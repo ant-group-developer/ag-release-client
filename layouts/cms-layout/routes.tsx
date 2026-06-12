@@ -151,6 +151,16 @@ export const adminRoutes: RouteNode[] = [
                 // hidden: true,
             },
             {
+                id: 'analytics2Detail',
+                type: 'link',
+                label: 'analytics.label',
+                title: 'Analytics 2 Detail',
+                hidden: true,
+                href: APP_ROUTES.ANALYTICS2_DETAIL,
+                icon: ChartNoAxesCombined,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
+            },
+            {
                 id: 'analytics',
                 type: 'link',
                 label: 'analytics.label',
@@ -307,6 +317,15 @@ export const adminRoutes: RouteNode[] = [
                 href: APP_ROUTES.DSP,
                 icon: Server,
                 required: { permission: [PERMISSION.DSP.READ] },
+            },
+            {
+                id: 'channels',
+                type: 'link',
+                label: 'channel.label',
+                title: 'Channels',
+                href: APP_ROUTES.CHANNELS,
+                icon: Video,
+                required: { permission: [PERMISSION.CHANNEL.READ] },
             },
 
             // {
@@ -656,15 +675,6 @@ export const adminRoutes: RouteNode[] = [
                         title: 'Languages',
                         href: APP_ROUTES.LANGUAGES,
                         icon: Globe,
-                        required: SYS_ADMIN_REQ,
-                    },
-                    {
-                        id: 'channels',
-                        type: 'link',
-                        label: 'channel.label',
-                        title: 'Channels',
-                        href: APP_ROUTES.CHANNELS,
-                        icon: Video,
                         required: SYS_ADMIN_REQ,
                     },
                     {

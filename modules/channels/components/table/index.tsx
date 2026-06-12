@@ -5,11 +5,14 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { Button } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
 import { useUpdateChannel } from '../../hooks/use-update-channel';
 import { ChannelDataFilter, ChannelsData } from '../../types';
+import ChannelThumbImage from '../image/channel-thumb-image';
+import ChannelStatusTag from '../tag/channel-status-tag';
 
 type Props = Omit<AppTableProps<ChannelsData>, 'columns'> & {
     pagination: {
@@ -51,6 +54,19 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                 ),
         },
         {
+            title: messages('common.thumbnail'),
+            key: 'thumbUrl',
+            dataIndex: 'thumbUrl',
+            align: 'center',
+            width: 90,
+            render: (_, record) => (
+                <ChannelThumbImage
+                    thumbUrl={record.thumbUrl}
+                    name={record.name}
+                />
+            ),
+        },
+        {
             title: messages('channel.name'),
             key: 'name',
             dataIndex: 'name',
@@ -68,6 +84,25 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     <p className="truncate">{value}</p>
                 </CopyText>
             ),
+        },
+        {
+            title: 'YouTube channel ID',
+            key: 'youtubeChannelId',
+            dataIndex: 'youtubeChannelId',
+            ellipsis: true,
+            align: 'left',
+            width: 240,
+            render: (value) =>
+                value ? (
+                    <CopyText
+                        tooltipProps={{ placement: 'right' }}
+                        text={value}
+                    >
+                        <p className="truncate">{value}</p>
+                    </CopyText>
+                ) : (
+                    '-'
+                ),
         },
         {
             title: messages('tenant.label'),
@@ -89,6 +124,39 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     }
                 />
             ),
+        },
+        {
+            title: messages('common.status'),
+            key: 'status',
+            dataIndex: 'status',
+            align: 'center',
+            width: 120,
+            render: (value) => <ChannelStatusTag status={value} />,
+        },
+        {
+            title: messages('common.history'),
+            key: 'history',
+            align: 'center',
+            width: 100,
+            render: (_, record) => {
+                const count =
+                    record.historyCount ??
+                    record.historiesCount ??
+                    record.histories?.length ??
+                    0;
+
+                return (
+                    <Button
+                        type="link"
+                        disabled={count === 0}
+                        onClick={() =>
+                            openModal(TYPE_MODAL_CHANNELS.HISTORY, record)
+                        }
+                    >
+                        {count}
+                    </Button>
+                );
+            },
         },
         {
             title: messages('common.createdAt'),
@@ -130,6 +198,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 50,
+            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showDelete

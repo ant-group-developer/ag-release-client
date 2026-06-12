@@ -9,6 +9,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
 import { useCreateChannel } from '../../hooks/use-create-channel';
 import { useUpdateChannel } from '../../hooks/use-update-channel';
 import { ChannelsData } from '../../types';
@@ -36,6 +37,8 @@ export default function ChannelFormModal({ ...props }: Props) {
         const payload = {
             name: values.name,
             tenantId: values.tenantId,
+            youtubeChannelId: values.youtubeChannelId,
+            thumbUrl: values.thumbUrl,
         } as CreateChannelPayload;
 
         const variables: CreateVariables<CreateChannelPayload> = {
@@ -68,8 +71,9 @@ export default function ChannelFormModal({ ...props }: Props) {
         updateChannel(variables);
     };
 
-    const onfinish = (values: ChannelFormValues) => {
+    const onfinish = async (values: ChannelFormValues) => {
         active();
+
         try {
             return isUpdateForm
                 ? handleUpdateChannel(values)
@@ -84,8 +88,11 @@ export default function ChannelFormModal({ ...props }: Props) {
     };
 
     useEffect(() => {
-        const initialData = {
-            ...dataEdit,
+        const initialData: ChannelFormValues = {
+            name: dataEdit?.name,
+            tenantId: dataEdit?.tenantId,
+            youtubeChannelId: dataEdit?.youtubeChannelId ?? undefined,
+            thumbUrl: dataEdit?.thumbUrl ?? undefined,
         };
         form.setFieldsValue(initialData);
     }, [dataEdit, form]);
@@ -107,6 +114,30 @@ export default function ChannelFormModal({ ...props }: Props) {
                 layout="vertical"
                 disabled={isActive}
             >
+                <AppFormItem
+                    name="thumbUrl"
+                    label={messages('common.thumbnailUrl')}
+                    rules={[
+                        {
+                            type: 'url',
+                            message: messages('validation.url'),
+                        },
+                        {
+                            max: CHANNEL_THUMB_URL_MAX_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: CHANNEL_THUMB_URL_MAX_LENGTH,
+                                field: messages('common.thumbnailUrl'),
+                            }),
+                        },
+                    ]}
+                >
+                    <Input
+                        placeholder="https://..."
+                        allowClear
+                        disabled={isActive}
+                    />
+                </AppFormItem>
+
                 <AppFormItem
                     name="tenantId"
                     label={messages('tenant.label')}
@@ -146,6 +177,22 @@ export default function ChannelFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input placeholder={messages('channel.name')} allowClear />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="youtubeChannelId"
+                    label="YouTube channel ID"
+                    rules={[
+                        {
+                            max: 100,
+                            message: messages('validation.stringMax', {
+                                max: 100,
+                                field: 'YouTube channel ID',
+                            }),
+                        },
+                    ]}
+                >
+                    <Input placeholder="UC..." allowClear />
                 </AppFormItem>
             </AppForm>
         </AppModal>

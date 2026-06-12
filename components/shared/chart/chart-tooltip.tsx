@@ -1,6 +1,10 @@
 import { formatCurrency, formattedNumber } from '@/helpers/common';
 import { Typography } from 'antd';
 
+const TWO_COLUMN_TOOLTIP_GRID_TEMPLATE = 'minmax(100px, 1fr) 96px';
+const THREE_COLUMN_TOOLTIP_GRID_TEMPLATE = 'minmax(160px, 1fr) 96px 96px';
+const THREE_COLUMN_TOOLTIP_MIN_WIDTH = 320;
+
 interface ChartTooltipBaseProps {
     active?: boolean;
     payload?: any[];
@@ -11,11 +15,15 @@ interface ChartTooltipBaseProps {
 export interface CustomTooltipProps extends ChartTooltipBaseProps {
     headers?: [string, string];
     formatter?: (value: any) => string;
+    showTotal?: boolean;
+    totalLabel?: string;
 }
 
 export interface ThreeColumnTooltipProps extends ChartTooltipBaseProps {
     headers?: [string, string, string];
     primaryFormatter?: (value: any) => string;
+    showTotal?: boolean;
+    totalLabel?: string;
     extraColumn: {
         metaKey: string;
         formatter?: (value: unknown) => string;
@@ -32,6 +40,8 @@ export const CustomTooltip = ({
     value,
     headers = ['Name', 'Value'],
     formatter,
+    showTotal = false,
+    totalLabel = 'Total',
 }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
         // Nếu chỉ có 1 item (ví dụ: Pie Chart)
@@ -84,7 +94,9 @@ export const CustomTooltip = ({
                     <Typography.Text
                         style={{ marginLeft: '12px', fontWeight: 500 }}
                     >
-                        {formatter ? formatter(displayValue) : formattedNumber(displayValue)}
+                        {formatter
+                            ? formatter(displayValue)
+                            : formattedNumber(displayValue)}
                     </Typography.Text>
                 </div>
             );
@@ -94,6 +106,9 @@ export const CustomTooltip = ({
         const sortedPayload = [...payload].sort((a, b) => {
             return (Number(b?.value) || 0) - (Number(a?.value) || 0);
         });
+        const totalValue = sortedPayload.reduce((total, item) => {
+            return total + (Number(item?.value) || 0);
+        }, 0);
 
         return (
             <div
@@ -125,7 +140,7 @@ export const CustomTooltip = ({
                 <div
                     style={{
                         display: 'grid',
-                        gridTemplateColumns: 'minmax(100px, 1fr) 70px',
+                        gridTemplateColumns: TWO_COLUMN_TOOLTIP_GRID_TEMPLATE,
                         alignItems: 'center',
                         columnGap: '12px',
                         borderBottom: '1px solid #f0f0f0',
@@ -145,6 +160,7 @@ export const CustomTooltip = ({
                             fontSize: '11px',
                             fontWeight: 500,
                             textAlign: 'right',
+                            whiteSpace: 'nowrap',
                         }}
                     >
                         {headers[1]}
@@ -167,7 +183,8 @@ export const CustomTooltip = ({
                             key={idx}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'minmax(100px, 1fr) 70px',
+                                gridTemplateColumns:
+                                    TWO_COLUMN_TOOLTIP_GRID_TEMPLATE,
                                 alignItems: 'center',
                                 columnGap: '12px',
                             }}
@@ -200,13 +217,48 @@ export const CustomTooltip = ({
                                     fontWeight: 500,
                                     fontSize: '12px',
                                     textAlign: 'right',
+                                    whiteSpace: 'nowrap',
                                 }}
                             >
-                                {formatter ? formatter(displayValue) : formattedNumber(displayValue)}
+                                {formatter
+                                    ? formatter(displayValue)
+                                    : formattedNumber(displayValue)}
                             </Typography.Text>
                         </div>
                     );
                 })}
+                {showTotal && (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns:
+                                TWO_COLUMN_TOOLTIP_GRID_TEMPLATE,
+                            alignItems: 'center',
+                            columnGap: '12px',
+                            borderTop: '1px solid #f0f0f0',
+                            paddingTop: '6px',
+                            marginTop: '2px',
+                        }}
+                    >
+                        <Typography.Text
+                            style={{ fontWeight: 600, fontSize: '12px' }}
+                        >
+                            {totalLabel}
+                        </Typography.Text>
+                        <Typography.Text
+                            style={{
+                                fontWeight: 600,
+                                fontSize: '12px',
+                                textAlign: 'right',
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            {formatter
+                                ? formatter(totalValue)
+                                : formattedNumber(totalValue)}
+                        </Typography.Text>
+                    </div>
+                )}
             </div>
         );
     }
@@ -219,15 +271,32 @@ export const ThreeColumnTooltip = ({
     label,
     headers = ['Name', 'Value', 'Extra'],
     primaryFormatter,
+    showTotal = false,
+    totalLabel = 'Total',
     extraColumn,
-    minWidth = 280,
-    gridTemplateColumns = 'minmax(100px, 1fr) 70px 90px',
+    minWidth = THREE_COLUMN_TOOLTIP_MIN_WIDTH,
+    gridTemplateColumns = THREE_COLUMN_TOOLTIP_GRID_TEMPLATE,
 }: ThreeColumnTooltipProps) => {
     if (!active || !payload?.length) return null;
 
     const sortedPayload = [...payload].sort((a, b) => {
         return (Number(b?.value) || 0) - (Number(a?.value) || 0);
     });
+    const totals = sortedPayload.reduce(
+        (acc, item) => {
+            const itemDataKey = item?.dataKey;
+            const itemPayload = item?.payload;
+            const extraValue =
+                (itemDataKey &&
+                    itemPayload?.[`${itemDataKey}${extraColumn.metaKey}`]) ??
+                0;
+
+            acc.primary += Number(item?.value) || 0;
+            acc.extra += Number(extraValue) || 0;
+            return acc;
+        },
+        { primary: 0, extra: 0 }
+    );
 
     return (
         <div
@@ -278,6 +347,7 @@ export const ThreeColumnTooltip = ({
                         fontSize: '11px',
                         fontWeight: 500,
                         textAlign: 'right',
+                        whiteSpace: 'nowrap',
                     }}
                 >
                     {headers[1]}
@@ -288,6 +358,7 @@ export const ThreeColumnTooltip = ({
                         fontSize: '11px',
                         fontWeight: 500,
                         textAlign: 'right',
+                        whiteSpace: 'nowrap',
                     }}
                 >
                     {headers[2]}
@@ -351,6 +422,7 @@ export const ThreeColumnTooltip = ({
                                 fontWeight: 500,
                                 fontSize: '12px',
                                 textAlign: 'right',
+                                whiteSpace: 'nowrap',
                             }}
                         >
                             {primaryFormatter
@@ -359,7 +431,11 @@ export const ThreeColumnTooltip = ({
                         </Typography.Text>
                         <Typography.Text
                             type={extraColumn.textType ?? 'secondary'}
-                            style={{ fontSize: '12px', textAlign: 'right' }}
+                            style={{
+                                fontSize: '12px',
+                                textAlign: 'right',
+                                whiteSpace: 'nowrap',
+                            }}
                         >
                             {extraColumn.formatter
                                 ? extraColumn.formatter(extraValue)
@@ -368,11 +444,60 @@ export const ThreeColumnTooltip = ({
                     </div>
                 );
             })}
+            {showTotal && (
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns,
+                        alignItems: 'center',
+                        columnGap: '12px',
+                        borderTop: '1px solid #f0f0f0',
+                        paddingTop: '6px',
+                        marginTop: '2px',
+                    }}
+                >
+                    <Typography.Text
+                        style={{ fontWeight: 600, fontSize: '12px' }}
+                    >
+                        {totalLabel}
+                    </Typography.Text>
+                    <Typography.Text
+                        style={{
+                            fontWeight: 600,
+                            fontSize: '12px',
+                            textAlign: 'right',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {primaryFormatter
+                            ? primaryFormatter(totals.primary)
+                            : formattedNumber(totals.primary)}
+                    </Typography.Text>
+                    <Typography.Text
+                        type={extraColumn.textType ?? 'secondary'}
+                        style={{
+                            fontWeight: 600,
+                            fontSize: '12px',
+                            textAlign: 'right',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {extraColumn.formatter
+                            ? extraColumn.formatter(totals.extra)
+                            : formattedNumber(totals.extra as any)}
+                    </Typography.Text>
+                </div>
+            )}
         </div>
     );
 };
 
-export const SalesTooltip = (props: ChartTooltipBaseProps) => {
+export const SalesTooltip = (
+    props: ChartTooltipBaseProps & {
+        showTotal?: boolean;
+        totalLabel?: string;
+    }
+) => {
     return (
         <ThreeColumnTooltip
             {...props}

@@ -11,11 +11,6 @@ import PlaysTimelineChart from '@/modules/analytics2/components/chart/plays-time
 import AnalyticsRankings from '@/modules/analytics2/components/ranking/analytics-rankings';
 import DistributionRow from '@/modules/dashboard/components/distribution-row';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
-import {
-    //     useGetCountCountries,
-    useGetCountIssues,
-    useGetCountOverview,
-} from '@/modules/dashboard/hooks/use-get-count';
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
@@ -48,11 +43,6 @@ function Dashboard({}: Props) {
     });
     const messages = useTranslations();
     const { releasesData, isLoading } = useGetListReleases(dataFilter);
-    const { countIssuesData, isFetching: isIssuesLoading } =
-        useGetCountIssues(dataFilter);
-    const { countOverviewData, isFetching: isOverviewLoading } =
-        useGetCountOverview(dataFilter);
-    // const { countCountriesData } = useGetCountCountries(dataFilter);
 
     return (
         <div
@@ -81,12 +71,7 @@ function Dashboard({}: Props) {
                 /> */}
 
                 <div className="flex flex-col gap-4">
-                    <StatsOverview
-                        issuesData={countIssuesData}
-                        overviewData={countOverviewData}
-                        isIssuesLoading={isIssuesLoading}
-                        isOverviewLoading={isOverviewLoading}
-                    />
+                    <StatsOverview params={dataFilter} />
 
                     <ListRelease
                         data={releasesData.items.slice(0, 10)}
@@ -94,8 +79,20 @@ function Dashboard({}: Props) {
                     />
 
                     <DistributionRow
-                        startDate={dataFilter.startDate ? dayjs(dataFilter.startDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : undefined}
-                        endDate={dataFilter.endDate ? dayjs(dataFilter.endDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : undefined}
+                        startDate={
+                            dataFilter.startDate
+                                ? dayjs(dataFilter.startDate).format(
+                                      DATE_FORMAT.MYSQL_TYPE_DATE
+                                  )
+                                : undefined
+                        }
+                        endDate={
+                            dataFilter.endDate
+                                ? dayjs(dataFilter.endDate).format(
+                                      DATE_FORMAT.MYSQL_TYPE_DATE
+                                  )
+                                : undefined
+                        }
                     />
 
                     {/* <DashboardAnalyticsRow
@@ -116,13 +113,37 @@ function Dashboard({}: Props) {
                     {/* </Row> */}
 
                     <PlaysTimelineChart
-                        fromDate={dataFilter.startDate ? dayjs(dataFilter.startDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : ''}
-                        toDate={dataFilter.endDate ? dayjs(dataFilter.endDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : ''}
+                        fromDate={
+                            dataFilter.startDate
+                                ? dayjs(dataFilter.startDate).format(
+                                      DATE_FORMAT.MYSQL_TYPE_DATE
+                                  )
+                                : ''
+                        }
+                        toDate={
+                            dataFilter.endDate
+                                ? dayjs(dataFilter.endDate).format(
+                                      DATE_FORMAT.MYSQL_TYPE_DATE
+                                  )
+                                : ''
+                        }
                     />
 
                     <AnalyticsRankings
-                        fromDate={dataFilter.startDate ? dayjs(dataFilter.startDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : ''}
-                        toDate={dataFilter.endDate ? dayjs(dataFilter.endDate).format(DATE_FORMAT.MYSQL_TYPE_DATE) : ''}
+                        fromDate={
+                            dataFilter.startDate
+                                ? dayjs(dataFilter.startDate).format(
+                                      DATE_FORMAT.MYSQL_TYPE_DATE
+                                  )
+                                : ''
+                        }
+                        toDate={
+                            dataFilter.endDate
+                                ? dayjs(dataFilter.endDate).format(
+                                      DATE_FORMAT.MYSQL_TYPE_DATE
+                                  )
+                                : ''
+                        }
                     />
                 </div>
 

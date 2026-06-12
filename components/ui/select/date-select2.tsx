@@ -1,11 +1,8 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { DatePicker, GetProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-
-dayjs.extend(isoWeek);
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -15,7 +12,10 @@ type Props = Omit<RangePickerProps, 'value' | 'onChange'> & {
     externalOnChange?: (startDate: string, endDate: string) => void;
 };
 
-const DAY_RANGES = [7, 14, 30, 90, 180, 365];
+const MONTH_PRESET_START_OFFSET = 2;
+const MONTH_PRESET_COUNT = 4;
+const PAST_YEAR_PRESET_COUNT = 4;
+const LIFETIME_START_DATE = '1970-01-01';
 
 export default function DateSelect2({
     value,
@@ -26,31 +26,51 @@ export default function DateSelect2({
     const messages = useTranslations();
 
     const presets = useMemo(() => {
-        const customPresets = [
-            {
-                label: messages('date.thisWeek'),
-                value: () =>
-                    [dayjs().startOf('isoWeek'), dayjs()] as [Dayjs, Dayjs],
-            },
-            {
-                label: messages('date.thisMonth'),
-                value: () =>
-                    [dayjs().startOf('month'), dayjs()] as [Dayjs, Dayjs],
-            },
-            {
-                label: messages('date.thisYear'),
-                value: () =>
-                    [dayjs().startOf('year'), dayjs()] as [Dayjs, Dayjs],
-            },
-        ];
+        const monthPresets = Array.from(
+            { length: MONTH_PRESET_COUNT },
+            (_, i) => {
+                const targetMonth = dayjs()
+                    .subtract(MONTH_PRESET_START_OFFSET, 'month')
+                    .subtract(i, 'month');
 
-        const relativePresets = DAY_RANGES.map((days) => ({
-            label: messages('date.lastDays', { days }),
+                return {
+                    label: targetMonth.format(DATE_FORMAT.MONTH_YEAR),
+                    value: () =>
+                        [
+                            targetMonth.startOf('month'),
+                            targetMonth.endOf('month'),
+                        ] as [Dayjs, Dayjs],
+                };
+            }
+        );
+
+        const pastYearsPresets = Array.from(
+            { length: PAST_YEAR_PRESET_COUNT },
+            (_, i) => {
+                const yearDiff = i;
+                const targetYear = dayjs().subtract(yearDiff, 'year');
+
+                return {
+                    label: targetYear.format(DATE_FORMAT.YEAR),
+                    value: () =>
+                        [
+                            targetYear.startOf('year'),
+                            targetYear.endOf('year'),
+                        ] as [Dayjs, Dayjs],
+                };
+            }
+        );
+
+        const lifetimePreset = {
+            label: <div>{messages('date.lifetime')}</div>,
             value: () =>
-                [dayjs().subtract(days - 1, 'day'), dayjs()] as [Dayjs, Dayjs],
-        }));
+                [
+                    dayjs(LIFETIME_START_DATE, DATE_FORMAT.MYSQL_TYPE_DATE),
+                    dayjs(),
+                ] as [Dayjs, Dayjs],
+        };
 
-        return [...customPresets, ...relativePresets];
+        return [...monthPresets, lifetimePreset, ...pastYearsPresets];
     }, [messages]);
 
     const rangeValue = useMemo<RangePickerProps['value']>(() => {

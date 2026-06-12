@@ -1,9 +1,9 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, formattedNumber, getIndex } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Tag, theme } from 'antd';
+import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -19,7 +19,6 @@ type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
 
 export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
     const messages = useTranslations();
-    const { token } = theme.useToken();
 
     const getStatusTagColor = (status: ImportJobStatus) => {
         switch (status) {
@@ -102,50 +101,41 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             title: messages('reportConfigs.importResult.totalRows'),
             key: 'totalRows',
             width: 120,
-            align: 'center',
-            render: (_, record) => record.rows?.total ?? '-',
+            align: 'left',
+            render: (_, record) =>
+                record.rows?.total !== undefined && record.rows?.total !== null
+                    ? formattedNumber(record.rows.total)
+                    : '-',
         },
         {
             title: messages('reportConfigs.importResult.processedRows'),
             key: 'processedRows',
             width: 120,
-            align: 'center',
-            render: (_, record) => {
-                if (record.rows?.processed === undefined) return '-';
-                return (
-                    <span style={{ color: token.colorSuccess, fontWeight: 600 }}>
-                        {record.rows.processed}
-                    </span>
-                );
-            },
+            align: 'left',
+            render: (_, record) =>
+                record.rows?.processed !== undefined && record.rows?.processed !== null
+                    ? formattedNumber(record.rows.processed)
+                    : '-',
         },
         {
             title: messages('reportConfigs.importResult.skippedRows'),
             key: 'skippedRows',
             width: 120,
-            align: 'center',
-            render: (_, record) => {
-                if (record.rows?.skipped === undefined) return '-';
-                return (
-                    <span style={{ color: token.colorWarning, fontWeight: 600 }}>
-                        {record.rows.skipped}
-                    </span>
-                );
-            },
+            align: 'left',
+            render: (_, record) =>
+                record.rows?.skipped !== undefined && record.rows?.skipped !== null
+                    ? formattedNumber(record.rows.skipped)
+                    : '-',
         },
         {
             title: messages('reportConfigs.importResult.errorRows'),
             key: 'errorRows',
             width: 120,
-            align: 'center',
-            render: (_, record) => {
-                if (record.rows?.errors === undefined) return '-';
-                return (
-                    <span style={{ color: token.colorError, fontWeight: 600 }}>
-                        {record.rows.errors}
-                    </span>
-                );
-            },
+            align: 'left',
+            render: (_, record) =>
+                record.rows?.errors !== undefined && record.rows?.errors !== null
+                    ? formattedNumber(record.rows.errors)
+                    : '-',
         },
         {
             title: messages('common.createdAt'),

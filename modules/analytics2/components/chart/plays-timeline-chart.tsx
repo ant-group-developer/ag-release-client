@@ -268,9 +268,14 @@ export default function PlaysTimelineChart({
                         ]}
                         tooltipContent={
                             viewMode === ANALYTICS_CHART_VIEW_MODE.SALES ? (
-                                <SalesTooltip />
+                                <SalesTooltip
+                                    showTotal
+                                    totalLabel={messages('common.total')}
+                                />
                             ) : undefined
                         }
+                        showTooltipTotal
+                        tooltipTotalLabel={messages('common.total')}
                     />
                 )
             ) : dailyItems.length === 0 ? (
@@ -288,6 +293,8 @@ export default function PlaysTimelineChart({
                         messages('analytics.chart.dsp'),
                         messages('analytics.chart.view'),
                     ]}
+                    showTooltipTotal
+                    tooltipTotalLabel={messages('common.total')}
                 />
             )}
         </Card>

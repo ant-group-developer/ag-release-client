@@ -1,5 +1,5 @@
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
-import { PaginationResponse, CommonParams } from '@/types/api';
+import { CommonParams, PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { reportConfigApis } from '../apis';
 import { etlJobQueryKeys } from '../constants/query-keys';
@@ -20,6 +20,7 @@ export const useGetListEtlJobs = (params: CommonParams) => {
 
             return hasRunningJob ? 5000 : false;
         },
+        refetchOnWindowFocus: true,
     });
 
     const etlJobsData =

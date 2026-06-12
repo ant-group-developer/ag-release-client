@@ -26,10 +26,21 @@ export const reportConfigQueryKeys = {
 };
 
 export const etlJobQueryKeys = {
-    all: ['ETL_JOBS'] as const,
-    lists: () => [...etlJobQueryKeys.all, 'GET_LIST'] as const,
+    all: [QUERY_KEY.ETL_JOBS.KEY] as const,
+    lists: () => [...etlJobQueryKeys.all, QUERY_KEY.ETL_JOBS.GET_LIST] as const,
     list: (params?: any) =>
         params
             ? ([...etlJobQueryKeys.lists(), params] as const)
             : etlJobQueryKeys.lists(),
+};
+
+export const ftpExcludePatternQueryKeys = {
+    all: [QUERY_KEY.FTP_EXCLUDE_PATTERN.KEY] as const,
+    lists: () => [...ftpExcludePatternQueryKeys.all, QUERY_KEY.FTP_EXCLUDE_PATTERN.GET_LIST] as const,
+    list: (params?: any) =>
+        params
+            ? ([...ftpExcludePatternQueryKeys.lists(), params] as const)
+            : ftpExcludePatternQueryKeys.lists(),
+    details: () => [...ftpExcludePatternQueryKeys.all, QUERY_KEY.FTP_EXCLUDE_PATTERN.GET_DETAIL] as const,
+    detail: (id: string) => [...ftpExcludePatternQueryKeys.details(), id] as const,
 };
