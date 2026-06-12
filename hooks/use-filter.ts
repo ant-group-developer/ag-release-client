@@ -3,8 +3,7 @@
 import { AppSearchProps, OnSearchType } from '@/components/ui/input/search';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { CommonParams } from '@/types/api';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryParams } from './use-query-params';
 
 export type OnChangeFilter<DataFilterType> = (
