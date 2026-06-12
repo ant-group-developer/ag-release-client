@@ -125,17 +125,20 @@ export default function ChannelFormModal({ ...props }: Props) {
     };
 
     useEffect(() => {
-        const initialData = {
-            ...dataEdit,
+        const initialData: ChannelFormValues = {
+            name: dataEdit?.name,
+            tenantId: dataEdit?.tenantId,
+            youtubeChannelId: dataEdit?.youtubeChannelId ?? undefined,
+            thumbId: dataEdit?.thumbId ?? undefined,
             thumbFile:
                 dataEdit?.thumbId && thumbUrl
                     ? {
                           fileList: [
                               {
-                                  uid: dataEdit.thumbId,
+                                  uid: dataEdit?.thumbId,
                                   url: thumbUrl,
                                   thumbUrl,
-                                  name: dataEdit.name,
+                                  name: dataEdit?.name,
                                   status: 'done',
                               },
                           ],

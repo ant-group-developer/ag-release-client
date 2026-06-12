@@ -18,7 +18,7 @@ export default function ChannelHistoryModal() {
         <AppModal
             open
             title={`${messages('common.history')} - ${channel?.name ?? ''}`}
-            width={1100}
+            width={'80VW'}
             footer={null}
             onCancel={closeModal}
         >
@@ -27,7 +27,7 @@ export default function ChannelHistoryModal() {
                 dataSource={histories}
                 pagination={false}
                 size="small"
-                scroll={{ x: 950, y: 520 }}
+                scroll={{ y: 520 }}
                 columns={[
                     {
                         title: messages('common.thumbnail'),
