@@ -672,7 +672,8 @@
         "last5Year": "5 năm qua",
         "thisMonth": "Tháng này",
         "thisYear": "Năm nay",
-        "thisWeek": "Tuần này"
+        "thisWeek": "Tuần này",
+        "lifetime": "Toàn thời gian"
     },
     "message": {
         "createSuccessfully": "Thêm thành công!",
@@ -2440,6 +2441,49 @@
         "label": "Report import",
         "configReport": "Cấu hình báo cáo",
         "importReport": "Nhập báo cáo",
+        "importSftp": "Cấu hình import SFTP",
+        "sftpExcludePatterns": {
+            "title": "Mẫu loại trừ SFTP",
+            "pattern": "Mẫu (Pattern)",
+            "patternType": "Loại mẫu (Pattern Type)",
+            "scope": "Phạm vi (Scope)",
+            "isActive": "Trạng thái",
+            "description": "Mô tả",
+            "action": {
+                "create": "Tạo mẫu loại trừ",
+                "update": "Cập nhật mẫu loại trừ"
+            },
+            "sync": {
+                "modalTitle": "Đồng bộ báo cáo SFTP",
+                "syncMode": "Chế độ đồng bộ",
+                "syncModeSingle": "Đồng bộ 1 tháng",
+                "syncModeAll": "Đồng bộ tất cả từ tháng",
+                "period": "Tháng",
+                "startPeriod": "Tháng bắt đầu",
+                "categories": "Danh mục báo cáo",
+                "force": "Buộc đồng bộ",
+                "categoriesPlaceholder": "Chọn danh mục",
+                "salesLabel": "Sales (Doanh số)",
+                "trendsLabel": "Trends (Xu hướng)",
+                "requiredStartPeriod": "Vui lòng chọn tháng bắt đầu!",
+                "requiredPeriod": "Vui lòng chọn tháng!",
+                "requiredCategories": "Vui lòng chọn ít nhất một danh mục!",
+                "success": "Đồng bộ dữ liệu thành công!"
+            },
+            "syncConfig": {
+                "title": "Cấu hình đồng bộ",
+                "mode": "Chế độ (Mode)",
+                "cron": "Biểu thức Cron",
+                "startPeriod": "Tháng bắt đầu",
+                "categories": "Danh mục báo cáo",
+                "force": "Buộc đồng bộ",
+                "excludeEnabled": "Kích hoạt loại trừ",
+                "maxRetries": "Số lần thử lại tối đa",
+                "save": "Lưu cấu hình",
+                "saveSuccess": "Cập nhật cấu hình đồng bộ thành công!",
+                "saveFailed": "Cập nhật cấu hình đồng bộ thất bại!"
+            }
+        },
         "importReportBtn": "Nhập báo cáo",
         "importModalTitle": "Nhập báo cáo",
         "allowedExtensions": "Định dạng file",
@@ -2538,5 +2582,8 @@
             "failed": "Đồng bộ dữ liệu thất bại",
             "jobNotFound": "Có lỗi khi đồng bộ dữ liệu"
         }
+    },
+    "report-import": {
+        "configExcludePattern": "Cấu hình mẫu loại trừ"
     }
 }

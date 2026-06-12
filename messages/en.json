@@ -676,7 +676,8 @@
         "last5Year": "Last 5 years",
         "thisMonth": "This month",
         "thisYear": "This year",
-        "thisWeek": "This week"
+        "thisWeek": "This week",
+        "lifetime": "Lifetime"
     },
     "message": {
         "createSuccessfully": "Create successfully!",
@@ -2442,6 +2443,49 @@
         "label": "Report Import",
         "configReport": "Config report",
         "importReport": "Import report",
+        "importSftp": "Config import SFTP",
+        "sftpExcludePatterns": {
+            "title": "SFTP Exclude Patterns",
+            "pattern": "Pattern",
+            "patternType": "Pattern Type",
+            "scope": "Scope",
+            "isActive": "Is Active",
+            "description": "Description",
+            "action": {
+                "create": "Create Exclude Pattern",
+                "update": "Update Exclude Pattern"
+            },
+            "sync": {
+                "modalTitle": "Sync SFTP Reports",
+                "syncMode": "Sync mode",
+                "syncModeSingle": "Sync single month",
+                "syncModeAll": "Sync all from month",
+                "period": "Month",
+                "startPeriod": "Start month",
+                "categories": "Report categories",
+                "force": "Force sync",
+                "categoriesPlaceholder": "Select categories",
+                "salesLabel": "Sales",
+                "trendsLabel": "Trends",
+                "requiredStartPeriod": "Please select start month!",
+                "requiredPeriod": "Please select month!",
+                "requiredCategories": "Please select at least one category!",
+                "success": "Sync data successfully!"
+            },
+            "syncConfig": {
+                "title": "Sync Configuration",
+                "mode": "Mode",
+                "cron": "Cron Expression",
+                "startPeriod": "Start month",
+                "categories": "Report categories",
+                "force": "Force sync",
+                "excludeEnabled": "Exclude enabled",
+                "maxRetries": "Max retries",
+                "save": "Save Configuration",
+                "saveSuccess": "Sync configuration updated successfully!",
+                "saveFailed": "Failed to update sync configuration!"
+            }
+        },
         "importReportBtn": "Import report",
         "importModalTitle": "Import Report",
         "allowedExtensions": "Allowed extensions",
@@ -2540,5 +2584,8 @@
             "failed": "Sync data failed",
             "jobNotFound": "Something went wrong while syncing data"
         }
+    },
+    "report-import": {
+        "configExcludePattern": "Configure Exclude Pattern"
     }
 }

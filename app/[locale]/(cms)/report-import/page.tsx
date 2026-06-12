@@ -6,13 +6,13 @@ import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import ConfigTab from '@/modules/report-import/components/config-tab';
 import ImportTab from '@/modules/report-import/components/import-tab';
+import SftpExcludeTab from '@/modules/report-import/components/sftp-exclude-tab';
 import { reportConfigQueryKeys } from '@/modules/report-import/constants/query-keys';
 import { useGetListReportConfig } from '@/modules/report-import/hooks/use-get-list';
-import {
-    ReportConfigDataFilter,
-} from '@/modules/report-import/types';
+import { ReportConfigDataFilter } from '@/modules/report-import/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { Tabs, TabsProps } from 'antd';
+import { SettingOutlined, ImportOutlined, CloudServerOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 
 type ReportConfigFilter = ReportConfigDataFilter & {
@@ -39,6 +39,7 @@ export default function ReportConfigs() {
         {
             key: 'config-report',
             label: messages('reportConfigs.configReport'),
+            icon: <SettingOutlined />,
             children: (
                 <ConfigTab
                     dataFilter={dataFilter}
@@ -52,17 +53,25 @@ export default function ReportConfigs() {
         {
             key: 'import-report',
             label: messages('reportConfigs.importReport'),
+            icon: <ImportOutlined />,
             children: <ImportTab />,
+        },
+        {
+            key: 'import-sftp',
+            label: messages('reportConfigs.importSftp'),
+            icon: <CloudServerOutlined />,
+            children: <SftpExcludeTab />,
         },
     ];
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('reportConfigs.label')}>
+            <PageContainer>
                 <Tabs
                     activeKey={dataFilter.tab}
                     onChange={(key) => onChangeFilter({ tab: key })}
                     items={tabItems}
+                    className="!mt-4"
                 />
             </PageContainer>
         </AppPageWrapper>

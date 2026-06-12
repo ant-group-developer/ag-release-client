@@ -103,6 +103,12 @@ export const PERMISSION = {
     REVENUE: {
         READ: 'revenue.read',
     },
+    CHANNEL: {
+        CREATE: 'channel.create',
+        READ: 'channel.read',
+        UPDATE: 'channel.update',
+        DELETE: 'channel.delete',
+    },
 } as const;
 
 // Type helper for permission values

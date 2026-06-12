@@ -308,6 +308,15 @@ export const adminRoutes: RouteNode[] = [
                 icon: Server,
                 required: { permission: [PERMISSION.DSP.READ] },
             },
+            {
+                id: 'channels',
+                type: 'link',
+                label: 'channel.label',
+                title: 'Channels',
+                href: APP_ROUTES.CHANNELS,
+                icon: Video,
+                required: { permission: [PERMISSION.CHANNEL.READ] },
+            },
 
             // {
             //     id: 'dsp-tenant',
@@ -656,15 +665,6 @@ export const adminRoutes: RouteNode[] = [
                         title: 'Languages',
                         href: APP_ROUTES.LANGUAGES,
                         icon: Globe,
-                        required: SYS_ADMIN_REQ,
-                    },
-                    {
-                        id: 'channels',
-                        type: 'link',
-                        label: 'channel.label',
-                        title: 'Channels',
-                        href: APP_ROUTES.CHANNELS,
-                        icon: Video,
                         required: SYS_ADMIN_REQ,
                     },
                     {

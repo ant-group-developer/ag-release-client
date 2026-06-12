@@ -1,6 +1,6 @@
 import CreateButton from '@/components/ui/button/create-button';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -17,7 +17,7 @@ export default function ImportTab() {
     const [viewJobId, setViewJobId] = useState<string | null>(null);
 
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(PAGE_SIZE);
+    const [pageSize, setPageSize] = useState(10);
 
     const { etlJobsData, isLoading } = useGetListEtlJobs({
         page,
@@ -72,14 +72,15 @@ export default function ImportTab() {
                     pageSize,
                     current: etlJobsData.metadata.page,
                 }}
-                scroll={{ x: 1300 }}
                 onViewDetail={handleViewDetail}
                 onChange={() => undefined}
+                scroll={{
+                    y: 500,
+                }}
             />
             <AppPagination
                 style={{
                     backgroundColor: token.colorBgContainer,
-                    marginTop: 16,
                 }}
                 align="end"
                 current={etlJobsData.metadata.page}

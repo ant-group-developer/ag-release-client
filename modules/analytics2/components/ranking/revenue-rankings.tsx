@@ -323,7 +323,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             <Row gutter={[24, 24]}>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.partners'))}
+                        title={topRankingTitle(messages('artist.artists'))}
                         columns={artistColumns}
                         dataSource={topArtistData}
                         loading={isArtistsLoading}

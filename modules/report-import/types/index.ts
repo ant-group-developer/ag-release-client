@@ -15,3 +15,29 @@ export interface ReportConfigData extends CommonAttribute {
 }
 
 export interface ReportConfigDataFilter extends CommonParams {}
+
+export interface FtpExcludePatternData extends CommonAttribute {
+    pattern: string;
+    patternType: string;
+    scope: string;
+    isActive: number;
+    description: string;
+    isDeleted: number;
+}
+
+export interface FtpExcludePatternDataFilter extends CommonParams {
+    scope?: string;
+    patternType?: string;
+    isActive?: boolean | string;
+}
+
+export interface SyncConfigData {
+    mode: string;
+    cron: string;
+    startPeriod: string;
+    categories: string[];
+    force: boolean;
+    excludeEnabled: boolean;
+    maxRetries: number;
+}
+

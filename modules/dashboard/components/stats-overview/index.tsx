@@ -1,4 +1,5 @@
 import { APP_ROUTES } from '@/enums/routes';
+import { formattedNumber } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
 import { theme } from 'antd';
 import { Building2, DiscAlbum, Music, Users } from 'lucide-react';
@@ -152,7 +153,7 @@ export default function StatsOverview({
                                             className="w-fit text-2xl font-bold transition-colors hover:text-blue-500"
                                         >
                                             <span className="hover:text-blue-500">
-                                                {item?.count ?? 0}
+                                                {formattedNumber(item?.count)}
                                             </span>
                                         </Link>
                                         {typeof item.importCount ===
@@ -161,7 +162,7 @@ export default function StatsOverview({
                                                 {messages(
                                                     'common.importedFromReport'
                                                 )}
-                                                : {item.importCount}
+                                                : {formattedNumber(item.importCount)}
                                             </span>
                                         )}
                                     </>
