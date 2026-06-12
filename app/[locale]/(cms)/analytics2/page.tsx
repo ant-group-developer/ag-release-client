@@ -11,6 +11,7 @@ import { Radio, Space, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const defaultFilter: Analytics2DataFilter = {
     startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
@@ -25,10 +26,18 @@ export default function Analytics2Page() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const activeTab =
-        (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+    const initialTab = (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+    const [activeTab, setActiveTab] = useState<ANALYTICS2_TABS>(initialTab);
+
+    useEffect(() => {
+        const queryTab = (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+        if (queryTab !== activeTab) {
+            setActiveTab(queryTab);
+        }
+    }, [searchParams, activeTab]);
 
     const handleTabChange = (tab: ANALYTICS2_TABS) => {
+        setActiveTab(tab);
         const params = new URLSearchParams(searchParams.toString());
         params.set('tab', tab);
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });

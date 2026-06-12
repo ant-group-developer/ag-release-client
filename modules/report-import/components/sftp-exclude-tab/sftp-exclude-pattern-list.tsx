@@ -41,7 +41,7 @@ export default function SftpExcludePatternList() {
     const [keyword, setKeyword] = useState('');
     const [debouncedKeyword, setDebouncedKeyword] = useState('');
 
-    const [scope, setScope] = useState<FTP_EXCLUDE_PATTERN_SCOPE | undefined>(
+    const [scope, setScope] = useState<FTP_EXCLUDE_PATTERN_SCOPE[] | undefined>(
         undefined
     );
     const [patternType, setPatternType] = useState<PATTERN_TYPE | undefined>(
@@ -64,7 +64,7 @@ export default function SftpExcludePatternList() {
         page,
         pageSize,
         keyword: debouncedKeyword || undefined,
-        scope,
+        scope: scope && scope.length > 0 ? scope.join(',') : undefined,
         patternType,
         isActive:
             isActiveFilter !== undefined
@@ -165,7 +165,7 @@ export default function SftpExcludePatternList() {
                     page,
                     pageSize,
                     keyword: debouncedKeyword,
-                    scope,
+                    scope: scope && scope.length > 0 ? scope.join(',') : undefined,
                     patternType,
                     isActive: isActiveFilter,
                 }}

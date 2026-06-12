@@ -25,6 +25,7 @@ import { ReleasesDataFilter } from '../../types';
 
 type Props = {
     dataFilter: ReleasesDataFilter;
+    defaultFilter?: ReleasesDataFilter;
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
@@ -32,6 +33,7 @@ type Props = {
 
 export default function ReleasesHeaderV2({
     dataFilter,
+    defaultFilter,
     onChangeFilter,
     canClearFilter,
     removeFilter,
@@ -245,6 +247,7 @@ export default function ReleasesHeaderV2({
                 <FilterPanel
                     configs={filterConfigs}
                     dataFilter={mappedDataFilter}
+                    defaultFilter={defaultFilter}
                     onChangeFilter={handleChangeFilter}
                     removeFilter={removeFilter}
                     canClearFilter={canClearFilter}

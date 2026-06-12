@@ -7,7 +7,7 @@ import { SyncConfigData } from '../types';
 
 export const useGetSyncConfig = () => {
     const { data, ...res } = useQuery({
-        queryKey: ['etl-sync-config'] as const,
+        queryKey: [QUERY_KEY.ETL_SYNC_CONFIG.KEY] as const,
         queryFn: () => etlSyncConfigApis.get(),
     });
 
@@ -22,11 +22,11 @@ export const useUpdateSyncConfig = () => {
     const messages = useTranslations();
 
     const mutation = useMutation({
-        mutationFn: (payload: SyncConfigData) =>
+        mutationFn: (payload: Partial<SyncConfigData>) =>
             etlSyncConfigApis.update(payload),
         onSuccess: (data) => {
             queryClient.invalidateQueries({
-                queryKey: ['etl-sync-config'],
+                queryKey: [QUERY_KEY.ETL_SYNC_CONFIG.KEY],
             });
             message.success(
                 messages(
@@ -55,7 +55,7 @@ export const useStartFtpSync = () => {
     const messages = useTranslations();
 
     const mutation = useMutation({
-        mutationFn: (payload: { period: string; force: boolean; categories?: string[] }) =>
+        mutationFn: (payload: { month_start: string; month_end: string; force: boolean; categories?: string[] }) =>
             etlSyncConfigApis.sync(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({

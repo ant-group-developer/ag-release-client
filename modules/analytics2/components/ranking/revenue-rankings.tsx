@@ -1,6 +1,7 @@
 'use client';
 
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { APP_ROUTES } from '@/enums/routes';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -8,11 +9,19 @@ import { useMemo, useState } from 'react';
 import {
     useGetRevenueTopArtist,
     useGetRevenueTopDsp,
+    useGetRevenueTopRelease,
+    useGetRevenueTopTenant,
     useGetRevenueTopTrack,
 } from '../../hooks/use-get-revenue-data';
-import { RevenueArtistItem, RevenueTrackItem } from '../../types';
+import {
+    RevenueArtistItem,
+    RevenueReleaseItem,
+    RevenueTenantItem,
+    RevenueTrackItem,
+} from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
+import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 
 interface Props {
@@ -41,6 +50,15 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
         title: '',
         isrc: '',
     });
+    const [releaseDetailModal, setReleaseDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        releaseId: string;
+    }>({
+        open: false,
+        title: '',
+        releaseId: '',
+    });
 
     const topRankingTitle = (title: string) =>
         messages('analytics2.topRankingTitle', {
@@ -65,6 +83,14 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
         }
     );
 
+    const { topReleaseData, isFetching: isReleasesLoading } =
+        useGetRevenueTopRelease({
+            fromDate,
+            toDate,
+            topN,
+            includeOther: true,
+        });
+
     const { topDspData, isFetching: isDspLoading } = useGetRevenueTopDsp({
         fromDate,
         toDate,
@@ -72,8 +98,16 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
         includeOther: true,
     });
 
+    const { topTenantData, isFetching: isTenantsLoading } =
+        useGetRevenueTopTenant({
+            fromDate,
+            toDate,
+            topN,
+            includeOther: true,
+        });
+
     const dspDataWithRank = useMemo(() => {
-        return topDspData.map((item, index) => ({
+        return topDspData?.items?.map((item, index) => ({
             ...item,
             rank: index + 1,
         }));
@@ -137,6 +171,17 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 render: (count: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {count || 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.saleView'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 125,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
                     </span>
                 ),
             },
@@ -214,26 +259,121 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 ),
             },
             {
-                title: messages('common.artist'),
-                dataIndex: 'artistName',
-                key: 'artistName',
-                width: 90,
+                title: 'ISRC',
+                dataIndex: 'isrc',
+                key: 'isrc',
+                width: 100,
                 ellipsis: true,
                 render: (text: string) => (
-                    <span className="truncate text-gray-600 dark:text-zinc-400">
+                    <span className="truncate text-gray-500 dark:text-zinc-400">
                         {text || '—'}
                     </span>
                 ),
             },
             {
-                title: 'ISRC',
-                dataIndex: 'isrc',
-                key: 'isrc',
-                width: 85,
+                title: messages('common.saleView'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 90,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'revenueUsd',
+                key: 'revenueUsd',
+                width: 100,
+                render: (val: number) => (
+                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                        $
+                        {val
+                            ? val.toLocaleString(undefined, {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                              })
+                            : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages]
+    );
+
+    const releaseColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: 50,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.release'),
+                dataIndex: 'title',
+                key: 'title',
+                width: 130,
+                ellipsis: true,
+                fixed: 'left' as const,
+                render: (text: string, record: RevenueReleaseItem) => (
+                    <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
+                            <ReleaseCoverImage
+                                width={32}
+                                height={32}
+                                data={{ id: record.releaseId } as any}
+                            />
+                        </div>
+                        <div className="flex min-w-0 flex-col">
+                            <CustomTooltip
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <span
+                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    onClick={() =>
+                                        setReleaseDetailModal({
+                                            open: true,
+                                            title: text,
+                                            releaseId: record.releaseId,
+                                        })
+                                    }
+                                >
+                                    {text}
+                                </span>
+                            </CustomTooltip>
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                title: 'UPC',
+                dataIndex: 'upc',
+                key: 'upc',
+                width: 95,
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-500 dark:text-zinc-400">
                         {text || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.saleView'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 90,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
                     </span>
                 ),
             },
@@ -287,7 +427,76 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 ),
             },
             {
-                title: messages('common.quantity'),
+                title: messages('common.saleView'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 100,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'revenueUsd',
+                key: 'revenueUsd',
+                width: 120,
+                render: (val: number) => (
+                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                        $
+                        {val
+                            ? val.toLocaleString(undefined, {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                              })
+                            : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages]
+    );
+
+    const tenantColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: 50,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('tenant.name'),
+                dataIndex: 'tenantName',
+                key: 'tenantName',
+                width: 200,
+                ellipsis: true,
+                fixed: 'left' as const,
+                render: (text: string, record: RevenueTenantItem) => (
+                    <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
+                            <ReleaseCoverImage
+                                width={32}
+                                height={32}
+                                src={record.logo}
+                            />
+                        </div>
+                        <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
+                            {text || '-'}
+                        </span>
+                    </div>
+                ),
+            },
+            {
+                title: messages('common.saleView'),
                 dataIndex: 'quantity',
                 key: 'quantity',
                 width: 100,
@@ -325,24 +534,39 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                     <RankingCard
                         title={topRankingTitle(messages('artist.artists'))}
                         columns={artistColumns}
-                        dataSource={topArtistData}
+                        dataSource={topArtistData?.items}
                         loading={isArtistsLoading}
                         rowKey="artistId"
                         labelKey="artistName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.BAR}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('common.tracks'))}
                         columns={trackColumns}
-                        dataSource={topTrackData}
+                        dataSource={topTrackData?.items}
                         loading={isTracksLoading}
                         rowKey="isrc"
                         labelKey="title"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.BAR}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.releases'))}
+                        columns={releaseColumns}
+                        dataSource={topReleaseData?.items}
+                        loading={isReleasesLoading}
+                        rowKey="releaseId"
+                        labelKey="title"
+                        valueKey="revenueUsd"
+                        defaultView={RankingCardView.BAR}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -355,6 +579,18 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                         labelKey="dspName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('tenant.workspaces'))}
+                        columns={tenantColumns}
+                        dataSource={topTenantData?.items}
+                        loading={isTenantsLoading}
+                        rowKey="tenantId"
+                        labelKey="tenantName"
+                        valueKey="revenueUsd"
+                        defaultView={RankingCardView.BAR}
                     />
                 </Col>
             </Row>
@@ -381,6 +617,19 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 }
                 title={trackDetailModal.title}
                 isrc={trackDetailModal.isrc}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailReleaseAnalyticsModal
+                open={releaseDetailModal.open}
+                onClose={() =>
+                    setReleaseDetailModal((prev) => ({
+                        ...prev,
+                        open: false,
+                    }))
+                }
+                title={releaseDetailModal.title}
+                releaseId={releaseDetailModal.releaseId}
                 fromDate={fromDate}
                 toDate={toDate}
             />

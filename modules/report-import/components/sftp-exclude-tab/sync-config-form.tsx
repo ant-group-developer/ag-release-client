@@ -27,6 +27,7 @@ export default function SyncConfigForm() {
         useGetSyncConfig();
     const { updateSyncConfig, isPending: isUpdatingConfig } =
         useUpdateSyncConfig();
+    const mode = Form.useWatch('mode', form);
 
     useEffect(() => {
         if (syncConfigData) {
@@ -47,7 +48,7 @@ export default function SyncConfigForm() {
     }, [syncConfigData, form]);
 
     const onFinishConfig = (values: any) => {
-        const payload = {
+        const payload = values.mode === 'auto' ? {
             mode: values.mode,
             cron: cronValue,
             startPeriod: values.startPeriod
@@ -57,6 +58,8 @@ export default function SyncConfigForm() {
             force: !!values.force,
             excludeEnabled: !!values.excludeEnabled,
             maxRetries: values.maxRetries || 0,
+        } : {
+            mode: values.mode,
         };
         updateSyncConfig(payload);
     };
@@ -69,131 +72,150 @@ export default function SyncConfigForm() {
                     label={messages(
                         'reportConfigs.sftpExcludePatterns.syncConfig.mode'
                     )}
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.select'),
-                        },
-                    ]}
-                >
-                    <Select
-                        options={[
-                            { label: 'Auto', value: 'auto' },
-                            { label: 'Manual', value: 'manual' },
-                        ]}
-                        style={{ width: '100%', maxWidth: 600 }}
-                    />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="startPeriod"
-                    label={messages(
-                        'reportConfigs.sftpExcludePatterns.syncConfig.startPeriod'
-                    )}
-                    rules={[
-                        {
-                            required: true,
-                            message: messages(
-                                'reportConfigs.sftpExcludePatterns.sync.requiredStartPeriod'
-                            ),
-                        },
-                    ]}
-                >
-                    <DatePicker
-                        picker="month"
-                        format="MM/YYYY"
-                        style={{ width: '100%', maxWidth: 600 }}
-                    />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="categories"
-                    label={messages(
-                        'reportConfigs.sftpExcludePatterns.syncConfig.categories'
-                    )}
-                    rules={[
-                        {
-                            required: true,
-                            message: messages(
-                                'reportConfigs.sftpExcludePatterns.sync.requiredCategories'
-                            ),
-                        },
-                    ]}
-                >
-                    <Select
-                        mode="multiple"
-                        placeholder={messages(
-                            'reportConfigs.sftpExcludePatterns.sync.categoriesPlaceholder'
-                        )}
-                        options={[
-                            {
-                                label: messages(
-                                    'reportConfigs.sftpExcludePatterns.sync.salesLabel'
-                                ),
-                                value: 'sales',
-                            },
-                            {
-                                label: messages(
-                                    'reportConfigs.sftpExcludePatterns.sync.trendsLabel'
-                                ),
-                                value: 'trends',
-                            },
-                        ]}
-                        style={{ width: '100%', maxWidth: 600 }}
-                    />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="maxRetries"
-                    label={messages(
-                        'reportConfigs.sftpExcludePatterns.syncConfig.maxRetries'
-                    )}
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
-                >
-                    <InputNumber
-                        min={0}
-                        max={10}
-                        style={{ width: '100%', maxWidth: 600 }}
-                    />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="force"
-                    label={messages(
-                        'reportConfigs.sftpExcludePatterns.syncConfig.force'
-                    )}
                     valuePropName="checked"
+                    getValueProps={(value) => ({ checked: value === 'auto' })}
+                    getValueFromEvent={(checked) => (checked ? 'auto' : 'manual')}
                 >
-                    <Switch />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="excludeEnabled"
-                    label={messages(
-                        'reportConfigs.sftpExcludePatterns.syncConfig.excludeEnabled'
-                    )}
-                    valuePropName="checked"
-                >
-                    <Switch />
-                </AppFormItem>
-
-                <AppFormItem
-                    label={messages(
-                        'reportConfigs.sftpExcludePatterns.syncConfig.cron'
-                    )}
-                >
-                    <Cron
-                        value={cronValue}
-                        setValue={setCronValue}
-                        clearButtonProps={{ type: 'default' }}
-                        disabled={isUpdatingConfig}
+                    <Switch
+                        checkedChildren={messages('status.enable')}
+                        unCheckedChildren={messages('status.disable')}
                     />
                 </AppFormItem>
+
+                {mode === 'auto' && (
+                    <>
+                        <AppFormItem
+                            name="startPeriod"
+                            label={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.startPeriod'
+                            )}
+                            tooltipInfo={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.startPeriodTooltip'
+                            )}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages(
+                                        'reportConfigs.sftpExcludePatterns.sync.requiredStartPeriod'
+                                    ),
+                                },
+                            ]}
+                        >
+                            <DatePicker
+                                picker="month"
+                                format="MM/YYYY"
+                                style={{ width: '100%', maxWidth: 600 }}
+                            />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="categories"
+                            label={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.categories'
+                            )}
+                            tooltipInfo={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.categoriesTooltip'
+                            )}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages(
+                                        'reportConfigs.sftpExcludePatterns.sync.requiredCategories'
+                                    ),
+                                },
+                            ]}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder={messages(
+                                    'reportConfigs.sftpExcludePatterns.sync.categoriesPlaceholder'
+                                )}
+                                options={[
+                                    {
+                                        label: messages(
+                                            'reportConfigs.sftpExcludePatterns.sync.salesLabel'
+                                        ),
+                                        value: 'sales',
+                                    },
+                                    {
+                                        label: messages(
+                                            'reportConfigs.sftpExcludePatterns.sync.trendsLabel'
+                                        ),
+                                        value: 'trends',
+                                    },
+                                ]}
+                                style={{ width: '100%', maxWidth: 600 }}
+                            />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="maxRetries"
+                            label={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.maxRetries'
+                            )}
+                            tooltipInfo={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.maxRetriesTooltip'
+                            )}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: messages('validation.input'),
+                                },
+                            ]}
+                        >
+                            <InputNumber
+                                min={0}
+                                max={10}
+                                style={{ width: '100%', maxWidth: 600 }}
+                            />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="force"
+                            label={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.force'
+                            )}
+                            tooltipInfo={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.forceTooltip'
+                            )}
+                            valuePropName="checked"
+                        >
+                            <Switch
+                                checkedChildren={messages('status.enable')}
+                                unCheckedChildren={messages('status.disable')}
+                            />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="excludeEnabled"
+                            label={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.excludeEnabled'
+                            )}
+                            tooltipInfo={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.excludeEnabledTooltip'
+                            )}
+                            valuePropName="checked"
+                        >
+                            <Switch
+                                checkedChildren={messages('status.enable')}
+                                unCheckedChildren={messages('status.disable')}
+                            />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            label={messages(
+                                'reportConfigs.sftpExcludePatterns.syncConfig.cron'
+                            )}
+                        >
+                            <Cron
+                                value={cronValue}
+                                setValue={setCronValue}
+                                clearButtonProps={{ type: 'default' }}
+                                disabled={isUpdatingConfig}
+                            />
+                        </AppFormItem>
+                    </>
+                )}
 
                 <AppFormItem
                     wrapperCol={{

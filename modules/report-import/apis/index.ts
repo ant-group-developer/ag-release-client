@@ -105,13 +105,13 @@ export const etlSyncConfigApis = {
             '/etl/sync-config'
         );
     },
-    update: (payload: SyncConfigData) => {
+    update: (payload: Partial<SyncConfigData>) => {
         return axiosInstance.put<DetailResponse<SyncConfigData>>(
             '/etl/sync-config',
             payload
         );
     },
-    sync: (payload: { period: string; force: boolean; categories?: string[] }) => {
+    sync: (payload: { month_start: string; month_end: string; force: boolean; categories?: string[] }) => {
         return axiosInstance.post<SuccessResponse>('/etl/ftp/sync', payload);
     },
     syncAll: (payload: { startPeriod: string; force: boolean; categories?: string[] }) => {

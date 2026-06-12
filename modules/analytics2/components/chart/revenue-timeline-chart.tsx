@@ -157,9 +157,7 @@ export default function RevenueTimelineChart({
                                     content={
                                         <ThreeColumnTooltip
                                             headers={[
-                                                messages(
-                                                    'analytics.chart.dsp'
-                                                ),
+                                                messages('analytics.chart.dsp'),
                                                 messages(
                                                     'analytics.revenue.label'
                                                 ),
@@ -168,6 +166,10 @@ export default function RevenueTimelineChart({
                                                 ),
                                             ]}
                                             primaryFormatter={formatValue}
+                                            showTotal
+                                            totalLabel={messages(
+                                                'common.total'
+                                            )}
                                             extraColumn={{
                                                 metaKey: 'Quantity',
                                                 formatter: (value) =>

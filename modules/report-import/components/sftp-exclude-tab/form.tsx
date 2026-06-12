@@ -35,7 +35,6 @@ const PATTERN_TYPE_OPTIONS = [
 const SCOPE_OPTIONS = [
     { label: 'Folder', value: FTP_EXCLUDE_PATTERN_SCOPE.FOLDER },
     { label: 'File', value: FTP_EXCLUDE_PATTERN_SCOPE.FILE },
-    { label: 'Both', value: FTP_EXCLUDE_PATTERN_SCOPE.BOTH },
 ];
 
 export default function FtpExcludePatternForm({ ...props }: Props) {
@@ -198,7 +197,10 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
                         label={messages('reportConfigs.sftpExcludePatterns.isActive')}
                         valuePropName="checked"
                     >
-                        <Switch />
+                        <Switch
+                            checkedChildren={messages('status.enable')}
+                            unCheckedChildren={messages('status.disable')}
+                        />
                     </AppFormItem>
                 </AppForm>
             </Spin>

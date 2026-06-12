@@ -1,5 +1,6 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { DetailResponse } from '@/types/api';
+import axios from 'axios';
 import { Form, Modal, Spin } from 'antd';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +17,28 @@ import {
 import { ImportForm } from './import-form';
 import { ImportModalFooter } from './import-modal-footer';
 import { ImportResultView } from './import-result-view';
+
+const uploadFileWithProgress = async (
+    url: string,
+    file: File,
+    onProgress: (percent: number) => void
+): Promise<void> => {
+    const response = await axios.put(url, file, {
+        headers: {
+            'Content-Type': file.type || 'application/octet-stream',
+        },
+        onUploadProgress: (progressEvent) => {
+            const percent = Math.round(
+                (progressEvent.loaded * 100) / (progressEvent.total || 1)
+            );
+            onProgress(percent);
+        },
+    });
+
+    if (!response.status || response.status >= 400) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+};
 
 interface ImportModalProps {
     open: boolean;
@@ -41,7 +64,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     );
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadResults, setUploadResults] = useState<
-        Record<string, { status: FileUploadStatus; error?: string }>
+        Record<string, { status: FileUploadStatus; progress?: number; error?: string }>
     >({});
 
     const [startedJobId, setStartedJobId] = useState<string | null>(null);
@@ -64,7 +87,15 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
     useEffect(() => {
         if (viewJobId && jobStatus) {
-            const files = jobStatus.params?.files || [];
+            let paramsObj: any = jobStatus.params;
+            if (typeof paramsObj === 'string') {
+                try {
+                    paramsObj = JSON.parse(paramsObj);
+                } catch (e) {
+                    console.error('Failed to parse jobStatus.params:', e);
+                }
+            }
+            const files = paramsObj?.files || [];
             const matchedFiles: PreValidateImportMatchedFile[] = files.map(
                 (f: any) => ({
                     path: f.path || f.name || 'Unknown',
@@ -178,22 +209,25 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                                 try {
                                     if (file && file.originFileObj) {
-                                        const response = await fetch(
+                                        await uploadFileWithProgress(
                                             matchedItem.uploadUrl,
-                                            {
-                                                method: 'PUT',
-                                                body: file.originFileObj,
+                                            file.originFileObj,
+                                            (percent) => {
+                                                setUploadResults((prev) => ({
+                                                    ...prev,
+                                                    [matchedItem.path]: {
+                                                        ...prev[matchedItem.path],
+                                                        status: FileUploadStatus.UPLOADING,
+                                                        progress: percent,
+                                                    },
+                                                }));
                                             }
                                         );
-                                        if (!response.ok) {
-                                            throw new Error(
-                                                `HTTP error! status: ${response.status}`
-                                            );
-                                        }
                                         setUploadResults((prev) => ({
                                             ...prev,
                                             [matchedItem.path]: {
                                                 status: FileUploadStatus.SUCCESS,
+                                                progress: 100,
                                             },
                                         }));
                                     } else {
@@ -293,7 +327,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         <Modal
             title={messages('reportConfigs.importModalTitle')}
             open={open}
-            confirmLoading={isPending || isUploading || isJobProcessing}
+            centered
+            confirmLoading={isPending}
             onOk={() => {
                 if (validationResult) {
                     handleCloseModal();

@@ -18,7 +18,7 @@ interface ImportResultViewProps {
     uploadError: string | null;
     uploadResults: Record<
         string,
-        { status: FileUploadStatus; error?: string }
+        { status: FileUploadStatus; progress?: number; error?: string }
     >;
     readOnly?: boolean;
 }
@@ -196,6 +196,7 @@ export const ImportResultView: React.FC<ImportResultViewProps> = ({
                                                         }}
                                                     >
                                                         {messages('reportConfigs.importResult.uploading')}
+                                                        {result.progress !== undefined && ` (${result.progress}%)`}
                                                     </span>
                                                 )}
                                                 {result?.status ===
@@ -371,15 +372,13 @@ export const ImportResultView: React.FC<ImportResultViewProps> = ({
                     <div style={{ marginTop: 8 }}>
                         <Progress
                             percent={
-                                jobStatus.status === ImportJobStatus.COMPLETED
-                                    ? 100
-                                    : jobStatus.progress.total > 0
-                                      ? Math.round(
-                                            (jobStatus.progress.current /
-                                                jobStatus.progress.total) *
-                                                100
-                                        )
-                                      : 0
+                                jobStatus.progress.total > 0
+                                    ? Math.round(
+                                          (jobStatus.progress.current /
+                                              jobStatus.progress.total) *
+                                              100
+                                      )
+                                    : 0
                             }
                             status={
                                 jobStatus.status === ImportJobStatus.COMPLETED
@@ -390,10 +389,7 @@ export const ImportResultView: React.FC<ImportResultViewProps> = ({
                                       : 'active'
                             }
                             format={() => {
-                                const current = jobStatus.status === ImportJobStatus.COMPLETED
-                                    ? jobStatus.progress.total
-                                    : jobStatus.progress.current;
-                                return `${current}/${jobStatus.progress.total} ${messages('reportConfigs.importResult.filesUnit')}`;
+                                return `${jobStatus.progress.current}/${jobStatus.progress.total} ${messages('reportConfigs.importResult.filesUnit')}`;
                             }}
                         />
                         {jobStatus.progress.label && (
@@ -408,6 +404,113 @@ export const ImportResultView: React.FC<ImportResultViewProps> = ({
                             </div>
                         )}
                     </div>
+
+                    {/* Individual Files Progress */}
+                    {validationResult.matched?.length > 0 && (
+                        <div style={{ marginTop: 8 }}>
+                            <div
+                                style={{
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    color: token.colorText,
+                                    marginBottom: 8,
+                                }}
+                            >
+                                {messages('reportConfigs.importResult.detailedProgress')}
+                            </div>
+                            <div
+                                style={{
+                                    maxHeight: 180,
+                                    overflowY: 'auto',
+                                    border: `1px solid ${token.colorBorderSecondary}`,
+                                    borderRadius: token.borderRadiusLG,
+                                    padding: '12px',
+                                    backgroundColor: token.colorBgLayout,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 12,
+                                }}
+                            >
+                                {validationResult.matched.map((file: any, idx: number) => {
+                                    const totalFiles = jobStatus.progress.total || validationResult.matched.length;
+                                    const currentIdx = jobStatus.progress.current;
+                                    
+                                    let percent = 0;
+                                    let status: 'normal' | 'active' | 'success' | 'exception' = 'normal';
+                                    
+                                    if (jobStatus.status === ImportJobStatus.COMPLETED) {
+                                        percent = 100;
+                                        status = 'success';
+                                    } else if (idx < currentIdx) {
+                                        percent = 100;
+                                        status = 'success';
+                                    } else if (idx === currentIdx) {
+                                        if (jobStatus.status === ImportJobStatus.FAILED) {
+                                            percent = 100;
+                                            status = 'exception';
+                                        } else {
+                                            status = 'active';
+                                            const overallRowPercent = jobStatus.rows.total > 0
+                                                ? Math.round((jobStatus.rows.processed / jobStatus.rows.total) * 100)
+                                                : 0;
+                                            percent = totalFiles > 0
+                                                ? Math.min(100, Math.max(0, (overallRowPercent * totalFiles) - (currentIdx * 100)))
+                                                : 0;
+                                        }
+                                    } else {
+                                        percent = 0;
+                                        status = 'normal';
+                                    }
+
+                                    return (
+                                        <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span
+                                                    style={{
+                                                        fontSize: 12,
+                                                        fontWeight: 500,
+                                                        color: token.colorText,
+                                                        wordBreak: 'break-all',
+                                                        marginRight: 8,
+                                                    }}
+                                                >
+                                                    {file.path}
+                                                </span>
+                                                <span style={{ fontSize: 11, color: token.colorTextDescription, flexShrink: 0 }}>
+                                                    {status === 'success' && (
+                                                        <span style={{ color: token.colorSuccess }}>
+                                                            {messages('reportConfigs.importResult.statusCompleted')}
+                                                        </span>
+                                                    )}
+                                                    {status === 'active' && (
+                                                        <span style={{ color: token.colorPrimary }}>
+                                                            {messages('reportConfigs.importResult.statusProcessing')}
+                                                        </span>
+                                                    )}
+                                                    {status === 'exception' && (
+                                                        <span style={{ color: token.colorError }}>
+                                                            {messages('reportConfigs.importResult.statusFailed')}
+                                                        </span>
+                                                    )}
+                                                    {status === 'normal' && (
+                                                        <span>
+                                                            {messages('reportConfigs.importResult.statusPending')}
+                                                        </span>
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <Progress
+                                                percent={percent}
+                                                status={status}
+                                                size="small"
+                                                strokeColor={status === 'success' ? token.colorSuccess : undefined}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Processing Statistics */}
                     <div
