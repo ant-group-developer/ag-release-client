@@ -31,13 +31,13 @@ export default function ChannelHistoryModal() {
                 columns={[
                     {
                         title: messages('common.thumbnail'),
-                        dataIndex: ['channel', 'thumbId'],
-                        key: 'thumbId',
+                        dataIndex: ['channel', 'thumbUrl'],
+                        key: 'thumbUrl',
                         width: 90,
                         align: 'center',
                         render: (_, record) => (
                             <ChannelThumbImage
-                                thumbId={record.channel?.thumbId}
+                                thumbUrl={record.channel?.thumbUrl}
                                 name={
                                     record.channel?.name ?? channel?.name ?? ''
                                 }

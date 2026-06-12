@@ -3,7 +3,8 @@
 import { AppSearchProps, OnSearchType } from '@/components/ui/input/search';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { CommonParams } from '@/types/api';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useQueryParams } from './use-query-params';
 
 export type OnChangeFilter<DataFilterType> = (
@@ -67,12 +68,11 @@ const compareObjects = (obj1: any, obj2: any) => {
 export const useFilter = <DataFilterType extends CommonParams>(
     defaultFilter: DataFilterType
 ): UseFilterProps<DataFilterType> => {
-    const router = useRouter();
     const pathname = usePathname();
 
     const searchParams = useSearchParams();
     const queryParams = useQueryParams();
-
+    const router = useRouter();
     const dataFilter: DataFilterType = {
         ...defaultFilter,
         ...queryParams,
@@ -142,7 +142,7 @@ export const useFilter = <DataFilterType extends CommonParams>(
     };
 
     const removeFilter = () => {
-        router.push(pathname ?? '');
+        window.history.pushState(null, '', pathname ?? '');
     };
 
     removeNullValue(dataFilter);

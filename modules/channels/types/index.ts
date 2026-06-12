@@ -7,7 +7,7 @@ export interface ChannelsData extends CommonAttribute {
     status?: string | null;
     error?: string | null;
     youtubeChannelId?: string | null;
-    thumbId?: string | null;
+    thumbUrl?: string | null;
     tenant?: Pick<TenantData, 'id' | 'name'>;
     histories?: ChannelHistoryData[];
     historyCount?: number;
@@ -26,7 +26,7 @@ export interface ChannelHistoryData extends CommonAttribute {
 export interface ChannelsSimpleData
     extends Pick<
         ChannelsData,
-        'id' | 'name' | 'youtubeChannelId' | 'thumbId'
+        'id' | 'name' | 'youtubeChannelId' | 'thumbUrl'
     > {}
 
 export interface ChannelDataFilter extends CommonParams {
