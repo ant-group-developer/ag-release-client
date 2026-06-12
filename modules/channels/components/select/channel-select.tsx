@@ -1,5 +1,6 @@
+import { PAGE_SIZE_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useGetListSimpleChannel } from '@/modules/channels/hooks/use-get-list-simple-channel';
+import { useGetListChannelForVideo } from '@/modules/channels/hooks/use-get-list-channel-for-video';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
@@ -7,9 +8,12 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function ChannelSelect({ fallBack, ...props }: Props) {
-    const { channelsData } = useGetListSimpleChannel();
+    const { channelsData, isFetching } = useGetListChannelForVideo({
+        page: 1,
+        pageSize: PAGE_SIZE_LARGE,
+    });
     const option =
-        channelsData?.map((item) => {
+        channelsData.items?.map((item) => {
             return {
                 id: item.id,
                 value: item.id,
@@ -36,6 +40,7 @@ export default function ChannelSelect({ fallBack, ...props }: Props) {
             }
             options={option}
             labelRender={labelRender}
+            loading={isFetching}
         />
     );
 }

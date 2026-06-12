@@ -19,6 +19,15 @@ export const channelApi = {
         );
     },
 
+    getListForVideo: (params: ChannelDataFilter) => {
+        return axiosInstance.get<PaginationResponse<ChannelsData>>(
+            '/channels/video-options',
+            {
+                params,
+            }
+        );
+    },
+
     getDetail: (id: ChannelsData['id']) => {
         return axiosInstance.get<DetailResponse<ChannelsData>>(
             `/channels/${id}`

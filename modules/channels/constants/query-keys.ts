@@ -11,6 +11,8 @@ export const channelQueryKeys = {
             ...channelQueryKeys.all,
             QUERY_KEY.CHANNEL.GET_CHANNEL_LIST_SIMPLE,
         ] as const,
+    listForVideo: (params: ChannelDataFilter) =>
+        [...channelQueryKeys.all, 'video-options', params] as const,
     list: (params?: ChannelDataFilter) =>
         params
             ? ([...channelQueryKeys.lists(), params] as const)

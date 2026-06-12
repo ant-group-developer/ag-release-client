@@ -10,6 +10,7 @@ import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ChannelsHeader from '@/modules/channels/components/header';
 import ChannelFormModal from '@/modules/channels/components/modal/channel-form';
+import ChannelHistoryModal from '@/modules/channels/components/modal/channel-history-modal';
 import { ChannelsTable } from '@/modules/channels/components/table';
 import { TYPE_MODAL_CHANNELS } from '@/modules/channels/enums';
 import { useDeleteChannel } from '@/modules/channels/hooks/use-delete-channel';
@@ -109,6 +110,10 @@ export default function Channels({}: Props) {
                         typeModal === TYPE_MODAL_CHANNELS.UPDATE) && (
                         <ChannelFormModal />
                     )}
+
+                {typeModal === TYPE_MODAL_CHANNELS.HISTORY && (
+                    <ChannelHistoryModal />
+                )}
             </PageContainer>
         </AppPageWrapper>
     );
