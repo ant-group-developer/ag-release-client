@@ -3,7 +3,7 @@
 import { AppSearchProps, OnSearchType } from '@/components/ui/input/search';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { CommonParams } from '@/types/api';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useQueryParams } from './use-query-params';
 
 export type OnChangeFilter<DataFilterType> = (
@@ -67,7 +67,6 @@ const compareObjects = (obj1: any, obj2: any) => {
 export const useFilter = <DataFilterType extends CommonParams>(
     defaultFilter: DataFilterType
 ): UseFilterProps<DataFilterType> => {
-    const router = useRouter();
     const pathname = usePathname();
 
     const searchParams = useSearchParams();
@@ -83,14 +82,17 @@ export const useFilter = <DataFilterType extends CommonParams>(
             Array.from((searchParams ?? new URLSearchParams()).entries())
         );
         for (const [key, value] of Object.entries(params)) {
-            if (value) {
-                current.set(key, value as string);
+            if (value || value === 0) {
+                current.set(key, String(value));
             } else {
                 current.delete(key);
             }
         }
 
-        router.push(`${pathname}?${current.toString()}`);
+        const queryString = current.toString();
+        const href = queryString ? `${pathname}?${queryString}` : pathname;
+
+        window.history.pushState(null, '', href);
     };
 
     const onChangePage: OnChangePage = (page, pageSize = PAGE_SIZE) => {
@@ -142,7 +144,7 @@ export const useFilter = <DataFilterType extends CommonParams>(
     };
 
     const removeFilter = () => {
-        router.push(pathname ?? '');
+        window.history.pushState(null, '', pathname ?? '');
     };
 
     removeNullValue(dataFilter);
