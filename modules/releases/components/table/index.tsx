@@ -145,7 +145,7 @@ export default function ReleasesTable({
             key: 'upc',
             dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value, record) => (
                 <Paragraph
                     data-stop-row-click="true"

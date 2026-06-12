@@ -18,10 +18,16 @@ export enum PATTERN_TYPE {
 export enum FTP_EXCLUDE_PATTERN_SCOPE {
     FOLDER = 'folder',
     FILE = 'file',
-    BOTH = 'both',
 }
 
 export enum ACTIVE_STATUS {
     ACTIVE = 1,
     INACTIVE = 0,
 }
+
+export enum REPORT_IMPORT_TAB {
+    CONFIG = 'config-report',
+    IMPORT = 'import-report',
+    SFTP = 'import-sftp',
+}
+

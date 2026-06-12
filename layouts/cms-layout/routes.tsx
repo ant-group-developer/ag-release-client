@@ -151,6 +151,16 @@ export const adminRoutes: RouteNode[] = [
                 // hidden: true,
             },
             {
+                id: 'analytics2Detail',
+                type: 'link',
+                label: 'analytics.label',
+                title: 'Analytics 2 Detail',
+                hidden: true,
+                href: APP_ROUTES.ANALYTICS2_DETAIL,
+                icon: ChartNoAxesCombined,
+                required: { permission: [PERMISSION.ANALYTICS.READ] },
+            },
+            {
                 id: 'analytics',
                 type: 'link',
                 label: 'analytics.label',

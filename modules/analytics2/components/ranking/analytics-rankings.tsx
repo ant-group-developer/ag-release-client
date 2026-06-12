@@ -1,15 +1,17 @@
 'use client';
 
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { APP_ROUTES } from '@/enums/routes';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
     useGetArtistRanking,
     useGetLabelRanking,
     useGetReleaseRanking,
+    useGetTenantRanking,
     useGetTrackRanking,
 } from '../../hooks/use-get-rankings';
 import { useGetTerTimeline } from '../../hooks/use-get-ter-timeline';
@@ -17,6 +19,7 @@ import {
     ArtistRankingItem,
     LabelRankingItem,
     ReleaseRankingItem,
+    TenantRankingItem,
     TrackRankingItem,
 } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
@@ -107,6 +110,14 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             pageSize: topN,
         });
 
+    const { tenantRankingData, isFetching: isTenantsFetching } =
+        useGetTenantRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
     const { timelineData: terTimelineData, isFetching: isTerFetching } =
         useGetTerTimeline({
             fromDate,
@@ -114,29 +125,6 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             topN,
             includeOther: true,
         });
-
-    const territoryRankingData = useMemo(() => {
-        if (!terTimelineData?.items) return [];
-
-        const totals: Record<string, number> = {};
-        terTimelineData.items.forEach((item) => {
-            item.series.forEach((s) => {
-                const name = s.territory || 'Other';
-                totals[name] = (totals[name] ?? 0) + s.trendViews;
-            });
-        });
-
-        return Object.entries(totals)
-            .map(([territory, totalViews]) => ({
-                territory,
-                totalViews,
-            }))
-            .sort((a, b) => b.totalViews - a.totalViews)
-            .map((item, index) => ({
-                rank: index + 1,
-                ...item,
-            }));
-    }, [terTimelineData]);
 
     // Columns config
     const trackColumns = [
@@ -229,7 +217,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         //     ),
         // },
         {
-            title: messages('common.streams'),
+            title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 70,
@@ -330,7 +318,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             ),
         },
         {
-            title: messages('common.streams'),
+            title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 70,
@@ -399,7 +387,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             ),
         },
         {
-            title: messages('common.streams'),
+            title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 125,
@@ -479,7 +467,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             ),
         },
         {
-            title: messages('common.streams'),
+            title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 90,
@@ -491,7 +479,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         },
     ];
 
-    const territoryColumns = [
+    const tenantColumns = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -506,23 +494,30 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             ),
         },
         {
-            title: messages('common.region'),
-            dataIndex: 'territory',
-            key: 'territory',
+            title: messages('tenant.name'),
+            dataIndex: 'tenantName',
+            key: 'tenantName',
             width: 200,
             ellipsis: true,
             fixed: 'left' as const,
-            render: (text: string) => (
-                <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                    {text}
-                </span>
+            render: (text: string, record: TenantRankingItem) => (
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={32}
+                        height={32}
+                        src={record.logo}
+                    />
+                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
+                        {text || '-'}
+                    </span>
+                </div>
             ),
         },
         {
-            title: messages('common.streams'),
+            title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 125,
+            width: 90,
             render: (views: number) => (
                 <span className="font-semibold text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -538,62 +533,66 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     <RankingCard
                         title={topRankingTitle(messages('common.tracks'))}
                         columns={trackColumns}
-                        dataSource={trackRankingData}
+                        dataSource={trackRankingData?.items}
                         loading={isTracksFetching}
                         rowKey="isrc"
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('common.releases'))}
                         columns={releaseColumns}
-                        dataSource={releaseRankingData}
+                        dataSource={releaseRankingData?.items}
                         loading={isReleasesFetching}
                         rowKey="releaseId"
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('artist.artists'))}
                         columns={artistColumns}
-                        dataSource={artistRankingData}
+                        dataSource={artistRankingData?.items}
                         loading={isArtistsFetching}
                         rowKey="artistId"
                         labelKey="artistName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.BAR}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('common.labels'))}
                         columns={labelColumns}
-                        dataSource={labelRankingData}
+                        dataSource={labelRankingData?.items}
                         loading={isLabelsFetching}
                         rowKey="labelId"
                         labelKey="labelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.BAR}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_LABELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
-                {/* <Col span={12} xs={24} lg={12}>
+                <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.region'))}
-                        columns={territoryColumns}
-                        dataSource={territoryRankingData}
-                        loading={isTerFetching}
-                        rowKey="territory"
-                        labelKey="territory"
+                        title={topRankingTitle(messages('tenant.workspaces'))}
+                        columns={tenantColumns}
+                        dataSource={tenantRankingData?.items}
+                        loading={isTenantsFetching}
+                        rowKey="tenantId"
+                        labelKey="tenantName"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.LIST}
+                        defaultView={RankingCardView.BAR}
                     />
-                </Col> */}
+                </Col>
             </Row>
             <DetailReleaseAnalyticsModal
                 open={detailModal.open}

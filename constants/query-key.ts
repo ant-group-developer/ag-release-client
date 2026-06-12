@@ -372,6 +372,9 @@ export const QUERY_KEY = {
         KEY: 'ETL_JOBS',
         GET_LIST: 'GET_LIST_ETL_JOBS',
     },
+    ETL_SYNC_CONFIG: {
+        KEY: 'ETL_SYNC_CONFIG',
+    },
     FTP_EXCLUDE_PATTERN: {
         KEY: 'FTP_EXCLUDE_PATTERNS',
         GET_LIST: 'GET_LIST_FTP_EXCLUDE_PATTERNS',

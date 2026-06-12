@@ -1,7 +1,8 @@
 import CreateButton from '@/components/ui/button/create-button';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { theme } from 'antd';
+import { SyncOutlined } from '@ant-design/icons';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useGetListEtlJobs } from '../../hooks/use-get-list-etl-jobs';
@@ -19,7 +20,7 @@ export default function ImportTab() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const { etlJobsData, isLoading } = useGetListEtlJobs({
+    const { etlJobsData, isLoading, isFetching, refetch } = useGetListEtlJobs({
         page,
         pageSize,
     });
@@ -56,13 +57,28 @@ export default function ImportTab() {
                                 'reportConfigs.importResult.recentJobsTitle'
                             )}
                         </span>
-                        <CreateButton
-                            text={messages('reportConfigs.importReportBtn')}
-                            onClick={() => {
-                                setViewJobId(null);
-                                setIsModalOpen(true);
+                        <div
+                            style={{
+                                display: 'flex',
+                                gap: 8,
+                                alignItems: 'center',
                             }}
-                        />
+                        >
+                            <Button
+                                icon={<SyncOutlined />}
+                                onClick={() => refetch()}
+                                loading={isFetching}
+                            >
+                                {messages('common.refresh')}
+                            </Button>
+                            <CreateButton
+                                text={messages('reportConfigs.importReportBtn')}
+                                onClick={() => {
+                                    setViewJobId(null);
+                                    setIsModalOpen(true);
+                                }}
+                            />
+                        </div>
                     </div>
                 )}
                 sticky

@@ -1,28 +1,33 @@
 import axiosInstance from '@/api/axios-auth';
-import { DetailResponse } from '@/types/api';
+import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
-    DspTimelineData,
-    DspSalesTimelineData,
-    DspTimelineParams,
-    TerTimelineData,
-    TerTimelineParams,
-    RankingParams,
-    TrackRankingItem,
-    ReleaseRankingItem,
     ArtistRankingItem,
+    DspSalesTimelineData,
+    DspTimelineData,
+    DspTimelineParams,
     LabelRankingItem,
-    SyncRequest,
+    RankingParams,
+    ReleaseOverviewData,
+    ReleaseOverviewParams,
+    ReleaseRankingItem,
+    RevenueArtistItem,
+    RevenueDspItem,
+    RevenueQueryParams,
+    RevenueReleaseItem,
+    RevenueSummaryData,
+    RevenueTenantItem,
+    RevenueTimelineData,
+    RevenueTrackItem,
     SyncAllRequest,
     SyncAllResponse,
     SyncJobResponse,
-    RevenueQueryParams,
-    RevenueSummaryData,
-    RevenueTimelineData,
-    RevenueDspItem,
-    RevenueArtistItem,
-    RevenueTrackItem,
-    ReleaseOverviewParams,
-    ReleaseOverviewData,
+    SyncRequest,
+    TenantRankingItem,
+    TerTimelineData,
+    TerTimelineParams,
+    TrackRankingItem,
+    TrendViewSummaryData,
+    TrendViewSummaryParams,
 } from '../types';
 
 export const analytics2Apis = {
@@ -50,27 +55,39 @@ export const analytics2Apis = {
             params
         );
     },
+    getTrendViewSummary: (params: TrendViewSummaryParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewSummaryData>>(
+            '/analytics/trend-view/summary',
+            params
+        );
+    },
     getTrackRanking: (params: RankingParams) => {
-        return axiosInstance.post<DetailResponse<{ items: TrackRankingItem[] }>>(
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             '/analytics/ranking/tracks',
             params
         );
     },
     getReleaseRanking: (params: RankingParams) => {
-        return axiosInstance.post<DetailResponse<{ items: ReleaseRankingItem[] }>>(
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             '/analytics/ranking/releases',
             params
         );
     },
     getArtistRanking: (params: RankingParams) => {
-        return axiosInstance.post<DetailResponse<{ items: ArtistRankingItem[] }>>(
+        return axiosInstance.post<PaginationResponse<ArtistRankingItem>>(
             '/analytics/ranking/artists',
             params
         );
     },
     getLabelRanking: (params: RankingParams) => {
-        return axiosInstance.post<DetailResponse<{ items: LabelRankingItem[] }>>(
+        return axiosInstance.post<PaginationResponse<LabelRankingItem>>(
             '/analytics/ranking/labels',
+            params
+        );
+    },
+    getTenantRanking: (params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<TenantRankingItem>>(
+            '/analytics/ranking/tenants',
             params
         );
     },
@@ -102,20 +119,32 @@ export const analytics2Apis = {
         );
     },
     getRevenueTopDsp: (params: RevenueQueryParams) => {
-        return axiosInstance.post<DetailResponse<RevenueDspItem[]>>(
+        return axiosInstance.post<PaginationResponse<RevenueDspItem>>(
             '/analytics/revenue/top-dsp',
             params
         );
     },
+    getRevenueTopTenant: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueTenantItem>>(
+            '/analytics/revenue/top-tenant',
+            params
+        );
+    },
     getRevenueTopArtist: (params: RevenueQueryParams) => {
-        return axiosInstance.post<DetailResponse<RevenueArtistItem[]>>(
+        return axiosInstance.post<PaginationResponse<RevenueArtistItem>>(
             '/analytics/revenue/top-artist',
             params
         );
     },
     getRevenueTopTrack: (params: RevenueQueryParams) => {
-        return axiosInstance.post<DetailResponse<RevenueTrackItem[]>>(
+        return axiosInstance.post<PaginationResponse<RevenueTrackItem>>(
             '/analytics/revenue/top-track',
+            params
+        );
+    },
+    getRevenueTopRelease: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueReleaseItem>>(
+            '/analytics/revenue/top-release',
             params
         );
     },
@@ -131,19 +160,28 @@ export const analytics2Apis = {
             params
         );
     },
-    getReleaseDspSalesTimeline: (releaseId: string, params: DspTimelineParams) => {
+    getReleaseDspSalesTimeline: (
+        releaseId: string,
+        params: DspTimelineParams
+    ) => {
         return axiosInstance.post<DetailResponse<DspSalesTimelineData>>(
             `/analytics/release/${releaseId}/sales-view/dsp/timeline`,
             params
         );
     },
-    getReleaseDspDailyTimeline: (releaseId: string, params: DspTimelineParams) => {
+    getReleaseDspDailyTimeline: (
+        releaseId: string,
+        params: DspTimelineParams
+    ) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             `/analytics/release/${releaseId}/trend-view/dsp/timeline/daily`,
             params
         );
     },
-    getReleaseRevenueTimeline: (releaseId: string, params: RevenueQueryParams) => {
+    getReleaseRevenueTimeline: (
+        releaseId: string,
+        params: RevenueQueryParams
+    ) => {
         return axiosInstance.post<DetailResponse<RevenueTimelineData>>(
             `/analytics/release/${releaseId}/revenue/timeline`,
             params
@@ -221,23 +259,31 @@ export const analytics2Apis = {
             params
         );
     },
-    getArtistDspSalesTimeline: (artistId: string, params: DspTimelineParams) => {
+    getArtistDspSalesTimeline: (
+        artistId: string,
+        params: DspTimelineParams
+    ) => {
         return axiosInstance.post<DetailResponse<DspSalesTimelineData>>(
             `/analytics/artist/${artistId}/sales-view/dsp/timeline`,
             params
         );
     },
-    getArtistDspDailyTimeline: (artistId: string, params: DspTimelineParams) => {
+    getArtistDspDailyTimeline: (
+        artistId: string,
+        params: DspTimelineParams
+    ) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             `/analytics/artist/${artistId}/trend-view/dsp/timeline/daily`,
             params
         );
     },
-    getArtistRevenueTimeline: (artistId: string, params: RevenueQueryParams) => {
+    getArtistRevenueTimeline: (
+        artistId: string,
+        params: RevenueQueryParams
+    ) => {
         return axiosInstance.post<DetailResponse<RevenueTimelineData>>(
             `/analytics/artist/${artistId}/revenue/timeline`,
             params
         );
     },
 };
-

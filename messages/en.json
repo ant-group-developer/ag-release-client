@@ -99,6 +99,7 @@
         "pieChart": "Pie chart",
         "barChart": "Bar chart",
         "quantity": "Quantity",
+        "saleView": "Sale view",
         "tracks": "Tracks",
         "clearFilter": "Clear filter",
         "clearAll": "Clear all",
@@ -124,6 +125,7 @@
         "preparingDownloadDesc": "Process can take a few seconds, please wait",
         "assets": "Assets",
         "streams": "Streams",
+        "viewCount": "Views",
         "success": "Success",
         "compare": "Compare",
         "isSongCreatedByAi": "Is a song created by AI",
@@ -152,7 +154,7 @@
         "activities": "Activities",
         "revenue": "Revenue",
         "partners": "Partners",
-        "views": "Views",
+        "views": "Trend view",
         "fileName": "File name",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
@@ -617,6 +619,8 @@
         "label": "Status",
         "active": "Active",
         "inActive": "Inactive",
+        "enable": "Enable",
+        "disable": "Disable",
         "on": "On",
         "off": "Off",
         "block": "Blocked",
@@ -2006,7 +2010,7 @@
             "trends": "Trends",
             "sales": "Sales",
             "dsp": "DSP",
-            "view": "Plays",
+            "view": "Views",
             "monthly": "Monthly",
             "daily": "Daily"
         },
@@ -2018,7 +2022,7 @@
         },
         "revenue": {
             "totalRevenue": "Total Revenue",
-            "totalPlays": "Total Plays",
+            "totalPlays": "Total Usage",
             "totalTerritories": "Territories",
             "timelineTitle": "Revenue timeline",
             "modeRevenue": "Revenue (USD)",
@@ -2029,7 +2033,7 @@
             "plays": "Plays & Trends",
             "revenue": "Revenue"
         },
-        "totalTrendViews": "Trend Plays",
+        "totalTrendViews": "Trends view",
         "totalSalesViews": "Sales Views",
         "totalRevenueUsd": "Total Revenue (USD)",
         "detailTitle": "Detailed Analytics",
@@ -2449,7 +2453,7 @@
             "pattern": "Pattern",
             "patternType": "Pattern Type",
             "scope": "Scope",
-            "isActive": "Is Active",
+            "isActive": "Is active",
             "description": "Description",
             "action": {
                 "create": "Create Exclude Pattern",
@@ -2461,26 +2465,38 @@
                 "syncModeSingle": "Sync single month",
                 "syncModeAll": "Sync all from month",
                 "period": "Month",
+                "periodTooltip": "The month to start importing reports up to the present",
                 "startPeriod": "Start month",
                 "categories": "Report categories",
+                "categoriesTooltip": "This field is used to select categories for report import",
                 "force": "Force sync",
+                "forceTooltip": "If enabled, it will re-import even previously imported reports",
                 "categoriesPlaceholder": "Select categories",
                 "salesLabel": "Sales",
                 "trendsLabel": "Trends",
                 "requiredStartPeriod": "Please select start month!",
-                "requiredPeriod": "Please select month!",
+                "requiredPeriod": "Please select month range!",
                 "requiredCategories": "Please select at least one category!",
-                "success": "Sync data successfully!"
+                "success": "Sync data successfully!",
+                "preset": {
+                    "thisQuarter": "This quarter",
+                    "prevQuarter": "Previous quarter"
+                }
             },
             "syncConfig": {
                 "title": "Sync Configuration",
-                "mode": "Mode",
-                "cron": "Cron Expression",
+                "mode": "Active cron",
+                "cron": "Cron expression",
                 "startPeriod": "Start month",
+                "startPeriodTooltip": "The month to start importing reports up to the present",
                 "categories": "Report categories",
+                "categoriesTooltip": "This field is used to select categories for report import",
                 "force": "Force sync",
+                "forceTooltip": "If enabled, it will re-import even previously imported reports",
                 "excludeEnabled": "Exclude enabled",
+                "excludeEnabledTooltip": "If enabled, the Configure Exclude Patterns will be applied",
                 "maxRetries": "Max retries",
+                "maxRetriesTooltip": "If the import fails, it will retry this many times",
                 "save": "Save Configuration",
                 "saveSuccess": "Sync configuration updated successfully!",
                 "saveFailed": "Failed to update sync configuration!"
@@ -2549,7 +2565,8 @@
             "skippedRows": "Skipped",
             "errorRows": "Errors",
             "recentJobsTitle": "Recent Import/Sync Jobs",
-            "uploadReportBtn": "Import Report"
+            "uploadReportBtn": "Import Report",
+            "detailedProgress": "Detailed files progress"
         }
     },
     "analytics2": {

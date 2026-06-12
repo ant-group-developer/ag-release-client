@@ -99,6 +99,7 @@
         "pieChart": "Biểu đồ tròn",
         "barChart": "Biểu đồ cột",
         "quantity": "Số lượng",
+        "saleView": "Lượt sale",
         "tracks": "Bài hát",
         "clearFilter": "Xoá bộ lọc",
         "clearAll": "Xoá tất cả",
@@ -124,6 +125,7 @@
         "preparingDownloadDesc": "Quá trình có thể mất vài giây, vui lòng chờ",
         "assets": "Tài sản",
         "streams": "Lượt phát",
+        "viewCount": "Lượt xem",
         "success": "Thành công",
         "compare": "So sánh",
         "isSongCreatedByAi": "Bài hát được tạo bởi AI",
@@ -152,7 +154,7 @@
         "activities": "Hoạt động",
         "revenue": "Doanh thu",
         "partners": "Đối tác",
-        "views": "Lượt xem",
+        "views": "Trend view",
         "fileName": "Tên file",
         "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
@@ -613,6 +615,8 @@
         "label": "Trạng thái",
         "active": "Kích hoạt",
         "inActive": "Không kích hoạt",
+        "enable": "Kích hoạt",
+        "disable": "Vô hiệu hóa",
         "on": "Bật",
         "off": "Tắt",
         "block": "Khoá",
@@ -2004,7 +2008,7 @@
             "trends": "Xu hướng",
             "sales": "Doanh số",
             "dsp": "DSP",
-            "view": "Lượt nghe",
+            "view": "Lượt xem",
             "monthly": "Hàng tháng",
             "daily": "Hàng ngày"
         },
@@ -2016,7 +2020,7 @@
         },
         "revenue": {
             "totalRevenue": "Tổng doanh thu",
-            "totalPlays": "Tổng lượt nghe",
+            "totalPlays": "Tổng lượt sử dụng",
             "totalTerritories": "Quốc gia/Vùng lãnh thổ",
             "timelineTitle": "Doanh thu theo thời gian",
             "modeRevenue": "Doanh thu (USD)",
@@ -2459,26 +2463,38 @@
                 "syncModeSingle": "Đồng bộ 1 tháng",
                 "syncModeAll": "Đồng bộ tất cả từ tháng",
                 "period": "Tháng",
+                "periodTooltip": "Tháng sẽ bắt đầu import báo cáo cho tới nay",
                 "startPeriod": "Tháng bắt đầu",
                 "categories": "Danh mục báo cáo",
+                "categoriesTooltip": "field này để chọn ra các danh mục sẽ import báo cáo",
                 "force": "Buộc đồng bộ",
+                "forceTooltip": "Nếu enable thì sẽ import lại cả các báo cáo đã import",
                 "categoriesPlaceholder": "Chọn danh mục",
                 "salesLabel": "Sales (Doanh số)",
                 "trendsLabel": "Trends (Xu hướng)",
                 "requiredStartPeriod": "Vui lòng chọn tháng bắt đầu!",
-                "requiredPeriod": "Vui lòng chọn tháng!",
+                "requiredPeriod": "Vui lòng chọn khoảng tháng!",
                 "requiredCategories": "Vui lòng chọn ít nhất một danh mục!",
-                "success": "Đồng bộ dữ liệu thành công!"
+                "success": "Đồng bộ dữ liệu thành công!",
+                "preset": {
+                    "thisQuarter": "Quý này",
+                    "prevQuarter": "Quý trước"
+                }
             },
             "syncConfig": {
                 "title": "Cấu hình đồng bộ",
-                "mode": "Chế độ (Mode)",
+                "mode": "Active cron",
                 "cron": "Biểu thức Cron",
                 "startPeriod": "Tháng bắt đầu",
+                "startPeriodTooltip": "Tháng sẽ bắt đầu import báo cáo cho tới nay",
                 "categories": "Danh mục báo cáo",
+                "categoriesTooltip": "field này để chọn ra các danh mục sẽ import báo cáo",
                 "force": "Buộc đồng bộ",
+                "forceTooltip": "Nếu enable thì sẽ import lại cả các báo cáo đã import",
                 "excludeEnabled": "Kích hoạt loại trừ",
+                "excludeEnabledTooltip": "Nếu enable thì sẽ áp dụng các Configure Exclude Pattern",
                 "maxRetries": "Số lần thử lại tối đa",
+                "maxRetriesTooltip": "Nếu import lỗi thì sẽ thử lại từng này lần",
                 "save": "Lưu cấu hình",
                 "saveSuccess": "Cập nhật cấu hình đồng bộ thành công!",
                 "saveFailed": "Cập nhật cấu hình đồng bộ thất bại!"
@@ -2547,7 +2563,8 @@
             "skippedRows": "Bỏ qua",
             "errorRows": "Lỗi",
             "recentJobsTitle": "Lịch sử import/sync gần đây",
-            "uploadReportBtn": "Nhập báo cáo"
+            "uploadReportBtn": "Nhập báo cáo",
+            "detailedProgress": "Tiến độ chi tiết từng file"
         }
     },
     "analytics2": {
