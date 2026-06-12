@@ -15,7 +15,7 @@ type Props = Omit<RangePickerProps, 'value' | 'onChange'> & {
     externalOnChange?: (startDate: string, endDate: string) => void;
 };
 
-const DAY_RANGES = [7, 14, 30, 90, 180, 365];
+const DAY_RANGES = [7, 28, 90, 365];
 
 export default function DateSelect2({
     value,
@@ -26,31 +26,33 @@ export default function DateSelect2({
     const messages = useTranslations();
 
     const presets = useMemo(() => {
-        const customPresets = [
-            {
-                label: messages('date.thisWeek'),
-                value: () =>
-                    [dayjs().startOf('isoWeek'), dayjs()] as [Dayjs, Dayjs],
-            },
-            {
-                label: messages('date.thisMonth'),
-                value: () =>
-                    [dayjs().startOf('month'), dayjs()] as [Dayjs, Dayjs],
-            },
-            {
-                label: messages('date.thisYear'),
-                value: () =>
-                    [dayjs().startOf('year'), dayjs()] as [Dayjs, Dayjs],
-            },
-        ];
-
         const relativePresets = DAY_RANGES.map((days) => ({
             label: messages('date.lastDays', { days }),
             value: () =>
                 [dayjs().subtract(days - 1, 'day'), dayjs()] as [Dayjs, Dayjs],
         }));
 
-        return [...customPresets, ...relativePresets];
+        const pastYearsPresets = Array.from({ length: 3 }, (_, i) => {
+            const yearDiff = i + 1;
+            const targetYearLabel = dayjs()
+                .subtract(yearDiff, 'year')
+                .format('YYYY');
+            return {
+                label: targetYearLabel,
+                value: () =>
+                    [
+                        dayjs().subtract(yearDiff, 'year').startOf('year'),
+                        dayjs().subtract(yearDiff, 'year').endOf('year'),
+                    ] as [Dayjs, Dayjs],
+            };
+        });
+
+        const lifetimePreset = {
+            label: <div>{messages('date.lifetime')}</div>,
+            value: () => [dayjs('1970-01-01'), dayjs()] as [Dayjs, Dayjs],
+        };
+
+        return [...relativePresets, lifetimePreset, ...pastYearsPresets];
     }, [messages]);
 
     const rangeValue = useMemo<RangePickerProps['value']>(() => {

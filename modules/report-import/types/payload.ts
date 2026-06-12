@@ -1,4 +1,4 @@
-import { ReportConfigData } from '.';
+import { ReportConfigData, FtpExcludePatternData } from '.';
 
 export interface CreateReportConfigPayload
     extends Pick<
@@ -135,3 +135,14 @@ export interface EtlJobData {
     finishedAt: string | null;
     durationMs: number;
 }
+
+export interface CreateFtpExcludePatternPayload {
+    pattern: string;
+    patternType: string;
+    scope: string;
+    isActive: boolean;
+    description: string;
+}
+
+export interface UpdateFtpExcludePatternPayload
+    extends Partial<CreateFtpExcludePatternPayload> {}

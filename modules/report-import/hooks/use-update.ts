@@ -1,10 +1,10 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis } from '../apis';
-import { reportConfigQueryKeys } from '../constants/query-keys';
-import { ReportConfigData } from '../types';
-import { UpdateReportConfigPayload } from '../types/payload';
+import { reportConfigApis, ftpExcludePatternApis } from '../apis';
+import { reportConfigQueryKeys, ftpExcludePatternQueryKeys } from '../constants/query-keys';
+import { ReportConfigData, FtpExcludePatternData } from '../types';
+import { UpdateReportConfigPayload, UpdateFtpExcludePatternPayload } from '../types/payload';
 
 export const useUpdateReportConfig = () => {
     const queryClient = useQueryClient();
@@ -52,6 +52,55 @@ export const useUpdateReportConfig = () => {
 
     return {
         updateReportConfig: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useUpdateFtpExcludePattern = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            id,
+            payload,
+        }: UpdateVariables<
+            FtpExcludePatternData['id'],
+            UpdateFtpExcludePatternPayload
+        >) => ftpExcludePatternApis.update(id, payload),
+        onSuccess: (
+            data,
+            {
+                id,
+                onSuccess,
+            }: UpdateVariables<
+                FtpExcludePatternData['id'],
+                UpdateFtpExcludePatternPayload
+            >
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: ftpExcludePatternQueryKeys.lists(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: ftpExcludePatternQueryKeys.detail(id),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: UpdateVariables<
+                FtpExcludePatternData['id'],
+                UpdateFtpExcludePatternPayload
+            >
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        updateFtpExcludePattern: mutation.mutate,
         ...mutation,
     };
 };

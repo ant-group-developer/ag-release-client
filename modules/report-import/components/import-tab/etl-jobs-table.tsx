@@ -1,7 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { formattedDate, getIndex } from '@/helpers/common';
+import { formattedDate, formattedNumber, getIndex } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Tag, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -103,7 +103,10 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             key: 'totalRows',
             width: 120,
             align: 'center',
-            render: (_, record) => record.rows?.total ?? '-',
+            render: (_, record) =>
+                record.rows?.total !== undefined && record.rows?.total !== null
+                    ? formattedNumber(record.rows.total)
+                    : '-',
         },
         {
             title: messages('reportConfigs.importResult.processedRows'),
@@ -111,10 +114,10 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'center',
             render: (_, record) => {
-                if (record.rows?.processed === undefined) return '-';
+                if (record.rows?.processed === undefined || record.rows?.processed === null) return '-';
                 return (
                     <span style={{ color: token.colorSuccess, fontWeight: 600 }}>
-                        {record.rows.processed}
+                        {formattedNumber(record.rows.processed)}
                     </span>
                 );
             },
@@ -125,10 +128,10 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'center',
             render: (_, record) => {
-                if (record.rows?.skipped === undefined) return '-';
+                if (record.rows?.skipped === undefined || record.rows?.skipped === null) return '-';
                 return (
                     <span style={{ color: token.colorWarning, fontWeight: 600 }}>
-                        {record.rows.skipped}
+                        {formattedNumber(record.rows.skipped)}
                     </span>
                 );
             },
@@ -139,10 +142,10 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'center',
             render: (_, record) => {
-                if (record.rows?.errors === undefined) return '-';
+                if (record.rows?.errors === undefined || record.rows?.errors === null) return '-';
                 return (
                     <span style={{ color: token.colorError, fontWeight: 600 }}>
-                        {record.rows.errors}
+                        {formattedNumber(record.rows.errors)}
                     </span>
                 );
             },
