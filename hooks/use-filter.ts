@@ -4,6 +4,7 @@ import { AppSearchProps, OnSearchType } from '@/components/ui/input/search';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { CommonParams } from '@/types/api';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useQueryParams } from './use-query-params';
 
 export type OnChangeFilter<DataFilterType> = (
@@ -71,7 +72,7 @@ export const useFilter = <DataFilterType extends CommonParams>(
 
     const searchParams = useSearchParams();
     const queryParams = useQueryParams();
-
+    const router = useRouter();
     const dataFilter: DataFilterType = {
         ...defaultFilter,
         ...queryParams,
@@ -82,17 +83,14 @@ export const useFilter = <DataFilterType extends CommonParams>(
             Array.from((searchParams ?? new URLSearchParams()).entries())
         );
         for (const [key, value] of Object.entries(params)) {
-            if (value || value === 0) {
-                current.set(key, String(value));
+            if (value) {
+                current.set(key, value as string);
             } else {
                 current.delete(key);
             }
         }
 
-        const queryString = current.toString();
-        const href = queryString ? `${pathname}?${queryString}` : pathname;
-
-        window.history.pushState(null, '', href);
+        router.push(`${pathname}?${current.toString()}`);
     };
 
     const onChangePage: OnChangePage = (page, pageSize = PAGE_SIZE) => {
