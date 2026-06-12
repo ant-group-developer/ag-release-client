@@ -1,19 +1,15 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import ImageListUpload from '@/components/ui/input/image-list-upload';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import TenantSelect from '@/components/ui/select/tenant-select';
-import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
-import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
+import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
-import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
-import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Input } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
 import { useCreateChannel } from '../../hooks/use-create-channel';
 import { useUpdateChannel } from '../../hooks/use-update-channel';
 import { ChannelsData } from '../../types';
@@ -22,9 +18,7 @@ import {
     UpdateChannelPayload,
 } from '../../types/payload';
 
-type ChannelFormValues = UpdateChannelPayload & {
-    thumbFile?: any;
-};
+type ChannelFormValues = UpdateChannelPayload;
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -35,9 +29,6 @@ export default function ChannelFormModal({ ...props }: Props) {
     const dataEdit = useModalStore((state) => state.dataEdit as ChannelsData);
     const isUpdateForm = !!dataEdit?.id;
     const { active, deActive, isActive } = useActive();
-    const { linkReadFile: thumbUrl } = useGetLinkReadFile(
-        dataEdit?.thumbId ?? ''
-    );
 
     const { createChannel, isPending: isCreatePending } = useCreateChannel();
     const { updateChannel, isPending: isUpdatePending } = useUpdateChannel();
@@ -47,7 +38,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             name: values.name,
             tenantId: values.tenantId,
             youtubeChannelId: values.youtubeChannelId,
-            thumbId: values.thumbId,
+            thumbUrl: values.thumbUrl,
         } as CreateChannelPayload;
 
         const variables: CreateVariables<CreateChannelPayload> = {
@@ -84,37 +75,9 @@ export default function ChannelFormModal({ ...props }: Props) {
         active();
 
         try {
-            const { thumbFile, ...payloadValues } = values;
-            const file = thumbFile?.fileList?.[0]?.originFileObj as
-                | File
-                | undefined;
-
-            if (file) {
-                const payload: CreateBucketFile = {
-                    folderBucket: {
-                        uploadPurpose: TYPE_UPLOAD_BUCKET.CHANNEL_THUMB,
-                    },
-                    file: {
-                        fileName: file.name,
-                        contentType: file.type,
-                        extension: file.name.split('.').pop() || '',
-                        fileSize: file.size,
-                    },
-                };
-                const thumbId = await bucketApi.createBucket(file, payload);
-
-                if (!thumbId) {
-                    deActive();
-                    return;
-                }
-
-                await bucketApi.submit({ ids: [thumbId] });
-                payloadValues.thumbId = thumbId;
-            }
-
             return isUpdateForm
-                ? handleUpdateChannel(payloadValues)
-                : handleCreateChannel(payloadValues);
+                ? handleUpdateChannel(values)
+                : handleCreateChannel(values);
         } catch (error) {
             deActive();
         }
@@ -129,24 +92,10 @@ export default function ChannelFormModal({ ...props }: Props) {
             name: dataEdit?.name,
             tenantId: dataEdit?.tenantId,
             youtubeChannelId: dataEdit?.youtubeChannelId ?? undefined,
-            thumbId: dataEdit?.thumbId ?? undefined,
-            thumbFile:
-                dataEdit?.thumbId && thumbUrl
-                    ? {
-                          fileList: [
-                              {
-                                  uid: dataEdit?.thumbId,
-                                  url: thumbUrl,
-                                  thumbUrl,
-                                  name: dataEdit?.name,
-                                  status: 'done',
-                              },
-                          ],
-                      }
-                    : undefined,
+            thumbUrl: dataEdit?.thumbUrl ?? undefined,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit, form, thumbUrl]);
+    }, [dataEdit, form]);
 
     return (
         <AppModal
@@ -165,12 +114,26 @@ export default function ChannelFormModal({ ...props }: Props) {
                 layout="vertical"
                 disabled={isActive}
             >
-                <AppFormItem name="thumbFile" label="Thumbnail">
-                    <ImageListUpload
-                        maxCount={1}
-                        accept={ACCEPT_IMAGE}
-                        maxSizeMB={3}
-                        placeholder={messages('common.uploadImage')}
+                <AppFormItem
+                    name="thumbUrl"
+                    label={messages('common.thumbnailUrl')}
+                    rules={[
+                        {
+                            type: 'url',
+                            message: messages('validation.url'),
+                        },
+                        {
+                            max: CHANNEL_THUMB_URL_MAX_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: CHANNEL_THUMB_URL_MAX_LENGTH,
+                                field: messages('common.thumbnailUrl'),
+                            }),
+                        },
+                    ]}
+                >
+                    <Input
+                        placeholder="https://..."
+                        allowClear
                         disabled={isActive}
                     />
                 </AppFormItem>

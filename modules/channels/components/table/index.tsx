@@ -55,13 +55,13 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('common.thumbnail'),
-            key: 'thumbId',
-            dataIndex: 'thumbId',
+            key: 'thumbUrl',
+            dataIndex: 'thumbUrl',
             align: 'center',
             width: 90,
             render: (_, record) => (
                 <ChannelThumbImage
-                    thumbId={record.thumbId}
+                    thumbUrl={record.thumbUrl}
                     name={record.name}
                 />
             ),
