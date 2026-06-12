@@ -198,6 +198,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 50,
+            fixed: 'right',
             render: (_, record) => (
                 <ActionButton
                     showDelete
