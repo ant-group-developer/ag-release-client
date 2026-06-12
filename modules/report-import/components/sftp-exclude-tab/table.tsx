@@ -1,11 +1,16 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Tag } from 'antd';
+import { Switch, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_FTP_EXCLUDE_PATTERN } from '../../enums';
+import {
+    FTP_EXCLUDE_PATTERN_SCOPE,
+    TYPE_MODAL_FTP_EXCLUDE_PATTERN,
+} from '../../enums';
+import { useUpdateFtpExcludePattern } from '../../hooks/use-update';
 import {
     FtpExcludePatternData,
     FtpExcludePatternDataFilter,
@@ -25,6 +30,7 @@ export default function FtpExcludePatternTable({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { updateFtpExcludePattern } = useUpdateFtpExcludePattern();
     void dataFilter;
 
     const columns: ColumnType<FtpExcludePatternData>[] = [
@@ -60,22 +66,61 @@ export default function FtpExcludePatternTable({
             title: messages('reportConfigs.sftpExcludePatterns.scope'),
             key: 'scope',
             dataIndex: 'scope',
-            width: 100,
+            width: 120,
             align: 'center',
-            render: (value) => <Tag color="purple">{value}</Tag>,
+            render: (value: any) => {
+                const scopes: string[] = Array.isArray(value)
+                    ? value
+                    : typeof value === 'string'
+                      ? value.split(',').filter(Boolean)
+                      : [];
+
+                const getScopeColor = (scopeVal: string) => {
+                    const normalized = scopeVal?.trim().toLowerCase();
+                    if (normalized === FTP_EXCLUDE_PATTERN_SCOPE.FOLDER)
+                        return 'orange';
+                    if (normalized === FTP_EXCLUDE_PATTERN_SCOPE.FILE)
+                        return 'purple';
+                    return 'default';
+                };
+
+                return (
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: 4,
+                            justifyContent: 'center',
+                            flexWrap: 'wrap',
+                        }}
+                    >
+                        {scopes.map((s) => (
+                            <Tag key={s} color={getScopeColor(s)}>
+                                {s}
+                            </Tag>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
-            title: messages('reportConfigs.sftpExcludePatterns.isActive'),
+            title: messages('status.active'),
             key: 'isActive',
             dataIndex: 'isActive',
             width: 100,
             align: 'center',
-            render: (value) =>
-                value === 1 ? (
-                    <Tag color="success">{messages('status.active')}</Tag>
-                ) : (
-                    <Tag color="error">{messages('status.inActive')}</Tag>
-                ),
+            render: (value, record) => (
+                <Switch
+                    checked={value === 1 || (value as any) === true}
+                    checkedChildren={messages('status.active')}
+                    unCheckedChildren={messages('status.inActive')}
+                    onChange={(checked) =>
+                        updateFtpExcludePattern({
+                            id: record.id,
+                            payload: { isActive: checked },
+                        })
+                    }
+                />
+            ),
         },
         {
             title: messages('reportConfigs.sftpExcludePatterns.description'),
@@ -83,6 +128,13 @@ export default function FtpExcludePatternTable({
             dataIndex: 'description',
             width: 200,
             ellipsis: true,
+            render: (value) => (
+                <CustomTooltip title={value}>
+                    <span className="line-clamp-3 truncate whitespace-pre-line">
+                        {value}
+                    </span>
+                </CustomTooltip>
+            ),
         },
         {
             title: messages('common.createdAt'),

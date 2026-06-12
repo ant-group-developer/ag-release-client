@@ -27,6 +27,7 @@ export type UseFilterProps<DataFilterType> = {
     onChangeFilter: OnChangeFilter<DataFilterType>;
     onChangePage: OnChangePage;
     removeFilter: RemoveFilter;
+    defaultFilter: DataFilterType;
 };
 
 const compareObjects = (obj1: any, obj2: any) => {
@@ -158,5 +159,6 @@ export const useFilter = <DataFilterType extends CommonParams>(
         onChangePage,
         onSearch,
         removeFilter,
+        defaultFilter,
     };
 };

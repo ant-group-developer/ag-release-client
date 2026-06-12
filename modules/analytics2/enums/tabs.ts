@@ -12,3 +12,9 @@ export enum ANALYTICS_CHART_PERIOD {
     MONTHLY = 'monthly',
     DAILY = 'daily',
 }
+
+export enum ANALYTICS_VIEW_TYPE {
+    VIEW = 'view',
+    REVENUE = 'revenue',
+}
+

@@ -28,6 +28,15 @@ export interface DspTimelineData {
     items: DspTimelinePeriod[];
 }
 
+export interface TrendViewSummaryParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface TrendViewSummaryData {
+    totalViews: number;
+}
+
 export interface DspSalesSeriesItem {
     dsp: string;
     salesViews: number;
@@ -49,6 +58,7 @@ export interface RankingParams {
     toDate: string;
     page: number;
     pageSize: number;
+    keyword?: string;
 }
 
 export interface TrackRankingItem {
@@ -94,6 +104,14 @@ export interface LabelRankingItem {
     totalViews: number;
 }
 
+export interface TenantRankingItem {
+    rank: number;
+    tenantId: string;
+    tenantName: string;
+    logo: string | null;
+    totalViews: number;
+}
+
 export interface SyncRequest {
     period: string;
     force: boolean;
@@ -130,7 +148,7 @@ export interface SyncJobResponse {
 }
 
 // Params for Revenue APIs
-export interface RevenueQueryParams {
+export interface RevenueQueryParams extends CommonParams {
     fromDate: string;
     toDate: string;
     topN?: number;
@@ -170,6 +188,15 @@ export interface RevenueDspItem {
     quantity: number;
 }
 
+export interface RevenueTenantItem {
+    rank: number;
+    tenantId: string;
+    tenantName: string;
+    logo: string | null;
+    revenueUsd: number;
+    quantity: number;
+}
+
 // Top Artist Response
 export interface RevenueArtistItem {
     rank: number;
@@ -192,6 +219,7 @@ export interface RevenueTrackItem {
     releaseTitle: string | null;
     revenueUsd: number;
     quantity: number;
+    release?: ReleasesData;
 }
 
 export interface TerTimelineParams {
@@ -225,4 +253,17 @@ export interface ReleaseOverviewData {
     totalTrendViews: number;
     totalSalesViews: number;
     totalRevenueUsd: number;
+}
+
+export interface RevenueReleaseItem {
+    rank: number;
+    releaseId: string;
+    title: string;
+    upc: string;
+    labelId: string;
+    labelName: string;
+    trackCount: number;
+    revenueUsd: number;
+    quantity: number;
+    release?: ReleasesData;
 }

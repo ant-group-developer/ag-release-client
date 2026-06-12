@@ -40,6 +40,7 @@ export default function Releases({}: Props) {
         onChangeFilter,
         canClearFilter,
         removeFilter,
+        defaultFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
@@ -142,6 +143,7 @@ export default function Releases({}: Props) {
                     headerTitle={
                         <ReleasesHeaderV2
                             dataFilter={dataFilter}
+                            defaultFilter={defaultFilter}
                             onChangeFilter={onChangeFilter}
                             canClearFilter={canClearFilter}
                             removeFilter={removeFilter}

@@ -32,8 +32,8 @@ export default function DateSelect2({
                 [dayjs().subtract(days - 1, 'day'), dayjs()] as [Dayjs, Dayjs],
         }));
 
-        const pastYearsPresets = Array.from({ length: 3 }, (_, i) => {
-            const yearDiff = i + 1;
+        const pastYearsPresets = Array.from({ length: 4 }, (_, i) => {
+            const yearDiff = i;
             const targetYearLabel = dayjs()
                 .subtract(yearDiff, 'year')
                 .format('YYYY');

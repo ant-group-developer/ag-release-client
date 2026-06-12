@@ -1,6 +1,6 @@
 import { Divider, theme } from 'antd';
-import SyncConfigForm from './sync-config-form';
 import SftpExcludePatternList from './sftp-exclude-pattern-list';
+import SyncConfigForm from './sync-config-form';
 
 export default function SftpExcludeTab() {
     const { token } = theme.useToken();
@@ -13,7 +13,6 @@ export default function SftpExcludeTab() {
                 borderRadius: 8,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 16,
             }}
         >
             <SyncConfigForm />

@@ -54,6 +54,8 @@ export interface FilterPanelProps<TFilter extends Record<string, any>> {
     configs: FilterConfig[];
     /** Current filter data from useFilter */
     dataFilter: TFilter;
+    /** Default filter data from useFilter */
+    defaultFilter?: Record<string, any>;
     /** Callback to change filter values */
     onChangeFilter: (newValue: Partial<TFilter>, backToFirstPage?: boolean) => void;
     /** Callback to remove all filters */

@@ -5,7 +5,7 @@ import { FTP_EXCLUDE_PATTERN_SCOPE, PATTERN_TYPE } from '../../enums';
 
 export interface FtpExcludePatternFilterState {
     keyword?: string;
-    scope?: FTP_EXCLUDE_PATTERN_SCOPE;
+    scope?: FTP_EXCLUDE_PATTERN_SCOPE[];
     patternType?: PATTERN_TYPE;
     isActive?: string;
 }
@@ -15,13 +15,15 @@ interface Props {
     onChangeFilter: (newFilter: Partial<FtpExcludePatternFilterState>) => void;
 }
 
-export default function FtpExcludePatternTableFilter({ filter, onChangeFilter }: Props) {
+export default function FtpExcludePatternTableFilter({
+    filter,
+    onChangeFilter,
+}: Props) {
     const messages = useTranslations();
 
     const scopeOptions = [
         { label: 'Folder', value: FTP_EXCLUDE_PATTERN_SCOPE.FOLDER },
         { label: 'File', value: FTP_EXCLUDE_PATTERN_SCOPE.FILE },
-        { label: 'Both', value: FTP_EXCLUDE_PATTERN_SCOPE.BOTH },
     ];
 
     const patternTypeOptions = [
@@ -42,19 +44,25 @@ export default function FtpExcludePatternTableFilter({ filter, onChangeFilter }:
                 style={{ width: 220 }}
             />
             <Select
+                mode="multiple"
+                maxTagCount="responsive"
                 options={scopeOptions}
                 placeholder={messages('placeholder.filterBy', {
-                    value: messages('reportConfigs.sftpExcludePatterns.scope').toLowerCase(),
+                    value: messages(
+                        'reportConfigs.sftpExcludePatterns.scope'
+                    ).toLowerCase(),
                 })}
                 onChange={(value) => onChangeFilter({ scope: value })}
                 value={filter.scope}
                 allowClear
-                style={{ minWidth: 160 }}
+                style={{ minWidth: 200 }}
             />
             <Select
                 options={patternTypeOptions}
                 placeholder={messages('placeholder.filterBy', {
-                    value: messages('reportConfigs.sftpExcludePatterns.patternType').toLowerCase(),
+                    value: messages(
+                        'reportConfigs.sftpExcludePatterns.patternType'
+                    ).toLowerCase(),
                 })}
                 onChange={(value) => onChangeFilter({ patternType: value })}
                 value={filter.patternType}
@@ -64,7 +72,9 @@ export default function FtpExcludePatternTableFilter({ filter, onChangeFilter }:
             <Select
                 options={isActiveOptions}
                 placeholder={messages('placeholder.filterBy', {
-                    value: messages('reportConfigs.sftpExcludePatterns.isActive').toLowerCase(),
+                    value: messages(
+                        'reportConfigs.sftpExcludePatterns.isActive'
+                    ).toLowerCase(),
                 })}
                 onChange={(value) => onChangeFilter({ isActive: value })}
                 value={filter.isActive}

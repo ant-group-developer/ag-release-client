@@ -9,11 +9,14 @@ import { FilterConfig } from './types';
 type ActiveFilter = {
     config: FilterConfig;
     displayValue: string;
+    isDefault: boolean;
 };
 
 type Props = {
     configs: FilterConfig[];
     dataFilter: Record<string, any>;
+    defaultFilter?: Record<string, any>;
+    canClearFilter?: boolean;
     onRemoveFilter: (config: FilterConfig) => void;
     onRemoveAll: () => void;
     onClickTag?: (key: string) => void;
@@ -22,6 +25,8 @@ type Props = {
 export default function ActiveFilterTags({
     configs,
     dataFilter,
+    defaultFilter,
+    canClearFilter = false,
     onRemoveFilter,
     onRemoveAll,
     onClickTag,
@@ -40,9 +45,13 @@ export default function ActiveFilterTags({
                 const startVal = dataFilter[startKey];
                 const endVal = dataFilter[endKey];
                 if (startVal && endVal) {
+                    const isDefault = defaultFilter &&
+                        String(dataFilter[startKey]) === String(defaultFilter[startKey]) &&
+                        String(dataFilter[endKey]) === String(defaultFilter[endKey]);
                     active.push({
                         config,
                         displayValue: `${formattedDate(startVal, DATE_FORMAT.DATE_ONLY)} - ${formattedDate(endVal, DATE_FORMAT.DATE_ONLY)}`,
+                        isDefault: !!isDefault,
                     });
                 }
             } else {
@@ -71,7 +80,12 @@ export default function ActiveFilterTags({
                     displayValue = String(raw);
                 }
 
-                active.push({ config, displayValue });
+                const isDefault = defaultFilter && String(raw) === String(defaultFilter[key]);
+                active.push({
+                    config,
+                    displayValue,
+                    isDefault: !!isDefault,
+                });
             }
         }
 
@@ -87,10 +101,10 @@ export default function ActiveFilterTags({
             <span className="mr-1 text-xs text-gray-500">
                 {messages('filter.filterBy')}:
             </span>
-            {activeFilters.map(({ config, displayValue }) => (
+            {activeFilters.map(({ config, displayValue, isDefault }) => (
                 <Tag
                     key={config.key}
-                    closable
+                    closable={!isDefault}
                     onClose={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -108,12 +122,14 @@ export default function ActiveFilterTags({
                     </span>
                 </Tag>
             ))}
-            <button
-                onClick={onRemoveAll}
-                className="ml-1 text-xs text-red-500 hover:text-red-700"
-            >
-                {messages('common.clearFilter')}
-            </button>
+            {canClearFilter && (
+                <button
+                    onClick={onRemoveAll}
+                    className="ml-1 text-xs text-red-500 hover:text-red-700"
+                >
+                    {messages('common.clearFilter')}
+                </button>
+            )}
         </div>
     );
 }

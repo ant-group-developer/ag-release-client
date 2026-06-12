@@ -21,6 +21,8 @@ interface BarViewProps {
     chartHeight?: number;
     tooltipContent?: ReactElement;
     tooltipHeaders?: [string, string];
+    showTooltipTotal?: boolean;
+    tooltipTotalLabel?: string;
     yAxisFormatter?: (value: any) => string;
 }
 
@@ -31,6 +33,8 @@ export default function BarView({
     chartHeight = 400,
     tooltipContent,
     tooltipHeaders,
+    showTooltipTotal,
+    tooltipTotalLabel,
     yAxisFormatter,
 }: BarViewProps) {
     const barSize = Math.max(
@@ -120,14 +124,19 @@ export default function BarView({
                                 fill: '#999',
                             }}
                             tickFormatter={
-                                yAxisFormatter ?? ((v) =>
+                                yAxisFormatter ??
+                                ((v) =>
                                     formattedNumber(v, undefined as any, true))
                             }
                         />
                         <Tooltip
                             content={
                                 tooltipContent ?? (
-                                    <CustomTooltip headers={tooltipHeaders} />
+                                    <CustomTooltip
+                                        headers={tooltipHeaders}
+                                        showTotal={showTooltipTotal}
+                                        totalLabel={tooltipTotalLabel}
+                                    />
                                 )
                             }
                             animationEasing="ease"

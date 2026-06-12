@@ -1,3 +1,4 @@
+import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
@@ -5,12 +6,12 @@ import {
     RevenueQueryParams,
     RevenueSummaryData,
     RevenueTimelineData,
-    RevenueDspItem,
-    RevenueArtistItem,
-    RevenueTrackItem,
 } from '../types';
 
-export const useGetRevenueSummary = (params: { fromDate: string; toDate: string }) => {
+export const useGetRevenueSummary = (params: {
+    fromDate: string;
+    toDate: string;
+}) => {
     const { data, ...res } = useQuery({
         queryKey: analytics2QueryKeys.revenueSummary(params),
         queryFn: () => analytics2Apis.getRevenueSummary(params),
@@ -37,40 +38,92 @@ export const useGetRevenueTimeline = (params: RevenueQueryParams) => {
 };
 
 export const useGetRevenueTopDsp = (params: RevenueQueryParams) => {
-    const { data, ...res } = useQuery({
+    const query = useQuery({
         queryKey: analytics2QueryKeys.revenueTopDsp(params),
         queryFn: () => analytics2Apis.getRevenueTopDsp(params),
         placeholderData: (prev) => prev,
     });
 
+    const topDspData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
     return {
-        topDspData: data?.data?.data ?? ([] as RevenueDspItem[]),
-        ...res,
+        topDspData,
+        ...query,
     };
 };
 
-export const useGetRevenueTopArtist = (params: RevenueQueryParams) => {
-    const { data, ...res } = useQuery({
+export const useGetRevenueTopTenant = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopTenant(params),
+        queryFn: () => analytics2Apis.getRevenueTopTenant(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topTenantData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topTenantData,
+        ...query,
+    };
+};
+
+export const useGetRevenueTopArtist = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
         queryKey: analytics2QueryKeys.revenueTopArtist(params),
         queryFn: () => analytics2Apis.getRevenueTopArtist(params),
         placeholderData: (prev) => prev,
+        ...options,
     });
 
+    const topArtistData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
     return {
-        topArtistData: data?.data?.data ?? ([] as RevenueArtistItem[]),
-        ...res,
+        topArtistData,
+        ...query,
     };
 };
 
-export const useGetRevenueTopTrack = (params: RevenueQueryParams) => {
-    const { data, ...res } = useQuery({
+export const useGetRevenueTopTrack = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
         queryKey: analytics2QueryKeys.revenueTopTrack(params),
         queryFn: () => analytics2Apis.getRevenueTopTrack(params),
         placeholderData: (prev) => prev,
+        ...options,
     });
 
+    const topTrackData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
     return {
-        topTrackData: data?.data?.data ?? ([] as RevenueTrackItem[]),
-        ...res,
+        topTrackData,
+        ...query,
+    };
+};
+
+export const useGetRevenueTopRelease = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopRelease(params),
+        queryFn: () => analytics2Apis.getRevenueTopRelease(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topReleaseData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topReleaseData,
+        ...query,
     };
 };
