@@ -80,8 +80,8 @@ export default function RankingBar<T>({
                                 fontSize: 11,
                                 fill: '#666',
                             }}
-                            tickFormatter={(v) => truncateText(v, 22)}
-                            width={130}
+                            tickFormatter={(v) => truncateText(v, 30)}
+                            width={180}
                             interval={0}
                             tickMargin={12}
                         />

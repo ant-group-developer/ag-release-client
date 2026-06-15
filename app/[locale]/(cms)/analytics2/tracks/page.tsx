@@ -84,7 +84,6 @@ export default function TracksRankingPage() {
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
-    const rankingData = isRevenue ? topTrackData : trackRankingData;
 
     const revenueColumns: ColumnsType<RevenueTrackItem> = [
         {
@@ -149,7 +148,7 @@ export default function TracksRankingPage() {
             ),
         },
         {
-            title: messages('common.quantity'),
+            title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
@@ -303,10 +302,12 @@ export default function TracksRankingPage() {
                     </div>
                     {isRevenue ? (
                         <Table<RevenueTrackItem>
+                            sticky
                             columns={revenueColumns}
                             dataSource={topTrackData.items}
                             loading={isFetching}
                             rowKey="isrc"
+                            size="small"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
@@ -320,10 +321,12 @@ export default function TracksRankingPage() {
                         />
                     ) : (
                         <Table<TrackRankingItem>
+                            sticky
                             columns={viewColumns}
                             dataSource={trackRankingData.items}
                             loading={isFetching}
                             rowKey="isrc"
+                            size="small"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,

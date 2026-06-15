@@ -144,7 +144,7 @@ export default function ArtistsRankingPage() {
             ),
         },
         {
-            title: messages('common.quantity'),
+            title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
@@ -280,6 +280,8 @@ export default function ArtistsRankingPage() {
                     </div>
                     {isRevenue ? (
                         <Table<RevenueArtistItem>
+                            sticky
+                            size="small"
                             columns={revenueColumns}
                             dataSource={topArtistData.items}
                             loading={isFetching}
@@ -296,6 +298,8 @@ export default function ArtistsRankingPage() {
                         />
                     ) : (
                         <Table<ArtistRankingItem>
+                            sticky
+                            size="small"
                             columns={viewColumns}
                             dataSource={artistRankingData.items}
                             loading={isFetching}

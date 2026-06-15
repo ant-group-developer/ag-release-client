@@ -1,4 +1,5 @@
 import { ReportConfigData, FtpExcludePatternData } from '.';
+import { ETL_JOB_SOURCE_TYPE } from '../enums';
 
 export interface CreateReportConfigPayload
     extends Pick<
@@ -96,7 +97,7 @@ export interface ImportJobStatusResponse {
 
 export interface EtlJobData {
     id: string;
-    sourceType: string;
+    sourceType: ETL_JOB_SOURCE_TYPE | string;
     status: ImportJobStatus;
     progress: {
         current: number;

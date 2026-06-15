@@ -99,3 +99,23 @@ export const useGetTenantRanking = (
         ...query,
     };
 };
+
+export const useGetDspRanking = (
+    params: RankingParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.dspRanking(params),
+        queryFn: () => analytics2Apis.getDspRanking(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const dspRankingData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        dspRankingData,
+        ...query,
+    };
+};
+

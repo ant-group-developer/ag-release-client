@@ -31,3 +31,7 @@ export enum REPORT_IMPORT_TAB {
     SFTP = 'import-sftp',
 }
 
+export enum ETL_JOB_SOURCE_TYPE {
+    REPORT_UPLOAD = 'REPORT_UPLOAD',
+    FTP_SYNC_PERIOD = 'FTP_SYNC_PERIOD',
+}

@@ -2,8 +2,12 @@ import {
     DspTimelineParams,
     RankingParams,
     ReleaseOverviewParams,
+    RevenueDspBarChartParams,
+    RevenueLineChartParams,
     RevenueQueryParams,
     TerTimelineParams,
+    TrendViewDspBarChartParams,
+    TrendViewLineChartParams,
     TrendViewSummaryParams,
 } from '../types';
 
@@ -15,6 +19,14 @@ export const analytics2QueryKeys = {
         [...analytics2QueryKeys.all, 'ter-timeline', params] as const,
     trendViewSummary: (params: TrendViewSummaryParams) =>
         [...analytics2QueryKeys.all, 'trend-view-summary', params] as const,
+    trendViewLineChart: (params: TrendViewLineChartParams) =>
+        [...analytics2QueryKeys.all, 'trend-view-line-chart', params] as const,
+    trendViewDspBarChart: (params: TrendViewDspBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            'trend-view-dsp-bar-chart',
+            params,
+        ] as const,
     dspSalesTimeline: (params: DspTimelineParams) =>
         [...analytics2QueryKeys.all, 'dsp-sales-timeline', params] as const,
     dspDailyTimeline: (params: DspTimelineParams) =>
@@ -29,10 +41,21 @@ export const analytics2QueryKeys = {
         [...analytics2QueryKeys.all, 'label-ranking', params] as const,
     tenantRanking: (params: RankingParams) =>
         [...analytics2QueryKeys.all, 'tenant-ranking', params] as const,
+    dspRanking: (params: RankingParams) =>
+        [...analytics2QueryKeys.all, 'dsp-ranking', params] as const,
     syncJob: (jobId?: string) =>
+
         [...analytics2QueryKeys.all, 'SYNC_JOB', jobId] as const,
     revenueSummary: (params: { fromDate: string; toDate: string }) =>
         [...analytics2QueryKeys.all, 'revenue-summary', params] as const,
+    revenueLineChart: (params: RevenueLineChartParams) =>
+        [...analytics2QueryKeys.all, 'revenue-line-chart', params] as const,
+    revenueDspBarChart: (params: RevenueDspBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            'revenue-dsp-bar-chart',
+            params,
+        ] as const,
     revenueTimeline: (params: RevenueQueryParams) =>
         [...analytics2QueryKeys.all, 'revenue-timeline', params] as const,
     revenueTopDsp: (params: RevenueQueryParams) =>
@@ -45,6 +68,8 @@ export const analytics2QueryKeys = {
         [...analytics2QueryKeys.all, 'revenue-top-track', params] as const,
     revenueTopRelease: (params: RevenueQueryParams) =>
         [...analytics2QueryKeys.all, 'revenue-top-release', params] as const,
+    revenueTopLabel: (params: RevenueQueryParams) =>
+        [...analytics2QueryKeys.all, 'revenue-top-label', params] as const,
     releaseOverview: (releaseId: string, params: ReleaseOverviewParams) =>
         [
             ...analytics2QueryKeys.all,

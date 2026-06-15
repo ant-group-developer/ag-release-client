@@ -1,5 +1,6 @@
 'use client';
 
+import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -7,11 +8,15 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
+import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetLabelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { LabelRankingItem } from '@/modules/analytics2/types';
+import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import { LabelRankingItem, RevenueLabelItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Table, theme } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -21,6 +26,7 @@ const DEFAULT_PAGE = 1;
 interface RankingFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
+    type?: ANALYTICS_VIEW_TYPE;
 }
 
 export default function LabelsRankingPage() {
@@ -33,6 +39,7 @@ export default function LabelsRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
             endDate: dayjs().format('YYYY-MM-DD'),
+            type: ANALYTICS_VIEW_TYPE.VIEW,
         });
 
     const [detailModal, setDetailModal] = useState<{
@@ -47,17 +54,132 @@ export default function LabelsRankingPage() {
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
+    const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
-    // Fetch ranking data
-    const { labelRankingData, isFetching } = useGetLabelRanking({
-        fromDate: dataFilter.startDate!,
-        toDate: dataFilter.endDate!,
-        page,
-        pageSize,
-        keyword: dataFilter.keyword,
-    });
+    // Fetch ranking data (Views)
+    const { labelRankingData, isFetching: isViewsFetching } = useGetLabelRanking(
+        {
+            fromDate: dataFilter.startDate!,
+            toDate: dataFilter.endDate!,
+            page,
+            pageSize,
+            keyword: dataFilter.keyword,
+        },
+        { enabled: !isRevenue }
+    );
 
-    const columns = [
+    // Fetch revenue ranking data
+    const { topLabelData, isFetching: isRevenueFetching } = useGetRevenueTopLabel(
+        {
+            fromDate: dataFilter.startDate!,
+            toDate: dataFilter.endDate!,
+            page,
+            pageSize,
+            keyword: dataFilter.keyword ?? undefined,
+            includeOther: false,
+        },
+        { enabled: isRevenue }
+    );
+
+    const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const revenueColumns: ColumnsType<RevenueLabelItem> = [
+        {
+            title: messages('analytics2.rank'),
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 80,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            ellipsis: true,
+            render: (text: string, record: RevenueLabelItem) => (
+                <div className="flex items-center gap-3">
+                    <ImageFallback
+                        src={record.picture ?? ''}
+                        alt={text}
+                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        className="aspect-square rounded-full object-cover"
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailModal({
+                                    open: true,
+                                    title: text,
+                                    labelId: record.labelId,
+                                })
+                            }
+                        >
+                            {text}
+                        </span>
+                    </CustomTooltip>
+                </div>
+            ),
+        },
+        {
+            title: messages('common.releases'),
+            dataIndex: 'releaseCount',
+            key: 'releaseCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.usage'),
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: 150,
+            render: (qty: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {qty ? qty.toLocaleString() : 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.revenue'),
+            dataIndex: 'revenueUsd',
+            key: 'revenueUsd',
+            width: 180,
+            render: (val: number) => (
+                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    $
+                    {val
+                        ? val.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                          })
+                        : '0.00'}
+                </span>
+            ),
+        },
+    ];
+
+    const viewColumns: ColumnsType<LabelRankingItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -105,7 +227,9 @@ export default function LabelsRankingPage() {
         },
     ];
 
-    const pageTitle = `${messages('common.labels')} - ${messages('common.views')}`;
+    const pageTitle = isRevenue
+        ? `${messages('common.labels')} - ${messages('common.revenue')}`
+        : `${messages('common.labels')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {
@@ -151,22 +275,45 @@ export default function LabelsRankingPage() {
                             style={{ width: 200 }}
                         />
                     </div>
-                    <Table
-                        columns={columns}
-                        dataSource={labelRankingData?.items}
-                        loading={isFetching}
-                        rowKey="labelId"
-                        pagination={{
-                            current: dataFilter.page,
-                            pageSize: dataFilter.pageSize,
-                            total: labelRankingData?.metadata?.totalItems,
-                            pageSizeOptions: PAGE_SIZE_OPTIONS,
-                            showSizeChanger: true,
-                            showTotal: (totalCount, range) =>
-                                `${range[0]}-${range[1]} / ${totalCount}`,
-                            onChange: onChangePage,
-                        }}
-                    />
+                    {isRevenue ? (
+                        <Table<RevenueLabelItem>
+                            sticky
+                            size="small"
+                            columns={revenueColumns}
+                            dataSource={topLabelData?.items}
+                            loading={isFetching}
+                            rowKey="labelId"
+                            pagination={{
+                                current: dataFilter.page,
+                                pageSize: dataFilter.pageSize,
+                                total: topLabelData?.metadata?.totalItems,
+                                pageSizeOptions: PAGE_SIZE_OPTIONS,
+                                showSizeChanger: true,
+                                showTotal: (totalCount, range) =>
+                                    `${range[0]}-${range[1]} / ${totalCount}`,
+                                onChange: onChangePage,
+                            }}
+                        />
+                    ) : (
+                        <Table<LabelRankingItem>
+                            sticky
+                            size="small"
+                            columns={viewColumns}
+                            dataSource={labelRankingData?.items}
+                            loading={isFetching}
+                            rowKey="labelId"
+                            pagination={{
+                                current: dataFilter.page,
+                                pageSize: dataFilter.pageSize,
+                                total: labelRankingData?.metadata?.totalItems,
+                                pageSizeOptions: PAGE_SIZE_OPTIONS,
+                                showSizeChanger: true,
+                                showTotal: (totalCount, range) =>
+                                    `${range[0]}-${range[1]} / ${totalCount}`,
+                                onChange: onChangePage,
+                            }}
+                        />
+                    )}
                 </Card>
 
                 <DetailLabelAnalyticsModal
