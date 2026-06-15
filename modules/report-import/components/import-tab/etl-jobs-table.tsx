@@ -7,6 +7,7 @@ import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ETL_JOB_SOURCE_TYPE } from '../../enums';
 import { EtlJobData, ImportJobStatus } from '../../types/payload';
 
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
@@ -19,6 +20,17 @@ type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
 
 export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
     const messages = useTranslations();
+
+    const getSourceTypeTagColor = (sourceType: string) => {
+        switch (sourceType?.toUpperCase()) {
+            case ETL_JOB_SOURCE_TYPE.FTP_SYNC_PERIOD:
+                return 'blue';
+            case ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD:
+                return 'purple';
+            default:
+                return 'default';
+        }
+    };
 
     const getStatusTagColor = (status: ImportJobStatus) => {
         switch (status) {
@@ -70,6 +82,14 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             dataIndex: 'sourceType',
             width: 150,
             ellipsis: true,
+            render: (sourceType: string, record) =>
+                record?.sourceType ? (
+                    <Tag color={getSourceTypeTagColor(record?.sourceType)}>
+                        {record?.sourceType}
+                    </Tag>
+                ) : (
+                    '-'
+                ),
         },
         {
             title: messages('common.fileName'),
@@ -113,7 +133,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'left',
             render: (_, record) =>
-                record.rows?.processed !== undefined && record.rows?.processed !== null
+                record.rows?.processed !== undefined &&
+                record.rows?.processed !== null
                     ? formattedNumber(record.rows.processed)
                     : '-',
         },
@@ -123,7 +144,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'left',
             render: (_, record) =>
-                record.rows?.skipped !== undefined && record.rows?.skipped !== null
+                record.rows?.skipped !== undefined &&
+                record.rows?.skipped !== null
                     ? formattedNumber(record.rows.skipped)
                     : '-',
         },
@@ -133,7 +155,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'left',
             render: (_, record) =>
-                record.rows?.errors !== undefined && record.rows?.errors !== null
+                record.rows?.errors !== undefined &&
+                record.rows?.errors !== null
                     ? formattedNumber(record.rows.errors)
                     : '-',
         },

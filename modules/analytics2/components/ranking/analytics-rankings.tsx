@@ -1,32 +1,23 @@
 'use client';
 
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { APP_ROUTES } from '@/enums/routes';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import {
     useGetArtistRanking,
+    useGetDspRanking,
     useGetLabelRanking,
     useGetReleaseRanking,
     useGetTenantRanking,
     useGetTrackRanking,
 } from '../../hooks/use-get-rankings';
-import { useGetTerTimeline } from '../../hooks/use-get-ter-timeline';
-import {
-    ArtistRankingItem,
-    LabelRankingItem,
-    ReleaseRankingItem,
-    TenantRankingItem,
-    TrackRankingItem,
-} from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
 import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
+import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
 interface Props {
     fromDate: string;
@@ -42,41 +33,23 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             title,
         });
     const [detailModal, setDetailModal] = useState<{
-        open: boolean;
+        type: 'release' | 'track' | 'label' | 'artist' | null;
         title: string;
-        releaseId: string;
+        id: string;
     }>({
-        open: false,
+        type: null,
         title: '',
-        releaseId: '',
+        id: '',
     });
-    const [trackDetailModal, setTrackDetailModal] = useState<{
-        open: boolean;
-        title: string;
-        isrc: string;
-    }>({
-        open: false,
-        title: '',
-        isrc: '',
-    });
-    const [labelDetailModal, setLabelDetailModal] = useState<{
-        open: boolean;
-        title: string;
-        labelId: string;
-    }>({
-        open: false,
-        title: '',
-        labelId: '',
-    });
-    const [artistDetailModal, setArtistDetailModal] = useState<{
-        open: boolean;
-        title: string;
-        artistId: string;
-    }>({
-        open: false,
-        title: '',
-        artistId: '',
-    });
+
+    const {
+        trackColumns,
+        releaseColumns,
+        artistColumns,
+        labelColumns,
+        tenantColumns,
+        dspColumns,
+    } = useAnalyticsRankingColumns({ setDetailModal });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
         useGetTrackRanking({
@@ -118,416 +91,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             pageSize: topN,
         });
 
-    const { timelineData: terTimelineData, isFetching: isTerFetching } =
-        useGetTerTimeline({
-            fromDate,
-            toDate,
-            topN,
-            includeOther: true,
-        });
-
-    // Columns config
-    const trackColumns = [
-        {
-            title: messages('analytics2.rank'),
-            dataIndex: 'rank',
-            key: 'rank',
-            width: 50,
-            fixed: 'left' as const,
-            align: 'center' as const,
-            render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.track'),
-            dataIndex: 'title',
-            key: 'title',
-            width: 130,
-            ellipsis: true,
-            fixed: 'left' as const,
-            render: (text: string, record: TrackRankingItem) => (
-                <div className="flex items-center gap-3">
-                    <ReleaseCoverImage
-                        width={32}
-                        height={32}
-                        fileId={
-                            record?.release?.coverArtThumbnails?.[
-                                RELEASE_COVER_ART_SIZE.S75
-                            ] as string
-                        }
-                    />
-                    <div className="flex min-w-0 flex-col">
-                        <CustomTooltip
-                            title={messages('common.detailedAnalysis')}
-                        >
-                            <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                onClick={() =>
-                                    setTrackDetailModal({
-                                        open: true,
-                                        title: text,
-                                        isrc: record.isrc,
-                                    })
-                                }
-                            >
-                                {text}
-                            </span>
-                        </CustomTooltip>
-                    </div>
-                </div>
-            ),
-        },
-        // {
-        //     title: messages('common.artist'),
-        //     dataIndex: 'artistName',
-        //     key: 'artistName',
-        //     width: 90,
-        //     ellipsis: true,
-        //     render: (text: string) => (
-        //         <span className="truncate text-gray-600 dark:text-zinc-400">
-        //             {text || '—'}
-        //         </span>
-        //     ),
-        // },
-        {
-            title: 'ISRC',
-            dataIndex: 'isrc',
-            key: 'isrc',
-            width: 85,
-            ellipsis: true,
-            render: (text: string) => (
-                <span className="truncate text-gray-500 dark:text-zinc-400">
-                    {text || '—'}
-                </span>
-            ),
-        },
-        // {
-        //     title: messages('common.release'),
-        //     dataIndex: 'releaseTitle',
-        //     key: 'releaseTitle',
-        //     width: 85,
-        //     ellipsis: true,
-        //     render: (text: string) => (
-        //         <span className="truncate text-gray-600 dark:text-zinc-400">
-        //             {text || '—'}
-        //         </span>
-        //     ),
-        // },
-        {
-            title: messages('common.viewCount'),
-            dataIndex: 'totalViews',
-            key: 'totalViews',
-            width: 70,
-            render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                    {views ? views.toLocaleString() : 0}
-                </span>
-            ),
-        },
-    ];
-
-    const releaseColumns = [
-        {
-            title: messages('analytics2.rank'),
-            dataIndex: 'rank',
-            key: 'rank',
-            width: 50,
-            fixed: 'left' as const,
-            align: 'center' as const,
-            render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.release'),
-            dataIndex: 'title',
-            key: 'title',
-            width: 130,
-            ellipsis: true,
-            fixed: 'left' as const,
-            render: (text: string, record: ReleaseRankingItem) => (
-                <div className="flex items-center gap-3">
-                    <ReleaseCoverImage
-                        width={32}
-                        height={32}
-                        fileId={
-                            record.release?.coverArtThumbnails?.[
-                                RELEASE_COVER_ART_SIZE.S75
-                            ] as string
-                        }
-                    />
-                    <div className="flex min-w-0 flex-col">
-                        <CustomTooltip
-                            title={messages('common.detailedAnalysis')}
-                        >
-                            <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                onClick={() =>
-                                    setDetailModal({
-                                        open: true,
-                                        title: text,
-                                        releaseId: record.releaseId,
-                                    })
-                                }
-                            >
-                                {text}
-                            </span>
-                        </CustomTooltip>
-                    </div>
-                </div>
-            ),
-        },
-        // {
-        //     title: messages('common.label'),
-        //     dataIndex: 'labelName',
-        //     key: 'labelName',
-        //     width: 90,
-        //     ellipsis: true,
-        //     render: (text: string) => (
-        //         <span className="truncate text-gray-600 dark:text-zinc-400">
-        //             {text || '—'}
-        //         </span>
-        //     ),
-        // },
-        {
-            title: 'UPC',
-            dataIndex: 'upc',
-            key: 'upc',
-            width: 95,
-            ellipsis: true,
-            render: (text: string) => (
-                <span className="truncate text-gray-500 dark:text-zinc-400">
-                    {text || '—'}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.tracks'),
-            dataIndex: 'trackCount',
-            key: 'trackCount',
-            width: 65,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.viewCount'),
-            dataIndex: 'totalViews',
-            key: 'totalViews',
-            width: 70,
-            render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                    {views ? views.toLocaleString() : 0}
-                </span>
-            ),
-        },
-    ];
-
-    const artistColumns = [
-        {
-            title: messages('analytics2.rank'),
-            dataIndex: 'rank',
-            key: 'rank',
-            width: 50,
-            fixed: 'left' as const,
-            align: 'center' as const,
-            render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.artist'),
-            dataIndex: 'artistName',
-            key: 'artistName',
-            width: 200,
-            ellipsis: true,
-            fixed: 'left' as const,
-            render: (text: string, record: ArtistRankingItem) => (
-                <div className="flex items-center gap-3">
-                    <ReleaseCoverImage
-                        width={32}
-                        height={32}
-                        src={record.picture}
-                    />
-                    <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                            onClick={() =>
-                                setArtistDetailModal({
-                                    open: true,
-                                    title: text,
-                                    artistId: record.artistId,
-                                })
-                            }
-                        >
-                            {text}
-                        </span>
-                    </CustomTooltip>
-                </div>
-            ),
-        },
-        {
-            title: messages('common.tracks'),
-            dataIndex: 'trackCount',
-            key: 'trackCount',
-            width: 125,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.viewCount'),
-            dataIndex: 'totalViews',
-            key: 'totalViews',
-            width: 125,
-            render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                    {views ? views.toLocaleString() : 0}
-                </span>
-            ),
-        },
-    ];
-
-    const labelColumns = [
-        {
-            title: messages('analytics2.rank'),
-            dataIndex: 'rank',
-            key: 'rank',
-            width: 50,
-            fixed: 'left' as const,
-            align: 'center' as const,
-            render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.label'),
-            dataIndex: 'labelName',
-            key: 'labelName',
-            width: 200,
-            ellipsis: true,
-            fixed: 'left' as const,
-            render: (text: string, record: LabelRankingItem) => (
-                <div className="flex items-center gap-3">
-                    <ReleaseCoverImage
-                        width={32}
-                        height={32}
-                        src={record.picture}
-                    />
-                    <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                            onClick={() =>
-                                setLabelDetailModal({
-                                    open: true,
-                                    title: text,
-                                    labelId: record.labelId,
-                                })
-                            }
-                        >
-                            {text}
-                        </span>
-                    </CustomTooltip>
-                </div>
-            ),
-        },
-        {
-            title: messages('common.release'),
-            dataIndex: 'releaseCount',
-            key: 'releaseCount',
-            width: 80,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.tracks'),
-            dataIndex: 'trackCount',
-            key: 'trackCount',
-            width: 80,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.viewCount'),
-            dataIndex: 'totalViews',
-            key: 'totalViews',
-            width: 90,
-            render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                    {views ? views.toLocaleString() : 0}
-                </span>
-            ),
-        },
-    ];
-
-    const tenantColumns = [
-        {
-            title: messages('analytics2.rank'),
-            dataIndex: 'rank',
-            key: 'rank',
-            width: 50,
-            fixed: 'left' as const,
-            align: 'center' as const,
-            render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
-            ),
-        },
-        {
-            title: messages('tenant.name'),
-            dataIndex: 'tenantName',
-            key: 'tenantName',
-            width: 200,
-            ellipsis: true,
-            fixed: 'left' as const,
-            render: (text: string, record: TenantRankingItem) => (
-                <div className="flex items-center gap-3">
-                    <ReleaseCoverImage
-                        width={32}
-                        height={32}
-                        src={record.logo}
-                    />
-                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                        {text || '-'}
-                    </span>
-                </div>
-            ),
-        },
-        {
-            title: messages('common.viewCount'),
-            dataIndex: 'totalViews',
-            key: 'totalViews',
-            width: 90,
-            render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                    {views ? views.toLocaleString() : 0}
-                </span>
-            ),
-        },
-    ];
+    const { dspRankingData, isFetching: isDspsFetching } = useGetDspRanking({
+        fromDate,
+        toDate,
+        page: 1,
+        pageSize: topN,
+    });
 
     return (
-        <div className="mt-4 flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
             <Row gutter={[24, 24]}>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
@@ -564,7 +136,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="artistId"
                         labelKey="artistName"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.BAR}
+                        defaultView={RankingCardView.LIST}
                         viewMoreHref={`${APP_ROUTES.ANALYTICS2_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
@@ -577,7 +149,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="labelId"
                         labelKey="labelName"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.BAR}
+                        defaultView={RankingCardView.LIST}
                         viewMoreHref={`${APP_ROUTES.ANALYTICS2_LABELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
@@ -590,47 +162,61 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         rowKey="tenantId"
                         labelKey="tenantName"
                         valueKey="totalViews"
-                        defaultView={RankingCardView.BAR}
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TENANTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.dsps'))}
+                        columns={dspColumns}
+                        dataSource={dspRankingData?.items}
+                        loading={isDspsFetching}
+                        rowKey="dspName"
+                        labelKey="dspName"
+                        valueKey="totalViews"
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
             </Row>
             <DetailReleaseAnalyticsModal
-                open={detailModal.open}
+                open={detailModal.type === 'release'}
                 onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, open: false }))
+                    setDetailModal((prev) => ({ ...prev, type: null }))
                 }
                 title={detailModal.title}
-                releaseId={detailModal.releaseId}
+                releaseId={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />
             <DetailTrackAnalyticsModal
-                open={trackDetailModal.open}
+                open={detailModal.type === 'track'}
                 onClose={() =>
-                    setTrackDetailModal((prev) => ({ ...prev, open: false }))
+                    setDetailModal((prev) => ({ ...prev, type: null }))
                 }
-                title={trackDetailModal.title}
-                isrc={trackDetailModal.isrc}
+                title={detailModal.title}
+                isrc={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />
             <DetailLabelAnalyticsModal
-                open={labelDetailModal.open}
+                open={detailModal.type === 'label'}
                 onClose={() =>
-                    setLabelDetailModal((prev) => ({ ...prev, open: false }))
+                    setDetailModal((prev) => ({ ...prev, type: null }))
                 }
-                title={labelDetailModal.title}
-                labelId={labelDetailModal.labelId}
+                title={detailModal.title}
+                labelId={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />
             <DetailArtistAnalyticsModal
-                open={artistDetailModal.open}
+                open={detailModal.type === 'artist'}
                 onClose={() =>
-                    setArtistDetailModal((prev) => ({ ...prev, open: false }))
+                    setDetailModal((prev) => ({ ...prev, type: null }))
                 }
-                title={artistDetailModal.title}
-                artistId={artistDetailModal.artistId}
+                title={detailModal.title}
+                artistId={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />

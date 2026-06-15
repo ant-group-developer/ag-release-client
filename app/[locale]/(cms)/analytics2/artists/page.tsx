@@ -67,7 +67,7 @@ export default function ArtistsRankingPage() {
                 toDate: dataFilter.endDate!,
                 page,
                 pageSize,
-                keyword: dataFilter.keyword,
+                keyword: dataFilter.keyword ?? undefined,
             },
             { enabled: !isRevenue }
         );
@@ -80,19 +80,13 @@ export default function ArtistsRankingPage() {
                 toDate: dataFilter.endDate!,
                 page,
                 pageSize,
-                keyword: dataFilter.keyword,
+                keyword: dataFilter.keyword ?? undefined,
+                includeOther: false,
             },
             { enabled: isRevenue }
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
-    const rankingData = isRevenue ? topArtistData : artistRankingData;
-
-    const total =
-        rankingData?.metadata?.totalItems ||
-        ((rankingData?.items || []).length < pageSize
-            ? (page - 1) * pageSize + (rankingData?.items || []).length
-            : page * pageSize + 1);
 
     const revenueColumns: ColumnsType<RevenueArtistItem> = [
         {
@@ -150,7 +144,7 @@ export default function ArtistsRankingPage() {
             ),
         },
         {
-            title: messages('common.quantity'),
+            title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
@@ -286,14 +280,15 @@ export default function ArtistsRankingPage() {
                     </div>
                     {isRevenue ? (
                         <Table<RevenueArtistItem>
+                            sticky
+                            size="small"
                             columns={revenueColumns}
                             dataSource={topArtistData.items}
                             loading={isFetching}
-                            rowKey="artistId"
                             pagination={{
-                                current: page,
-                                pageSize: pageSize,
-                                total: total,
+                                current: dataFilter.page,
+                                pageSize: dataFilter.pageSize,
+                                total: topArtistData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -303,14 +298,15 @@ export default function ArtistsRankingPage() {
                         />
                     ) : (
                         <Table<ArtistRankingItem>
+                            sticky
+                            size="small"
                             columns={viewColumns}
                             dataSource={artistRankingData.items}
                             loading={isFetching}
-                            rowKey="artistId"
                             pagination={{
-                                current: page,
-                                pageSize: pageSize,
-                                total: total,
+                                current: dataFilter.page,
+                                pageSize: dataFilter.pageSize,
+                                total: artistRankingData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
