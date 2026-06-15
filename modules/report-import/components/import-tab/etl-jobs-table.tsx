@@ -10,6 +10,27 @@ import { useTranslations } from 'next-intl';
 import { ETL_JOB_SOURCE_TYPE } from '../../enums';
 import { EtlJobData, ImportJobStatus } from '../../types/payload';
 
+const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
+    [ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD]:
+        'reportConfigs.importResult.sourceTypeReportUpload',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_PERIOD]:
+        'reportConfigs.importResult.sourceTypeFtpSyncPeriod',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_ALL]:
+        'reportConfigs.importResult.sourceTypeFtpSyncAll',
+    [ETL_JOB_SOURCE_TYPE.FTP_RETRY]:
+        'reportConfigs.importResult.sourceTypeFtpRetry',
+    [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]:
+        'reportConfigs.importResult.sourceTypeFtpAutoCron',
+};
+
+const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
+    [ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD]: 'purple',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_PERIOD]: 'blue',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_ALL]: 'cyan',
+    [ETL_JOB_SOURCE_TYPE.FTP_RETRY]: 'orange',
+    [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]: 'green',
+};
+
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
     pagination: {
         pageSize: number;
@@ -22,14 +43,20 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
     const messages = useTranslations();
 
     const getSourceTypeTagColor = (sourceType: string) => {
-        switch (sourceType?.toUpperCase()) {
-            case ETL_JOB_SOURCE_TYPE.FTP_SYNC_PERIOD:
-                return 'blue';
-            case ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD:
-                return 'purple';
-            default:
-                return 'default';
-        }
+        return (
+            SOURCE_TYPE_TAG_COLORS[
+                sourceType?.toUpperCase() as ETL_JOB_SOURCE_TYPE
+            ] || 'default'
+        );
+    };
+
+    const getSourceTypeLabel = (sourceType: string) => {
+        const sourceTypeKey =
+            SOURCE_TYPE_MESSAGE_KEYS[
+                sourceType?.toUpperCase() as ETL_JOB_SOURCE_TYPE
+            ];
+
+        return sourceTypeKey ? messages(sourceTypeKey as any) : sourceType;
     };
 
     const getStatusTagColor = (status: ImportJobStatus) => {
@@ -85,7 +112,7 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             render: (sourceType: string, record) =>
                 record?.sourceType ? (
                     <Tag color={getSourceTypeTagColor(record?.sourceType)}>
-                        {record?.sourceType}
+                        {getSourceTypeLabel(record?.sourceType)}
                     </Tag>
                 ) : (
                     '-'
