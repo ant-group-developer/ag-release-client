@@ -2028,7 +2028,7 @@
             "totalPlays": "Total Usage",
             "totalTerritories": "Territories",
             "timelineTitle": "Revenue timeline",
-            "modeRevenue": "Revenue (USD)",
+            "modeRevenue": "Revenue",
             "modeQuantity": "Plays (Quantity)",
             "label": "Revenue"
         },
@@ -2042,7 +2042,7 @@
         "revenueDspDistribution": "Revenue by DSP",
         "totalSalesViews": "Sales Views",
 
-        "totalRevenueUsd": "Total Revenue (USD)",
+        "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",
         "detailChartTitle": "Trend timeline"
     },
@@ -2556,6 +2556,7 @@
         "reportType": "Report type",
         "folderPatterns": "Folder patterns",
         "filePatterns": "File patterns",
+        "filePatternsTooltip": "Each line corresponds to a regex pattern",
         "requiredHeaders": "Required headers",
         "parserCode": "Parser code",
         "delimiter": "Delimiter",

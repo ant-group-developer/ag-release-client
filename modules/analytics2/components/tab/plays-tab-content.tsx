@@ -54,7 +54,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
 
             {/* <PlaysTimelineChart fromDate={fromDate} toDate={toDate} /> */}
 
-            <Row gutter={[16, 16]} className="mb-6">
+            <Row gutter={[24, 24]}>
                 <Col xs={24} lg={15}>
                     <LineChartView
                         title={messages('analytics.totalTrendViews')}
@@ -63,7 +63,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
                         lineKey="totalViews"
                         lineName={messages('common.viewCount')}
                         loading={isLineChartFetching}
-                        chartHeight={300}
+                        chartHeight={250}
                     />
                 </Col>
                 <Col xs={24} lg={9}>

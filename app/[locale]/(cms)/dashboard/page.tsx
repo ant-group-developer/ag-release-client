@@ -62,6 +62,7 @@ function Dashboard({}: Props) {
                             })
                         }
                         value={`${dataFilter.startDate},${dataFilter.endDate}`}
+                        picker="month"
                     />
                 }
             >

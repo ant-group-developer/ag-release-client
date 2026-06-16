@@ -19,6 +19,8 @@ export interface TooltipKeyConfig {
     valuePrefix?: string;
 }
 
+const DEFAULT_MIN_TICK_GAP = 15;
+
 interface LineChartViewProps {
     title: string;
     data: any[];
@@ -30,6 +32,7 @@ interface LineChartViewProps {
     loading?: boolean;
     valuePrefix?: string;
     additionalTooltipKeys?: TooltipKeyConfig[];
+    minTickGap?: number;
 }
 
 const CustomLineTooltip = ({
@@ -60,7 +63,7 @@ const CustomLineTooltip = ({
                 <Typography.Text style={{ fontWeight: 600, fontSize: '13px' }}>
                     {label}
                 </Typography.Text>
-                
+
                 {/* Main line item */}
                 <div
                     style={{
@@ -75,7 +78,9 @@ const CustomLineTooltip = ({
                             height: '8px',
                             borderRadius: '50%',
                             backgroundColor:
-                                firstEntry.color || firstEntry.stroke || '#1890ff',
+                                firstEntry.color ||
+                                firstEntry.stroke ||
+                                '#1890ff',
                         }}
                     />
                     <Typography.Text style={{ fontSize: '12px' }}>
@@ -88,46 +93,50 @@ const CustomLineTooltip = ({
                             marginLeft: '4px',
                         }}
                     >
-                        {valuePrefix}{formattedNumber(firstEntry.value)}
+                        {valuePrefix}
+                        {formattedNumber(firstEntry.value)}
                     </Typography.Text>
                 </div>
 
                 {/* Additional metrics */}
-                {additionalTooltipKeys.map((cfg: TooltipKeyConfig, idx: number) => {
-                    const val = originalData?.[cfg.key];
-                    if (val === undefined || val === null) return null;
-                    return (
-                        <div
-                            key={idx}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                            }}
-                        >
+                {additionalTooltipKeys.map(
+                    (cfg: TooltipKeyConfig, idx: number) => {
+                        const val = originalData?.[cfg.key];
+                        if (val === undefined || val === null) return null;
+                        return (
                             <div
+                                key={idx}
                                 style={{
-                                    width: '8px',
-                                    height: '8px',
-                                    borderRadius: '50%',
-                                    backgroundColor: '#8c8c8c',
-                                }}
-                            />
-                            <Typography.Text style={{ fontSize: '12px' }}>
-                                {cfg.name}:
-                            </Typography.Text>
-                            <Typography.Text
-                                style={{
-                                    fontWeight: 600,
-                                    fontSize: '12px',
-                                    marginLeft: '4px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
                                 }}
                             >
-                                {cfg.valuePrefix || ''}{formattedNumber(val)}
-                            </Typography.Text>
-                        </div>
-                    );
-                })}
+                                <div
+                                    style={{
+                                        width: '8px',
+                                        height: '8px',
+                                        borderRadius: '50%',
+                                        backgroundColor: '#8c8c8c',
+                                    }}
+                                />
+                                <Typography.Text style={{ fontSize: '12px' }}>
+                                    {cfg.name}:
+                                </Typography.Text>
+                                <Typography.Text
+                                    style={{
+                                        fontWeight: 600,
+                                        fontSize: '12px',
+                                        marginLeft: '4px',
+                                    }}
+                                >
+                                    {cfg.valuePrefix || ''}
+                                    {formattedNumber(val)}
+                                </Typography.Text>
+                            </div>
+                        );
+                    }
+                )}
             </div>
         );
     }
@@ -145,6 +154,7 @@ export default function LineChartView({
     loading = false,
     valuePrefix = '',
     additionalTooltipKeys = [],
+    minTickGap = DEFAULT_MIN_TICK_GAP,
 }: LineChartViewProps) {
     const messages = useTranslations();
 
@@ -237,6 +247,7 @@ export default function LineChartView({
                                         fill: '#999',
                                     }}
                                     dy={10}
+                                    minTickGap={minTickGap}
                                 />
                                 <YAxis
                                     axisLine={false}
@@ -258,7 +269,9 @@ export default function LineChartView({
                                         <CustomLineTooltip
                                             lineName={lineName}
                                             valuePrefix={valuePrefix}
-                                            additionalTooltipKeys={additionalTooltipKeys}
+                                            additionalTooltipKeys={
+                                                additionalTooltipKeys
+                                            }
                                         />
                                     }
                                     animationEasing="ease"

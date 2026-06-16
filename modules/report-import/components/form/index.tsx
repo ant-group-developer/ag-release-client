@@ -22,7 +22,7 @@ type ReportConfigFormValues = Omit<
     'folderPatterns' | 'filePatterns' | 'requiredHeaders'
 > & {
     folderPatterns?: string[];
-    filePatterns?: string[];
+    filePatterns?: string;
     requiredHeaders?: string[];
 };
 
@@ -36,6 +36,12 @@ const REPORT_TYPE_OPTIONS = [
 
 const normalizeTags = (value?: string[]) =>
     value?.map((item) => item.trim()).filter(Boolean) ?? [];
+
+const normalizeTextArea = (value?: string) =>
+    value
+        ?.split('\n')
+        .map((item) => item.trim())
+        .filter(Boolean) ?? [];
 
 export default function ReportConfigForm({ ...props }: Props) {
     const messages = useTranslations();
@@ -59,7 +65,7 @@ export default function ReportConfigForm({ ...props }: Props) {
     ): CreateReportConfigPayload => ({
         ...values,
         folderPatterns: normalizeTags(values.folderPatterns),
-        filePatterns: normalizeTags(values.filePatterns),
+        filePatterns: normalizeTextArea(values.filePatterns),
         requiredHeaders: normalizeTags(values.requiredHeaders),
         delimiter: values.delimiter ?? ',',
         defaultCurrency: values.defaultCurrency ?? '',
@@ -108,7 +114,7 @@ export default function ReportConfigForm({ ...props }: Props) {
             form.setFieldsValue({
                 ...reportConfigData,
                 folderPatterns: reportConfigData?.folderPatterns ?? [],
-                filePatterns: reportConfigData?.filePatterns ?? [],
+                filePatterns: reportConfigData?.filePatterns?.join('\n') ?? '',
                 requiredHeaders: reportConfigData?.requiredHeaders ?? [],
             });
         }
@@ -238,8 +244,14 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="filePatterns"
                         label={messages('reportConfigs.filePatterns')}
+                        tooltipInfo={messages(
+                            'reportConfigs.filePatternsTooltip'
+                        )}
                     >
-                        <Select mode="tags" tokenSeparators={[',']} />
+                        <Input.TextArea
+                            autoSize={{ minRows: 2, maxRows: 6 }}
+                            allowClear
+                        />
                     </AppFormItem>
 
                     <AppFormItem
