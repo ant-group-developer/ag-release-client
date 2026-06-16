@@ -100,11 +100,13 @@ export default function DateSelect2({
         externalOnChange?.(startDate, endDate);
     };
 
+    const format = props.format ?? (props.picker === 'month' ? DATE_FORMAT.MONTH_YEAR : DATE_FORMAT.DATE_ONLY);
+
     return (
         <DatePicker.RangePicker
             allowClear={false}
-            format={DATE_FORMAT.DATE_ONLY}
             {...props}
+            format={format}
             presets={presets}
             value={rangeValue}
             onChange={handleRangeChange}

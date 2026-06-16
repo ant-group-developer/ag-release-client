@@ -22,6 +22,7 @@ interface PieChartViewProps {
     showLegend?: boolean;
     chartHeight?: number;
     valuePrefix?: string;
+    pieWidth?: number | string;
 }
 
 const DEFAULT_COLORS = [
@@ -50,6 +51,8 @@ const PIE_CONTAINER_HEIGHT = {
     DEFAULT_RIGHT_CHART_HEIGHT: 280,
     DEFAULT_BOTTOM_CHART_HEIGHT: 260,
 };
+
+const DEFAULT_DESKTOP_PIE_WIDTH = 220;
 
 const PieChartTooltip = ({ active, payload, valuePrefix = '' }: any) => {
     if (active && payload && payload.length) {
@@ -113,8 +116,11 @@ export default function PieChartView({
     showLegend = true,
     chartHeight,
     valuePrefix = '',
+    pieWidth = DEFAULT_DESKTOP_PIE_WIDTH,
 }: PieChartViewProps) {
     const messages = useTranslations();
+    const finalPieWidth =
+        typeof pieWidth === 'number' ? `${pieWidth}px` : pieWidth;
     const screens = Grid.useBreakpoint();
     const isSmallDevice = !screens.xxl;
 
@@ -144,7 +150,7 @@ export default function PieChartView({
 
     const pieContainerStyle: React.CSSProperties = isRight
         ? {
-              flex: isSmallDevice ? 'none' : 1,
+              flex: isSmallDevice ? 'none' : `0 0 ${finalPieWidth}`,
               height: finalChartHeight,
               width: '100%',
               minWidth: 0,
@@ -162,12 +168,12 @@ export default function PieChartView({
               flexWrap: 'wrap',
               gap: '8px',
               justifyContent: isSmallDevice ? 'center' : 'flex-start',
-              width: isSmallDevice ? '100%' : '240px',
-              flex: isSmallDevice ? 1 : 'none',
+              width: isSmallDevice ? '100%' : 'auto',
+              flex: 1,
               height: isSmallDevice ? 'auto' : finalChartHeight,
               maxHeight: isSmallDevice ? 'none' : `${finalChartHeight}px`,
               overflowY: 'auto',
-              paddingLeft: isSmallDevice ? 0 : '8px',
+              paddingLeft: isSmallDevice ? 0 : '16px',
           }
         : {
               display: 'flex',
@@ -218,8 +224,8 @@ export default function PieChartView({
                             <PieChart>
                                 <Pie
                                     data={data}
-                                    cx={isRight ? '40%' : '50%'}
-                                    cy="50%"
+                                    cx={isRight ? '45%' : '50%'}
+                                    cy={isRight ? '45%' : '50%'}
                                     innerRadius={
                                         isRight
                                             ? PIE_RADIUS_CONFIG.RIGHT.INNER
@@ -317,9 +323,7 @@ export default function PieChartView({
                                             <Text
                                                 style={{
                                                     color: '#8c8c8c',
-                                                    fontSize: isRightLayout
-                                                        ? 14
-                                                        : 13,
+                                                    fontSize: 13,
                                                     flexShrink: 0,
                                                     whiteSpace: 'nowrap',
                                                 }}
