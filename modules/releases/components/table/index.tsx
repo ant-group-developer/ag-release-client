@@ -18,13 +18,14 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import {
     getReleaseDetailTabRoute,
+    getReleaseViewRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { CircleX } from 'lucide-react';
+import { CircleX, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import {
@@ -161,7 +162,7 @@ export default function ReleasesTable({
             key: 'status',
             dataIndex: RELEASES_TABLE_KEY.STATUS,
             align: 'left',
-            width: 120,
+            width: 150,
             render: (value, record) => {
                 return <ReleaseStatusTag status={record?.status} />;
             },
@@ -207,7 +208,7 @@ export default function ReleasesTable({
             key: 'releaseDate',
             dataIndex: RELEASES_TABLE_KEY.RELEASE_DATE,
             align: 'left',
-            width: 130,
+            width: 160,
             // sorter: true,
             // sortOrder: getSortOrder(
             //     dataFilter.orderBy,
@@ -229,7 +230,7 @@ export default function ReleasesTable({
             // key: 'createdAt',
             dataIndex: RELEASES_TABLE_KEY.CREATED_AT,
             align: 'left',
-            width: 150,
+            width: 160,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -251,7 +252,7 @@ export default function ReleasesTable({
             key: 'updatedAt',
             dataIndex: RELEASES_TABLE_KEY.UPDATED_AT,
             align: 'left',
-            width: 150,
+            width: 160,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -279,6 +280,7 @@ export default function ReleasesTable({
                     <div onClick={(e) => e.stopPropagation()}>
                         <ActionButton
                             showDetail
+                            showUpdate
                             showDelete={
                                 status === RELEASES_STATUS.DRAFT && canDelete
                             }
@@ -286,6 +288,10 @@ export default function ReleasesTable({
                                 openModal(TYPE_MODAL_RELEASE.DELETE, record)
                             }
                             onShowDetail={() => {
+                                nProgress.start();
+                                router.push(getReleaseViewRoute(record?.id));
+                            }}
+                            onShowUpdate={() => {
                                 nProgress.start();
                                 setAction(RELEASE_DETAIL_ACTION.READ);
                                 router.push(
