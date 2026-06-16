@@ -28,10 +28,21 @@ export enum ACTIVE_STATUS {
 export enum REPORT_IMPORT_TAB {
     CONFIG = 'config-report',
     IMPORT = 'import-report',
+    ENRICH_DATA_IMPORT = 'enrich-data-import',
     SFTP = 'import-sftp',
 }
 
 export enum ETL_JOB_SOURCE_TYPE {
     REPORT_UPLOAD = 'REPORT_UPLOAD',
     FTP_SYNC_PERIOD = 'FTP_SYNC_PERIOD',
+    FTP_SYNC_ALL = 'FTP_SYNC_ALL',
+    FTP_RETRY = 'FTP_RETRY',
+    FTP_AUTO_CRON = 'FTP_AUTO_CRON',
+}
+
+export enum ENRICH_SCAN_STATUS {
+    PENDING = 'PENDING',
+    PROCESSING = 'PROCESSING',
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED',
 }

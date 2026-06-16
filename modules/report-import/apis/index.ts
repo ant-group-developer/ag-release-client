@@ -1,17 +1,35 @@
 import axiosInstance from '@/api/axios-auth';
-import { DetailResponse, PaginationResponse, SuccessResponse, CommonParams } from '@/types/api';
-import { ReportConfigData, ReportConfigDataFilter, FtpExcludePatternData, FtpExcludePatternDataFilter, SyncConfigData } from '../types';
 import {
+    CommonParams,
+    DetailResponse,
+    PaginationResponse,
+    SuccessResponse,
+} from '@/types/api';
+import {
+    FtpExcludePatternData,
+    FtpExcludePatternDataFilter,
+    ReportConfigData,
+    ReportConfigDataFilter,
+    SyncConfigData,
+} from '../types';
+import {
+    CreateFtpExcludePatternPayload,
     CreateReportConfigPayload,
+    EnrichScanSessionData,
+    EtlJobData,
     ImportJobStatusResponse,
     PreValidateImportPayload,
     PreValidateImportResponse,
-    UpdateReportConfigPayload,
-    EtlJobData,
-    CreateFtpExcludePatternPayload,
+    StartEnrichScanPayload,
+    StartEnrichScanResponse,
     UpdateFtpExcludePatternPayload,
+    UpdateReportConfigPayload,
 } from '../types/payload';
 
+const REPORT_IMPORT_API_PATHS = {
+    ENRICH_SCAN: '/partners/enrich/scan',
+    ENRICH_SCAN_SESSIONS: '/partners/enrich/scan/sessions',
+} as const;
 
 export const reportConfigApis = {
     getList: (params: ReportConfigDataFilter) => {
@@ -60,8 +78,20 @@ export const reportConfigApis = {
         );
     },
     getListEtlJobs: (params: CommonParams) => {
-        return axiosInstance.get<PaginationResponse<EtlJobData>>(
-            '/etl/jobs',
+        return axiosInstance.get<PaginationResponse<EtlJobData>>('/etl/jobs', {
+            params,
+        });
+    },
+    getListEnrichScanSessions: (params: CommonParams) => {
+        return axiosInstance.get<PaginationResponse<EnrichScanSessionData>>(
+            REPORT_IMPORT_API_PATHS.ENRICH_SCAN_SESSIONS,
+            { params }
+        );
+    },
+    startEnrichScan: (params: StartEnrichScanPayload) => {
+        return axiosInstance.post<DetailResponse<StartEnrichScanResponse>>(
+            REPORT_IMPORT_API_PATHS.ENRICH_SCAN,
+            undefined,
             { params }
         );
     },
@@ -111,12 +141,22 @@ export const etlSyncConfigApis = {
             payload
         );
     },
-    sync: (payload: { month_start: string; month_end: string; force: boolean; categories?: string[] }) => {
+    sync: (payload: {
+        month_start: string;
+        month_end: string;
+        force: boolean;
+        categories?: string[];
+    }) => {
         return axiosInstance.post<SuccessResponse>('/etl/ftp/sync', payload);
     },
-    syncAll: (payload: { startPeriod: string; force: boolean; categories?: string[] }) => {
-        return axiosInstance.post<SuccessResponse>('/etl/ftp/sync-all', payload);
+    syncAll: (payload: {
+        startPeriod: string;
+        force: boolean;
+        categories?: string[];
+    }) => {
+        return axiosInstance.post<SuccessResponse>(
+            '/etl/ftp/sync-all',
+            payload
+        );
     },
 };
-
-

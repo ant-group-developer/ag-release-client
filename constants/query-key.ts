@@ -372,6 +372,10 @@ export const QUERY_KEY = {
         KEY: 'ETL_JOBS',
         GET_LIST: 'GET_LIST_ETL_JOBS',
     },
+    ENRICH_SCAN_SESSIONS: {
+        KEY: 'ENRICH_SCAN_SESSIONS',
+        GET_LIST: 'GET_LIST_ENRICH_SCAN_SESSIONS',
+    },
     ETL_SYNC_CONFIG: {
         KEY: 'ETL_SYNC_CONFIG',
     },
