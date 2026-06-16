@@ -7,7 +7,29 @@ import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ETL_JOB_SOURCE_TYPE } from '../../enums';
 import { EtlJobData, ImportJobStatus } from '../../types/payload';
+
+const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
+    [ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD]:
+        'reportConfigs.importResult.sourceTypeReportUpload',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_PERIOD]:
+        'reportConfigs.importResult.sourceTypeFtpSyncPeriod',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_ALL]:
+        'reportConfigs.importResult.sourceTypeFtpSyncAll',
+    [ETL_JOB_SOURCE_TYPE.FTP_RETRY]:
+        'reportConfigs.importResult.sourceTypeFtpRetry',
+    [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]:
+        'reportConfigs.importResult.sourceTypeFtpAutoCron',
+};
+
+const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
+    [ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD]: 'purple',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_PERIOD]: 'blue',
+    [ETL_JOB_SOURCE_TYPE.FTP_SYNC_ALL]: 'cyan',
+    [ETL_JOB_SOURCE_TYPE.FTP_RETRY]: 'orange',
+    [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]: 'green',
+};
 
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
     pagination: {
@@ -19,6 +41,23 @@ type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
 
 export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
     const messages = useTranslations();
+
+    const getSourceTypeTagColor = (sourceType: string) => {
+        return (
+            SOURCE_TYPE_TAG_COLORS[
+                sourceType?.toUpperCase() as ETL_JOB_SOURCE_TYPE
+            ] || 'default'
+        );
+    };
+
+    const getSourceTypeLabel = (sourceType: string) => {
+        const sourceTypeKey =
+            SOURCE_TYPE_MESSAGE_KEYS[
+                sourceType?.toUpperCase() as ETL_JOB_SOURCE_TYPE
+            ];
+
+        return sourceTypeKey ? messages(sourceTypeKey as any) : sourceType;
+    };
 
     const getStatusTagColor = (status: ImportJobStatus) => {
         switch (status) {
@@ -70,6 +109,14 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             dataIndex: 'sourceType',
             width: 150,
             ellipsis: true,
+            render: (sourceType: string, record) =>
+                record?.sourceType ? (
+                    <Tag color={getSourceTypeTagColor(record?.sourceType)}>
+                        {getSourceTypeLabel(record?.sourceType)}
+                    </Tag>
+                ) : (
+                    '-'
+                ),
         },
         {
             title: messages('common.fileName'),
@@ -113,7 +160,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'left',
             render: (_, record) =>
-                record.rows?.processed !== undefined && record.rows?.processed !== null
+                record.rows?.processed !== undefined &&
+                record.rows?.processed !== null
                     ? formattedNumber(record.rows.processed)
                     : '-',
         },
@@ -123,7 +171,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'left',
             render: (_, record) =>
-                record.rows?.skipped !== undefined && record.rows?.skipped !== null
+                record.rows?.skipped !== undefined &&
+                record.rows?.skipped !== null
                     ? formattedNumber(record.rows.skipped)
                     : '-',
         },
@@ -133,7 +182,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             width: 120,
             align: 'left',
             render: (_, record) =>
-                record.rows?.errors !== undefined && record.rows?.errors !== null
+                record.rows?.errors !== undefined &&
+                record.rows?.errors !== null
                     ? formattedNumber(record.rows.errors)
                     : '-',
         },

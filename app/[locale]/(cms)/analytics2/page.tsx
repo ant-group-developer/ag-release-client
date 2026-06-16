@@ -14,8 +14,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const defaultFilter: Analytics2DataFilter = {
-    startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
-    endDate: dayjs().format('YYYY-MM-DD'),
+    startDate: dayjs().startOf('year').format('YYYY-MM-DD'),
+    endDate: dayjs().endOf('year').format('YYYY-MM-DD'),
 };
 
 export default function Analytics2Page() {
@@ -26,11 +26,14 @@ export default function Analytics2Page() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const initialTab = (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+    const initialTab =
+        (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
     const [activeTab, setActiveTab] = useState<ANALYTICS2_TABS>(initialTab);
 
     useEffect(() => {
-        const queryTab = (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+        const queryTab =
+            (searchParams.get('tab') as ANALYTICS2_TABS) ||
+            ANALYTICS2_TABS.VIEWS;
         if (queryTab !== activeTab) {
             setActiveTab(queryTab);
         }
@@ -88,6 +91,7 @@ export default function Analytics2Page() {
 
                             onChangeFilter({ startDate, endDate });
                         }}
+                        picker="month"
                     />
                 </Space>
             }

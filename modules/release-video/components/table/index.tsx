@@ -5,6 +5,8 @@ import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
@@ -161,16 +163,20 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             width: 80,
             align: 'center',
             render: (_, record) => (
-                <ActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
-                    }
-                    showUpdate
-                    onShowUpdate={() =>
-                        router.push(`${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`)
-                    }
-                />
+                <PermissionGate permission={PERMISSION.RELEASE_VIDEO.UPDATE}>
+                    <ActionButton
+                        showDelete
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
+                        }
+                        showUpdate
+                        onShowUpdate={() =>
+                            router.push(
+                                `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`
+                            )
+                        }
+                    />
+                </PermissionGate>
             ),
         },
     ];

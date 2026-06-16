@@ -75,7 +75,7 @@ export const CustomizedPieLabel = (props: any, content?: string | number) => {
             textAnchor="middle"
             dominantBaseline="central"
             style={{
-                fontWeight: 'bold',
+                // fontWeight: 'bold',
                 fontSize: '12px',
                 pointerEvents: 'none',
             }}

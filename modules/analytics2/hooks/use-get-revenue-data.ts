@@ -6,6 +6,7 @@ import {
     RevenueQueryParams,
     RevenueSummaryData,
     RevenueTimelineData,
+    RevenueLabelItem,
 } from '../types';
 
 export const useGetRevenueSummary = (params: {
@@ -37,11 +38,15 @@ export const useGetRevenueTimeline = (params: RevenueQueryParams) => {
     };
 };
 
-export const useGetRevenueTopDsp = (params: RevenueQueryParams) => {
+export const useGetRevenueTopDsp = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
     const query = useQuery({
         queryKey: analytics2QueryKeys.revenueTopDsp(params),
         queryFn: () => analytics2Apis.getRevenueTopDsp(params),
         placeholderData: (prev) => prev,
+        ...options,
     });
 
     const topDspData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
@@ -127,3 +132,23 @@ export const useGetRevenueTopRelease = (
         ...query,
     };
 };
+
+export const useGetRevenueTopLabel = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopLabel(params),
+        queryFn: () => analytics2Apis.getRevenueTopLabel(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topLabelData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topLabelData,
+        ...query,
+    };
+};
+

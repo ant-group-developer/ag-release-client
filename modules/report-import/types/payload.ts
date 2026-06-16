@@ -1,4 +1,5 @@
-import { ReportConfigData, FtpExcludePatternData } from '.';
+import { ReportConfigData } from '.';
+import { ENRICH_SCAN_STATUS, ETL_JOB_SOURCE_TYPE } from '../enums';
 
 export interface CreateReportConfigPayload
     extends Pick<
@@ -96,7 +97,7 @@ export interface ImportJobStatusResponse {
 
 export interface EtlJobData {
     id: string;
-    sourceType: string;
+    sourceType: ETL_JOB_SOURCE_TYPE | string;
     status: ImportJobStatus;
     progress: {
         current: number;
@@ -134,6 +135,80 @@ export interface EtlJobData {
     startedAt: string | null;
     finishedAt: string | null;
     durationMs: number;
+}
+
+export interface EnrichScanSessionData {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    status: ENRICH_SCAN_STATUS | string;
+    totalReleases: number;
+    processedReleases: number;
+    successCount: number;
+    failedCount: number;
+    notFoundCount: number;
+    dryRun: boolean;
+    force: boolean;
+    limitCount: number;
+    errorMessage: string | null;
+    startedAt: string | null;
+    finishedAt: string | null;
+}
+
+export interface StartEnrichScanPayload {
+    dryRun: boolean;
+    limit: number;
+    force: boolean;
+}
+
+export interface EnrichScanSummary {
+    status?: ENRICH_SCAN_STATUS | string;
+    totalReleases: number;
+    processedReleases: number;
+    successCount: number;
+    failedCount: number;
+    notFoundCount: number;
+    errorMessage: string | null;
+}
+
+export interface StartEnrichScanSummary {
+    totalReleases: number;
+    totalDone: number;
+    totalRemaining: number;
+    successCount: number;
+    failedCount: number;
+    notFoundCount: number;
+    pendingCount: number;
+}
+
+export interface StartEnrichScanResponse extends StartEnrichScanPayload {
+    message: string;
+    scanId: string;
+    summary: StartEnrichScanSummary;
+}
+
+export enum EnrichScanEventType {
+    SNAPSHOT = 'snapshot',
+    PROGRESS = 'progress',
+    HEARTBEAT = 'heartbeat',
+    COMPLETED = 'completed',
+    FAILED = 'failed',
+}
+
+export interface EnrichScanEventData {
+    type: EnrichScanEventType | string;
+    scanId?: string;
+    message?: string;
+    summary?: Partial<EnrichScanSummary>;
+    progress?: Partial<EnrichScanSummary>;
+    status?: ENRICH_SCAN_STATUS | string;
+    totalReleases?: number;
+    processedReleases?: number;
+    successCount?: number;
+    failedCount?: number;
+    notFoundCount?: number;
+    errorMessage?: string | null;
+    [key: string]: any;
 }
 
 export interface CreateFtpExcludePatternPayload {

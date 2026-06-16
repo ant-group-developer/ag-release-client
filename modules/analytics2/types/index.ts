@@ -267,3 +267,66 @@ export interface RevenueReleaseItem {
     quantity: number;
     release?: ReleasesData;
 }
+
+export interface RevenueLabelItem {
+    rank: number;
+    labelId: string;
+    labelName: string;
+    picture: string | null;
+    releaseCount?: number;
+    trackCount: number;
+    revenueUsd: number;
+    quantity: number;
+}
+
+
+export interface TrendViewLineChartParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface TrendViewLineChartItem {
+    period: string;
+    totalViews: number;
+}
+
+export interface TrendViewDspBarChartParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface TrendViewDspBarChartItem {
+    dspName: string;
+    totalViews: number;
+}
+
+export interface DspRankingItem {
+    rank: number;
+    dspName: string;
+    totalViews: number;
+}
+
+export interface RevenueLineChartParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface RevenueLineChartItem {
+    period: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+export interface RevenueDspBarChartParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface RevenueDspBarChartItem {
+    dspName: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+
+

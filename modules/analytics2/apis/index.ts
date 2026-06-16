@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     ArtistRankingItem,
+    DspRankingItem,
     DspSalesTimelineData,
     DspTimelineData,
     DspTimelineParams,
@@ -14,6 +15,11 @@ import {
     RevenueDspItem,
     RevenueQueryParams,
     RevenueReleaseItem,
+    RevenueLabelItem,
+    RevenueDspBarChartItem,
+    RevenueDspBarChartParams,
+    RevenueLineChartItem,
+    RevenueLineChartParams,
     RevenueSummaryData,
     RevenueTenantItem,
     RevenueTimelineData,
@@ -26,6 +32,10 @@ import {
     TerTimelineData,
     TerTimelineParams,
     TrackRankingItem,
+    TrendViewDspBarChartItem,
+    TrendViewDspBarChartParams,
+    TrendViewLineChartItem,
+    TrendViewLineChartParams,
     TrendViewSummaryData,
     TrendViewSummaryParams,
 } from '../types';
@@ -61,6 +71,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getTrendViewLineChart: (params: TrendViewLineChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            '/analytics/trend-view/line-chart',
+            params
+        );
+    },
+    getTrendViewDspBarChart: (params: TrendViewDspBarChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            '/analytics/trend-view/dsp/bar-chart',
+            params
+        );
+    },
     getTrackRanking: (params: RankingParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             '/analytics/ranking/tracks',
@@ -91,6 +113,13 @@ export const analytics2Apis = {
             params
         );
     },
+    getDspRanking: (params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<DspRankingItem>>(
+            '/analytics/ranking/dsp',
+            params
+        );
+    },
+
     startSync: ({ period, force }: SyncRequest) => {
         return axiosInstance.post<SyncAllResponse>('/etl/ftp/sync', {
             period,
@@ -109,6 +138,18 @@ export const analytics2Apis = {
     getRevenueSummary: (params: { fromDate: string; toDate: string }) => {
         return axiosInstance.post<DetailResponse<RevenueSummaryData>>(
             '/analytics/revenue/summary',
+            params
+        );
+    },
+    getRevenueLineChart: (params: RevenueLineChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            '/analytics/revenue/line-chart',
+            params
+        );
+    },
+    getRevenueDspBarChart: (params: RevenueDspBarChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            '/analytics/revenue/dsp/bar-chart',
             params
         );
     },
@@ -145,6 +186,12 @@ export const analytics2Apis = {
     getRevenueTopRelease: (params: RevenueQueryParams) => {
         return axiosInstance.post<PaginationResponse<RevenueReleaseItem>>(
             '/analytics/revenue/top-release',
+            params
+        );
+    },
+    getRevenueTopLabel: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueLabelItem>>(
+            '/analytics/revenue/top-label',
             params
         );
     },

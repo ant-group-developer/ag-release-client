@@ -8,6 +8,7 @@ import {
     ImportJobStatusResponse,
     PreValidateImportResponse,
 } from '../../types/payload';
+import { convertSecondsToHHMMSS } from '@/helpers/common';
 
 interface ImportResultViewProps {
     validationResult: PreValidateImportResponse;
@@ -625,15 +626,26 @@ export const ImportResultView: React.FC<ImportResultViewProps> = ({
                             color: token.colorTextDescription,
                             display: 'flex',
                             justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            gap: 16,
                             marginTop: 'auto',
                             paddingTop: 12,
+                            borderTop: `1px solid ${token.colorBorderSecondary}`,
                         }}
                     >
-                        <span>{messages('reportConfigs.importResult.sourceFile', { file: jobStatus.file })}</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, flex: 1 }}>
+                            <span style={{ fontWeight: 600 }}>{messages('reportConfigs.importResult.sourceFile')}:</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                {(jobStatus.file ? jobStatus.file.split(',').map((f: string) => f.trim()).filter(Boolean) : []).map((file: string, idx: number) => (
+                                    <span key={idx} style={{ wordBreak: 'break-all' }}>{file}</span>
+                                ))}
+                            </div>
+                        </div>
                         {jobStatus.durationMs > 0 && (
-                            <span>
-                                {messages('reportConfigs.importResult.duration', { duration: (jobStatus.durationMs / 1000).toFixed(2) })}
-                            </span>
+                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                <span style={{ fontWeight: 600 }}>{messages('reportConfigs.importResult.duration')}:</span>
+                                <div>{convertSecondsToHHMMSS(jobStatus.durationMs / 1000)}</div>
+                            </div>
                         )}
                     </div>
                 </div>
