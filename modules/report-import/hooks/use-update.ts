@@ -1,10 +1,10 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys } from '../constants/query-keys';
-import { ReportConfigData, FtpExcludePatternData } from '../types';
-import { UpdateReportConfigPayload, UpdateFtpExcludePatternPayload } from '../types/payload';
+import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis } from '../apis';
+import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys } from '../constants/query-keys';
+import { ReportConfigData, FtpExcludePatternData, EnrichScanScheduleData } from '../types';
+import { UpdateReportConfigPayload, UpdateFtpExcludePatternPayload, UpdateEnrichScanSchedulePayload } from '../types/payload';
 
 export const useUpdateReportConfig = () => {
     const queryClient = useQueryClient();
@@ -101,6 +101,51 @@ export const useUpdateFtpExcludePattern = () => {
 
     return {
         updateFtpExcludePattern: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useUpdateEnrichScanSchedule = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            id,
+            payload,
+        }: UpdateVariables<
+            EnrichScanScheduleData['id'],
+            UpdateEnrichScanSchedulePayload
+        >) => enrichScanScheduleApis.update(id, payload),
+        onSuccess: (
+            data,
+            {
+                onSuccess,
+            }: UpdateVariables<
+                EnrichScanScheduleData['id'],
+                UpdateEnrichScanSchedulePayload
+            >
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: enrichScanScheduleQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: UpdateVariables<
+                EnrichScanScheduleData['id'],
+                UpdateEnrichScanSchedulePayload
+            >
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        updateEnrichScanSchedule: mutation.mutate,
         ...mutation,
     };
 };

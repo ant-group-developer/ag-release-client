@@ -41,3 +41,21 @@ export interface SyncConfigData {
     maxRetries: number;
 }
 
+export interface EnrichScanScheduleData extends CommonAttribute {
+    name: string;
+    enabled: boolean;
+    cronExpression: string;
+    timezone: string;
+    isImportedFromReport: boolean;
+    limitCount: number;
+    force: boolean;
+    isDeleted: boolean;
+    lastRunAt: string | null;
+    lastScanId: string | null;
+    lastSkippedAt: string | null;
+    lastSkipReason: string | null;
+    lastError: string | null;
+}
+
+export interface EnrichScanScheduleDataFilter extends CommonParams {}
+

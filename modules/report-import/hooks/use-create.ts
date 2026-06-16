@@ -1,9 +1,9 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys } from '../constants/query-keys';
-import { CreateReportConfigPayload, CreateFtpExcludePatternPayload } from '../types/payload';
+import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis } from '../apis';
+import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys } from '../constants/query-keys';
+import { CreateReportConfigPayload, CreateFtpExcludePatternPayload, CreateEnrichScanSchedulePayload } from '../types/payload';
 
 export const useCreateReportConfig = () => {
     const queryClient = useQueryClient();
@@ -69,6 +69,40 @@ export const useCreateFtpExcludePattern = () => {
 
     return {
         createFtpExcludePattern: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useCreateEnrichScanSchedule = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            payload,
+        }: CreateVariables<CreateEnrichScanSchedulePayload>) =>
+            enrichScanScheduleApis.create(payload),
+        onSuccess: (
+            data,
+            { onSuccess }: CreateVariables<CreateEnrichScanSchedulePayload>
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: enrichScanScheduleQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: CreateVariables<CreateEnrichScanSchedulePayload>
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        createEnrichScanSchedule: mutation.mutate,
         ...mutation,
     };
 };

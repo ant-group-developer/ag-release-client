@@ -92,6 +92,7 @@
         "errors": "Errors",
         "importedFromReport": "Imported from report",
         "contributors": "Contributors",
+        "listen": "Listen",
         "add": "Add",
         "information": "Information",
         "statistics": "Statistics",
@@ -892,6 +893,53 @@
         "role": "Role",
         "back": "Back to releases list",
         "isMoreThan4Artists": "Is more than 4 artists",
+        "overview": {
+            "releaseInfo": "Release information",
+            "releaseArtists": "Release artists",
+            "releaseContributors": "Release contributors",
+            "releaseTitle": "Release Title",
+            "titleVersion": "Title Version",
+            "mainPrimaryArtist": "Main Primary Artist",
+            "keyArtists": "Key Artists",
+            "producersEngineers": "Producers & Engineers",
+            "spotifyAlbumId": "Spotify album ID",
+            "spotifyAlbumUrl": "Spotify album URL",
+            "primaryInfo": "Primary information",
+            "primaryReleaseId": "Primary release ID",
+            "uri": "URI",
+            "originalReleaseDate": "Original release date",
+            "includedMedia": "Included media",
+            "audio": "Audio",
+            "releaseIdentifiers": "Release identifiers",
+            "upc": "UPC",
+            "mainArtistUri": "Main artist URI",
+            "url": "URL",
+            "releaseType": "Release type",
+            "single": "Single",
+            "labelInfo": "Label information",
+            "label": "Label",
+            "feedName": "Feed name",
+            "pLine": "P line",
+            "licensor": "Licensor",
+            "cLine": "C line",
+            "courtesyLine": "Courtesy line",
+            "platformLinks": "Platform links",
+            "releaseId": "Release ID",
+            "version": "Version",
+            "catalogId": "Catalog ID",
+            "primaryGenre": "Primary genre",
+            "secondaryGenre": "Secondary Genre",
+            "subGenre": "Sub genre",
+            "isVariousArtist": "Various Artists compilation",
+            "isInstrumental": "Instrumental",
+            "metadataLanguage": "Metadata language",
+            "audioLanguage": "Audio language",
+            "metadataLanguageCountry": "Metadata country language",
+            "releaseDate": "Release date",
+            "releaseTime": "Release time",
+            "timezone": "Timezone",
+            "territory": "Distribute territory"
+        },
         "select": {
             "artist": "Select artist",
             "subArtist": "Select sub artist"
@@ -1042,6 +1090,14 @@
         }
     },
     "track": {
+        "metadataExternal": "External Metadata",
+        "dsp": "Platform",
+        "externalId": "Album ID",
+        "albumUrl": "Album URL",
+        "trackUrl": "Track URL",
+        "externalUrl": "URL",
+        "coverArt": "Cover Art",
+        "lastSyncedAt": "Last Synced At",
         "parentalAdvisoryNotice": "Parental advisory notice",
         "list": "Track list",
         "number": "Track number",
@@ -2481,6 +2537,8 @@
             "finishedAt": "Finished at",
             "dryRunTooltip": "If enabled, the scan runs without applying data changes.",
             "forceTooltip": "If enabled, existing enriched data will be processed again.",
+            "isImportedFromReport": "Sync direct releases",
+            "isImportedFromReportTooltip": "If enabled (true), the system will sync releases created directly. If disabled (false), it will sync releases imported from reports.",
             "eventConnectionError": "Cannot connect to scan events"
         },
         "sftpExcludePatterns": {
@@ -2608,6 +2666,35 @@
             "recentJobsTitle": "Recent Import/Sync Jobs",
             "uploadReportBtn": "Import Report",
             "detailedProgress": "Detailed files progress"
+        },
+        "enrichScanSchedules": {
+            "label": "Enrich data cron",
+            "title": "Metadata scan schedules",
+            "name": "Schedule name",
+            "enabled": "Active cron",
+            "cronExpression": "Cron expression",
+            "timezone": "Timezone",
+            "isImportedFromReport": "Sync direct releases",
+            "isImportedFromReportTooltip": "If enabled (true), the system will sync releases created directly. If disabled (false), it will sync releases imported from reports.",
+            "limitCount": "Limit",
+            "force": "Force run",
+            "forceTooltip": "If enabled, existing enriched data will be processed again.",
+            "lastRunAt": "Last run at",
+            "lastScanId": "Last scan ID",
+            "lastSkippedAt": "Last skipped at",
+            "lastSkipReason": "Last skip reason",
+            "lastError": "Last error",
+            "action": {
+                "create": "Create scan schedule",
+                "update": "Update scan schedule"
+            },
+            "message": {
+                "success": {
+                    "create": "Scan schedule created successfully!",
+                    "update": "Scan schedule updated successfully!",
+                    "delete": "Scan schedule deleted successfully!"
+                }
+            }
         }
     },
     "analytics2": {

@@ -8,6 +8,7 @@ import ConfigTab from '@/modules/report-import/components/config-tab';
 import EnrichDataImportTab from '@/modules/report-import/components/enrich-data-import-tab';
 import ImportTab from '@/modules/report-import/components/import-tab';
 import SftpExcludeTab from '@/modules/report-import/components/sftp-exclude-tab';
+import EnrichDataCronTab from '@/modules/report-import/components/enrich-data-cron-tab';
 import { reportConfigQueryKeys } from '@/modules/report-import/constants/query-keys';
 import { REPORT_IMPORT_TAB } from '@/modules/report-import/enums';
 import { useGetListReportConfig } from '@/modules/report-import/hooks/use-get-list';
@@ -17,6 +18,7 @@ import {
     DatabaseOutlined,
     ImportOutlined,
     SettingOutlined,
+    ClockCircleOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Tabs, TabsProps } from 'antd';
@@ -91,6 +93,12 @@ export default function ReportConfigs() {
                 label: messages('reportConfigs.enrichDataImport.label'),
                 icon: <DatabaseOutlined />,
                 children: <EnrichDataImportTab />,
+            },
+            {
+                key: REPORT_IMPORT_TAB.ENRICH_DATA_CRON,
+                label: messages('reportConfigs.enrichScanSchedules.label'),
+                icon: <ClockCircleOutlined />,
+                children: <EnrichDataCronTab />,
             },
         ],
         [

@@ -63,3 +63,16 @@ export const ftpExcludePatternQueryKeys = {
     detail: (id: string) =>
         [...ftpExcludePatternQueryKeys.details(), id] as const,
 };
+
+export const enrichScanScheduleQueryKeys = {
+    all: [QUERY_KEY.ENRICH_SCAN_SCHEDULES.KEY] as const,
+    lists: () =>
+        [
+            ...enrichScanScheduleQueryKeys.all,
+            QUERY_KEY.ENRICH_SCAN_SCHEDULES.GET_LIST,
+        ] as const,
+    list: (params?: any) =>
+        params
+            ? ([...enrichScanScheduleQueryKeys.lists(), params] as const)
+            : enrichScanScheduleQueryKeys.lists(),
+};

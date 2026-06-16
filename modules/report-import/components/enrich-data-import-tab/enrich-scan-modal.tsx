@@ -24,6 +24,7 @@ const ENRICH_SCAN_FORM_DEFAULT_VALUES: StartEnrichScanPayload = {
     dryRun: true,
     limit: 10,
     force: false,
+    isImportedFromReport: false,
 };
 
 const ENRICH_SCAN_LIMIT_MIN = 1;
@@ -121,6 +122,7 @@ export default function EnrichScanModal({
                     dryRun: !!values.dryRun,
                     limit: Number(values.limit),
                     force: !!values.force,
+                    isImportedFromReport: !!values.isImportedFromReport,
                 },
                 onSuccess: (response?: StartEnrichScanResponse) => {
                     if (response?.scanId) {
@@ -191,6 +193,22 @@ export default function EnrichScanModal({
                         label={messages('reportConfigs.enrichDataImport.force')}
                         tooltip={messages(
                             'reportConfigs.enrichDataImport.forceTooltip'
+                        )}
+                        valuePropName="checked"
+                    >
+                        <Switch
+                            checkedChildren={messages('status.enable')}
+                            unCheckedChildren={messages('status.disable')}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="isImportedFromReport"
+                        label={messages(
+                            'reportConfigs.enrichDataImport.isImportedFromReport'
+                        )}
+                        tooltip={messages(
+                            'reportConfigs.enrichDataImport.isImportedFromReportTooltip'
                         )}
                         valuePropName="checked"
                     >

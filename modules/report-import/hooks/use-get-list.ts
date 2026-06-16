@@ -1,9 +1,22 @@
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys } from '../constants/query-keys';
-import { ReportConfigData, ReportConfigDataFilter, FtpExcludePatternData, FtpExcludePatternDataFilter } from '../types';
+import {
+    enrichScanScheduleApis,
+    ftpExcludePatternApis,
+    reportConfigApis,
+} from '../apis';
+import {
+    enrichScanScheduleQueryKeys,
+    ftpExcludePatternQueryKeys,
+    reportConfigQueryKeys,
+} from '../constants/query-keys';
+import {
+    FtpExcludePatternData,
+    FtpExcludePatternDataFilter,
+    ReportConfigData,
+    ReportConfigDataFilter,
+} from '../types';
 
 export const useGetListReportConfig = (params: ReportConfigDataFilter) => {
     const { data, ...res } = useQuery({
@@ -22,7 +35,9 @@ export const useGetListReportConfig = (params: ReportConfigDataFilter) => {
     };
 };
 
-export const useGetListFtpExcludePattern = (params: FtpExcludePatternDataFilter) => {
+export const useGetListFtpExcludePattern = (
+    params: FtpExcludePatternDataFilter
+) => {
     const { data, ...res } = useQuery({
         queryKey: ftpExcludePatternQueryKeys.list(params),
         queryFn: () => ftpExcludePatternApis.getList(params),
@@ -35,6 +50,22 @@ export const useGetListFtpExcludePattern = (params: FtpExcludePatternDataFilter)
 
     return {
         ftpExcludePatternsData,
+        ...res,
+    };
+};
+
+export const useGetListEnrichScanSchedule = () => {
+    const { data, ...res } = useQuery({
+        queryKey: enrichScanScheduleQueryKeys.list(),
+        queryFn: () => enrichScanScheduleApis.getList({}),
+        placeholderData: (prev) => prev,
+        refetchOnWindowFocus: true,
+    });
+
+    const enrichScanSchedulesData = data?.data?.data?.items || [];
+
+    return {
+        enrichScanSchedulesData,
         ...res,
     };
 };
