@@ -30,6 +30,13 @@ export enum REPORT_IMPORT_TAB {
     IMPORT = 'import-report',
     ENRICH_DATA_IMPORT = 'enrich-data-import',
     SFTP = 'import-sftp',
+    ENRICH_DATA_CRON = 'enrich-data-cron',
+}
+
+export enum TYPE_MODAL_ENRICH_SCAN_SCHEDULE {
+    CREATE = 'CREATE_ENRICH_SCAN_SCHEDULE',
+    UPDATE = 'UPDATE_ENRICH_SCAN_SCHEDULE',
+    DELETE = 'DELETE_ENRICH_SCAN_SCHEDULE',
 }
 
 export enum ETL_JOB_SOURCE_TYPE {

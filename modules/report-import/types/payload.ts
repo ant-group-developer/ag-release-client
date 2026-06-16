@@ -159,6 +159,7 @@ export interface StartEnrichScanPayload {
     dryRun: boolean;
     limit: number;
     force: boolean;
+    isImportedFromReport?: boolean;
 }
 
 export interface EnrichScanSummary {
@@ -214,10 +215,23 @@ export interface EnrichScanEventData {
 export interface CreateFtpExcludePatternPayload {
     pattern: string;
     patternType: string;
-    scope: string;
+    scope: string[];
     isActive: boolean;
     description: string;
 }
 
 export interface UpdateFtpExcludePatternPayload
     extends Partial<CreateFtpExcludePatternPayload> {}
+
+export interface CreateEnrichScanSchedulePayload {
+    name: string;
+    enabled: boolean;
+    cronExpression: string;
+    timezone: string;
+    isImportedFromReport: boolean;
+    limitCount: number;
+    force: boolean;
+}
+
+export interface UpdateEnrichScanSchedulePayload
+    extends Partial<CreateEnrichScanSchedulePayload> {}

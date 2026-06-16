@@ -64,6 +64,12 @@ export enum RELEASES_TABS {
     SUBMITS = 'submits',
 }
 
+export enum RELEASE_VIEW_TABS {
+    OVERVIEW = 'overview',
+    TRACKS = 'tracks',
+}
+
+
 export enum RELEASES_STATUS {
     DRAFT = 'draft',
     PROCESSING = 'processing',

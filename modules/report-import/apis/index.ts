@@ -6,6 +6,7 @@ import {
     SuccessResponse,
 } from '@/types/api';
 import {
+    EnrichScanScheduleData,
     FtpExcludePatternData,
     FtpExcludePatternDataFilter,
     ReportConfigData,
@@ -13,6 +14,7 @@ import {
     SyncConfigData,
 } from '../types';
 import {
+    CreateEnrichScanSchedulePayload,
     CreateFtpExcludePatternPayload,
     CreateReportConfigPayload,
     EnrichScanSessionData,
@@ -22,6 +24,7 @@ import {
     PreValidateImportResponse,
     StartEnrichScanPayload,
     StartEnrichScanResponse,
+    UpdateEnrichScanSchedulePayload,
     UpdateFtpExcludePatternPayload,
     UpdateReportConfigPayload,
 } from '../types/payload';
@@ -158,5 +161,29 @@ export const etlSyncConfigApis = {
             '/etl/ftp/sync-all',
             payload
         );
+    },
+};
+
+export const enrichScanScheduleApis = {
+    getList: (params: CommonParams) => {
+        return axiosInstance.get<PaginationResponse<EnrichScanScheduleData>>(
+            '/partners/enrich/scan/schedules',
+            { params }
+        );
+    },
+    create: (payload: CreateEnrichScanSchedulePayload) => {
+        return axiosInstance.post<DetailResponse<EnrichScanScheduleData>>(
+            '/partners/enrich/scan/schedules',
+            payload
+        );
+    },
+    update: (id: string, payload: UpdateEnrichScanSchedulePayload) => {
+        return axiosInstance.put<DetailResponse<EnrichScanScheduleData>>(
+            `/partners/enrich/scan/schedules/${id}`,
+            payload
+        );
+    },
+    delete: (id: string) => {
+        return axiosInstance.delete(`/partners/enrich/scan/schedules/${id}`);
     },
 };
