@@ -167,7 +167,7 @@ export default function PieChartView({
               flexDirection: isSmallDevice ? 'row' : 'column',
               flexWrap: 'wrap',
               gap: '8px',
-              justifyContent: isSmallDevice ? 'center' : 'flex-start',
+              justifyContent: 'center',
               width: isSmallDevice ? '100%' : 'auto',
               flex: 1,
               height: isSmallDevice ? 'auto' : finalChartHeight,
@@ -224,8 +224,8 @@ export default function PieChartView({
                             <PieChart>
                                 <Pie
                                     data={data}
-                                    cx={isRight ? '45%' : '50%'}
-                                    cy={isRight ? '45%' : '50%'}
+                                    cx={'50%'}
+                                    cy={'50%'}
                                     innerRadius={
                                         isRight
                                             ? PIE_RADIUS_CONFIG.RIGHT.INNER
@@ -298,7 +298,7 @@ export default function PieChartView({
                                                 alignItems: 'center',
                                                 justifyContent: isRightLayout
                                                     ? 'space-between'
-                                                    : 'flex-start',
+                                                    : 'center',
                                                 flex: 1,
                                                 minWidth: 0,
                                                 gap: isRightLayout
