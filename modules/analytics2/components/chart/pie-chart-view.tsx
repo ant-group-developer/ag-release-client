@@ -33,6 +33,24 @@ const DEFAULT_COLORS = [
     '#13C2C2', // Cyan
 ];
 
+// Configuration constants for the pie chart dimensions and radii
+const PIE_RADIUS_CONFIG = {
+    RIGHT: {
+        INNER: 50,
+        OUTER: 90,
+    },
+    BOTTOM: {
+        INNER: 45,
+        OUTER: 85,
+    },
+};
+
+const PIE_CONTAINER_HEIGHT = {
+    BOTTOM_DEFAULT: 180,
+    DEFAULT_RIGHT_CHART_HEIGHT: 280,
+    DEFAULT_BOTTOM_CHART_HEIGHT: 260,
+};
+
 const PieChartTooltip = ({ active, payload, valuePrefix = '' }: any) => {
     if (active && payload && payload.length) {
         const item = payload[0];
@@ -76,7 +94,8 @@ const PieChartTooltip = ({ active, payload, valuePrefix = '' }: any) => {
                     </Typography.Text>
                 </div>
                 <Typography.Text style={{ fontWeight: 600, fontSize: 13 }}>
-                    {valuePrefix}{formattedNumber(displayValue)}
+                    {valuePrefix}
+                    {formattedNumber(displayValue)}
                 </Typography.Text>
             </div>
         );
@@ -99,8 +118,10 @@ export default function PieChartView({
     const screens = Grid.useBreakpoint();
     const isSmallDevice = !screens.xxl;
 
-    const isRight = legendPosition === 'right';
-    const defaultHeight = isRight ? 280 : 260;
+    const isRight = legendPosition === 'right' && !isSmallDevice;
+    const defaultHeight = isRight
+        ? PIE_CONTAINER_HEIGHT.DEFAULT_RIGHT_CHART_HEIGHT
+        : PIE_CONTAINER_HEIGHT.DEFAULT_BOTTOM_CHART_HEIGHT;
     const finalChartHeight = chartHeight ?? defaultHeight;
 
     const containerStyle: React.CSSProperties = isRight
@@ -109,9 +130,8 @@ export default function PieChartView({
               flexDirection: isSmallDevice ? 'column' : 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: isSmallDevice ? '12px' : '16px',
               height: '100%',
-              minHeight: finalChartHeight + 40,
+              minHeight: finalChartHeight,
           }
         : {
               display: 'flex',
@@ -130,7 +150,7 @@ export default function PieChartView({
               minWidth: 0,
           }
         : {
-              height: 180,
+              height: PIE_CONTAINER_HEIGHT.BOTTOM_DEFAULT,
               width: '100%',
               minWidth: 0,
           };
@@ -170,7 +190,7 @@ export default function PieChartView({
                 },
             }}
         >
-            <div className="mb-6">
+            <div>
                 <Title level={5} className="!m-0">
                     {title}
                 </Title>
@@ -198,10 +218,18 @@ export default function PieChartView({
                             <PieChart>
                                 <Pie
                                     data={data}
-                                    cx="50%"
+                                    cx={isRight ? '40%' : '50%'}
                                     cy="50%"
-                                    innerRadius={isRight ? 45 : 40}
-                                    outerRadius={isRight ? 80 : 75}
+                                    innerRadius={
+                                        isRight
+                                            ? PIE_RADIUS_CONFIG.RIGHT.INNER
+                                            : PIE_RADIUS_CONFIG.BOTTOM.INNER
+                                    }
+                                    outerRadius={
+                                        isRight
+                                            ? PIE_RADIUS_CONFIG.RIGHT.OUTER
+                                            : PIE_RADIUS_CONFIG.BOTTOM.OUTER
+                                    }
                                     stroke="none"
                                     dataKey="value"
                                     nameKey="type"
@@ -216,7 +244,11 @@ export default function PieChartView({
                                     ))}
                                 </Pie>
                                 <Tooltip
-                                    content={<PieChartTooltip valuePrefix={valuePrefix} />}
+                                    content={
+                                        <PieChartTooltip
+                                            valuePrefix={valuePrefix}
+                                        />
+                                    }
                                     isAnimationActive={true}
                                 />
                             </PieChart>
@@ -270,9 +302,7 @@ export default function PieChartView({
                                         >
                                             <Text
                                                 style={{
-                                                    fontSize: isRightLayout
-                                                        ? 14
-                                                        : 13,
+                                                    fontSize: 13,
                                                     textOverflow: 'ellipsis',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',

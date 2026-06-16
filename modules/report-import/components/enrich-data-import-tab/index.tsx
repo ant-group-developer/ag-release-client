@@ -1,38 +1,30 @@
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { useFilter } from '@/hooks/use-filter';
 import { ScanOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ENRICH_SCAN_STATUS } from '../../enums';
 import { useEnrichScanEvents } from '../../hooks/use-enrich-scan-events';
 import { useGetListEnrichScanSessions } from '../../hooks/use-get-list-enrich-scan-sessions';
-import {
-    EnrichScanEventData,
-    EnrichScanSessionData,
-} from '../../types/payload';
+import { EnrichScanSessionData } from '../../types/payload';
 import EnrichScanModal from './enrich-scan-modal';
 import EnrichScanSessionsTable from './enrich-scan-sessions-table';
-
-const DEFAULT_ENRICH_SCAN_SESSION_PAGE = 1;
-const DEFAULT_ENRICH_SCAN_SESSION_PAGE_SIZE = 10;
 
 export default function EnrichDataImportTab() {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
-    const [page, setPage] = useState(DEFAULT_ENRICH_SCAN_SESSION_PAGE);
-    const [pageSize, setPageSize] = useState(
-        DEFAULT_ENRICH_SCAN_SESSION_PAGE_SIZE
-    );
+    const { dataFilter, onChangePage } = useFilter({
+        page: 1,
+        pageSize: 10,
+    });
     const [isScanModalOpen, setIsScanModalOpen] = useState(false);
     const [viewScanId, setViewScanId] = useState<string | null>(null);
 
     const { enrichScanSessionsData, isLoading, isFetching, refetch } =
-        useGetListEnrichScanSessions({
-            page,
-            pageSize,
-        });
+        useGetListEnrichScanSessions(dataFilter);
 
     const runningScanSession = useMemo(() => {
         return enrichScanSessionsData.items.find(
@@ -44,24 +36,10 @@ export default function EnrichDataImportTab() {
 
     const hasRunningScanSession = !!runningScanSession;
 
-    const handleScanEventDone = useCallback(
-        (_eventData: EnrichScanEventData) => {
-            refetch();
-        },
-        [refetch]
-    );
-
     useEnrichScanEvents({
         scanId: runningScanSession?.id,
-        enabled: !!runningScanSession?.id,
-        onCompleted: handleScanEventDone,
-        onFailed: handleScanEventDone,
+        enabled: !!runningScanSession?.id && !isScanModalOpen,
     });
-
-    const onChangePage = (newPage: number, newPageSize: number) => {
-        setPage(newPage);
-        setPageSize(newPageSize);
-    };
 
     const handleOpenScanModal = () => {
         setViewScanId(null);
@@ -126,7 +104,7 @@ export default function EnrichDataImportTab() {
                 dataSource={enrichScanSessionsData.items}
                 loading={isLoading}
                 pagination={{
-                    pageSize,
+                    pageSize: dataFilter.pageSize ?? 10,
                     current: enrichScanSessionsData.metadata.page,
                 }}
                 onChange={() => undefined}
@@ -138,7 +116,7 @@ export default function EnrichDataImportTab() {
                 }}
                 align="end"
                 current={enrichScanSessionsData.metadata.page}
-                pageSize={pageSize}
+                pageSize={dataFilter.pageSize}
                 total={enrichScanSessionsData.metadata.totalItems}
                 onChange={onChangePage}
                 showTotalText

@@ -43,7 +43,7 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
             <RevenueMetricCards fromDate={fromDate} toDate={toDate} />
 
             {/* Row with LineChart and PieChart */}
-            <Row gutter={[16, 16]} className="mb-6">
+            <Row gutter={[24, 24]}>
                 <Col xs={24} lg={15}>
                     <LineChartView
                         title={messages('analytics.totalRevenueByMonth')}
@@ -52,7 +52,7 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
                         lineKey="revenueUsd"
                         lineName={messages('analytics.revenue.modeRevenue')}
                         loading={isLineChartFetching}
-                        chartHeight={300}
+                        chartHeight={250}
                         valuePrefix="$"
                         additionalTooltipKeys={[
                             {

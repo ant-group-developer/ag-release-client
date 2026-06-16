@@ -2554,6 +2554,7 @@
         "reportType": "Loai bao cao",
         "folderPatterns": "Mau thu muc",
         "filePatterns": "Mau file",
+        "filePatternsTooltip": "Mỗi dòng tương ứng với một mẫu regex",
         "requiredHeaders": "Header bat buoc",
         "parserCode": "Ma parser",
         "delimiter": "Ky tu phan tach",

@@ -91,6 +91,7 @@ export default function Analytics2Page() {
 
                             onChangeFilter({ startDate, endDate });
                         }}
+                        picker="month"
                     />
                 </Space>
             }
