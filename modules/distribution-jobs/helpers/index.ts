@@ -1,11 +1,7 @@
-import {
-    DISTRIBUTION_JOB_STATUS,
-    DISTRIBUTION_JOB_TYPE,
-    DistributionJobStatus,
-} from '../types';
+import { DISTRIBUTION_JOB_STATUS, DISTRIBUTION_JOB_TYPE } from '../types';
 
 export const getDistributionJobStatusColor = (
-    status?: DistributionJobStatus | string | null
+    status?: DISTRIBUTION_JOB_STATUS | string | null
 ) => {
     switch (status) {
         case DISTRIBUTION_JOB_STATUS.COMPLETED:

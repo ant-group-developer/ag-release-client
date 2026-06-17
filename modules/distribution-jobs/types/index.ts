@@ -14,14 +14,6 @@ export enum DISTRIBUTION_JOB_TYPE {
     ADMIN_EXPORT = 'ADMIN_EXPORT',
 }
 
-export type DistributionJobStatus =
-    | 'pending'
-    | 'processing'
-    | 'completed'
-    | 'failed'
-    | 'skipped'
-    | 'cancel';
-
 export interface DistributionJobData extends CommonAttribute {
     type: DISTRIBUTION_JOB_TYPE | string;
     upc: string;
@@ -29,7 +21,7 @@ export interface DistributionJobData extends CommonAttribute {
     releaseSubmitId: string;
     stepId: string;
     releaseId: string;
-    status: DistributionJobStatus | string;
+    status: DISTRIBUTION_JOB_STATUS | string;
     deliveryEmail: string | null;
     deliveryEmailSubject: string | null;
     sentAt: string | null;
@@ -38,7 +30,7 @@ export interface DistributionJobData extends CommonAttribute {
 }
 
 export interface DistributionJobFilter extends CommonParams {
-    status?: DistributionJobStatus | string;
+    status?: DISTRIBUTION_JOB_STATUS | string;
     type?: string;
     releaseId?: string;
     releaseSubmitId?: string;

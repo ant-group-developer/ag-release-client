@@ -5,9 +5,9 @@ import { DatePicker, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import {
+    DISTRIBUTION_JOB_STATUS,
     DISTRIBUTION_JOB_TYPE,
     DistributionJobFilter,
-    DistributionJobStatus,
 } from '../../types';
 
 type Props = {
@@ -16,13 +16,7 @@ type Props = {
     onSearch: TOnSearch;
 };
 
-const STATUS_OPTIONS: DistributionJobStatus[] = [
-    'pending',
-    'processing',
-    'completed',
-    'failed',
-    'skipped',
-];
+const STATUS_OPTIONS = Object.values(DISTRIBUTION_JOB_STATUS);
 
 const TYPE_OPTIONS = [
     DISTRIBUTION_JOB_TYPE.EMAIL_STATE51,
@@ -106,7 +100,9 @@ export default function DistributionJobsHeader({
                     })
                 }
                 defaultValue={
-                    dataFilter?.status ? dataFilter.status.split(',') : undefined
+                    dataFilter?.status
+                        ? dataFilter.status.split(',')
+                        : undefined
                 }
                 allowClear
                 className="w-52"
