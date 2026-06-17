@@ -83,7 +83,12 @@ export const useFilter = <DataFilterType extends CommonParams>(
         );
         for (const [key, value] of Object.entries(params)) {
             if (value) {
-                current.set(key, value as string);
+                current.set(
+                    key,
+                    typeof value === 'object'
+                        ? JSON.stringify(value)
+                        : (value as string)
+                );
             } else {
                 current.delete(key);
             }

@@ -13,9 +13,9 @@ import ReleaseSubmitDetailModal from '@/modules/release-submit/components/detail
 import ReleaseSubmitHeader from '@/modules/release-submit/components/header';
 import ReleaseSubmitSnapshotModal from '@/modules/release-submit/components/snapshot-modal';
 import ReleaseSubmitTable from '@/modules/release-submit/components/table';
+import { FieldOrderReleaseExecution3 } from '@/modules/release-submit/enums';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
 import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
-import { RELEASE_SUBMIT_SORT_FIELD } from '@/modules/release-submit/enums';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -29,13 +29,20 @@ export default function ReleaseSubmitsPage() {
     const [selectedRecord, setSelectedRecord] = useState<any>(null);
     const { isDark } = useThemeMode();
 
-    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<ReleaseSubmitFilter>({
-            page: 1,
-            pageSize: PAGE_SIZE,
-            orderBy: ORDER.DESC,
-            fieldOrder: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
-        });
+    const {
+        dataFilter,
+        onChangeFilter,
+        onChangePage,
+        canClearFilter,
+        removeFilter,
+        defaultFilter,
+    } = useFilter<ReleaseSubmitFilter>({
+        page: 1,
+        pageSize: PAGE_SIZE,
+        orderBy: ORDER.DESC,
+        fieldOrder: FieldOrderReleaseExecution3.execution_createdAt,
+        latestOnly: true,
+    });
 
     const { releaseSubmitsData, isFetching, refetch } =
         useGetListReleaseSubmits(dataFilter);
@@ -76,8 +83,10 @@ export default function ReleaseSubmitsPage() {
                     headerTitle={
                         <ReleaseSubmitHeader
                             dataFilter={dataFilter}
+                            defaultFilter={defaultFilter}
                             onChangeFilter={onChangeFilter}
-                            onSearch={onSearch}
+                            canClearFilter={canClearFilter}
+                            removeFilter={removeFilter}
                         />
                     }
                     sticky
