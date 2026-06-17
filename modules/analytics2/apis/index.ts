@@ -42,6 +42,8 @@ import {
     TrendViewTerBarChartParams,
     RevenueTerBarChartItem,
     RevenueTerBarChartParams,
+    ExportReportRequest,
+    ExportReportResponse,
 } from '../types';
 
 export const analytics2Apis = {
@@ -349,4 +351,15 @@ export const analytics2Apis = {
             params
         );
     },
+    exportReport: (params: ExportReportRequest) => {
+        return axiosInstance.post<ExportReportResponse>(
+            '/analytics/reports/export',
+            params
+        );
+    },
 };
+
+export const getExportReportEventsUrl = (jobId: string) => {
+    return `/api/v1/analytics/reports/export/${jobId}/events`;
+};
+

@@ -2,12 +2,15 @@
 
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { useFilter } from '@/hooks/use-filter';
+import ExportReportModal from '@/modules/analytics2/components/modal/export-report-modal';
 import PlaysTabContent from '@/modules/analytics2/components/tab/plays-tab-content';
 import RevenueTabContent from '@/modules/analytics2/components/tab/revenue-tab-content';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
+import { useExportAnalyticsReportEvents } from '@/modules/analytics2/hooks/use-export-analytics-report-events';
 import { Analytics2DataFilter } from '@/modules/analytics2/types';
+import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Radio, Space, theme } from 'antd';
+import { Button, Radio, Space, theme } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -25,6 +28,26 @@ export default function Analytics2Page() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
+
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [jobId, setJobId] = useState<string | null>(null);
+
+    const { latestEvent, summary, isListening, isTerminalEvent, error } =
+        useExportAnalyticsReportEvents({
+            jobId,
+            enabled: !!jobId,
+            onCompleted: (eventData) => {
+                if (eventData.result?.downloadUrl) {
+                    window.location.href = eventData.result.downloadUrl;
+                }
+            },
+        });
+
+    useEffect(() => {
+        if (isTerminalEvent && jobId) {
+            setJobId(null);
+        }
+    }, [isTerminalEvent, jobId]);
 
     const initialTab =
         (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
@@ -61,6 +84,23 @@ export default function Analytics2Page() {
             }}
             extra={
                 <Space>
+                    <Button
+                        icon={
+                            isListening ? (
+                                <LoadingOutlined />
+                            ) : (
+                                <DownloadOutlined />
+                            )
+                        }
+                        onClick={() => {
+                            if (jobId && !isListening) {
+                                setJobId(null);
+                            }
+                            setIsExportModalOpen(true);
+                        }}
+                    >
+                        {messages('common.exportReport')}
+                    </Button>
                     <Radio.Group
                         buttonStyle="solid"
                         optionType="button"
@@ -103,6 +143,17 @@ export default function Analytics2Page() {
                     <RevenueTabContent fromDate={fromDate} toDate={toDate} />
                 )}
             </div>
+
+            <ExportReportModal
+                open={isExportModalOpen}
+                onClose={() => setIsExportModalOpen(false)}
+                jobId={jobId}
+                setJobId={setJobId}
+                latestEvent={latestEvent}
+                summary={summary}
+                isListening={isListening}
+                error={error}
+            />
         </PageContainer>
     );
 }

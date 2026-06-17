@@ -1,8 +1,17 @@
-import { ReleasesData } from '@/modules/releases/types';
-import { Avatar, Card, Col, Empty, Row, Typography, theme } from 'antd';
-import { useTranslations } from 'next-intl';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { ArtistProfileData } from '@/modules/artist/types';
+import { ReleaseContributor } from '@/modules/release-contributor/types';
+import { ReleasesData } from '@/modules/releases/types';
+import { Avatar, Space, Table, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { useTranslations } from 'next-intl';
+import { OVERVIEW_FALLBACK_VALUE } from './overview-constants';
+import OverviewText from './overview-text';
+
+const { Title } = Typography;
+const CONTRIBUTOR_AVATAR_SIZE = 24;
+const CONTRIBUTOR_PROFILE_AVATAR_SIZE = 28;
+const CONTRIBUTOR_PROFILE_WINDOW_FEATURES = 'noopener';
 
 type Props = {
     releaseData: ReleasesData;
@@ -10,93 +19,96 @@ type Props = {
 
 export default function ReleaseContributorsSection({ releaseData }: Props) {
     const messages = useTranslations();
-    const { token } = theme.useToken();
     const releaseContributors = releaseData?.releaseContributors || [];
 
-    return (
-        <Card
-            title={
-                <span className="text-base font-semibold">
-                    {messages('release.overview.releaseContributors')}
-                </span>
-            }
-            style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-            styles={{
-                body: { padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' },
-            }}
-        >
-            {releaseContributors.length === 0 ? (
-                <div
-                    className="flex justify-center items-center py-8 rounded-lg border border-dashed"
-                    style={{
-                        borderColor: token.colorBorder,
-                        backgroundColor: token.colorBgContainer,
-                    }}
-                >
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                </div>
-            ) : (
-                <Row gutter={[16, 16]}>
-                    {releaseContributors.map((item) => {
-                        const artist = item?.artist;
-                        if (!artist) return null;
-                        return (
-                            <Col span={24} key={item.id}>
-                                <div
-                                    className="flex items-center justify-between p-4 rounded-lg border transition-all duration-300 hover:shadow-md"
-                                    style={{
-                                        backgroundColor: token.colorBgContainer,
-                                        borderColor: token.colorBorderSecondary,
-                                    }}
+    if (!releaseContributors.length) {
+        return null;
+    }
+
+    const columns: ColumnsType<ReleaseContributor> = [
+        {
+            title: messages('common.name'),
+            render: (_, item) => {
+                const artist = item?.artist;
+
+                return (
+                    <Space align="center">
+                        <Avatar
+                            size={CONTRIBUTOR_AVATAR_SIZE}
+                            src={artist?.picture ?? ''}
+                            className="flex-shrink-0"
+                        >
+                            {artist?.name?.[0]?.toUpperCase()}
+                        </Avatar>
+                        <span className="font-semibold">
+                            {artist?.name || OVERVIEW_FALLBACK_VALUE}
+                        </span>
+                    </Space>
+                );
+            },
+        },
+        {
+            title: messages('country.label'),
+            render: (_, item) => (
+                <OverviewText value={item.artist?.country?.name} strong />
+            ),
+        },
+        {
+            title: messages('common.role'),
+            render: (_, item) => (
+                <OverviewText value={item.artistRole?.name} strong />
+            ),
+        },
+        {
+            title: messages('artist.profiles'),
+            render: (_, item) =>
+                item.artist?.artistProfiles?.length ? (
+                    <Space size={6} wrap>
+                        {item.artist.artistProfiles.map(
+                            (profile: ArtistProfileData) => (
+                                <CustomTooltip
+                                    key={profile.id}
+                                    title={profile.dsp?.name}
                                 >
-                                    <div className="flex items-center gap-3 min-w-0">
-                                        <Avatar
-                                            size={48}
-                                            src={artist.picture ?? ''}
-                                            style={{ backgroundColor: token.colorPrimary }}
-                                        >
-                                            {artist.name?.[0]?.toUpperCase()}
-                                        </Avatar>
-                                        <div className="min-w-0">
-                                            <Typography.Text strong className="block truncate text-[14px]">
-                                                {artist.name}
-                                            </Typography.Text>
-                                            <Typography.Text type="secondary" className="block truncate text-[12px]">
-                                                {item.artistRole?.name || '-'}
-                                            </Typography.Text>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-1.5 flex-shrink-0 pl-2">
-                                        {artist.artistProfiles && artist.artistProfiles.length > 0 ? (
-                                            artist.artistProfiles.map((profile: ArtistProfileData) => (
-                                                <CustomTooltip key={profile.id} title={profile.dsp?.name}>
-                                                    <Avatar
-                                                        size={28}
-                                                        src={profile.dsp?.picture ?? ''}
-                                                        className="cursor-pointer hover:scale-110 transition-transform duration-200"
-                                                        onClick={(e) => {
-                                                            e?.stopPropagation();
-                                                            if (profile.url) {
-                                                                window.open(profile.url, '_blank', 'noopener');
-                                                            }
-                                                        }}
-                                                    >
-                                                        {profile.dsp?.name?.[0]}
-                                                    </Avatar>
-                                                </CustomTooltip>
-                                            ))
-                                        ) : (
-                                            <Typography.Text type="secondary" className="text-[12px] italic">
-                                                -
-                                            </Typography.Text>
-                                        )}
-                                    </div>
-                                </div>
-                            </Col>
-                        );
-                    })}
-                </Row>
-            )}
-        </Card>
+                                    <Avatar
+                                        size={CONTRIBUTOR_PROFILE_AVATAR_SIZE}
+                                        src={profile.dsp?.picture ?? ''}
+                                        className="cursor-pointer transition-transform duration-200 hover:scale-110"
+                                        onClick={(e) => {
+                                            e?.stopPropagation();
+                                            if (profile.url) {
+                                                window.open(
+                                                    profile.url,
+                                                    '_blank',
+                                                    CONTRIBUTOR_PROFILE_WINDOW_FEATURES
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        {profile.dsp?.name?.[0]}
+                                    </Avatar>
+                                </CustomTooltip>
+                            )
+                        )}
+                    </Space>
+                ) : (
+                    <OverviewText value={OVERVIEW_FALLBACK_VALUE} />
+                ),
+        },
+    ];
+
+    return (
+        <>
+            <Title level={5} className="!mb-4 text-[16px] font-bold">
+                {messages('release.overview.releaseContributors')}
+            </Title>
+            <Table
+                columns={columns}
+                dataSource={releaseContributors}
+                pagination={false}
+                rowKey="id"
+                size="small"
+            />
+        </>
     );
 }
