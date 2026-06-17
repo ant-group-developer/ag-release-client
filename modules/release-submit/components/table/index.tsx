@@ -14,7 +14,7 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space, Tag, theme, Typography } from 'antd';
 import { Eye, FileJson } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { RELEASE_SUBMIT_SORT_FIELD } from '../../enums';
+import { FieldOrderReleaseExecution3 } from '../../enums';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -58,7 +58,14 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('releaseExecution.columns.upc'),
-            key: 'upc',
+            dataIndex: FieldOrderReleaseExecution3.execution_releaseUpc,
+            key: FieldOrderReleaseExecution3.execution_releaseUpc,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_releaseUpc
+            ),
             width: 150,
             fixed: 'left',
             render: (_, record) => (
@@ -71,7 +78,14 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('releaseExecution.columns.releaseName'),
-            key: 'releaseId',
+            dataIndex: FieldOrderReleaseExecution3.execution_releaseTitle,
+            key: FieldOrderReleaseExecution3.execution_releaseTitle,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_releaseTitle
+            ),
             width: 250,
             ellipsis: true,
             render: (_, record) => {
@@ -107,8 +121,14 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('releaseExecution.columns.type'),
-            dataIndex: 'type',
-            key: 'type',
+            dataIndex: FieldOrderReleaseExecution3.execution_type,
+            key: FieldOrderReleaseExecution3.execution_type,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_type
+            ),
             width: 120,
             render: (_, record) =>
                 record.type ? (
@@ -121,8 +141,14 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('releaseExecution.columns.status'),
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: FieldOrderReleaseExecution3.execution_status,
+            key: FieldOrderReleaseExecution3.execution_status,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_status
+            ),
             width: 130,
             render: (_, record) =>
                 record.status ? (
@@ -240,13 +266,13 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            dataIndex: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
-            key: RELEASE_SUBMIT_SORT_FIELD.CREATED_AT,
+            dataIndex: FieldOrderReleaseExecution3.execution_createdAt,
+            key: FieldOrderReleaseExecution3.execution_createdAt,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter?.orderBy,
                 dataFilter?.fieldOrder,
-                RELEASE_SUBMIT_SORT_FIELD.CREATED_AT
+                FieldOrderReleaseExecution3.execution_createdAt
             ),
             width: 150,
             render: (value, record) =>
