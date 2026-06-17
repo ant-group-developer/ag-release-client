@@ -5,7 +5,6 @@ import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import InfoRow from '@/modules/releases/components/view/info-row';
 import OverviewText from '@/modules/releases/components/view/overview-text';
 import TrackCoverArt from '@/modules/tracks/components/table/trackCoverArt';
-import TagScanCopyright from '@/modules/tracks/components/tags/tag-scan-coppyright';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import { TrackData } from '@/modules/tracks/types';
@@ -151,12 +150,6 @@ export default function TracksCollapse({ tracks }: Props) {
                             {record.version ? `${record.version} • ` : ''}
                             {record.sampleLength || '-'}
                         </span>
-                    </div>
-                    <div
-                        className="ml-auto"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <TagScanCopyright status={record.scanCopyrightStatus} />
                     </div>
                 </div>
             ),
