@@ -50,9 +50,11 @@ export interface PreValidateImportResponse {
 
 export enum ImportJobStatus {
     PENDING = 'PENDING',
+    QUEUED = 'QUEUED',
     PROCESSING = 'PROCESSING',
     COMPLETED = 'COMPLETED',
     FAILED = 'FAILED',
+    CANCELLED = 'CANCELLED',
 }
 
 export enum FileUploadStatus {

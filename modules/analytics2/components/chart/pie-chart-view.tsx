@@ -13,7 +13,7 @@ interface DataItem {
 }
 
 interface PieChartViewProps {
-    title: string;
+    title: React.ReactNode;
     subtitle?: string;
     data: DataItem[];
     colors?: string[];
@@ -197,9 +197,13 @@ export default function PieChartView({
             }}
         >
             <div>
-                <Title level={5} className="!m-0">
-                    {title}
-                </Title>
+                {typeof title === 'string' ? (
+                    <Title level={5} className="!m-0">
+                        {title}
+                    </Title>
+                ) : (
+                    title
+                )}
                 {subtitle && (
                     <Text type="secondary" style={{ fontSize: 13 }}>
                         {subtitle}

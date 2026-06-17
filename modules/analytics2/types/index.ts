@@ -328,5 +328,23 @@ export interface RevenueDspBarChartItem {
     quantity: number;
 }
 
+export interface TrendViewTerBarChartParams {
+    fromDate: string;
+    toDate: string;
+}
 
+export interface TrendViewTerBarChartItem {
+    territory: string;
+    totalViews: number;
+}
 
+export interface RevenueTerBarChartParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface RevenueTerBarChartItem {
+    territory: string;
+    revenueUsd: number;
+    revenueUsdExact: string;
+}

@@ -2095,7 +2095,9 @@
         "totalTrendViews": "Views by month",
         "totalRevenueByMonth": "Revenue by month",
         "dspDistribution": "Views by DSP",
+        "terDistribution": "Views by Country",
         "revenueDspDistribution": "Revenue by DSP",
+        "revenueTerDistribution": "Revenue by Country",
         "totalSalesViews": "Sales Views",
 
         "totalRevenueUsd": "Total Revenue",

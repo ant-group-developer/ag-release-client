@@ -2087,7 +2087,9 @@
         "totalTrendViews": "Lượt xem theo tháng",
         "totalRevenueByMonth": "Doanh thu theo tháng",
         "dspDistribution": "Lượt xem theo DSP",
+        "terDistribution": "Lượt xem theo quốc gia",
         "revenueDspDistribution": "Doanh thu theo DSP",
+        "revenueTerDistribution": "Doanh thu theo quốc gia",
         "totalSalesViews": "Lượt xem bán hàng",
 
         "totalRevenueUsd": "Tổng doanh thu (USD)",

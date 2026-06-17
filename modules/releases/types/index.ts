@@ -85,6 +85,8 @@ export interface ExternalMetadata {
 
 export interface ReleaseMetadataExternal {
     spotify?: ExternalMetadata;
+    deezer?: ExternalMetadata;
+    [key: string]: ExternalMetadata | undefined;
 }
 
 export interface VideoData {
