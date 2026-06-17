@@ -17,11 +17,13 @@ import {
     UpdateReportConfigPayload,
 } from '../../types/payload';
 
+import { useGetListSimpleCurrencies } from '@/modules/currencies/hooks/use-get-list-simple-currencies';
+
 type ReportConfigFormValues = Omit<
     CreateReportConfigPayload,
     'folderPatterns' | 'filePatterns' | 'requiredHeaders'
 > & {
-    folderPatterns?: string[];
+    folderPatterns?: string;
     filePatterns?: string;
     requiredHeaders?: string[];
 };
@@ -59,12 +61,19 @@ export default function ReportConfigForm({ ...props }: Props) {
         useUpdateReportConfig();
     const { reportConfigData, isFetching } =
         useGetDetailReportConfig(reportConfigId);
+    const { currenciesData, isFetching: isFetchingCurrencies } =
+        useGetListSimpleCurrencies();
+
+    const currencyOptions = currenciesData.map((item) => ({
+        label: `${item.code} - ${item.name}`,
+        value: item.code,
+    }));
 
     const buildPayload = (
         values: ReportConfigFormValues
     ): CreateReportConfigPayload => ({
         ...values,
-        folderPatterns: normalizeTags(values.folderPatterns),
+        folderPatterns: normalizeTextArea(values.folderPatterns),
         filePatterns: normalizeTextArea(values.filePatterns),
         requiredHeaders: normalizeTags(values.requiredHeaders),
         delimiter: values.delimiter ?? ',',
@@ -113,7 +122,8 @@ export default function ReportConfigForm({ ...props }: Props) {
         if (isUpdateForm) {
             form.setFieldsValue({
                 ...reportConfigData,
-                folderPatterns: reportConfigData?.folderPatterns ?? [],
+                folderPatterns:
+                    reportConfigData?.folderPatterns?.join('\n') ?? '',
                 filePatterns: reportConfigData?.filePatterns?.join('\n') ?? '',
                 requiredHeaders: reportConfigData?.requiredHeaders ?? [],
             });
@@ -224,7 +234,13 @@ export default function ReportConfigForm({ ...props }: Props) {
                         name="defaultCurrency"
                         label={messages('reportConfigs.defaultCurrency')}
                     >
-                        <Input allowClear />
+                        <Select
+                            allowClear
+                            showSearch
+                            options={currencyOptions}
+                            loading={isFetchingCurrencies}
+                            optionFilterProp="label"
+                        />
                     </AppFormItem>
 
                     <AppFormItem
@@ -237,8 +253,14 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="folderPatterns"
                         label={messages('reportConfigs.folderPatterns')}
+                        tooltipInfo={messages(
+                            'reportConfigs.folderPatternsTooltip'
+                        )}
                     >
-                        <Select mode="tags" tokenSeparators={[',']} />
+                        <Input.TextArea
+                            autoSize={{ minRows: 2, maxRows: 6 }}
+                            allowClear
+                        />
                     </AppFormItem>
 
                     <AppFormItem
