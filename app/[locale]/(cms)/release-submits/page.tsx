@@ -12,8 +12,12 @@ import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums
 import ReleaseSubmitDetailModal from '@/modules/release-submit/components/detail-modal';
 import ReleaseSubmitHeader from '@/modules/release-submit/components/header';
 import ReleaseSubmitSnapshotModal from '@/modules/release-submit/components/snapshot-modal';
+import ReleaseSubmitStatusSummary from '@/modules/release-submit/components/status-summary';
 import ReleaseSubmitTable from '@/modules/release-submit/components/table';
-import { FieldOrderReleaseExecution3 } from '@/modules/release-submit/enums';
+import {
+    FieldOrderReleaseExecution3,
+    RELEASE_SUBMIT_STATUS,
+} from '@/modules/release-submit/enums';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
 import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
 import { PageContainer } from '@ant-design/pro-components';
@@ -59,25 +63,25 @@ export default function ReleaseSubmitsPage() {
         );
     };
 
-    // const statusSummary = Object.values(RELEASE_EXECUTION_STATUS).map(
-    //     (status) => ({
-    //         status,
-    //         count:
-    //             releaseSubmitsData?.metadata?.statusCounts?.[status] ??
-    //             releaseSubmitsData?.items?.filter(
-    //                 (item) => item.status === status
-    //             ).length ??
-    //             0,
-    //     })
-    // );
+    const statusSummary = Object.values(RELEASE_SUBMIT_STATUS).map(
+        (status) => ({
+            status,
+            count:
+                releaseSubmitsData?.metadata?.statusCounts?.[status] ??
+                releaseSubmitsData?.items?.filter(
+                    (item) => item.status === status
+                ).length ??
+                0,
+        })
+    );
 
     return (
         <AppPageWrapper>
             <PageContainer title={messages('releaseExecution.label')}>
-                {/* <ReleaseSubmitStatusSummary
+                <ReleaseSubmitStatusSummary
                     items={statusSummary}
                     loading={isFetching}
-                /> */}
+                />
 
                 <ReleaseSubmitTable
                     headerTitle={

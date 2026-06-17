@@ -17,11 +17,11 @@ import {
     SoundOutlined,
     TagOutlined,
 } from '@ant-design/icons';
-import { Checkbox, Popover, Select, Space, Table } from 'antd';
+import { Button, Checkbox, Popover, Select, Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
     RELEASE_EXECUTION_STEP_TYPE,
     RELEASE_SUBMIT_STATUS,
@@ -49,6 +49,40 @@ type StepFilterTableRow = {
     excludeStatuses: RELEASE_SUBMIT_STEP_STATUS[];
 };
 
+const createStepFilterRows = (
+    stepFilters: ReleaseExecutionStepFilter[] = []
+) => {
+    const rowMap = new Map<RELEASE_EXECUTION_STEP_TYPE, StepFilterTableRow>(
+        Object.values(RELEASE_EXECUTION_STEP_TYPE).map((type) => [
+            type,
+            {
+                type,
+                enabled: false,
+                includeStatuses: [],
+                excludeStatuses: [],
+            },
+        ])
+    );
+
+    stepFilters.forEach((step) => {
+        if (!step.type) return;
+
+        const row = rowMap.get(step.type);
+        if (!row) return;
+
+        row.enabled = true;
+        if (!step.status) return;
+
+        if (step.exclude) {
+            row.excludeStatuses.push(step.status);
+        } else {
+            row.includeStatuses.push(step.status);
+        }
+    });
+
+    return Array.from(rowMap.values());
+};
+
 export default function ReleaseSubmitHeader({
     dataFilter,
     defaultFilter,
@@ -63,6 +97,9 @@ export default function ReleaseSubmitHeader({
     const { isAdmin } = useAuth();
     const { tenantSimpleData, isLoading: isLoadingTenants } =
         useGetListSimpleTenant();
+    const [stepFilterRows, setStepFilterRows] = useState<StepFilterTableRow[]>(
+        () => createStepFilterRows(dataFilter.steps)
+    );
 
     const executionStatusOptions = useMemo(
         () =>
@@ -301,48 +338,11 @@ export default function ReleaseSubmitHeader({
         [canClearFilter, mappedDataFilter]
     );
 
-    const stepFilters = useMemo(
-        () => dataFilter.steps ?? [],
-        [dataFilter.steps]
-    );
-
     const changeStepFilters = (steps: ReleaseExecutionStepFilter[]) => {
         onChangeFilter({
             steps: steps.length ? steps : undefined,
         });
     };
-
-    const stepFilterRows = useMemo<StepFilterTableRow[]>(() => {
-        const rowMap = new Map<RELEASE_EXECUTION_STEP_TYPE, StepFilterTableRow>(
-            Object.values(RELEASE_EXECUTION_STEP_TYPE).map((type) => [
-                type,
-                {
-                    type,
-                    enabled: false,
-                    includeStatuses: [],
-                    excludeStatuses: [],
-                },
-            ])
-        );
-
-        stepFilters.forEach((step) => {
-            if (!step.type) return;
-
-            const row = rowMap.get(step.type);
-            if (!row) return;
-
-            row.enabled = true;
-            if (!step.status) return;
-
-            if (step.exclude) {
-                row.excludeStatuses.push(step.status);
-            } else {
-                row.includeStatuses.push(step.status);
-            }
-        });
-
-        return Array.from(rowMap.values());
-    }, [stepFilters]);
 
     const parseStepFilterRows = (rows: StepFilterTableRow[]) =>
         rows.flatMap<ReleaseExecutionStepFilter>((row) => {
@@ -373,7 +373,13 @@ export default function ReleaseSubmitHeader({
             row.type === type ? { ...row, ...value } : row
         );
 
+        setStepFilterRows(nextRows);
         changeStepFilters(parseStepFilterRows(nextRows));
+    };
+
+    const handleRemoveFilter = () => {
+        setStepFilterRows(createStepFilterRows());
+        removeFilter();
     };
 
     const appliedStepFilterCount = stepFilterRows.filter(
@@ -392,12 +398,6 @@ export default function ReleaseSubmitHeader({
                     onChange={(event) =>
                         updateStepFilterRow(record.type, {
                             enabled: event.target.checked,
-                            includeStatuses: event.target.checked
-                                ? record.includeStatuses
-                                : [],
-                            excludeStatuses: event.target.checked
-                                ? record.excludeStatuses
-                                : [],
                         })
                     }
                 />
@@ -406,7 +406,7 @@ export default function ReleaseSubmitHeader({
         {
             title: 'Step',
             dataIndex: 'type',
-            width: 260,
+            width: 220,
             render: (value) => formatEnumLabel(value),
         },
         {
@@ -454,7 +454,7 @@ export default function ReleaseSubmitHeader({
     ];
 
     const stepsFilterContent = (
-        <div className="w-[780px]">
+        <div className="w-[750px]">
             <Table
                 rowKey="type"
                 size="small"
@@ -503,7 +503,7 @@ export default function ReleaseSubmitHeader({
                     })
                 }
             >
-                Latest only
+                {messages('common.latestOnly')}
             </Checkbox>
 
             <Popover
@@ -512,13 +512,10 @@ export default function ReleaseSubmitHeader({
                 content={stepsFilterContent}
                 arrow={false}
             >
-                <button
-                    type="button"
-                    className="h-8 rounded-md border border-solid border-[#d9d9d9] bg-white px-4 text-sm text-[#1f2937] shadow-sm hover:border-[#4096ff] hover:text-[#1677ff]"
-                >
-                    Steps
+                <Button>
+                    {messages('common.steps')}
                     {!!appliedStepFilterCount && ` (${appliedStepFilterCount})`}
-                </button>
+                </Button>
             </Popover>
 
             <FilterPanel
@@ -526,7 +523,7 @@ export default function ReleaseSubmitHeader({
                 dataFilter={mappedDataFilter}
                 defaultFilter={mappedDefaultFilter}
                 onChangeFilter={handleChangeFilter}
-                removeFilter={removeFilter}
+                removeFilter={handleRemoveFilter}
                 canClearFilter={canClearReleaseFilter}
             />
         </Space>

@@ -78,6 +78,8 @@
         "regionCode": "Mã vùng",
         "link": "Đường dẫn",
         "step": "Bước",
+        "steps": "Các bước",
+        "latestOnly": "Chỉ bản mới nhất",
         "loading": "Đang tải",
         "exportTemplate": "Xuất mẫu",
         "incomplete": "Chưa hoàn thành",
@@ -2487,6 +2489,15 @@
             "AWAITING_ACTION": "Chờ xử lý",
             "COMPLETED": "Hoàn thành",
             "PARTIALLY_COMPLETED": "Hoàn thành một phần",
+            "FAILED": "Thất bại",
+            "CANCELLED": "Đã hủy"
+        },
+        "submitStatusOptions": {
+            "NEW": "Mới",
+            "PROCESSING": "Đang xử lý",
+            "WAITING_ACTION": "Chờ xử lý",
+            "WAITING_PARTNER": "Chờ đối tác",
+            "DONE": "Hoàn thành",
             "FAILED": "Thất bại",
             "CANCELLED": "Đã hủy"
         },

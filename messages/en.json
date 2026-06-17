@@ -78,6 +78,8 @@
         "regionCode": "Region Code",
         "link": "Link",
         "step": "Step",
+        "steps": "Steps",
+        "latestOnly": "Latest only",
         "exportTemplate": "Export template",
         "loading": "Loading",
         "incomplete": "Incomplete",
@@ -2496,6 +2498,15 @@
             "COMPLETED": "All steps succeeded",
             "PARTIALLY_COMPLETED": "Some ok, some failed",
             "FAILED": "All failed",
+            "CANCELLED": "Cancelled"
+        },
+        "submitStatusOptions": {
+            "NEW": "New",
+            "PROCESSING": "Processing",
+            "WAITING_ACTION": "Waiting action",
+            "WAITING_PARTNER": "Waiting partner",
+            "DONE": "Done",
+            "FAILED": "Failed",
             "CANCELLED": "Cancelled"
         },
         "stepStatus": {
