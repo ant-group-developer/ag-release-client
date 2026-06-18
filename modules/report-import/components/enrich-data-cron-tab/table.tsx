@@ -93,16 +93,7 @@ export default function EnrichScanScheduleTable({
             width: 140,
             align: 'center',
         },
-        {
-            title: messages(
-                'reportConfigs.enrichScanSchedules.isImportedFromReport'
-            ),
-            key: 'isImportedFromReport',
-            dataIndex: 'isImportedFromReport',
-            width: 180,
-            align: 'center',
-            render: renderBoolean,
-        },
+
         {
             title: messages('reportConfigs.enrichScanSchedules.limitCount'),
             key: 'limitCount',
@@ -111,15 +102,6 @@ export default function EnrichScanScheduleTable({
             align: 'right',
             render: (val) => val ?? '-',
         },
-        {
-            title: messages('reportConfigs.enrichScanSchedules.force'),
-            key: 'force',
-            dataIndex: 'force',
-            width: 110,
-            align: 'center',
-            render: renderBoolean,
-        },
-
         {
             key: 'actions',
             width: 90,

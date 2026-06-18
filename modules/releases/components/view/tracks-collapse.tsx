@@ -60,6 +60,7 @@ export default function TracksCollapse({
                                       record.audioFile.duration
                                   )
                                 : '-'}
+                            {record.isrc ? ` • ${record.isrc}` : ''}
                         </span>
                     </div>
                 </div>

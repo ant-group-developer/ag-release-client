@@ -3,7 +3,7 @@ import { CommonParams, PaginationResponse } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 import { reportConfigApis } from '../apis';
 import { etlJobQueryKeys } from '../constants/query-keys';
-import { EtlJobData, ImportJobStatus } from '../types/payload';
+import { EtlJobData, RUNNING_IMPORT_JOB_STATUSES } from '../types/payload';
 
 export const useGetListEtlJobs = (params: CommonParams) => {
     const { data, ...res } = useQuery({
@@ -14,8 +14,7 @@ export const useGetListEtlJobs = (params: CommonParams) => {
             const items = query.state.data?.data?.data?.items ?? [];
             const hasRunningJob = items.some(
                 (item) =>
-                    item.status === ImportJobStatus.PENDING ||
-                    item.status === ImportJobStatus.PROCESSING
+                    RUNNING_IMPORT_JOB_STATUSES.includes(item.status)
             );
 
             return hasRunningJob ? 5000 : false;

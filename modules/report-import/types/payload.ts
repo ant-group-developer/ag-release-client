@@ -48,7 +48,7 @@ export interface PreValidateImportResponse {
     invalid: PreValidateImportInvalidFile[];
 }
 
-export enum ImportJobStatus {
+export enum IMPORT_JOBS_STATUS {
     PENDING = 'PENDING',
     QUEUED = 'QUEUED',
     PROCESSING = 'PROCESSING',
@@ -56,6 +56,12 @@ export enum ImportJobStatus {
     FAILED = 'FAILED',
     CANCELLED = 'CANCELLED',
 }
+
+export const RUNNING_IMPORT_JOB_STATUSES = [
+    IMPORT_JOBS_STATUS.PENDING,
+    IMPORT_JOBS_STATUS.QUEUED,
+    IMPORT_JOBS_STATUS.PROCESSING,
+];
 
 export enum FileUploadStatus {
     IDLE = 'idle',
@@ -66,7 +72,7 @@ export enum FileUploadStatus {
 
 export interface ImportJobStatusResponse {
     id: string;
-    status: ImportJobStatus;
+    status: IMPORT_JOBS_STATUS;
     progress: {
         current: number;
         total: number;
@@ -100,7 +106,7 @@ export interface ImportJobStatusResponse {
 export interface EtlJobData {
     id: string;
     sourceType: ETL_JOB_SOURCE_TYPE | string;
-    status: ImportJobStatus;
+    status: IMPORT_JOBS_STATUS;
     progress: {
         current: number;
         total: number;

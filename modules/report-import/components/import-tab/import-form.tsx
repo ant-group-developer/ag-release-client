@@ -98,6 +98,7 @@ export const ImportForm: React.FC<ImportFormProps> = ({ form, onSubmit }) => {
                             showRemoveIcon: true,
                         }}
                         accept={accept}
+                        className="[&_.ant-upload-list]:max-h-[300px] [&_.ant-upload-list]:overflow-y-auto"
                     >
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
