@@ -56,9 +56,7 @@ export default function TrackArtistsTable({
                         >
                             {row.name?.[0]?.toUpperCase()}
                         </Avatar>
-                        <span className="font-semibold">
-                            {row.name || OVERVIEW_FALLBACK_VALUE}
-                        </span>
+                        <span>{row.name || OVERVIEW_FALLBACK_VALUE}</span>
                     </Space>
                 ),
             },
@@ -66,7 +64,7 @@ export default function TrackArtistsTable({
                 title: messages('common.role'),
                 dataIndex: 'role',
                 key: 'role',
-                render: (text: string) => <OverviewText value={text} strong />,
+                render: (text: string) => <OverviewText value={text} />,
             },
             {
                 title: messages('artist.profiles'),

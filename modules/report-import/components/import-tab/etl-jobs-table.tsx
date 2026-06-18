@@ -23,6 +23,8 @@ const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
         'reportConfigs.importResult.sourceTypeFtpAutoCron',
     [ETL_JOB_SOURCE_TYPE.ANALYTICS_REPORT_EXPORT]:
         'reportConfigs.importResult.sourceTypeAnalyticsReportExport',
+    [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]:
+        'reportConfigs.importResult.sourceTypeReportReleaseDelete',
 };
 
 const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
@@ -32,6 +34,7 @@ const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
     [ETL_JOB_SOURCE_TYPE.FTP_RETRY]: 'orange',
     [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]: 'green',
     [ETL_JOB_SOURCE_TYPE.ANALYTICS_REPORT_EXPORT]: 'geekblue',
+    [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]: 'red',
 };
 
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {

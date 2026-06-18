@@ -54,14 +54,7 @@ export default function MetadataExternalOverviewSection({
     const dspItems = useMemo(() => dspData?.items ?? [], [dspData?.items]);
 
     if (!metadataExternalItems.length) {
-        return (
-            <>
-                <Title level={5} className="!mb-4 text-[16px] font-bold">
-                    {messages('release.overview.albumLink')}
-                </Title>
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </>
-        );
+        return null;
     }
 
     return (

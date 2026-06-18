@@ -122,8 +122,14 @@ export interface EtlJobData {
         name: string;
         sizeBytes: number;
         hash: string | null;
-    };
+    } | null;
     params?: {
+        tenantId?: string;
+        deleteAll?: boolean;
+        resolvedFromDateUtc?: string | null;
+        resolvedToDateUtc?: string | null;
+        matchedReleases?: number;
+        matchedTracks?: number;
         files?: {
             path: string;
             r2Key: string;
@@ -168,6 +174,42 @@ export interface StartEnrichScanPayload {
     limit: number;
     force: boolean;
     isImportedFromReport?: boolean;
+}
+
+export interface DeleteImportedReleasesPayload {
+    fromDate?: string;
+    toDate?: string;
+    tenantId?: string;
+    labelId?: string;
+    importSourceType?: ETL_JOB_SOURCE_TYPE | string;
+    parserCode?: string;
+    fileName?: string;
+    deleteAll?: boolean;
+}
+
+export interface DeleteImportedReleasesResponse {
+    id?: string;
+    jobId?: string;
+    status?: IMPORT_JOBS_STATUS | string;
+    eventsUrl?: string;
+    data?: DeleteImportedReleasesResponse;
+    [key: string]: any;
+}
+
+export enum DeleteImportedReleasesEventType {
+    PROGRESS = 'progress',
+    HEARTBEAT = 'heartbeat',
+    COMPLETED = 'completed',
+    FAILED = 'failed',
+}
+
+export interface DeleteImportedReleasesEventData
+    extends Partial<Omit<EtlJobData, 'id'>> {
+    type: DeleteImportedReleasesEventType | string;
+    id?: string;
+    summary?: Partial<EtlJobData>;
+    message?: string;
+    [key: string]: any;
 }
 
 export interface EnrichScanSummary {

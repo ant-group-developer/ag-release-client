@@ -279,7 +279,6 @@ export interface RevenueLabelItem {
     quantity: number;
 }
 
-
 export interface TrendViewLineChartParams {
     fromDate: string;
     toDate: string;
@@ -357,6 +356,11 @@ export interface ExportReportResponse {
     jobId: string;
     status: string;
     eventsUrl: string;
+}
+
+export interface ExportReportJob {
+    id: string;
+    createdAt: number;
 }
 
 export enum ExportReportEventType {

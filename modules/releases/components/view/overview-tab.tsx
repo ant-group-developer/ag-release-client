@@ -40,11 +40,19 @@ function OverviewSectionCard({
 export default function OverviewTab({ releaseData }: Props) {
     if (!releaseData) return null;
 
+    const isHasMetadataExternal = Object.values(
+        releaseData.metadataExternal ?? {}
+    ).some((metadata) => !!metadata);
+
     return (
         <div className="flex flex-col gap-4 pb-4">
-            <OverviewSectionCard>
-                <MetadataExternalOverviewSection releaseData={releaseData} />
-            </OverviewSectionCard>
+            {isHasMetadataExternal && (
+                <OverviewSectionCard>
+                    <MetadataExternalOverviewSection
+                        releaseData={releaseData}
+                    />
+                </OverviewSectionCard>
+            )}
             <OverviewSectionCard>
                 <ReleaseArtistsSection releaseData={releaseData} />
             </OverviewSectionCard>

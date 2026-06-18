@@ -40,9 +40,7 @@ export default function ReleaseContributorsSection({ releaseData }: Props) {
                         >
                             {artist?.name?.[0]?.toUpperCase()}
                         </Avatar>
-                        <span className="font-semibold">
-                            {artist?.name || OVERVIEW_FALLBACK_VALUE}
-                        </span>
+                        <span>{artist?.name || OVERVIEW_FALLBACK_VALUE}</span>
                     </Space>
                 );
             },
@@ -50,14 +48,12 @@ export default function ReleaseContributorsSection({ releaseData }: Props) {
         {
             title: messages('country.label'),
             render: (_, item) => (
-                <OverviewText value={item.artist?.country?.name} strong />
+                <OverviewText value={item.artist?.country?.name} />
             ),
         },
         {
             title: messages('common.role'),
-            render: (_, item) => (
-                <OverviewText value={item.artistRole?.name} strong />
-            ),
+            render: (_, item) => <OverviewText value={item.artistRole?.name} />,
         },
         {
             title: messages('artist.profiles'),

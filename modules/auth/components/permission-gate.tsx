@@ -9,6 +9,8 @@ interface PermissionGateProps {
     anyOf?: (Permission | string)[];
     /** Show children if user has ALL of these permissions */
     allOf?: (Permission | string)[];
+    /** Show children only for system admin users */
+    adminOnly?: boolean;
     /** Content to show when permission is granted */
     children: ReactNode;
     /** Optional content to show when permission is denied */
@@ -39,11 +41,16 @@ export function PermissionGate({
     permission,
     anyOf,
     allOf,
+    adminOnly = false,
     children,
     fallback = null,
 }: PermissionGateProps) {
     const { hasPermission, hasAnyPermission, hasAllPermissions, isAdmin } =
         usePermission();
+
+    if (adminOnly) {
+        return isAdmin ? <>{children}</> : <>{fallback}</>;
+    }
 
     // Admin always has access
     if (isAdmin) {

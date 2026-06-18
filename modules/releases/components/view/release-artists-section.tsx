@@ -40,9 +40,7 @@ export default function ReleaseArtistsSection({ releaseData }: Props) {
                         >
                             {artist?.name?.[0]?.toUpperCase()}
                         </Avatar>
-                        <span className="font-semibold">
-                            {artist?.name || OVERVIEW_FALLBACK_VALUE}
-                        </span>
+                        <span>{artist?.name || OVERVIEW_FALLBACK_VALUE}</span>
                     </Space>
                 );
             },
@@ -50,7 +48,7 @@ export default function ReleaseArtistsSection({ releaseData }: Props) {
         {
             title: messages('country.label'),
             render: (_, item) => (
-                <OverviewText value={item.artist?.country?.name} strong />
+                <OverviewText value={item.artist?.country?.name} />
             ),
         },
         {

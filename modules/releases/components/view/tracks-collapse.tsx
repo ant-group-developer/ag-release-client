@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import TrackArtistsTable from './track-artists-table';
 import TrackMetadataExternal from './track-metadata-external';
+import { DownOutlined } from '@ant-design/icons';
 
 type Props = {
     tracks: TrackData[];
@@ -121,7 +122,10 @@ export default function TracksCollapse({
                     border: `1px solid ${token.colorBorderSecondary}`,
                     borderRadius: 8,
                 }}
-                expandIconPosition="end"
+                expandIconPosition="start"
+                expandIcon={({ isActive }) => (
+                    <DownOutlined rotate={isActive ? 180 : 0} className="text-gray-500" />
+                )}
                 activeKey={activeKey}
                 onChange={onChange}
             />

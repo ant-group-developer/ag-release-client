@@ -17,6 +17,8 @@ import {
     CreateEnrichScanSchedulePayload,
     CreateFtpExcludePatternPayload,
     CreateReportConfigPayload,
+    DeleteImportedReleasesPayload,
+    DeleteImportedReleasesResponse,
     EnrichScanSessionData,
     EtlJobData,
     ImportJobStatusResponse,
@@ -32,6 +34,7 @@ import {
 const REPORT_IMPORT_API_PATHS = {
     ENRICH_SCAN: '/partners/enrich/scan',
     ENRICH_SCAN_SESSIONS: '/partners/enrich/scan/sessions',
+    RELEASES_DELETE: '/report-import/releases/delete',
 } as const;
 
 export const reportConfigApis = {
@@ -73,6 +76,12 @@ export const reportConfigApis = {
     startImportJob: (jobId: string) => {
         return axiosInstance.post<SuccessResponse>(
             `/report-import/jobs/${jobId}/start`
+        );
+    },
+    deleteImportedReleases: (payload: DeleteImportedReleasesPayload) => {
+        return axiosInstance.post<DeleteImportedReleasesResponse>(
+            REPORT_IMPORT_API_PATHS.RELEASES_DELETE,
+            payload
         );
     },
     getImportJobStatus: (jobId: string) => {
