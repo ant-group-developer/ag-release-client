@@ -1,6 +1,6 @@
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { ReleasesData } from '@/modules/releases/types';
+import { ExternalMetadata, ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -11,6 +11,17 @@ type Props = {
     releaseData: ReleasesData;
 };
 
+function getFirstExternalCoverUrl(
+    metadataExternal?: Partial<Record<string, ExternalMetadata | undefined>>
+) {
+    return Object.values(metadataExternal ?? {})
+        .flatMap(
+            (metadata) =>
+                metadata?.coverImages?.map((coverImage) => coverImage.url) ?? []
+        )
+        .find(Boolean);
+}
+
 export default function ReleaseViewHeader({ releaseData }: Props) {
     const { token } = theme.useToken();
     const messages = useTranslations();
@@ -19,19 +30,21 @@ export default function ReleaseViewHeader({ releaseData }: Props) {
         releaseData?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
         releaseData?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
 
-    const { linkReadFile, isPending: isCoverArtLoading } = useGetLinkReadFile(
-        imgFileId as string,
-        {
-            enabled: !!imgFileId,
-        }
-    );
+    const {
+        linkReadFile,
+        isPending: isCoverArtLoading,
+        isFetching: isCoverArtFetching,
+    } = useGetLinkReadFile(imgFileId as string, {
+        enabled: !!imgFileId,
+    });
 
     if (!releaseData) return null;
 
-    const spotifyCoverUrl =
-        releaseData.metadataExternal?.spotify?.coverImages?.[0]?.url;
+    const externalCoverUrl = getFirstExternalCoverUrl(
+        releaseData.metadataExternal
+    );
 
-    const coverArtUrl = linkReadFile || spotifyCoverUrl;
+    const coverArtUrl = linkReadFile || externalCoverUrl;
 
     return (
         <div
@@ -64,7 +77,7 @@ export default function ReleaseViewHeader({ releaseData }: Props) {
                     <div style={{ flexShrink: 0 }}>
                         <ImageListUpload
                             disabled
-                            loading={isCoverArtLoading}
+                            loading={isCoverArtFetching}
                             value={
                                 coverArtUrl
                                     ? {

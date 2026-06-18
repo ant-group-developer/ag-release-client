@@ -9,6 +9,8 @@ import {
     TrendViewDspBarChartParams,
     TrendViewLineChartParams,
     TrendViewSummaryParams,
+    TrendViewTerBarChartParams,
+    RevenueTerBarChartParams,
 } from '../types';
 
 export const analytics2QueryKeys = {
@@ -25,6 +27,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             'trend-view-dsp-bar-chart',
+            params,
+        ] as const,
+    trendViewTerBarChart: (params: TrendViewTerBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            'trend-view-ter-bar-chart',
             params,
         ] as const,
     dspSalesTimeline: (params: DspTimelineParams) =>
@@ -54,6 +62,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             'revenue-dsp-bar-chart',
+            params,
+        ] as const,
+    revenueTerBarChart: (params: RevenueTerBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            'revenue-ter-bar-chart',
             params,
         ] as const,
     revenueTimeline: (params: RevenueQueryParams) =>

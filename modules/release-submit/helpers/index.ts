@@ -12,6 +12,8 @@ export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
             return 'green';
         case RELEASE_SUBMIT_STATUS.WAITING_ACTION:
             return 'blue';
+        case RELEASE_SUBMIT_STATUS.WAITING_PARTNER:
+            return 'purple';
         case RELEASE_SUBMIT_STATUS.CANCELLED:
             return 'magenta';
         case RELEASE_SUBMIT_STATUS.FAILED:
@@ -20,8 +22,6 @@ export const getReleaseSubmitStatusColor = (status?: RELEASE_SUBMIT_STATUS) => {
             return 'blue';
         case RELEASE_SUBMIT_STATUS.NEW:
             return 'geekblue';
-        case RELEASE_SUBMIT_STATUS.PARTIAL_DONE:
-            return 'lime';
         default:
             return 'default';
     }

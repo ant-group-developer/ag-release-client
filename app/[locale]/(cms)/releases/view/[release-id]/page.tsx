@@ -4,7 +4,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { RELEASE_VIEW_TABS } from '@/modules/releases/enums';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { CustomerServiceOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Breadcrumb, Space, Tabs, theme, Typography } from 'antd';
+import { Breadcrumb, Space, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -12,8 +12,6 @@ import { useEffect, useState } from 'react';
 import ReleaseViewHeader from '@/modules/releases/components/view/header';
 import OverviewTab from '@/modules/releases/components/view/overview-tab';
 import TracksTab from '@/modules/releases/components/view/tracks-tab';
-
-const { Text } = Typography;
 
 export default function ReleaseDetailView() {
     const params = useParams();
@@ -33,7 +31,7 @@ export default function ReleaseDetailView() {
         if (dataFilter.tab && dataFilter.tab !== activeTab) {
             setActiveTab(dataFilter.tab);
         }
-    }, [dataFilter.tab]);
+    }, [activeTab, dataFilter.tab]);
 
     const handleTabChange = (key: string) => {
         setActiveTab(key);
@@ -61,7 +59,6 @@ export default function ReleaseDetailView() {
                     {messages('common.overview')}
                 </Space>
             ),
-            children: <OverviewTab releaseData={releaseData} />,
         },
         {
             key: RELEASE_VIEW_TABS.TRACKS,
@@ -71,9 +68,14 @@ export default function ReleaseDetailView() {
                     {messages('common.tracks')}
                 </Space>
             ),
-            children: <TracksTab releaseId={releaseId} />,
         },
     ];
+    const activeTabContent =
+        activeTab === RELEASE_VIEW_TABS.TRACKS ? (
+            <TracksTab releaseId={releaseId} />
+        ) : (
+            <OverviewTab releaseData={releaseData} />
+        );
 
     return (
         <div
@@ -86,13 +88,19 @@ export default function ReleaseDetailView() {
                 <Breadcrumb items={breadcrumbItems} className="!py-4" />
                 <div
                     id="release-header"
-                    className="mb-4 rounded-lg p-4"
+                    className="mb-4 rounded-lg p-4 shadow-sm"
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
                 >
                     <ReleaseViewHeader releaseData={releaseData} />
-                    <div>
+
+                    <div
+                        className="rounded-lg"
+                        style={{
+                            backgroundColor: token.colorBgContainer,
+                        }}
+                    >
                         <Tabs
                             className="tab-release-detail"
                             style={{
@@ -104,6 +112,8 @@ export default function ReleaseDetailView() {
                         />
                     </div>
                 </div>
+
+                <div>{activeTabContent}</div>
             </div>
         </div>
     );

@@ -38,6 +38,12 @@ import {
     TrendViewLineChartParams,
     TrendViewSummaryData,
     TrendViewSummaryParams,
+    TrendViewTerBarChartItem,
+    TrendViewTerBarChartParams,
+    RevenueTerBarChartItem,
+    RevenueTerBarChartParams,
+    ExportReportRequest,
+    ExportReportResponse,
 } from '../types';
 
 export const analytics2Apis = {
@@ -80,6 +86,12 @@ export const analytics2Apis = {
     getTrendViewDspBarChart: (params: TrendViewDspBarChartParams) => {
         return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
             '/analytics/trend-view/dsp/bar-chart',
+            params
+        );
+    },
+    getTrendViewTerBarChart: (params: TrendViewTerBarChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            '/analytics/trend-view/ter/bar-chart',
             params
         );
     },
@@ -150,6 +162,12 @@ export const analytics2Apis = {
     getRevenueDspBarChart: (params: RevenueDspBarChartParams) => {
         return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
             '/analytics/revenue/dsp/bar-chart',
+            params
+        );
+    },
+    getRevenueTerBarChart: (params: RevenueTerBarChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            '/analytics/revenue/ter/bar-chart',
             params
         );
     },
@@ -333,4 +351,15 @@ export const analytics2Apis = {
             params
         );
     },
+    exportReport: (params: ExportReportRequest) => {
+        return axiosInstance.post<ExportReportResponse>(
+            '/analytics/reports/export',
+            params
+        );
+    },
 };
+
+export const getExportReportEventsUrl = (jobId: string) => {
+    return `/api/v1/analytics/reports/export/${jobId}/events`;
+};
+

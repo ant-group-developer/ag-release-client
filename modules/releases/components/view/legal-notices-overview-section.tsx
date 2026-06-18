@@ -15,7 +15,7 @@ export default function LegalNoticesOverviewSection({ releaseData }: Props) {
     const messages = useTranslations();
 
     return (
-        <section className="mb-8">
+        <section>
             <Title level={5} className="!mb-4 text-[16px] font-bold">
                 {messages('common.legalNotices')}
             </Title>

@@ -1,9 +1,9 @@
-import { RELEASE_EXECUTION_STATUS } from '@/modules/release-executions/enums';
+import { RELEASE_SUBMIT_STATUS } from '@/modules/release-submit/enums';
 import { Card, Skeleton, theme } from 'antd';
-import { formatEnumLabel } from '../../helpers';
+import { useTranslations } from 'next-intl';
 
 type StatusSummaryItem = {
-    status: RELEASE_EXECUTION_STATUS;
+    status: RELEASE_SUBMIT_STATUS;
     count: number;
 };
 
@@ -13,46 +13,51 @@ type Props = {
 };
 
 const STATUS_STYLES: Record<
-    RELEASE_EXECUTION_STATUS,
+    RELEASE_SUBMIT_STATUS,
     {
         accent: string;
     }
 > = {
-    [RELEASE_EXECUTION_STATUS.QUEUED]: {
+    [RELEASE_SUBMIT_STATUS.NEW]: {
         accent: '#64748b',
     },
-    [RELEASE_EXECUTION_STATUS.RUNNING]: {
+    [RELEASE_SUBMIT_STATUS.PROCESSING]: {
         accent: '#2563eb',
     },
-    [RELEASE_EXECUTION_STATUS.AWAITING_ACTION]: {
+    [RELEASE_SUBMIT_STATUS.WAITING_ACTION]: {
         accent: '#ea580c',
     },
-    [RELEASE_EXECUTION_STATUS.COMPLETED]: {
+    [RELEASE_SUBMIT_STATUS.WAITING_PARTNER]: {
+        accent: '#7c3aed',
+    },
+    [RELEASE_SUBMIT_STATUS.DONE]: {
         accent: '#16a34a',
     },
-    [RELEASE_EXECUTION_STATUS.PARTIALLY_COMPLETED]: {
-        accent: '#ca8a04',
-    },
-    [RELEASE_EXECUTION_STATUS.FAILED]: {
+    [RELEASE_SUBMIT_STATUS.FAILED]: {
         accent: '#dc2626',
     },
-    [RELEASE_EXECUTION_STATUS.CANCELLED]: {
+    [RELEASE_SUBMIT_STATUS.CANCELLED]: {
         accent: '#475569',
     },
 };
 
+const STATUS_SUMMARY_GRID_CLASS =
+    'mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7';
+
 export default function ReleaseSubmitStatusSummary({ items, loading }: Props) {
+    const messages = useTranslations();
     const { token } = theme.useToken();
+    const skeletonItems = Object.values(RELEASE_SUBMIT_STATUS);
 
     if (loading) {
         return (
-            <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-                {Array.from({ length: 7 }).map((_, index) => (
+            <div className={STATUS_SUMMARY_GRID_CLASS}>
+                {skeletonItems.map((status) => (
                     <Skeleton.Button
-                        key={index}
+                        key={status}
                         active
                         block
-                        className="!h-[116px] !rounded-xl"
+                        className="!h-[116px] !rounded-lg"
                     />
                 ))}
             </div>
@@ -60,35 +65,41 @@ export default function ReleaseSubmitStatusSummary({ items, loading }: Props) {
     }
 
     return (
-        <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-            {items.map((item) => (
-                <Card
-                    key={item.status}
-                    variant="borderless"
-                    className="shadow-sm"
-                    styles={{
-                        body: {
-                            padding: 16,
-                            backgroundColor: token.colorBgContainer,
-                            borderRadius: 8,
-                        },
-                    }}
-                >
-                    <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                            <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
-                                {formatEnumLabel(item.status)}
-                            </div>
-                            <div
-                                className="mt-3 text-3xl font-semibold leading-none"
-                                style={{ color: STATUS_STYLES[item.status].accent }}
-                            >
-                                {item.count}
+        <div className={STATUS_SUMMARY_GRID_CLASS}>
+            {items.map((item) => {
+                const statusStyle = STATUS_STYLES[item.status];
+
+                return (
+                    <Card
+                        key={item.status}
+                        variant="borderless"
+                        className="shadow-sm"
+                        styles={{
+                            body: {
+                                padding: 16,
+                                backgroundColor: token.colorBgContainer,
+                                borderRadius: 8,
+                            },
+                        }}
+                    >
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                                <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+                                    {messages(
+                                        `releaseExecution.submitStatusOptions.${item.status}`
+                                    )}
+                                </div>
+                                <div
+                                    className="mt-3 text-3xl font-semibold leading-none"
+                                    style={{ color: statusStyle.accent }}
+                                >
+                                    {item.count}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Card>
-            ))}
+                    </Card>
+                );
+            })}
         </div>
     );
 }

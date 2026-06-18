@@ -328,5 +328,83 @@ export interface RevenueDspBarChartItem {
     quantity: number;
 }
 
+export interface TrendViewTerBarChartParams {
+    fromDate: string;
+    toDate: string;
+}
 
+export interface TrendViewTerBarChartItem {
+    territory: string;
+    totalViews: number;
+}
 
+export interface RevenueTerBarChartParams {
+    fromDate: string;
+    toDate: string;
+}
+
+export interface RevenueTerBarChartItem {
+    territory: string;
+    revenueUsd: number;
+    revenueUsdExact: string;
+}
+
+export interface ExportReportRequest {
+    [key: string]: any;
+}
+
+export interface ExportReportResponse {
+    jobId: string;
+    status: string;
+    eventsUrl: string;
+}
+
+export enum ExportReportEventType {
+    PROGRESS = 'progress',
+    HEARTBEAT = 'heartbeat',
+    COMPLETED = 'completed',
+    FAILED = 'failed',
+}
+
+export interface ExportReportEventSummary {
+    status?: string;
+    progress?: {
+        current: number;
+        total: number;
+        label: string;
+    };
+    rows?: {
+        total: number;
+        processed: number;
+        skipped: number;
+        errors: number;
+    };
+    file?: {
+        name: string;
+        sizeBytes: number;
+        hash: string | null;
+    };
+    result?: {
+        fileName: string;
+        key: string;
+        downloadUrl: string;
+        expiresInSeconds: number;
+        totalRows: number;
+        totalProcessedRows: number;
+    };
+    error?: string | null;
+}
+
+export interface ExportReportEventData {
+    type: ExportReportEventType | string;
+    id?: string;
+    sourceType?: string;
+    status?: string;
+    progress?: ExportReportEventSummary['progress'];
+    rows?: ExportReportEventSummary['rows'];
+    file?: ExportReportEventSummary['file'];
+    result?: ExportReportEventSummary['result'];
+    error?: string | null;
+    summary?: Partial<ExportReportEventSummary>;
+    [key: string]: any;
+}
