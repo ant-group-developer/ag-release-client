@@ -3,12 +3,17 @@
 import { useFilter } from '@/hooks/use-filter';
 import { RELEASE_VIEW_TABS } from '@/modules/releases/enums';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { CustomerServiceOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+    BarChartOutlined,
+    CustomerServiceOutlined,
+    InfoCircleOutlined,
+} from '@ant-design/icons';
 import { Breadcrumb, Space, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import AnalyticsTab from '@/modules/releases/components/view/analytics-tab';
 import ReleaseViewHeader from '@/modules/releases/components/view/header';
 import OverviewTab from '@/modules/releases/components/view/overview-tab';
 import TracksTab from '@/modules/releases/components/view/tracks-tab';
@@ -69,13 +74,28 @@ export default function ReleaseDetailView() {
                 </Space>
             ),
         },
+        {
+            key: RELEASE_VIEW_TABS.ANALYTICS,
+            label: (
+                <Space>
+                    <BarChartOutlined />
+                    {messages('analytics.label')}
+                </Space>
+            ),
+        },
     ];
-    const activeTabContent =
-        activeTab === RELEASE_VIEW_TABS.TRACKS ? (
-            <TracksTab releaseId={releaseId} />
-        ) : (
-            <OverviewTab releaseData={releaseData} />
-        );
+
+    const renderActiveTabContent = () => {
+        switch (activeTab) {
+            case RELEASE_VIEW_TABS.TRACKS:
+                return <TracksTab releaseId={releaseId} />;
+            case RELEASE_VIEW_TABS.ANALYTICS:
+                return <AnalyticsTab releaseId={releaseId} />;
+            case RELEASE_VIEW_TABS.OVERVIEW:
+            default:
+                return <OverviewTab releaseData={releaseData} />;
+        }
+    };
 
     return (
         <div
@@ -113,7 +133,7 @@ export default function ReleaseDetailView() {
                     </div>
                 </div>
 
-                <div>{activeTabContent}</div>
+                <div>{renderActiveTabContent()}</div>
             </div>
         </div>
     );

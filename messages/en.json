@@ -335,7 +335,9 @@
         "engagement": "Engagement",
         "listeners": "Listeners",
         "label": "Label",
-        "labels": "Labels"
+        "labels": "Labels",
+        "expandAll": "Expand all",
+        "collapseAll": "Collapse all"
     },
     "country": {
         "label": "Country",
@@ -2099,7 +2101,7 @@
             "plays": "Plays & Trends",
             "revenue": "Revenue"
         },
-        "totalTrendViews": "Views by month",
+        "totalTrendViews": "Total trend views",
         "totalRevenueByMonth": "Revenue by month",
         "dspDistribution": "Views by DSP",
         "terDistribution": "Views by Country",

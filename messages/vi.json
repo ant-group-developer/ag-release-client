@@ -334,7 +334,9 @@
         "engagement": "Mức độ tương tác",
         "listeners": "Người nghe",
         "label": "Label",
-        "labels": "Hãng phát hành"
+        "labels": "Hãng phát hành",
+        "expandAll": "Mở rộng tất cả",
+        "collapseAll": "Thu gọn tất cả"
     },
     "country": {
         "label": "Quốc gia",
@@ -2091,7 +2093,7 @@
             "plays": "Lượt nghe & Xu hướng",
             "revenue": "Doanh thu"
         },
-        "totalTrendViews": "Lượt xem theo tháng",
+        "totalTrendViews": "Tổng lượt xem xu hướng",
         "totalRevenueByMonth": "Doanh thu theo tháng",
         "dspDistribution": "Lượt xem theo DSP",
         "terDistribution": "Lượt xem theo quốc gia",

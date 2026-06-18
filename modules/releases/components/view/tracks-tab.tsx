@@ -3,13 +3,12 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import AcrCloudScanHistoryModal from '@/modules/acr-cloud/components/modal/acr-scan-history-modal';
-import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-modal';
-import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
-import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackDataFilter } from '@/modules/tracks/types';
-import { theme } from 'antd';
+import { CompressOutlined, ExpandOutlined } from '@ant-design/icons';
+import { Button, theme } from 'antd';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import TracksCollapse from './tracks-collapse';
 
 type Props = {
@@ -19,6 +18,7 @@ type Props = {
 export default function TracksTab({ releaseId }: Props) {
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
+    const messages = useTranslations();
 
     const {
         dataFilter,
@@ -35,6 +35,32 @@ export default function TracksTab({ releaseId }: Props) {
 
     const { tracksData, isFetching, refetch } = useGetListTracks(dataFilter);
 
+    const [activeKeys, setActiveKeys] = useState<string[]>([]);
+
+    const allKeys = useMemo(
+        () => (tracksData?.items || []).map((_, index) => String(index)),
+        [tracksData?.items]
+    );
+
+    const isAllExpanded = useMemo(
+        () =>
+            allKeys.length > 0 &&
+            allKeys.every((key) => activeKeys.includes(key)),
+        [allKeys, activeKeys]
+    );
+
+    const handleToggleAll = () => {
+        if (isAllExpanded) {
+            setActiveKeys([]);
+        } else {
+            setActiveKeys(allKeys);
+        }
+    };
+
+    const handleCollapseChange = (keys: string | string[]) => {
+        setActiveKeys(Array.isArray(keys) ? keys : [keys]);
+    };
+
     return (
         <div className="flex flex-col gap-4 py-4">
             <div className="flex items-center justify-between">
@@ -43,12 +69,34 @@ export default function TracksTab({ releaseId }: Props) {
                     onChange={onSearch}
                     defaultValue={dataFilter.keyword}
                 />
+                <Button
+                    icon={
+                        isAllExpanded ? (
+                            <CompressOutlined />
+                        ) : (
+                            <ExpandOutlined />
+                        )
+                    }
+                    onClick={handleToggleAll}
+                    disabled={allKeys.length === 0}
+                >
+                    {isAllExpanded
+                        ? messages('common.collapseAll')
+                        : messages('common.expandAll')}
+                </Button>
             </div>
 
-            <TracksCollapse tracks={tracksData?.items || []} />
+            <TracksCollapse
+                tracks={tracksData?.items || []}
+                page={tracksData?.metadata?.page}
+                pageSize={dataFilter.pageSize}
+                activeKey={activeKeys}
+                onChange={handleCollapseChange}
+                loading={isFetching}
+            />
 
             <AppPagination
-                className="rounded-b-lg"
+                className="rounded-lg"
                 style={{ background: token.colorBgContainer }}
                 align="end"
                 current={tracksData?.metadata?.page}
@@ -60,18 +108,6 @@ export default function TracksTab({ releaseId }: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-
-            {typeModal === TYPE_MODAL_TRACK.ACR_CLOUD_SCAN && (
-                <AcrCloudScanModal />
-            )}
-
-            {typeModal === TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_HISTORY && (
-                <AcrCloudScanHistoryModal />
-            )}
-
-            {typeModal === TYPE_MODAL_TRACK.ACR_CLOUD_SCAN_RESULT && (
-                <AcrCloudScanResultModal />
-            )}
         </div>
     );
 }

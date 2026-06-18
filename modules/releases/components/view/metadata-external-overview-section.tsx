@@ -1,7 +1,7 @@
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { ExternalMetadata, ReleasesData } from '@/modules/releases/types';
-import { Avatar, Col, Row, Space, Typography } from 'antd';
+import { Avatar, Col, Empty, Row, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import InfoRow from './info-row';
@@ -54,7 +54,14 @@ export default function MetadataExternalOverviewSection({
     const dspItems = useMemo(() => dspData?.items ?? [], [dspData?.items]);
 
     if (!metadataExternalItems.length) {
-        return null;
+        return (
+            <>
+                <Title level={5} className="!mb-4 text-[16px] font-bold">
+                    {messages('release.overview.albumLink')}
+                </Title>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </>
+        );
     }
 
     return (
