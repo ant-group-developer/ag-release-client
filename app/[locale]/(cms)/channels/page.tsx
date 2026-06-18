@@ -7,7 +7,8 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import ChannelsHeader from '@/modules/channels/components/header';
 import ChannelFormModal from '@/modules/channels/components/modal/channel-form';
 import ChannelHistoryModal from '@/modules/channels/components/modal/channel-history-modal';
@@ -32,7 +33,10 @@ export default function Channels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<ChannelsData>((state) => state.dataEdit);
-    const { isAdmin } = useAuth();
+    const { hasPermission } = usePermission();
+    const canCreateChannel = hasPermission(PERMISSION.CHANNEL.CREATE);
+    const canUpdateChannel = hasPermission(PERMISSION.CHANNEL.UPDATE);
+    const canDeleteChannel = hasPermission(PERMISSION.CHANNEL.DELETE);
 
     const { deleteChannel } = useDeleteChannel();
     const { channelsData, isFetching } = useGetListChannel(dataFilter);
@@ -93,23 +97,25 @@ export default function Channels({}: Props) {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 
-                {typeModal === TYPE_MODAL_CHANNELS.DELETE && (
-                    <AppConfirm
-                        open
-                        onCancel={closeModal}
-                        onOk={() => handleDeleteChannel()}
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: dataEdit?.name,
-                        })}
-                    />
-                )}
-
-                {isAdmin &&
-                    (typeModal === TYPE_MODAL_CHANNELS.CREATE ||
-                        typeModal === TYPE_MODAL_CHANNELS.UPDATE) && (
-                        <ChannelFormModal />
+                {canDeleteChannel &&
+                    typeModal === TYPE_MODAL_CHANNELS.DELETE && (
+                        <AppConfirm
+                            open
+                            onCancel={closeModal}
+                            onOk={() => handleDeleteChannel()}
+                            modalTitle={messages('delete.confirmTitle')}
+                            paragraph={messages('delete.confirmMessage', {
+                                value: dataEdit?.name,
+                            })}
+                        />
                     )}
+
+                {((canCreateChannel &&
+                    typeModal === TYPE_MODAL_CHANNELS.CREATE) ||
+                    (canUpdateChannel &&
+                        typeModal === TYPE_MODAL_CHANNELS.UPDATE)) && (
+                    <ChannelFormModal />
+                )}
 
                 {typeModal === TYPE_MODAL_CHANNELS.HISTORY && (
                     <ChannelHistoryModal />

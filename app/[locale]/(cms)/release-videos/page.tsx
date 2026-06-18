@@ -8,6 +8,8 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import ReleaseVideoHeader from '@/modules/release-video/components/header';
 import { ReleaseVideoTable } from '@/modules/release-video/components/table';
 import { TYPE_MODAL_RELEASE_VIDEO } from '@/modules/release-video/enums';
@@ -33,6 +35,10 @@ export default function ReleaseVideos() {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<ReleasesData>((state) => state.dataEdit);
+    const { hasPermission } = usePermission();
+    const canDeleteReleaseVideo = hasPermission(
+        PERMISSION.RELEASE_VIDEO.DELETE
+    );
 
     // apis
     const { releasesData, isFetching } = useGetListReleases(dataFilter);
@@ -96,17 +102,18 @@ export default function ReleaseVideos() {
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
 
-                {typeModal === TYPE_MODAL_RELEASE_VIDEO.DELETE && (
-                    <AppConfirm
-                        open
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: dataEdit?.title,
-                        })}
-                        onCancel={closeModal}
-                        onOk={() => handleDeleteReleaseVideo()}
-                    />
-                )}
+                {canDeleteReleaseVideo &&
+                    typeModal === TYPE_MODAL_RELEASE_VIDEO.DELETE && (
+                        <AppConfirm
+                            open
+                            modalTitle={messages('delete.confirmTitle')}
+                            paragraph={messages('delete.confirmMessage', {
+                                value: dataEdit?.title,
+                            })}
+                            onCancel={closeModal}
+                            onOk={() => handleDeleteReleaseVideo()}
+                        />
+                    )}
             </PageContainer>
         </AppPageWrapper>
     );

@@ -4,7 +4,8 @@ import TenantSelect from '@/components/ui/select/tenant-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { Button } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -25,12 +26,16 @@ type Props = Omit<AppTableProps<ChannelsData>, 'columns'> & {
 export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { isAdmin } = useAuth();
+    const { hasPermission } = usePermission();
     const { updateChannel, isPending } = useUpdateChannel();
+    const canUpdateChannel = hasPermission(PERMISSION.CHANNEL.UPDATE);
+    const canDeleteChannel = hasPermission(PERMISSION.CHANNEL.DELETE);
 
     const handleUpdateTenant = (record: ChannelsData, tenantId: string) => {
         const currentTenantId = record.tenantId || record.tenant?.id;
-        if (!isAdmin || !tenantId || tenantId === currentTenantId) return;
+        if (!canUpdateChannel || !tenantId || tenantId === currentTenantId) {
+            return;
+        }
 
         updateChannel({
             id: record.id,
@@ -117,7 +122,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     value={record.tenantId || record.tenant?.id}
                     fallBack={record.tenant?.name}
                     placeholder={messages('tenant.selectTitle')}
-                    disabled={!isAdmin}
+                    disabled={!canUpdateChannel}
                     loading={isPending}
                     onChange={(tenantId) =>
                         handleUpdateTenant(record, tenantId)
@@ -199,18 +204,24 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 50,
             fixed: 'right',
-            render: (_, record) => (
-                <ActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_CHANNELS.DELETE, record)
-                    }
-                    showUpdate={isAdmin}
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
-                    }
-                />
-            ),
+            render: (_, record) => {
+                if (!canUpdateChannel && !canDeleteChannel) {
+                    return null;
+                }
+
+                return (
+                    <ActionButton
+                        showDelete={canDeleteChannel}
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_CHANNELS.DELETE, record)
+                        }
+                        showUpdate={canUpdateChannel}
+                        onShowUpdate={() =>
+                            openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
+                        }
+                    />
+                );
+            },
         },
     ];
 

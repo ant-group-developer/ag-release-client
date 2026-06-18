@@ -4,8 +4,8 @@ import PopoverTags from '@/components/ui/tag/popover-tags';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
@@ -28,6 +28,13 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
     const openModal = useModalStore((state) => state.openModal);
     const router = useRouter();
     const { Text } = Typography;
+    const { hasPermission } = usePermission();
+    const canUpdateReleaseVideo = hasPermission(
+        PERMISSION.RELEASE_VIDEO.UPDATE
+    );
+    const canDeleteReleaseVideo = hasPermission(
+        PERMISSION.RELEASE_VIDEO.DELETE
+    );
 
     const columns: ColumnType<ReleasesData>[] = [
         {
@@ -162,22 +169,26 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: '',
             width: 80,
             align: 'center',
-            render: (_, record) => (
-                <PermissionGate permission={PERMISSION.RELEASE_VIDEO.UPDATE}>
+            render: (_, record) => {
+                if (!canUpdateReleaseVideo && !canDeleteReleaseVideo) {
+                    return null;
+                }
+
+                return (
                     <ActionButton
-                        showDelete
+                        showDelete={canDeleteReleaseVideo}
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
                         }
-                        showUpdate
+                        showUpdate={canUpdateReleaseVideo}
                         onShowUpdate={() =>
                             router.push(
                                 `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`
                             )
                         }
                     />
-                </PermissionGate>
-            ),
+                );
+            },
         },
     ];
 

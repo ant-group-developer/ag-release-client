@@ -1,20 +1,20 @@
 import { APP_ROUTES } from '@/enums/routes';
 import { flattenData } from '@/helpers/common';
-import { usePermission } from '@/hooks/use-permission';
 import { adminRoutes, RouteRequired } from '@/layouts/cms-layout/routes';
 import { useLocale } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useAuth } from './use-auth';
 
 export const useCheckPermission = () => {
-    const { profile } = useAuth();
+    const { isAdmin, profile } = useAuth();
 
     const pathname = usePathname();
     const locale = useLocale();
-    const { hasPermission } = usePermission();
+    const profilePermissions = new Set(profile.permission || []);
 
     const checkPermission = (required?: RouteRequired) => {
         if (required === undefined) return true;
+        if (isAdmin) return true;
 
         if ('userType' in required) {
             const { userType, tenantId } = required;
@@ -36,7 +36,7 @@ export const useCheckPermission = () => {
             );
         }
 
-        return hasPermission(required.permission);
+        return required.permission.some((item) => profilePermissions.has(item));
     };
 
     const convertHref = (value: string) => '/' + locale + value;

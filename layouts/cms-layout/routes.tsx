@@ -203,10 +203,7 @@ export const adminRoutes: RouteNode[] = [
                 href: APP_ROUTES.RELEASE_VIDEOS,
                 icon: Video,
                 required: {
-                    permission: [
-                        PERMISSION.RELEASE.READ,
-                        PERMISSION.RELEASE.CREATE,
-                    ],
+                    permission: [PERMISSION.RELEASE_VIDEO.READ],
                 },
             },
             {
@@ -218,10 +215,7 @@ export const adminRoutes: RouteNode[] = [
                 hidden: true,
                 icon: Video,
                 required: {
-                    permission: [
-                        PERMISSION.RELEASE.READ,
-                        PERMISSION.RELEASE.CREATE,
-                    ],
+                    permission: [PERMISSION.RELEASE_VIDEO.READ],
                 },
             },
             {

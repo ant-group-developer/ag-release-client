@@ -5,7 +5,6 @@ import { usePermission } from '@/hooks/use-permission';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import AdditionalTab from '@/modules/release-video/components/modal/additional-tab';
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
@@ -40,12 +39,14 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [form] = Form.useForm();
-    const { isAdmin } = useAuth();
     const { hasPermission } = usePermission();
     // const { active, isActive, deActive } = useActive();
     const isUpdateForm = !!dataEdit?.id;
     const canEditReleaseVideo =
         !isUpdateForm || hasPermission(PERMISSION.RELEASE_VIDEO.UPDATE);
+    const canReviewReleaseVideo = hasPermission(
+        PERMISSION.RELEASE_VIDEO.REVIEW
+    );
     const tabParam = searchParams.get('tab');
     const activeTabTemp =
         tabParam !== null &&
@@ -56,7 +57,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             : DEFAULT_RELEASE_VIDEO_TAB;
     const activeTab =
         activeTabTemp === RELEASE_VIDEO_TABS.SUBMITS &&
-        (!isAdmin || !isUpdateForm)
+        (!canReviewReleaseVideo || !isUpdateForm)
             ? DEFAULT_RELEASE_VIDEO_TAB
             : activeTabTemp;
 
@@ -207,7 +208,7 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
             style: { outline: 'none' },
             forceRender: true,
         },
-        ...(isAdmin && isUpdateForm
+        ...(canReviewReleaseVideo && isUpdateForm
             ? [
                   {
                       key: RELEASE_VIDEO_TABS.SUBMITS,
