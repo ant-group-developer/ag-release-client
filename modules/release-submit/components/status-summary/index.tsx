@@ -10,6 +10,7 @@ type StatusSummaryItem = {
 type Props = {
     items: StatusSummaryItem[];
     loading?: boolean;
+    onStatusClick?: (status: RELEASE_SUBMIT_STATUS) => void;
 };
 
 const STATUS_STYLES: Record<
@@ -44,7 +45,11 @@ const STATUS_STYLES: Record<
 const STATUS_SUMMARY_GRID_CLASS =
     'mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7';
 
-export default function ReleaseSubmitStatusSummary({ items, loading }: Props) {
+export default function ReleaseSubmitStatusSummary({
+    items,
+    loading,
+    onStatusClick,
+}: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const skeletonItems = Object.values(RELEASE_SUBMIT_STATUS);
@@ -73,7 +78,22 @@ export default function ReleaseSubmitStatusSummary({ items, loading }: Props) {
                     <Card
                         key={item.status}
                         variant="borderless"
+                        hoverable={!!onStatusClick}
+                        role={onStatusClick ? 'button' : undefined}
+                        tabIndex={onStatusClick ? 0 : undefined}
                         className="shadow-sm"
+                        onClick={() => onStatusClick?.(item.status)}
+                        onKeyDown={(event) => {
+                            if (
+                                !onStatusClick ||
+                                (event.key !== 'Enter' && event.key !== ' ')
+                            ) {
+                                return;
+                            }
+
+                            event.preventDefault();
+                            onStatusClick(item.status);
+                        }}
                         styles={{
                             body: {
                                 padding: 16,

@@ -1,4 +1,5 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
+import DateRangePicker from '@/components/ui/input/date-range-picker';
 import AppSearch from '@/components/ui/input/search';
 import { SIZE_ICON } from '@/constants/common';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
@@ -19,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Checkbox, Popover, Select, Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import dayjs from 'dayjs';
 import { Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
@@ -26,6 +28,7 @@ import {
     RELEASE_EXECUTION_STEP_TYPE,
     RELEASE_SUBMIT_STATUS,
     RELEASE_SUBMIT_STEP_STATUS,
+    RELEASE_SUBMIT_TYPE,
 } from '../../enums';
 import { formatEnumLabel } from '../../helpers';
 import {
@@ -106,6 +109,15 @@ export default function ReleaseSubmitHeader({
             Object.values(RELEASE_SUBMIT_STATUS).map((status) => ({
                 label: formatEnumLabel(status),
                 value: status,
+            })),
+        []
+    );
+
+    const executionTypeOptions = useMemo(
+        () =>
+            Object.values(RELEASE_SUBMIT_TYPE).map((type) => ({
+                label: formatEnumLabel(type),
+                value: type,
             })),
         []
     );
@@ -480,16 +492,68 @@ export default function ReleaseSubmitHeader({
             />
 
             <Select
+                mode="multiple"
+                options={executionTypeOptions}
+                placeholder={messages('placeholder.filterBy', {
+                    value: messages(
+                        'releaseExecution.columns.type'
+                    ).toLowerCase(),
+                })}
+                onChange={(value) =>
+                    onChangeFilter({ type: value.length ? value : undefined })
+                }
+                value={
+                    Array.isArray(dataFilter?.type)
+                        ? dataFilter.type
+                        : dataFilter?.type
+                          ? [dataFilter.type]
+                          : undefined
+                }
+                allowClear
+                className="w-52"
+                maxTagCount="responsive"
+            />
+
+            <Select
+                mode="multiple"
                 options={executionStatusOptions}
                 placeholder={messages('placeholder.filterBy', {
                     value: messages(
                         'releaseExecution.columns.status'
                     ).toLowerCase(),
                 })}
-                onChange={(value) => onChangeFilter({ status: value })}
-                defaultValue={dataFilter?.status}
+                onChange={(value) =>
+                    onChangeFilter({ status: value.length ? value : undefined })
+                }
+                value={
+                    Array.isArray(dataFilter?.status)
+                        ? dataFilter.status
+                        : dataFilter?.status
+                          ? [dataFilter.status]
+                          : undefined
+                }
                 allowClear
                 className="w-52"
+                maxTagCount="responsive"
+            />
+
+            <DateRangePicker
+                className="w-64"
+                allowClear
+                value={
+                    dataFilter.startCreatedAt && dataFilter.endCreatedAt
+                        ? [
+                              dayjs(dataFilter.startCreatedAt),
+                              dayjs(dataFilter.endCreatedAt),
+                          ]
+                        : undefined
+                }
+                externalOnChange={(startCreatedAt, endCreatedAt) =>
+                    onChangeFilter({
+                        startCreatedAt,
+                        endCreatedAt,
+                    })
+                }
             />
 
             <Checkbox

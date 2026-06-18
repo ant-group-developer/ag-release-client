@@ -51,6 +51,22 @@ export default function ReleaseSubmitsPage() {
     const { releaseSubmitsData, isFetching, refetch } =
         useGetListReleaseSubmits(dataFilter);
 
+    const selectedStatuses = Array.isArray(dataFilter.status)
+        ? dataFilter.status
+        : dataFilter.status
+          ? [dataFilter.status]
+          : [];
+
+    const toggleStatusFilter = (status: RELEASE_SUBMIT_STATUS) => {
+        const nextStatuses = selectedStatuses.includes(status)
+            ? selectedStatuses.filter((item) => item !== status)
+            : [...selectedStatuses, status];
+
+        onChangeFilter({
+            status: nextStatuses.length ? nextStatuses : undefined,
+        });
+    };
+
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -81,6 +97,7 @@ export default function ReleaseSubmitsPage() {
                 <ReleaseSubmitStatusSummary
                     items={statusSummary}
                     loading={isFetching}
+                    onStatusClick={toggleStatusFilter}
                 />
 
                 <ReleaseSubmitTable

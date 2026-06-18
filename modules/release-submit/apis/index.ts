@@ -20,7 +20,7 @@ const compactObject = <T extends Record<string, unknown>>(value: T) =>
     }, {} as Partial<T>);
 
 const mapReleaseExecution3Params = (params: ReleaseSubmitFilter) => {
-    const { queryListReleases, type, latestOnly, ...executionParams } = params;
+    const { queryListReleases, latestOnly, type, ...executionParams } = params;
 
     const queryListReleasesParams = compactObject({
         ...queryListReleases,
@@ -32,6 +32,7 @@ const mapReleaseExecution3Params = (params: ReleaseSubmitFilter) => {
 
     return compactObject({
         ...executionParams,
+        type: Array.isArray(type) ? type.join(',') : type,
         latestOnly: latestOnly === 'all' ? undefined : latestOnly,
         queryListReleases:
             Object.keys(queryListReleasesParams).length > 0

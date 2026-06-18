@@ -31,8 +31,8 @@ export interface ReleaseSubmitData extends CommonAttribute {
 
 export interface ReleaseSubmitFilter extends CommonParams {
     releaseId?: string;
-    type?: RELEASE_SUBMIT_TYPE;
-    status?: RELEASE_SUBMIT_STATUS;
+    type?: RELEASE_SUBMIT_TYPE | RELEASE_SUBMIT_TYPE[];
+    status?: RELEASE_SUBMIT_STATUS | RELEASE_SUBMIT_STATUS[];
     latestOnly?: boolean | string;
     steps?: ReleaseExecutionStepFilter[];
     queryListReleases?: QueryListReleasesFilter;
