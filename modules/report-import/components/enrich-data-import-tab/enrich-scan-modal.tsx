@@ -146,7 +146,7 @@ export default function EnrichScanModal({
             cancelText={messages('analytics2.syncAll.cancel')}
             onCancel={handleClose}
             onOk={handleOk}
-            destroyOnClose
+            destroyOnHidden
             confirmLoading={isPending}
             okButtonProps={{
                 disabled: isListening,

@@ -2688,6 +2688,7 @@
             "sourceTypeFtpSyncAll": "Đồng bộ toàn bộ FTP",
             "sourceTypeFtpRetry": "Thử lại FTP",
             "sourceTypeFtpAutoCron": "Tự động đồng bộ FTP",
+            "sourceTypeAnalyticsReportExport": "Xuất báo cáo phân tích",
             "totalRows": "Tổng số dòng",
             "processedRows": "Đã xử lý",
             "skippedRows": "Bỏ qua",

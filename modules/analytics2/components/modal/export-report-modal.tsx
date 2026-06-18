@@ -5,7 +5,12 @@ import { Alert, Button, Descriptions, Modal, Progress } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { ExportReportEventType, ExportReportResponse, ExportReportEventData, ExportReportEventSummary } from '../../types';
+import {
+    ExportReportEventData,
+    ExportReportEventSummary,
+    ExportReportEventType,
+    ExportReportResponse,
+} from '../../types';
 
 interface ExportReportModalProps {
     open: boolean;
@@ -91,7 +96,7 @@ export default function ExportReportModal({
             title={messages('common.exportReport')}
             open={open}
             onCancel={handleClose}
-            destroyOnClose
+            destroyOnHidden
             footer={
                 jobId
                     ? [

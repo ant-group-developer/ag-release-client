@@ -2696,6 +2696,7 @@
             "sourceTypeFtpSyncAll": "FTP sync all",
             "sourceTypeFtpRetry": "FTP retry",
             "sourceTypeFtpAutoCron": "FTP auto cron",
+            "sourceTypeAnalyticsReportExport": "Analytics report export",
             "totalRows": "Total Rows",
             "processedRows": "Processed",
             "skippedRows": "Skipped",

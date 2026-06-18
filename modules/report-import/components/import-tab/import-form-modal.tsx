@@ -1,7 +1,7 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { DetailResponse } from '@/types/api';
-import axios from 'axios';
 import { Form, Modal, Spin } from 'antd';
+import axios from 'axios';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import { useGetImportJobStatus } from '../../hooks/use-get-import-job-status';
@@ -64,7 +64,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     );
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadResults, setUploadResults] = useState<
-        Record<string, { status: FileUploadStatus; progress?: number; error?: string }>
+        Record<
+            string,
+            { status: FileUploadStatus; progress?: number; error?: string }
+        >
     >({});
 
     const [startedJobId, setStartedJobId] = useState<string | null>(null);
@@ -216,7 +219,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                                                 setUploadResults((prev) => ({
                                                     ...prev,
                                                     [matchedItem.path]: {
-                                                        ...prev[matchedItem.path],
+                                                        ...prev[
+                                                            matchedItem.path
+                                                        ],
                                                         status: FileUploadStatus.UPLOADING,
                                                         progress: percent,
                                                     },
@@ -339,7 +344,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             onCancel={handleCloseModal}
             okText={messages('common.submit')}
             cancelText={messages('common.cancel')}
-            destroyOnClose
+            destroyOnHidden
             width={startedJobId && jobStatus && !viewJobId ? 960 : 560}
             closable={!isUploading}
             maskClosable={!isUploading}
