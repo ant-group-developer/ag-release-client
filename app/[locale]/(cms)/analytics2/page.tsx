@@ -155,6 +155,7 @@ export default function Analytics2Page() {
                 open={isExportModalOpen}
                 onClose={() => setIsExportModalOpen(false)}
                 onExportStarted={handleExportStarted}
+                dataFilter={dataFilter}
             />
 
             {isExportProgressOpen && exportJobs.length ? (

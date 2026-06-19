@@ -3,6 +3,8 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
@@ -28,11 +30,15 @@ export default function ChannelsHeader({ dataFilter, onSearch }: Props) {
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <CreateButton
-                        canCreate={isAdmin}
-                        text={messages('channel.add')}
-                        onClick={() => openModal(TYPE_MODAL_CHANNELS.CREATE)}
-                    />
+                    <PermissionGate permission={PERMISSION.CHANNEL.CREATE}>
+                        <CreateButton
+                            canCreate={isAdmin}
+                            text={messages('channel.add')}
+                            onClick={() =>
+                                openModal(TYPE_MODAL_CHANNELS.CREATE)
+                            }
+                        />
+                    </PermissionGate>
                 </div>
             </AppHeaderGroup>
         </AppHeader>
