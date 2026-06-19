@@ -5,8 +5,14 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import { Col, Row, Select } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetArtistOverview } from '../../hooks/use-get-artist-overview';
+import { useGetArtistRevenueDspBarChart } from '../../hooks/use-get-artist-revenue-dsp-bar-chart';
+import { useGetArtistRevenueLineChart } from '../../hooks/use-get-artist-revenue-line-chart';
+import { useGetArtistRevenueTerBarChart } from '../../hooks/use-get-artist-revenue-ter-bar-chart';
+import { useGetArtistTrendViewDspBarChart } from '../../hooks/use-get-artist-trend-view-dsp-bar-chart';
+import { useGetArtistTrendViewLineChart } from '../../hooks/use-get-artist-trend-view-line-chart';
+import { useGetArtistTrendViewTerBarChart } from '../../hooks/use-get-artist-trend-view-ter-bar-chart';
 import LineChartView from '../chart/line-chart-view';
 import PieChartView from '../chart/pie-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
@@ -32,6 +38,10 @@ export default function DetailArtistAnalyticsModal({
 
     const [localFromDate, setLocalFromDate] = useState(fromDate);
     const [localToDate, setLocalToDate] = useState(toDate);
+    const [trendViewType, setTrendViewType] = useState<'dsp' | 'ter'>('dsp');
+    const [revenueViewType, setRevenueViewType] = useState<'dsp' | 'ter'>(
+        'dsp'
+    );
 
     // Đồng bộ lại ngày từ component cha khi mở modal
     useEffect(() => {
@@ -47,6 +57,98 @@ export default function DetailArtistAnalyticsModal({
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
+
+    // Gọi API lấy thông tin biểu đồ doanh thu của Artist
+    const { revenueLineChartData, isFetching: isLineChartFetching } =
+        useGetArtistRevenueLineChart(
+            artistId,
+            { fromDate: localFromDate, toDate: localToDate },
+            open
+        );
+
+    // Gọi API lấy thông tin biểu đồ lượt nghe của Artist
+    const {
+        lineChartData: trendViewLineChartData,
+        isFetching: isTrendViewLineChartFetching,
+    } = useGetArtistTrendViewLineChart(
+        artistId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open
+    );
+
+    // Gọi API lấy thông tin phân bố theo DSP của Artist
+    const {
+        dspBarChartData: trendViewDspBarChartData,
+        isFetching: isTrendViewDspBarChartFetching,
+    } = useGetArtistTrendViewDspBarChart(
+        artistId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open && trendViewType === 'dsp'
+    );
+
+    // Gọi API lấy thông tin phân bố theo quốc gia của Artist
+    const {
+        terBarChartData: trendViewTerBarChartData,
+        isFetching: isTrendViewTerBarChartFetching,
+    } = useGetArtistTrendViewTerBarChart(
+        artistId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open && trendViewType === 'ter'
+    );
+
+    const mappedTrendPieData = useMemo(() => {
+        if (trendViewType === 'dsp') {
+            return trendViewDspBarChartData.map((item) => ({
+                type: item.dspName,
+                value: item.totalViews,
+            }));
+        } else {
+            return trendViewTerBarChartData.map((item) => ({
+                type: item.territory,
+                value: item.totalViews,
+            }));
+        }
+    }, [trendViewType, trendViewDspBarChartData, trendViewTerBarChartData]);
+
+    const isTrendBarChartFetching =
+        trendViewType === 'dsp'
+            ? isTrendViewDspBarChartFetching
+            : isTrendViewTerBarChartFetching;
+
+    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Artist
+    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
+        useGetArtistRevenueDspBarChart(
+            artistId,
+            { fromDate: localFromDate, toDate: localToDate },
+            open && revenueViewType === 'dsp'
+        );
+
+    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Artist
+    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
+        useGetArtistRevenueTerBarChart(
+            artistId,
+            { fromDate: localFromDate, toDate: localToDate },
+            open && revenueViewType === 'ter'
+        );
+
+    const mappedRevenuePieData = useMemo(() => {
+        if (revenueViewType === 'dsp') {
+            return revenueDspBarChartData.map((item) => ({
+                type: item.dspName,
+                value: item.revenueUsd,
+            }));
+        } else {
+            return revenueTerBarChartData.map((item) => ({
+                type: item.territory,
+                value: item.revenueUsd,
+            }));
+        }
+    }, [revenueViewType, revenueDspBarChartData, revenueTerBarChartData]);
+
+    const isRevenueBarChartFetching =
+        revenueViewType === 'dsp'
+            ? isRevenueDspBarChartFetching
+            : isRevenueTerBarChartFetching;
 
     return (
         <FullScreenModal
@@ -92,12 +194,12 @@ export default function DetailArtistAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={15}>
                         <LineChartView
-                            title={messages('analytics.totalTrendViews')}
-                            data={[]}
+                            title={messages('analytics.trendViewsByMonth')}
+                            data={trendViewLineChartData}
                             xAxisKey="period"
                             lineKey="totalViews"
                             lineName={messages('common.viewCount')}
-                            loading={true}
+                            loading={isTrendViewLineChartFetching}
                             chartHeight={250}
                         />
                     </Col>
@@ -106,8 +208,8 @@ export default function DetailArtistAnalyticsModal({
                             title={
                                 <Select
                                     variant="borderless"
-                                    value={'dsp'}
-                                    onChange={() => {}}
+                                    value={trendViewType}
+                                    onChange={(val) => setTrendViewType(val)}
                                     options={[
                                         {
                                             value: 'dsp',
@@ -136,13 +238,13 @@ export default function DetailArtistAnalyticsModal({
                                             ),
                                         },
                                     ]}
-                                    className="w-[200px]"
+                                    className="w-[250px]"
                                 />
                             }
-                            data={[]}
-                            loading={true}
+                            data={mappedTrendPieData}
+                            loading={isTrendBarChartFetching}
                             legendPosition="right"
-                            chartHeight={200}
+                            chartHeight={250}
                         />
                     </Col>
                 </Row>
@@ -150,13 +252,20 @@ export default function DetailArtistAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={15}>
                         <LineChartView
-                            title={messages('analytics.totalRevenueUsd')}
-                            data={[]}
+                            title={messages('analytics.revenue.label')}
+                            data={revenueLineChartData}
                             xAxisKey="period"
-                            lineKey="totalViews"
-                            lineName={messages('common.viewCount')}
-                            loading={true}
+                            lineKey="revenueUsd"
+                            lineName={messages('analytics.revenue.modeRevenue')}
+                            loading={isLineChartFetching}
                             chartHeight={250}
+                            valuePrefix="$"
+                            additionalTooltipKeys={[
+                                {
+                                    key: 'quantity',
+                                    name: messages('analytics.revenue.usage'),
+                                },
+                            ]}
                         />
                     </Col>
                     <Col xs={24} lg={9}>
@@ -164,8 +273,8 @@ export default function DetailArtistAnalyticsModal({
                             title={
                                 <Select
                                     variant="borderless"
-                                    value={'dsp'}
-                                    onChange={() => {}}
+                                    value={revenueViewType}
+                                    onChange={(val) => setRevenueViewType(val)}
                                     options={[
                                         {
                                             value: 'dsp',
@@ -175,7 +284,7 @@ export default function DetailArtistAnalyticsModal({
                                                     className="!text-sm"
                                                 >
                                                     {messages(
-                                                        'analytics.dspDistribution'
+                                                        'analytics.revenueDspDistribution'
                                                     )}
                                                 </Title>
                                             ),
@@ -188,19 +297,20 @@ export default function DetailArtistAnalyticsModal({
                                                     className="!text-sm"
                                                 >
                                                     {messages(
-                                                        'analytics.terDistribution'
+                                                        'analytics.revenueTerDistribution'
                                                     )}
                                                 </Title>
                                             ),
                                         },
                                     ]}
-                                    className="w-[200px]"
+                                    className="w-[250px]"
                                 />
                             }
-                            data={[]}
-                            loading={true}
+                            data={mappedRevenuePieData}
+                            loading={isRevenueBarChartFetching}
                             legendPosition="right"
-                            chartHeight={200}
+                            chartHeight={250}
+                            valuePrefix="$"
                         />
                     </Col>
                 </Row>

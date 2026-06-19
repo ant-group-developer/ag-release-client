@@ -103,19 +103,6 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             <Row gutter={[24, 24]}>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.tracks'))}
-                        columns={trackColumns}
-                        dataSource={trackRankingData?.items}
-                        loading={isTracksFetching}
-                        rowKey="isrc"
-                        labelKey="title"
-                        valueKey="totalViews"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
-                    />
-                </Col>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
                         title={topRankingTitle(messages('common.releases'))}
                         columns={releaseColumns}
                         dataSource={releaseRankingData?.items}
@@ -125,6 +112,19 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={`${APP_ROUTES.ANALYTICS2_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.tracks'))}
+                        columns={trackColumns}
+                        dataSource={trackRankingData?.items}
+                        loading={isTracksFetching}
+                        rowKey="isrc"
+                        labelKey="title"
+                        valueKey="totalViews"
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -168,7 +168,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.dsps'))}
+                        title={topRankingTitle(messages('dsp.label'))}
                         columns={dspColumns}
                         dataSource={dspRankingData?.items}
                         loading={isDspsFetching}

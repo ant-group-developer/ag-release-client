@@ -252,9 +252,90 @@ export const analytics2Apis = {
             params
         );
     },
+    getReleaseTrendViewLineChart: (
+        releaseId: string,
+        params: TrendViewLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/release/${releaseId}/trend-view/line-chart`,
+            params
+        );
+    },
+    getReleaseTrendViewDspBarChart: (
+        releaseId: string,
+        params: TrendViewDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/release/${releaseId}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getReleaseTrendViewTerBarChart: (
+        releaseId: string,
+        params: TrendViewTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/release/${releaseId}/trend-view/ter/bar-chart`,
+            params
+        );
+    },
+    getReleaseRevenueLineChart: (
+        releaseId: string,
+        params: RevenueLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/release/${releaseId}/revenue/line-chart`,
+            params
+        );
+    },
+    getReleaseRevenueDspBarChart: (
+        releaseId: string,
+        params: RevenueDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/release/${releaseId}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getReleaseRevenueTerBarChart: (
+        releaseId: string,
+        params: RevenueTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/release/${releaseId}/revenue/ter/bar-chart`,
+            params
+        );
+    },
     getTrackOverview: (isrc: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/track/${isrc}/overview`,
+            params
+        );
+    },
+    getTrackTrendViewLineChart: (
+        isrc: string,
+        params: TrendViewLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/track/${isrc}/trend-view/line-chart`,
+            params
+        );
+    },
+    getTrackTrendViewDspBarChart: (
+        isrc: string,
+        params: TrendViewDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/track/${isrc}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getTrackTrendViewTerBarChart: (
+        isrc: string,
+        params: TrendViewTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/track/${isrc}/trend-view/ter/bar-chart`,
             params
         );
     },
@@ -279,6 +360,30 @@ export const analytics2Apis = {
     getTrackRevenueTimeline: (isrc: string, params: RevenueQueryParams) => {
         return axiosInstance.post<DetailResponse<RevenueTimelineData>>(
             `/analytics/track/${isrc}/revenue/timeline`,
+            params
+        );
+    },
+    getTrackRevenueLineChart: (isrc: string, params: RevenueLineChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/track/${isrc}/revenue/line-chart`,
+            params
+        );
+    },
+    getTrackRevenueDspBarChart: (
+        isrc: string,
+        params: RevenueDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/track/${isrc}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getTrackRevenueTerBarChart: (
+        isrc: string,
+        params: RevenueTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/track/${isrc}/revenue/ter/bar-chart`,
             params
         );
     },
@@ -309,6 +414,60 @@ export const analytics2Apis = {
     getLabelRevenueTimeline: (labelId: string, params: RevenueQueryParams) => {
         return axiosInstance.post<DetailResponse<RevenueTimelineData>>(
             `/analytics/label/${labelId}/revenue/timeline`,
+            params
+        );
+    },
+    getLabelTrendViewLineChart: (
+        labelId: string,
+        params: TrendViewLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/label/${labelId}/trend-view/line-chart`,
+            params
+        );
+    },
+    getLabelTrendViewDspBarChart: (
+        labelId: string,
+        params: TrendViewDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/label/${labelId}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getLabelTrendViewTerBarChart: (
+        labelId: string,
+        params: TrendViewTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/label/${labelId}/trend-view/ter/bar-chart`,
+            params
+        );
+    },
+    getLabelRevenueLineChart: (
+        labelId: string,
+        params: RevenueLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/label/${labelId}/revenue/line-chart`,
+            params
+        );
+    },
+    getLabelRevenueDspBarChart: (
+        labelId: string,
+        params: RevenueDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/label/${labelId}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getLabelRevenueTerBarChart: (
+        labelId: string,
+        params: RevenueTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/label/${labelId}/revenue/ter/bar-chart`,
             params
         );
     },
@@ -348,6 +507,60 @@ export const analytics2Apis = {
     ) => {
         return axiosInstance.post<DetailResponse<RevenueTimelineData>>(
             `/analytics/artist/${artistId}/revenue/timeline`,
+            params
+        );
+    },
+    getArtistTrendViewLineChart: (
+        artistId: string,
+        params: TrendViewLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/artist/${artistId}/trend-view/line-chart`,
+            params
+        );
+    },
+    getArtistTrendViewDspBarChart: (
+        artistId: string,
+        params: TrendViewDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/artist/${artistId}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getArtistTrendViewTerBarChart: (
+        artistId: string,
+        params: TrendViewTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/artist/${artistId}/trend-view/ter/bar-chart`,
+            params
+        );
+    },
+    getArtistRevenueLineChart: (
+        artistId: string,
+        params: RevenueLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/artist/${artistId}/revenue/line-chart`,
+            params
+        );
+    },
+    getArtistRevenueDspBarChart: (
+        artistId: string,
+        params: RevenueDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/artist/${artistId}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getArtistRevenueTerBarChart: (
+        artistId: string,
+        params: RevenueTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/artist/${artistId}/revenue/ter/bar-chart`,
             params
         );
     },

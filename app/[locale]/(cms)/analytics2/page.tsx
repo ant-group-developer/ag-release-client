@@ -119,7 +119,7 @@ export default function Analytics2Page() {
                         }
                         options={[
                             {
-                                label: messages('common.views'),
+                                label: messages('analytics.trendViews'),
                                 value: ANALYTICS2_TABS.VIEWS,
                             },
                             {
