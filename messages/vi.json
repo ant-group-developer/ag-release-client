@@ -2723,7 +2723,7 @@
             "processedRows": "Đã xử lý",
             "skippedRows": "Bỏ qua",
             "errorRows": "Lỗi",
-            "recentJobsTitle": "Lịch sử import/sync gần đây",
+            "recentJobsTitle": "Lịch sử nhập/đồng bộ gần đây",
             "uploadReportBtn": "Nhập báo cáo",
             "detailedProgress": "Tiến độ chi tiết từng file"
         },

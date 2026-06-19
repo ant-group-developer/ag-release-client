@@ -77,6 +77,14 @@ export interface ImportJobStatusResponse {
         current: number;
         total: number;
         label: string;
+        detail?: {
+            currentFile: string;
+            status: string;
+            files: {
+                name: string;
+                status: 'done' | 'processing' | 'pending' | 'failed' | string;
+            }[];
+        };
     };
     rows: {
         total: number;

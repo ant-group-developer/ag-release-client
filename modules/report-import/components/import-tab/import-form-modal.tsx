@@ -40,6 +40,8 @@ const uploadFileWithProgress = async (
     }
 };
 
+const MAX_CONCURRENT_UPLOADS = 3;
+
 interface ImportModalProps {
     open: boolean;
     onClose: () => void;
@@ -199,86 +201,74 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                     try {
                         let hasFailed = false;
+                        let index = 0;
 
-                        // Hàm chia nhỏ mảng để giới hạn số lượng upload đồng thời
-                        const chunkArray = <T,>(
-                            arr: T[],
-                            size: number
-                        ): T[][] => {
-                            const result = [];
-                            for (let i = 0; i < arr.length; i += size) {
-                                result.push(arr.slice(i, i + size));
+                        const uploadNext = async (): Promise<void> => {
+                            if (index >= matched.length) {
+                                return;
                             }
-                            return result;
-                        };
 
-                        const batches = chunkArray(matched, 3);
+                            const currentIndex = index++;
+                            const matchedItem = matched[currentIndex];
 
-                        for (const batch of batches) {
-                            const uploadPromises = batch.map(
-                                async (matchedItem: any) => {
-                                    const file = files.find((f: any) => {
-                                        const originalFile =
-                                            f.originFileObj as File;
-                                        const path =
-                                            originalFile?.webkitRelativePath ||
-                                            f.name ||
-                                            '';
-                                        return path === matchedItem.path;
-                                    });
+                            const file = files.find((f: any) => {
+                                const originalFile = f.originFileObj as File;
+                                const path =
+                                    originalFile?.webkitRelativePath ||
+                                    f.name ||
+                                    '';
+                                return path === matchedItem.path;
+                            });
 
-                                    try {
-                                        if (file && file.originFileObj) {
-                                            await uploadFileWithProgress(
-                                                matchedItem.uploadUrl,
-                                                file.originFileObj,
-                                                (percent) => {
-                                                    setUploadResults(
-                                                        (prev) => ({
-                                                            ...prev,
-                                                            [matchedItem.path]:
-                                                                {
-                                                                    ...prev[
-                                                                        matchedItem
-                                                                            .path
-                                                                    ],
-                                                                    status: FileUploadStatus.UPLOADING,
-                                                                    progress:
-                                                                        percent,
-                                                                },
-                                                        })
-                                                    );
-                                                }
-                                            );
+                            try {
+                                if (file && file.originFileObj) {
+                                    await uploadFileWithProgress(
+                                        matchedItem.uploadUrl,
+                                        file.originFileObj,
+                                        (percent) => {
                                             setUploadResults((prev) => ({
                                                 ...prev,
                                                 [matchedItem.path]: {
-                                                    status: FileUploadStatus.SUCCESS,
-                                                    progress: 100,
+                                                    ...prev[matchedItem.path],
+                                                    status: FileUploadStatus.UPLOADING,
+                                                    progress: percent,
                                                 },
                                             }));
-                                        } else {
-                                            throw new Error(
-                                                `File not found in local files: ${matchedItem.path}`
-                                            );
                                         }
-                                    } catch (err: any) {
-                                        hasFailed = true;
-                                        setUploadResults((prev) => ({
-                                            ...prev,
-                                            [matchedItem.path]: {
-                                                status: FileUploadStatus.FAILED,
-                                                error:
-                                                    err?.message ||
-                                                    'Upload failed',
-                                            },
-                                        }));
-                                    }
+                                    );
+                                    setUploadResults((prev) => ({
+                                        ...prev,
+                                        [matchedItem.path]: {
+                                            status: FileUploadStatus.SUCCESS,
+                                            progress: 100,
+                                        },
+                                    }));
+                                } else {
+                                    throw new Error(
+                                        `File not found in local files: ${matchedItem.path}`
+                                    );
                                 }
-                            );
+                            } catch (err: any) {
+                                hasFailed = true;
+                                setUploadResults((prev) => ({
+                                    ...prev,
+                                    [matchedItem.path]: {
+                                        status: FileUploadStatus.FAILED,
+                                        error: err?.message || 'Upload failed',
+                                    },
+                                }));
+                            }
 
-                            await Promise.all(uploadPromises);
+                            await uploadNext();
+                        };
+
+                        const workers = [];
+                        const limit = Math.min(MAX_CONCURRENT_UPLOADS, matched.length);
+                        for (let i = 0; i < limit; i++) {
+                            workers.push(uploadNext());
                         }
+
+                        await Promise.all(workers);
 
                         if (hasFailed) {
                             setUploadStatus(FileUploadStatus.FAILED);
