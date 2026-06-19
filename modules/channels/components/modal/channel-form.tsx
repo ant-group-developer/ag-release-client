@@ -115,30 +115,6 @@ export default function ChannelFormModal({ ...props }: Props) {
                 disabled={isActive}
             >
                 <AppFormItem
-                    name="thumbUrl"
-                    label={messages('common.thumbnailUrl')}
-                    rules={[
-                        {
-                            type: 'url',
-                            message: messages('validation.url'),
-                        },
-                        {
-                            max: CHANNEL_THUMB_URL_MAX_LENGTH,
-                            message: messages('validation.stringMax', {
-                                max: CHANNEL_THUMB_URL_MAX_LENGTH,
-                                field: messages('common.thumbnailUrl'),
-                            }),
-                        },
-                    ]}
-                >
-                    <Input
-                        placeholder="https://..."
-                        allowClear
-                        disabled={isActive}
-                    />
-                </AppFormItem>
-
-                <AppFormItem
                     name="tenantId"
                     label={messages('tenant.label')}
                     required
@@ -193,6 +169,30 @@ export default function ChannelFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input placeholder="UC..." allowClear />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="thumbUrl"
+                    label={messages('common.thumbnailUrl')}
+                    rules={[
+                        {
+                            type: 'url',
+                            message: messages('validation.url'),
+                        },
+                        {
+                            max: CHANNEL_THUMB_URL_MAX_LENGTH,
+                            message: messages('validation.stringMax', {
+                                max: CHANNEL_THUMB_URL_MAX_LENGTH,
+                                field: messages('common.thumbnailUrl'),
+                            }),
+                        },
+                    ]}
+                >
+                    <Input
+                        placeholder="https://..."
+                        allowClear
+                        disabled={isActive}
+                    />
                 </AppFormItem>
             </AppForm>
         </AppModal>
