@@ -8,7 +8,7 @@ import { ColumnType } from 'antd/es/table';
 import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ETL_JOB_SOURCE_TYPE } from '../../enums';
-import { EtlJobData, ImportJobStatus } from '../../types/payload';
+import { EtlJobData, IMPORT_JOBS_STATUS } from '../../types/payload';
 
 const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
     [ETL_JOB_SOURCE_TYPE.REPORT_UPLOAD]:
@@ -21,6 +21,10 @@ const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
         'reportConfigs.importResult.sourceTypeFtpRetry',
     [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]:
         'reportConfigs.importResult.sourceTypeFtpAutoCron',
+    [ETL_JOB_SOURCE_TYPE.ANALYTICS_REPORT_EXPORT]:
+        'reportConfigs.importResult.sourceTypeAnalyticsReportExport',
+    [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]:
+        'reportConfigs.importResult.sourceTypeReportReleaseDelete',
 };
 
 const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
@@ -29,6 +33,8 @@ const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
     [ETL_JOB_SOURCE_TYPE.FTP_SYNC_ALL]: 'cyan',
     [ETL_JOB_SOURCE_TYPE.FTP_RETRY]: 'orange',
     [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]: 'green',
+    [ETL_JOB_SOURCE_TYPE.ANALYTICS_REPORT_EXPORT]: 'geekblue',
+    [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]: 'red',
 };
 
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
@@ -59,30 +65,33 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
         return sourceTypeKey ? messages(sourceTypeKey as any) : sourceType;
     };
 
-    const getStatusTagColor = (status: ImportJobStatus) => {
+    const getStatusTagColor = (status: IMPORT_JOBS_STATUS) => {
         switch (status) {
-            case ImportJobStatus.PENDING:
+            case IMPORT_JOBS_STATUS.PENDING:
+            case IMPORT_JOBS_STATUS.QUEUED:
                 return 'warning';
-            case ImportJobStatus.PROCESSING:
+            case IMPORT_JOBS_STATUS.PROCESSING:
                 return 'processing';
-            case ImportJobStatus.COMPLETED:
+            case IMPORT_JOBS_STATUS.COMPLETED:
                 return 'success';
-            case ImportJobStatus.FAILED:
+            case IMPORT_JOBS_STATUS.FAILED:
                 return 'error';
             default:
                 return 'default';
         }
     };
 
-    const getStatusLabel = (status: ImportJobStatus) => {
+    const getStatusLabel = (status: IMPORT_JOBS_STATUS) => {
         switch (status) {
-            case ImportJobStatus.PENDING:
+            case IMPORT_JOBS_STATUS.PENDING:
                 return messages('reportConfigs.importResult.statusPending');
-            case ImportJobStatus.PROCESSING:
+            case IMPORT_JOBS_STATUS.QUEUED:
+                return messages('reportConfigs.importResult.statusQueued');
+            case IMPORT_JOBS_STATUS.PROCESSING:
                 return messages('reportConfigs.importResult.statusProcessing');
-            case ImportJobStatus.COMPLETED:
+            case IMPORT_JOBS_STATUS.COMPLETED:
                 return messages('reportConfigs.importResult.statusCompleted');
-            case ImportJobStatus.FAILED:
+            case IMPORT_JOBS_STATUS.FAILED:
                 return messages('reportConfigs.importResult.statusFailed');
             default:
                 return status;
@@ -131,11 +140,12 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             dataIndex: 'status',
             width: 130,
             align: 'center',
-            render: (status: ImportJobStatus) => (
+            render: (status: IMPORT_JOBS_STATUS) => (
                 <Tag
                     color={getStatusTagColor(status)}
                     icon={
-                        status === ImportJobStatus.PENDING ? (
+                        status === IMPORT_JOBS_STATUS.PENDING ||
+                        status === IMPORT_JOBS_STATUS.QUEUED ? (
                             <LoadingOutlined spin />
                         ) : undefined
                     }

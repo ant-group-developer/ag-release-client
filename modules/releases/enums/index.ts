@@ -16,6 +16,7 @@ export enum TYPE_MODAL_RELEASE {
     EXPORT_TEMPLATE = 'EXPORT_TEMPLATE',
     BULK_SUBMIT = 'BULK_SUBMIT_RELEASE',
     BULK_DELETE = 'BULK_DELETE_RELEASE',
+    DELETE_REPORT = 'DELETE_REPORT_RELEASE',
 }
 
 export enum RELEASE_ROUTE_ACTION {
@@ -67,8 +68,8 @@ export enum RELEASES_TABS {
 export enum RELEASE_VIEW_TABS {
     OVERVIEW = 'overview',
     TRACKS = 'tracks',
+    ANALYTICS = 'analytics',
 }
-
 
 export enum RELEASES_STATUS {
     DRAFT = 'draft',

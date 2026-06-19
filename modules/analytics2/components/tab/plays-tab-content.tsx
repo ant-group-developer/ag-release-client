@@ -84,6 +84,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
                     <PieChartView
                         title={
                             <Select
+                                variant="borderless"
                                 value={viewType}
                                 onChange={(val) => setViewType(val)}
                                 options={[

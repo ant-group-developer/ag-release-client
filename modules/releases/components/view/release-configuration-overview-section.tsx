@@ -25,18 +25,11 @@ export default function ReleaseConfigurationOverviewSection({
                 <Col xs={24} lg={12}>
                     <InfoRow
                         label={messages('release.name')}
-                        value={
-                            <OverviewText value={releaseData.title} strong />
-                        }
+                        value={<OverviewText value={releaseData.title} />}
                     />
                     <InfoRow
                         label={messages('release.overview.label')}
-                        value={
-                            <OverviewText
-                                value={releaseData.label?.name}
-                                strong
-                            />
-                        }
+                        value={<OverviewText value={releaseData.label?.name} />}
                     />
                 </Col>
                 <Col xs={24} lg={12}>

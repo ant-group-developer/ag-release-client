@@ -2,13 +2,16 @@
 
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { useFilter } from '@/hooks/use-filter';
+import ExportReportProgressPopover from '@/modules/analytics2/components/export-report-progress-popover';
 import ExportReportModal from '@/modules/analytics2/components/modal/export-report-modal';
 import PlaysTabContent from '@/modules/analytics2/components/tab/plays-tab-content';
 import RevenueTabContent from '@/modules/analytics2/components/tab/revenue-tab-content';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
-import { useExportAnalyticsReportEvents } from '@/modules/analytics2/hooks/use-export-analytics-report-events';
-import { Analytics2DataFilter } from '@/modules/analytics2/types';
-import { DownloadOutlined, LoadingOutlined } from '@ant-design/icons';
+import {
+    Analytics2DataFilter,
+    ExportReportJob,
+} from '@/modules/analytics2/types';
+import { DownloadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Radio, Space, theme } from 'antd';
 import dayjs from 'dayjs';
@@ -30,24 +33,33 @@ export default function Analytics2Page() {
     const pathname = usePathname();
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-    const [jobId, setJobId] = useState<string | null>(null);
+    const [isExportProgressOpen, setIsExportProgressOpen] = useState(false);
+    const [exportJobs, setExportJobs] = useState<ExportReportJob[]>([]);
 
-    const { latestEvent, summary, isListening, isTerminalEvent, error } =
-        useExportAnalyticsReportEvents({
-            jobId,
-            enabled: !!jobId,
-            onCompleted: (eventData) => {
-                if (eventData.result?.downloadUrl) {
-                    window.location.href = eventData.result.downloadUrl;
-                }
-            },
+    const handleExportStarted = (jobId: string) => {
+        setExportJobs((prevJobs) => {
+            if (prevJobs.some((job) => job.id === jobId)) return prevJobs;
+
+            return [
+                ...prevJobs,
+                {
+                    id: jobId,
+                    createdAt: Date.now(),
+                },
+            ];
         });
+        setIsExportProgressOpen(true);
+    };
+
+    const handleRemoveExportJob = (jobId: string) => {
+        setExportJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
+    };
 
     useEffect(() => {
-        if (isTerminalEvent && jobId) {
-            setJobId(null);
+        if (!exportJobs.length) {
+            setIsExportProgressOpen(false);
         }
-    }, [isTerminalEvent, jobId]);
+    }, [exportJobs.length]);
 
     const initialTab =
         (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
@@ -85,17 +97,12 @@ export default function Analytics2Page() {
             extra={
                 <Space>
                     <Button
-                        icon={
-                            isListening ? (
-                                <LoadingOutlined />
-                            ) : (
-                                <DownloadOutlined />
-                            )
-                        }
+                        icon={<DownloadOutlined />}
                         onClick={() => {
-                            if (jobId && !isListening) {
-                                setJobId(null);
+                            if (exportJobs.length) {
+                                setIsExportProgressOpen(true);
                             }
+
                             setIsExportModalOpen(true);
                         }}
                     >
@@ -147,13 +154,19 @@ export default function Analytics2Page() {
             <ExportReportModal
                 open={isExportModalOpen}
                 onClose={() => setIsExportModalOpen(false)}
-                jobId={jobId}
-                setJobId={setJobId}
-                latestEvent={latestEvent}
-                summary={summary}
-                isListening={isListening}
-                error={error}
+                onExportStarted={handleExportStarted}
             />
+
+            {isExportProgressOpen && exportJobs.length ? (
+                <ExportReportProgressPopover
+                    jobs={exportJobs}
+                    onClose={() => {
+                        setIsExportProgressOpen(false);
+                        setExportJobs([]);
+                    }}
+                    onRemoveJob={handleRemoveExportJob}
+                />
+            ) : null}
         </PageContainer>
     );
 }

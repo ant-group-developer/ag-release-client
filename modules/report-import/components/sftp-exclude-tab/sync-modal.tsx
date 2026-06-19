@@ -118,7 +118,7 @@ export default function SyncModal({ open, onClose }: SyncModalProps) {
             cancelText={messages('analytics2.syncAll.cancel')}
             onCancel={onClose}
             onOk={handleOk}
-            destroyOnClose
+            destroyOnHidden
             confirmLoading={isPending}
             cancelButtonProps={{ disabled: isPending }}
         >

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { reportConfigApis } from '../apis';
-import { ImportJobStatus } from '../types/payload';
+import { RUNNING_IMPORT_JOB_STATUSES } from '../types/payload';
 
 export const useGetImportJobStatus = (jobId?: string, enabled = false) => {
     const query = useQuery({
@@ -13,8 +13,8 @@ export const useGetImportJobStatus = (jobId?: string, enabled = false) => {
         refetchInterval: (query) => {
             const status = query.state.data?.data?.data?.status;
             if (
-                status === ImportJobStatus.PENDING ||
-                status === ImportJobStatus.PROCESSING
+                status &&
+                RUNNING_IMPORT_JOB_STATUSES.includes(status)
             ) {
                 return 5000; // poll every 5 seconds
             }

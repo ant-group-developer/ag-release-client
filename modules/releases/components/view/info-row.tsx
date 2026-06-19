@@ -21,13 +21,13 @@ export default function InfoRow({ label, value, copyText }: InfoRowProps) {
     };
 
     return (
-        <div className="flex items-center justify-between border-b border-[#f0f0f0] py-3">
+        <div className="flex items-center justify-between border-[#f0f0f0] py-3">
             <div className="flex-[0_0_200px] pr-4">
                 <Text type="secondary" className="text-[14px]">
                     {label}
                 </Text>
             </div>
-            <div className="flex min-w-0 flex-1 items-center justify-between">
+            <div className="flex min-w-0 flex-1 items-center justify-between border-b border-[#f0f0f0]">
                 <div className="truncate">{value}</div>
                 {copyText && (
                     <Tooltip title={messages('common.copy')}>

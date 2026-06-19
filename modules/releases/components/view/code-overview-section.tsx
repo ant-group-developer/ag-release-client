@@ -23,7 +23,7 @@ export default function CodeOverviewSection({ releaseData }: Props) {
                 <Col xs={24} lg={12}>
                     <InfoRow
                         label={messages('formFields.upc')}
-                        value={<OverviewText value={releaseData.upc} strong />}
+                        value={<OverviewText value={releaseData.upc} />}
                         copyText={releaseData.upc}
                     />
                 </Col>

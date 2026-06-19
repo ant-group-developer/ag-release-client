@@ -1,26 +1,25 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { useQueryClient } from '@tanstack/react-query';
 import { getSession } from 'next-auth/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getExportReportEventsUrl } from '../apis';
+import { etlJobQueryKeys } from '../constants/query-keys';
 import {
-    isExportReportCompleted,
-    isExportReportFailed,
-} from '../helpers/export-report-helper';
-import {
-    ExportReportEventData,
-    ExportReportEventSummary,
-    ExportReportEventType,
-} from '../types';
+    DeleteImportedReleasesEventData,
+    DeleteImportedReleasesEventType,
+    EtlJobData,
+    IMPORT_JOBS_STATUS,
+} from '../types/payload';
+
+const DELETE_REPORT_EVENTS_API_PATH = '/api/v1/report-import/releases/delete';
+
+const getDeleteImportedReleaseEventsUrl = (jobId: string) => {
+    return `${DELETE_REPORT_EVENTS_API_PATH}/${jobId}/events`;
+};
 
 const parseEventData = (
     eventType: string,
     eventData?: string
-): ExportReportEventData => {
-    const resolvedEventType =
-        eventType && eventType !== ExportReportEventType.PROGRESS
-            ? eventType
-            : undefined;
-
+): DeleteImportedReleasesEventData => {
     if (!eventData) {
         return { type: eventType };
     }
@@ -31,7 +30,7 @@ const parseEventData = (
         if (parsedData && typeof parsedData === 'object') {
             return {
                 ...parsedData,
-                type: resolvedEventType || parsedData.type || eventType,
+                type: parsedData.type || eventType,
             };
         }
 
@@ -48,55 +47,78 @@ const parseEventData = (
 };
 
 const getEventSummary = (
-    eventData: ExportReportEventData
-): Partial<ExportReportEventSummary> | undefined => {
+    eventData: DeleteImportedReleasesEventData
+): Partial<EtlJobData> | undefined => {
     const hasFlatSummary =
         eventData.status !== undefined ||
         eventData.progress !== undefined ||
         eventData.rows !== undefined ||
         eventData.file !== undefined ||
+        eventData.params !== undefined ||
         eventData.result !== undefined ||
         eventData.error !== undefined;
 
     if (!hasFlatSummary && !eventData.summary) return undefined;
 
-    const eventSummary: Partial<ExportReportEventSummary> = {
+    return {
         ...(eventData.summary || {}),
+        ...(eventData.status !== undefined ? { status: eventData.status } : {}),
+        ...(eventData.progress !== undefined
+            ? { progress: eventData.progress }
+            : {}),
+        ...(eventData.rows !== undefined ? { rows: eventData.rows } : {}),
+        ...(eventData.file !== undefined ? { file: eventData.file } : {}),
+        ...(eventData.params !== undefined ? { params: eventData.params } : {}),
+        ...(eventData.result !== undefined ? { result: eventData.result } : {}),
+        ...(eventData.error !== undefined ? { error: eventData.error } : {}),
     };
-
-    if (eventData.status !== undefined) eventSummary.status = eventData.status;
-    if (eventData.progress !== undefined) {
-        eventSummary.progress = eventData.progress;
-    }
-    if (eventData.rows !== undefined) eventSummary.rows = eventData.rows;
-    if (eventData.file !== undefined) eventSummary.file = eventData.file;
-    if (eventData.result !== undefined) eventSummary.result = eventData.result;
-    if (eventData.error !== undefined) eventSummary.error = eventData.error;
-
-    return eventSummary;
 };
 
-interface UseExportAnalyticsReportEventsParams {
+const isCompletedEvent = (
+    eventData: DeleteImportedReleasesEventData | null,
+    summary: Partial<EtlJobData> | null
+) => {
+    return (
+        eventData?.type === DeleteImportedReleasesEventType.COMPLETED ||
+        eventData?.status === IMPORT_JOBS_STATUS.COMPLETED ||
+        summary?.status === IMPORT_JOBS_STATUS.COMPLETED
+    );
+};
+
+const isFailedEvent = (
+    eventData: DeleteImportedReleasesEventData | null,
+    summary: Partial<EtlJobData> | null
+) => {
+    return (
+        eventData?.type === DeleteImportedReleasesEventType.FAILED ||
+        eventData?.status === IMPORT_JOBS_STATUS.FAILED ||
+        summary?.status === IMPORT_JOBS_STATUS.FAILED
+    );
+};
+
+interface UseDeleteImportedReleaseEventsParams {
     jobId?: string | null;
+    eventsUrl?: string | null;
     enabled?: boolean;
-    onCompleted?: (eventData: ExportReportEventData) => void;
-    onFailed?: (eventData: ExportReportEventData) => void;
+    onCompleted?: (eventData: DeleteImportedReleasesEventData) => void;
+    onFailed?: (eventData: DeleteImportedReleasesEventData) => void;
 }
 
-export const useExportAnalyticsReportEvents = ({
+export const useDeleteImportedReleaseEvents = ({
     jobId,
+    eventsUrl,
     enabled = true,
     onCompleted,
     onFailed,
-}: UseExportAnalyticsReportEventsParams) => {
+}: UseDeleteImportedReleaseEventsParams) => {
+    const queryClient = useQueryClient();
     const [latestEvent, setLatestEvent] =
-        useState<ExportReportEventData | null>(null);
-    const [summary, setSummary] =
-        useState<Partial<ExportReportEventSummary> | null>(null);
+        useState<DeleteImportedReleasesEventData | null>(null);
+    const [summary, setSummary] = useState<Partial<EtlJobData> | null>(null);
     const [isListening, setIsListening] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const summaryRef = useRef<Partial<ExportReportEventSummary> | null>(null);
+    const summaryRef = useRef<Partial<EtlJobData> | null>(null);
     const isTerminalRef = useRef(false);
     const onCompletedRef = useRef(onCompleted);
     const onFailedRef = useRef(onFailed);
@@ -112,15 +134,17 @@ export const useExportAnalyticsReportEvents = ({
         setSummary(null);
         setLatestEvent(null);
         setError(null);
-    }, [jobId]);
+    }, [eventsUrl, jobId]);
 
     useEffect(() => {
-        if (!jobId || !enabled) {
+        if ((!jobId && !eventsUrl) || !enabled) {
             setIsListening(false);
             return;
         }
 
         const abortController = new AbortController();
+        const resolvedEventsUrl =
+            eventsUrl || getDeleteImportedReleaseEventsUrl(jobId as string);
 
         const listenEvents = async () => {
             if (isTerminalRef.current) return;
@@ -132,7 +156,7 @@ export const useExportAnalyticsReportEvents = ({
                 accessToken?: string;
             } | null;
 
-            await fetchEventSource(getExportReportEventsUrl(jobId), {
+            await fetchEventSource(resolvedEventsUrl, {
                 method: 'GET',
                 signal: abortController.signal,
                 openWhenHidden: true,
@@ -144,7 +168,7 @@ export const useExportAnalyticsReportEvents = ({
                 },
                 onmessage: (event) => {
                     const eventData = parseEventData(
-                        event.event || ExportReportEventType.PROGRESS,
+                        event.event || DeleteImportedReleasesEventType.PROGRESS,
                         event.data
                     );
                     const eventSummary = getEventSummary(eventData);
@@ -161,25 +185,22 @@ export const useExportAnalyticsReportEvents = ({
                         setSummary(nextSummary);
                     }
 
-                    const isCompleted = isExportReportCompleted(
-                        eventData,
-                        nextSummary
-                    );
-                    const isFailed = isExportReportFailed(
-                        eventData,
-                        nextSummary
-                    );
-
-                    if (isCompleted) {
+                    if (isCompletedEvent(eventData, nextSummary)) {
                         isTerminalRef.current = true;
+                        queryClient.invalidateQueries({
+                            queryKey: etlJobQueryKeys.all,
+                        });
                         onCompletedRef.current?.(eventData);
                         setIsListening(false);
                         abortController.abort();
                         return;
                     }
 
-                    if (isFailed) {
+                    if (isFailedEvent(eventData, nextSummary)) {
                         isTerminalRef.current = true;
+                        queryClient.invalidateQueries({
+                            queryKey: etlJobQueryKeys.all,
+                        });
                         onFailedRef.current?.(eventData);
                         setIsListening(false);
                         abortController.abort();
@@ -220,12 +241,12 @@ export const useExportAnalyticsReportEvents = ({
             setIsListening(false);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enabled, jobId]);
+    }, [enabled, eventsUrl, jobId, queryClient]);
 
     const isTerminalEvent = useMemo(() => {
         return (
-            isExportReportCompleted(latestEvent, summary) ||
-            isExportReportFailed(latestEvent, summary)
+            isCompletedEvent(latestEvent, summary) ||
+            isFailedEvent(latestEvent, summary)
         );
     }, [latestEvent, summary]);
 
@@ -238,4 +259,4 @@ export const useExportAnalyticsReportEvents = ({
     };
 };
 
-export { getExportReportEventsUrl };
+export { getDeleteImportedReleaseEventsUrl, isCompletedEvent, isFailedEvent };

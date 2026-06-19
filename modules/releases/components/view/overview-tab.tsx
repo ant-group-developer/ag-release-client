@@ -40,22 +40,23 @@ function OverviewSectionCard({
 export default function OverviewTab({ releaseData }: Props) {
     if (!releaseData) return null;
 
-    const shouldShowMetadataExternal =
-        Object.values(releaseData.metadataExternal || {}).length > 0;
-    const shouldShowReleaseArtists =
-        (releaseData.releaseArtists || []).length > 0;
-    const shouldShowReleaseContributors =
-        (releaseData.releaseContributors || []).length > 0;
+    const isHasMetadataExternal = Object.values(
+        releaseData.metadataExternal ?? {}
+    ).some((metadata) => !!metadata);
 
     return (
         <div className="flex flex-col gap-4 pb-4">
-            <OverviewSectionCard isEmpty={!shouldShowMetadataExternal}>
-                <MetadataExternalOverviewSection releaseData={releaseData} />
-            </OverviewSectionCard>
-            <OverviewSectionCard isEmpty={!shouldShowReleaseArtists}>
+            {isHasMetadataExternal && (
+                <OverviewSectionCard>
+                    <MetadataExternalOverviewSection
+                        releaseData={releaseData}
+                    />
+                </OverviewSectionCard>
+            )}
+            <OverviewSectionCard>
                 <ReleaseArtistsSection releaseData={releaseData} />
             </OverviewSectionCard>
-            <OverviewSectionCard isEmpty={!shouldShowReleaseContributors}>
+            <OverviewSectionCard>
                 <ReleaseContributorsSection releaseData={releaseData} />
             </OverviewSectionCard>
             <OverviewSectionCard>

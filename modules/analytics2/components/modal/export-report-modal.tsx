@@ -1,32 +1,22 @@
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { useExportAnalyticsReport } from '@/modules/analytics2/hooks/use-export-analytics-report';
 import { DetailResponse } from '@/types/api';
-import { Alert, Button, Descriptions, Modal, Progress } from 'antd';
+import { Button, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
-import { ExportReportEventType, ExportReportResponse, ExportReportEventData, ExportReportEventSummary } from '../../types';
+import { useEffect, useState } from 'react';
+import { ExportReportResponse } from '../../types';
 
 interface ExportReportModalProps {
     open: boolean;
     onClose: () => void;
-    jobId: string | null;
-    setJobId: (jobId: string | null) => void;
-    latestEvent: ExportReportEventData | null;
-    summary: Partial<ExportReportEventSummary> | null;
-    isListening: boolean;
-    error: Error | null;
+    onExportStarted: (jobId: string) => void;
 }
 
 export default function ExportReportModal({
     open,
     onClose,
-    jobId,
-    setJobId,
-    latestEvent,
-    summary,
-    isListening,
-    error,
+    onExportStarted,
 }: ExportReportModalProps) {
     const messages = useTranslations();
     const [exportDateRange, setExportDateRange] = useState<{
@@ -50,11 +40,6 @@ export default function ExportReportModal({
     }, [open]);
 
     const handleExport = () => {
-        if (jobId) {
-            handleClose();
-            return;
-        }
-
         exportAnalyticsReport({
             payload: {
                 fromDate: dayjs(exportDateRange.startDate).format('YYYY-MM'),
@@ -62,7 +47,8 @@ export default function ExportReportModal({
             },
             onSuccess: (data: DetailResponse<ExportReportResponse>) => {
                 if (data?.data?.jobId) {
-                    setJobId(data.data.jobId);
+                    onExportStarted(data.data.jobId);
+                    handleClose();
                 }
             },
         });
@@ -72,165 +58,44 @@ export default function ExportReportModal({
         onClose();
     };
 
-    const progressPercent = useMemo(() => {
-        if (!summary?.progress?.total) return 0;
-        return Math.min(
-            Math.round(
-                (summary.progress.current / summary.progress.total) * 100
-            ),
-            100
-        );
-    }, [summary?.progress]);
-
-    const isRunning = isExporting || isListening;
-    const isCompleted = latestEvent?.type === ExportReportEventType.COMPLETED;
-    const isFailed = latestEvent?.type === ExportReportEventType.FAILED;
-
     return (
         <Modal
             title={messages('common.exportReport')}
             open={open}
             onCancel={handleClose}
-            destroyOnClose
-            footer={
-                jobId
-                    ? [
-                          isCompleted && summary?.result?.downloadUrl ? (
-                              <Button
-                                  key="download"
-                                  type="primary"
-                                  href={summary.result.downloadUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                              >
-                                  {messages('common.download')}
-                              </Button>
-                          ) : null,
-                          <Button
-                              key="close"
-                              type={
-                                  isCompleted && summary?.result?.downloadUrl
-                                      ? 'default'
-                                      : 'primary'
-                              }
-                              onClick={handleClose}
-                          >
-                              {messages('common.close')}
-                          </Button>,
-                      ]
-                    : [
-                          <Button
-                              key="cancel"
-                              onClick={handleClose}
-                              disabled={isExporting}
-                          >
-                              {messages('common.cancel')}
-                          </Button>,
-                          <Button
-                              key="submit"
-                              type="primary"
-                              loading={isExporting}
-                              onClick={handleExport}
-                          >
-                              {messages('common.export')}
-                          </Button>,
-                      ]
-            }
+            destroyOnHidden
+            footer={[
+                <Button
+                    key="cancel"
+                    onClick={handleClose}
+                    disabled={isExporting}
+                >
+                    {messages('common.cancel')}
+                </Button>,
+                <Button
+                    key="submit"
+                    type="primary"
+                    loading={isExporting}
+                    onClick={handleExport}
+                >
+                    {messages('common.export')}
+                </Button>,
+            ]}
         >
-            {!jobId ? (
-                <div className="flex flex-col gap-2 py-4">
-                    <label>{messages('common.time')}</label>
-                    <DateSelect2
-                        style={{ width: '100%' }}
-                        value={`${exportDateRange.startDate},${exportDateRange.endDate}`}
-                        onChange={(value) => {
-                            const [startDate, endDate] = value
-                                .toString()
-                                .split(',');
-                            setExportDateRange({ startDate, endDate });
-                        }}
-                        picker="month"
-                    />
-                </div>
-            ) : null}
-
-            {jobId ? (
-                <div className="flex flex-col gap-4 py-4">
-                    <Alert
-                        type={
-                            isFailed
-                                ? 'error'
-                                : isCompleted
-                                  ? 'success'
-                                  : 'info'
-                        }
-                        showIcon
-                        message={
-                            latestEvent?.message ||
-                            summary?.status ||
-                            messages('common.processing')
-                        }
-                    />
-
-                    {summary?.progress ? (
-                        <div>
-                            <div className="mb-1 text-sm text-gray-500">
-                                {summary.progress.label ||
-                                    messages('common.progress')}
-                            </div>
-                            <Progress percent={progressPercent} />
-                        </div>
-                    ) : null}
-
-                    <Descriptions
-                        size="small"
-                        bordered
-                        column={1}
-                        style={{ marginTop: 8 }}
-                    >
-                        <Descriptions.Item label={messages('common.status')}>
-                            {summary?.status || latestEvent?.type || '-'}
-                        </Descriptions.Item>
-                        {(summary?.file?.name || summary?.result?.fileName) && (
-                            <Descriptions.Item
-                                label={messages('common.fileName')}
-                            >
-                                {summary?.file?.name ||
-                                    summary?.result?.fileName}
-                            </Descriptions.Item>
-                        )}
-                        {summary?.rows?.total !== undefined && (
-                            <Descriptions.Item label={messages('common.total')}>
-                                {summary.rows.total.toLocaleString()}
-                            </Descriptions.Item>
-                        )}
-                        {summary?.rows?.processed !== undefined && (
-                            <Descriptions.Item
-                                label={messages('common.success')}
-                            >
-                                {summary.rows.processed.toLocaleString()}
-                            </Descriptions.Item>
-                        )}
-                        {summary?.rows?.skipped !== undefined && (
-                            <Descriptions.Item label="Skipped">
-                                {summary.rows.skipped.toLocaleString()}
-                            </Descriptions.Item>
-                        )}
-                        {summary?.rows?.errors !== undefined &&
-                            summary.rows.errors > 0 && (
-                                <Descriptions.Item
-                                    label={messages('common.errors')}
-                                >
-                                    {summary.rows.errors.toLocaleString()}
-                                </Descriptions.Item>
-                            )}
-                    </Descriptions>
-
-                    {error ? (
-                        <Alert type="error" showIcon message={error.message} />
-                    ) : null}
-                </div>
-            ) : null}
+            <div className="flex flex-col gap-2 py-4">
+                <label>{messages('common.time')}</label>
+                <DateSelect2
+                    style={{ width: '100%' }}
+                    value={`${exportDateRange.startDate},${exportDateRange.endDate}`}
+                    onChange={(value) => {
+                        const [startDate, endDate] = value
+                            .toString()
+                            .split(',');
+                        setExportDateRange({ startDate, endDate });
+                    }}
+                    picker="month"
+                />
+            </div>
         </Modal>
     );
 }

@@ -48,7 +48,7 @@ export interface PreValidateImportResponse {
     invalid: PreValidateImportInvalidFile[];
 }
 
-export enum ImportJobStatus {
+export enum IMPORT_JOBS_STATUS {
     PENDING = 'PENDING',
     QUEUED = 'QUEUED',
     PROCESSING = 'PROCESSING',
@@ -56,6 +56,12 @@ export enum ImportJobStatus {
     FAILED = 'FAILED',
     CANCELLED = 'CANCELLED',
 }
+
+export const RUNNING_IMPORT_JOB_STATUSES = [
+    IMPORT_JOBS_STATUS.PENDING,
+    IMPORT_JOBS_STATUS.QUEUED,
+    IMPORT_JOBS_STATUS.PROCESSING,
+];
 
 export enum FileUploadStatus {
     IDLE = 'idle',
@@ -66,7 +72,7 @@ export enum FileUploadStatus {
 
 export interface ImportJobStatusResponse {
     id: string;
-    status: ImportJobStatus;
+    status: IMPORT_JOBS_STATUS;
     progress: {
         current: number;
         total: number;
@@ -100,7 +106,7 @@ export interface ImportJobStatusResponse {
 export interface EtlJobData {
     id: string;
     sourceType: ETL_JOB_SOURCE_TYPE | string;
-    status: ImportJobStatus;
+    status: IMPORT_JOBS_STATUS;
     progress: {
         current: number;
         total: number;
@@ -116,8 +122,14 @@ export interface EtlJobData {
         name: string;
         sizeBytes: number;
         hash: string | null;
-    };
+    } | null;
     params?: {
+        tenantId?: string;
+        deleteAll?: boolean;
+        resolvedFromDateUtc?: string | null;
+        resolvedToDateUtc?: string | null;
+        matchedReleases?: number;
+        matchedTracks?: number;
         files?: {
             path: string;
             r2Key: string;
@@ -162,6 +174,42 @@ export interface StartEnrichScanPayload {
     limit: number;
     force: boolean;
     isImportedFromReport?: boolean;
+}
+
+export interface DeleteImportedReleasesPayload {
+    fromDate?: string;
+    toDate?: string;
+    tenantId?: string;
+    labelId?: string;
+    importSourceType?: ETL_JOB_SOURCE_TYPE | string;
+    parserCode?: string;
+    fileName?: string;
+    deleteAll?: boolean;
+}
+
+export interface DeleteImportedReleasesResponse {
+    id?: string;
+    jobId?: string;
+    status?: IMPORT_JOBS_STATUS | string;
+    eventsUrl?: string;
+    data?: DeleteImportedReleasesResponse;
+    [key: string]: any;
+}
+
+export enum DeleteImportedReleasesEventType {
+    PROGRESS = 'progress',
+    HEARTBEAT = 'heartbeat',
+    COMPLETED = 'completed',
+    FAILED = 'failed',
+}
+
+export interface DeleteImportedReleasesEventData
+    extends Partial<Omit<EtlJobData, 'id'>> {
+    type: DeleteImportedReleasesEventType | string;
+    id?: string;
+    summary?: Partial<EtlJobData>;
+    message?: string;
+    [key: string]: any;
 }
 
 export interface EnrichScanSummary {

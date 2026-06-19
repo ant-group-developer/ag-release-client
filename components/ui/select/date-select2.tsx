@@ -24,6 +24,10 @@ export default function DateSelect2({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const valueFormat =
+        typeof props.format === 'string'
+            ? props.format
+            : DATE_FORMAT.MYSQL_TYPE_DATE;
 
     const presets = useMemo(() => {
         const monthPresets = Array.from(
@@ -77,14 +81,14 @@ export default function DateSelect2({
         if (!value) return null;
         const [startDateStr, endDateStr] = value.split(',');
         if (startDateStr && endDateStr) {
-            const start = dayjs(startDateStr, DATE_FORMAT.MYSQL_TYPE_DATE);
-            const end = dayjs(endDateStr, DATE_FORMAT.MYSQL_TYPE_DATE);
+            const start = dayjs(startDateStr, valueFormat);
+            const end = dayjs(endDateStr, valueFormat);
             if (start.isValid() && end.isValid()) {
                 return [start, end];
             }
         }
         return null;
-    }, [value]);
+    }, [value, valueFormat]);
 
     const handleRangeChange = (values: RangePickerProps['value']) => {
         if (!values || !values[0] || !values[1]) {
@@ -93,14 +97,18 @@ export default function DateSelect2({
             return;
         }
 
-        const startDate = values[0].format(DATE_FORMAT.MYSQL_TYPE_DATE);
-        const endDate = values[1].format(DATE_FORMAT.MYSQL_TYPE_DATE);
+        const startDate = values[0].format(valueFormat);
+        const endDate = values[1].format(valueFormat);
 
         onChange?.(`${startDate},${endDate}`);
         externalOnChange?.(startDate, endDate);
     };
 
-    const format = props.format ?? (props.picker === 'month' ? DATE_FORMAT.MONTH_YEAR : DATE_FORMAT.DATE_ONLY);
+    const format =
+        props.format ??
+        (props.picker === 'month'
+            ? DATE_FORMAT.MONTH_YEAR
+            : DATE_FORMAT.DATE_ONLY);
 
     return (
         <DatePicker.RangePicker

@@ -91,7 +91,7 @@ export default function ReleaseViewHeader({ releaseData }: Props) {
                                       }
                                     : undefined
                             }
-                            className="release-detail-header-upload !aspect-square !size-28 !rounded-lg !p-0 transition-all duration-300"
+                            className="release-detail-header-upload !aspect-square !size-20 !rounded-lg !p-0 transition-all duration-300"
                             placeholder={messages('common.uploadImage')}
                             maxCount={1}
                         />
