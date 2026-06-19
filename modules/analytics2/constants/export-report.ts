@@ -1,5 +1,5 @@
 export const EXPORT_REPORT_PROGRESS_POPOVER = {
-    widthClassName: 'w-[360px] max-w-[calc(100vw-32px)]',
+    widthClassName: 'w-[320px] max-w-[calc(100vw-32px)]',
     zIndexClassName: 'z-50',
     defaultCompletedCount: 1,
     maxProgressPercent: 100,
