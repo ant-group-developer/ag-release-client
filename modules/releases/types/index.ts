@@ -66,6 +66,27 @@ export interface ReleasesData extends CommonAttribute {
     priceTierId?: string;
     type?: RELEASE_TYPE;
     video?: VideoData;
+    metadataExternal?: ReleaseMetadataExternal;
+}
+
+export interface SpotifyCoverImage {
+    url: string;
+    size: string;
+    width: number;
+    height: number;
+}
+
+export interface ExternalMetadata {
+    albumId: string;
+    albumUrl: string;
+    coverImages: SpotifyCoverImage[];
+    lastSyncedAt: string;
+}
+
+export interface ReleaseMetadataExternal {
+    spotify?: ExternalMetadata;
+    deezer?: ExternalMetadata;
+    [key: string]: ExternalMetadata | undefined;
 }
 
 export interface VideoData {

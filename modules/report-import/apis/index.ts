@@ -6,6 +6,7 @@ import {
     SuccessResponse,
 } from '@/types/api';
 import {
+    EnrichScanScheduleData,
     FtpExcludePatternData,
     FtpExcludePatternDataFilter,
     ReportConfigData,
@@ -13,8 +14,11 @@ import {
     SyncConfigData,
 } from '../types';
 import {
+    CreateEnrichScanSchedulePayload,
     CreateFtpExcludePatternPayload,
     CreateReportConfigPayload,
+    DeleteImportedReleasesPayload,
+    DeleteImportedReleasesResponse,
     EnrichScanSessionData,
     EtlJobData,
     ImportJobStatusResponse,
@@ -22,6 +26,7 @@ import {
     PreValidateImportResponse,
     StartEnrichScanPayload,
     StartEnrichScanResponse,
+    UpdateEnrichScanSchedulePayload,
     UpdateFtpExcludePatternPayload,
     UpdateReportConfigPayload,
 } from '../types/payload';
@@ -29,6 +34,7 @@ import {
 const REPORT_IMPORT_API_PATHS = {
     ENRICH_SCAN: '/partners/enrich/scan',
     ENRICH_SCAN_SESSIONS: '/partners/enrich/scan/sessions',
+    RELEASES_DELETE: '/report-import/releases/delete',
 } as const;
 
 export const reportConfigApis = {
@@ -70,6 +76,12 @@ export const reportConfigApis = {
     startImportJob: (jobId: string) => {
         return axiosInstance.post<SuccessResponse>(
             `/report-import/jobs/${jobId}/start`
+        );
+    },
+    deleteImportedReleases: (payload: DeleteImportedReleasesPayload) => {
+        return axiosInstance.post<DeleteImportedReleasesResponse>(
+            REPORT_IMPORT_API_PATHS.RELEASES_DELETE,
+            payload
         );
     },
     getImportJobStatus: (jobId: string) => {
@@ -158,5 +170,29 @@ export const etlSyncConfigApis = {
             '/etl/ftp/sync-all',
             payload
         );
+    },
+};
+
+export const enrichScanScheduleApis = {
+    getList: (params: CommonParams) => {
+        return axiosInstance.get<PaginationResponse<EnrichScanScheduleData>>(
+            '/partners/enrich/scan/schedules',
+            { params }
+        );
+    },
+    create: (payload: CreateEnrichScanSchedulePayload) => {
+        return axiosInstance.post<DetailResponse<EnrichScanScheduleData>>(
+            '/partners/enrich/scan/schedules',
+            payload
+        );
+    },
+    update: (id: string, payload: UpdateEnrichScanSchedulePayload) => {
+        return axiosInstance.put<DetailResponse<EnrichScanScheduleData>>(
+            `/partners/enrich/scan/schedules/${id}`,
+            payload
+        );
+    },
+    delete: (id: string) => {
+        return axiosInstance.delete(`/partners/enrich/scan/schedules/${id}`);
     },
 };

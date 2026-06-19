@@ -4,10 +4,14 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input, Select, Switch, Spin } from 'antd';
+import { Form, Input, Select, Spin, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { TYPE_MODAL_FTP_EXCLUDE_PATTERN, PATTERN_TYPE, FTP_EXCLUDE_PATTERN_SCOPE } from '../../enums';
+import {
+    FTP_EXCLUDE_PATTERN_SCOPE,
+    PATTERN_TYPE,
+    TYPE_MODAL_FTP_EXCLUDE_PATTERN,
+} from '../../enums';
 import { useCreateFtpExcludePattern } from '../../hooks/use-create';
 import { useGetDetailFtpExcludePattern } from '../../hooks/use-get-detail';
 import { useUpdateFtpExcludePattern } from '../../hooks/use-update';
@@ -20,7 +24,7 @@ import {
 type FtpExcludePatternFormValues = {
     pattern: string;
     patternType: PATTERN_TYPE;
-    scope: FTP_EXCLUDE_PATTERN_SCOPE;
+    scope: FTP_EXCLUDE_PATTERN_SCOPE[];
     isActive: boolean;
     description: string;
 };
@@ -43,7 +47,9 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
     const { active, deActive, isActive } = useActive();
     const closeModal = useModalStore((state) => state.closeModal);
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore<FtpExcludePatternData>((state) => state.dataEdit);
+    const dataEdit = useModalStore<FtpExcludePatternData>(
+        (state) => state.dataEdit
+    );
     const isUpdateForm = typeModal === TYPE_MODAL_FTP_EXCLUDE_PATTERN.UPDATE;
     const patternId = isUpdateForm ? dataEdit?.id : undefined;
 
@@ -102,10 +108,20 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
 
     useEffect(() => {
         if (isUpdateForm && ftpExcludePatternData) {
+            const rawScope = ftpExcludePatternData.scope;
+            let formScope: FTP_EXCLUDE_PATTERN_SCOPE[] = [];
+            if (Array.isArray(rawScope)) {
+                formScope = rawScope as FTP_EXCLUDE_PATTERN_SCOPE[];
+            } else if (typeof rawScope === 'string') {
+                formScope = rawScope
+                    ? (rawScope.split(',').map((s) => s.trim()) as FTP_EXCLUDE_PATTERN_SCOPE[])
+                    : [];
+            }
+
             form.setFieldsValue({
                 pattern: ftpExcludePatternData.pattern,
                 patternType: ftpExcludePatternData.patternType as PATTERN_TYPE,
-                scope: ftpExcludePatternData.scope as FTP_EXCLUDE_PATTERN_SCOPE,
+                scope: formScope,
                 isActive:
                     ftpExcludePatternData.isActive === 1 ||
                     (ftpExcludePatternData.isActive as any) === true,
@@ -115,7 +131,7 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
             form.setFieldsValue({
                 isActive: true,
                 patternType: PATTERN_TYPE.CONTAINS,
-                scope: FTP_EXCLUDE_PATTERN_SCOPE.FOLDER,
+                scope: [FTP_EXCLUDE_PATTERN_SCOPE.FOLDER],
             });
         }
     }, [isUpdateForm, form, ftpExcludePatternData]);
@@ -145,7 +161,9 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
                 >
                     <AppFormItem
                         name="pattern"
-                        label={messages('reportConfigs.sftpExcludePatterns.pattern')}
+                        label={messages(
+                            'reportConfigs.sftpExcludePatterns.pattern'
+                        )}
                         required
                         rules={[
                             {
@@ -159,7 +177,9 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
 
                     <AppFormItem
                         name="patternType"
-                        label={messages('reportConfigs.sftpExcludePatterns.patternType')}
+                        label={messages(
+                            'reportConfigs.sftpExcludePatterns.patternType'
+                        )}
                         required
                         rules={[
                             {
@@ -173,7 +193,9 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
 
                     <AppFormItem
                         name="scope"
-                        label={messages('reportConfigs.sftpExcludePatterns.scope')}
+                        label={messages(
+                            'reportConfigs.sftpExcludePatterns.scope'
+                        )}
                         required
                         rules={[
                             {
@@ -182,19 +204,23 @@ export default function FtpExcludePatternForm({ ...props }: Props) {
                             },
                         ]}
                     >
-                        <Select options={SCOPE_OPTIONS} />
+                        <Select mode="multiple" options={SCOPE_OPTIONS} />
                     </AppFormItem>
 
                     <AppFormItem
                         name="description"
-                        label={messages('reportConfigs.sftpExcludePatterns.description')}
+                        label={messages(
+                            'reportConfigs.sftpExcludePatterns.description'
+                        )}
                     >
                         <Input.TextArea allowClear rows={3} />
                     </AppFormItem>
 
                     <AppFormItem
                         name="isActive"
-                        label={messages('reportConfigs.sftpExcludePatterns.isActive')}
+                        label={messages(
+                            'reportConfigs.sftpExcludePatterns.isActive'
+                        )}
                         valuePropName="checked"
                     >
                         <Switch

@@ -121,12 +121,12 @@ export const useEnrichScanEvents = ({
                 method: 'GET',
                 signal: abortController.signal,
                 openWhenHidden: true,
-                headers: {
-                    Accept: 'text/event-stream',
-                    ...(session?.accessToken
-                        ? { Authorization: `Bearer ${session.accessToken}` }
-                        : {}),
-                },
+                // headers: {
+                //     Accept: 'text/event-stream',
+                //     ...(session?.accessToken
+                //         ? { Authorization: `Bearer ${session.accessToken}` }
+                //         : {}),
+                // },
                 onmessage: (event) => {
                     const eventData = parseEventData(
                         event.event || EnrichScanEventType.PROGRESS,

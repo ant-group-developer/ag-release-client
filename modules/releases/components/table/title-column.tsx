@@ -2,9 +2,8 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { Link } from '@/i18n/routing';
 import { ReleaseArtist } from '@/modules/release-artist/types';
-import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
+import { getReleaseViewRoute } from '@/modules/releases/helpers/link';
 import { useTranslations } from 'next-intl';
-import { RELEASES_TABS } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseCoverImage from '../image/release-cover-image';
 
@@ -31,23 +30,13 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
 
     return (
         <div className="flex items-center gap-4">
-            <Link
-                href={getReleaseDetailTabRoute(
-                    record?.id,
-                    RELEASES_TABS.CORE_DETAIL
-                )}
-            >
+            <Link href={getReleaseViewRoute(record?.id)}>
                 <div className="h-14 min-w-14">
                     <ReleaseCoverImage data={record} />
                 </div>
             </Link>
             <div>
-                <Link
-                    href={getReleaseDetailTabRoute(
-                        record?.id,
-                        RELEASES_TABS.CORE_DETAIL
-                    )}
-                >
+                <Link href={getReleaseViewRoute(record?.id)}>
                     <div className="!max-w-80 truncate">
                         <CustomTooltip title={title}>
                             <span className="cursor-pointer hover:underline">

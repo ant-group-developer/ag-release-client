@@ -117,6 +117,57 @@ export default function PartnersForm({}: Props) {
                 </div>
 
                 <Typography.Title level={5} className="!mt-8">
+                    Vevo
+                </Typography.Title>
+                <div className="pl-4">
+                    <AppFormItem
+                        name={['vevo', 'token']}
+                        label={'Token'}
+                        rules={[
+                            {
+                                max: 1000,
+                                message: messages('validation.stringMax', {
+                                    max: 1000,
+                                    field: 'Vevo Token',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input.Password />
+                    </AppFormItem>
+                    <AppFormItem
+                        name={['vevo', 'baseUrl']}
+                        label={'Base URL'}
+                        rules={[
+                            {
+                                max: MAX_NAME_LENGTH,
+                                message: messages('validation.stringMax', {
+                                    max: MAX_NAME_LENGTH,
+                                    field: 'Vevo Base URL',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+                    <AppFormItem
+                        name={['vevo', 'callbackUrl']}
+                        label={'Callback URL'}
+                        rules={[
+                            {
+                                max: MAX_NAME_LENGTH,
+                                message: messages('validation.stringMax', {
+                                    max: MAX_NAME_LENGTH,
+                                    field: 'Vevo Callback URL',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+                </div>
+
+                <Typography.Title level={5} className="!mt-8">
                     CI
                 </Typography.Title>
                 <div className="pl-4">

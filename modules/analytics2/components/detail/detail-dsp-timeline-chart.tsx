@@ -1,12 +1,19 @@
 'use client';
 
+import { SalesTooltip } from '@/components/shared/chart/chart-tooltip';
 import { Card, Empty, Radio, Select, Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
-import { ANALYTICS_CHART_PERIOD, ANALYTICS_CHART_VIEW_MODE } from '../../enums/tabs';
-import { DSP_PALETTE, transformBarData, transformSalesBarData } from '../../helpers/analytics-chart-helper';
+import {
+    ANALYTICS_CHART_PERIOD,
+    ANALYTICS_CHART_VIEW_MODE,
+} from '../../enums/tabs';
+import {
+    DSP_PALETTE,
+    transformBarData,
+    transformSalesBarData,
+} from '../../helpers/analytics-chart-helper';
 import BarView from '../chart/bar-view';
-import { SalesTooltip } from '@/components/shared/chart/chart-tooltip';
 
 interface DetailDspTimelineChartProps {
     trendTimelineData?: {
@@ -122,12 +129,24 @@ export default function DetailDspTimelineChart({
                             width: 250,
                             padding: 0,
                         }}
-                        dropdownStyle={{ minWidth: 150 }}
+                        // dropdownStyle={{ minWidth: 150 }}
+                        // styles={{
+                        //     popup: {
+                        //         root: {
+                        //             minWidth: 150,
+                        //         },
+                        //     },
+                        // }}
                         options={[
                             {
                                 value: ANALYTICS_CHART_PERIOD.MONTHLY,
                                 label: (
-                                    <span style={{ fontSize: 14, fontWeight: 'bold' }}>
+                                    <span
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {messages('analytics.chart.title')}
                                     </span>
                                 ),
@@ -135,7 +154,12 @@ export default function DetailDspTimelineChart({
                             {
                                 value: ANALYTICS_CHART_PERIOD.DAILY,
                                 label: (
-                                    <span style={{ fontSize: 14, fontWeight: 'bold' }}>
+                                    <span
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {messages('analytics.dailyChart.title')}
                                     </span>
                                 ),

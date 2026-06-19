@@ -1,9 +1,9 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys } from '../constants/query-keys';
-import { ReportConfigData, FtpExcludePatternData } from '../types';
+import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis } from '../apis';
+import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys } from '../constants/query-keys';
+import { ReportConfigData, FtpExcludePatternData, EnrichScanScheduleData } from '../types';
 
 export const useDeleteReportConfig = () => {
     const queryClient = useQueryClient();
@@ -65,6 +65,38 @@ export const useDeleteFtpExcludePattern = () => {
 
     return {
         deleteFtpExcludePattern: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useDeleteEnrichScanSchedule = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({ id }: DeleteVariables<EnrichScanScheduleData['id']>) =>
+            enrichScanScheduleApis.delete(id),
+        onSuccess: (
+            data,
+            { onSuccess }: DeleteVariables<EnrichScanScheduleData['id']>
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: enrichScanScheduleQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: DeleteVariables<EnrichScanScheduleData['id']>
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        deleteEnrichScanSchedule: mutation.mutate,
         ...mutation,
     };
 };

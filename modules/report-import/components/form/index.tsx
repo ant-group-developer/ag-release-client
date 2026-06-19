@@ -17,11 +17,13 @@ import {
     UpdateReportConfigPayload,
 } from '../../types/payload';
 
+import { useGetListSimpleCurrencies } from '@/modules/currencies/hooks/use-get-list-simple-currencies';
+
 type ReportConfigFormValues = Omit<
     CreateReportConfigPayload,
     'folderPatterns' | 'filePatterns' | 'requiredHeaders'
 > & {
-    folderPatterns?: string[];
+    folderPatterns?: string;
     filePatterns?: string;
     requiredHeaders?: string[];
 };
@@ -59,12 +61,19 @@ export default function ReportConfigForm({ ...props }: Props) {
         useUpdateReportConfig();
     const { reportConfigData, isFetching } =
         useGetDetailReportConfig(reportConfigId);
+    const { currenciesData, isFetching: isFetchingCurrencies } =
+        useGetListSimpleCurrencies();
+
+    const currencyOptions = currenciesData.map((item) => ({
+        label: `${item.code} - ${item.name}`,
+        value: item.code,
+    }));
 
     const buildPayload = (
         values: ReportConfigFormValues
     ): CreateReportConfigPayload => ({
         ...values,
-        folderPatterns: normalizeTags(values.folderPatterns),
+        folderPatterns: normalizeTextArea(values.folderPatterns),
         filePatterns: normalizeTextArea(values.filePatterns),
         requiredHeaders: normalizeTags(values.requiredHeaders),
         delimiter: values.delimiter ?? ',',
@@ -113,7 +122,8 @@ export default function ReportConfigForm({ ...props }: Props) {
         if (isUpdateForm) {
             form.setFieldsValue({
                 ...reportConfigData,
-                folderPatterns: reportConfigData?.folderPatterns ?? [],
+                folderPatterns:
+                    reportConfigData?.folderPatterns?.join('\n') ?? '',
                 filePatterns: reportConfigData?.filePatterns?.join('\n') ?? '',
                 requiredHeaders: reportConfigData?.requiredHeaders ?? [],
             });
@@ -153,6 +163,7 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="sourceCode"
                         label={messages('reportConfigs.sourceCode')}
+                        tooltipInfo={messages('reportConfigs.sourceCodeTooltip')}
                         required
                         rules={[
                             {
@@ -167,6 +178,7 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="sourceName"
                         label={messages('reportConfigs.sourceName')}
+                        tooltipInfo={messages('reportConfigs.sourceNameTooltip')}
                         required
                         rules={[
                             {
@@ -181,6 +193,7 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="reportType"
                         label={messages('reportConfigs.reportType')}
+                        tooltipInfo={messages('reportConfigs.reportTypeTooltip')}
                         required
                         rules={[
                             {
@@ -195,6 +208,7 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="parserCode"
                         label={messages('reportConfigs.parserCode')}
+                        tooltipInfo={messages('reportConfigs.parserCodeTooltip')}
                         required
                         rules={[
                             {
@@ -206,30 +220,24 @@ export default function ReportConfigForm({ ...props }: Props) {
                         <Input allowClear />
                     </AppFormItem>
 
-                    {/* <AppFormItem
-                        name="delimiter"
-                        label={messages('reportConfigs.delimiter')}
-                    >
-                        <Input maxLength={5} allowClear />
-                    </AppFormItem>
-
-                    <AppFormItem
-                        name="priority"
-                        label={messages('reportConfigs.priority')}
-                    >
-                        <InputNumber min={0} precision={0} />
-                    </AppFormItem> */}
-
                     <AppFormItem
                         name="defaultCurrency"
                         label={messages('reportConfigs.defaultCurrency')}
+                        tooltipInfo={messages('reportConfigs.defaultCurrencyTooltip')}
                     >
-                        <Input allowClear />
+                        <Select
+                            allowClear
+                            showSearch
+                            options={currencyOptions}
+                            loading={isFetchingCurrencies}
+                            optionFilterProp="label"
+                        />
                     </AppFormItem>
 
                     <AppFormItem
                         name="defaultMember"
                         label={messages('reportConfigs.defaultMember')}
+                        tooltipInfo={messages('reportConfigs.defaultMemberTooltip')}
                     >
                         <Input allowClear />
                     </AppFormItem>
@@ -237,8 +245,14 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="folderPatterns"
                         label={messages('reportConfigs.folderPatterns')}
+                        tooltipInfo={messages(
+                            'reportConfigs.folderPatternsTooltip'
+                        )}
                     >
-                        <Select mode="tags" tokenSeparators={[',']} />
+                        <Input.TextArea
+                            autoSize={{ minRows: 2, maxRows: 6 }}
+                            allowClear
+                        />
                     </AppFormItem>
 
                     <AppFormItem
@@ -257,6 +271,7 @@ export default function ReportConfigForm({ ...props }: Props) {
                     <AppFormItem
                         name="requiredHeaders"
                         label={messages('reportConfigs.requiredHeaders')}
+                        tooltipInfo={messages('reportConfigs.requiredHeadersTooltip')}
                     >
                         <Select mode="tags" tokenSeparators={[',']} />
                     </AppFormItem>

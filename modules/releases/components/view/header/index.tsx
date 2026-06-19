@@ -1,6 +1,9 @@
-import { ReleasesData } from '@/modules/releases/types';
-import { UserOutlined } from '@ant-design/icons';
-import { Image, theme } from 'antd';
+import ImageListUpload from '@/components/ui/input/image-list-upload';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
+import { ExternalMetadata, ReleasesData } from '@/modules/releases/types';
+import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
+import { theme } from 'antd';
+import { useTranslations } from 'next-intl';
 import ReleaseStatusTag from '../../tag/release-status-tag';
 import ReleaseInfoView from './release-info-view';
 
@@ -8,12 +11,40 @@ type Props = {
     releaseData: ReleasesData;
 };
 
+function getFirstExternalCoverUrl(
+    metadataExternal?: Partial<Record<string, ExternalMetadata | undefined>>
+) {
+    return Object.values(metadataExternal ?? {})
+        .flatMap(
+            (metadata) =>
+                metadata?.coverImages?.map((coverImage) => coverImage.url) ?? []
+        )
+        .find(Boolean);
+}
+
 export default function ReleaseViewHeader({ releaseData }: Props) {
     const { token } = theme.useToken();
+    const messages = useTranslations();
+
+    const imgFileId =
+        releaseData?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
+        releaseData?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
+
+    const {
+        linkReadFile,
+        isPending: isCoverArtLoading,
+        isFetching: isCoverArtFetching,
+    } = useGetLinkReadFile(imgFileId as string, {
+        enabled: !!imgFileId,
+    });
 
     if (!releaseData) return null;
 
-    const coverArtUrl = releaseData.coverArtThumbnails?.original || releaseData.coverArtThumbnails?.['160x160'];
+    const externalCoverUrl = getFirstExternalCoverUrl(
+        releaseData.metadataExternal
+    );
+
+    const coverArtUrl = linkReadFile || externalCoverUrl;
 
     return (
         <div
@@ -44,31 +75,26 @@ export default function ReleaseViewHeader({ releaseData }: Props) {
             <div className="flex justify-between gap-4">
                 <div className="flex w-3/4 items-start gap-4">
                     <div style={{ flexShrink: 0 }}>
-                        {coverArtUrl ? (
-                            <Image
-                                width={112}
-                                height={112}
-                                src={coverArtUrl}
-                                alt={releaseData.title}
-                                style={{ borderRadius: '8px', objectFit: 'cover' }}
-                                fallback="/placeholder.png"
-                            />
-                        ) : (
-                            <div
-                                style={{
-                                    width: 112,
-                                    height: 112,
-                                    backgroundColor: '#f5f5f5',
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    border: '1px solid #d9d9d9',
-                                }}
-                            >
-                                <UserOutlined style={{ fontSize: '32px', color: '#bfbfbf' }} />
-                            </div>
-                        )}
+                        <ImageListUpload
+                            disabled
+                            loading={isCoverArtFetching}
+                            value={
+                                coverArtUrl
+                                    ? {
+                                          fileList: [
+                                              {
+                                                  uid: '-1',
+                                                  url: coverArtUrl,
+                                                  name: releaseData.title,
+                                              },
+                                          ],
+                                      }
+                                    : undefined
+                            }
+                            className="release-detail-header-upload !aspect-square !size-20 !rounded-lg !p-0 transition-all duration-300"
+                            placeholder={messages('common.uploadImage')}
+                            maxCount={1}
+                        />
                     </div>
 
                     {/* release info */}

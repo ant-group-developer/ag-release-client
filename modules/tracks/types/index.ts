@@ -5,7 +5,7 @@ import { DspData } from '@/modules/dsp/types';
 import { GenresData } from '@/modules/genres/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { PriceTiersData } from '@/modules/price_tiers/types';
-import { ReleasesData } from '@/modules/releases/types';
+import { ExternalMetadata, ReleasesData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackContributorData } from '@/modules/track-contributor/types';
 import { TrackOriginTypeData } from '@/modules/track-origin-types/types';
@@ -55,6 +55,10 @@ export interface TrackData extends CommonAttribute {
     trackPolicies: TrackPolicyData[];
     scanCopyrightStatus: SCAN_COPYRIGHT_STATUS;
     isByAi: boolean;
+    metadataExternal?: {
+        spotify?: ExternalMetadata;
+        deezer?: ExternalMetadata;
+    };
 }
 export interface TrackDataFilter extends CommonParams {
     releaseId?: string;

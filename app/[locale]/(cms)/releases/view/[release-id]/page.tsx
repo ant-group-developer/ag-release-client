@@ -1,15 +1,22 @@
 'use client';
 
-import ReleaseViewHeader from '@/modules/releases/components/view/header';
+import { useFilter } from '@/hooks/use-filter';
+import { RELEASE_VIEW_TABS } from '@/modules/releases/enums';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
-import { CustomerServiceOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Breadcrumb, Space, Spin, Tabs, theme, Typography } from 'antd';
+import {
+    BarChartOutlined,
+    CustomerServiceOutlined,
+    InfoCircleOutlined,
+} from '@ant-design/icons';
+import { Breadcrumb, Space, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
+import AnalyticsTab from '@/modules/releases/components/view/analytics-tab';
+import ReleaseViewHeader from '@/modules/releases/components/view/header';
 import OverviewTab from '@/modules/releases/components/view/overview-tab';
-
-const { Text } = Typography;
+import TracksTab from '@/modules/releases/components/view/tracks-tab';
 
 export default function ReleaseDetailView() {
     const params = useParams();
@@ -17,40 +24,31 @@ export default function ReleaseDetailView() {
     const releaseId = params['release-id'] as string;
     const { token } = theme.useToken();
 
+    const { dataFilter, onChangeFilter } = useFilter<any>({
+        tab: RELEASE_VIEW_TABS.OVERVIEW,
+    });
+
+    const [activeTab, setActiveTab] = useState<string>(
+        dataFilter.tab || RELEASE_VIEW_TABS.OVERVIEW
+    );
+
+    useEffect(() => {
+        if (dataFilter.tab && dataFilter.tab !== activeTab) {
+            setActiveTab(dataFilter.tab);
+        }
+    }, [activeTab, dataFilter.tab]);
+
+    const handleTabChange = (key: string) => {
+        setActiveTab(key);
+        onChangeFilter({ tab: key });
+    };
+
     const { releaseData, isLoading: isReleaseLoading } =
         useGetDetailRelease(releaseId);
 
-    if (isReleaseLoading) {
-        return (
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '80vh',
-                }}
-            >
-                <Spin
-                    size="large"
-                    tip={messages('common.loading') || 'Loading...'}
-                />
-            </div>
-        );
-    }
-
-    if (!releaseData) {
-        return (
-            <div style={{ padding: '24px', textAlign: 'center' }}>
-                <Text type="danger">
-                    {messages('common.error') || 'Release not found'}
-                </Text>
-            </div>
-        );
-    }
-
     const breadcrumbItems = [
         {
-            title: messages('release.releases') || 'Releases',
+            title: messages('release.releases'),
         },
         {
             title: releaseData.title,
@@ -59,62 +57,83 @@ export default function ReleaseDetailView() {
 
     const tabItems = [
         {
-            key: 'overview',
+            key: RELEASE_VIEW_TABS.OVERVIEW,
             label: (
                 <Space>
                     <InfoCircleOutlined />
                     {messages('common.overview')}
                 </Space>
             ),
-            children: (
-                <OverviewTab releaseData={releaseData} />
-            ),
         },
         {
-            key: 'tracks',
+            key: RELEASE_VIEW_TABS.TRACKS,
             label: (
                 <Space>
                     <CustomerServiceOutlined />
                     {messages('common.tracks')}
                 </Space>
             ),
-            children: (
-                <div style={{ padding: '24px 0' }}>
-                    <Text type="secondary">Tracks Content Placeholder</Text>
-                </div>
+        },
+        {
+            key: RELEASE_VIEW_TABS.ANALYTICS,
+            label: (
+                <Space>
+                    <BarChartOutlined />
+                    {messages('analytics.label')}
+                </Space>
             ),
         },
     ];
 
+    const renderActiveTabContent = () => {
+        switch (activeTab) {
+            case RELEASE_VIEW_TABS.TRACKS:
+                return <TracksTab releaseId={releaseId} />;
+            case RELEASE_VIEW_TABS.ANALYTICS:
+                return <AnalyticsTab releaseId={releaseId} />;
+            case RELEASE_VIEW_TABS.OVERVIEW:
+            default:
+                return <OverviewTab releaseData={releaseData} />;
+        }
+    };
+
     return (
         <div
-            className="flex flex-1 overflow-y-hidden overflow-x-clip"
+            className="flex min-h-[calc(100vh-4rem)] flex-1 overflow-y-hidden overflow-x-clip"
             style={{
                 backgroundColor: token.colorBgLayout,
-                minHeight: 'calc(100vh - 4rem)',
             }}
         >
             <div className="thin-scrollbar mx-auto flex h-[calc(100vh-4rem)] min-w-0 flex-1 flex-col overflow-y-auto px-8">
                 <Breadcrumb items={breadcrumbItems} className="!py-4" />
                 <div
                     id="release-header"
-                    className="mb-4 rounded-lg p-4"
+                    className="mb-4 rounded-lg p-4 shadow-sm"
                     style={{
                         backgroundColor: token.colorBgContainer,
                     }}
                 >
                     <ReleaseViewHeader releaseData={releaseData} />
-                    <div>
+
+                    <div
+                        className="rounded-lg"
+                        style={{
+                            backgroundColor: token.colorBgContainer,
+                        }}
+                    >
                         <Tabs
-                            className="tab-release-detail !pt-0"
+                            className="tab-release-detail"
                             style={{
                                 backgroundColor: token.colorBgContainer,
                             }}
                             items={tabItems}
-                            defaultActiveKey="overview"
+                            activeKey={activeTab}
+                            onChange={handleTabChange}
                         />
                     </div>
                 </div>
+
+                <div>{renderActiveTabContent()}</div>
             </div>
         </div>
     );

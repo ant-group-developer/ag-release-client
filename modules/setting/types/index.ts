@@ -28,11 +28,18 @@ export interface PartnersConfig {
         clientId?: string;
         clientSecret?: string;
     };
+    vevo?: PartnerVevoConfig;
     ci?: {
         baseUrl: string;
         token: string;
         dailySendCron?: string;
     };
+}
+
+export interface PartnerVevoConfig {
+    token: string;
+    baseUrl: string;
+    callbackUrl: string;
 }
 
 export interface OtherConfig {

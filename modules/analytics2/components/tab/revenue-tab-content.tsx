@@ -1,10 +1,12 @@
 'use client';
 
-import { Col, Row } from 'antd';
+import { Col, Row, Select } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
 import { useGetRevenueLineChart } from '../../hooks/use-get-revenue-line-chart';
+import { useGetRevenueTerBarChart } from '../../hooks/use-get-revenue-ter-bar-chart';
 import RevenueMetricCards from '../card/revenue-metric-cards';
 import LineChartView from '../chart/line-chart-view';
 import PieChartView from '../chart/pie-chart-view';
@@ -18,24 +20,48 @@ interface Props {
 export default function RevenueTabContent({ fromDate, toDate }: Props) {
     const messages = useTranslations();
 
+    const [viewType, setViewType] = useState<'dsp' | 'ter'>('dsp');
+
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetRevenueLineChart({
             fromDate,
             toDate,
         });
 
-    const { revenueDspBarChartData, isFetching: isBarChartFetching } =
-        useGetRevenueDspBarChart({
-            fromDate,
-            toDate,
-        });
+    const { revenueDspBarChartData, isFetching: isDspBarChartFetching } =
+        useGetRevenueDspBarChart(
+            {
+                fromDate,
+                toDate,
+            },
+            { enabled: viewType === 'dsp' }
+        );
+
+    const { revenueTerBarChartData, isFetching: isTerBarChartFetching } =
+        useGetRevenueTerBarChart(
+            {
+                fromDate,
+                toDate,
+            },
+            { enabled: viewType === 'ter' }
+        );
 
     const mappedPieData = useMemo(() => {
-        return revenueDspBarChartData.map((item) => ({
-            type: item.dspName,
-            value: item.revenueUsd,
-        }));
-    }, [revenueDspBarChartData]);
+        if (viewType === 'dsp') {
+            return revenueDspBarChartData.map((item) => ({
+                type: item.dspName,
+                value: item.revenueUsd,
+            }));
+        } else {
+            return revenueTerBarChartData.map((item) => ({
+                type: item.territory,
+                value: item.revenueUsd,
+            }));
+        }
+    }, [viewType, revenueDspBarChartData, revenueTerBarChartData]);
+
+    const isBarChartFetching =
+        viewType === 'dsp' ? isDspBarChartFetching : isTerBarChartFetching;
 
     return (
         <>
@@ -64,7 +90,42 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
                 </Col>
                 <Col xs={24} lg={9}>
                     <PieChartView
-                        title={messages('analytics.revenueDspDistribution')}
+                        title={
+                            <Select
+                                variant="borderless"
+                                value={viewType}
+                                onChange={(val) => setViewType(val)}
+                                options={[
+                                    {
+                                        value: 'dsp',
+                                        label: (
+                                            <Title
+                                                level={5}
+                                                className="!text-sm"
+                                            >
+                                                {messages(
+                                                    'analytics.revenueDspDistribution'
+                                                )}
+                                            </Title>
+                                        ),
+                                    },
+                                    {
+                                        value: 'ter',
+                                        label: (
+                                            <Title
+                                                level={4}
+                                                className="!text-sm"
+                                            >
+                                                {messages(
+                                                    'analytics.revenueTerDistribution'
+                                                )}
+                                            </Title>
+                                        ),
+                                    },
+                                ]}
+                                className="w-[200px]"
+                            />
+                        }
                         data={mappedPieData}
                         loading={isBarChartFetching}
                         legendPosition="right"

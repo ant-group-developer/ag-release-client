@@ -30,6 +30,14 @@ export enum REPORT_IMPORT_TAB {
     IMPORT = 'import-report',
     ENRICH_DATA_IMPORT = 'enrich-data-import',
     SFTP = 'import-sftp',
+    ENRICH_DATA_CRON = 'enrich-data-cron',
+    DELETE_REPORT = 'delete-report',
+}
+
+export enum TYPE_MODAL_ENRICH_SCAN_SCHEDULE {
+    CREATE = 'CREATE_ENRICH_SCAN_SCHEDULE',
+    UPDATE = 'UPDATE_ENRICH_SCAN_SCHEDULE',
+    DELETE = 'DELETE_ENRICH_SCAN_SCHEDULE',
 }
 
 export enum ETL_JOB_SOURCE_TYPE {
@@ -38,6 +46,8 @@ export enum ETL_JOB_SOURCE_TYPE {
     FTP_SYNC_ALL = 'FTP_SYNC_ALL',
     FTP_RETRY = 'FTP_RETRY',
     FTP_AUTO_CRON = 'FTP_AUTO_CRON',
+    ANALYTICS_REPORT_EXPORT = 'ANALYTICS_REPORT_EXPORT',
+    REPORT_RELEASE_DELETE = 'REPORT_RELEASE_DELETE',
 }
 
 export enum ENRICH_SCAN_STATUS {
