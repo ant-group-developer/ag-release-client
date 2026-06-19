@@ -573,6 +573,14 @@
             "error": {
                 "duplicateNameChannel": "This channel name already exists"
             }
+        },
+        "status": {
+            "REQUESTED": "Requested",
+            "PROCESSING": "Processing",
+            "SUCCESS": "Success",
+            "FAILED": "Failed",
+            "PENDING": "Pending",
+            "ERROR": "Error"
         }
     },
     "system": {

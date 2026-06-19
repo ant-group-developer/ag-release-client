@@ -569,6 +569,14 @@
             "error": {
                 "duplicateNameChannel": "Tên kênh đã tồn tại"
             }
+        },
+        "status": {
+            "REQUESTED": "Yêu cầu",
+            "PROCESSING": "Đang xử lý",
+            "SUCCESS": "Thành công",
+            "FAILED": "Thất bại",
+            "PENDING": "Đang chờ",
+            "ERROR": "Lỗi"
         }
     },
     "system": {

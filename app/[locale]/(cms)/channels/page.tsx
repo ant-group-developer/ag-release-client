@@ -35,7 +35,7 @@ export default function Channels({}: Props) {
     const { isAdmin } = useAuth();
 
     const { deleteChannel } = useDeleteChannel();
-    const { channelsData, isFetching } = useGetListChannel(dataFilter);
+    const { channelsData, isFetching, refetch, lastUpdatedAt } = useGetListChannel(dataFilter);
 
     const handleDeleteChannel = () => {
         const variables: DeleteVariables<ChannelsData['id']> = {
@@ -68,6 +68,8 @@ export default function Channels({}: Props) {
                         <ChannelsHeader
                             dataFilter={dataFilter}
                             onSearch={onSearch}
+                            handleRefresh={refetch}
+                            isFetching={isFetching}
                         />
                     )}
                     sticky
