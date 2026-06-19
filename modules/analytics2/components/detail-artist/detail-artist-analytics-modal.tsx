@@ -2,17 +2,19 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
-import { Col, Row } from 'antd';
-import dayjs from 'dayjs';
+import { Col, Row, Select } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { useGetArtistDspDailyTimeline } from '../../hooks/use-get-artist-dsp-daily-timeline';
-import { useGetArtistDspSalesTimeline } from '../../hooks/use-get-artist-dsp-sales-timeline';
-import { useGetArtistDspTimeline } from '../../hooks/use-get-artist-dsp-timeline';
 import { useGetArtistOverview } from '../../hooks/use-get-artist-overview';
-import { useGetArtistRevenueTimeline } from '../../hooks/use-get-artist-revenue-timeline';
-import DetailDspTimelineChart from '../detail/detail-dsp-timeline-chart';
-import DetailRevenueTimelineChart from '../detail/detail-revenue-timeline-chart';
+import { useGetArtistRevenueDspBarChart } from '../../hooks/use-get-artist-revenue-dsp-bar-chart';
+import { useGetArtistRevenueLineChart } from '../../hooks/use-get-artist-revenue-line-chart';
+import { useGetArtistRevenueTerBarChart } from '../../hooks/use-get-artist-revenue-ter-bar-chart';
+import { useGetArtistTrendViewDspBarChart } from '../../hooks/use-get-artist-trend-view-dsp-bar-chart';
+import { useGetArtistTrendViewLineChart } from '../../hooks/use-get-artist-trend-view-line-chart';
+import { useGetArtistTrendViewTerBarChart } from '../../hooks/use-get-artist-trend-view-ter-bar-chart';
+import LineChartView from '../chart/line-chart-view';
+import PieChartView from '../chart/pie-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
 
 interface DetailArtistAnalyticsModalProps {
@@ -36,7 +38,10 @@ export default function DetailArtistAnalyticsModal({
 
     const [localFromDate, setLocalFromDate] = useState(fromDate);
     const [localToDate, setLocalToDate] = useState(toDate);
-    const [range, setRange] = useState<number>(30);
+    const [trendViewType, setTrendViewType] = useState<'dsp' | 'ter'>('dsp');
+    const [revenueViewType, setRevenueViewType] = useState<'dsp' | 'ter'>(
+        'dsp'
+    );
 
     // Đồng bộ lại ngày từ component cha khi mở modal
     useEffect(() => {
@@ -53,65 +58,97 @@ export default function DetailArtistAnalyticsModal({
         open
     );
 
-    // 1. Gọi API lấy thông tin xu hướng theo thời gian (Monthly) của Artist
-    const { timelineData: trendTimelineData, isFetching: isTrendFetching } =
-        useGetArtistDspTimeline(
+    // Gọi API lấy thông tin biểu đồ doanh thu của Artist
+    const { revenueLineChartData, isFetching: isLineChartFetching } =
+        useGetArtistRevenueLineChart(
             artistId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
+            { fromDate: localFromDate, toDate: localToDate },
             open
         );
 
-    // 2. Gọi API lấy thông tin doanh số theo thời gian (Monthly) của Artist
-    const { timelineData: salesTimelineData, isFetching: isSalesFetching } =
-        useGetArtistDspSalesTimeline(
+    // Gọi API lấy thông tin biểu đồ lượt nghe của Artist
+    const {
+        lineChartData: trendViewLineChartData,
+        isFetching: isTrendViewLineChartFetching,
+    } = useGetArtistTrendViewLineChart(
+        artistId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open
+    );
+
+    // Gọi API lấy thông tin phân bố theo DSP của Artist
+    const {
+        dspBarChartData: trendViewDspBarChartData,
+        isFetching: isTrendViewDspBarChartFetching,
+    } = useGetArtistTrendViewDspBarChart(
+        artistId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open && trendViewType === 'dsp'
+    );
+
+    // Gọi API lấy thông tin phân bố theo quốc gia của Artist
+    const {
+        terBarChartData: trendViewTerBarChartData,
+        isFetching: isTrendViewTerBarChartFetching,
+    } = useGetArtistTrendViewTerBarChart(
+        artistId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open && trendViewType === 'ter'
+    );
+
+    const mappedTrendPieData = useMemo(() => {
+        if (trendViewType === 'dsp') {
+            return trendViewDspBarChartData.map((item) => ({
+                type: item.dspName,
+                value: item.totalViews,
+            }));
+        } else {
+            return trendViewTerBarChartData.map((item) => ({
+                type: item.territory,
+                value: item.totalViews,
+            }));
+        }
+    }, [trendViewType, trendViewDspBarChartData, trendViewTerBarChartData]);
+
+    const isTrendBarChartFetching =
+        trendViewType === 'dsp'
+            ? isTrendViewDspBarChartFetching
+            : isTrendViewTerBarChartFetching;
+
+    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Artist
+    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
+        useGetArtistRevenueDspBarChart(
             artistId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
+            { fromDate: localFromDate, toDate: localToDate },
+            open && revenueViewType === 'dsp'
         );
 
-    // 3. Gọi API lấy thông tin xu hướng theo thời gian (Daily) của Artist
-    const toDateDaily = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
-    const fromDateDaily = useMemo(() => {
-        return dayjs()
-            .subtract(range - 1, 'day')
-            .format('YYYY-MM-DD');
-    }, [range]);
-
-    const { timelineData: dailyTimelineData, isFetching: isDailyFetching } =
-        useGetArtistDspDailyTimeline(
+    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Artist
+    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
+        useGetArtistRevenueTerBarChart(
             artistId,
-            {
-                fromDate: fromDateDaily,
-                toDate: toDateDaily,
-                topN: 5,
-                includeOther: true,
-            },
-            open
+            { fromDate: localFromDate, toDate: localToDate },
+            open && revenueViewType === 'ter'
         );
 
-    // 4. Gọi API lấy thông tin doanh thu theo thời gian của Artist
-    const { timelineData: revenueTimelineData, isFetching: isRevenueFetching } =
-        useGetArtistRevenueTimeline(
-            artistId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-                // Artist ID parameter
-            },
-            open
-        );
+    const mappedRevenuePieData = useMemo(() => {
+        if (revenueViewType === 'dsp') {
+            return revenueDspBarChartData.map((item) => ({
+                type: item.dspName,
+                value: item.revenueUsd,
+            }));
+        } else {
+            return revenueTerBarChartData.map((item) => ({
+                type: item.territory,
+                value: item.revenueUsd,
+            }));
+        }
+    }, [revenueViewType, revenueDspBarChartData, revenueTerBarChartData]);
+
+    const isRevenueBarChartFetching =
+        revenueViewType === 'dsp'
+            ? isRevenueDspBarChartFetching
+            : isRevenueTerBarChartFetching;
 
     return (
         <FullScreenModal
@@ -155,24 +192,125 @@ export default function DetailArtistAnalyticsModal({
                 />
 
                 <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12} className="flex">
-                        {/* 2. Biểu đồ xu hướng theo DSP */}
-                        <DetailDspTimelineChart
-                            trendTimelineData={trendTimelineData}
-                            isTrendFetching={isTrendFetching}
-                            salesTimelineData={salesTimelineData}
-                            isSalesFetching={isSalesFetching}
-                            dailyTimelineData={dailyTimelineData}
-                            isDailyFetching={isDailyFetching}
-                            range={range}
-                            onRangeChange={setRange}
+                    <Col xs={24} lg={15}>
+                        <LineChartView
+                            title={messages('analytics.trendViewsByMonth')}
+                            data={trendViewLineChartData}
+                            xAxisKey="period"
+                            lineKey="totalViews"
+                            lineName={messages('common.viewCount')}
+                            loading={isTrendViewLineChartFetching}
+                            chartHeight={250}
                         />
                     </Col>
-                    <Col xs={24} lg={12} className="flex">
-                        {/* 3. Biểu đồ doanh thu theo thời gian */}
-                        <DetailRevenueTimelineChart
-                            revenueTimelineData={revenueTimelineData}
-                            isRevenueFetching={isRevenueFetching}
+                    <Col xs={24} lg={9}>
+                        <PieChartView
+                            title={
+                                <Select
+                                    variant="borderless"
+                                    value={trendViewType}
+                                    onChange={(val) => setTrendViewType(val)}
+                                    options={[
+                                        {
+                                            value: 'dsp',
+                                            label: (
+                                                <Title
+                                                    level={5}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.dspDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                        {
+                                            value: 'ter',
+                                            label: (
+                                                <Title
+                                                    level={4}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.terDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                    ]}
+                                    className="w-[250px]"
+                                />
+                            }
+                            data={mappedTrendPieData}
+                            loading={isTrendBarChartFetching}
+                            legendPosition="right"
+                            chartHeight={250}
+                        />
+                    </Col>
+                </Row>
+
+                <Row gutter={[24, 24]}>
+                    <Col xs={24} lg={15}>
+                        <LineChartView
+                            title={messages('analytics.revenue.label')}
+                            data={revenueLineChartData}
+                            xAxisKey="period"
+                            lineKey="revenueUsd"
+                            lineName={messages('analytics.revenue.modeRevenue')}
+                            loading={isLineChartFetching}
+                            chartHeight={250}
+                            valuePrefix="$"
+                            additionalTooltipKeys={[
+                                {
+                                    key: 'quantity',
+                                    name: messages('analytics.revenue.usage'),
+                                },
+                            ]}
+                        />
+                    </Col>
+                    <Col xs={24} lg={9}>
+                        <PieChartView
+                            title={
+                                <Select
+                                    variant="borderless"
+                                    value={revenueViewType}
+                                    onChange={(val) => setRevenueViewType(val)}
+                                    options={[
+                                        {
+                                            value: 'dsp',
+                                            label: (
+                                                <Title
+                                                    level={5}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.revenueDspDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                        {
+                                            value: 'ter',
+                                            label: (
+                                                <Title
+                                                    level={4}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.revenueTerDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                    ]}
+                                    className="w-[250px]"
+                                />
+                            }
+                            data={mappedRevenuePieData}
+                            loading={isRevenueBarChartFetching}
+                            legendPosition="right"
+                            chartHeight={250}
+                            valuePrefix="$"
                         />
                     </Col>
                 </Row>

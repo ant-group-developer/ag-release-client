@@ -130,6 +130,11 @@
         "downloadReady": "Ready to download",
         "exportReportCompressed": "{count} file compressed",
         "exportReportFailed": "Export report failed",
+        "exportReportSuccess": "Success",
+        "cancelDownloadConfirmTitle": "Cancel download?",
+        "cancelDownloadConfirmContent": "Your download is not complete. Do you want to cancel the download?",
+        "continueDownload": "Continue downloading",
+        "cancelDownload": "Cancel download",
         "collapse": "Collapse",
         "expand": "Expand",
         "assets": "Assets",
@@ -203,6 +208,8 @@
         "language": "Language",
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
+        "containsLyrics": "Contains Lyrics",
+        "instrumental": "Instrumental",
         "releaseDate": "Release date",
         "releaseTime": "Release time",
         "duration": "Duration",
@@ -571,6 +578,14 @@
             "error": {
                 "duplicateNameChannel": "This channel name already exists"
             }
+        },
+        "status": {
+            "REQUESTED": "Requested",
+            "PROCESSING": "Processing",
+            "SUCCESS": "Success",
+            "FAILED": "Failed",
+            "PENDING": "Pending",
+            "ERROR": "Error"
         }
     },
     "system": {
@@ -2108,6 +2123,8 @@
         "revenue": {
             "totalRevenue": "Total Revenue",
             "totalPlays": "Total Usage",
+            "totalUsage": "Total Usage",
+            "usage": "Usage",
             "totalTerritories": "Territories",
             "timelineTitle": "Revenue timeline",
             "modeRevenue": "Revenue",
@@ -2119,12 +2136,14 @@
             "revenue": "Revenue"
         },
         "totalTrendViews": "Total trend views",
+        "trendViews": "Trend views",
+        "trendViewsByMonth": "Monthly trend views",
         "totalRevenueByMonth": "Revenue by month",
         "dspDistribution": "Views by DSP",
         "terDistribution": "Views by Country",
         "revenueDspDistribution": "Revenue by DSP",
         "revenueTerDistribution": "Revenue by Country",
-        "totalSalesViews": "Sales Views",
+        "totalSalesViews": "Total usage",
 
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",

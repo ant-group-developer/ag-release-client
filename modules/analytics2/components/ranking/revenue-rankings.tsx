@@ -7,18 +7,18 @@ import { useMemo, useState } from 'react';
 import {
     useGetRevenueTopArtist,
     useGetRevenueTopDsp,
+    useGetRevenueTopLabel,
     useGetRevenueTopRelease,
     useGetRevenueTopTenant,
     useGetRevenueTopTrack,
-    useGetRevenueTopLabel,
 } from '../../hooks/use-get-revenue-data';
+import { RevenueDspItem } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
 import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useRevenueRankingColumns } from './use-revenue-ranking-columns';
-import { RevenueDspItem } from '../../types';
 
 interface Props {
     fromDate: string;
@@ -58,7 +58,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             fromDate,
             toDate,
             topN,
-            includeOther: true,
+            includeOther: false,
         });
 
     const { topTrackData, isFetching: isTracksLoading } = useGetRevenueTopTrack(
@@ -66,7 +66,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             fromDate,
             toDate,
             topN,
-            includeOther: true,
+            includeOther: false,
         }
     );
 
@@ -75,14 +75,14 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             fromDate,
             toDate,
             topN,
-            includeOther: true,
+            includeOther: false,
         });
 
     const { topDspData, isFetching: isDspLoading } = useGetRevenueTopDsp({
         fromDate,
         toDate,
         topN,
-        includeOther: true,
+        includeOther: false,
     });
 
     const { topTenantData, isFetching: isTenantsLoading } =
@@ -90,22 +90,25 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             fromDate,
             toDate,
             topN,
-            includeOther: true,
+            includeOther: false,
         });
 
-    const { topLabelData, isFetching: isLabelsLoading } =
-        useGetRevenueTopLabel({
+    const { topLabelData, isFetching: isLabelsLoading } = useGetRevenueTopLabel(
+        {
             fromDate,
             toDate,
             topN,
-            includeOther: true,
-        });
+            includeOther: false,
+        }
+    );
 
     const dspDataWithRank = useMemo(() => {
-        return topDspData?.items?.map((item: RevenueDspItem, index: number) => ({
-            ...item,
-            rank: index + 1,
-        }));
+        return topDspData?.items?.map(
+            (item: RevenueDspItem, index: number) => ({
+                ...item,
+                rank: index + 1,
+            })
+        );
     }, [topDspData]);
 
     return (
@@ -113,15 +116,15 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             <Row gutter={[24, 24]}>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('artist.artists'))}
-                        columns={artistColumns}
-                        dataSource={topArtistData?.items}
-                        loading={isArtistsLoading}
-                        rowKey="artistId"
-                        labelKey="artistName"
+                        title={topRankingTitle(messages('common.releases'))}
+                        columns={releaseColumns}
+                        dataSource={topReleaseData?.items}
+                        loading={isReleasesLoading}
+                        rowKey="releaseId"
+                        labelKey="title"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -139,15 +142,15 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.releases'))}
-                        columns={releaseColumns}
-                        dataSource={topReleaseData?.items}
-                        loading={isReleasesLoading}
-                        rowKey="releaseId"
-                        labelKey="title"
+                        title={topRankingTitle(messages('artist.artists'))}
+                        columns={artistColumns}
+                        dataSource={topArtistData?.items}
+                        loading={isArtistsLoading}
+                        rowKey="artistId"
+                        labelKey="artistName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -165,19 +168,6 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.dsps'))}
-                        columns={dspColumns}
-                        dataSource={dspDataWithRank}
-                        loading={isDspLoading}
-                        rowKey="dspName"
-                        labelKey="dspName"
-                        valueKey="revenueUsd"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
-                    />
-                </Col>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
                         title={topRankingTitle(messages('tenant.workspaces'))}
                         columns={tenantColumns}
                         dataSource={topTenantData?.items}
@@ -187,6 +177,19 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={`${APP_ROUTES.ANALYTICS2_TENANTS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.dsps'))}
+                        columns={dspColumns}
+                        dataSource={dspDataWithRank}
+                        loading={isDspLoading}
+                        rowKey="dspName"
+                        labelKey="dspName"
+                        valueKey="revenueUsd"
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=revenue`}
                     />
                 </Col>
             </Row>

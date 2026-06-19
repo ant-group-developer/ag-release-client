@@ -71,7 +71,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
             <Row gutter={[24, 24]}>
                 <Col xs={24} lg={15}>
                     <LineChartView
-                        title={messages('analytics.totalTrendViews')}
+                        title={messages('analytics.trendViewsByMonth')}
                         data={lineChartData}
                         xAxisKey="period"
                         lineKey="totalViews"

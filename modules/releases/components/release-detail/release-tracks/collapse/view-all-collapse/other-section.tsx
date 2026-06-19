@@ -321,8 +321,8 @@ export default function OtherSection({
                                 });
                             }}
                         >
-                            <Radio value={false}>Contains Lyrics</Radio>
-                            <Radio value={true}>Instrumental</Radio>
+                            <Radio value={false}>{messages('common.containsLyrics')}</Radio>
+                            <Radio value={true}>{messages('common.instrumental')}</Radio>
                         </Radio.Group>
                     </AppFormItem>
 

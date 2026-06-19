@@ -1,12 +1,12 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import LabelSelect from '@/components/ui/select/label-select';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { CreateReleaseDraftPayload } from '@/modules/releases/types/payload';
@@ -70,7 +70,7 @@ export default function ReleaseConfigurationSectionV2({
             <span className="text-base font-semibold">
                 {messages('release.configuration')}
             </span>
-            <div className="grid grid-cols-1 gap-x-16 gap-y-1 md:grid-cols-2 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-x-14 md:grid-cols-2 lg:grid-cols-2">
                 <div className="col-span-1">
                     <AppFormItem
                         label={messages('release.name')}
@@ -239,4 +239,3 @@ export default function ReleaseConfigurationSectionV2({
         </div>
     );
 }
-

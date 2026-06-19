@@ -5,13 +5,11 @@ import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import {
     ArtistRankingItem,
-    DspRankingItem,
     LabelRankingItem,
     ReleaseRankingItem,
     TenantRankingItem,
     TrackRankingItem,
 } from '../../types';
-
 
 interface DetailModalState {
     type: 'release' | 'track' | 'label' | 'artist' | null;
@@ -32,7 +30,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -113,7 +111,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -205,7 +203,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 70,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -279,7 +277,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 70,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -325,7 +323,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.release'),
                 dataIndex: 'releaseCount',
                 key: 'releaseCount',
-                width: 80,
+                width: 100,
                 render: (count: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {count || 0}
@@ -364,7 +362,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -414,7 +412,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -424,7 +422,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.dsps'),
+                title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
                 width: 200,
