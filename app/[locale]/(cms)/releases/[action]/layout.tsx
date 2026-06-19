@@ -23,7 +23,14 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { Breadcrumb, BreadcrumbProps, Tabs, TabsProps, theme } from 'antd';
-import { BookHeadphones, Box, Calendar, Eye, Music, ScrollText } from 'lucide-react';
+import {
+    BookHeadphones,
+    Box,
+    Calendar,
+    Eye,
+    Music,
+    ScrollText,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
@@ -175,7 +182,9 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                           >
                               <div className="flex items-center gap-1">
                                   <ScrollText size={SIZE_ICON} />
-                                  <span>{messages('releaseVideo.tabs.submits')}</span>
+                                  <span>
+                                      {messages('releaseVideo.tabs.submits')}
+                                  </span>
                               </div>
                           </Link>
                       ),

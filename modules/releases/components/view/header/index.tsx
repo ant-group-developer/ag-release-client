@@ -2,10 +2,16 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { ExternalMetadata, ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
-import { theme } from 'antd';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import ReleaseStatusTag from '../../tag/release-status-tag';
 import ReleaseInfoView from './release-info-view';
+import { EditOutlined } from '@ant-design/icons';
+import { Link } from '@/i18n/routing';
+import { APP_ROUTES } from '@/enums/routes';
+import { RELEASES_TABS } from '@/modules/releases/enums';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 
 type Props = {
     releaseData: ReleasesData;
@@ -25,6 +31,7 @@ function getFirstExternalCoverUrl(
 export default function ReleaseViewHeader({ releaseData }: Props) {
     const { token } = theme.useToken();
     const messages = useTranslations();
+    const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
     const imgFileId =
         releaseData?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
@@ -70,6 +77,17 @@ export default function ReleaseViewHeader({ releaseData }: Props) {
                     }}
                     status={releaseData.status}
                 />
+
+                <Link
+                    href={`${APP_ROUTES.RELEASES}/detail/${releaseData.id}/${RELEASES_TABS.CORE_DETAIL}`}
+                    onClick={() => {
+                        setReleaseAction(RELEASE_DETAIL_ACTION.EDIT);
+                    }}
+                >
+                    <Button type="primary" icon={<EditOutlined />}>
+                        {messages('common.edit')}
+                    </Button>
+                </Link>
             </div>
 
             <div className="flex justify-between gap-4">

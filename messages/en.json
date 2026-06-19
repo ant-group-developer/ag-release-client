@@ -203,6 +203,8 @@
         "language": "Language",
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
+        "containsLyrics": "Contains Lyrics",
+        "instrumental": "Instrumental",
         "releaseDate": "Release date",
         "releaseTime": "Release time",
         "duration": "Duration",

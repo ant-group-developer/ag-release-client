@@ -203,6 +203,8 @@
         "language": "Ngôn ngữ",
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
+        "containsLyrics": "Nhạc có lời",
+        "instrumental": "Nhạc không lời",
         "releaseDate": "Ngày phát hành",
         "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",

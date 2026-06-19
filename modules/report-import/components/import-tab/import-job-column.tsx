@@ -455,7 +455,7 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 2,
-                            maxHeight: 200,
+                            maxHeight: 100,
                             overflowY: 'auto',
                         }}
                     >

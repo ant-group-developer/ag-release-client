@@ -12,6 +12,8 @@ import { Breadcrumb, Space, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Link } from '@/i18n/routing';
+import { APP_ROUTES } from '@/enums/routes';
 
 import AnalyticsTab from '@/modules/releases/components/view/analytics-tab';
 import ReleaseViewHeader from '@/modules/releases/components/view/header';
@@ -48,7 +50,11 @@ export default function ReleaseDetailView() {
 
     const breadcrumbItems = [
         {
-            title: messages('release.releases'),
+            title: (
+                <Link href={APP_ROUTES.RELEASES}>
+                    {messages('release.releases')}
+                </Link>
+            ),
         },
         {
             title: releaseData.title,

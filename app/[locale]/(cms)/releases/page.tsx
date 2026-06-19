@@ -8,7 +8,6 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
@@ -26,11 +25,7 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import {
-    DeleteOutlined,
-    FileExcelOutlined,
-    SendOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -226,6 +221,7 @@ export default function Releases({}: Props) {
                         })}
                     />
                 )}
+
                 {/* 
                 {typeModal === TYPE_MODAL_RELEASE.EXPORT_TEMPLATE && (
                     <ExportTemplateModal
@@ -236,7 +232,6 @@ export default function Releases({}: Props) {
                 {typeModal === TYPE_MODAL_RELEASE.BULK_SUBMIT && (
                     <BulkSubmitModal onFinished={() => setSelectedRows([])} />
                 )}
-
 
                 {typeModal === TYPE_MODAL_RELEASE.BULK_DELETE && (
                     <AppConfirm

@@ -28,7 +28,7 @@ export default function InfoRow({ label, value, copyText }: InfoRowProps) {
                 </Text>
             </div>
             <div className="flex min-w-0 flex-1 items-center justify-between border-b border-[#f0f0f0]">
-                <div className="truncate">{value}</div>
+                <div className="truncate font-medium">{value}</div>
                 {copyText && (
                     <Tooltip title={messages('common.copy')}>
                         <CopyOutlined
