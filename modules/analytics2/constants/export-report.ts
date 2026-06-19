@@ -23,3 +23,6 @@ export const EXPORT_REPORT_FAILED_EVENT_VALUES = [
     'failure',
     'error',
 ] as const;
+
+export const CANCEL_CONFIRM_MODAL_WIDTH = 400;
+export const WARNING_ICON_COLOR = '#faad14';

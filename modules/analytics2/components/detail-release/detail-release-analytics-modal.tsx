@@ -2,17 +2,13 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
-import { Col, Row } from 'antd';
-import dayjs from 'dayjs';
+import { Col, Row, Select } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
-import { useGetReleaseDspDailyTimeline } from '../../hooks/use-get-release-dsp-daily-timeline';
-import { useGetReleaseDspSalesTimeline } from '../../hooks/use-get-release-dsp-sales-timeline';
-import { useGetReleaseDspTimeline } from '../../hooks/use-get-release-dsp-timeline';
+import { useEffect, useState } from 'react';
 import { useGetReleaseOverview } from '../../hooks/use-get-release-overview';
-import { useGetReleaseRevenueTimeline } from '../../hooks/use-get-release-revenue-timeline';
-import DetailDspTimelineChart from '../detail/detail-dsp-timeline-chart';
-import DetailRevenueTimelineChart from '../detail/detail-revenue-timeline-chart';
+import LineChartView from '../chart/line-chart-view';
+import PieChartView from '../chart/pie-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
 
 interface DetailReleaseAnalyticsModalProps {
@@ -52,65 +48,6 @@ export default function DetailReleaseAnalyticsModal({
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
-
-    // 1. Gọi API lấy thông tin xu hướng theo thời gian (Monthly) của Release
-    const { timelineData: trendTimelineData, isFetching: isTrendFetching } =
-        useGetReleaseDspTimeline(
-            releaseId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
-
-    // 2. Gọi API lấy thông tin doanh số theo thời gian (Monthly) của Release
-    const { timelineData: salesTimelineData, isFetching: isSalesFetching } =
-        useGetReleaseDspSalesTimeline(
-            releaseId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
-
-    // 3. Gọi API lấy thông tin xu hướng theo thời gian (Daily) của Release
-    const toDateDaily = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
-    const fromDateDaily = useMemo(() => {
-        return dayjs()
-            .subtract(range - 1, 'day')
-            .format('YYYY-MM-DD');
-    }, [range]);
-
-    const { timelineData: dailyTimelineData, isFetching: isDailyFetching } =
-        useGetReleaseDspDailyTimeline(
-            releaseId,
-            {
-                fromDate: fromDateDaily,
-                toDate: toDateDaily,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
-
-    // 4. Gọi API lấy thông tin doanh thu theo thời gian của Release
-    const { timelineData: revenueTimelineData, isFetching: isRevenueFetching } =
-        useGetReleaseRevenueTimeline(
-            releaseId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
 
     return (
         <FullScreenModal
@@ -154,24 +91,117 @@ export default function DetailReleaseAnalyticsModal({
                 />
 
                 <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12} className="flex">
-                        {/* 2. Biểu đồ xu hướng theo DSP */}
-                        <DetailDspTimelineChart
-                            trendTimelineData={trendTimelineData}
-                            isTrendFetching={isTrendFetching}
-                            salesTimelineData={salesTimelineData}
-                            isSalesFetching={isSalesFetching}
-                            dailyTimelineData={dailyTimelineData}
-                            isDailyFetching={isDailyFetching}
-                            range={range}
-                            onRangeChange={setRange}
+                    <Col xs={24} lg={15}>
+                        <LineChartView
+                            title={messages('analytics.totalTrendViews')}
+                            data={[]}
+                            xAxisKey="period"
+                            lineKey="totalViews"
+                            lineName={messages('common.viewCount')}
+                            loading={true}
+                            chartHeight={250}
                         />
                     </Col>
-                    <Col xs={24} lg={12} className="flex">
-                        {/* 3. Biểu đồ doanh thu theo thời gian */}
-                        <DetailRevenueTimelineChart
-                            revenueTimelineData={revenueTimelineData}
-                            isRevenueFetching={isRevenueFetching}
+                    <Col xs={24} lg={9}>
+                        <PieChartView
+                            title={
+                                <Select
+                                    variant="borderless"
+                                    value={'dsp'}
+                                    onChange={() => {}}
+                                    options={[
+                                        {
+                                            value: 'dsp',
+                                            label: (
+                                                <Title
+                                                    level={5}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.dspDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                        {
+                                            value: 'ter',
+                                            label: (
+                                                <Title
+                                                    level={4}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.terDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                    ]}
+                                    className="w-[200px]"
+                                />
+                            }
+                            data={[]}
+                            loading={true}
+                            legendPosition="right"
+                            chartHeight={200}
+                        />
+                    </Col>
+                </Row>
+
+                <Row gutter={[24, 24]}>
+                    <Col xs={24} lg={15}>
+                        <LineChartView
+                            title={messages('analytics.totalTrendViews')}
+                            data={[]}
+                            xAxisKey="period"
+                            lineKey="totalViews"
+                            lineName={messages('common.viewCount')}
+                            loading={true}
+                            chartHeight={250}
+                        />
+                    </Col>
+                    <Col xs={24} lg={9}>
+                        <PieChartView
+                            title={
+                                <Select
+                                    variant="borderless"
+                                    value={'dsp'}
+                                    onChange={() => {}}
+                                    options={[
+                                        {
+                                            value: 'dsp',
+                                            label: (
+                                                <Title
+                                                    level={5}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.dspDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                        {
+                                            value: 'ter',
+                                            label: (
+                                                <Title
+                                                    level={4}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.terDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                    ]}
+                                    className="w-[200px]"
+                                />
+                            }
+                            data={[]}
+                            loading={true}
+                            legendPosition="right"
+                            chartHeight={200}
                         />
                     </Col>
                 </Row>

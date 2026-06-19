@@ -2,7 +2,8 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
-import { Col, Row } from 'antd';
+import { Col, Row, Select } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
@@ -11,8 +12,8 @@ import { useGetLabelDspSalesTimeline } from '../../hooks/use-get-label-dsp-sales
 import { useGetLabelDspTimeline } from '../../hooks/use-get-label-dsp-timeline';
 import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
 import { useGetLabelRevenueTimeline } from '../../hooks/use-get-label-revenue-timeline';
-import DetailDspTimelineChart from '../detail/detail-dsp-timeline-chart';
-import DetailRevenueTimelineChart from '../detail/detail-revenue-timeline-chart';
+import LineChartView from '../chart/line-chart-view';
+import PieChartView from '../chart/pie-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
 
 interface DetailLabelAnalyticsModalProps {
@@ -154,24 +155,117 @@ export default function DetailLabelAnalyticsModal({
                 />
 
                 <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12} className="flex">
-                        {/* 2. Biểu đồ xu hướng theo DSP */}
-                        <DetailDspTimelineChart
-                            trendTimelineData={trendTimelineData}
-                            isTrendFetching={isTrendFetching}
-                            salesTimelineData={salesTimelineData}
-                            isSalesFetching={isSalesFetching}
-                            dailyTimelineData={dailyTimelineData}
-                            isDailyFetching={isDailyFetching}
-                            range={range}
-                            onRangeChange={setRange}
+                    <Col xs={24} lg={15}>
+                        <LineChartView
+                            title={messages('analytics.totalTrendViews')}
+                            data={[]}
+                            xAxisKey="period"
+                            lineKey="totalViews"
+                            lineName={messages('common.viewCount')}
+                            loading={true}
+                            chartHeight={250}
                         />
                     </Col>
-                    <Col xs={24} lg={12} className="flex">
-                        {/* 3. Biểu đồ doanh thu theo thời gian */}
-                        <DetailRevenueTimelineChart
-                            revenueTimelineData={revenueTimelineData}
-                            isRevenueFetching={isRevenueFetching}
+                    <Col xs={24} lg={9}>
+                        <PieChartView
+                            title={
+                                <Select
+                                    variant="borderless"
+                                    value={'dsp'}
+                                    onChange={() => {}}
+                                    options={[
+                                        {
+                                            value: 'dsp',
+                                            label: (
+                                                <Title
+                                                    level={5}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.dspDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                        {
+                                            value: 'ter',
+                                            label: (
+                                                <Title
+                                                    level={4}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.terDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                    ]}
+                                    className="w-[200px]"
+                                />
+                            }
+                            data={[]}
+                            loading={true}
+                            legendPosition="right"
+                            chartHeight={200}
+                        />
+                    </Col>
+                </Row>
+
+                <Row gutter={[24, 24]}>
+                    <Col xs={24} lg={15}>
+                        <LineChartView
+                            title={messages('analytics.totalRevenueUsd')}
+                            data={[]}
+                            xAxisKey="period"
+                            lineKey="totalViews"
+                            lineName={messages('common.viewCount')}
+                            loading={true}
+                            chartHeight={250}
+                        />
+                    </Col>
+                    <Col xs={24} lg={9}>
+                        <PieChartView
+                            title={
+                                <Select
+                                    variant="borderless"
+                                    value={'dsp'}
+                                    onChange={() => {}}
+                                    options={[
+                                        {
+                                            value: 'dsp',
+                                            label: (
+                                                <Title
+                                                    level={5}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.dspDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                        {
+                                            value: 'ter',
+                                            label: (
+                                                <Title
+                                                    level={4}
+                                                    className="!text-sm"
+                                                >
+                                                    {messages(
+                                                        'analytics.terDistribution'
+                                                    )}
+                                                </Title>
+                                            ),
+                                        },
+                                    ]}
+                                    className="w-[200px]"
+                                />
+                            }
+                            data={[]}
+                            loading={true}
+                            legendPosition="right"
+                            chartHeight={200}
                         />
                     </Col>
                 </Row>

@@ -2,16 +2,19 @@
 
 import { cn } from '@/helpers/common';
 import {
+    CANCEL_CONFIRM_MODAL_WIDTH,
     EXPORT_REPORT_JOB_STATUS,
     EXPORT_REPORT_PROGRESS_POPOVER,
+    WARNING_ICON_COLOR,
 } from '@/modules/analytics2/constants/export-report';
 import { ExportReportJob } from '@/modules/analytics2/types';
-import { Card, List, Space, theme, Typography } from 'antd';
-import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Button, Card, List, Modal, Space, Typography } from 'antd';
+import { AlertCircle, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ExportReportProgressItem from './export-report-progress-item';
 import { ExportReportJobStatus } from './types';
+import { useCancelExportAnalyticsReportList } from '@/modules/analytics2/hooks/use-cancel-export-analytics-report-list';
 
 interface ExportReportProgressPopoverProps {
     jobs: ExportReportJob[];
@@ -25,11 +28,12 @@ export default function ExportReportProgressPopover({
     onRemoveJob,
 }: ExportReportProgressPopoverProps) {
     const messages = useTranslations();
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
     const [isExpanded, setIsExpanded] = useState(true);
     const [statusByJobId, setStatusByJobId] = useState<
         Record<string, ExportReportJobStatus>
     >({});
+    const { cancelExportAnalyticsReportList } = useCancelExportAnalyticsReportList();
 
     const handleStatusChange = useCallback(
         (jobId: string, status: ExportReportJobStatus) => {
@@ -74,6 +78,79 @@ export default function ExportReportProgressPopover({
         : !hasRunningJob
           ? messages('common.exportReportFailed')
           : messages('common.preparingDownload');
+
+    useEffect(() => {
+        if (jobs.length > 0 && isAllCompleted) {
+            const timer = setTimeout(() => {
+                onClose();
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isAllCompleted, jobs.length, onClose]);
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            const runningJobIds = jobs
+                .filter((job) => {
+                    const status = statusByJobId[job.id] || EXPORT_REPORT_JOB_STATUS.RUNNING;
+                    return status === EXPORT_REPORT_JOB_STATUS.RUNNING;
+                })
+                .map((job) => job.id);
+
+            if (runningJobIds.length > 0) {
+                fetch('/api/v1/analytics/reports/export/cancel-list', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ jobIds: runningJobIds }),
+                    keepalive: true,
+                });
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [jobs, statusByJobId]);
+
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
+    const handleCloseClick = () => {
+        const runningJobIds = jobs
+            .filter((job) => {
+                const status = statusByJobId[job.id] || EXPORT_REPORT_JOB_STATUS.RUNNING;
+                return status === EXPORT_REPORT_JOB_STATUS.RUNNING;
+            })
+            .map((job) => job.id);
+
+        if (runningJobIds.length > 0) {
+            setIsConfirmOpen(true);
+        } else {
+            onClose();
+        }
+    };
+
+    const handleCancelDownload = () => {
+        const runningJobIds = jobs
+            .filter((job) => {
+                const status = statusByJobId[job.id] || EXPORT_REPORT_JOB_STATUS.RUNNING;
+                return status === EXPORT_REPORT_JOB_STATUS.RUNNING;
+            })
+            .map((job) => job.id);
+
+        if (runningJobIds.length > 0) {
+            cancelExportAnalyticsReportList({ jobIds: runningJobIds });
+        }
+        setIsConfirmOpen(false);
+        onClose();
+    };
+
+    const handleContinueDownload = () => {
+        setIsConfirmOpen(false);
+    };
 
     if (!jobs.length) return null;
 
@@ -127,7 +204,7 @@ export default function ExportReportProgressPopover({
                         <X
                             className="cursor-pointer text-gray-500 hover:text-gray-800"
                             style={{ width: 20, height: 20, display: 'block' }}
-                            onClick={onClose}
+                            onClick={handleCloseClick}
                         />
                     </Space>
                 </div>
@@ -145,6 +222,41 @@ export default function ExportReportProgressPopover({
                     ))}
                 </List>
             </div>
+            <Modal
+                open={isConfirmOpen}
+                closable={false}
+                footer={null}
+                centered
+                width={CANCEL_CONFIRM_MODAL_WIDTH}
+                onCancel={handleContinueDownload}
+            >
+                <div className="flex gap-4">
+                    <AlertCircle
+                        style={{
+                            width: 24,
+                            height: 24,
+                            color: WARNING_ICON_COLOR,
+                            flexShrink: 0,
+                        }}
+                    />
+                    <div className="flex flex-col gap-2">
+                        <Typography.Text className="text-lg font-bold text-gray-900 leading-6">
+                            {messages('common.cancelDownloadConfirmTitle')}
+                        </Typography.Text>
+                        <Typography.Text className="text-sm text-gray-500 leading-5">
+                            {messages('common.cancelDownloadConfirmContent')}
+                        </Typography.Text>
+                    </div>
+                </div>
+                <div className="mt-6 flex justify-end gap-3">
+                    <Button onClick={handleContinueDownload}>
+                        {messages('common.continueDownload')}
+                    </Button>
+                    <Button type="primary" danger onClick={handleCancelDownload}>
+                        {messages('common.cancelDownload')}
+                    </Button>
+                </div>
+            </Modal>
         </Card>
     );
 }

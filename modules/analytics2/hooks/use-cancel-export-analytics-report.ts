@@ -13,9 +13,12 @@ export const useCancelExportAnalyticsReport = () => {
     const mutation = useMutation({
         mutationFn: ({ jobId }: CancelExportAnalyticsReportVariables) =>
             analytics2Apis.cancelExportReport(jobId),
-        onSuccess: (data, { onSuccess }: CancelExportAnalyticsReportVariables) => {
+        onSuccess: (
+            data,
+            { onSuccess }: CancelExportAnalyticsReportVariables
+        ) => {
             onSuccess?.(data?.data);
-            handleSuccess(data?.data);
+            // handleSuccess(data?.data);
         },
         onError: (error, { onError }: CancelExportAnalyticsReportVariables) => {
             onError?.();

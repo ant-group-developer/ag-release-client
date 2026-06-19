@@ -362,6 +362,12 @@ export const analytics2Apis = {
             `/analytics/reports/export/${jobId}/cancel`
         );
     },
+    cancelExportReportList: (jobIds: string[]) => {
+        return axiosInstance.post<void>(
+            '/analytics/reports/export/cancel-list',
+            { jobIds }
+        );
+    },
 };
 
 export const getExportReportEventsUrl = (jobId: string) => {

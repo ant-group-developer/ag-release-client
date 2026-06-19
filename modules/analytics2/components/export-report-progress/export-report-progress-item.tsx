@@ -9,7 +9,7 @@ import { useCancelExportAnalyticsReport } from '@/modules/analytics2/hooks/use-c
 import { useExportAnalyticsReportEvents } from '@/modules/analytics2/hooks/use-export-analytics-report-events';
 import { ExportReportJob } from '@/modules/analytics2/types';
 import { List, Progress, Typography } from 'antd';
-import { AlertCircle, CheckCircle, CircleX, FolderArchive } from 'lucide-react';
+import { AlertCircle, CircleCheck, CircleX, FolderArchive } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef } from 'react';
 import { ExportReportJobStatus } from './types';
@@ -49,7 +49,7 @@ export default function ExportReportProgressItem({
           ? EXPORT_REPORT_JOB_STATUS.FAILED
           : EXPORT_REPORT_JOB_STATUS.RUNNING;
 
-     const isCompleted = status === EXPORT_REPORT_JOB_STATUS.COMPLETED;
+    const isCompleted = status === EXPORT_REPORT_JOB_STATUS.COMPLETED;
     const isFailed = status === EXPORT_REPORT_JOB_STATUS.FAILED;
     const isRunning =
         isListening && !isCompleted && !isTerminalEvent && !isFailed;
@@ -98,13 +98,13 @@ export default function ExportReportProgressItem({
                     href={summary.result.downloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    // ellipsis={{ tooltip: fileName }}
+                    // ellipsis={{ tooltip: messages('common.exportReportSuccess') }}
                     style={{
                         maxWidth: 190,
                         fontWeight: 500,
                     }}
                 >
-                    {fileName}
+                    {messages('common.exportReportSuccess')}
                 </Typography.Link>
             );
         }
@@ -146,7 +146,7 @@ export default function ExportReportProgressItem({
                 <div className="relative flex h-[25px] w-[25px] shrink-0 items-center justify-center">
                     <div className="flex h-full w-full items-center justify-center group-hover:hidden">
                         {isCompleted ? (
-                            <CheckCircle
+                            <CircleCheck
                                 className="lucide lucide-check-circle text-green-500"
                                 style={{ width: 20, height: 20 }}
                             />
@@ -166,7 +166,7 @@ export default function ExportReportProgressItem({
                         )}
                     </div>
                     <CircleX
-                        className="lucide lucide-circle-x hidden cursor-pointer text-gray-400 hover:text-gray-600 group-hover:block"
+                        className="lucide lucide-circle-x hidden cursor-pointer text-red-400 hover:text-red-500 group-hover:block"
                         style={{ width: 25, height: 25 }}
                         onClick={handleRemove}
                     />
