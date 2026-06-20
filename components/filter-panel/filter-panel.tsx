@@ -19,7 +19,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     canClearFilter,
     className,
     placement = 'bottomLeft',
-    popoverHeight = 400,
+    popoverHeight = 450,
 }: FilterPanelProps<TFilter>) {
     const messages = useTranslations();
     const { token } = theme.useToken();

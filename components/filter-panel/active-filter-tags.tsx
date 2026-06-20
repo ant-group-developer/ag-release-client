@@ -61,7 +61,7 @@ export default function ActiveFilterTags({
 
                 let displayValue: string;
 
-                if (config.type === 'checkbox' && config.options) {
+                if ((config.type === 'checkbox' || config.type === 'radio') && config.options) {
                     // Resolve checkbox labels
                     const values = config.isCommaSeparated
                         ? String(raw).split(',')

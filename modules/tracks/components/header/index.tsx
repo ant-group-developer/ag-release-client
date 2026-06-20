@@ -24,6 +24,7 @@ type Props = {
     onChangeFilter: OnChangeFilter<TrackDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
+    hideArtistFilter?: boolean;
 };
 
 export default function TrackHeader({
@@ -31,6 +32,7 @@ export default function TrackHeader({
     onChangeFilter,
     canClearFilter,
     removeFilter,
+    hideArtistFilter = false,
 }: Props) {
     const messages = useTranslations();
     const [artistKeyword, setArtistKeyword] = useState('');
@@ -43,6 +45,9 @@ export default function TrackHeader({
         {
             keyword: artistKeyword,
             pageSize: 100,
+        },
+        {
+            enabled: !hideArtistFilter,
         }
     );
     const { genresData } = useGetListSimpleGenres();
@@ -116,7 +121,10 @@ export default function TrackHeader({
                 options: scanStatusOptions,
                 isCommaSeparated: true,
             },
-            {
+        ];
+
+        if (!hideArtistFilter) {
+            configs.push({
                 key: 'artistId',
                 label: messages('artist.label'),
                 icon: <TeamOutlined />,
@@ -127,7 +135,10 @@ export default function TrackHeader({
                 isCommaSeparated: true,
                 // 3. Truyền hàm onSearch để cập nhật keyword cho API
                 onSearch: (val) => setArtistKeyword(val),
-            },
+            });
+        }
+
+        configs.push(
             {
                 key: 'genres',
                 label: messages('genre.label'),
@@ -143,8 +154,8 @@ export default function TrackHeader({
                 icon: <CalendarOutlined />,
                 type: 'dateRange',
                 filterKey: ['startCreatedAt', 'endCreatedAt'],
-            },
-        ];
+            }
+        );
 
         if (isAdmin) {
             configs.splice(1, 0, {
@@ -163,6 +174,7 @@ export default function TrackHeader({
     }, [
         messages,
         scanStatusOptions,
+        hideArtistFilter,
         artistOptions,
         isLoadingArtists,
         genreOptions,

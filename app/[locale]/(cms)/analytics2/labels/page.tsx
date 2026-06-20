@@ -57,29 +57,31 @@ export default function LabelsRankingPage() {
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { labelRankingData, isFetching: isViewsFetching } = useGetLabelRanking(
-        {
-            fromDate: dataFilter.startDate!,
-            toDate: dataFilter.endDate!,
-            page,
-            pageSize,
-            keyword: dataFilter.keyword,
-        },
-        { enabled: !isRevenue }
-    );
+    const { labelRankingData, isFetching: isViewsFetching } =
+        useGetLabelRanking(
+            {
+                fromDate: dataFilter.startDate!,
+                toDate: dataFilter.endDate!,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+            },
+            { enabled: !isRevenue }
+        );
 
     // Fetch revenue ranking data
-    const { topLabelData, isFetching: isRevenueFetching } = useGetRevenueTopLabel(
-        {
-            fromDate: dataFilter.startDate!,
-            toDate: dataFilter.endDate!,
-            page,
-            pageSize,
-            keyword: dataFilter.keyword ?? undefined,
-            includeOther: false,
-        },
-        { enabled: isRevenue }
-    );
+    const { topLabelData, isFetching: isRevenueFetching } =
+        useGetRevenueTopLabel(
+            {
+                fromDate: dataFilter.startDate!,
+                toDate: dataFilter.endDate!,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword ?? undefined,
+                includeOther: false,
+            },
+            { enabled: isRevenue }
+        );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
@@ -91,7 +93,7 @@ export default function LabelsRankingPage() {
             width: 80,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -112,7 +114,7 @@ export default function LabelsRankingPage() {
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <span
-                            className="cursor-pointer font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                             onClick={() =>
                                 setDetailModal({
                                     open: true,
@@ -166,7 +168,7 @@ export default function LabelsRankingPage() {
             key: 'revenueUsd',
             width: 180,
             render: (val: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     $
                     {val
                         ? val.toLocaleString(undefined, {
@@ -187,7 +189,7 @@ export default function LabelsRankingPage() {
             width: 80,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -200,7 +202,7 @@ export default function LabelsRankingPage() {
             render: (text: string, record: LabelRankingItem) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <span
-                        className="cursor-pointer font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                         onClick={() =>
                             setDetailModal({
                                 open: true,
@@ -220,7 +222,7 @@ export default function LabelsRankingPage() {
             key: 'totalViews',
             width: 180,
             render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
                 </span>
             ),

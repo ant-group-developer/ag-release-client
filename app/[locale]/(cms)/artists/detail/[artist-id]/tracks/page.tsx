@@ -65,6 +65,7 @@ export default function Tracks({}: Props) {
                             onChangeFilter={onChangeFilter}
                             canClearFilter={canClearFilter}
                             removeFilter={removeFilter}
+                            hideArtistFilter
                         />
                     }
                     sticky={{ offsetHeader: headerLayoutHeight }}

@@ -123,7 +123,7 @@ export default function ReleasesRankingPage() {
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
                                         open: true,
@@ -226,7 +226,7 @@ export default function ReleasesRankingPage() {
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
                                         open: true,

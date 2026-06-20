@@ -2,7 +2,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { ExternalMetadata, ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
-import { Button, theme } from 'antd';
+import { Button, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import ReleaseStatusTag from '../../tag/release-status-tag';
 import ReleaseInfoView from './release-info-view';
@@ -71,12 +71,28 @@ export default function ReleaseViewHeader({ releaseData }: Props) {
                     paddingBottom: 24,
                 }}
             >
-                <ReleaseStatusTag
-                    style={{
-                        padding: '2px 16px',
-                    }}
-                    status={releaseData.status}
-                />
+                <div className="flex gap-2">
+                    <ReleaseStatusTag
+                        style={{
+                            padding: '2px 16px',
+                        }}
+                        status={releaseData.status}
+                    />
+                    <Tag
+                        style={{
+                            padding: '2px 16px',
+                        }}
+                        color={
+                            releaseData.isImportedFromReport
+                                ? 'blue'
+                                : 'purple'
+                        }
+                    >
+                        {releaseData.isImportedFromReport
+                            ? messages('release.importedFromReport')
+                            : messages('release.createdDirectly')}
+                    </Tag>
+                </div>
 
                 <Link
                     href={`${APP_ROUTES.RELEASES}/detail/${releaseData.id}/${RELEASES_TABS.CORE_DETAIL}`}

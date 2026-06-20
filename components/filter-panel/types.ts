@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 /**
  * Filter content types supported by the FilterPanel
  */
-export type FilterType = 'checkbox' | 'dateRange' | 'input';
+export type FilterType = 'checkbox' | 'dateRange' | 'input' | 'radio';
 
 /**
  * Option item for checkbox filters
