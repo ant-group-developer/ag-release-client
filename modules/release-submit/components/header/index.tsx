@@ -462,7 +462,7 @@ export default function ReleaseSubmitHeader({
                 columns={stepFilterColumns}
                 dataSource={stepFilterRows}
                 rowClassName={(record) => (record.enabled ? '' : 'opacity-50')}
-                scroll={{ y: 420 }}
+                scroll={{ y: 280 }}
             />
         </div>
     );
@@ -508,9 +508,10 @@ export default function ReleaseSubmitHeader({
 
             <Popover
                 trigger="click"
-                placement="bottomLeft"
+                placement="topLeft"
                 content={stepsFilterContent}
                 arrow={false}
+                autoAdjustOverflow={false}
             >
                 <Button>
                     {messages('common.steps')}
@@ -525,6 +526,8 @@ export default function ReleaseSubmitHeader({
                 onChangeFilter={handleChangeFilter}
                 removeFilter={handleRemoveFilter}
                 canClearFilter={canClearReleaseFilter}
+                placement="topLeft"
+                popoverHeight={380}
             />
         </Space>
     );

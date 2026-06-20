@@ -18,6 +18,8 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     removeFilter,
     canClearFilter,
     className,
+    placement = 'bottomLeft',
+    popoverHeight = 400,
 }: FilterPanelProps<TFilter>) {
     const messages = useTranslations();
     const { token } = theme.useToken();
@@ -85,7 +87,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     );
 
     const popoverContent = (
-        <div className="flex" style={{ height: 500 }}>
+        <div className="flex" style={{ height: popoverHeight }}>
             {/* Left sidebar */}
             <FilterCategoryList
                 configs={configs}
@@ -144,8 +146,9 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
                 open={open}
                 onOpenChange={setOpen}
                 trigger="click"
-                placement="bottomLeft"
+                placement={placement}
                 arrow={false}
+                autoAdjustOverflow={false}
                 overlayInnerStyle={{ padding: 0, overflow: 'hidden' }}
                 content={
                     <div>

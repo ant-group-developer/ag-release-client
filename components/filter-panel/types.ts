@@ -1,3 +1,4 @@
+import { PopoverProps } from 'antd';
 import { ReactNode } from 'react';
 
 /**
@@ -64,4 +65,8 @@ export interface FilterPanelProps<TFilter extends Record<string, any>> {
     canClearFilter: boolean;
     /** Optional CSS class */
     className?: string;
+    /** Optional popover placement */
+    placement?: PopoverProps['placement'];
+    /** Optional popover height */
+    popoverHeight?: number | string;
 }
