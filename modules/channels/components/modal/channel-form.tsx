@@ -1,7 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import TenantSelect from '@/components/ui/select/tenant-select';
+import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
@@ -150,7 +150,7 @@ export default function ChannelFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <TenantSelect
+                    <TenantSelectActive
                         placeholder={messages('tenant.selectTitle')}
                     />
                 </AppFormItem>

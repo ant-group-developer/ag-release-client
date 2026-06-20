@@ -34,7 +34,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    <span className="text-gray-700 dark:text-zinc-300">
                         #{rank}
                     </span>
                 ),
@@ -62,7 +62,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
                                         setDetailModal({
                                             type: 'track',
@@ -96,7 +96,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 key: 'totalViews',
                 width: 70,
                 render: (views: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -115,7 +115,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    <span className="text-gray-700 dark:text-zinc-300">
                         #{rank}
                     </span>
                 ),
@@ -143,7 +143,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
                                         setDetailModal({
                                             type: 'release',
@@ -188,7 +188,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 key: 'totalViews',
                 width: 70,
                 render: (views: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -207,7 +207,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    <span className="text-gray-700 dark:text-zinc-300">
                         #{rank}
                     </span>
                 ),
@@ -230,7 +230,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
                                         type: 'artist',
@@ -262,7 +262,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 key: 'totalViews',
                 width: 125,
                 render: (views: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -281,7 +281,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    <span className="text-gray-700 dark:text-zinc-300">
                         #{rank}
                     </span>
                 ),
@@ -304,7 +304,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
                                         type: 'label',
@@ -347,7 +347,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 key: 'totalViews',
                 width: 90,
                 render: (views: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -366,7 +366,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    <span className="text-gray-700 dark:text-zinc-300">
                         #{rank}
                     </span>
                 ),
@@ -385,7 +385,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             height={32}
                             src={record.logo}
                         />
-                        <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
+                        <span className="truncate text-gray-900 dark:text-zinc-100">
                             {text || '-'}
                         </span>
                     </div>
@@ -397,7 +397,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 key: 'totalViews',
                 width: 90,
                 render: (views: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -416,7 +416,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                    <span className="text-gray-700 dark:text-zinc-300">
                         #{rank}
                     </span>
                 ),
@@ -429,7 +429,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ellipsis: true,
                 fixed: 'left' as const,
                 render: (text: string) => (
-                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
+                    <span className="truncate text-gray-900 dark:text-zinc-100">
                         {text || '—'}
                     </span>
                 ),
@@ -440,7 +440,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 key: 'totalViews',
                 width: 90,
                 render: (views: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),

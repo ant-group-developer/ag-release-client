@@ -1,6 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
-import TenantSelect from '@/components/ui/select/tenant-select';
+import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -36,9 +36,6 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const canUpdate = hasPermission(PERMISSION.CHANNEL.UPDATE);
 
     const handleUpdateTenant = (record: ChannelsData, tenantId: string) => {
-        const currentTenantId = record.tenantId || record.tenant?.id;
-        if (!isAdmin || !tenantId || tenantId === currentTenantId) return;
-
         updateChannel({
             id: record.id,
             payload: {
@@ -119,7 +116,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 240,
             render: (_, record) => (
-                <TenantSelect
+                <TenantSelectActive
                     className="!w-full"
                     value={record.tenantId || record.tenant?.id}
                     fallBack={record.tenant?.name}
