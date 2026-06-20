@@ -585,6 +585,8 @@
         "add": "Add channel",
         "label": "Channel",
         "name": "Channel name",
+        "existedOnVevoBackstage": "Existed on Vevo Backstage",
+        "youtubeChannelId": "YouTube channel ID",
         "validation": {
             "nameFormat": "Channel name can only contain letters and numbers, and must end with VEVO."
         },
@@ -595,7 +597,9 @@
                 "delete": "Delete channel successfully"
             },
             "error": {
-                "duplicateNameChannel": "This channel name already exists"
+                "duplicateNameChannel": "This channel name already exists",
+                "duplicateChannelOnVevo": "This channel already exists on Vevo",
+                "channelCreateRequestExistsOnVevo": "A channel creation request already exists on Vevo"
             }
         },
         "status": {

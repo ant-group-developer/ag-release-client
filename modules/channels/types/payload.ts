@@ -3,6 +3,7 @@ export interface CreateChannelPayload {
     tenantId: string;
     youtubeChannelId?: string;
     thumbUrl?: string;
+    existedOnVevoBackstage?: boolean;
 }
 
 export interface UpdateChannelPayload extends Partial<CreateChannelPayload> {}

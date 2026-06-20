@@ -30,8 +30,8 @@ export const useCreateChannel = () => {
         data: any,
         { onError }: CreateVariables<CreateChannelPayload>
     ) => {
-        onError?.();
-        handleError(data);
+        onError?.(data);
+        // handleError(data);
     };
 
     const mutation = useMutation({
