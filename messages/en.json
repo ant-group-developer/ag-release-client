@@ -349,7 +349,10 @@
         "label": "Label",
         "labels": "Labels",
         "expandAll": "Expand all",
-        "collapseAll": "Collapse all"
+        "collapseAll": "Collapse all",
+        "isrc": "ISRC",
+        "justNow": "just now",
+        "ago": "ago"
     },
     "country": {
         "label": "Country",

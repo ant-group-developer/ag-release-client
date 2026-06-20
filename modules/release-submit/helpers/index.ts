@@ -100,23 +100,30 @@ export const formatEnumLabel = (value?: string | null) => {
         .join(' ');
 };
 
-export const formatRelativeShort = (date?: string | null) => {
+export const formatRelativeShort = (
+    date?: string | null,
+    messages?: any
+) => {
     if (!date) return null;
 
     const targetDate = dayjs(date);
     if (!targetDate.isValid()) return null;
 
     const diff = dayjs().diff(targetDate);
-    if (diff < 0) return 'just now';
-    if (diff < MINUTE_IN_MS) return 'just now';
+    const justNow = messages ? messages('common.justNow') : 'just now';
+    const ago = messages ? messages('common.ago') : 'ago';
+
+    if (diff < 0) return justNow;
+    if (diff < MINUTE_IN_MS) return justNow;
+
     if (diff < HOUR_IN_MS) {
-        return `${formatUnit(Math.floor(diff / MINUTE_IN_MS), 'm')} ago`;
+        return `${Math.floor(diff / MINUTE_IN_MS)}m ${ago}`;
     }
     if (diff < DAY_IN_MS) {
-        return `${formatUnit(Math.floor(diff / HOUR_IN_MS), 'h')} ago`;
+        return `${Math.floor(diff / HOUR_IN_MS)}h ${ago}`;
     }
 
-    return `${formatUnit(Math.floor(diff / DAY_IN_MS), 'd')} ago`;
+    return `${Math.floor(diff / DAY_IN_MS)}d ${ago}`;
 };
 
 export const formatDurationShort = (

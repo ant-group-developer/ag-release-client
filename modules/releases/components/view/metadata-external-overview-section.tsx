@@ -80,9 +80,7 @@ export default function MetadataExternalOverviewSection({
                             >
                                 {record.name[0]?.toUpperCase()}
                             </Avatar>
-                            <span className="font-semibold capitalize">
-                                {record.name}
-                            </span>
+                            <span className="capitalize">{record.name}</span>
                         </Space>
                     );
                 },
@@ -94,7 +92,7 @@ export default function MetadataExternalOverviewSection({
                     const albumId = record.metadata.albumId;
                     return (
                         <div className="flex items-center gap-2">
-                            <OverviewText value={albumId} strong />
+                            <OverviewText value={albumId} />
                             {albumId && (
                                 <Tooltip title={messages('common.copy')}>
                                     <CopyOutlined
@@ -123,13 +121,13 @@ export default function MetadataExternalOverviewSection({
                                 href={albumUrl}
                                 target={LINK_TARGET_BLANK}
                                 rel={LINK_REL_NOOPENER}
-                                className="!hover:text-purple-800 truncate text-[14px] font-normal !text-purple-600 hover:underline"
+                                className="!hover:text-purple-800 truncate !text-purple-600 hover:underline"
                             >
                                 {albumUrl}
                             </Typography.Link>
                             <Tooltip title={messages('common.copy')}>
                                 <CopyOutlined
-                                    className="flex-shrink-0 cursor-pointer text-[14px] text-gray-400 transition-colors hover:text-gray-600"
+                                    className="flex-shrink-0 cursor-pointer text-gray-400 transition-colors hover:text-gray-600"
                                     onClick={() =>
                                         handleCopy(
                                             albumUrl,

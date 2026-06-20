@@ -5,12 +5,23 @@ import TrackCoverArt from '@/modules/tracks/components/table/trackCoverArt';
 import { TRACK_TABS } from '@/modules/tracks/enums';
 import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import { TrackData } from '@/modules/tracks/types';
-import { Collapse, Empty, Spin, theme } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import { Avatar, Collapse, Empty, Spin, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import TrackArtistsTable from './track-artists-table';
-import TrackMetadataExternal from './track-metadata-external';
-import { DownOutlined } from '@ant-design/icons';
+import TrackMetadataExternal, {
+    getDspByMetadataKey,
+} from './track-metadata-external';
+
+const GRID_COLUMNS = {
+    STT: 'col-span-1',
+    THUMBNAIL: 'col-span-1',
+    TITLE: 'col-span-4',
+    ISRC: 'col-span-2',
+    DURATION: 'col-span-1',
+    EXTERNAL: 'col-span-3',
+} as const;
 
 type Props = {
     tracks: TrackData[];
@@ -38,31 +49,89 @@ export default function TracksCollapse({
         return {
             key: String(index),
             label: (
-                <div className="flex items-center gap-4 py-2">
-                    <span className="w-6 text-center font-medium">
+                <div className="grid w-full grid-cols-12 items-center gap-4 py-1">
+                    <span
+                        className={`${GRID_COLUMNS.STT} text-center text-xs font-medium text-gray-400`}
+                    >
                         {getIndex(pageSize, page, index)}
                     </span>
-                    <TrackCoverArt trackData={record} />
-                    <div className="flex flex-col">
+                    <div
+                        className={`${GRID_COLUMNS.THUMBNAIL} flex items-center`}
+                    >
+                        <TrackCoverArt trackData={record} />
+                    </div>
+                    <div
+                        className={`${GRID_COLUMNS.TITLE} flex min-w-0 flex-col pr-4`}
+                    >
                         <Link
                             href={getTrackDetailRoute(
                                 record.id,
                                 TRACK_TABS.METADATA
                             )}
-                            className="font-semibold text-blue-600 hover:underline"
+                            className="w-fit max-w-full truncate font-semibold text-blue-600 hover:underline"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {record.title}
                         </Link>
-                        <span className="text-sm text-gray-500">
-                            {record.version ? `${record.version} • ` : ''}
-                            {record.audioFile?.duration
-                                ? convertSecondsToTime(
-                                      record.audioFile.duration
-                                  )
-                                : '-'}
-                            {record.isrc ? ` • ${record.isrc}` : ''}
-                        </span>
+                        {record.version && (
+                            <span
+                                className="truncate text-xs text-gray-500"
+                                title={record.version}
+                            >
+                                {record.version}
+                            </span>
+                        )}
+                    </div>
+                    <div
+                        className={`${GRID_COLUMNS.ISRC} truncate text-gray-600`}
+                        title={record.isrc || ''}
+                    >
+                        {record.isrc || '-'}
+                    </div>
+                    <div className={`${GRID_COLUMNS.DURATION} text-gray-600`}>
+                        {record.audioFile?.duration
+                            ? convertSecondsToTime(record.audioFile.duration)
+                            : '-'}
+                    </div>
+                    <div
+                        className={`${GRID_COLUMNS.EXTERNAL} flex flex-wrap items-center gap-2`}
+                    >
+                        {(
+                            Object.entries(record.metadataExternal || {}) as [
+                                string,
+                                any,
+                            ][]
+                        )
+                            .filter(
+                                ([, metadata]) =>
+                                    !!metadata &&
+                                    (metadata.trackUrl || metadata.albumUrl)
+                            )
+                            .map(([key, metadata]) => {
+                                const dsp = getDspByMetadataKey(key, dspItems);
+                                const url =
+                                    metadata.trackUrl || metadata.albumUrl;
+                                return (
+                                    <a
+                                        key={key}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-center transition-opacity hover:opacity-80"
+                                        title={`${key}: ${url}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <Avatar
+                                            size={24}
+                                            shape="square"
+                                            src={dsp?.picture}
+                                            className="rounded border border-gray-200"
+                                        >
+                                            {key[0]?.toUpperCase()}
+                                        </Avatar>
+                                    </a>
+                                );
+                            })}
                     </div>
                 </div>
             ),
@@ -114,21 +183,57 @@ export default function TracksCollapse({
 
     return (
         <Spin spinning={loading}>
-            <Collapse
-                items={collapseItems}
-                bordered={false}
-                className="overflow-hidden !bg-transparent [&_.ant-collapse-item_.ant-collapse-content]:!border-none [&_.ant-collapse-item_.ant-collapse-header]:!items-center"
+            <div
+                className="overflow-hidden"
                 style={{
                     border: `1px solid ${token.colorBorderSecondary}`,
                     borderRadius: 8,
                 }}
-                expandIconPosition="start"
-                expandIcon={({ isActive }) => (
-                    <DownOutlined rotate={isActive ? 180 : 0} className="text-gray-500" />
-                )}
-                activeKey={activeKey}
-                onChange={onChange}
-            />
+            >
+                <div
+                    className="grid grid-cols-12 gap-4 border-b px-4 py-3 pr-12 text-xs font-semibold uppercase text-gray-400"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                        borderColor: token.colorBorderSecondary,
+                    }}
+                >
+                    <div className={`${GRID_COLUMNS.STT} text-center`}>
+                        {messages('common.iNo')}
+                    </div>
+                    <div className={GRID_COLUMNS.THUMBNAIL}>
+                        {messages('common.thumbnail')}
+                    </div>
+                    <div className={GRID_COLUMNS.TITLE}>
+                        {messages('common.title')}
+                    </div>
+                    <div className={GRID_COLUMNS.ISRC}>
+                        {messages('common.isrc')}
+                    </div>
+                    <div className={GRID_COLUMNS.DURATION}>
+                        {messages('common.duration')}
+                    </div>
+                    <div className={GRID_COLUMNS.EXTERNAL}>
+                        {messages('common.link')}
+                    </div>
+                </div>
+                <Collapse
+                    items={collapseItems}
+                    bordered={false}
+                    className="cursor-pointer overflow-hidden !bg-transparent [&_.ant-collapse-item_.ant-collapse-content]:!border-none [&_.ant-collapse-item_.ant-collapse-header]:!items-center"
+                    style={{
+                        borderRadius: 0,
+                    }}
+                    expandIconPosition="end"
+                    expandIcon={({ isActive }) => (
+                        <DownOutlined
+                            rotate={isActive ? 180 : 0}
+                            className="text-gray-500"
+                        />
+                    )}
+                    activeKey={activeKey}
+                    onChange={onChange}
+                />
+            </div>
         </Spin>
     );
 }

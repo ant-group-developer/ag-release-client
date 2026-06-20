@@ -217,8 +217,8 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             width: 150,
             render: (_, record) => {
                 const sinceText =
-                    formatRelativeShort(record?.completedAt) ??
-                    formatRelativeShort(record?.createdAt);
+                    formatRelativeShort(record?.completedAt, messages) ??
+                    formatRelativeShort(record?.createdAt, messages);
                 const completedText = formatDurationShort(
                     record?.createdAt,
                     record?.completedAt,
