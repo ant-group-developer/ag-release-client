@@ -177,7 +177,7 @@ export default function ChannelFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={messages('channel.name')} allowClear />
+                    <Input placeholder={messages('channel.name')} allowClear disabled={isUpdateForm || isActive} />
                 </AppFormItem>
 
                 <AppFormItem
@@ -193,7 +193,7 @@ export default function ChannelFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder="UC..." allowClear />
+                    <Input placeholder="UC..." allowClear disabled={isUpdateForm || isActive} />
                 </AppFormItem>
 
                 <AppFormItem
@@ -220,13 +220,15 @@ export default function ChannelFormModal({ ...props }: Props) {
                     />
                 </AppFormItem>
 
-                <AppFormItem
-                    name="existedOnVevoBackstage"
-                    label={messages('channel.existedOnVevoBackstage')}
-                    valuePropName="checked"
-                >
-                    <Switch disabled={isActive} />
-                </AppFormItem>
+                {!isUpdateForm && (
+                    <AppFormItem
+                        name="existedOnVevoBackstage"
+                        label={messages('channel.existedOnVevoBackstage')}
+                        valuePropName="checked"
+                    >
+                        <Switch disabled={isActive} />
+                    </AppFormItem>
+                )}
             </AppForm>
         </AppModal>
     );
