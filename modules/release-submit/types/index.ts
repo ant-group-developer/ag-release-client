@@ -30,6 +30,7 @@ export interface ReleaseSubmitData extends CommonAttribute {
 }
 
 export interface ReleaseSubmitFilter extends CommonParams {
+    releaseIds?: string[];
     releaseId?: string;
     type?: RELEASE_SUBMIT_TYPE;
     status?: RELEASE_SUBMIT_STATUS;

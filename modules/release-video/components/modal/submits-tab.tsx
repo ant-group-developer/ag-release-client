@@ -37,7 +37,7 @@ export default function SubmitsTab({ releaseId }: Props) {
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: FieldOrderReleaseExecution3.execution_createdAt,
-        releaseId: releaseId,
+        releaseIds: releaseId ? [releaseId] : [],
         latestOnly: true,
     });
 
