@@ -581,6 +581,8 @@
         "add": "Thêm kênh",
         "label": "Kênh",
         "name": "Tên kênh",
+        "existedOnVevoBackstage": "Đã tồn tại trên Vevo Backstage",
+        "youtubeChannelId": "YouTube channel ID",
         "validation": {
             "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
         },
@@ -591,7 +593,9 @@
                 "delete": "Xoá kênh thành công"
             },
             "error": {
-                "duplicateNameChannel": "Tên kênh đã tồn tại"
+                "duplicateNameChannel": "Tên kênh đã tồn tại",
+                "duplicateChannelOnVevo": "Kênh này đã tồn tại trên Vevo",
+                "channelCreateRequestExistsOnVevo": "Yêu cầu tạo kênh đã tồn tại trên Vevo"
             }
         },
         "status": {
@@ -1415,7 +1419,7 @@
             "details": "Chi tiết",
             "additional": "Bổ sung",
             "distribution": "Phân phối",
-            "submits": "Submit logs"
+            "submits": "Lịch sử gửi"
         },
         "additionalTitle": "Siêu dữ liệu bổ sung",
         "additionalDesc": "Cấu hình các tùy chọn nâng cao, tiêu đề thay thế hoặc thẻ bổ sung.",

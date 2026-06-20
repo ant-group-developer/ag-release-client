@@ -3,10 +3,11 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import TenantSelect from '@/components/ui/select/tenant-select';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
+import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
@@ -33,12 +34,39 @@ export default function ChannelFormModal({ ...props }: Props) {
     const { createChannel, isPending: isCreatePending } = useCreateChannel();
     const { updateChannel, isPending: isUpdatePending } = useUpdateChannel();
 
+    const handleFormError = (data: any) => {
+        const response = data?.response?.data;
+        const { channel_name, youtube_channel_id } = response?.data || {};
+
+        let errorMsg = messages.has(response?.messageCode)
+            ? messages(response?.messageCode)
+            : response?.message;
+
+        const details: string[] = [];
+        if (channel_name) {
+            details.push(`${messages('channel.name')}: ${channel_name}`);
+        }
+        if (youtube_channel_id) {
+            details.push(
+                `${messages('channel.youtubeChannelId')}: ${youtube_channel_id}`
+            );
+        }
+
+        if (details.length > 0) {
+            errorMsg = `${errorMsg} (${details.join(', ')})`;
+        }
+
+        showNotification('error', errorMsg);
+        deActive();
+    };
+
     const handleCreateChannel = (values: ChannelFormValues) => {
         const payload = {
             name: values.name,
             tenantId: values.tenantId,
             youtubeChannelId: values.youtubeChannelId,
             thumbUrl: values.thumbUrl,
+            existedOnVevoBackstage: values.existedOnVevoBackstage,
         } as CreateChannelPayload;
 
         const variables: CreateVariables<CreateChannelPayload> = {
@@ -47,9 +75,7 @@ export default function ChannelFormModal({ ...props }: Props) {
                 form.resetFields();
                 deActive();
             },
-            onError: () => {
-                deActive();
-            },
+            onError: handleFormError,
         };
         createChannel(variables);
     };
@@ -64,9 +90,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
             },
-            onError: () => {
-                deActive();
-            },
+            onError: handleFormError,
         };
         updateChannel(variables);
     };
@@ -93,6 +117,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             tenantId: dataEdit?.tenantId,
             youtubeChannelId: dataEdit?.youtubeChannelId ?? undefined,
             thumbUrl: dataEdit?.thumbUrl ?? undefined,
+            existedOnVevoBackstage: dataEdit?.existedOnVevoBackstage ?? false,
         };
         form.setFieldsValue(initialData);
     }, [dataEdit, form]);
@@ -152,23 +177,23 @@ export default function ChannelFormModal({ ...props }: Props) {
                         },
                     ]}
                 >
-                    <Input placeholder={messages('channel.name')} allowClear />
+                    <Input placeholder={messages('channel.name')} allowClear disabled={isUpdateForm || isActive} />
                 </AppFormItem>
 
                 <AppFormItem
                     name="youtubeChannelId"
-                    label="YouTube channel ID"
+                    label={messages('channel.youtubeChannelId')}
                     rules={[
                         {
                             max: 100,
                             message: messages('validation.stringMax', {
                                 max: 100,
-                                field: 'YouTube channel ID',
+                                field: messages('channel.youtubeChannelId'),
                             }),
                         },
                     ]}
                 >
-                    <Input placeholder="UC..." allowClear />
+                    <Input placeholder="UC..." allowClear disabled={isUpdateForm || isActive} />
                 </AppFormItem>
 
                 <AppFormItem
@@ -194,6 +219,16 @@ export default function ChannelFormModal({ ...props }: Props) {
                         disabled={isActive}
                     />
                 </AppFormItem>
+
+                {!isUpdateForm && (
+                    <AppFormItem
+                        name="existedOnVevoBackstage"
+                        label={messages('channel.existedOnVevoBackstage')}
+                        valuePropName="checked"
+                    >
+                        <Switch disabled={isActive} />
+                    </AppFormItem>
+                )}
             </AppForm>
         </AppModal>
     );

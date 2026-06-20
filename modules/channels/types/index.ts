@@ -8,6 +8,7 @@ export interface ChannelsData extends CommonAttribute {
     error?: string | null;
     youtubeChannelId?: string | null;
     thumbUrl?: string | null;
+    existedOnVevoBackstage?: boolean | null;
     tenant?: Pick<TenantData, 'id' | 'name'>;
     histories?: ChannelHistoryData[];
     historyCount?: number;
