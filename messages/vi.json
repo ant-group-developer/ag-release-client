@@ -529,7 +529,26 @@
         }
     },
     "log": {
-        "label": "Log"
+        "label": "Nhật ký",
+        "logs": "Nhật ký",
+        "level": {
+            "success": "Thành công",
+            "log": "Nhật ký",
+            "warning": "Cảnh báo",
+            "error": "Lỗi"
+        },
+        "type": {
+            "business": "Nghiệp vụ",
+            "system": "Hệ thống"
+        },
+        "columns": {
+            "level": "Cấp độ",
+            "type": "Loại",
+            "module": "Module",
+            "releaseSubmitId": "Release Submit ID",
+            "releaseSubmitStepId": "Release Submit Step ID",
+            "dataDetail": "Chi tiết dữ liệu"
+        }
     },
     "language": {
         "original": "Ngôn ngữ gốc",

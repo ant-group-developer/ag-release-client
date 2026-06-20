@@ -18,6 +18,7 @@ import {
     Contact,
     DiscAlbum,
     Earth,
+    FileClock,
     FileMusic,
     FileTerminal,
     FileText,
@@ -512,6 +513,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Release Log',
                 href: APP_ROUTES.RELEASE_LOG,
                 icon: ScrollText,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'log',
+                type: 'link',
+                label: 'log.label',
+                title: 'Log',
+                href: APP_ROUTES.LOG,
+                icon: FileClock,
                 required: SYS_ADMIN_REQ,
             },
             {

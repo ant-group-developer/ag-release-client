@@ -533,7 +533,26 @@
         }
     },
     "log": {
-        "label": "Log"
+        "label": "Log",
+        "logs": "Logs",
+        "level": {
+            "success": "Success",
+            "log": "Log",
+            "warning": "Warning",
+            "error": "Error"
+        },
+        "type": {
+            "business": "Business",
+            "system": "System"
+        },
+        "columns": {
+            "level": "Level",
+            "type": "Type",
+            "module": "Module",
+            "releaseSubmitId": "Release Submit ID",
+            "releaseSubmitStepId": "Release Submit Step ID",
+            "dataDetail": "Data Detail"
+        }
     },
     "language": {
         "english": "English",
