@@ -28,6 +28,7 @@ export default function ReleaseArtistsSection({ releaseData }: Props) {
     const columns: ColumnsType<ReleaseArtist> = [
         {
             title: messages('common.name'),
+            width: 600,
             render: (_, item) => {
                 const artist = item?.artist;
 
@@ -47,12 +48,14 @@ export default function ReleaseArtistsSection({ releaseData }: Props) {
         },
         {
             title: messages('country.label'),
+            width: 400,
             render: (_, item) => (
                 <OverviewText value={item.artist?.country?.name} />
             ),
         },
         {
             title: messages('artist.profiles'),
+            width: 400,
             render: (_, item) =>
                 item.artist?.artistProfiles?.length ? (
                     <Space size={6} wrap>

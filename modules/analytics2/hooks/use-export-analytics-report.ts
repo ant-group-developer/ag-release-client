@@ -16,7 +16,7 @@ export const useExportAnalyticsReport = () => {
             analytics2Apis.exportReport(payload),
         onSuccess: (data, { onSuccess }: ExportAnalyticsReportVariables) => {
             onSuccess?.(data?.data);
-            handleSuccess(data?.data);
+            // handleSuccess(data?.data);
         },
         onError: (error, { onError }: ExportAnalyticsReportVariables) => {
             onError?.();

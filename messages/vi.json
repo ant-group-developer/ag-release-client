@@ -130,6 +130,11 @@
         "downloadReady": "Đã sẵn sàng tải xuống",
         "exportReportCompressed": "{count} tệp được nén",
         "exportReportFailed": "Xuất báo cáo thất bại",
+        "exportReportSuccess": "Đã thành công",
+        "cancelDownloadConfirmTitle": "Hủy tải xuống?",
+        "cancelDownloadConfirmContent": "Tải xuống của bạn chưa hoàn tất. Bạn có muốn hủy tải xuống không?",
+        "continueDownload": "Tiếp tục tải xuống",
+        "cancelDownload": "Hủy tải xuống",
         "collapse": "Thu gọn",
         "expand": "Mở rộng",
         "assets": "Tài sản",
@@ -203,6 +208,8 @@
         "language": "Ngôn ngữ",
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
+        "containsLyrics": "Nhạc có lời",
+        "instrumental": "Nhạc không lời",
         "releaseDate": "Ngày phát hành",
         "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
@@ -341,7 +348,10 @@
         "label": "Label",
         "labels": "Hãng phát hành",
         "expandAll": "Mở rộng tất cả",
-        "collapseAll": "Thu gọn tất cả"
+        "collapseAll": "Thu gọn tất cả",
+        "isrc": "ISRC",
+        "justNow": "vừa xong",
+        "ago": "trước"
     },
     "country": {
         "label": "Quốc gia",
@@ -522,7 +532,26 @@
         }
     },
     "log": {
-        "label": "Log"
+        "label": "Nhật ký",
+        "logs": "Nhật ký",
+        "level": {
+            "success": "Thành công",
+            "log": "Nhật ký",
+            "warning": "Cảnh báo",
+            "error": "Lỗi"
+        },
+        "type": {
+            "business": "Nghiệp vụ",
+            "system": "Hệ thống"
+        },
+        "columns": {
+            "level": "Cấp độ",
+            "type": "Loại",
+            "module": "Module",
+            "releaseSubmitId": "Release Submit ID",
+            "releaseSubmitStepId": "Release Submit Step ID",
+            "dataDetail": "Chi tiết dữ liệu"
+        }
     },
     "language": {
         "original": "Ngôn ngữ gốc",
@@ -555,6 +584,8 @@
         "add": "Thêm kênh",
         "label": "Kênh",
         "name": "Tên kênh",
+        "existedOnVevoBackstage": "Đã tồn tại trên Vevo Backstage",
+        "youtubeChannelId": "YouTube channel ID",
         "validation": {
             "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
         },
@@ -565,8 +596,18 @@
                 "delete": "Xoá kênh thành công"
             },
             "error": {
-                "duplicateNameChannel": "Tên kênh đã tồn tại"
+                "duplicateNameChannel": "Tên kênh đã tồn tại",
+                "duplicateChannelOnVevo": "Kênh này đã tồn tại trên Vevo",
+                "channelCreateRequestExistsOnVevo": "Yêu cầu tạo kênh đã tồn tại trên Vevo"
             }
+        },
+        "status": {
+            "REQUESTED": "Yêu cầu",
+            "PROCESSING": "Đang xử lý",
+            "SUCCESS": "Thành công",
+            "FAILED": "Thất bại",
+            "PENDING": "Đang chờ",
+            "ERROR": "Lỗi"
         }
     },
     "system": {
@@ -1381,7 +1422,7 @@
             "details": "Chi tiết",
             "additional": "Bổ sung",
             "distribution": "Phân phối",
-            "submits": "Submit logs"
+            "submits": "Lịch sử gửi"
         },
         "additionalTitle": "Siêu dữ liệu bổ sung",
         "additionalDesc": "Cấu hình các tùy chọn nâng cao, tiêu đề thay thế hoặc thẻ bổ sung.",
@@ -2100,25 +2141,28 @@
         "revenue": {
             "totalRevenue": "Tổng doanh thu",
             "totalPlays": "Tổng lượt sử dụng",
+            "totalUsage": "Tổng lượt sử dụng",
+            "usage": "Lượt sử dụng",
             "totalTerritories": "Quốc gia/Vùng lãnh thổ",
             "timelineTitle": "Doanh thu theo thời gian",
-            "modeRevenue": "Doanh thu (USD)",
+            "modeRevenue": "Doanh thu",
             "modeQuantity": "Lượt nghe (Số lượng)",
             "label": "Doanh thu"
         },
         "tabs": {
-            "plays": "Lượt nghe & Xu hướng",
+            "plays": "Lượt nghe",
             "revenue": "Doanh thu"
         },
-        "totalTrendViews": "Tổng lượt xem xu hướng",
+        "totalTrendViews": "Tổng lượt xem",
+        "trendViews": "Lượt xem",
+        "trendViewsByMonth": "Lượt xem theo tháng",
         "totalRevenueByMonth": "Doanh thu theo tháng",
         "dspDistribution": "Lượt xem theo DSP",
         "terDistribution": "Lượt xem theo quốc gia",
         "revenueDspDistribution": "Doanh thu theo DSP",
         "revenueTerDistribution": "Doanh thu theo quốc gia",
-        "totalSalesViews": "Lượt xem bán hàng",
-
-        "totalRevenueUsd": "Tổng doanh thu (USD)",
+        "totalSalesViews": "Lượt sử dụng",
+        "totalRevenueUsd": "Tổng doanh thu",
         "detailTitle": "Chi tiết phân tích",
         "detailChartTitle": "Biểu đồ diễn biến"
     },
@@ -2713,7 +2757,7 @@
             "processedRows": "Đã xử lý",
             "skippedRows": "Bỏ qua",
             "errorRows": "Lỗi",
-            "recentJobsTitle": "Lịch sử import/sync gần đây",
+            "recentJobsTitle": "Lịch sử nhập/đồng bộ gần đây",
             "uploadReportBtn": "Nhập báo cáo",
             "detailedProgress": "Tiến độ chi tiết từng file"
         },

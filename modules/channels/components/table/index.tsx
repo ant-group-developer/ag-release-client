@@ -4,6 +4,9 @@ import TenantSelect from '@/components/ui/select/tenant-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Button } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -26,7 +29,11 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { isAdmin } = useAuth();
+    const { hasPermission } = usePermission();
     const { updateChannel, isPending } = useUpdateChannel();
+
+    const canDelete = hasPermission(PERMISSION.CHANNEL.DELETE);
+    const canUpdate = hasPermission(PERMISSION.CHANNEL.UPDATE);
 
     const handleUpdateTenant = (record: ChannelsData, tenantId: string) => {
         const currentTenantId = record.tenantId || record.tenant?.id;
@@ -117,7 +124,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     value={record.tenantId || record.tenant?.id}
                     fallBack={record.tenant?.name}
                     placeholder={messages('tenant.selectTitle')}
-                    disabled={!isAdmin}
+                    disabled={!isAdmin && !canUpdate}
                     loading={isPending}
                     onChange={(tenantId) =>
                         handleUpdateTenant(record, tenantId)
@@ -199,18 +206,27 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 50,
             fixed: 'right',
-            render: (_, record) => (
-                <ActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_CHANNELS.DELETE, record)
-                    }
-                    showUpdate={isAdmin}
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
-                    }
-                />
-            ),
+            render: (_, record) => {
+                return (
+                    <PermissionGate
+                        anyOf={[
+                            PERMISSION.CHANNEL.UPDATE,
+                            PERMISSION.CHANNEL.DELETE,
+                        ]}
+                    >
+                        <ActionButton
+                            showDelete={canDelete}
+                            onShowDelete={() =>
+                                openModal(TYPE_MODAL_CHANNELS.DELETE, record)
+                            }
+                            showUpdate={isAdmin}
+                            onShowUpdate={() =>
+                                openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
+                            }
+                        />
+                    </PermissionGate>
+                );
+            },
         },
     ];
 

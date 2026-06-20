@@ -152,6 +152,7 @@ export default function EnrichScanModal({
                 disabled: isListening,
             }}
             cancelButtonProps={{ disabled: isPending }}
+            width={'50vw'}
         >
             {!scanId ? (
                 <Form

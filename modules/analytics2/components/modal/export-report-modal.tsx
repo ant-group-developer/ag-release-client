@@ -1,49 +1,53 @@
+import AppForm from '@/components/ui/antd-form/form';
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { useExportAnalyticsReport } from '@/modules/analytics2/hooks/use-export-analytics-report';
 import { DetailResponse } from '@/types/api';
-import { Button, Modal } from 'antd';
+import { Button, Form, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { ExportReportResponse } from '../../types';
+import { useEffect } from 'react';
+import { Analytics2DataFilter, ExportReportResponse } from '../../types';
 
 interface ExportReportModalProps {
     open: boolean;
     onClose: () => void;
     onExportStarted: (jobId: string) => void;
+    dataFilter?: Analytics2DataFilter;
 }
 
 export default function ExportReportModal({
     open,
     onClose,
     onExportStarted,
+    dataFilter,
 }: ExportReportModalProps) {
     const messages = useTranslations();
-    const [exportDateRange, setExportDateRange] = useState<{
-        startDate: string;
-        endDate: string;
-    }>({
-        startDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-        endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
-    });
+    const [form] = Form.useForm();
 
     const { exportAnalyticsReport, isPending: isExporting } =
         useExportAnalyticsReport();
 
     useEffect(() => {
         if (open) {
-            setExportDateRange({
-                startDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-                endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+            const startDate =
+                dataFilter?.startDate ??
+                dayjs().startOf('month').format('YYYY-MM-DD');
+            const endDate =
+                dataFilter?.endDate ??
+                dayjs().endOf('month').format('YYYY-MM-DD');
+            form.setFieldsValue({
+                dateRange: `${startDate},${endDate}`,
             });
         }
-    }, [open]);
+    }, [open, dataFilter, form]);
 
-    const handleExport = () => {
+    const handleExport = (values: { dateRange: string }) => {
+        const [startDate, endDate] = values.dateRange.split(',');
         exportAnalyticsReport({
             payload: {
-                fromDate: dayjs(exportDateRange.startDate).format('YYYY-MM'),
-                endDate: dayjs(exportDateRange.endDate).format('YYYY-MM'),
+                fromDate: dayjs(startDate).format('YYYY-MM'),
+                endDate: dayjs(endDate).format('YYYY-MM'),
             },
             onSuccess: (data: DetailResponse<ExportReportResponse>) => {
                 if (data?.data?.jobId) {
@@ -55,6 +59,7 @@ export default function ExportReportModal({
     };
 
     const handleClose = () => {
+        form.resetFields();
         onClose();
     };
 
@@ -76,26 +81,35 @@ export default function ExportReportModal({
                     key="submit"
                     type="primary"
                     loading={isExporting}
-                    onClick={handleExport}
+                    onClick={form.submit}
                 >
                     {messages('common.export')}
                 </Button>,
             ]}
         >
-            <div className="flex flex-col gap-2 py-4">
-                <label>{messages('common.time')}</label>
-                <DateSelect2
-                    style={{ width: '100%' }}
-                    value={`${exportDateRange.startDate},${exportDateRange.endDate}`}
-                    onChange={(value) => {
-                        const [startDate, endDate] = value
-                            .toString()
-                            .split(',');
-                        setExportDateRange({ startDate, endDate });
-                    }}
-                    picker="month"
-                />
-            </div>
+            <AppForm
+                form={form}
+                onFinish={handleExport}
+                showSubmit={false}
+                layout="vertical"
+                disabled={isExporting}
+            >
+                <AppFormItem
+                    name="dateRange"
+                    label={messages('common.time')}
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <DateSelect2
+                        style={{ width: '100%' }}
+                        picker="month"
+                    />
+                </AppFormItem>
+            </AppForm>
         </Modal>
     );
 }

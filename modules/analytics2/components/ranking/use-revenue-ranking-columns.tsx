@@ -29,7 +29,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 90,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -122,7 +122,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -218,7 +218,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -314,7 +314,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -324,7 +324,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.dsps'),
+                title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
                 width: 150,
@@ -374,7 +374,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 60,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -443,7 +443,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 50,
+                width: 100,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -513,7 +513,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 100,
+                width: 120,
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}

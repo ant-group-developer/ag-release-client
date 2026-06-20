@@ -5,11 +5,11 @@ import InfoRow from './info-row';
 import { OVERVIEW_COLUMN_GUTTER } from './overview-constants';
 import OverviewText from './overview-text';
 
-function normalizeMetadataKey(value?: string | null) {
+export function normalizeMetadataKey(value?: string | null) {
     return value?.trim().toLowerCase();
 }
 
-function getDspByMetadataKey(key: string, dspData: any[]) {
+export function getDspByMetadataKey(key: string, dspData: any[]) {
     const normalizedKey = normalizeMetadataKey(key);
 
     return dspData.find((item) =>
@@ -35,7 +35,7 @@ export default function TrackMetadataExternal({
     }
 
     return (
-        <div className="mx-6 flex flex-col gap-2">
+        <div className="mx-6 flex flex-col gap-1">
             {Object.entries(metadataExternal)
                 .filter(([, metadata]) => !!metadata)
                 .map(([key, metadata]: [string, any]) => {
@@ -49,7 +49,7 @@ export default function TrackMetadataExternal({
                             align="middle"
                             className="rounded-lg bg-zinc-100"
                         >
-                            <Col xs={24} lg={4}>
+                            <Col xs={24} lg={3}>
                                 <Space align="center">
                                     <Avatar
                                         size={24}
@@ -59,13 +59,13 @@ export default function TrackMetadataExternal({
                                     >
                                         {name[0]?.toUpperCase()}
                                     </Avatar>
-                                    <span className="font-semibold">
+                                    <span className="font-semibold capitalize">
                                         {name}
                                     </span>
                                 </Space>
                             </Col>
 
-                            <Col xs={24} lg={8}>
+                            <Col xs={24} lg={9}>
                                 <InfoRow
                                     label={messages('track.id') || 'Track ID'}
                                     value={

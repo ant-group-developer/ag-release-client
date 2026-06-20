@@ -116,7 +116,7 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             title: messages('reportConfigs.importResult.sourceType'),
             key: 'sourceType',
             dataIndex: 'sourceType',
-            width: 150,
+            width: 180,
             ellipsis: true,
             render: (sourceType: string, record) =>
                 record?.sourceType ? (

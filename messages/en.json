@@ -130,6 +130,11 @@
         "downloadReady": "Ready to download",
         "exportReportCompressed": "{count} file compressed",
         "exportReportFailed": "Export report failed",
+        "exportReportSuccess": "Success",
+        "cancelDownloadConfirmTitle": "Cancel download?",
+        "cancelDownloadConfirmContent": "Your download is not complete. Do you want to cancel the download?",
+        "continueDownload": "Continue downloading",
+        "cancelDownload": "Cancel download",
         "collapse": "Collapse",
         "expand": "Expand",
         "assets": "Assets",
@@ -203,6 +208,8 @@
         "language": "Language",
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
+        "containsLyrics": "Contains Lyrics",
+        "instrumental": "Instrumental",
         "releaseDate": "Release date",
         "releaseTime": "Release time",
         "duration": "Duration",
@@ -342,7 +349,10 @@
         "label": "Label",
         "labels": "Labels",
         "expandAll": "Expand all",
-        "collapseAll": "Collapse all"
+        "collapseAll": "Collapse all",
+        "isrc": "ISRC",
+        "justNow": "just now",
+        "ago": "ago"
     },
     "country": {
         "label": "Country",
@@ -526,7 +536,26 @@
         }
     },
     "log": {
-        "label": "Log"
+        "label": "Log",
+        "logs": "Logs",
+        "level": {
+            "success": "Success",
+            "log": "Log",
+            "warning": "Warning",
+            "error": "Error"
+        },
+        "type": {
+            "business": "Business",
+            "system": "System"
+        },
+        "columns": {
+            "level": "Level",
+            "type": "Type",
+            "module": "Module",
+            "releaseSubmitId": "Release Submit ID",
+            "releaseSubmitStepId": "Release Submit Step ID",
+            "dataDetail": "Data Detail"
+        }
     },
     "language": {
         "english": "English",
@@ -559,6 +588,8 @@
         "add": "Add channel",
         "label": "Channel",
         "name": "Channel name",
+        "existedOnVevoBackstage": "Existed on Vevo Backstage",
+        "youtubeChannelId": "YouTube channel ID",
         "validation": {
             "nameFormat": "Channel name can only contain letters and numbers, and must end with VEVO."
         },
@@ -569,8 +600,18 @@
                 "delete": "Delete channel successfully"
             },
             "error": {
-                "duplicateNameChannel": "This channel name already exists"
+                "duplicateNameChannel": "This channel name already exists",
+                "duplicateChannelOnVevo": "This channel already exists on Vevo",
+                "channelCreateRequestExistsOnVevo": "A channel creation request already exists on Vevo"
             }
+        },
+        "status": {
+            "REQUESTED": "Requested",
+            "PROCESSING": "Processing",
+            "SUCCESS": "Success",
+            "FAILED": "Failed",
+            "PENDING": "Pending",
+            "ERROR": "Error"
         }
     },
     "system": {
@@ -2108,6 +2149,8 @@
         "revenue": {
             "totalRevenue": "Total Revenue",
             "totalPlays": "Total Usage",
+            "totalUsage": "Total Usage",
+            "usage": "Usage",
             "totalTerritories": "Territories",
             "timelineTitle": "Revenue timeline",
             "modeRevenue": "Revenue",
@@ -2119,12 +2162,14 @@
             "revenue": "Revenue"
         },
         "totalTrendViews": "Total trend views",
+        "trendViews": "Trend views",
+        "trendViewsByMonth": "Monthly trend views",
         "totalRevenueByMonth": "Revenue by month",
         "dspDistribution": "Views by DSP",
         "terDistribution": "Views by Country",
         "revenueDspDistribution": "Revenue by DSP",
         "revenueTerDistribution": "Revenue by Country",
-        "totalSalesViews": "Sales Views",
+        "totalSalesViews": "Total usage",
 
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",

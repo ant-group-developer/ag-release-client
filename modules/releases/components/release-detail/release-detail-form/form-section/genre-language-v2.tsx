@@ -135,7 +135,7 @@ export default function GenreLanguageSectionV2({
                 </AppFormItem>
 
                 <AppFormItem
-                    label="Lyrics"
+                    label={messages('formFields.tracks.lyrics')}
                     required
                     validateStatus={errors.isInstrumental ? 'error' : ''}
                     help={errors.isInstrumental?.message as string}
@@ -171,8 +171,8 @@ export default function GenreLanguageSectionV2({
                                 }}
                                 disabled={isCreateReleasePage || isReadMode}
                             >
-                                <Radio value={false}>Contains Lyrics</Radio>
-                                <Radio value={true}>Instrumental</Radio>
+                                <Radio value={false}>{messages('common.containsLyrics')}</Radio>
+                                <Radio value={true}>{messages('common.instrumental')}</Radio>
                             </Radio.Group>
                         )}
                     />
