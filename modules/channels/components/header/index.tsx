@@ -52,6 +52,7 @@ export default function ChannelsHeader({
                     </Button>
                     <PermissionGate permission={PERMISSION.CHANNEL.CREATE}>
                         <CreateButton
+                            canCreate={true}
                             text={messages('channel.add')}
                             onClick={() =>
                                 openModal(TYPE_MODAL_CHANNELS.CREATE)

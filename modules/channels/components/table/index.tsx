@@ -36,9 +36,6 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const canUpdate = hasPermission(PERMISSION.CHANNEL.UPDATE);
 
     const handleUpdateTenant = (record: ChannelsData, tenantId: string) => {
-        const currentTenantId = record.tenantId || record.tenant?.id;
-        if (!isAdmin || !tenantId || tenantId === currentTenantId) return;
-
         updateChannel({
             id: record.id,
             payload: {

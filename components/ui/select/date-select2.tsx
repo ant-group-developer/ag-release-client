@@ -21,6 +21,7 @@ export default function DateSelect2({
     value,
     onChange,
     externalOnChange,
+    picker = 'month',
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -106,13 +107,14 @@ export default function DateSelect2({
 
     const format =
         props.format ??
-        (props.picker === 'month'
+        (picker === 'month'
             ? DATE_FORMAT.MONTH_YEAR
             : DATE_FORMAT.DATE_ONLY);
 
     return (
         <DatePicker.RangePicker
             allowClear={false}
+            picker={picker}
             {...props}
             format={format}
             presets={presets}
