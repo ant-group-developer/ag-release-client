@@ -12,7 +12,10 @@ import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
 import { ChannelDataFilter } from '../../types';
 
-type Props = Pick<UseFilterProps<ChannelDataFilter>, 'dataFilter' | 'onSearch'> & {
+type Props = Pick<
+    UseFilterProps<ChannelDataFilter>,
+    'dataFilter' | 'onSearch'
+> & {
     handleRefresh: () => void;
     isFetching?: boolean;
 };
@@ -49,7 +52,6 @@ export default function ChannelsHeader({
                     </Button>
                     <PermissionGate permission={PERMISSION.CHANNEL.CREATE}>
                         <CreateButton
-                            canCreate={isAdmin}
                             text={messages('channel.add')}
                             onClick={() =>
                                 openModal(TYPE_MODAL_CHANNELS.CREATE)
