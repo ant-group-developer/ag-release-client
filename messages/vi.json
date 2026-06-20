@@ -348,7 +348,10 @@
         "label": "Label",
         "labels": "Hãng phát hành",
         "expandAll": "Mở rộng tất cả",
-        "collapseAll": "Thu gọn tất cả"
+        "collapseAll": "Thu gọn tất cả",
+        "isrc": "ISRC",
+        "justNow": "vừa xong",
+        "ago": "trước"
     },
     "country": {
         "label": "Quốc gia",
@@ -2147,12 +2150,12 @@
             "label": "Doanh thu"
         },
         "tabs": {
-            "plays": "Lượt nghe & Xu hướng",
+            "plays": "Lượt nghe",
             "revenue": "Doanh thu"
         },
-        "totalTrendViews": "Tổng lượt xem xu hướng",
-        "trendViews": "Lượt xem xu hướng",
-        "trendViewsByMonth": "Lượt xem xu hướng theo tháng",
+        "totalTrendViews": "Tổng lượt xem",
+        "trendViews": "Lượt xem",
+        "trendViewsByMonth": "Lượt xem theo tháng",
         "totalRevenueByMonth": "Doanh thu theo tháng",
         "dspDistribution": "Lượt xem theo DSP",
         "terDistribution": "Lượt xem theo quốc gia",

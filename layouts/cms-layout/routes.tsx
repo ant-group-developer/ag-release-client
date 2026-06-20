@@ -205,8 +205,8 @@ export const adminRoutes: RouteNode[] = [
                 icon: Video,
                 required: {
                     permission: [
-                        PERMISSION.RELEASE.READ,
-                        PERMISSION.RELEASE.CREATE,
+                        PERMISSION.RELEASE_VIDEO.READ,
+                        PERMISSION.RELEASE_VIDEO.CREATE,
                     ],
                 },
             },
@@ -220,8 +220,8 @@ export const adminRoutes: RouteNode[] = [
                 icon: Video,
                 required: {
                     permission: [
-                        PERMISSION.RELEASE.READ,
-                        PERMISSION.RELEASE.CREATE,
+                        PERMISSION.RELEASE_VIDEO.READ,
+                        PERMISSION.RELEASE_VIDEO.CREATE,
                     ],
                 },
             },

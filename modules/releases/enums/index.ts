@@ -69,6 +69,8 @@ export enum RELEASE_VIEW_TABS {
     OVERVIEW = 'overview',
     TRACKS = 'tracks',
     ANALYTICS = 'analytics',
+    SCHEDULE = 'schedule',
+    DISTRIBUTION = 'distribution',
 }
 
 export enum RELEASES_STATUS {

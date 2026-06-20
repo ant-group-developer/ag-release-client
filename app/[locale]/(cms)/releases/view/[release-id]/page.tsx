@@ -1,23 +1,27 @@
 'use client';
 
+import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import { Link } from '@/i18n/routing';
 import { RELEASE_VIEW_TABS } from '@/modules/releases/enums';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import {
     BarChartOutlined,
+    CalendarOutlined,
     CustomerServiceOutlined,
     InfoCircleOutlined,
+    PartitionOutlined,
 } from '@ant-design/icons';
 import { Breadcrumb, Space, Tabs, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Link } from '@/i18n/routing';
-import { APP_ROUTES } from '@/enums/routes';
 
 import AnalyticsTab from '@/modules/releases/components/view/analytics-tab';
+import DistributionTab from '@/modules/releases/components/view/distribution-tab';
 import ReleaseViewHeader from '@/modules/releases/components/view/header';
 import OverviewTab from '@/modules/releases/components/view/overview-tab';
+import ScheduleTab from '@/modules/releases/components/view/schedule-tab';
 import TracksTab from '@/modules/releases/components/view/tracks-tab';
 
 export default function ReleaseDetailView() {
@@ -81,6 +85,24 @@ export default function ReleaseDetailView() {
             ),
         },
         {
+            key: RELEASE_VIEW_TABS.SCHEDULE,
+            label: (
+                <Space>
+                    <CalendarOutlined />
+                    {messages('release.scheduling.label')}
+                </Space>
+            ),
+        },
+        {
+            key: RELEASE_VIEW_TABS.DISTRIBUTION,
+            label: (
+                <Space>
+                    <PartitionOutlined />
+                    {messages('distribute.label')}
+                </Space>
+            ),
+        },
+        {
             key: RELEASE_VIEW_TABS.ANALYTICS,
             label: (
                 <Space>
@@ -97,6 +119,10 @@ export default function ReleaseDetailView() {
                 return <TracksTab releaseId={releaseId} />;
             case RELEASE_VIEW_TABS.ANALYTICS:
                 return <AnalyticsTab releaseId={releaseId} />;
+            case RELEASE_VIEW_TABS.SCHEDULE:
+                return <ScheduleTab releaseData={releaseData} />;
+            case RELEASE_VIEW_TABS.DISTRIBUTION:
+                return <DistributionTab releaseData={releaseData} />;
             case RELEASE_VIEW_TABS.OVERVIEW:
             default:
                 return <OverviewTab releaseData={releaseData} />;

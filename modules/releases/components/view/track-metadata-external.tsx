@@ -5,11 +5,11 @@ import InfoRow from './info-row';
 import { OVERVIEW_COLUMN_GUTTER } from './overview-constants';
 import OverviewText from './overview-text';
 
-function normalizeMetadataKey(value?: string | null) {
+export function normalizeMetadataKey(value?: string | null) {
     return value?.trim().toLowerCase();
 }
 
-function getDspByMetadataKey(key: string, dspData: any[]) {
+export function getDspByMetadataKey(key: string, dspData: any[]) {
     const normalizedKey = normalizeMetadataKey(key);
 
     return dspData.find((item) =>
