@@ -1,74 +1,94 @@
 'use client';
 
-import AppLoader from '@/components/app-loader';
-import AppContainer from '@/components/cms/app-container';
+import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE } from '@/constants/page-size';
-import { DATE_FORMAT } from '@/enums/common';
-import { formatDatesToUTC } from '@/helpers/common';
+import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { ORDER } from '@/enums/common';
+import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import LogHeader from '@/modules/log/components/log-header';
 import LogTable from '@/modules/log/components/log-table';
-import { useLogList } from '@/modules/log/hooks/useGetLog';
-import { DataFilterLog } from '@/modules/log/types/data';
-import dayjs from 'dayjs';
+import { useGetLogs } from '@/modules/log/hooks/useGetLogs';
+import { DataFilterLogs } from '@/modules/log/types/data';
+import { PageContainer } from '@ant-design/pro-components';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {};
 
 function LogPage({}: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
 
-    const [startDateCreated, endDateCreated] = formatDatesToUTC(
-        dayjs()
-            .subtract(30, 'day')
-            .startOf('day')
-            .format(DATE_FORMAT.MYSQL_TYPE_DATE),
-        dayjs().endOf('day').format(DATE_FORMAT.MYSQL_TYPE_DATE)
-    );
-    const defaultFilter: DataFilterLog = {
+    const defaultFilter: DataFilterLogs = {
         page: 1,
         pageSize: PAGE_SIZE,
-        startDateCreated: startDateCreated,
-        endDateCreated: endDateCreated,
     };
 
-    const { dataFilter, onSearch, onChangePage, onChangeFilter, isReady } =
-        useFilter<DataFilterLog>(defaultFilter);
+    const { dataFilter, onChangePage, onChangeFilter, onSearch } =
+        useFilter<DataFilterLogs>(defaultFilter);
 
-    const { dataLog, totalRecord, isFetching } = useLogList(
-        dataFilter,
-        isReady
-    );
+    const { logsData, isFetching, refetch } = useGetLogs(dataFilter);
 
-    if (!isReady) {
-        return <AppLoader className="bg-white" />;
-    }
+    const onChangeSort = (pagination: any, filters: any, sort: any) => {
+        const orderBy = setSortOrder(sort, ORDER.ASC);
+        const fieldOrder = sort.field;
+        onChangeFilter(
+            {
+                orderBy,
+                fieldOrder,
+            },
+            false
+        );
+    };
 
     return (
-        <AppContainer appTitle={messages('log.label')}>
-            <LogHeader
-                dataFilter={dataFilter}
-                onSearch={onSearch}
-                onChangeFilter={onChangeFilter}
-            />
-            <LogTable
-                sticky
-                dataSource={dataLog}
-                loading={isFetching}
-                pagination={{
-                    pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                    current: dataFilter.page ?? 1,
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('log.logs')}
+                style={{
+                    backgroundColor: token.colorBgLayout,
                 }}
-            />
-            <AppPagination
-                showTotalText
-                pageSize={PAGE_SIZE}
-                onChange={onChangePage}
-                current={dataFilter.page}
-                total={totalRecord}
-            />
-        </AppContainer>
+            >
+                <LogTable
+                    sticky
+                    dataSource={logsData?.items ?? []}
+                    loading={isFetching}
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    onChange={onChangeSort}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: logsData?.metadata?.page,
+                    }}
+                    headerTitle={
+                        <LogHeader
+                            dataFilter={dataFilter}
+                            onChangeFilter={onChangeFilter}
+                            onSearch={onSearch}
+                        />
+                    }
+                    options={{
+                        reload: () => refetch(),
+                    }}
+                />
+                <AppPagination
+                    align="end"
+                    className="rounded-b-lg"
+                    style={{
+                        backgroundColor: token?.colorBgContainer,
+                    }}
+                    current={logsData?.metadata?.page || dataFilter.page}
+                    pageSize={dataFilter.pageSize}
+                    total={logsData?.metadata?.totalItems ?? 0}
+                    onChange={onChangePage}
+                    showTotalText
+                    showSizeChanger
+                    showQuickJumper
+                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+            </PageContainer>
+        </AppPageWrapper>
     );
 }
 

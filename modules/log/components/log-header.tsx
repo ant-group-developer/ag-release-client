@@ -1,47 +1,63 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import AppSearch from '@/components/ui/input/search';
-import DateSelect from '@/components/ui/select/date-select';
-import { UseFilterProps } from '@/hooks/use-filter';
-import { DataFilterLog } from '../types/data';
-import LogStatusSelect from './log-status-select';
-import MethodSelect from './method-select';
+import { arrayFromString, arrayToString } from '@/helpers/array';
+import { OnChangeFilter } from '@/hooks/use-filter';
+import { Space } from 'antd';
+import { useTranslations } from 'next-intl';
+import { DataFilterLogs } from '../types/data';
+import { LogLevelsSelect } from './select/log-levels-select';
+import { LogModulesSelect } from './select/log-modules-select';
+import { LogTypesSelect } from './select/log-types-select';
 
-type Props = {} & Pick<
-    UseFilterProps<DataFilterLog>,
-    'onSearch' | 'dataFilter' | 'onChangeFilter'
->;
+interface Props {
+    dataFilter: DataFilterLogs;
+    onChangeFilter: OnChangeFilter<DataFilterLogs>;
+    onSearch: (value: any) => void;
+}
 
-function LogHeader({ onSearch, dataFilter, onChangeFilter }: Props) {
+function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
+    const messages = useTranslations();
+
     return (
-        <AppHeader>
-            <AppHeaderGroup>
-                <AppSearch
-                    onChange={onSearch}
-                    defaultValue={dataFilter.keyword}
-                />
-                <MethodSelect
-                    className="w-full lg:w-52"
-                    value={dataFilter.action}
-                    onChange={(value) => onChangeFilter({ action: value })}
-                />
-                <LogStatusSelect
-                    className="w-full lg:w-52"
-                    value={dataFilter.success}
-                    onChange={(value) => onChangeFilter({ success: value })}
-                />
-                <DateSelect
-                    selectClassName="w-[150px]"
-                    rangeClassName="w-[250px]"
-                    externalOnChange={(fromDate, toDate) =>
-                        onChangeFilter({
-                            startDateCreated: fromDate,
-                            endDateCreated: toDate,
-                        })
-                    }
-                    value={`${dataFilter.startDateCreated},${dataFilter.endDateCreated}`}
-                />
-            </AppHeaderGroup>
-        </AppHeader>
+        <Space className="font-normal" wrap>
+            <AppSearch
+                className="max-w-52"
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+            />
+            <LogLevelsSelect
+                mode="multiple"
+                placeholder={messages('log.columns.level')}
+                onChange={(value) =>
+                    onChangeFilter({ level: arrayToString(value) })
+                }
+                value={arrayFromString(dataFilter.level)}
+                allowClear
+                maxTagCount="responsive"
+                style={{ minWidth: 200 }}
+            />
+            <LogTypesSelect
+                mode="multiple"
+                placeholder={messages('log.columns.type')}
+                onChange={(value) =>
+                    onChangeFilter({ type: arrayToString(value) })
+                }
+                value={arrayFromString(dataFilter.type)}
+                allowClear
+                maxTagCount="responsive"
+                style={{ minWidth: 200 }}
+            />
+            <LogModulesSelect
+                mode="multiple"
+                placeholder={messages('log.columns.module')}
+                onChange={(value) =>
+                    onChangeFilter({ module: arrayToString(value) })
+                }
+                value={arrayFromString(dataFilter.module)}
+                allowClear
+                maxTagCount="responsive"
+                style={{ minWidth: 200 }}
+            />
+        </Space>
     );
 }
 

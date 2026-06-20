@@ -132,7 +132,8 @@ export const QUERY_KEY = {
     },
     LOG: {
         KEY: 'LOG',
-        GET_LOG_LIST: 'GET_LOG_LIST',
+        GET_LOGS_LIST: 'GET_LOGS_LIST',
+        GET_LOGS_MODULES: 'GET_LOGS_MODULES',
     },
     CHANNEL_LOG: {
         KEY: 'CHANNEL_LOG',
