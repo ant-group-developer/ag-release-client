@@ -45,14 +45,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     Form,
-    Segmented,
     Space,
     Tag,
     Typography,
     notification,
     theme,
 } from 'antd';
-import { SegmentedOptions } from 'antd/es/segmented';
 import exifr from 'exifr';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -106,37 +104,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const isCreateReleasePage =
         params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
-    const getActiveTextColor = (action: RELEASE_DETAIL_ACTION) =>
-        releaseAction === action ? { color: token.colorPrimary } : undefined;
 
-    const segmentedOptions: SegmentedOptions = [
-        {
-            icon: (
-                <EyeOutlined
-                    style={getActiveTextColor(RELEASE_DETAIL_ACTION.READ)}
-                />
-            ),
-            label: (
-                <span style={getActiveTextColor(RELEASE_DETAIL_ACTION.READ)}>
-                    {messages('common.watch')}
-                </span>
-            ),
-            value: RELEASE_DETAIL_ACTION.READ,
-        },
-        {
-            icon: (
-                <EditOutlined
-                    style={getActiveTextColor(RELEASE_DETAIL_ACTION.EDIT)}
-                />
-            ),
-            label: (
-                <span style={getActiveTextColor(RELEASE_DETAIL_ACTION.EDIT)}>
-                    {messages('common.edit')}
-                </span>
-            ),
-            value: RELEASE_DETAIL_ACTION.EDIT,
-        },
-    ];
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
     const validateLength = releaseValidateData && releaseValidateData?.length;
     const coverArtRequirementKeys = [
@@ -647,15 +615,18 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     <PermissionGate
                                         permission={PERMISSION.RELEASE.UPDATE}
                                     >
-                                        <Segmented
-                                            value={releaseAction}
-                                            options={segmentedOptions}
-                                            onChange={(val) =>
-                                                handleChangeAction(
-                                                    val as RELEASE_DETAIL_ACTION
-                                                )
-                                            }
-                                        />
+                                        {isReadMode && (
+                                            <Button
+                                                icon={<EditOutlined />}
+                                                onClick={() =>
+                                                    handleChangeAction(
+                                                        RELEASE_DETAIL_ACTION.EDIT
+                                                    )
+                                                }
+                                            >
+                                                {messages('common.edit')}
+                                            </Button>
+                                        )}
                                     </PermissionGate>
                                 </div>
                             </div>
