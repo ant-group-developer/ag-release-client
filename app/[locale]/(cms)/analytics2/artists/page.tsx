@@ -4,7 +4,11 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import {
+    PAGE_SIZE_DEFAULT,
+    PAGE_SIZE_EXTRA_LARGE,
+    PAGE_SIZE_OPTIONS,
+} from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import DetailArtistAnalyticsModal from '@/modules/analytics2/components/detail-artist/detail-artist-analytics-modal';
@@ -16,9 +20,10 @@ import {
     ArtistRankingItem,
     RevenueArtistItem,
 } from '@/modules/analytics2/types';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Table, theme } from 'antd';
+import { Avatar, Card, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -35,6 +40,9 @@ interface RankingFilter extends CommonParams {
 export default function ArtistsRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
+    const { dspData } = useGetListDsp({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<RankingFilter>({
@@ -133,6 +141,73 @@ export default function ArtistsRankingPage() {
             ),
         },
         {
+            title: messages('artist.profiles'),
+            key: 'profiles',
+            dataIndex: 'profiles',
+            width: 180,
+            render: (_, record) => (
+                <div>
+                    <Avatar.Group
+                        max={{
+                            count: 5,
+                            style: { backgroundColor: '#ccc' },
+                        }}
+                    >
+                        {record?.profiles?.map((item) => {
+                            const dsp = dspData?.items?.find(
+                                (d) => d.code === item.dspCode
+                            );
+                            return (
+                                <CustomTooltip
+                                    key={item.dspCode}
+                                    title={item.dspName || item.dspCode}
+                                >
+                                    <a
+                                        href={item.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <Avatar
+                                            src={dsp?.picture}
+                                            style={{ backgroundColor: '#ccc' }}
+                                        >
+                                            {(item.dspName || item.dspCode)
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </Avatar>
+                                    </a>
+                                </CustomTooltip>
+                            );
+                        })}
+                    </Avatar.Group>
+                </div>
+            ),
+        },
+        {
+            title: messages('country.label'),
+            key: 'country',
+            dataIndex: 'country',
+            width: 150,
+            ellipsis: true,
+            render: (_, record) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {record?.country || '-'}
+                </span>
+            ),
+        },
+        {
+            title: messages('genre.label'),
+            key: 'genre',
+            dataIndex: 'genre',
+            width: 150,
+            ellipsis: true,
+            render: (_, record) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {record?.genre || '-'}
+                </span>
+            ),
+        },
+        {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
@@ -215,6 +290,85 @@ export default function ArtistsRankingPage() {
                         </span>
                     </CustomTooltip>
                 </div>
+            ),
+        },
+        {
+            title: messages('artist.profiles'),
+            key: 'profiles',
+            dataIndex: 'profiles',
+            width: 180,
+            render: (_, record) => (
+                <div>
+                    <Avatar.Group
+                        max={{
+                            count: 5,
+                            style: { backgroundColor: '#ccc' },
+                        }}
+                    >
+                        {record?.profiles?.map((item) => {
+                            const dsp = dspData?.items?.find(
+                                (d) => d.code === item.dspCode
+                            );
+                            return (
+                                <CustomTooltip
+                                    key={item.dspCode}
+                                    title={item.dspName || item.dspCode}
+                                >
+                                    <a
+                                        href={item.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <Avatar
+                                            size={28}
+                                            src={dsp?.picture}
+                                            style={{ backgroundColor: '#ccc' }}
+                                        >
+                                            {(item.dspName || item.dspCode)
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </Avatar>
+                                    </a>
+                                </CustomTooltip>
+                            );
+                        })}
+                    </Avatar.Group>
+                </div>
+            ),
+        },
+        {
+            title: messages('country.label'),
+            key: 'country',
+            dataIndex: 'country',
+            width: 150,
+            ellipsis: true,
+            render: (_, record) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {record?.country || '-'}
+                </span>
+            ),
+        },
+        {
+            title: messages('genre.label'),
+            key: 'genre',
+            dataIndex: 'genre',
+            width: 150,
+            ellipsis: true,
+            render: (_, record) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {record?.genre || '-'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
             ),
         },
         {

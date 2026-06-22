@@ -56,6 +56,21 @@ export const convertTiffToPreviewUrl = async (buffer: ArrayBuffer) => {
 };
 
 export const resolvePreviewUrl = async (url: string) => {
+    try {
+        const urlObj = new URL(url);
+        const pathname = urlObj.pathname.toLowerCase();
+        const isTiff = pathname.endsWith('.tiff') || pathname.endsWith('.tif');
+
+        if (!isTiff) {
+            return {
+                previewUrl: url,
+                revokeUrl: false,
+            };
+        }
+    } catch (e) {
+        console.error('Failed to parse URL in resolvePreviewUrl:', e);
+    }
+
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error('Failed to fetch cover art image');

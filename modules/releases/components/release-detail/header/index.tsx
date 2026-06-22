@@ -89,9 +89,16 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
     const coverArtFileId =
+        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
         formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
+
+    const originalFileId =
+        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
+    const { linkReadFile: originalLinkReadFile } = useGetLinkReadFile(originalFileId, {
+        enabled: !!originalFileId && originalFileId !== coverArtFileId,
+    });
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const { deleteRelease } = useDeleteRelease();
     const { releaseValidateData } = useReleaseValidate(
@@ -381,6 +388,35 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         toastPromise(promise, messages);
     };
 
+    const handleGetPreviewUrl = async (file: any) => {
+        if (file.originFileObj) {
+            const { previewUrl } = await resolvePreviewFromFile(file.originFileObj);
+            return previewUrl;
+        }
+
+        let originalLink = originalLinkReadFile;
+
+        if (!originalLink) {
+            const originalFileId =
+                formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
+            if (originalFileId) {
+                if (originalFileId === coverArtFileId) {
+                    originalLink = linkReadFile;
+                } else {
+                    const response = await bucketApi.getLinkReadFile(originalFileId);
+                    originalLink = (response?.data?.data as string) ?? '';
+                }
+            }
+        }
+
+        if (!originalLink) {
+            return '';
+        }
+
+        const { previewUrl } = await resolvePreviewUrl(originalLink);
+        return previewUrl;
+    };
+
     useEffect(() => {
         let isMounted = true;
         let objectUrlToRevoke: string | null = null;
@@ -593,6 +629,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     placeholder={messages('common.uploadImage')}
                                     onChange={handleImageUpload}
                                     onRemove={handleRemoveImage}
+                                    onGetPreviewUrl={handleGetPreviewUrl}
                                 />
                             </AppFormItem>
                         </CustomTooltip>

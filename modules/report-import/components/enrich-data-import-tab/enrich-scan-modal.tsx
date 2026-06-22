@@ -21,7 +21,7 @@ import {
 } from '../../types/payload';
 
 const ENRICH_SCAN_FORM_DEFAULT_VALUES: StartEnrichScanPayload = {
-    dryRun: true,
+    dryRun: false,
     limit: 10,
     force: false,
     isImportedFromReport: false,

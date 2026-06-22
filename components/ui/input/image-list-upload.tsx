@@ -16,6 +16,7 @@ type Props = UploadProps & {
     description?: ReactNode;
     imageFit?: 'contain' | 'cover';
     previewAspectRatio?: string;
+    onGetPreviewUrl?: (file: UploadFile) => Promise<string>;
 };
 
 export default function ImageListUpload({
@@ -27,12 +28,14 @@ export default function ImageListUpload({
     description,
     imageFit = 'cover',
     previewAspectRatio,
+    onGetPreviewUrl,
     ...props
 }: Props) {
     const messages = useTranslations();
     const { styles } = useStyles({ imageFit, previewAspectRatio });
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+    const [previewLoading, setPreviewLoading] = useState(false);
     const [showText, setShowText] = useState(true);
     const fileList = value?.fileList || [];
     const containerRef = useRef<HTMLDivElement>(null);
@@ -84,12 +87,26 @@ export default function ImageListUpload({
     }
 
     const handlePreview = async (file: UploadFile) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj as FileType);
+        setPreviewLoading(true);
+        try {
+            if (onGetPreviewUrl) {
+                const url = await onGetPreviewUrl(file);
+                if (url) {
+                    setPreviewImage(url);
+                    setPreviewOpen(true);
+                }
+            } else {
+                if (!file.url && !file.preview) {
+                    file.preview = await getBase64(file.originFileObj as FileType);
+                }
+                setPreviewImage(file.url || file.preview || '');
+                setPreviewOpen(true);
+            }
+        } catch (error) {
+            console.error('Failed to load preview image:', error);
+        } finally {
+            setPreviewLoading(false);
         }
-
-        setPreviewImage(file.url || file.preview || '');
-        setPreviewOpen(true);
     };
 
     const handleChange: UploadProps['onChange'] = (info) => {
@@ -156,7 +173,7 @@ export default function ImageListUpload({
 
             {description}
 
-            {loading && (
+            {(loading || previewLoading) && (
                 <div
                     style={{
                         position: 'absolute',
@@ -168,8 +185,8 @@ export default function ImageListUpload({
                         alignItems: 'center',
                         justifyContent: 'center',
                         zIndex: 10,
-                        // borderRadius: '6px',
-                        // backdropFilter: 'blur(10px)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '8px',
                     }}
                 >
                     <Spin />

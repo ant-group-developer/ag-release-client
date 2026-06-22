@@ -92,6 +92,13 @@ export interface ArtistRankingItem {
     picture: string | null;
     trackCount: number;
     totalViews: number;
+    profiles?: {
+        dspCode: string;
+        dspName: string;
+        url: string;
+    }[];
+    country?: string | null;
+    genre?: string | null;
 }
 
 export interface LabelRankingItem {
@@ -162,7 +169,7 @@ export interface RevenueSummaryData {
     totalTerritories: number;
 }
 
-// Timeline Series Items
+// Table/Timeline Series Items
 export interface RevenueTimelineDspItem {
     dsp: string;
     revenueUsd: number;
@@ -206,6 +213,13 @@ export interface RevenueArtistItem {
     trackCount: number;
     revenueUsd: number;
     quantity: number;
+    profiles?: {
+        dspCode: string;
+        dspName: string;
+        url: string;
+    }[];
+    country?: string | null;
+    genre?: string | null;
 }
 
 // Top Track Response

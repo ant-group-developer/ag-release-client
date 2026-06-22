@@ -77,6 +77,7 @@ export default function ArtistSelect({
         };
     });
 
+
     const optionRender = (oriOption: any) => {
         const item = oriOption.data.artistData as ArtistDataSimple;
         const disabled = oriOption.disabled;
