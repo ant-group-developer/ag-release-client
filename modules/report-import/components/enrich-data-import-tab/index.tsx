@@ -91,7 +91,7 @@ export default function EnrichDataImportTab() {
                                 type="primary"
                                 icon={<ScanOutlined />}
                                 onClick={handleOpenScanModal}
-                                disabled={hasRunningScanSession}
+                                // disabled={hasRunningScanSession}
                             >
                                 {messages(
                                     'reportConfigs.enrichDataImport.scanButton'

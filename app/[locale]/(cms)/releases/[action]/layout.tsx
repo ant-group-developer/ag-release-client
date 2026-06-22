@@ -27,6 +27,7 @@ import {
     BookHeadphones,
     Box,
     Calendar,
+    ChartColumn,
     Eye,
     Music,
     ScrollText,
@@ -152,6 +153,24 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             disabled: isDisableTab,
         },
         {
+            key: RELEASES_TABS.ANALYTICS,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={getReleaseTabRoute(
+                        releaseId,
+                        RELEASES_TABS.ANALYTICS
+                    )}
+                >
+                    <div className="flex items-center gap-1">
+                        <ChartColumn size={SIZE_ICON} />
+                        <span>{messages('analytics.label')}</span>
+                    </div>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
             key: RELEASES_TABS.REVIEW,
             label: (
                 <Link
@@ -208,6 +227,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
                 [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
                 [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
+                [RELEASES_TABS.ANALYTICS]: RELEASES_TABS.ANALYTICS,
                 [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
                 [RELEASES_TABS.SUBMITS]: RELEASES_TABS.SUBMITS,
             };

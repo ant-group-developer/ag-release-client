@@ -4,7 +4,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input, InputNumber, Spin, Switch } from 'antd';
+import { Form, Input, InputNumber, Radio, Spin, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Cron } from 'react-js-cron';
@@ -218,12 +218,19 @@ export default function EnrichScanScheduleForm({ ...props }: Props) {
                         tooltipInfo={messages(
                             'reportConfigs.enrichScanSchedules.isImportedFromReportTooltip'
                         )}
-                        valuePropName="checked"
                     >
-                        <Switch
-                            checkedChildren={messages('status.enable')}
-                            unCheckedChildren={messages('status.disable')}
-                        />
+                        <Radio.Group>
+                            <Radio value={false}>
+                                {messages(
+                                    'reportConfigs.enrichScanSchedules.isImportedFromReportDirect'
+                                )}
+                            </Radio>
+                            <Radio value={true}>
+                                {messages(
+                                    'reportConfigs.enrichScanSchedules.isImportedFromReportImport'
+                                )}
+                            </Radio>
+                        </Radio.Group>
                     </AppFormItem>
 
                     <AppFormItem

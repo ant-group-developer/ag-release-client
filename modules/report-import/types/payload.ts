@@ -178,7 +178,7 @@ export interface EnrichScanSessionData {
 }
 
 export interface StartEnrichScanPayload {
-    dryRun: boolean;
+    dryRun?: boolean;
     limit: number;
     force: boolean;
     isImportedFromReport?: boolean;
@@ -252,6 +252,7 @@ export enum EnrichScanEventType {
     HEARTBEAT = 'heartbeat',
     COMPLETED = 'completed',
     FAILED = 'failed',
+    CANCELLED = 'cancelled',
 }
 
 export interface EnrichScanEventData {

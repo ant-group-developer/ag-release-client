@@ -45,14 +45,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     Form,
-    Segmented,
     Space,
     Tag,
     Typography,
     notification,
     theme,
 } from 'antd';
-import { SegmentedOptions } from 'antd/es/segmented';
 import exifr from 'exifr';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -91,9 +89,16 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
         useUpdateReleaseDraft();
     const coverArtFileId =
+        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
         formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
+
+    const originalFileId =
+        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
+    const { linkReadFile: originalLinkReadFile } = useGetLinkReadFile(originalFileId, {
+        enabled: !!originalFileId && originalFileId !== coverArtFileId,
+    });
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const { deleteRelease } = useDeleteRelease();
     const { releaseValidateData } = useReleaseValidate(
@@ -106,37 +111,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const isCreateReleasePage =
         params['action'] === RELEASE_ROUTE_ACTION.CREATE;
 
-    const getActiveTextColor = (action: RELEASE_DETAIL_ACTION) =>
-        releaseAction === action ? { color: token.colorPrimary } : undefined;
 
-    const segmentedOptions: SegmentedOptions = [
-        {
-            icon: (
-                <EyeOutlined
-                    style={getActiveTextColor(RELEASE_DETAIL_ACTION.READ)}
-                />
-            ),
-            label: (
-                <span style={getActiveTextColor(RELEASE_DETAIL_ACTION.READ)}>
-                    {messages('common.watch')}
-                </span>
-            ),
-            value: RELEASE_DETAIL_ACTION.READ,
-        },
-        {
-            icon: (
-                <EditOutlined
-                    style={getActiveTextColor(RELEASE_DETAIL_ACTION.EDIT)}
-                />
-            ),
-            label: (
-                <span style={getActiveTextColor(RELEASE_DETAIL_ACTION.EDIT)}>
-                    {messages('common.edit')}
-                </span>
-            ),
-            value: RELEASE_DETAIL_ACTION.EDIT,
-        },
-    ];
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
     const validateLength = releaseValidateData && releaseValidateData?.length;
     const coverArtRequirementKeys = [
@@ -413,6 +388,35 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         toastPromise(promise, messages);
     };
 
+    const handleGetPreviewUrl = async (file: any) => {
+        if (file.originFileObj) {
+            const { previewUrl } = await resolvePreviewFromFile(file.originFileObj);
+            return previewUrl;
+        }
+
+        let originalLink = originalLinkReadFile;
+
+        if (!originalLink) {
+            const originalFileId =
+                formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
+            if (originalFileId) {
+                if (originalFileId === coverArtFileId) {
+                    originalLink = linkReadFile;
+                } else {
+                    const response = await bucketApi.getLinkReadFile(originalFileId);
+                    originalLink = (response?.data?.data as string) ?? '';
+                }
+            }
+        }
+
+        if (!originalLink) {
+            return '';
+        }
+
+        const { previewUrl } = await resolvePreviewUrl(originalLink);
+        return previewUrl;
+    };
+
     useEffect(() => {
         let isMounted = true;
         let objectUrlToRevoke: string | null = null;
@@ -625,6 +629,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     placeholder={messages('common.uploadImage')}
                                     onChange={handleImageUpload}
                                     onRemove={handleRemoveImage}
+                                    onGetPreviewUrl={handleGetPreviewUrl}
                                 />
                             </AppFormItem>
                         </CustomTooltip>
@@ -647,15 +652,18 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     <PermissionGate
                                         permission={PERMISSION.RELEASE.UPDATE}
                                     >
-                                        <Segmented
-                                            value={releaseAction}
-                                            options={segmentedOptions}
-                                            onChange={(val) =>
-                                                handleChangeAction(
-                                                    val as RELEASE_DETAIL_ACTION
-                                                )
-                                            }
-                                        />
+                                        {isReadMode && (
+                                            <Button
+                                                icon={<EditOutlined />}
+                                                onClick={() =>
+                                                    handleChangeAction(
+                                                        RELEASE_DETAIL_ACTION.EDIT
+                                                    )
+                                                }
+                                            >
+                                                {messages('common.edit')}
+                                            </Button>
+                                        )}
                                     </PermissionGate>
                                 </div>
                             </div>

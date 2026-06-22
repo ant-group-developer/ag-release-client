@@ -84,7 +84,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 200,
+            width: 220,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -101,7 +101,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('genre.label'),
-            width: 200,
+            width: 180,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.genre?.name}</span>;
@@ -109,7 +109,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('country.label'),
-            width: 200,
+            width: 180,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.country?.name}</span>;
@@ -117,7 +117,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.profiles'),
-            width: 150,
+            width: 120,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-1">

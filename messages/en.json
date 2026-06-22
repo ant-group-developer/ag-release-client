@@ -2591,7 +2591,7 @@
     "reportConfigs": {
         "label": "Report Import",
         "configReport": "Config report",
-        "importReport": "Import report",
+        "importReport": "Report logs",
         "importSftp": "Config import SFTP",
         "enrichDataImport": {
             "label": "Enrich data import",
@@ -2619,9 +2619,14 @@
             "finishedAt": "Finished at",
             "dryRunTooltip": "If enabled, the scan runs without applying data changes.",
             "forceTooltip": "If enabled, existing enriched data will be processed again.",
-            "isImportedFromReport": "Sync direct releases",
-            "isImportedFromReportTooltip": "If enabled (true), the system will sync releases created directly. If disabled (false), it will sync releases imported from reports.",
-            "eventConnectionError": "Cannot connect to scan events"
+            "isImportedFromReport": "Sync releases",
+            "isImportedFromReportTooltip": "Select release sync type.",
+            "isImportedFromReportDirect": "Sync direct releases",
+            "isImportedFromReportImport": "Sync imported releases",
+            "eventConnectionError": "Cannot connect to scan events",
+            "cancelScan": "Cancel",
+            "cancelScanConfirm": "Are you sure you want to cancel this data scan?",
+            "scanCancelled": "Enrich data scan cancelled"
         },
         "sftpExcludePatterns": {
             "title": "SFTP Exclude Patterns",
@@ -2731,6 +2736,7 @@
             "statusProcessing": "Processing...",
             "statusCompleted": "Completed",
             "statusFailed": "Failed",
+            "statusCanceled": "Cancelled",
             "filesUnit": "files",
             "runningFile": "Running: {file}",
             "totalRecords": "Total records",
@@ -2777,8 +2783,10 @@
             "enabled": "Active cron",
             "cronExpression": "Cron expression",
             "timezone": "Timezone",
-            "isImportedFromReport": "Sync direct releases",
-            "isImportedFromReportTooltip": "If enabled (true), the system will sync releases created directly. If disabled (false), it will sync releases imported from reports.",
+            "isImportedFromReport": "Sync releases",
+            "isImportedFromReportTooltip": "Select release sync type.",
+            "isImportedFromReportDirect": "Sync direct releases",
+            "isImportedFromReportImport": "Sync imported releases",
             "limitCount": "Limit",
             "force": "Force run",
             "forceTooltip": "If enabled, existing enriched data will be processed again.",
