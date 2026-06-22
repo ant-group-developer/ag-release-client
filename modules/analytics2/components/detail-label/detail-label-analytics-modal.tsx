@@ -2,8 +2,7 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
-import { Col, Row, Select } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Col, Row, Select, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
@@ -215,27 +214,27 @@ export default function DetailLabelAnalyticsModal({
                                         {
                                             value: 'dsp',
                                             label: (
-                                                <Title
+                                                <Typography.Title
                                                     level={5}
                                                     className="!text-sm"
                                                 >
                                                     {messages(
                                                         'analytics.dspDistribution'
                                                     )}
-                                                </Title>
+                                                </Typography.Title>
                                             ),
                                         },
                                         {
                                             value: 'ter',
                                             label: (
-                                                <Title
+                                                <Typography.Title
                                                     level={4}
                                                     className="!text-sm"
                                                 >
                                                     {messages(
                                                         'analytics.terDistribution'
                                                     )}
-                                                </Title>
+                                                </Typography.Title>
                                             ),
                                         },
                                     ]}
@@ -280,27 +279,27 @@ export default function DetailLabelAnalyticsModal({
                                         {
                                             value: 'dsp',
                                             label: (
-                                                <Title
+                                                <Typography.Title
                                                     level={5}
                                                     className="!text-sm"
                                                 >
                                                     {messages(
                                                         'analytics.revenueDspDistribution'
                                                     )}
-                                                </Title>
+                                                </Typography.Title>
                                             ),
                                         },
                                         {
                                             value: 'ter',
                                             label: (
-                                                <Title
+                                                <Typography.Title
                                                     level={4}
                                                     className="!text-sm"
                                                 >
                                                     {messages(
                                                         'analytics.revenueTerDistribution'
                                                     )}
-                                                </Title>
+                                                </Typography.Title>
                                             ),
                                         },
                                     ]}

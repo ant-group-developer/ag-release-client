@@ -1,6 +1,5 @@
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
-import { Col, Row, Select } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Col, Row, Select, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { useGetTrendViewDspBarChart } from '../../hooks/use-get-trend-view-dsp-bar-chart';
@@ -91,27 +90,27 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
                                     {
                                         value: 'dsp',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={5}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.dspDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                     {
                                         value: 'ter',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={4}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.terDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                 ]}

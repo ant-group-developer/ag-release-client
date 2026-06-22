@@ -198,16 +198,16 @@ export default function PieChartView({
         >
             <div>
                 {typeof title === 'string' ? (
-                    <Title level={5} className="!m-0">
+                    <Typography.Title level={5} className="!m-0">
                         {title}
-                    </Title>
+                    </Typography.Title>
                 ) : (
                     title
                 )}
                 {subtitle && (
-                    <Text type="secondary" style={{ fontSize: 13 }}>
+                    <Typography.Text type="secondary" style={{ fontSize: 13 }}>
                         {subtitle}
-                    </Text>
+                    </Typography.Text>
                 )}
             </div>
 

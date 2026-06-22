@@ -110,7 +110,7 @@ export default function LabelDetailLayout({ children }: PropsWithChildren) {
                 >
                     <AppHeaderPage
                         imageSrc={labelData?.picture as string}
-                        isScrolled={isScrolled}
+                        isScrolled={true}
                     >
                         <ItemHeaderPage
                             name={messages('label.label')}
