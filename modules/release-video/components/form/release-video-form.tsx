@@ -147,11 +147,11 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                         ?.map((c) => c.artistId) || [],
             };
 
-            PRESERVED_ARTIST_FIELD_NAMES.forEach((fieldName) => {
-                if (form.isFieldTouched(fieldName)) {
-                    nextValues[fieldName] = form.getFieldValue(fieldName);
-                }
-            });
+            // PRESERVED_ARTIST_FIELD_NAMES.forEach((fieldName) => {
+            //     if (form.isFieldTouched(fieldName)) {
+            //         nextValues[fieldName] = form.getFieldValue(fieldName);
+            //     }
+            // });
 
             form.setFieldsValue(nextValues);
         } else {

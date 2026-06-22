@@ -289,11 +289,17 @@ export default function ReleasesTable({
                             }
                             onShowDetail={() => {
                                 nProgress.start();
-                                router.push(getReleaseViewRoute(record?.id));
+                                setAction(RELEASE_DETAIL_ACTION.READ);
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL
+                                    )
+                                );
                             }}
                             onShowUpdate={() => {
                                 nProgress.start();
-                                setAction(RELEASE_DETAIL_ACTION.READ);
+                                setAction(RELEASE_DETAIL_ACTION.EDIT);
                                 router.push(
                                     getReleaseDetailTabRoute(
                                         record?.id,

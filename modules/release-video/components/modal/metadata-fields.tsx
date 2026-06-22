@@ -59,7 +59,7 @@ export default function MetadataFields({
 
     const handleArtistsBlur = () => {
         const releaseId = dataEdit?.id;
-        if (!releaseId) return;
+        if (!releaseId) return showNotification('error', 'Release not found!');
 
         const newArtistIds = form.getFieldValue('artistIds') || [];
 
@@ -232,6 +232,9 @@ export default function MetadataFields({
                     onBlur={handleArtistsBlur}
                     onDeselect={handleDeselect}
                     tagRender={tagRender}
+                    artistId={dataEdit?.releaseArtists
+                        ?.map((a) => a.artistId)
+                        .join(',')}
                 />
             </AppFormItem>
 
@@ -246,6 +249,10 @@ export default function MetadataFields({
                     onBlur={handleFeaturedArtistsBlur}
                     onDeselect={handleDeselectFeatured}
                     tagRender={tagRender}
+                    artistId={dataEdit?.releaseContributors
+                        ?.filter((c) => c.artistRole?.id === featuredRoleId)
+                        ?.map((c) => c.artistId)
+                        .join(',')}
                 />
             </AppFormItem>
 
@@ -490,8 +497,8 @@ export default function MetadataFields({
                 YouTube
             </div>
 
-            <Row gutter={16} align="bottom" className="mb-4">
-                <Col span={18}>
+            <Row gutter={24} align="bottom" className="mb-4">
+                <Col span={24}>
                     <AppFormItem
                         name={['video', 'channelId']}
                         label={messages('releaseVideo.fields.channel')}
@@ -519,7 +526,7 @@ export default function MetadataFields({
                         />
                     </AppFormItem>
                 </Col>
-                <Col span={6}>
+                {/* <Col span={6}>
                     <AppFormItem label={''}>
                         <Button
                             shape="round"
@@ -531,7 +538,7 @@ export default function MetadataFields({
                             )}
                         </Button>
                     </AppFormItem>
-                </Col>
+                </Col> */}
             </Row>
 
             {/* Keywords (Full Width) */}

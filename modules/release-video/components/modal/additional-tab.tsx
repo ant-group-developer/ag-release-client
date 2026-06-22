@@ -192,7 +192,7 @@ export default function AdditionalTab({
     return (
         <div className="mx-auto w-full pb-8 pt-4">
             <Row gutter={16}>
-                <Col span={8}>
+                {/* <Col span={8}>
                     <AppFormItem
                         name="upc"
                         label={messages('releaseVideo.fields.upc')}
@@ -219,7 +219,7 @@ export default function AdditionalTab({
                             }
                         />
                     </AppFormItem>
-                </Col>
+                </Col> */}
 
                 <Col span={8}>
                     <AppFormItem
@@ -295,6 +295,10 @@ export default function AdditionalTab({
                             onBlur={handleBlurComposer}
                             onDeselect={handleDeselectComposer}
                             tagRender={tagRender}
+                            artistId={dataEdit?.releaseContributors
+                                ?.filter((c) => c.artistRole?.id === composerRoleId)
+                                ?.map((c) => c.artistId)
+                                .join(',')}
                         />
                     </AppFormItem>
                 </Col>
@@ -309,6 +313,10 @@ export default function AdditionalTab({
                             onBlur={handleBlurEditor}
                             onDeselect={handleDeselectEditor}
                             tagRender={tagRender}
+                            artistId={dataEdit?.releaseContributors
+                                ?.filter((c) => c.artistRole?.id === editorRoleId)
+                                ?.map((c) => c.artistId)
+                                .join(',')}
                         />
                     </AppFormItem>
                 </Col>
@@ -323,6 +331,10 @@ export default function AdditionalTab({
                             onBlur={handleBlurProducer}
                             onDeselect={handleDeselectProducer}
                             tagRender={tagRender}
+                            artistId={dataEdit?.releaseContributors
+                                ?.filter((c) => c.artistRole?.id === producerRoleId)
+                                ?.map((c) => c.artistId)
+                                .join(',')}
                         />
                     </AppFormItem>
                 </Col>
@@ -340,6 +352,10 @@ export default function AdditionalTab({
                             onBlur={handleBlurDirector}
                             onDeselect={handleDeselectDirector}
                             tagRender={tagRender}
+                            artistId={dataEdit?.releaseContributors
+                                ?.filter((c) => c.artistRole?.id === directorRoleId)
+                                ?.map((c) => c.artistId)
+                                .join(',')}
                         />
                     </AppFormItem>
                 </Col>

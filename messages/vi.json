@@ -2582,7 +2582,7 @@
     "reportConfigs": {
         "label": "Report import",
         "configReport": "Cấu hình báo cáo",
-        "importReport": "Nhập báo cáo",
+        "importReport": "Nhật ký báo cáo",
         "importSftp": "Cấu hình SFTP",
         "enrichDataImport": {
             "label": "Chuẩn hoá dữ liệu",
@@ -2610,9 +2610,14 @@
             "finishedAt": "Hoàn thành lúc",
             "dryRunTooltip": "Nếu bật, quá trình chuẩn hoá sẽ chạy thử và không áp dụng thay đổi dữ liệu.",
             "forceTooltip": "Nếu bật, dữ liệu đã được xử lý sẽ được xử lý lại.",
-            "isImportedFromReport": "Đồng bộ cả phát hành tạo trực tiếp",
-            "isImportedFromReportTooltip": "Nếu bật (true), hệ thống sẽ đồng bộ các bản phát hành được tạo trực tiếp. Nếu tắt (false), hệ thống sẽ đồng bộ các bản phát hành từ báo cáo đã nhập.",
-            "eventConnectionError": "Không thể kết nối tới sự kiện của quá trình chuẩn hoá"
+            "isImportedFromReport": "Đồng bộ phát hành",
+            "isImportedFromReportTooltip": "Chọn hình thức phát hành muốn đồng bộ dữ liệu.",
+            "isImportedFromReportDirect": "Đồng bộ phát hành tạo trực tiếp",
+            "isImportedFromReportImport": "Đồng bộ phát hành nhập từ báo cáo",
+            "eventConnectionError": "Không thể kết nối tới sự kiện của quá trình chuẩn hoá",
+            "cancelScan": "Hủy",
+            "cancelScanConfirm": "Bạn có chắc chắn muốn hủy quét dữ liệu này không?",
+            "scanCancelled": "Đã hủy quét chuẩn hoá dữ liệu"
         },
         "sftpExcludePatterns": {
             "title": "Mẫu loại trừ SFTP",
@@ -2722,6 +2727,7 @@
             "statusProcessing": "Đang xử lý...",
             "statusCompleted": "Thành công",
             "statusFailed": "Thất bại",
+            "statusCanceled": "Đã hủy",
             "filesUnit": "tệp",
             "runningFile": "Đang chạy: {file}",
             "totalRecords": "Tổng số bản ghi",
@@ -2768,8 +2774,10 @@
             "enabled": "Kích hoạt lịch",
             "cronExpression": "Lịch quét",
             "timezone": "Múi giờ",
-            "isImportedFromReport": "Đồng bộ phát hành tạo trực tiếp",
-            "isImportedFromReportTooltip": "Nếu bật (true), hệ thống sẽ đồng bộ các bản phát hành được tạo trực tiếp. Nếu tắt (false), hệ thống sẽ đồng bộ các bản phát hành từ import báo cáo.",
+            "isImportedFromReport": "Đồng bộ phát hành",
+            "isImportedFromReportTooltip": "Chọn hình thức phát hành muốn đồng bộ dữ liệu.",
+            "isImportedFromReportDirect": "Đồng bộ phát hành tạo trực tiếp",
+            "isImportedFromReportImport": "Đồng bộ phát hành nhập từ báo cáo",
             "limitCount": "Giới hạn",
             "force": "Xử lý lại",
             "forceTooltip": "Nếu bật, dữ liệu đã được xử lý sẽ được xử lý lại.",

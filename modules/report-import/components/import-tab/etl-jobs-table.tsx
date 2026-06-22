@@ -76,6 +76,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
                 return 'success';
             case IMPORT_JOBS_STATUS.FAILED:
                 return 'error';
+            case IMPORT_JOBS_STATUS.CANCELLED:
+                return 'magenta';
             default:
                 return 'default';
         }
@@ -93,6 +95,8 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
                 return messages('reportConfigs.importResult.statusCompleted');
             case IMPORT_JOBS_STATUS.FAILED:
                 return messages('reportConfigs.importResult.statusFailed');
+            case IMPORT_JOBS_STATUS.CANCELLED:
+                return messages('reportConfigs.importResult.statusCanceled');
             default:
                 return status;
         }

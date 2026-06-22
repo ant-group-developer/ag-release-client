@@ -12,6 +12,8 @@ import {
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { ReleaseValidate } from '@/modules/releases/types';
@@ -33,6 +35,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const params = useParams();
     const isCreateReleasePage = params['action'] == RELEASE_ROUTE_ACTION.CREATE;
     const messages = useTranslations();
+    const releaseAction = useReleaseActionStore((state) => state.action);
     const formValues = useReleaseFormStore((state) => state.formValues);
     const { releaseValidateData, isFetching } = useReleaseValidate(
         formValues?.id as string
@@ -120,12 +123,12 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
             return;
         }
 
-        if (validateLength > 0) {
-            setIsSidebarOpen(true);
-        } else {
+        if (releaseAction === RELEASE_DETAIL_ACTION.READ) {
             setIsSidebarOpen(false);
+        } else if (releaseAction === RELEASE_DETAIL_ACTION.EDIT) {
+            setIsSidebarOpen(true);
         }
-    }, [validateLength, isCreateReleasePage, screens.lg]);
+    }, [isCreateReleasePage, screens.lg, releaseAction]);
 
     return (
         <div
