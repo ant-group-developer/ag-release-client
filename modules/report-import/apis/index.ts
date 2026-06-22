@@ -107,6 +107,11 @@ export const reportConfigApis = {
             { params }
         );
     },
+    cancelEnrichScan: (scanId: string) => {
+        return axiosInstance.post<SuccessResponse>(
+            `${REPORT_IMPORT_API_PATHS.ENRICH_SCAN}/${scanId}/cancel`
+        );
+    },
 };
 
 export const ftpExcludePatternApis = {

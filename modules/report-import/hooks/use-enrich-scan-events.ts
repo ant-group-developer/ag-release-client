@@ -77,6 +77,7 @@ interface UseEnrichScanEventsParams {
     enabled?: boolean;
     onCompleted?: (eventData: EnrichScanEventData) => void;
     onFailed?: (eventData: EnrichScanEventData) => void;
+    onCancelled?: (eventData: EnrichScanEventData) => void;
 }
 
 export const useEnrichScanEvents = ({
@@ -84,6 +85,7 @@ export const useEnrichScanEvents = ({
     enabled = true,
     onCompleted,
     onFailed,
+    onCancelled,
 }: UseEnrichScanEventsParams) => {
     const queryClient = useQueryClient();
     const [latestEvent, setLatestEvent] = useState<EnrichScanEventData | null>(
@@ -158,6 +160,14 @@ export const useEnrichScanEvents = ({
                         onFailed?.(eventData);
                         abortController.abort();
                     }
+
+                    if (eventData.type === EnrichScanEventType.CANCELLED || eventData.status === 'CANCELLED') {
+                        queryClient.invalidateQueries({
+                            queryKey: enrichScanSessionQueryKeys.all,
+                        });
+                        onCancelled?.(eventData);
+                        abortController.abort();
+                    }
                 },
                 onclose: () => {
                     setIsListening(false);
@@ -185,14 +195,16 @@ export const useEnrichScanEvents = ({
             abortController.abort();
             setIsListening(false);
         };
-    }, [enabled, onCompleted, onFailed, queryClient, scanId]);
+    }, [enabled, onCompleted, onFailed, onCancelled, queryClient, scanId]);
 
     const isTerminalEvent = useMemo(() => {
         return (
             latestEvent?.type === EnrichScanEventType.COMPLETED ||
-            latestEvent?.type === EnrichScanEventType.FAILED
+            latestEvent?.type === EnrichScanEventType.FAILED ||
+            latestEvent?.type === EnrichScanEventType.CANCELLED ||
+            latestEvent?.status === 'CANCELLED'
         );
-    }, [latestEvent?.type]);
+    }, [latestEvent?.type, latestEvent?.status]);
 
     return {
         latestEvent,

@@ -1,15 +1,19 @@
 import { formattedNumber } from '@/helpers/common';
 import {
     Alert,
+    Button,
     Descriptions,
     Form,
     InputNumber,
     Modal,
+    Popconfirm,
     Progress,
+    Radio,
     Switch,
 } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCancelEnrichScan } from '../../hooks/use-cancel-enrich-scan';
 import { useEnrichScanEvents } from '../../hooks/use-enrich-scan-events';
 import { useStartEnrichScan } from '../../hooks/use-start-enrich-scan';
 import {
@@ -21,7 +25,6 @@ import {
 } from '../../types/payload';
 
 const ENRICH_SCAN_FORM_DEFAULT_VALUES: StartEnrichScanPayload = {
-    dryRun: false,
     limit: 10,
     force: false,
     isImportedFromReport: false,
@@ -43,6 +46,7 @@ export default function EnrichScanModal({
     const messages = useTranslations();
     const [form] = Form.useForm<StartEnrichScanPayload>();
     const { startEnrichScan, isPending } = useStartEnrichScan();
+    const { cancelEnrichScan, isPending: isCancelPending } = useCancelEnrichScan();
     const [scanId, setScanId] = useState<string | null>(null);
     const [terminalEvent, setTerminalEvent] =
         useState<EnrichScanEventData | null>(null);
@@ -62,11 +66,22 @@ export default function EnrichScanModal({
         setTerminalEvent(eventData);
     }, []);
 
+    const handleCancelled = useCallback((eventData: EnrichScanEventData) => {
+        setTerminalEvent(eventData);
+    }, []);
+
+    const handleCancelScan = () => {
+        if (scanId) {
+            cancelEnrichScan({ scanId });
+        }
+    };
+
     const { latestEvent, summary, isListening, error } = useEnrichScanEvents({
         scanId,
         enabled: open && !!scanId,
         onCompleted: handleCompleted,
         onFailed: handleFailed,
+        onCancelled: handleCancelled,
     });
 
     const currentSummary = summary as Partial<EnrichScanSummary> | null;
@@ -119,7 +134,6 @@ export default function EnrichScanModal({
         form.validateFields().then((values) => {
             startEnrichScan({
                 payload: {
-                    dryRun: !!values.dryRun,
                     limit: Number(values.limit),
                     force: !!values.force,
                     isImportedFromReport: !!values.isImportedFromReport,
@@ -138,21 +152,41 @@ export default function EnrichScanModal({
         <Modal
             open={open}
             title={messages('reportConfigs.enrichDataImport.scanModalTitle')}
-            okText={
-                scanId
-                    ? messages('common.close')
-                    : messages('reportConfigs.enrichDataImport.scanButton')
+            destroyOnHidden
+            width={'50vw'}
+            footer={
+                scanId ? (
+                    <div className="flex justify-end gap-2">
+                        <Button onClick={handleClose} disabled={isCancelPending}>
+                            {messages('common.close')}
+                        </Button>
+                        <Popconfirm
+                            title={messages('reportConfigs.enrichDataImport.cancelScanConfirm')}
+                            onConfirm={handleCancelScan}
+                            okText={messages('common.yes')}
+                            cancelText={messages('common.no')}
+                            disabled={!isListening || !!terminalEvent}
+                        >
+                            <Button
+                                danger
+                                disabled={!isListening || !!terminalEvent}
+                                loading={isCancelPending}
+                            >
+                                {messages('reportConfigs.enrichDataImport.cancelScan')}
+                            </Button>
+                        </Popconfirm>
+                    </div>
+                ) : undefined
             }
+            okText={messages('reportConfigs.enrichDataImport.scanButton')}
             cancelText={messages('analytics2.syncAll.cancel')}
             onCancel={handleClose}
             onOk={handleOk}
-            destroyOnHidden
             confirmLoading={isPending}
             okButtonProps={{
                 disabled: isListening,
             }}
             cancelButtonProps={{ disabled: isPending }}
-            width={'50vw'}
         >
             {!scanId ? (
                 <Form
@@ -162,22 +196,6 @@ export default function EnrichScanModal({
                     initialValues={ENRICH_SCAN_FORM_DEFAULT_VALUES}
                     disabled={isScanRunning}
                 >
-                    <Form.Item
-                        name="dryRun"
-                        label={messages(
-                            'reportConfigs.enrichDataImport.dryRun'
-                        )}
-                        tooltip={messages(
-                            'reportConfigs.enrichDataImport.dryRunTooltip'
-                        )}
-                        valuePropName="checked"
-                    >
-                        <Switch
-                            checkedChildren={messages('status.enable')}
-                            unCheckedChildren={messages('status.disable')}
-                        />
-                    </Form.Item>
-
                     <Form.Item
                         name="limit"
                         label={messages('reportConfigs.enrichDataImport.limit')}
@@ -211,12 +229,19 @@ export default function EnrichScanModal({
                         tooltip={messages(
                             'reportConfigs.enrichDataImport.isImportedFromReportTooltip'
                         )}
-                        valuePropName="checked"
                     >
-                        <Switch
-                            checkedChildren={messages('status.enable')}
-                            unCheckedChildren={messages('status.disable')}
-                        />
+                        <Radio.Group>
+                            <Radio value={false}>
+                                {messages(
+                                    'reportConfigs.enrichDataImport.isImportedFromReportDirect'
+                                )}
+                            </Radio>
+                            <Radio value={true}>
+                                {messages(
+                                    'reportConfigs.enrichDataImport.isImportedFromReportImport'
+                                )}
+                            </Radio>
+                        </Radio.Group>
                     </Form.Item>
                 </Form>
             ) : null}
@@ -227,10 +252,12 @@ export default function EnrichScanModal({
                         type={
                             terminalEvent?.type === EnrichScanEventType.FAILED
                                 ? 'error'
-                                : terminalEvent?.type ===
-                                    EnrichScanEventType.COMPLETED
-                                  ? 'success'
-                                  : 'info'
+                                : terminalEvent?.type === EnrichScanEventType.CANCELLED
+                                  ? 'warning'
+                                  : terminalEvent?.type ===
+                                      EnrichScanEventType.COMPLETED
+                                    ? 'success'
+                                    : 'info'
                         }
                         showIcon
                         message={

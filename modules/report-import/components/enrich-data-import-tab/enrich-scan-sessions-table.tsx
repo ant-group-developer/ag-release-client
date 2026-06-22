@@ -15,6 +15,7 @@ const ENRICH_SCAN_SESSION_STATUS_COLORS: Record<ENRICH_SCAN_STATUS, string> = {
     [ENRICH_SCAN_STATUS.PROCESSING]: 'processing',
     [ENRICH_SCAN_STATUS.COMPLETED]: 'success',
     [ENRICH_SCAN_STATUS.FAILED]: 'error',
+    [ENRICH_SCAN_STATUS.CANCELED]: 'magenta',
 };
 
 type Props = Omit<AppTableProps<EnrichScanSessionData>, 'columns'> & {
@@ -49,6 +50,8 @@ export default function EnrichScanSessionsTable({
                 return messages('reportConfigs.importResult.statusCompleted');
             case ENRICH_SCAN_STATUS.FAILED:
                 return messages('reportConfigs.importResult.statusFailed');
+            case ENRICH_SCAN_STATUS.CANCELED:
+                return messages('reportConfigs.importResult.statusCanceled');
             default:
                 return status;
         }
