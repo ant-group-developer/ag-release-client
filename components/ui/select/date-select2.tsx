@@ -21,6 +21,7 @@ export default function DateSelect2({
     value,
     onChange,
     externalOnChange,
+    picker = 'month',
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -28,6 +29,10 @@ export default function DateSelect2({
         typeof props.format === 'string'
             ? props.format
             : DATE_FORMAT.MYSQL_TYPE_DATE;
+
+    const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+        return current && current.isAfter(dayjs().endOf('day'));
+    };
 
     const presets = useMemo(() => {
         const monthPresets = Array.from(
@@ -106,14 +111,18 @@ export default function DateSelect2({
 
     const format =
         props.format ??
-        (props.picker === 'month'
-            ? DATE_FORMAT.MONTH_YEAR
-            : DATE_FORMAT.DATE_ONLY);
+        (picker === 'month' ? DATE_FORMAT.MONTH_YEAR : DATE_FORMAT.DATE_ONLY);
 
     return (
         <DatePicker.RangePicker
             allowClear={false}
+            picker={picker}
+            disabledDate={disabledDate}
             {...props}
+            style={{
+                ...props.style,
+                fontWeight: 400,
+            }}
             format={format}
             presets={presets}
             value={rangeValue}

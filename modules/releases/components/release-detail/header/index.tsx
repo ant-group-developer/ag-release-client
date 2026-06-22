@@ -47,6 +47,7 @@ import {
     Form,
     Segmented,
     Space,
+    Tag,
     Typography,
     notification,
     theme,
@@ -523,12 +524,30 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         labelPlacement="vertical"
                         /> */}
 
-                    <ReleaseStatusTag
-                        style={{
-                            padding: '2px 16px',
-                        }}
-                        status={releaseData?.status}
-                    />
+                    <div className="flex gap-2">
+                        <ReleaseStatusTag
+                            style={{
+                                padding: '2px 16px',
+                            }}
+                            status={releaseData?.status}
+                        />
+                        {releaseData && (
+                            <Tag
+                                style={{
+                                    padding: '2px 16px',
+                                }}
+                                color={
+                                    releaseData.isImportedFromReport
+                                        ? 'blue'
+                                        : 'purple'
+                                }
+                            >
+                                {releaseData.isImportedFromReport
+                                    ? messages('release.importedFromReport')
+                                    : messages('release.createdDirectly')}
+                            </Tag>
+                        )}
+                    </div>
 
                     <div>
                         {!isCreateReleasePage && !isReadMode && (

@@ -11,8 +11,8 @@ import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTenant } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
-    TenantRankingItem,
     RevenueTenantItem,
+    TenantRankingItem,
 } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
@@ -83,7 +83,7 @@ export default function TenantsRankingPage() {
             width: 80,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -102,7 +102,7 @@ export default function TenantsRankingPage() {
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
                     />
-                    <span className="font-medium text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {text || '—'}
                     </span>
                 </div>
@@ -125,7 +125,7 @@ export default function TenantsRankingPage() {
             key: 'revenueUsd',
             width: 180,
             render: (val: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     $
                     {val
                         ? val.toLocaleString(undefined, {
@@ -146,7 +146,7 @@ export default function TenantsRankingPage() {
             width: 80,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -165,7 +165,7 @@ export default function TenantsRankingPage() {
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
                     />
-                    <span className="font-medium text-gray-900 dark:text-zinc-100">
+                    <span className="text-gray-900 dark:text-zinc-100">
                         {text || '—'}
                     </span>
                 </div>
@@ -177,7 +177,7 @@ export default function TenantsRankingPage() {
             key: 'totalViews',
             width: 180,
             render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
                 </span>
             ),

@@ -188,6 +188,7 @@ export default function LineChartView({
                     }}
                 >
                     <Empty
+                        image={Empty.PRESENTED_IMAGE_DEFAULT}
                         className="py-12"
                         description={messages('common.noDataAvailable')}
                     />

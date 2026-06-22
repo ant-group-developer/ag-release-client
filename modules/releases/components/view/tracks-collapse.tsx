@@ -17,10 +17,11 @@ import TrackMetadataExternal, {
 const GRID_COLUMNS = {
     STT: 'col-span-1',
     THUMBNAIL: 'col-span-1',
-    TITLE: 'col-span-4',
+    TITLE: 'col-span-3',
+    ARTIST: 'col-span-2',
     ISRC: 'col-span-2',
     DURATION: 'col-span-1',
-    EXTERNAL: 'col-span-3',
+    EXTERNAL: 'col-span-1',
 } as const;
 
 type Props = {
@@ -51,14 +52,18 @@ export default function TracksCollapse({
             label: (
                 <div className="grid w-full grid-cols-12 items-center gap-4 py-1">
                     <span
-                        className={`${GRID_COLUMNS.STT} text-center text-xs font-medium text-gray-400`}
+                        className={`${GRID_COLUMNS.STT} text-center text-gray-400`}
                     >
                         {getIndex(pageSize, page, index)}
                     </span>
                     <div
                         className={`${GRID_COLUMNS.THUMBNAIL} flex items-center`}
                     >
-                        <TrackCoverArt trackData={record} />
+                        <TrackCoverArt
+                            trackData={record}
+                            width={48}
+                            height={48}
+                        />
                     </div>
                     <div
                         className={`${GRID_COLUMNS.TITLE} flex min-w-0 flex-col pr-4`}
@@ -68,7 +73,7 @@ export default function TracksCollapse({
                                 record.id,
                                 TRACK_TABS.METADATA
                             )}
-                            className="w-fit max-w-full truncate font-semibold text-blue-600 hover:underline"
+                            className="w-fit max-w-full truncate text-blue-600 hover:underline"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {record.title}
@@ -81,6 +86,20 @@ export default function TracksCollapse({
                                 {record.version}
                             </span>
                         )}
+                    </div>
+                    <div
+                        className={`${GRID_COLUMNS.ARTIST} truncate text-gray-600 pr-4`}
+                        title={
+                            record.trackArtists
+                                ?.map((ta) => ta.artist?.name)
+                                ?.filter(Boolean)
+                                ?.join(', ') || ''
+                        }
+                    >
+                        {record.trackArtists
+                            ?.map((ta) => ta.artist?.name)
+                            ?.filter(Boolean)
+                            ?.join(', ') || '-'}
                     </div>
                     <div
                         className={`${GRID_COLUMNS.ISRC} truncate text-gray-600`}
@@ -97,7 +116,7 @@ export default function TracksCollapse({
                         className={`${GRID_COLUMNS.EXTERNAL} flex flex-wrap items-center gap-2`}
                     >
                         {(
-                            Object.entries(record.metadataExternal || {}) as [
+                            Object.entries(record?.metadataExternal || {}) as [
                                 string,
                                 any,
                             ][]
@@ -138,7 +157,7 @@ export default function TracksCollapse({
             children: (
                 <div className="flex flex-col gap-4 px-4">
                     <TrackMetadataExternal
-                        metadataExternal={record.metadataExternal}
+                        metadataExternal={record?.metadataExternal}
                         dspItems={dspItems}
                     />
 
@@ -191,26 +210,72 @@ export default function TracksCollapse({
                 }}
             >
                 <div
-                    className="grid grid-cols-12 gap-4 border-b px-4 py-3 pr-12 text-xs font-semibold uppercase text-gray-400"
+                    className="grid grid-cols-12 gap-4 border-b px-4 py-3 pr-12 text-sm font-semibold"
                     style={{
                         backgroundColor: token.colorBgContainer,
                         borderColor: token.colorBorderSecondary,
+                        color: token.colorTextHeading,
                     }}
                 >
-                    <div className={`${GRID_COLUMNS.STT} text-center`}>
+                    <div className={`${GRID_COLUMNS.STT} relative text-center`}>
                         {messages('common.iNo')}
+                        <span
+                            className="absolute right-[-8px] top-1/2 w-[1px] -translate-y-1/2"
+                            style={{
+                                backgroundColor: token.colorSplit,
+                                height: '1.6em',
+                            }}
+                        />
                     </div>
-                    <div className={GRID_COLUMNS.THUMBNAIL}>
+                    <div className={`${GRID_COLUMNS.THUMBNAIL} relative`}>
                         {messages('common.thumbnail')}
+                        <span
+                            className="absolute right-[-8px] top-1/2 w-[1px] -translate-y-1/2"
+                            style={{
+                                backgroundColor: token.colorSplit,
+                                height: '1.6em',
+                            }}
+                        />
                     </div>
-                    <div className={GRID_COLUMNS.TITLE}>
+                    <div className={`${GRID_COLUMNS.TITLE} relative`}>
                         {messages('common.title')}
+                        <span
+                            className="absolute right-[-8px] top-1/2 w-[1px] -translate-y-1/2"
+                            style={{
+                                backgroundColor: token.colorSplit,
+                                height: '1.6em',
+                            }}
+                        />
                     </div>
-                    <div className={GRID_COLUMNS.ISRC}>
+                    <div className={`${GRID_COLUMNS.ARTIST} relative`}>
+                        {messages('common.artist')}
+                        <span
+                            className="absolute right-[-8px] top-1/2 w-[1px] -translate-y-1/2"
+                            style={{
+                                backgroundColor: token.colorSplit,
+                                height: '1.6em',
+                            }}
+                        />
+                    </div>
+                    <div className={`${GRID_COLUMNS.ISRC} relative`}>
                         {messages('common.isrc')}
+                        <span
+                            className="absolute right-[-8px] top-1/2 w-[1px] -translate-y-1/2"
+                            style={{
+                                backgroundColor: token.colorSplit,
+                                height: '1.6em',
+                            }}
+                        />
                     </div>
-                    <div className={GRID_COLUMNS.DURATION}>
+                    <div className={`${GRID_COLUMNS.DURATION} relative`}>
                         {messages('common.duration')}
+                        <span
+                            className="absolute right-[-8px] top-1/2 w-[1px] -translate-y-1/2"
+                            style={{
+                                backgroundColor: token.colorSplit,
+                                height: '1.6em',
+                            }}
+                        />
                     </div>
                     <div className={GRID_COLUMNS.EXTERNAL}>
                         {messages('common.link')}

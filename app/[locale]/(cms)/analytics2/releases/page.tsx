@@ -94,10 +94,10 @@ export default function ReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -123,7 +123,7 @@ export default function ReleasesRankingPage() {
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
                                         open: true,
@@ -179,7 +179,7 @@ export default function ReleasesRankingPage() {
             key: 'revenueUsd',
             width: 180,
             render: (val: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     $
                     {val
                         ? val.toLocaleString(undefined, {
@@ -197,10 +197,10 @@ export default function ReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -226,7 +226,7 @@ export default function ReleasesRankingPage() {
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
                                         open: true,
@@ -271,7 +271,7 @@ export default function ReleasesRankingPage() {
             key: 'totalViews',
             width: 150,
             render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
                 </span>
             ),
@@ -315,6 +315,7 @@ export default function ReleasesRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="month"
                     />
                 }
             >

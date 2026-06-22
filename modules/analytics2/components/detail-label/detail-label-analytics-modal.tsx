@@ -4,17 +4,12 @@ import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { Col, Row, Select } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { useGetLabelDspDailyTimeline } from '../../hooks/use-get-label-dsp-daily-timeline';
-import { useGetLabelDspSalesTimeline } from '../../hooks/use-get-label-dsp-sales-timeline';
-import { useGetLabelDspTimeline } from '../../hooks/use-get-label-dsp-timeline';
 import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
 import { useGetLabelRevenueDspBarChart } from '../../hooks/use-get-label-revenue-dsp-bar-chart';
 import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
 import { useGetLabelRevenueTerBarChart } from '../../hooks/use-get-label-revenue-ter-bar-chart';
-import { useGetLabelRevenueTimeline } from '../../hooks/use-get-label-revenue-timeline';
 import { useGetLabelTrendViewDspBarChart } from '../../hooks/use-get-label-trend-view-dsp-bar-chart';
 import { useGetLabelTrendViewLineChart } from '../../hooks/use-get-label-trend-view-line-chart';
 import { useGetLabelTrendViewTerBarChart } from '../../hooks/use-get-label-trend-view-ter-bar-chart';
@@ -63,65 +58,6 @@ export default function DetailLabelAnalyticsModal({
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
-
-    // 1. Gọi API lấy thông tin xu hướng theo thời gian (Monthly) của Label
-    const { timelineData: trendTimelineData, isFetching: isTrendFetching } =
-        useGetLabelDspTimeline(
-            labelId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
-
-    // 2. Gọi API lấy thông tin doanh số theo thời gian (Monthly) của Label
-    const { timelineData: salesTimelineData, isFetching: isSalesFetching } =
-        useGetLabelDspSalesTimeline(
-            labelId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
-
-    // 3. Gọi API lấy thông tin xu hướng theo thời gian (Daily) của Label
-    const toDateDaily = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
-    const fromDateDaily = useMemo(() => {
-        return dayjs()
-            .subtract(range - 1, 'day')
-            .format('YYYY-MM-DD');
-    }, [range]);
-
-    const { timelineData: dailyTimelineData, isFetching: isDailyFetching } =
-        useGetLabelDspDailyTimeline(
-            labelId,
-            {
-                fromDate: fromDateDaily,
-                toDate: toDateDaily,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
-
-    // 4. Gọi API lấy thông tin doanh thu theo thời gian của Label
-    const { timelineData: revenueTimelineData, isFetching: isRevenueFetching } =
-        useGetLabelRevenueTimeline(
-            labelId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-            },
-            open
-        );
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Label
     const { revenueLineChartData, isFetching: isLineChartFetching } =
@@ -223,7 +159,7 @@ export default function DetailLabelAnalyticsModal({
                         <span className="text-md font-bold text-gray-900 dark:text-zinc-100">
                             {messages('analytics.detailTitle')}
                         </span>
-                        <span className="text-xs font-normal text-gray-400 dark:text-zinc-500">
+                        <span className="font-normal text-gray-400 dark:text-zinc-500">
                             {messages('analytics2.detailEntityTitle', {
                                 entity: messages('common.label'),
                                 title,
@@ -317,7 +253,7 @@ export default function DetailLabelAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={15}>
                         <LineChartView
-                            title={messages('analytics.revenue.label')}
+                            title={messages('analytics.totalRevenueByMonth')}
                             data={revenueLineChartData}
                             xAxisKey="period"
                             lineKey="revenueUsd"

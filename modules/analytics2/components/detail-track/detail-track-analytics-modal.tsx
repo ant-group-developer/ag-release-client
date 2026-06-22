@@ -158,7 +158,7 @@ export default function DetailTrackAnalyticsModal({
                         <span className="text-md font-bold text-gray-900 dark:text-zinc-100">
                             {messages('analytics.detailTitle')}
                         </span>
-                        <span className="text-xs font-normal text-gray-400 dark:text-zinc-500">
+                        <span className="font-normal text-gray-400 dark:text-zinc-500">
                             {messages('analytics2.detailEntityTitle', {
                                 entity: messages('common.track'),
                                 title,
@@ -252,7 +252,7 @@ export default function DetailTrackAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={15}>
                         <LineChartView
-                            title={messages('analytics.revenue.label')}
+                            title={messages('analytics.totalRevenueByMonth')}
                             data={revenueLineChartData}
                             xAxisKey="period"
                             lineKey="revenueUsd"

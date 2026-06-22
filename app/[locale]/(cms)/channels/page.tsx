@@ -35,7 +35,8 @@ export default function Channels({}: Props) {
     const { isAdmin } = useAuth();
 
     const { deleteChannel } = useDeleteChannel();
-    const { channelsData, isFetching, refetch, lastUpdatedAt } = useGetListChannel(dataFilter);
+    const { channelsData, isFetching, refetch, lastUpdatedAt } =
+        useGetListChannel(dataFilter);
 
     const handleDeleteChannel = () => {
         const variables: DeleteVariables<ChannelsData['id']> = {
@@ -107,11 +108,10 @@ export default function Channels({}: Props) {
                     />
                 )}
 
-                {isAdmin &&
-                    (typeModal === TYPE_MODAL_CHANNELS.CREATE ||
-                        typeModal === TYPE_MODAL_CHANNELS.UPDATE) && (
-                        <ChannelFormModal />
-                    )}
+                {(typeModal === TYPE_MODAL_CHANNELS.CREATE ||
+                    typeModal === TYPE_MODAL_CHANNELS.UPDATE) && (
+                    <ChannelFormModal />
+                )}
 
                 {typeModal === TYPE_MODAL_CHANNELS.HISTORY && (
                     <ChannelHistoryModal />
