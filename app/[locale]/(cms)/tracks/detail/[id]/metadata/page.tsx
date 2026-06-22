@@ -28,7 +28,7 @@ export default function TrackMetadata({}: Props) {
             <AppCard
                 style={styleCard}
                 title={
-                    <p className="text-lg">
+                    <p className="">
                         {messages('track.label')} & {messages('artist.label')}
                     </p>
                 }
@@ -65,7 +65,7 @@ export default function TrackMetadata({}: Props) {
             </AppCard>
 
             <AppCard
-                title={<p className="text-lg">{messages('genre.label')}</p>}
+                title={<p className="">{messages('genre.label')}</p>}
                 style={styleCard}
             >
                 <div className="space-y-2 px-4 pb-4">
@@ -91,11 +91,7 @@ export default function TrackMetadata({}: Props) {
             </AppCard>
 
             <AppCard
-                title={
-                    <p className="text-lg">
-                        {messages('release.otherMetadata')}
-                    </p>
-                }
+                title={<p className="">{messages('release.otherMetadata')}</p>}
                 style={styleCard}
             >
                 <div className="space-y-2 px-4 pb-4">

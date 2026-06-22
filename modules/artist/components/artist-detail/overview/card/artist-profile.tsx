@@ -18,6 +18,9 @@ export default function ArtistProfileCard({ artistData }: Props) {
         if (!link) return;
         window.open(link, '_blank');
     };
+
+    if (!artistProfiles || artistProfiles?.length === 0) return null;
+
     return (
         <AppCard
             title={messages('artist.profiles')}

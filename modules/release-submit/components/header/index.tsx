@@ -508,7 +508,7 @@ export default function ReleaseSubmitHeader({
 
             <Popover
                 trigger="click"
-                placement="topLeft"
+                placement="bottom"
                 content={stepsFilterContent}
                 arrow={false}
                 autoAdjustOverflow={false}
@@ -526,7 +526,7 @@ export default function ReleaseSubmitHeader({
                 onChangeFilter={handleChangeFilter}
                 removeFilter={handleRemoveFilter}
                 canClearFilter={canClearReleaseFilter}
-                placement="topLeft"
+                placement="bottom"
                 popoverHeight={380}
             />
         </Space>

@@ -119,7 +119,7 @@ export default function ArtistDetailLayout({ children }: PropsWithChildren) {
                 >
                     <AppHeaderPage
                         imageSrc={artistData?.picture as string}
-                        isScrolled={isScrolled}
+                        isScrolled={true}
                     >
                         <ItemHeaderPage
                             name={messages('artist.name')}

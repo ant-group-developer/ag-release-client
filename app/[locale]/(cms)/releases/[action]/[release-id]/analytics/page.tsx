@@ -1,12 +1,12 @@
 'use client';
 
+import DateSelect2 from '@/components/ui/select/date-select2';
+import { PATH_PARAMS } from '@/enums/routes';
 import { Col, Row, Select, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { PATH_PARAMS } from '@/enums/routes';
-import DateSelect2 from '@/components/ui/select/date-select2';
+import { useMemo, useState } from 'react';
 
 import LineChartView from '@/modules/analytics2/components/chart/line-chart-view';
 import PieChartView from '@/modules/analytics2/components/chart/pie-chart-view';
@@ -37,18 +37,17 @@ export default function AnalyticsPage() {
     );
 
     const [fromDate, setFromDate] = useState<string>(
-        dayjs().subtract(ANALYTICS_MONTHLY_RANGE_DAYS, 'day').format('YYYY-MM-DD')
+        dayjs()
+            .subtract(ANALYTICS_MONTHLY_RANGE_DAYS, 'day')
+            .format('YYYY-MM-DD')
     );
     const [toDate, setToDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
 
     const isEnabled = !!releaseId;
 
     // Gọi API lấy thông tin tổng quan của Release
-    const { overviewData, isFetching: isOverviewFetching } = useGetReleaseOverview(
-        releaseId,
-        { fromDate, toDate },
-        isEnabled
-    );
+    const { overviewData, isFetching: isOverviewFetching } =
+        useGetReleaseOverview(releaseId, { fromDate, toDate }, isEnabled);
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Release
     const { revenueLineChartData, isFetching: isLineChartFetching } =
@@ -186,27 +185,27 @@ export default function AnalyticsPage() {
                                     {
                                         value: 'dsp',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={5}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.dspDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                     {
                                         value: 'ter',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={4}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.terDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                 ]}
@@ -251,27 +250,27 @@ export default function AnalyticsPage() {
                                     {
                                         value: 'dsp',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={5}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.revenueDspDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                     {
                                         value: 'ter',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={4}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.revenueTerDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                 ]}

@@ -8,8 +8,7 @@ import { useGetDetailArtist } from '@/modules/artist/hooks/use-get-detail-artist
 import ListRelease from '@/modules/dashboard/components/list-release';
 import { RELEASES_STATUS, RELEASES_TABLE_KEY } from '@/modules/releases/enums';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
-import { Col, Row, Select, theme } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Col, Row, Select, theme, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DiscAlbum, Music4 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -17,6 +16,9 @@ import { useParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import DateSelect2 from '@/components/ui/select/date-select2';
+import LineChartView from '@/modules/analytics2/components/chart/line-chart-view';
+import PieChartView from '@/modules/analytics2/components/chart/pie-chart-view';
+import DetailStatsOverview from '@/modules/analytics2/components/detail/detail-stats-overview';
 import { useGetArtistOverview } from '@/modules/analytics2/hooks/use-get-artist-overview';
 import { useGetArtistRevenueDspBarChart } from '@/modules/analytics2/hooks/use-get-artist-revenue-dsp-bar-chart';
 import { useGetArtistRevenueLineChart } from '@/modules/analytics2/hooks/use-get-artist-revenue-line-chart';
@@ -24,9 +26,6 @@ import { useGetArtistRevenueTerBarChart } from '@/modules/analytics2/hooks/use-g
 import { useGetArtistTrendViewDspBarChart } from '@/modules/analytics2/hooks/use-get-artist-trend-view-dsp-bar-chart';
 import { useGetArtistTrendViewLineChart } from '@/modules/analytics2/hooks/use-get-artist-trend-view-line-chart';
 import { useGetArtistTrendViewTerBarChart } from '@/modules/analytics2/hooks/use-get-artist-trend-view-ter-bar-chart';
-import LineChartView from '@/modules/analytics2/components/chart/line-chart-view';
-import PieChartView from '@/modules/analytics2/components/chart/pie-chart-view';
-import DetailStatsOverview from '@/modules/analytics2/components/detail/detail-stats-overview';
 
 type Props = {};
 
@@ -51,20 +50,26 @@ export default function Overview({}: Props) {
         backgroundColor: token.colorBgContainer,
     };
 
-    const defaultFromDate = useMemo(() => dayjs().subtract(29, 'day').format('YYYY-MM-DD'), []);
+    const defaultFromDate = useMemo(
+        () => dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
+        []
+    );
     const defaultToDate = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
 
     const [localFromDate, setLocalFromDate] = useState(defaultFromDate);
     const [localToDate, setLocalToDate] = useState(defaultToDate);
     const [trendViewType, setTrendViewType] = useState<'dsp' | 'ter'>('dsp');
-    const [revenueViewType, setRevenueViewType] = useState<'dsp' | 'ter'>('dsp');
+    const [revenueViewType, setRevenueViewType] = useState<'dsp' | 'ter'>(
+        'dsp'
+    );
 
     // Gọi API lấy thông tin tổng quan của Artist
-    const { overviewData, isFetching: isOverviewFetching } = useGetArtistOverview(
-        artistId as string,
-        { fromDate: localFromDate, toDate: localToDate },
-        !!artistId
-    );
+    const { overviewData, isFetching: isOverviewFetching } =
+        useGetArtistOverview(
+            artistId as string,
+            { fromDate: localFromDate, toDate: localToDate },
+            !!artistId
+        );
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Artist
     const { revenueLineChartData, isFetching: isLineChartFetching } =
@@ -185,7 +190,7 @@ export default function Overview({}: Props) {
 
             <ArtistProfileCard artistData={artistData} />
 
-            <div className="flex w-full items-center justify-between mt-6">
+            <div className="mt-6 flex w-full items-center justify-between">
                 <span className="text-base font-bold text-gray-900 dark:text-zinc-100">
                     {messages('analytics.detailTitle')}
                 </span>
@@ -232,27 +237,27 @@ export default function Overview({}: Props) {
                                     {
                                         value: 'dsp',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={5}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.dspDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                     {
                                         value: 'ter',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={4}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.terDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                 ]}
@@ -297,27 +302,27 @@ export default function Overview({}: Props) {
                                     {
                                         value: 'dsp',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={5}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.revenueDspDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                     {
                                         value: 'ter',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={4}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.revenueTerDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                 ]}

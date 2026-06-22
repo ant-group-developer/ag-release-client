@@ -304,10 +304,10 @@ const BulkUploadDemo: React.FC = () => {
                 justify="space-between"
                 style={{ marginBottom: 20 }}
             >
-                <Title level={3} style={{ margin: 0 }}>
+                <Typography.Title level={3} style={{ margin: 0 }}>
                     <CloudUploadOutlined style={{ marginRight: 8 }} />
                     Bulk Upload Demo
-                </Title>
+                </Typography.Title>
                 {releases.length > 0 && (
                     <Space size="middle">
                         <Badge
