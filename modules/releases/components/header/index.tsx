@@ -29,6 +29,7 @@ type Props = {
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
+    hideLabelFilter?: boolean;
 };
 
 export default function ReleasesHeaderV2({
@@ -37,11 +38,12 @@ export default function ReleasesHeaderV2({
     onChangeFilter,
     canClearFilter,
     removeFilter,
+    hideLabelFilter = false,
 }: Props) {
     const messages = useTranslations();
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const { genresData } = useGetListSimpleGenres();
-    const { labelsData } = useGetListLabelsSimple();
+    const { labelsData } = useGetListLabelsSimple({ enabled: !hideLabelFilter });
     const { isAdmin } = useAuth();
     const { tenantSimpleData, isLoading: isLoadingTenants } =
         useGetListSimpleTenant();
@@ -126,7 +128,10 @@ export default function ReleasesHeaderV2({
                 options: releaseTypeOptions,
                 isCommaSeparated: true,
             },
-            {
+        ];
+
+        if (!hideLabelFilter) {
+            configs.push({
                 key: 'labelId',
                 label: messages('label.label'),
                 icon: <TagOutlined />,
@@ -134,7 +139,10 @@ export default function ReleasesHeaderV2({
                 filterKey: 'labelId',
                 options: labelOptions,
                 isCommaSeparated: true,
-            },
+            });
+        }
+
+        configs.push(
             {
                 key: 'status',
                 label: messages('common.status'),
@@ -157,10 +165,9 @@ export default function ReleasesHeaderV2({
                 key: 'isImportedFromReport',
                 label: messages('release.creationSource'),
                 icon: <ImportOutlined />,
-                type: 'checkbox',
+                type: 'radio',
                 filterKey: 'isImportedFromReport',
                 options: isImportedFromReportOptions,
-                isCommaSeparated: true,
             },
             {
                 key: 'dateCreated',
@@ -174,9 +181,9 @@ export default function ReleasesHeaderV2({
                 label: messages('common.dateUpdated'),
                 icon: <CalendarOutlined />,
                 type: 'dateRange',
-                filterKey: ['startUpdatedAt', 'endUpdatedAt'],
-            },
-        ];
+                filterKey: ['startCreatedAt', 'endCreatedAt'],
+            }
+        );
 
         if (isAdmin) {
             configs.splice(1, 0, {
@@ -195,6 +202,7 @@ export default function ReleasesHeaderV2({
     }, [
         messages,
         releaseTypeOptions,
+        hideLabelFilter,
         labelOptions,
         releaseStatusOptions,
         genreOptions,
@@ -208,16 +216,7 @@ export default function ReleasesHeaderV2({
         const nextValue = { ...newValue };
         if ('isImportedFromReport' in nextValue) {
             const val = nextValue.isImportedFromReport;
-            if (val === 'true,false' || val === 'false,true') {
-                const prevVal = dataFilter.isImportedFromReport;
-                if (prevVal === 'true') {
-                    nextValue.isImportedFromReport = 'false';
-                } else if (prevVal === 'false') {
-                    nextValue.isImportedFromReport = 'true';
-                } else {
-                    nextValue.isImportedFromReport = 'all';
-                }
-            } else if (!val) {
+            if (!val) {
                 nextValue.isImportedFromReport = 'all';
             }
         }

@@ -30,6 +30,10 @@ export default function DateSelect2({
             ? props.format
             : DATE_FORMAT.MYSQL_TYPE_DATE;
 
+    const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+        return current && current.isAfter(dayjs().endOf('day'));
+    };
+
     const presets = useMemo(() => {
         const monthPresets = Array.from(
             { length: MONTH_PRESET_COUNT },
@@ -107,15 +111,18 @@ export default function DateSelect2({
 
     const format =
         props.format ??
-        (picker === 'month'
-            ? DATE_FORMAT.MONTH_YEAR
-            : DATE_FORMAT.DATE_ONLY);
+        (picker === 'month' ? DATE_FORMAT.MONTH_YEAR : DATE_FORMAT.DATE_ONLY);
 
     return (
         <DatePicker.RangePicker
             allowClear={false}
             picker={picker}
+            disabledDate={disabledDate}
             {...props}
+            style={{
+                ...props.style,
+                fontWeight: 400,
+            }}
             format={format}
             presets={presets}
             value={rangeValue}

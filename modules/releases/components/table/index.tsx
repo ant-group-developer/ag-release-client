@@ -25,7 +25,7 @@ import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-releas
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { CircleX, Eye } from 'lucide-react';
+import { CircleX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import {
@@ -188,7 +188,7 @@ export default function ReleasesTable({
             key: 'total_duration',
             dataIndex: RELEASES_TABLE_KEY.DURATION,
             align: 'left',
-            width: 100,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -379,8 +379,6 @@ export default function ReleasesTable({
                 persistenceType: 'sessionStorage',
                 defaultValue: {
                     tenant: { show: isSystemTenant },
-                    tracks_count: { show: false },
-                    total_duration: { show: false },
                     updatedAt: { show: false },
                 },
             }}

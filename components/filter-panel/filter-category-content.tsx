@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import CheckboxFilterContent from './contents/checkbox-filter-content';
 import DateRangeFilterContent from './contents/date-range-filter-content';
 import InputFilterContent from './contents/input-filter-content';
+import RadioFilterContent from './contents/radio-filter-content';
 import { FilterConfig } from './types';
 
 type Props = {
@@ -82,6 +83,14 @@ export default function FilterCategoryContent({
     };
 
     /**
+     * Handle radio value change - apply immediately
+     */
+    const handleRadioChange = (value: string | undefined) => {
+        const key = config.filterKey as string;
+        onChangeFilter({ [key]: value });
+    };
+
+    /**
      * Handle clear for this specific category
      */
     const handleClear = () => {
@@ -140,6 +149,17 @@ export default function FilterCategoryContent({
                         options={config.options || []}
                         selectedValues={getCheckboxValues()}
                         onChange={handleCheckboxChange}
+                        loading={config.loading}
+                        placeholder={config.placeholder}
+                        onSearch={config.onSearch}
+                    />
+                )}
+
+                {config.type === 'radio' && (
+                    <RadioFilterContent
+                        options={config.options || []}
+                        selectedValue={dataFilter[config.filterKey as string]}
+                        onChange={handleRadioChange}
                         loading={config.loading}
                         placeholder={config.placeholder}
                         onSearch={config.onSearch}

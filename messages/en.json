@@ -168,7 +168,7 @@
         "activities": "Activities",
         "revenue": "Revenue",
         "partners": "Partners",
-        "views": "Trend view",
+        "views": "Views",
         "fileName": "File name",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
@@ -2161,9 +2161,9 @@
             "plays": "Plays & Trends",
             "revenue": "Revenue"
         },
-        "totalTrendViews": "Total trend views",
-        "trendViews": "Trend views",
-        "trendViewsByMonth": "Monthly trend views",
+        "totalTrendViews": "Total views",
+        "trendViews": "Views",
+        "trendViewsByMonth": "Monthly views",
         "totalRevenueByMonth": "Revenue by month",
         "dspDistribution": "Views by DSP",
         "terDistribution": "Views by Country",
@@ -2173,7 +2173,7 @@
 
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",
-        "detailChartTitle": "Trend timeline"
+        "detailChartTitle": "Views timeline"
     },
     "issue": {
         "label": "Issue",

@@ -8,10 +8,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import {
-    DspRankingItem,
-    RevenueDspItem,
-} from '@/modules/analytics2/types';
+import { DspRankingItem, RevenueDspItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Table, theme } from 'antd';
@@ -46,31 +43,29 @@ export default function DspsRankingPage() {
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { dspRankingData, isFetching: isViewsFetching } =
-        useGetDspRanking(
-            {
-                fromDate: dataFilter.startDate!,
-                toDate: dataFilter.endDate!,
-                page,
-                pageSize,
-                keyword: dataFilter.keyword ?? undefined,
-            },
-            { enabled: !isRevenue }
-        );
+    const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
+        {
+            fromDate: dataFilter.startDate!,
+            toDate: dataFilter.endDate!,
+            page,
+            pageSize,
+            keyword: dataFilter.keyword ?? undefined,
+        },
+        { enabled: !isRevenue }
+    );
 
     // Fetch revenue ranking data
-    const { topDspData, isFetching: isRevenueFetching } =
-        useGetRevenueTopDsp(
-            {
-                fromDate: dataFilter.startDate!,
-                toDate: dataFilter.endDate!,
-                page,
-                pageSize,
-                keyword: dataFilter.keyword ?? undefined,
-                includeOther: false,
-            },
-            { enabled: isRevenue }
-        );
+    const { topDspData, isFetching: isRevenueFetching } = useGetRevenueTopDsp(
+        {
+            fromDate: dataFilter.startDate!,
+            toDate: dataFilter.endDate!,
+            page,
+            pageSize,
+            keyword: dataFilter.keyword ?? undefined,
+            includeOther: false,
+        },
+        { enabled: isRevenue }
+    );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
@@ -84,10 +79,12 @@ export default function DspsRankingPage() {
 
     const viewsDataWithRank = useMemo(() => {
         if (!dspRankingData?.items) return [];
-        return dspRankingData.items.map((item: DspRankingItem, index: number) => ({
-            ...item,
-            rank: (page - 1) * pageSize + index + 1,
-        }));
+        return dspRankingData.items.map(
+            (item: DspRankingItem, index: number) => ({
+                ...item,
+                rank: (page - 1) * pageSize + index + 1,
+            })
+        );
     }, [dspRankingData, page, pageSize]);
 
     const revenueColumns: ColumnsType<RevenueDspItem & { rank: number }> = [
@@ -98,7 +95,7 @@ export default function DspsRankingPage() {
             width: 80,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -109,7 +106,7 @@ export default function DspsRankingPage() {
             key: 'dspName',
             ellipsis: true,
             render: (text: string) => (
-                <span className="font-medium text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     {text || '—'}
                 </span>
             ),
@@ -131,7 +128,7 @@ export default function DspsRankingPage() {
             key: 'revenueUsd',
             width: 180,
             render: (val: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     $
                     {val
                         ? val.toLocaleString(undefined, {
@@ -152,7 +149,7 @@ export default function DspsRankingPage() {
             width: 80,
             align: 'center' as const,
             render: (rank: number) => (
-                <span className="font-bold text-gray-700 dark:text-zinc-300">
+                <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
                 </span>
             ),
@@ -163,7 +160,7 @@ export default function DspsRankingPage() {
             key: 'dspName',
             ellipsis: true,
             render: (text: string) => (
-                <span className="font-medium text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     {text || '—'}
                 </span>
             ),
@@ -174,7 +171,7 @@ export default function DspsRankingPage() {
             key: 'totalViews',
             width: 180,
             render: (views: number) => (
-                <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
                 </span>
             ),

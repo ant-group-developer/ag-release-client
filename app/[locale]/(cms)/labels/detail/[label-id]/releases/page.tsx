@@ -63,6 +63,7 @@ export default function Releases({}: Props) {
                             onChangeFilter={onChangeFilter}
                             canClearFilter={canClearFilter}
                             removeFilter={removeFilter}
+                            hideLabelFilter
                         />
                     }
                     className="rounded-t-lg"
