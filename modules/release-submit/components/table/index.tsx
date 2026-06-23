@@ -32,9 +32,10 @@ type Props = Omit<AppProTableProps<ReleaseSubmitData>, 'columns'> & {
         current: number;
     };
     onViewSnapshot?: (snapshot: any) => void;
+    showIsrc?: boolean;
 };
 
-export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
+export default function ReleaseSubmitTable({ dataFilter, showIsrc = false, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { dspData } = useGetListDsp({
@@ -57,7 +58,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: messages('releaseExecution.columns.upc'),
+            title: showIsrc ? messages('common.isrc') : messages('releaseExecution.columns.upc'),
             dataIndex: FieldOrderReleaseExecution3.execution_releaseUpc,
             key: FieldOrderReleaseExecution3.execution_releaseUpc,
             sorter: true,
@@ -68,13 +69,25 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             ),
             width: 150,
             fixed: 'left',
-            render: (_, record) => (
-                <Typography.Text copyable>
-                    {record?.metadata?.input?.upcAutoIfReleaseSnapshotNull ||
-                        record?.metadata?.input?.releaseSnapshot?.upc ||
-                        '-'}
-                </Typography.Text>
-            ),
+            render: (_, record) => {
+                const releaseSnapshot = record?.metadata?.input?.releaseSnapshot;
+                if (showIsrc) {
+                    const isrc = releaseSnapshot?.isrc || releaseSnapshot?.video?.isrc;
+                    if (!isrc) return '-';
+                    return (
+                        <Typography.Text copyable>
+                            {isrc}
+                        </Typography.Text>
+                    );
+                }
+                const upc = record?.metadata?.input?.upcAutoIfReleaseSnapshotNull || releaseSnapshot?.upc;
+                if (!upc) return '-';
+                return (
+                    <Typography.Text copyable>
+                        {upc}
+                    </Typography.Text>
+                );
+            },
         },
         {
             title: messages('releaseExecution.columns.releaseName'),

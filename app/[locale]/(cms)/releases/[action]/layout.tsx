@@ -31,6 +31,7 @@ import {
     Eye,
     Music,
     ScrollText,
+    ShieldCheck,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
@@ -209,6 +210,28 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                       ),
                       disabled: isDisableTab,
                   },
+                  {
+                      key: RELEASES_TABS.SYSTEM_REVIEW,
+                      label: (
+                          <Link
+                              className={cn(
+                                  isDisableTab ? 'pointer-events-none' : ''
+                              )}
+                              href={getReleaseTabRoute(
+                                  releaseId,
+                                  RELEASES_TABS.SYSTEM_REVIEW
+                              )}
+                          >
+                              <div className="flex items-center gap-1">
+                                  <ShieldCheck size={SIZE_ICON} />
+                                  <span>
+                                      {messages('common.systemReview')}
+                                  </span>
+                              </div>
+                          </Link>
+                      ),
+                      disabled: isDisableTab,
+                  },
               ]
             : []),
     ];
@@ -230,6 +253,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 [RELEASES_TABS.ANALYTICS]: RELEASES_TABS.ANALYTICS,
                 [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
                 [RELEASES_TABS.SUBMITS]: RELEASES_TABS.SUBMITS,
+                [RELEASES_TABS.SYSTEM_REVIEW]: RELEASES_TABS.SYSTEM_REVIEW,
             };
             const tabKey = pathname.split('/').pop();
             return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;

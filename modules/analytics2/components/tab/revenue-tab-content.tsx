@@ -1,7 +1,6 @@
 'use client';
 
-import { Col, Row, Select } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Col, Row, Select, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
@@ -99,27 +98,27 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
                                     {
                                         value: 'dsp',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={5}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.revenueDspDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                     {
                                         value: 'ter',
                                         label: (
-                                            <Title
+                                            <Typography.Title
                                                 level={4}
                                                 className="!text-sm"
                                             >
                                                 {messages(
                                                     'analytics.revenueTerDistribution'
                                                 )}
-                                            </Title>
+                                            </Typography.Title>
                                         ),
                                     },
                                 ]}

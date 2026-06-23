@@ -61,7 +61,9 @@ const PieChartTooltip = ({ active, payload }: any) => {
                             backgroundColor: color,
                         }}
                     />
-                    <Typography.Text style={{ fontSize: 13, fontWeight: 500 }}>{displayLabel}</Typography.Text>
+                    <Typography.Text style={{ fontSize: 13, fontWeight: 500 }}>
+                        {displayLabel}
+                    </Typography.Text>
                 </div>
                 <Typography.Text
                     style={{
@@ -103,12 +105,12 @@ export default function DistributionPieChart({
         >
             <div className="mb-4 flex items-start justify-between">
                 <div>
-                    <Title level={5} className="!m-0">
+                    <Typography.Title level={5} className="!m-0">
                         {title}
-                    </Title>
-                    <Text type="secondary" style={{ fontSize: 13 }}>
+                    </Typography.Title>
+                    <Typography.Text type="secondary" style={{ fontSize: 13 }}>
                         {subtitle}
-                    </Text>
+                    </Typography.Text>
                 </div>
                 <Segmented
                     options={[

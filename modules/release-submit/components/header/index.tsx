@@ -492,7 +492,7 @@ export default function ReleaseSubmitHeader({
                 className="w-52"
             />
 
-            <Checkbox
+            {/* <Checkbox
                 checked={
                     dataFilter?.latestOnly === true ||
                     dataFilter?.latestOnly === 'true'
@@ -504,11 +504,11 @@ export default function ReleaseSubmitHeader({
                 }
             >
                 {messages('common.latestOnly')}
-            </Checkbox>
+            </Checkbox> */}
 
             <Popover
                 trigger="click"
-                placement="topLeft"
+                placement="bottom"
                 content={stepsFilterContent}
                 arrow={false}
                 autoAdjustOverflow={false}
@@ -526,7 +526,7 @@ export default function ReleaseSubmitHeader({
                 onChangeFilter={handleChangeFilter}
                 removeFilter={handleRemoveFilter}
                 canClearFilter={canClearReleaseFilter}
-                placement="topLeft"
+                placement="bottom"
                 popoverHeight={380}
             />
         </Space>

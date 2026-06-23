@@ -15,6 +15,7 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
@@ -40,7 +41,7 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DeleteVariables, UpdateVariables } from '@/types/api';
-import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
@@ -67,6 +68,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const selectedRows = useReleaseDistribute((state) => state.selectedRows);
+    const { isAdmin } = useAuth();
 
     const messages = useTranslations();
     const queryClient = useQueryClient();
@@ -90,15 +92,19 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         useUpdateReleaseDraft();
     const coverArtFileId =
         formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
-        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
+        formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ??
+        '';
     const { linkReadFile, isFetching: isCoverArtLoading } =
         useGetLinkReadFile(coverArtFileId);
 
     const originalFileId =
         formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL] ?? '';
-    const { linkReadFile: originalLinkReadFile } = useGetLinkReadFile(originalFileId, {
-        enabled: !!originalFileId && originalFileId !== coverArtFileId,
-    });
+    const { linkReadFile: originalLinkReadFile } = useGetLinkReadFile(
+        originalFileId,
+        {
+            enabled: !!originalFileId && originalFileId !== coverArtFileId,
+        }
+    );
     const { releaseData } = useGetDetailRelease(formValues?.id as string);
     const { deleteRelease } = useDeleteRelease();
     const { releaseValidateData } = useReleaseValidate(
@@ -110,7 +116,6 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     // const
     const isCreateReleasePage =
         params['action'] === RELEASE_ROUTE_ACTION.CREATE;
-
 
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
     const validateLength = releaseValidateData && releaseValidateData?.length;
@@ -390,7 +395,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
     const handleGetPreviewUrl = async (file: any) => {
         if (file.originFileObj) {
-            const { previewUrl } = await resolvePreviewFromFile(file.originFileObj);
+            const { previewUrl } = await resolvePreviewFromFile(
+                file.originFileObj
+            );
             return previewUrl;
         }
 
@@ -398,12 +405,15 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
 
         if (!originalLink) {
             const originalFileId =
-                formValues?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
+                formValues?.coverArtThumbnails?.[
+                    RELEASE_COVER_ART_SIZE.ORIGINAL
+                ];
             if (originalFileId) {
                 if (originalFileId === coverArtFileId) {
                     originalLink = linkReadFile;
                 } else {
-                    const response = await bucketApi.getLinkReadFile(originalFileId);
+                    const response =
+                        await bucketApi.getLinkReadFile(originalFileId);
                     originalLink = (response?.data?.data as string) ?? '';
                 }
             }
@@ -528,14 +538,14 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         labelPlacement="vertical"
                         /> */}
 
-                    <div className="flex gap-2">
+                    <Space>
                         <ReleaseStatusTag
                             style={{
                                 padding: '2px 16px',
                             }}
                             status={releaseData?.status}
                         />
-                        {releaseData && (
+                        {releaseData && isAdmin && (
                             <Tag
                                 style={{
                                     padding: '2px 16px',
@@ -551,7 +561,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                     : messages('release.createdDirectly')}
                             </Tag>
                         )}
-                    </div>
+                    </Space>
 
                     <div>
                         {!isCreateReleasePage && !isReadMode && (
