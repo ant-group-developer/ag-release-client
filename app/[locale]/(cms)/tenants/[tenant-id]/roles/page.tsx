@@ -11,7 +11,7 @@ import { useTenantRoles } from '@/modules/tenant/hooks/use-get-tenant-roles';
 import { useUpdateTenantRoles } from '@/modules/tenant/hooks/use-update-tenant-roles';
 import { TenantRoleData } from '@/modules/tenant/types/data';
 import { ProColumns } from '@ant-design/pro-components';
-import { Badge, Switch, theme, Typography } from 'antd';
+import { Badge, Switch, Tag, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -105,6 +105,11 @@ function TenantRoles() {
                 >
                     <Badge color={record.color} />
                     <span className="flex-1 truncate">{record?.name}</span>
+                    {!record.isActive && (
+                        <Tag color="red" style={{ marginInlineEnd: 0 }}>
+                            {messages('status.inActive')}
+                        </Tag>
+                    )}
                 </CopyText>
             ),
         },
