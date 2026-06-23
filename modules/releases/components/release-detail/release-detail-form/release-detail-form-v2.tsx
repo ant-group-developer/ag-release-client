@@ -279,7 +279,7 @@ export default function ReleaseDetailFormV2() {
                 </Form>
 
                 <div className="my-4">
-                    <PermissionGate permission={PERMISSION.RELEASE.DELETE}>
+                    <PermissionGate permission={PERMISSION.RELEASE_AUDIO.DELETE}>
                         {!isCreateReleasePage &&
                             releaseData?.status == RELEASES_STATUS.DRAFT && (
                                 <Button

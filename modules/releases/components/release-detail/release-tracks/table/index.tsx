@@ -64,7 +64,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     // const
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
     const { hasPermission } = usePermission();
-    const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
+    const canUpdate = hasPermission(PERMISSION.RELEASE_AUDIO.UPDATE);
     const tracksLength = props.dataSource?.length || 0;
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
