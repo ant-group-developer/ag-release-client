@@ -3,9 +3,11 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
@@ -20,6 +22,7 @@ import { Card, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -32,6 +35,16 @@ interface RankingFilter extends CommonParams {
 export default function TenantsRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
+
+    const [detailModal, setDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        tenantId: string;
+    }>({
+        open: false,
+        title: '',
+        tenantId: '',
+    });
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<RankingFilter>({
@@ -80,7 +93,7 @@ export default function TenantsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -102,9 +115,20 @@ export default function TenantsRankingPage() {
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
                     />
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailModal({
+                                    open: true,
+                                    title: text,
+                                    tenantId: record.tenantId,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
                 </div>
             ),
         },
@@ -143,7 +167,7 @@ export default function TenantsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -165,9 +189,20 @@ export default function TenantsRankingPage() {
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
                     />
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailModal({
+                                    open: true,
+                                    title: text,
+                                    tenantId: record.tenantId,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
                 </div>
             ),
         },
@@ -272,6 +307,17 @@ export default function TenantsRankingPage() {
                         />
                     )}
                 </Card>
+
+                <DetailTenantAnalyticsModal
+                    open={detailModal.open}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, open: false }))
+                    }
+                    title={detailModal.title}
+                    tenantId={detailModal.tenantId}
+                    fromDate={dataFilter.startDate!}
+                    toDate={dataFilter.endDate!}
+                />
             </PageContainer>
         </div>
     );

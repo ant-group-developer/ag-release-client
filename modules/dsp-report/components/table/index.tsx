@@ -1,9 +1,14 @@
+import IconButton from '@/components/ui/button/icon-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
+import { SIZE_ICON } from '@/constants/common';
 import { getIndex } from '@/helpers/common';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, theme } from 'antd';
+import { Popconfirm, Tag, theme } from 'antd';
+import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAssignDspReport } from '../../hooks/use-assign-dsp-report';
+import { useDeleteDspReport } from '../../hooks/use-delete-dsp-report';
 import { useUnassignDspReport } from '../../hooks/use-unassign-dsp-report';
 import { DspReportData } from '../../types';
 import PgDspsSyncSelect from '../select/pg-dsps-sync-select';
@@ -21,6 +26,7 @@ export const DspReportTable = ({ ...props }: Props) => {
     const { assignDspReport, isPending: isAssigning } = useAssignDspReport();
     const { unassignDspReport, isPending: isUnassigning } =
         useUnassignDspReport();
+    const { deleteDspReport, isPending: isDeleting } = useDeleteDspReport();
 
     const columns: ProColumns<DspReportData>[] = [
         {
@@ -60,7 +66,7 @@ export const DspReportTable = ({ ...props }: Props) => {
         //     title: messages('dspReport.table.dsp'),
         //     key: 'dspCode',
         //     dataIndex: ['pgDspsSync', 'dspCode'],
-        //     width: 220,
+         //    width: 220,
         //     render: (_, record) => {
         //         if (!record.pgDspsSync) return '-';
         //         return (
@@ -87,7 +93,7 @@ export const DspReportTable = ({ ...props }: Props) => {
                     allowClear
                     className="w-full"
                     defaultValue={record.pgUuid}
-                    disabled={isAssigning || isUnassigning}
+                    disabled={isAssigning || isUnassigning || isDeleting}
                     onChange={(value) => {
                         if (value) {
                             assignDspReport({
@@ -101,6 +107,35 @@ export const DspReportTable = ({ ...props }: Props) => {
                         }
                     }}
                 />
+            ),
+        },
+        {
+            title: messages('common.action'),
+            key: 'action',
+            width: 80,
+            fixed: 'right',
+            align: 'center',
+            render: (_, record) => (
+                <PermissionGate adminOnly>
+                    <Popconfirm
+                        title={messages('delete.confirmTitle')}
+                        description={messages('delete.confirmMessage', {
+                            value: record.dspName,
+                        })}
+                        okText={messages('common.delete')}
+                        cancelText={messages('common.cancel')}
+                        okButtonProps={{ loading: isDeleting, danger: true }}
+                        onConfirm={() =>
+                            deleteDspReport({
+                                id: record.idDspsReport,
+                            })
+                        }
+                    >
+                        <IconButton>
+                            <Trash size={SIZE_ICON} className="text-red-500 hover:text-red-700" />
+                        </IconButton>
+                    </Popconfirm>
+                </PermissionGate>
             ),
         },
     ];

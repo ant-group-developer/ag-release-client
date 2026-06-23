@@ -72,10 +72,8 @@ export default function Analytics2Page() {
         const queryTab =
             (searchParams.get('tab') as ANALYTICS2_TABS) ||
             ANALYTICS2_TABS.VIEWS;
-        if (queryTab !== activeTab) {
-            setActiveTab(queryTab);
-        }
-    }, [searchParams, activeTab]);
+        setActiveTab(queryTab);
+    }, [searchParams]);
 
     const handleTabChange = (tab: ANALYTICS2_TABS) => {
         setActiveTab(tab);

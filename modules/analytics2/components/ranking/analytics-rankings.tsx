@@ -16,6 +16,7 @@ import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
 import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
+import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
@@ -33,7 +34,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             title,
         });
     const [detailModal, setDetailModal] = useState<{
-        type: 'release' | 'track' | 'label' | 'artist' | null;
+        type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | null;
         title: string;
         id: string;
     }>({
@@ -217,6 +218,16 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 }
                 title={detailModal.title}
                 artistId={detailModal.id}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailTenantAnalyticsModal
+                open={detailModal.type === 'tenant'}
+                onClose={() =>
+                    setDetailModal((prev) => ({ ...prev, type: null }))
+                }
+                title={detailModal.title}
+                tenantId={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />

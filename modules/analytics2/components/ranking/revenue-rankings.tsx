@@ -17,6 +17,7 @@ import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
 import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
+import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useRevenueRankingColumns } from './use-revenue-ranking-columns';
 
@@ -29,7 +30,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
     const messages = useTranslations();
     const topN = 5;
     const [detailModal, setDetailModal] = useState<{
-        type: 'artist' | 'track' | 'release' | 'label' | null;
+        type: 'artist' | 'track' | 'release' | 'label' | 'tenant' | null;
         title: string;
         id: string;
     }>({
@@ -242,6 +243,19 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 }
                 title={detailModal.title}
                 labelId={detailModal.id}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailTenantAnalyticsModal
+                open={detailModal.type === 'tenant'}
+                onClose={() =>
+                    setDetailModal((prev) => ({
+                        ...prev,
+                        type: null,
+                    }))
+                }
+                title={detailModal.title}
+                tenantId={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />

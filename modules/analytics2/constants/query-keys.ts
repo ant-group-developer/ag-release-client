@@ -540,4 +540,71 @@ export const analytics2QueryKeys = {
             artistId,
             params,
         ] as const,
+    tenantOverview: (tenantId: string, params: ReleaseOverviewParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_OVERVIEW,
+            tenantId,
+            params,
+        ] as const,
+    tenantTrendViewLineChart: (
+        tenantId: string,
+        params: TrendViewLineChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_TREND_VIEW_LINE_CHART,
+            tenantId,
+            params,
+        ] as const,
+    tenantTrendViewDspBarChart: (
+        tenantId: string,
+        params: TrendViewDspBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_TREND_VIEW_DSP_BAR_CHART,
+            tenantId,
+            params,
+        ] as const,
+    tenantTrendViewTerBarChart: (
+        tenantId: string,
+        params: TrendViewTerBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_TREND_VIEW_TER_BAR_CHART,
+            tenantId,
+            params,
+        ] as const,
+    tenantRevenueLineChart: (
+        tenantId: string,
+        params: RevenueLineChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_REVENUE_LINE_CHART,
+            tenantId,
+            params,
+        ] as const,
+    tenantRevenueDspBarChart: (
+        tenantId: string,
+        params: RevenueDspBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_REVENUE_DSP_BAR_CHART,
+            tenantId,
+            params,
+        ] as const,
+    tenantRevenueTerBarChart: (
+        tenantId: string,
+        params: RevenueTerBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_REVENUE_TER_BAR_CHART,
+            tenantId,
+            params,
+        ] as const,
 };

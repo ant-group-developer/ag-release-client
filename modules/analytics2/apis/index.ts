@@ -581,6 +581,66 @@ export const analytics2Apis = {
             { jobIds }
         );
     },
+    getTenantOverview: (tenantId: string, params: ReleaseOverviewParams) => {
+        return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
+            `/analytics/tenant/${tenantId}/overview`,
+            params
+        );
+    },
+    getTenantTrendViewLineChart: (
+        tenantId: string,
+        params: TrendViewLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/tenant/${tenantId}/trend-view/line-chart`,
+            params
+        );
+    },
+    getTenantTrendViewDspBarChart: (
+        tenantId: string,
+        params: TrendViewDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/tenant/${tenantId}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getTenantTrendViewTerBarChart: (
+        tenantId: string,
+        params: TrendViewTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/tenant/${tenantId}/trend-view/ter/bar-chart`,
+            params
+        );
+    },
+    getTenantRevenueLineChart: (
+        tenantId: string,
+        params: RevenueLineChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/tenant/${tenantId}/revenue/line-chart`,
+            params
+        );
+    },
+    getTenantRevenueDspBarChart: (
+        tenantId: string,
+        params: RevenueDspBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/tenant/${tenantId}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getTenantRevenueTerBarChart: (
+        tenantId: string,
+        params: RevenueTerBarChartParams
+    ) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/tenant/${tenantId}/revenue/ter/bar-chart`,
+            params
+        );
+    },
 };
 
 export const getExportReportEventsUrl = (jobId: string) => {
