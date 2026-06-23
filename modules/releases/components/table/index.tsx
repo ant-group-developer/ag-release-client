@@ -59,8 +59,8 @@ export default function ReleasesTable({
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
-    const canDelete = hasPermission(PERMISSION.RELEASE.DELETE);
-    const canTakedown = hasPermission(PERMISSION.RELEASE.TAKE_DOWN);
+    const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
+    const canTakedown = hasPermission(PERMISSION.RELEASE_AUDIO.TAKE_DOWN);
     const setAction = useReleaseActionStore((state) => state.setAction);
     const { takedownRelease } = useTakedownRelease();
 

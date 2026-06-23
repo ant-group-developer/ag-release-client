@@ -74,7 +74,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.CREATE;
     const isDisableTab = releaseId == '';
 
-    const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
+    const canUpdate = hasPermission(PERMISSION.RELEASE_AUDIO.UPDATE);
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const coreDetailTabsNavigate = isCreateReleasePage

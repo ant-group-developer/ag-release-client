@@ -69,8 +69,8 @@ function Header({ toggleCollapsed }: Props) {
                 {isNotSystemTenant && (
                     <PermissionGate
                         anyOf={[
-                            PERMISSION.RELEASE.CREATE,
-                            PERMISSION.RELEASE.UPDATE,
+                            PERMISSION.RELEASE_AUDIO.CREATE,
+                            PERMISSION.RELEASE_AUDIO.UPDATE,
                         ]}
                     >
                         <Space.Compact>
