@@ -3,8 +3,10 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
+import { usePermission } from '@/hooks/use-permission';
 import { showNotification } from '@/helpers/messages-helper';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import ChannelSelect from '@/modules/channels/components/select/channel-select';
 import { useBulkCreateReleaseArtist } from '@/modules/release-artist/hooks/use-bulk-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
@@ -13,6 +15,7 @@ import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks
 import {
     RELEASE_AI_CONTENT,
     RELEASE_MADE_FOR_KIDS,
+    RELEASES_STATUS,
 } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { CloseOutlined, CopyOutlined } from '@ant-design/icons';
@@ -44,6 +47,7 @@ export default function MetadataFields({
     form,
 }: MetadataFieldsProps) {
     const messages = useTranslations();
+    const { hasPermission } = usePermission();
     const [isManageCollaboratorsOpen, setIsManageCollaboratorsOpen] =
         useState(false);
     const { bulkCreateReleaseArtist } = useBulkCreateReleaseArtist();
@@ -56,6 +60,16 @@ export default function MetadataFields({
         r.name?.toLowerCase().includes('featured')
     );
     const featuredRoleId = featuredRole?.id;
+
+    const isUpdateForm = !!dataEdit?.id;
+    const canEditReleaseVideo = !isUpdateForm || hasPermission(PERMISSION.RELEASE_VIDEO.UPDATE);
+
+    const isCanEditChannel =
+        canEditReleaseVideo &&
+        (!dataEdit?.id ||
+            dataEdit?.status === RELEASES_STATUS.DRAFT ||
+            dataEdit?.status === RELEASES_STATUS.FAILED ||
+            dataEdit?.status === RELEASES_STATUS.TAKEN_DOWN);
 
     const handleArtistsBlur = () => {
         const releaseId = dataEdit?.id;
@@ -523,6 +537,7 @@ export default function MetadataFields({
                                     },
                                 })
                             }
+                            disabled={!isCanEditChannel}
                         />
                     </AppFormItem>
                 </Col>
