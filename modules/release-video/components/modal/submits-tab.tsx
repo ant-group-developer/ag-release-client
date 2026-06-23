@@ -1,6 +1,7 @@
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
@@ -13,6 +14,7 @@ import { FieldOrderReleaseExecution3 } from '@/modules/release-submit/enums';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
 import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
 import { theme } from 'antd';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 type Props = {
@@ -20,6 +22,8 @@ type Props = {
 };
 
 export default function SubmitsTab({ releaseId }: Props) {
+    const pathname = usePathname();
+    const showIsrc = pathname.includes(APP_ROUTES.RELEASE_VIDEOS);
     const { token } = theme.useToken();
     const typeModal = useModalStore((state) => state.typeModal);
     const [snapshotModalOpen, setSnapshotModalOpen] = useState(false);
@@ -38,7 +42,6 @@ export default function SubmitsTab({ releaseId }: Props) {
         orderBy: ORDER.DESC,
         fieldOrder: FieldOrderReleaseExecution3.execution_createdAt,
         releaseIds: releaseId ? [releaseId] : [],
-        latestOnly: true,
     });
 
     const { releaseSubmitsData, isFetching, refetch } =
@@ -59,7 +62,7 @@ export default function SubmitsTab({ releaseId }: Props) {
     return (
         <div className="flex flex-col gap-4">
             <ReleaseSubmitTable
-                showIsrc
+                showIsrc={showIsrc}
                 headerTitle={
                     <ReleaseSubmitHeader
                         dataFilter={dataFilter}

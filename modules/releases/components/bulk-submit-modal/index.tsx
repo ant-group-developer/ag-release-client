@@ -6,10 +6,10 @@ import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { useBulkSubmitRelease } from '@/modules/releases/hooks/use-bulk-submit-release';
 import { ProColumns } from '@ant-design/pro-components';
-import { Alert, Avatar, Button, Form, Select, Space, Tag, theme } from 'antd';
+import { Alert, Avatar, Button, Form, Select, Space, Tag } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
-import { Key, useEffect, useState } from 'react';
+import { Key, useEffect, useMemo, useState } from 'react';
 
 import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
@@ -38,7 +38,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
     const dataEdit = useModalStore<string[]>((state) => state.dataEdit);
     const { bulkSubmitRelease, isPending: isSubmitting } =
         useBulkSubmitRelease();
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
 
     const [idsExclude, setIdsExclude] = useState<string[]>([]);
     const [filterState, setFilterState] = useState<ReleasesDataFilter>({
@@ -57,21 +57,25 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
         isActive: true,
     });
 
-    const dspDataFilter = dspData?.items?.filter((item) => !!item.codeCi);
+    const dspDataFilter = useMemo(() => {
+        return dspData?.items?.filter((item) => !!item.codeCi) || [];
+    }, [dspData?.items]);
 
-    const options = dspDataFilter?.map((item) => {
-        return {
-            label: (
-                <Space>
-                    <Avatar size={18} src={item?.picture}>
-                        {item?.name[0]}
-                    </Avatar>
-                    <span>{item.name}</span>
-                </Space>
-            ),
-            value: item.code,
-        };
-    });
+    const options = useMemo(() => {
+        return dspDataFilter?.map((item) => {
+            return {
+                label: (
+                    <Space>
+                        <Avatar size={18} src={item?.picture}>
+                            {item?.name[0]}
+                        </Avatar>
+                        <span>{item.name}</span>
+                    </Space>
+                ),
+                value: item.code,
+            };
+        });
+    }, [dspDataFilter]);
 
     useEffect(() => {
         if (dspDataFilter && dspDataFilter.length > 0) {

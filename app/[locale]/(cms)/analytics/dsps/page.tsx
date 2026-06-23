@@ -1,25 +1,21 @@
 'use client';
 
-import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
-import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { useGetRevenueTopTenant } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import {
-    RevenueTenantItem,
-    TenantRankingItem,
-} from '@/modules/analytics2/types';
+import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import { DspRankingItem, RevenueDspItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -29,7 +25,7 @@ interface RankingFilter extends CommonParams {
     type?: ANALYTICS_VIEW_TYPE;
 }
 
-export default function TenantsRankingPage() {
+export default function DspsRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
 
@@ -47,40 +43,56 @@ export default function TenantsRankingPage() {
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { tenantRankingData, isFetching: isViewsFetching } =
-        useGetTenantRanking(
-            {
-                fromDate: dataFilter.startDate!,
-                toDate: dataFilter.endDate!,
-                page,
-                pageSize,
-                keyword: dataFilter.keyword ?? undefined,
-            },
-            { enabled: !isRevenue }
-        );
+    const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
+        {
+            fromDate: dataFilter.startDate!,
+            toDate: dataFilter.endDate!,
+            page,
+            pageSize,
+            keyword: dataFilter.keyword ?? undefined,
+        },
+        { enabled: !isRevenue }
+    );
 
     // Fetch revenue ranking data
-    const { topTenantData, isFetching: isRevenueFetching } =
-        useGetRevenueTopTenant(
-            {
-                fromDate: dataFilter.startDate!,
-                toDate: dataFilter.endDate!,
-                page,
-                pageSize,
-                keyword: dataFilter.keyword ?? undefined,
-                includeOther: false,
-            },
-            { enabled: isRevenue }
-        );
+    const { topDspData, isFetching: isRevenueFetching } = useGetRevenueTopDsp(
+        {
+            fromDate: dataFilter.startDate!,
+            toDate: dataFilter.endDate!,
+            page,
+            pageSize,
+            keyword: dataFilter.keyword ?? undefined,
+            includeOther: false,
+        },
+        { enabled: isRevenue }
+    );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueColumns: ColumnsType<RevenueTenantItem> = [
+    const revenueDataWithRank = useMemo(() => {
+        if (!topDspData?.items) return [];
+        return topDspData.items.map((item: RevenueDspItem, index: number) => ({
+            ...item,
+            rank: (page - 1) * pageSize + index + 1,
+        }));
+    }, [topDspData, page, pageSize]);
+
+    const viewsDataWithRank = useMemo(() => {
+        if (!dspRankingData?.items) return [];
+        return dspRankingData.items.map(
+            (item: DspRankingItem, index: number) => ({
+                ...item,
+                rank: (page - 1) * pageSize + index + 1,
+            })
+        );
+    }, [dspRankingData, page, pageSize]);
+
+    const revenueColumns: ColumnsType<RevenueDspItem & { rank: number }> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -89,23 +101,14 @@ export default function TenantsRankingPage() {
             ),
         },
         {
-            title: messages('tenant.name'),
-            dataIndex: 'tenantName',
-            key: 'tenantName',
+            title: messages('common.dsps'),
+            dataIndex: 'dspName',
+            key: 'dspName',
             ellipsis: true,
-            render: (text: string, record: RevenueTenantItem) => (
-                <div className="flex items-center gap-3">
-                    <ImageFallback
-                        src={record.logo ?? ''}
-                        alt={text}
-                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                        className="aspect-square rounded-full object-cover"
-                    />
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                </div>
+            render: (text: string) => (
+                <span className="text-gray-900 dark:text-zinc-100">
+                    {text || '—'}
+                </span>
             ),
         },
         {
@@ -138,12 +141,12 @@ export default function TenantsRankingPage() {
         },
     ];
 
-    const viewColumns: ColumnsType<TenantRankingItem> = [
+    const viewColumns: ColumnsType<DspRankingItem & { rank: number }> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -152,23 +155,14 @@ export default function TenantsRankingPage() {
             ),
         },
         {
-            title: messages('tenant.name'),
-            dataIndex: 'tenantName',
-            key: 'tenantName',
+            title: messages('common.dsps'),
+            dataIndex: 'dspName',
+            key: 'dspName',
             ellipsis: true,
-            render: (text: string, record: TenantRankingItem) => (
-                <div className="flex items-center gap-3">
-                    <ImageFallback
-                        src={record.logo ?? ''}
-                        alt={text}
-                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                        className="aspect-square rounded-full object-cover"
-                    />
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                </div>
+            render: (text: string) => (
+                <span className="text-gray-900 dark:text-zinc-100">
+                    {text || '—'}
+                </span>
             ),
         },
         {
@@ -185,13 +179,13 @@ export default function TenantsRankingPage() {
     ];
 
     const pageTitle = isRevenue
-        ? `${messages('tenant.workspaces')} - ${messages('common.revenue')}`
-        : `${messages('tenant.workspaces')} - ${messages('common.views')}`;
+        ? `${messages('common.dsps')} - ${messages('common.revenue')}`
+        : `${messages('common.dsps')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {
             title: messages('analytics.label'),
-            href: APP_ROUTES.ANALYTICS2,
+            href: APP_ROUTES.ANALYTICS,
         },
         {
             title: pageTitle,
@@ -233,17 +227,17 @@ export default function TenantsRankingPage() {
                         />
                     </div>
                     {isRevenue ? (
-                        <Table<RevenueTenantItem>
+                        <Table<RevenueDspItem & { rank: number }>
                             sticky
                             size="small"
                             columns={revenueColumns}
-                            dataSource={topTenantData.items}
+                            dataSource={revenueDataWithRank}
                             loading={isFetching}
-                            rowKey="tenantId"
+                            rowKey="dspName"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
-                                total: topTenantData?.metadata?.totalItems,
+                                total: topDspData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -252,17 +246,17 @@ export default function TenantsRankingPage() {
                             }}
                         />
                     ) : (
-                        <Table<TenantRankingItem>
+                        <Table<DspRankingItem & { rank: number }>
                             sticky
                             size="small"
                             columns={viewColumns}
-                            dataSource={tenantRankingData.items}
+                            dataSource={viewsDataWithRank}
                             loading={isFetching}
-                            rowKey="tenantId"
+                            rowKey="dspName"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
-                                total: tenantRankingData?.metadata?.totalItems,
+                                total: dspRankingData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>

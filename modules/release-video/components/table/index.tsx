@@ -67,7 +67,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                         <div className="flex flex-col truncate">
                             <div className="flex items-center gap-1">
                                 <Link href={detailUrl} className="truncate">
-                                    <span className="cursor-pointer font-medium text-gray-800 hover:underline">
+                                    <span className="cursor-pointer font-medium hover:underline">
                                         {value}
                                     </span>
                                 </Link>
@@ -75,7 +75,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                                     className="inline-block align-middle"
                                     data-stop-row-click="true"
                                 >
-                                    <Text
+                                    <Typography.Text
                                         copyable={{
                                             text: value,
                                             tooltips: false,
