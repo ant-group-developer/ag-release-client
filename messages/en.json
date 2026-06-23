@@ -352,7 +352,8 @@
         "collapseAll": "Collapse all",
         "isrc": "ISRC",
         "justNow": "just now",
-        "ago": "ago"
+        "ago": "ago",
+        "systemReview": "System Review"
     },
     "country": {
         "label": "Country",
