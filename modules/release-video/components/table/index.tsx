@@ -64,20 +64,30 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                                 <ReleaseCoverImage data={record} />
                             </div>
                         </Link>
-                        <div className="truncate">
-                            <Link href={detailUrl}>
-                                <span className="cursor-pointer font-medium text-gray-800 hover:underline">
-                                    {value}
+                        <div className="flex flex-col truncate">
+                            <div className="flex items-center gap-1">
+                                <Link href={detailUrl} className="truncate">
+                                    <span className="cursor-pointer font-medium text-gray-800 hover:underline">
+                                        {value}
+                                    </span>
+                                </Link>
+                                <span
+                                    className="inline-block align-middle"
+                                    data-stop-row-click="true"
+                                >
+                                    <Text
+                                        copyable={{
+                                            text: value,
+                                            tooltips: false,
+                                        }}
+                                    />
                                 </span>
-                            </Link>
-                            <span
-                                className="ml-1 inline-block align-middle"
-                                data-stop-row-click="true"
-                            >
-                                <Text
-                                    copyable={{ text: value, tooltips: false }}
-                                />
-                            </span>
+                            </div>
+                            {record.video?.channel && (
+                                <span className="truncate text-xs text-gray-500">
+                                    {record.video.channel}
+                                </span>
+                            )}
                         </div>
                     </div>
                 );
@@ -87,7 +97,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             title: messages('releaseVideo.fields.primaryArtists'),
             key: 'releaseArtists',
             dataIndex: 'releaseArtists',
-            width: 180,
+            width: 220,
             render: (value: ReleasesData['releaseArtists']) => {
                 const artists =
                     value
@@ -101,22 +111,28 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             title: messages('releaseVideo.fields.genre'),
             key: 'primaryGenre',
             dataIndex: 'primaryGenre',
-            width: 150,
+            width: 160,
             render: (_, record) => {
                 const genre = record.primaryGenre?.name;
-                return genre ? <PopoverTags tags={[genre]} /> : '-';
+                // return genre ? <PopoverTags tags={[genre]} /> : '-';
+                return <span>{genre}</span>;
             },
         },
         {
-            title: 'UPC',
-            key: 'upc',
-            dataIndex: 'upc',
+            title: 'ISRC',
+            key: 'ISRC',
+            dataIndex: 'ISRC',
             align: 'center',
-            width: 140,
+            width: 180,
             ellipsis: true,
-            render: (value) => (
-                <Text copyable={{ tooltips: false }}>{value}</Text>
-            ),
+            render: (value, record) => {
+                if (!record?.isrc) return '-';
+                return (
+                    <Typography.Text copyable={{ tooltips: false }}>
+                        {record?.isrc}
+                    </Typography.Text>
+                );
+            },
         },
         {
             title: messages('common.status'),

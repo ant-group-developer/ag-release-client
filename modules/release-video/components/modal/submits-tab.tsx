@@ -59,6 +59,7 @@ export default function SubmitsTab({ releaseId }: Props) {
     return (
         <div className="flex flex-col gap-4">
             <ReleaseSubmitTable
+                showIsrc
                 headerTitle={
                     <ReleaseSubmitHeader
                         dataFilter={dataFilter}

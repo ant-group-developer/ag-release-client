@@ -1,6 +1,5 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { useQueryClient } from '@tanstack/react-query';
-import { getSession } from 'next-auth/react';
 import { useEffect, useMemo, useState } from 'react';
 import { enrichScanSessionQueryKeys } from '../constants/query-keys';
 import {
@@ -115,9 +114,9 @@ export const useEnrichScanEvents = ({
             setIsListening(true);
             setError(null);
 
-            const session = (await getSession()) as {
-                accessToken?: string;
-            } | null;
+            // const session = (await getSession()) as {
+            //     accessToken?: string;
+            // } | null;
 
             await fetchEventSource(getEnrichScanEventsUrl(scanId), {
                 method: 'GET',
@@ -161,7 +160,10 @@ export const useEnrichScanEvents = ({
                         abortController.abort();
                     }
 
-                    if (eventData.type === EnrichScanEventType.CANCELLED || eventData.status === 'CANCELLED') {
+                    if (
+                        eventData.type === EnrichScanEventType.CANCELLED ||
+                        eventData.status === 'CANCELLED'
+                    ) {
                         queryClient.invalidateQueries({
                             queryKey: enrichScanSessionQueryKeys.all,
                         });

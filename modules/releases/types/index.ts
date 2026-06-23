@@ -68,6 +68,7 @@ export interface ReleasesData extends CommonAttribute {
     video?: VideoData;
     metadataExternal?: ReleaseMetadataExternal;
     isImportedFromReport?: boolean;
+    isrc?: string;
 }
 
 export interface SpotifyCoverImage {
