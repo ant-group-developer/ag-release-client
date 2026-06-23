@@ -157,7 +157,7 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Releases',
                 href: APP_ROUTES.RELEASES,
                 icon: DiscAlbum,
-                required: { permission: [PERMISSION.RELEASE.READ] },
+                required: { permission: [PERMISSION.RELEASE_AUDIO.READ] },
             },
 
             {
@@ -170,8 +170,8 @@ export const adminRoutes: RouteNode[] = [
                 icon: DiscAlbum,
                 required: {
                     permission: [
-                        PERMISSION.RELEASE.READ,
-                        PERMISSION.RELEASE.CREATE,
+                        PERMISSION.RELEASE_AUDIO.READ,
+                        PERMISSION.RELEASE_AUDIO.CREATE,
                     ],
                 },
             },
@@ -232,7 +232,7 @@ export const adminRoutes: RouteNode[] = [
                 icon: Box,
                 hidden: true,
                 required: {
-                    permission: [PERMISSION.RELEASE.UPDATE],
+                    permission: [PERMISSION.RELEASE_AUDIO.UPDATE],
                 },
             },
             // {
