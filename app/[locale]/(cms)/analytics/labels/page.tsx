@@ -90,7 +90,7 @@ export default function LabelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -152,6 +152,29 @@ export default function LabelsRankingPage() {
             ),
         },
         {
+            title: messages('tenant.label'),
+            dataIndex: 'tenant',
+            key: 'tenant',
+            ellipsis: true,
+            render: (tenant: any) => {
+                if (!tenant) return '-';
+                return (
+                    <div className="flex items-center gap-3">
+                        <ImageFallback
+                            src={tenant.logo ?? ''}
+                            alt={tenant.name ?? ''}
+                            width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            className="aspect-square rounded-full object-cover"
+                        />
+                        <span className="text-gray-900 dark:text-zinc-100">
+                            {tenant.name || '-'}
+                        </span>
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
@@ -186,7 +209,7 @@ export default function LabelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -200,21 +223,75 @@ export default function LabelsRankingPage() {
             key: 'labelName',
             ellipsis: true,
             render: (text: string, record: LabelRankingItem) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <span
-                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                        onClick={() =>
-                            setDetailModal({
-                                open: true,
-                                title: text,
-                                labelId: record.labelId,
-                            })
-                        }
-                    >
-                        {text}
-                    </span>
-                </CustomTooltip>
+                <div className="flex items-center gap-3">
+                    <ImageFallback
+                        src={record.picture ?? ''}
+                        alt={text}
+                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        className="aspect-square rounded-full object-cover"
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailModal({
+                                    open: true,
+                                    title: text,
+                                    labelId: record.labelId,
+                                })
+                            }
+                        >
+                            {text}
+                        </span>
+                    </CustomTooltip>
+                </div>
             ),
+        },
+        {
+            title: messages('common.releases'),
+            dataIndex: 'releaseCount',
+            key: 'releaseCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 150,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('tenant.label'),
+            dataIndex: 'tenant',
+            key: 'tenant',
+            ellipsis: true,
+            render: (tenant: any) => {
+                if (!tenant) return '-';
+                return (
+                    <div className="flex items-center gap-3">
+                        <ImageFallback
+                            src={tenant.logo ?? ''}
+                            alt={tenant.name ?? ''}
+                            width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            className="aspect-square rounded-full object-cover"
+                        />
+                        <span className="text-gray-900 dark:text-zinc-100">
+                            {tenant.name || '-'}
+                        </span>
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.viewCount'),
@@ -236,7 +313,7 @@ export default function LabelsRankingPage() {
     const breadcrumbs = [
         {
             title: messages('analytics.label'),
-            href: APP_ROUTES.ANALYTICS2,
+            href: APP_ROUTES.ANALYTICS,
         },
         {
             title: pageTitle,

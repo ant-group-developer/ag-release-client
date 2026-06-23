@@ -1,16 +1,20 @@
 'use client';
+
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
-import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
+import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-release/detail-release-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
-import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import { RevenueTrackItem, TrackRankingItem } from '@/modules/analytics2/types';
+import { useGetReleaseRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopRelease } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import {
+    ReleaseRankingItem,
+    RevenueReleaseItem,
+} from '@/modules/analytics2/types';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
@@ -29,7 +33,7 @@ interface RankingFilter extends CommonParams {
     type?: ANALYTICS_VIEW_TYPE;
 }
 
-export default function TracksRankingPage() {
+export default function ReleasesRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
 
@@ -42,14 +46,14 @@ export default function TracksRankingPage() {
             type: ANALYTICS_VIEW_TYPE.VIEW,
         });
 
-    const [trackDetailModal, setTrackDetailModal] = useState<{
+    const [detailModal, setDetailModal] = useState<{
         open: boolean;
         title: string;
-        isrc: string;
+        releaseId: string;
     }>({
         open: false,
         title: '',
-        isrc: '',
+        releaseId: '',
     });
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
@@ -57,8 +61,8 @@ export default function TracksRankingPage() {
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { trackRankingData, isFetching: isViewsFetching } =
-        useGetTrackRanking(
+    const { releaseRankingData, isFetching: isViewsFetching } =
+        useGetReleaseRanking(
             {
                 fromDate: dataFilter.startDate!,
                 toDate: dataFilter.endDate!,
@@ -70,8 +74,8 @@ export default function TracksRankingPage() {
         );
 
     // Fetch revenue ranking data
-    const { topTrackData, isFetching: isRevenueFetching } =
-        useGetRevenueTopTrack(
+    const { topReleaseData, isFetching: isRevenueFetching } =
+        useGetRevenueTopRelease(
             {
                 fromDate: dataFilter.startDate!,
                 toDate: dataFilter.endDate!,
@@ -85,12 +89,12 @@ export default function TracksRankingPage() {
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueColumns: ColumnsType<RevenueTrackItem> = [
+    const revenueColumns: ColumnsType<RevenueReleaseItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -99,11 +103,11 @@ export default function TracksRankingPage() {
             ),
         },
         {
-            title: messages('common.track'),
+            title: messages('common.release'),
             dataIndex: 'title',
             key: 'title',
             ellipsis: true,
-            render: (text: string, record: RevenueTrackItem) => (
+            render: (text: string, record: RevenueReleaseItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -121,10 +125,10 @@ export default function TracksRankingPage() {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setTrackDetailModal({
+                                    setDetailModal({
                                         open: true,
                                         title: text,
-                                        isrc: record.isrc,
+                                        releaseId: record.releaseId,
                                     })
                                 }
                             >
@@ -136,14 +140,25 @@ export default function TracksRankingPage() {
             ),
         },
         {
-            title: 'ISRC',
-            dataIndex: 'isrc',
-            key: 'isrc',
+            title: 'UPC',
+            dataIndex: 'upc',
+            key: 'upc',
             width: 180,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
                     {text || '—'}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 120,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
                 </span>
             ),
         },
@@ -177,12 +192,12 @@ export default function TracksRankingPage() {
         },
     ];
 
-    const viewColumns: ColumnsType<TrackRankingItem> = [
+    const viewColumns: ColumnsType<ReleaseRankingItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 120,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -191,17 +206,17 @@ export default function TracksRankingPage() {
             ),
         },
         {
-            title: messages('common.track'),
+            title: messages('common.release'),
             dataIndex: 'title',
             key: 'title',
             ellipsis: true,
-            render: (text: string, record: TrackRankingItem) => (
+            render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         fileId={
-                            record?.release?.coverArtThumbnails?.[
+                            record.release?.coverArtThumbnails?.[
                                 RELEASE_COVER_ART_SIZE.S75
                             ] as string
                         }
@@ -213,10 +228,10 @@ export default function TracksRankingPage() {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setTrackDetailModal({
+                                    setDetailModal({
                                         open: true,
                                         title: text,
-                                        isrc: record.isrc,
+                                        releaseId: record.releaseId,
                                     })
                                 }
                             >
@@ -228,10 +243,10 @@ export default function TracksRankingPage() {
             ),
         },
         {
-            title: 'ISRC',
-            dataIndex: 'isrc',
-            key: 'isrc',
-            width: 200,
+            title: 'UPC',
+            dataIndex: 'upc',
+            key: 'upc',
+            width: 180,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -240,10 +255,21 @@ export default function TracksRankingPage() {
             ),
         },
         {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: 120,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
             title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 180,
+            width: 150,
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -253,13 +279,13 @@ export default function TracksRankingPage() {
     ];
 
     const pageTitle = isRevenue
-        ? `${messages('common.tracks')} - ${messages('common.revenue')}`
-        : `${messages('common.tracks')} - ${messages('common.views')}`;
+        ? `${messages('common.releases')} - ${messages('common.revenue')}`
+        : `${messages('common.releases')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {
             title: messages('analytics.label'),
-            href: APP_ROUTES.ANALYTICS2,
+            href: APP_ROUTES.ANALYTICS,
         },
         {
             title: pageTitle,
@@ -289,6 +315,7 @@ export default function TracksRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="month"
                     />
                 }
             >
@@ -301,17 +328,17 @@ export default function TracksRankingPage() {
                         />
                     </div>
                     {isRevenue ? (
-                        <Table<RevenueTrackItem>
+                        <Table<RevenueReleaseItem>
                             sticky
-                            columns={revenueColumns}
-                            dataSource={topTrackData.items}
-                            loading={isFetching}
-                            rowKey="isrc"
                             size="small"
+                            columns={revenueColumns}
+                            dataSource={topReleaseData.items}
+                            loading={isFetching}
+                            rowKey="releaseId"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
-                                total: topTrackData?.metadata?.totalItems,
+                                total: topReleaseData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -320,17 +347,17 @@ export default function TracksRankingPage() {
                             }}
                         />
                     ) : (
-                        <Table<TrackRankingItem>
+                        <Table<ReleaseRankingItem>
                             sticky
-                            columns={viewColumns}
-                            dataSource={trackRankingData.items}
-                            loading={isFetching}
-                            rowKey="isrc"
                             size="small"
+                            columns={viewColumns}
+                            dataSource={releaseRankingData.items}
+                            loading={isFetching}
+                            rowKey="releaseId"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
-                                total: trackRankingData?.metadata?.totalItems,
+                                total: releaseRankingData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -341,16 +368,13 @@ export default function TracksRankingPage() {
                     )}
                 </Card>
 
-                <DetailTrackAnalyticsModal
-                    open={trackDetailModal.open}
+                <DetailReleaseAnalyticsModal
+                    open={detailModal.open}
                     onClose={() =>
-                        setTrackDetailModal((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
+                        setDetailModal((prev) => ({ ...prev, open: false }))
                     }
-                    title={trackDetailModal.title}
-                    isrc={trackDetailModal.isrc}
+                    title={detailModal.title}
+                    releaseId={detailModal.releaseId}
                     fromDate={dataFilter.startDate!}
                     toDate={dataFilter.endDate!}
                 />

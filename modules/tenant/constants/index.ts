@@ -5,6 +5,8 @@ export const tenantQueryKeys = {
     all: [QUERY_KEY.TENANT.KEY],
     active: () =>
         [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_ACTIVE] as const,
+    activeAccessible: () =>
+        [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_ACTIVE_ACCESSIBLE] as const,
     lists: () => [...tenantQueryKeys.all, QUERY_KEY.TENANT.GET_LIST] as const,
     list: (params?: DataFilterTenant) => {
         const result: any[] = [...tenantQueryKeys.lists()];

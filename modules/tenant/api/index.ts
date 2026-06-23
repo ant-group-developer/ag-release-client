@@ -33,6 +33,12 @@ export const tenantApi = {
         );
     },
 
+    getActiveAccessible() {
+        return axiosInstance.get<PaginationResponse<TenantData>>(
+            `/tenants/active/accessible`
+        );
+    },
+
     getDetail(id: string) {
         return axiosInstance.get<DetailResponse<TenantDetail>>(
             `/tenants/${id}`

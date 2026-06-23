@@ -101,14 +101,23 @@ export interface ArtistRankingItem {
     genre?: string | null;
 }
 
+export interface TenantInfo {
+    id: string;
+    name: string;
+    title?: string | null;
+    logo?: string | null;
+}
+
 export interface LabelRankingItem {
     rank: number;
     labelId: string;
     labelName: string;
     picture: string | null;
+    image?: string | null;
     releaseCount: number;
     trackCount: number;
     totalViews: number;
+    tenant?: TenantInfo | null;
 }
 
 export interface TenantRankingItem {
@@ -287,10 +296,12 @@ export interface RevenueLabelItem {
     labelId: string;
     labelName: string;
     picture: string | null;
+    image?: string | null;
     releaseCount?: number;
     trackCount: number;
     revenueUsd: number;
     quantity: number;
+    tenant?: TenantInfo | null;
 }
 
 export interface TrendViewLineChartParams {
@@ -363,7 +374,12 @@ export interface RevenueTerBarChartItem {
 }
 
 export interface ExportReportRequest {
-    [key: string]: any;
+    fromDate: string;
+    endDate: string;
+    tenantIds: string[];
+    splitMode: EXPORT_OPTION;
+    periodUnit?: PERIOD_TYPE;
+    isExportArtist?: boolean;
 }
 
 export interface ExportReportResponse {
@@ -382,6 +398,20 @@ export enum ExportReportEventType {
     HEARTBEAT = 'heartbeat',
     COMPLETED = 'completed',
     FAILED = 'failed',
+}
+
+export enum EXPORT_OPTION {
+    BY_WORKSPACE = 'by_workspace',
+    BY_ARTIST = 'by_artist',
+    BY_PERIOD = 'by_period',
+    WORKSPACE_ARTIST = 'workspace_artist',
+    WORKSPACE_PERIOD = 'workspace_period',
+}
+
+export enum PERIOD_TYPE {
+    MONTH = 'month',
+    QUARTER = 'quarter',
+    NONE = 'none',
 }
 
 export interface ExportReportEventSummary {

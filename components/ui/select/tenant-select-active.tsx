@@ -1,5 +1,5 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
-import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
+import { useTenantActiveAccessible } from '@/modules/tenant/hooks/use-get-tenant';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
@@ -7,7 +7,7 @@ type Props = Omit<SelectProps, 'options'> & {
 };
 
 export default function TenantSelectActive({ fallBack, ...props }: Props) {
-    const { data, isLoading } = useTenantActive();
+    const { data, isLoading } = useTenantActiveAccessible();
 
     const options = (data?.items || []).map((item) => ({
         id: item.id,

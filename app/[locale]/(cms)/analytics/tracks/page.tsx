@@ -1,21 +1,25 @@
 'use client';
-
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
+import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
-import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import { DspRankingItem, RevenueDspItem } from '@/modules/analytics2/types';
+import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import { RevenueTrackItem, TrackRankingItem } from '@/modules/analytics2/types';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useState } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -25,7 +29,7 @@ interface RankingFilter extends CommonParams {
     type?: ANALYTICS_VIEW_TYPE;
 }
 
-export default function DspsRankingPage() {
+export default function TracksRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
 
@@ -38,56 +42,50 @@ export default function DspsRankingPage() {
             type: ANALYTICS_VIEW_TYPE.VIEW,
         });
 
+    const [trackDetailModal, setTrackDetailModal] = useState<{
+        open: boolean;
+        title: string;
+        isrc: string;
+    }>({
+        open: false,
+        title: '',
+        isrc: '',
+    });
+
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
-        {
-            fromDate: dataFilter.startDate!,
-            toDate: dataFilter.endDate!,
-            page,
-            pageSize,
-            keyword: dataFilter.keyword ?? undefined,
-        },
-        { enabled: !isRevenue }
-    );
+    const { trackRankingData, isFetching: isViewsFetching } =
+        useGetTrackRanking(
+            {
+                fromDate: dataFilter.startDate!,
+                toDate: dataFilter.endDate!,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+            },
+            { enabled: !isRevenue }
+        );
 
     // Fetch revenue ranking data
-    const { topDspData, isFetching: isRevenueFetching } = useGetRevenueTopDsp(
-        {
-            fromDate: dataFilter.startDate!,
-            toDate: dataFilter.endDate!,
-            page,
-            pageSize,
-            keyword: dataFilter.keyword ?? undefined,
-            includeOther: false,
-        },
-        { enabled: isRevenue }
-    );
+    const { topTrackData, isFetching: isRevenueFetching } =
+        useGetRevenueTopTrack(
+            {
+                fromDate: dataFilter.startDate!,
+                toDate: dataFilter.endDate!,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+                includeOther: false,
+            },
+            { enabled: isRevenue }
+        );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueDataWithRank = useMemo(() => {
-        if (!topDspData?.items) return [];
-        return topDspData.items.map((item: RevenueDspItem, index: number) => ({
-            ...item,
-            rank: (page - 1) * pageSize + index + 1,
-        }));
-    }, [topDspData, page, pageSize]);
-
-    const viewsDataWithRank = useMemo(() => {
-        if (!dspRankingData?.items) return [];
-        return dspRankingData.items.map(
-            (item: DspRankingItem, index: number) => ({
-                ...item,
-                rank: (page - 1) * pageSize + index + 1,
-            })
-        );
-    }, [dspRankingData, page, pageSize]);
-
-    const revenueColumns: ColumnsType<RevenueDspItem & { rank: number }> = [
+    const revenueColumns: ColumnsType<RevenueTrackItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -101,12 +99,50 @@ export default function DspsRankingPage() {
             ),
         },
         {
-            title: messages('common.dsps'),
-            dataIndex: 'dspName',
-            key: 'dspName',
+            title: messages('common.track'),
+            dataIndex: 'title',
+            key: 'title',
+            ellipsis: true,
+            render: (text: string, record: RevenueTrackItem) => (
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        fileId={
+                            record.release?.coverArtThumbnails?.[
+                                RELEASE_COVER_ART_SIZE.S75
+                            ] as string
+                        }
+                    />
+                    <div className="flex min-w-0 flex-col">
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setTrackDetailModal({
+                                        open: true,
+                                        title: text,
+                                        isrc: record.isrc,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            title: 'ISRC',
+            dataIndex: 'isrc',
+            key: 'isrc',
+            width: 180,
             ellipsis: true,
             render: (text: string) => (
-                <span className="text-gray-900 dark:text-zinc-100">
+                <span className="truncate text-gray-500 dark:text-zinc-400">
                     {text || '—'}
                 </span>
             ),
@@ -141,7 +177,7 @@ export default function DspsRankingPage() {
         },
     ];
 
-    const viewColumns: ColumnsType<DspRankingItem & { rank: number }> = [
+    const viewColumns: ColumnsType<TrackRankingItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -155,12 +191,50 @@ export default function DspsRankingPage() {
             ),
         },
         {
-            title: messages('common.dsps'),
-            dataIndex: 'dspName',
-            key: 'dspName',
+            title: messages('common.track'),
+            dataIndex: 'title',
+            key: 'title',
+            ellipsis: true,
+            render: (text: string, record: TrackRankingItem) => (
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        fileId={
+                            record?.release?.coverArtThumbnails?.[
+                                RELEASE_COVER_ART_SIZE.S75
+                            ] as string
+                        }
+                    />
+                    <div className="flex min-w-0 flex-col">
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setTrackDetailModal({
+                                        open: true,
+                                        title: text,
+                                        isrc: record.isrc,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            title: 'ISRC',
+            dataIndex: 'isrc',
+            key: 'isrc',
+            width: 200,
             ellipsis: true,
             render: (text: string) => (
-                <span className="text-gray-900 dark:text-zinc-100">
+                <span className="truncate text-gray-500 dark:text-zinc-400">
                     {text || '—'}
                 </span>
             ),
@@ -179,13 +253,13 @@ export default function DspsRankingPage() {
     ];
 
     const pageTitle = isRevenue
-        ? `${messages('common.dsps')} - ${messages('common.revenue')}`
-        : `${messages('common.dsps')} - ${messages('common.views')}`;
+        ? `${messages('common.tracks')} - ${messages('common.revenue')}`
+        : `${messages('common.tracks')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {
             title: messages('analytics.label'),
-            href: APP_ROUTES.ANALYTICS2,
+            href: APP_ROUTES.ANALYTICS,
         },
         {
             title: pageTitle,
@@ -227,17 +301,17 @@ export default function DspsRankingPage() {
                         />
                     </div>
                     {isRevenue ? (
-                        <Table<RevenueDspItem & { rank: number }>
+                        <Table<RevenueTrackItem>
                             sticky
-                            size="small"
                             columns={revenueColumns}
-                            dataSource={revenueDataWithRank}
+                            dataSource={topTrackData.items}
                             loading={isFetching}
-                            rowKey="dspName"
+                            rowKey="isrc"
+                            size="small"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
-                                total: topDspData?.metadata?.totalItems,
+                                total: topTrackData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -246,17 +320,17 @@ export default function DspsRankingPage() {
                             }}
                         />
                     ) : (
-                        <Table<DspRankingItem & { rank: number }>
+                        <Table<TrackRankingItem>
                             sticky
-                            size="small"
                             columns={viewColumns}
-                            dataSource={viewsDataWithRank}
+                            dataSource={trackRankingData.items}
                             loading={isFetching}
-                            rowKey="dspName"
+                            rowKey="isrc"
+                            size="small"
                             pagination={{
                                 current: dataFilter.page,
                                 pageSize: dataFilter.pageSize,
-                                total: dspRankingData?.metadata?.totalItems,
+                                total: trackRankingData?.metadata?.totalItems,
                                 pageSizeOptions: PAGE_SIZE_OPTIONS,
                                 showSizeChanger: true,
                                 showTotal: (totalCount, range) =>
@@ -266,6 +340,20 @@ export default function DspsRankingPage() {
                         />
                     )}
                 </Card>
+
+                <DetailTrackAnalyticsModal
+                    open={trackDetailModal.open}
+                    onClose={() =>
+                        setTrackDetailModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={trackDetailModal.title}
+                    isrc={trackDetailModal.isrc}
+                    fromDate={dataFilter.startDate!}
+                    toDate={dataFilter.endDate!}
+                />
             </PageContainer>
         </div>
     );

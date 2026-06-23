@@ -2165,7 +2165,20 @@
         "totalSalesViews": "Lượt sử dụng",
         "totalRevenueUsd": "Tổng doanh thu",
         "detailTitle": "Chi tiết phân tích",
-        "detailChartTitle": "Biểu đồ diễn biến"
+        "detailChartTitle": "Biểu đồ diễn biến",
+        "splitMode": {
+            "label": "Tùy chọn xuất",
+            "by_workspace": "Mỗi workspace là một file",
+            "by_artist": "Mỗi nghệ sĩ là một file",
+            "by_period": "Mỗi tháng/quý là một file",
+            "workspace_artist": "Mỗi workspace là một thư mục, mỗi nghệ sĩ là một file",
+            "workspace_period": "Mỗi workspace là một thư mục, mỗi tháng/quý là một file",
+            "periodUnit": "Đơn vị thời gian",
+            "month": "Tháng",
+            "quarter": "Quý",
+            "none": "Tổng hợp",
+            "isExportArtist": "Xuất kèm theo nghệ sĩ"
+        }
     },
     "issue": {
         "label": "Vấn đề",
