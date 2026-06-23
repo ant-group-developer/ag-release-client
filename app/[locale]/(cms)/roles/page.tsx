@@ -4,7 +4,11 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import {
+    PAGE_SIZE,
+    PAGE_SIZE_LARGE,
+    PAGE_SIZE_OPTIONS,
+} from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -18,7 +22,7 @@ import { useDeleteRole } from '@/modules/roles/hooks/use-delete-role';
 import { useGetListRoles } from '@/modules/roles/hooks/use-get-list-roles';
 import { RolesData, RolesDataDataFilter } from '@/modules/roles/types';
 import { PageContainer } from '@ant-design/pro-components';
-import { Select, Space, theme } from 'antd';
+import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
@@ -53,8 +57,7 @@ export default function Roles({}: Props) {
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<RolesDataDataFilter>({
             page: 1,
-            pageSize: PAGE_SIZE,
-            isActive: 'true',
+            pageSize: PAGE_SIZE_LARGE,
         });
     const { rolesData, dataUpdatedAt, refetch, isFetching } =
         useGetListRoles(dataFilter);
@@ -108,31 +111,11 @@ export default function Roles({}: Props) {
                     onChange={onChangeSort}
                     rowSelection={rowSelection}
                     headerTitle={
-                        <Space>
-                            <AppSearch
-                                className="max-w-52"
-                                onChange={onSearch}
-                                defaultValue={dataFilter.keyword}
-                            />
-                            <Select
-                                style={{ width: 150 }}
-                                options={[
-                                    {
-                                        label: messages('status.active'),
-                                        value: 'true',
-                                    },
-                                    {
-                                        label: messages('status.block'),
-                                        value: 'false',
-                                    },
-                                ]}
-                                value={dataFilter.isActive}
-                                placeholder={messages('common.status')}
-                                onChange={(value) =>
-                                    onChangeFilter({ isActive: value })
-                                }
-                            />
-                        </Space>
+                        <AppSearch
+                            className="max-w-52"
+                            onChange={onSearch}
+                            defaultValue={dataFilter.keyword}
+                        />
                     }
                     options={{
                         reload: () => {
@@ -142,6 +125,7 @@ export default function Roles({}: Props) {
                 />
 
                 <AppPagination
+                    hideOnSinglePage={false}
                     align="end"
                     className="rounded-b-lg"
                     style={{
