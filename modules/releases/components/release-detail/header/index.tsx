@@ -660,7 +660,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="flex justify-between">
                                     <div>{isScrolled && <DownloadMenu />}</div>
                                     <PermissionGate
-                                        permission={PERMISSION.RELEASE.UPDATE}
+                                        permission={PERMISSION.RELEASE_AUDIO.UPDATE}
                                     >
                                         {isReadMode && (
                                             <Button

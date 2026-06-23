@@ -163,7 +163,7 @@ export default function DistributionTable({
             render: (value, record) => {
                 if (!isEditMode || record?.isActive === false) return;
                 return (
-                    <PermissionGate permission={PERMISSION.RELEASE.UPDATE}>
+                    <PermissionGate permission={PERMISSION.RELEASE_AUDIO.UPDATE}>
                         <Space>
                             {isEditMode && (
                                 <CustomTooltip
