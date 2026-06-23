@@ -64,6 +64,7 @@ export enum RELEASES_TABS {
     DISTRIBUTION = 'distribution',
     SUBMITS = 'submits',
     ANALYTICS = 'analytics',
+    SYSTEM_REVIEW = 'system-review',
 }
 
 export enum RELEASE_VIEW_TABS {
