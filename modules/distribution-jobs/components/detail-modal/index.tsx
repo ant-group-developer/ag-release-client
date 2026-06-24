@@ -199,6 +199,14 @@ export default function DistributionJobDetailModal({ groupedData }: Props) {
                         onDownloadExcel={onDownloadExcel}
                         isConfirmingCompleted={isConfirmingCompleted}
                         onConfirmCompleted={onConfirmCompleted}
+                        showAutoSendEmail={
+                            dataEdit?.type !==
+                            DISTRIBUTION_JOB_TYPE.ADMIN_EXPORT
+                        }
+                        showDownloadExcel={
+                            dataEdit?.type !==
+                            DISTRIBUTION_JOB_TYPE.EMAIL_STATE51
+                        }
                     />
                 )}
                 options={{

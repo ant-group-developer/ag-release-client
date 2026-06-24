@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { DspTimelinePeriod } from '../types';
+import { DspTimelinePeriod, DspSalesTimelinePeriod } from '../types';
 
 export const DSP_PALETTE = [
     '#6366f1',
@@ -42,4 +42,15 @@ export function useDspPieData(
                 color: colorMap[dsp] ?? '#94a3b8',
             }));
     }, [items, topDsps, colorMap]);
+}
+
+export function transformSalesBarData(items: DspSalesTimelinePeriod[]) {
+    return items.map((item) => {
+        const row: Record<string, any> = { period: item.period };
+        item.series.forEach(({ dsp, salesViews, revenueUsd }) => {
+            row[dsp] = salesViews;
+            row[`${dsp}RevenueUsd`] = revenueUsd;
+        });
+        return row;
+    });
 }

@@ -1,27 +1,21 @@
 import { CommonAttribute, CommonParams } from '@/types/api';
+import { LOG_LEVEL, LOG_TYPE } from '../enums';
 
-export interface DataFilterLog extends CommonParams {
-    action?: string;
-    success?: string;
-    date?: string;
-    startDateCreated?: string;
-    endDateCreated?: string;
+export interface DataFilterLogs extends CommonParams {
+    level?: string;
+    type?: string;
+    module?: string;
+    releaseSubmitId?: string;
+    releaseSubmitStepId?: string;
+    fieldOrder?: string;
 }
 
-export interface LogData extends CommonAttribute {
-    action: string;
-    ip: string | null;
-    country: string | null;
-    city: string | null;
-    originalUrl: string | null;
-    statusCode: number | null;
-    content: string | null;
-    response: string | null;
-    email: string | null;
-    creatorId: string | null;
-    note: string | null;
-    success: boolean;
-    userAgent: string;
+export interface LogsData extends CommonAttribute {
+    level: LOG_LEVEL;
+    type: LOG_TYPE;
+    module: string;
+    message: string;
+    releaseSubmitId: string | null;
+    releaseSubmitStepId: string | null;
+    data: any;
 }
-
-export interface LogDetail extends LogData {}

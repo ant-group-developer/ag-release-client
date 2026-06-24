@@ -14,7 +14,10 @@ import useModalStore from '@/hooks/use-modal';
 import PriceTiersHeader from '@/modules/price_tiers/components/header';
 import PriceTiersFormModal from '@/modules/price_tiers/components/modal/price-tiers-form';
 import PriceTiersTable from '@/modules/price_tiers/components/table';
-import { TYPE_MODAL_PRICE_TIERS } from '@/modules/price_tiers/enums';
+import {
+    PRICE_TIERS_TABLE_KEY,
+    TYPE_MODAL_PRICE_TIERS,
+} from '@/modules/price_tiers/enums';
 import { useBulkUpdatePriceTiers } from '@/modules/price_tiers/hooks/use-bulk-update-tiers';
 import { useDeletePriceTiers } from '@/modules/price_tiers/hooks/use-delete-price-tiers';
 import { useGetListPriceTiers } from '@/modules/price_tiers/hooks/use-get-list-tiers';
@@ -44,7 +47,7 @@ export default function PriceTiers({}: Props) {
             page: 1,
             pageSize: PAGE_SIZE_EXTRA_LARGE,
             orderBy: ORDER.ASC,
-            fieldOrder: 'priceTier.code',
+            fieldOrder: PRICE_TIERS_TABLE_KEY.CODE,
         });
     const { priceTiersData, dataUpdatedAt, refetch, isLoading } =
         useGetListPriceTiers(dataFilter);

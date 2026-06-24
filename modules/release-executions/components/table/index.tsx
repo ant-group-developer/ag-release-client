@@ -133,8 +133,8 @@ export default function ReleaseExecutionTable({ ...props }: Props) {
             width: 100,
             render: (_, record) => {
                 const sinceText =
-                    formatRelativeShort(record?.startedAt) ??
-                    formatRelativeShort(record?.createdAt);
+                    formatRelativeShort(record?.startedAt, messages) ??
+                    formatRelativeShort(record?.createdAt, messages);
                 const completedText = formatDurationShort(
                     record?.startedAt,
                     record?.completedAt

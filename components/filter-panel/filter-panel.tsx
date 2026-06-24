@@ -13,10 +13,13 @@ import { FilterConfig, FilterPanelProps } from './types';
 export default function FilterPanel<TFilter extends Record<string, any>>({
     configs,
     dataFilter,
+    defaultFilter,
     onChangeFilter,
     removeFilter,
     canClearFilter,
     className,
+    placement = 'bottomLeft',
+    popoverHeight = 450,
 }: FilterPanelProps<TFilter>) {
     const messages = useTranslations();
     const { token } = theme.useToken();
@@ -84,7 +87,7 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     );
 
     const popoverContent = (
-        <div className="flex" style={{ height: 500 }}>
+        <div className="flex" style={{ height: popoverHeight }}>
             {/* Left sidebar */}
             <FilterCategoryList
                 configs={configs}
@@ -108,15 +111,19 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
 
     const popoverFooter = totalActiveCount > 0 && (
         <div className="flex items-center justify-between border-t border-gray-100 px-4 py-2">
-            <button
-                onClick={() => {
-                    removeFilter();
-                    setOpen(false);
-                }}
-                className="text-xs font-medium text-red-500 hover:text-red-700"
-            >
-                {messages('common.clearFilter')}
-            </button>
+            {canClearFilter ? (
+                <button
+                    onClick={() => {
+                        removeFilter();
+                        setOpen(false);
+                    }}
+                    className="text-xs font-medium text-red-500 hover:text-red-700"
+                >
+                    {messages('common.clearFilter')}
+                </button>
+            ) : (
+                <div />
+            )}
             <div className="text-xs font-medium text-blue-500">
                 {messages('filter.activeFilterCount', {
                     count: totalActiveCount,
@@ -139,8 +146,9 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
                 open={open}
                 onOpenChange={setOpen}
                 trigger="click"
-                placement="bottomLeft"
+                placement={placement}
                 arrow={false}
+                autoAdjustOverflow={false}
                 overlayInnerStyle={{ padding: 0, overflow: 'hidden' }}
                 content={
                     <div>
@@ -165,18 +173,18 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
             </Popover>
 
             {/* Active filter tags */}
-            {canClearFilter && (
-                <ActiveFilterTags
-                    configs={configs}
-                    dataFilter={dataFilter}
-                    onRemoveFilter={handleRemoveFilter}
-                    onRemoveAll={removeFilter}
-                    onClickTag={(key) => {
-                        setActiveCategory(key);
-                        setOpen(true);
-                    }}
-                />
-            )}
+            <ActiveFilterTags
+                configs={configs}
+                dataFilter={dataFilter}
+                defaultFilter={defaultFilter}
+                canClearFilter={canClearFilter}
+                onRemoveFilter={handleRemoveFilter}
+                onRemoveAll={removeFilter}
+                onClickTag={(key) => {
+                    setActiveCategory(key);
+                    setOpen(true);
+                }}
+            />
         </div>
     );
 }

@@ -1,6 +1,7 @@
-import { FileType, getBase64 } from '@/helpers/common';
+import { cn, FileType, getBase64 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { Image, Spin, Upload, UploadFile, UploadProps } from 'antd';
+import { createStyles } from 'antd-style';
 import type { RcFile } from 'antd/es/upload/interface';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -13,6 +14,9 @@ type Props = UploadProps & {
     minWidth?: number;
     loading?: boolean;
     description?: ReactNode;
+    imageFit?: 'contain' | 'cover';
+    previewAspectRatio?: string;
+    onGetPreviewUrl?: (file: UploadFile) => Promise<string>;
 };
 
 export default function ImageListUpload({
@@ -22,11 +26,16 @@ export default function ImageListUpload({
     minWidth,
     loading = false,
     description,
+    imageFit = 'cover',
+    previewAspectRatio,
+    onGetPreviewUrl,
     ...props
 }: Props) {
     const messages = useTranslations();
+    const { styles } = useStyles({ imageFit, previewAspectRatio });
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
+    const [previewLoading, setPreviewLoading] = useState(false);
     const [showText, setShowText] = useState(true);
     const fileList = value?.fileList || [];
     const containerRef = useRef<HTMLDivElement>(null);
@@ -78,12 +87,26 @@ export default function ImageListUpload({
     }
 
     const handlePreview = async (file: UploadFile) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj as FileType);
+        setPreviewLoading(true);
+        try {
+            if (onGetPreviewUrl) {
+                const url = await onGetPreviewUrl(file);
+                if (url) {
+                    setPreviewImage(url);
+                    setPreviewOpen(true);
+                }
+            } else {
+                if (!file.url && !file.preview) {
+                    file.preview = await getBase64(file.originFileObj as FileType);
+                }
+                setPreviewImage(file.url || file.preview || '');
+                setPreviewOpen(true);
+            }
+        } catch (error) {
+            console.error('Failed to load preview image:', error);
+        } finally {
+            setPreviewLoading(false);
         }
-
-        setPreviewImage(file.url || file.preview || '');
-        setPreviewOpen(true);
     };
 
     const handleChange: UploadProps['onChange'] = (info) => {
@@ -139,6 +162,7 @@ export default function ImageListUpload({
                 // multiple
                 disabled={loading || props.disabled} // Disable upload khi đang loading
                 {...props}
+                className={cn(styles.imageUpload, props.className)}
                 fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
@@ -149,7 +173,7 @@ export default function ImageListUpload({
 
             {description}
 
-            {loading && (
+            {(loading || previewLoading) && (
                 <div
                     style={{
                         position: 'absolute',
@@ -161,8 +185,8 @@ export default function ImageListUpload({
                         alignItems: 'center',
                         justifyContent: 'center',
                         zIndex: 10,
-                        // borderRadius: '6px',
-                        // backdropFilter: 'blur(10px)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '8px',
                     }}
                 >
                     <Spin />
@@ -185,3 +209,45 @@ export default function ImageListUpload({
         </div>
     );
 }
+
+const useStyles = createStyles(
+    (
+        _,
+        {
+            imageFit,
+            previewAspectRatio,
+        }: Pick<Props, 'imageFit' | 'previewAspectRatio'>
+    ) => ({
+        imageUpload: {
+            ...(previewAspectRatio
+                ? {
+                      width: '100%',
+
+                      '.ant-upload': {
+                          width: '100% !important',
+                          height: 'auto !important',
+                          aspectRatio: previewAspectRatio,
+                      },
+
+                      '.ant-upload-list': {
+                          width: '100%',
+                      },
+
+                      '.ant-upload-list-item-container': {
+                          width: '100% !important',
+                          height: 'auto !important',
+                          aspectRatio: previewAspectRatio,
+                      },
+
+                      '.ant-upload-list-item': {
+                          height: '100%',
+                      },
+                  }
+                : {}),
+
+            '.ant-upload-list-item-thumbnail img': {
+                objectFit: imageFit,
+            },
+        },
+    })
+);

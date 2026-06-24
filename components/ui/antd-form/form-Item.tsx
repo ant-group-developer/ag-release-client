@@ -29,6 +29,7 @@ function AppFormItem({
                         color: '#65696e',
                     }}
                     type="secondary"
+                    className="dark:!text-white"
                 >
                     {label}
                 </Typography.Text>

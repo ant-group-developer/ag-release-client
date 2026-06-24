@@ -8,9 +8,10 @@ import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { TimezoneData } from '@/modules/timezone/types';
 import { TrackData } from '@/modules/tracks/types';
+import { FileBucket } from '@/modules/upload/types/data';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { RELEASE_TIME_MODE, RELEASES_STATUS, RELEASES_TYPE } from '../enums';
+import { RELEASE_TIME_MODE, RELEASE_TYPE, RELEASES_STATUS } from '../enums';
 
 export interface ReleaseCoverArt {
     '75x75': string | null;
@@ -48,6 +49,7 @@ export interface ReleasesData extends CommonAttribute {
     pLineYear: number | null;
     catalogId: string | null;
     isVariousArtist: boolean;
+    isInstrumental: boolean;
     releaseLanguage?: ReleaseLanguage;
     releaseDate: string;
     releaseOriginalDate: string;
@@ -62,13 +64,59 @@ export interface ReleasesData extends CommonAttribute {
     releaseTimeMode: RELEASE_TIME_MODE;
     logs: string;
     priceTierId?: string;
+    type?: RELEASE_TYPE;
+    video?: VideoData;
+    metadataExternal?: ReleaseMetadataExternal;
+    isImportedFromReport?: boolean;
+    isrc?: string;
+}
+
+export interface SpotifyCoverImage {
+    url: string;
+    size: string;
+    width: number;
+    height: number;
+}
+
+export interface ExternalMetadata {
+    albumId: string;
+    albumUrl: string;
+    coverImages: SpotifyCoverImage[];
+    lastSyncedAt: string;
+}
+
+export interface ReleaseMetadataExternal {
+    spotify?: ExternalMetadata;
+    deezer?: ExternalMetadata;
+    [key: string]: ExternalMetadata | undefined;
+}
+
+export interface VideoData {
+    id?: string;
+    releaseId: string;
+    isrc: string;
+    explicit: boolean;
+    aiContent: string;
+    channel: string;
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    madeForKids: string;
+    isUnlisted: boolean;
+    subtitles?: string[];
+    contentProvider?: string;
+    copyrightOwner?: string;
+    partnerCustomId1?: string;
+    partnerCustomId2?: string;
+    fileId?: string;
+    videoFile?: FileBucket;
 }
 
 export interface ReleasesDataSimple
     extends Pick<ReleasesData, 'id' | 'title'> {}
 
 export interface ReleasesDataFilter extends CommonParams {
-    type?: RELEASES_TYPE;
+    type?: RELEASE_TYPE;
     status?: RELEASES_STATUS;
     startDateCreated?: string;
     endDateCreated?: string;
@@ -81,6 +129,7 @@ export interface ReleasesDataFilter extends CommonParams {
     releaseId?: string;
     isVariousArtist?: string;
     idInclude?: string;
+    isImportedFromReport?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {
@@ -108,3 +157,12 @@ export interface ReleaseValidate {
 }
 
 export type { TrackData } from '@/modules/tracks/types';
+
+export interface ReleaseCaptionData extends CommonAttribute {
+    releaseId: string;
+    languageId: string;
+    type: string;
+    fileId: string;
+    file?: FileBucket;
+    language?: LanguagesData;
+}

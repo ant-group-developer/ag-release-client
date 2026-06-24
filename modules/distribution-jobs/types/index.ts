@@ -1,24 +1,18 @@
 import { CommonAttribute, CommonParams, PaginationResponse } from '@/types/api';
 
 export enum DISTRIBUTION_JOB_STATUS {
-    PENDING = 'pending',
-    PROCESSING = 'processing',
-    COMPLETED = 'completed',
-    FAILED = 'failed',
-    SKIPPED = 'skipped',
+    PENDING = 'PENDING',
+    PROCESSING = 'PROCESSING',
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED',
+    SKIPPED = 'SKIPPED',
+    CANCEL = 'CANCEL',
 }
 
 export enum DISTRIBUTION_JOB_TYPE {
-    EMAIL_STATE51 = 'email_state51',
-    ADMIN_EXPORT = 'admin_export',
+    EMAIL_STATE51 = 'EMAIL_STATE51',
+    ADMIN_EXPORT = 'ADMIN_EXPORT',
 }
-
-export type DistributionJobStatus =
-    | 'pending'
-    | 'processing'
-    | 'completed'
-    | 'failed'
-    | 'skipped';
 
 export interface DistributionJobData extends CommonAttribute {
     type: DISTRIBUTION_JOB_TYPE | string;
@@ -27,7 +21,7 @@ export interface DistributionJobData extends CommonAttribute {
     releaseSubmitId: string;
     stepId: string;
     releaseId: string;
-    status: DistributionJobStatus | string;
+    status: DISTRIBUTION_JOB_STATUS | string;
     deliveryEmail: string | null;
     deliveryEmailSubject: string | null;
     sentAt: string | null;
@@ -36,7 +30,7 @@ export interface DistributionJobData extends CommonAttribute {
 }
 
 export interface DistributionJobFilter extends CommonParams {
-    status?: DistributionJobStatus | string;
+    status?: DISTRIBUTION_JOB_STATUS | string;
     type?: string;
     releaseId?: string;
     releaseSubmitId?: string;

@@ -32,6 +32,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 // Section dependencies
+import { cn } from '@/helpers/common';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
@@ -79,6 +80,9 @@ export default function ReleaseDetailFormV2() {
         resolver: zodResolver(releaseDetailSchema(messages)),
         mode: 'onChange',
         reValidateMode: 'onChange',
+        defaultValues: {
+            isInstrumental: false,
+        },
     });
 
     const {
@@ -167,6 +171,7 @@ export default function ReleaseDetailFormV2() {
         } else if (releaseId && formValues) {
             const initialFormValue: ReleaseDetailSchema = {
                 ...(formValues as ReleaseDetailSchema),
+                isInstrumental: formValues.isInstrumental ?? false,
             };
             reset(initialFormValue);
         }
@@ -202,7 +207,12 @@ export default function ReleaseDetailFormV2() {
                 }}
             >
                 <Form
-                    className="form-read-only-primary"
+                    className={cn(
+                        'form-read-only-primary',
+                        isReadMode &&
+                            !isCreateReleasePage &&
+                            '[&_.ant-input]:!font-medium [&_.ant-picker-input_input]:!font-medium [&_.ant-radio-wrapper]:!font-medium [&_.ant-select-selection-item]:!font-medium'
+                    )}
                     layout="horizontal"
                     onFinish={handleSubmit(handleNext, handleFormError)}
                     labelCol={{ xl: 10, lg: 14, md: 24, sm: 24 }}
@@ -269,7 +279,7 @@ export default function ReleaseDetailFormV2() {
                 </Form>
 
                 <div className="my-4">
-                    <PermissionGate permission={PERMISSION.RELEASE.DELETE}>
+                    <PermissionGate permission={PERMISSION.RELEASE_AUDIO.DELETE}>
                         {!isCreateReleasePage &&
                             releaseData?.status == RELEASES_STATUS.DRAFT && (
                                 <Button

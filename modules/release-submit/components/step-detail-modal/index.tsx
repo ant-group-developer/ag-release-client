@@ -13,6 +13,7 @@ import {
     Typography,
     theme,
 } from 'antd';
+import { useTranslations } from 'next-intl';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -22,20 +23,19 @@ import {
 import { ReleaseSubmitLogsData, ReleaseSubmitStepData } from '../../types';
 
 type Props = Omit<AppModalProps, 'children'> & {
-    logs?: ReleaseSubmitLogsData[];
     step?: ReleaseSubmitStepData | null;
 };
 
 export default function ReleaseSubmitStepDetailModal({
-    logs = [],
     step,
     ...props
 }: Props) {
     const { token } = theme.useToken();
+    const messages = useTranslations();
 
     if (!step) return null;
 
-    const stepLogs = logs.filter((log) => log.releaseSubmitStepId === step.id);
+    const stepLogs = step.logs || [];
     const metadataJson = getJsonContent(step.metadata);
     const metadataText = getTextContent(step.metadata);
 
@@ -152,11 +152,12 @@ export default function ReleaseSubmitStepDetailModal({
                             },
                             {
                                 key: 'duration',
-                                label: 'Duration',
+                                label: messages('releaseExecution.detail.columns.duration'),
                                 children:
                                     formatDurationShort(
                                         step.startedAt,
-                                        step.completedAt
+                                        step.completedAt,
+                                        messages('releaseExecution.detail.columns.completedIn')
                                     ) || '-',
                             },
                         ]}

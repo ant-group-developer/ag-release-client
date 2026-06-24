@@ -56,6 +56,12 @@ export const CustomizedPieLabel = (props: any, content?: string | number) => {
         outerRadius = 0,
         percent = 0,
     } = props;
+
+    // Ẩn nhãn nếu phần trăm quá nhỏ (dưới 5%) để tránh chồng lấp gây xấu giao diện
+    if (percent < 0.05) {
+        return null;
+    }
+
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const RADIAN = Math.PI / 180;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -69,7 +75,7 @@ export const CustomizedPieLabel = (props: any, content?: string | number) => {
             textAnchor="middle"
             dominantBaseline="central"
             style={{
-                fontWeight: 'bold',
+                // fontWeight: 'bold',
                 fontSize: '12px',
                 pointerEvents: 'none',
             }}

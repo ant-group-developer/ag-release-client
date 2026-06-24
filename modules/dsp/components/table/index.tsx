@@ -11,7 +11,7 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { ProColumns } from '@ant-design/pro-components';
 import { Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { DSP_DEAL, TYPE_MODAL_DSP } from '../../enums';
+import { DSP_DEAL, DSP_TABLE_KEY, TYPE_MODAL_DSP } from '../../enums';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 
@@ -47,7 +47,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.name'),
             key: 'name',
-            dataIndex: 'name',
+            dataIndex: DSP_TABLE_KEY.NAME,
             ellipsis: true,
             align: 'left',
             width: 250,
@@ -73,7 +73,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('common.code'),
             key: 'code',
-            dataIndex: 'code',
+            dataIndex: DSP_TABLE_KEY.CODE,
             align: 'left',
             width: 150,
             render: (value, record) => (
@@ -88,7 +88,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.codeCi'),
             key: 'codeCi',
-            dataIndex: 'codeCi',
+            dataIndex: DSP_TABLE_KEY.CODE_CI,
             align: 'left',
             width: 120,
             render: (value, record) => (
@@ -103,7 +103,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.ddexPartyId'),
             key: 'ddexId',
-            dataIndex: 'ddexId',
+            dataIndex: DSP_TABLE_KEY.DDEX_ID,
             align: 'left',
             width: 200,
             render: (value, record) => (
@@ -118,7 +118,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.fullNameOfDDexParty'),
             key: 'ddexName',
-            dataIndex: 'ddexName',
+            dataIndex: DSP_TABLE_KEY.DDEX_NAME,
             align: 'left',
             width: 200,
             render: (value, record) => (
@@ -133,7 +133,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('status.active'),
             key: 'isActive',
-            dataIndex: 'isActive',
+            dataIndex: DSP_TABLE_KEY.IS_ACTIVE,
             align: 'center',
             width: 80,
             render: (value, record) => (
@@ -149,7 +149,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: `${messages('status.active')} ${messages('common.policies').toLowerCase()}`,
             key: 'enablePolicy',
-            dataIndex: 'enablePolicy',
+            dataIndex: DSP_TABLE_KEY.ENABLE_POLICY,
             align: 'center',
             width: 130,
             render: (value, record) => (
@@ -168,7 +168,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('roles.isDefault'),
             key: 'isDefault',
-            dataIndex: 'isDefault',
+            dataIndex: DSP_TABLE_KEY.IS_DEFAULT,
             align: 'center',
             width: 100,
             render: (value, record) => (
@@ -187,7 +187,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.hasDeal'),
             key: 'hasDeal',
-            dataIndex: 'hasDeal',
+            dataIndex: DSP_TABLE_KEY.HAS_DEAL,
             align: 'center',
             width: 120,
             render: (value, record) => (
@@ -206,7 +206,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.dealType'),
             key: 'dspRoutingConfig',
-            dataIndex: 'dspRoutingConfig',
+            dataIndex: DSP_TABLE_KEY.DSP_ROUTING_CONFIG,
             align: 'center',
             width: 100,
             ellipsis: true,
@@ -228,7 +228,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('common.createdAt'),
             key: 'createdAt',
-            dataIndex: 'createdAt',
+            dataIndex: DSP_TABLE_KEY.CREATED_AT,
             align: 'center',
             width: 150,
             render: (value, record) => (
@@ -240,7 +240,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('common.updatedAt'),
             key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            dataIndex: DSP_TABLE_KEY.UPDATED_AT,
             align: 'center',
             width: 150,
             render: (value, record) => (
@@ -252,7 +252,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: '',
             key: 'action',
-            dataIndex: '',
+            dataIndex: DSP_TABLE_KEY.ACTION,
             width: 50,
             fixed: canUpdate ? 'right' : undefined,
             render: (_, record) => (

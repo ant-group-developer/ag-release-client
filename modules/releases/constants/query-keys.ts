@@ -22,4 +22,9 @@ export const releasesQueryKeys = {
     validations: () =>
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.VALIDATE] as const,
     validate: (id: string) => [...releasesQueryKeys.validations(), id] as const,
+
+    captions: () =>
+        [...releasesQueryKeys.all, QUERY_KEY.RELEASES.GET_CAPTIONS] as const,
+    captionList: (id: string, type?: string) =>
+        [...releasesQueryKeys.captions(), id, type] as const,
 };

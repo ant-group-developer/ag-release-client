@@ -9,10 +9,12 @@ import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space, Tag, theme, Typography } from 'antd';
 import { Eye, FileJson } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { FieldOrderReleaseExecution3 } from '../../enums';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -30,9 +32,14 @@ type Props = Omit<AppProTableProps<ReleaseSubmitData>, 'columns'> & {
         current: number;
     };
     onViewSnapshot?: (snapshot: any) => void;
+    showIsrc?: boolean;
 };
 
-export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
+export default function ReleaseSubmitTable({
+    dataFilter,
+    showIsrc = false,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const { dspData } = useGetListDsp({
@@ -55,31 +62,88 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: messages('releaseExecution.columns.upc'),
-            key: 'upc',
+            title: showIsrc
+                ? messages('common.isrc')
+                : messages('releaseExecution.columns.upc'),
+            dataIndex: FieldOrderReleaseExecution3.execution_releaseUpc,
+            key: FieldOrderReleaseExecution3.execution_releaseUpc,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_releaseUpc
+            ),
             width: 150,
             fixed: 'left',
-            render: (_, record) => (
-                <Typography.Text copyable>
-                    {record?.metadata?.input?.releaseSnapshot?.upc || '-'}
-                </Typography.Text>
-            ),
+            render: (_, record) => {
+                const releaseSnapshot =
+                    record?.metadata?.input?.releaseSnapshot;
+                if (showIsrc) {
+                    const isrc =
+                        releaseSnapshot?.isrc || releaseSnapshot?.video?.isrc;
+                    if (!isrc) return '-';
+                    return <Typography.Text copyable>{isrc}</Typography.Text>;
+                }
+                const upc =
+                    record?.metadata?.input?.upcAutoIfReleaseSnapshotNull ||
+                    releaseSnapshot?.upc;
+                if (!upc) return '-';
+                return <Typography.Text copyable>{upc}</Typography.Text>;
+            },
         },
         {
             title: messages('releaseExecution.columns.releaseName'),
-            key: 'releaseId',
-            width: 200,
-            ellipsis: true,
-            render: (_, record) => (
-                <Typography.Text copyable>
-                    {record?.metadata?.input?.releaseSnapshot?.title || '-'}
-                </Typography.Text>
+            dataIndex: FieldOrderReleaseExecution3.execution_releaseTitle,
+            key: FieldOrderReleaseExecution3.execution_releaseTitle,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_releaseTitle
             ),
+            width: 250,
+            ellipsis: true,
+            render: (_, record) => {
+                const releaseSnapshot =
+                    record?.metadata?.input?.releaseSnapshot;
+                const coverArts = (releaseSnapshot as any)?.releaseCoverArts as
+                    | { type: string; fileId: string }[]
+                    | undefined;
+                const coverArtFileId =
+                    coverArts?.find((art) => art.type === '75x75')?.fileId ??
+                    coverArts?.[0]?.fileId;
+                return (
+                    <Space>
+                        {coverArtFileId ? (
+                            <div style={{ flexShrink: 0 }}>
+                                <ReleaseCoverImage
+                                    fileId={coverArtFileId}
+                                    width={36}
+                                    height={36}
+                                />
+                            </div>
+                        ) : (
+                            <Avatar shape="square" size={36}>
+                                -
+                            </Avatar>
+                        )}
+                        <Typography.Text copyable ellipsis>
+                            {releaseSnapshot?.title || '-'}
+                        </Typography.Text>
+                    </Space>
+                );
+            },
         },
         {
             title: messages('releaseExecution.columns.type'),
-            dataIndex: 'type',
-            key: 'type',
+            dataIndex: FieldOrderReleaseExecution3.execution_type,
+            key: FieldOrderReleaseExecution3.execution_type,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_type
+            ),
             width: 120,
             render: (_, record) =>
                 record.type ? (
@@ -92,8 +156,14 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('releaseExecution.columns.status'),
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: FieldOrderReleaseExecution3.execution_status,
+            key: FieldOrderReleaseExecution3.execution_status,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                FieldOrderReleaseExecution3.execution_status
+            ),
             width: 130,
             render: (_, record) =>
                 record.status ? (
@@ -105,7 +175,7 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
                 ),
         },
         {
-            title: messages('releaseExecution.columns.targetDspCodes'),
+            title: 'DSPs',
             key: 'dspCodes',
             width: 200,
             render: (_, record) => {
@@ -162,11 +232,12 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
             width: 150,
             render: (_, record) => {
                 const sinceText =
-                    formatRelativeShort(record?.completedAt) ??
-                    formatRelativeShort(record?.createdAt);
+                    formatRelativeShort(record?.completedAt, messages) ??
+                    formatRelativeShort(record?.createdAt, messages);
                 const completedText = formatDurationShort(
                     record?.createdAt,
-                    record?.completedAt
+                    record?.completedAt,
+                    messages('releaseExecution.detail.columns.completedIn')
                 );
 
                 if (!sinceText && !completedText && !record?.summary)
@@ -210,13 +281,13 @@ export default function ReleaseSubmitTable({ dataFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            dataIndex: 'submit.createdAt',
-            key: 'submit.createdAt',
+            dataIndex: FieldOrderReleaseExecution3.execution_createdAt,
+            key: FieldOrderReleaseExecution3.execution_createdAt,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter?.orderBy,
                 dataFilter?.fieldOrder,
-                'submit.createdAt'
+                FieldOrderReleaseExecution3.execution_createdAt
             ),
             width: 150,
             render: (value, record) =>

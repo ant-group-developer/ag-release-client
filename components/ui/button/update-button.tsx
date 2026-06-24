@@ -16,6 +16,7 @@ function UpdateButton({ canUpdate, ...props }: Props) {
     return (
         <Tooltip title={messages('common.update')}>
             <button
+                type="button"
                 {...props}
                 className="rounded-full border-0 bg-inherit p-2 hover:bg-slate-200"
             >

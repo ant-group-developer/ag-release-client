@@ -5,6 +5,8 @@ import {
     DashboardDataFilter,
     IssueCountData,
     OverviewCountData,
+    AnalyticDashboardParams,
+    AnalyticDashboardData,
 } from '../types';
 
 export const dashboardApis = {
@@ -26,4 +28,23 @@ export const dashboardApis = {
             { params }
         );
     },
+    getAnalyticDsp: (params: AnalyticDashboardParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticDashboardData[]>>(
+            '/analytic/dashboard/dsp',
+            params
+        );
+    },
+    getAnalyticLabel: (params: AnalyticDashboardParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticDashboardData[]>>(
+            '/analytic/dashboard/label',
+            params
+        );
+    },
+    getAnalyticArtist: (params: AnalyticDashboardParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticDashboardData[]>>(
+            '/analytic/dashboard/artist',
+            params
+        );
+    },
 };
+

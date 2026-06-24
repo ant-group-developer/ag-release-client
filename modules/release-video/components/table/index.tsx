@@ -1,28 +1,35 @@
+import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import PopoverTags from '@/components/ui/tag/popover-tags';
+import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { Link, useRouter } from '@/i18n/routing';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
+import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
+import { Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import ActionButton from '@/components/ui/button/action-button';
-import CopyText from '@/components/ui/copy-text/copy-text';
-import { Tag, Tooltip } from 'antd';
 import { TYPE_MODAL_RELEASE_VIDEO } from '../../enums';
-import { ReleaseVideoData, ReleaseVideoDataFilter } from '../../types';
-import { Sparkles } from 'lucide-react';
 
-type Props = Omit<AppTableProps<ReleaseVideoData>, 'columns'> & {
+type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
     pagination: {
         pageSize: number;
         current: number;
     };
-    dataFilter: ReleaseVideoDataFilter;
+    dataFilter: ReleasesDataFilter;
 };
 
 export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
+    const { Text } = Typography;
 
-    const columns: ColumnType<ReleaseVideoData>[] = [
+    const columns: ColumnType<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
@@ -37,126 +44,133 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('releaseVideo.fields.videoTitle'),
-            key: 'videoTitle',
-            dataIndex: 'videoTitle',
+            key: 'title',
+            dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 220,
+            width: 320,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'videoTitle'
+                'title'
             ),
-            render: (value, record) => (
-                <div className="flex items-center gap-2">
-                    <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                        <span className="font-semibold text-gray-800 truncate">{value}</span>
-                    </CopyText>
-                    {record.containsAiContent && (
-                        <Tooltip title={messages('releaseVideo.fields.containsAiContent')}>
-                            <Sparkles size={14} className="text-purple-500 animate-pulse" />
-                        </Tooltip>
-                    )}
-                    {record.isExplicit && (
-                        <Tag color="red" className="!text-[10px] !px-1 !line-height-1 leading-none font-bold scale-90">
-                            E
-                        </Tag>
-                    )}
-                </div>
-            ),
+            render: (value, record) => {
+                const detailUrl = `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`;
+                return (
+                    <div className="flex items-center gap-4">
+                        <Link href={detailUrl}>
+                            <div className="h-14 min-w-14">
+                                <ReleaseCoverImage data={record} />
+                            </div>
+                        </Link>
+                        <div className="flex flex-col truncate">
+                            <div className="flex items-center gap-1">
+                                <Link href={detailUrl} className="truncate">
+                                    <span className="cursor-pointer font-medium hover:underline">
+                                        {value}
+                                    </span>
+                                </Link>
+                                <span
+                                    className="inline-block align-middle"
+                                    data-stop-row-click="true"
+                                >
+                                    <Typography.Text
+                                        copyable={{
+                                            text: value,
+                                            tooltips: false,
+                                        }}
+                                    />
+                                </span>
+                            </div>
+                            {record.video?.channel && (
+                                <span className="truncate text-xs text-gray-500">
+                                    {record.video.channel}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                );
+            },
         },
         {
             title: messages('releaseVideo.fields.primaryArtists'),
-            key: 'primaryArtists',
-            dataIndex: 'primaryArtists',
+            key: 'releaseArtists',
+            dataIndex: 'releaseArtists',
+            width: 220,
+            render: (value: ReleasesData['releaseArtists']) => {
+                const artists =
+                    value
+                        ?.map((artist) => artist.artist?.name)
+                        .filter((name): name is string => !!name) || [];
+
+                return artists.length ? <PopoverTags tags={artists} /> : '-';
+            },
+        },
+        {
+            title: messages('releaseVideo.fields.genre'),
+            key: 'primaryGenre',
+            dataIndex: 'primaryGenre',
+            width: 160,
+            render: (_, record) => {
+                const genre = record.primaryGenre?.name;
+                // return genre ? <PopoverTags tags={[genre]} /> : '-';
+                return <span>{genre}</span>;
+            },
+        },
+        {
+            title: 'ISRC',
+            key: 'ISRC',
+            dataIndex: 'ISRC',
+            align: 'center',
             width: 180,
-            render: (value: string[]) => (
-                <div className="flex flex-wrap gap-1 max-w-[170px]">
-                    {value?.map((artist, idx) => (
-                        <Tag key={idx} color="blue" className="m-0 max-w-[80px] truncate">
-                            {artist}
-                        </Tag>
-                    )) || '-'}
-                </div>
-            ),
-        },
-        {
-            title: messages('releaseVideo.fields.featuredArtists'),
-            key: 'featuredArtists',
-            dataIndex: 'featuredArtists',
-            width: 150,
-            render: (value: string[]) => (
-                <div className="flex flex-wrap gap-1 max-w-[140px]">
-                    {value && value.length > 0 ? (
-                        value.map((artist, idx) => (
-                            <Tag key={idx} color="purple" className="m-0 max-w-[70px] truncate">
-                                {artist}
-                            </Tag>
-                        ))
-                    ) : (
-                        <span className="text-gray-400">-</span>
-                    )}
-                </div>
-            ),
-        },
-        {
-            title: messages('releaseVideo.fields.genres'),
-            key: 'genres',
-            dataIndex: 'genres',
-            width: 150,
-            render: (value: string[]) => (
-                <div className="flex flex-wrap gap-1 max-w-[140px]">
-                    {value?.map((genre, idx) => (
-                        <Tag key={idx} color="default" className="m-0 max-w-[70px] truncate">
-                            {genre}
-                        </Tag>
-                    )) || '-'}
-                </div>
-            ),
-        },
-        {
-            title: messages('releaseVideo.fields.isrc'),
-            key: 'isrc',
-            dataIndex: 'isrc',
-            align: 'center',
-            width: 140,
             ellipsis: true,
-            render: (value) => <span className="font-mono text-xs">{value}</span>,
+            render: (value, record) => {
+                if (!record?.isrc) return '-';
+                return (
+                    <Typography.Text copyable={{ tooltips: false }}>
+                        {record?.isrc}
+                    </Typography.Text>
+                );
+            },
         },
         {
-            title: messages('common.language'),
-            key: 'language',
-            dataIndex: 'language',
+            title: messages('common.status'),
+            key: 'status',
+            dataIndex: 'status',
             align: 'center',
-            width: 110,
-            render: (value) => <span className="text-sm">{value}</span>,
-        },
-        {
-            title: messages('releaseVideo.fields.channel'),
-            key: 'channel',
-            dataIndex: 'channel',
-            align: 'left',
             width: 120,
-            ellipsis: true,
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.status} />;
+            },
         },
+        // {
+        //     title: messages('common.createdAt'),
+        //     key: 'createdAt',
+        //     dataIndex: 'createdAt',
+        //     align: 'center',
+        //     width: 140,
+        //     sorter: true,
+        //     sortOrder: getSortOrder(
+        //         dataFilter.orderBy,
+        //         dataFilter.fieldOrder,
+        //         'createdAt'
+        //     ),
+        //     render: (value) => <span>{formattedDate(value)}</span>,
+        // },
         {
-            title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            title: messages('common.updatedAt'),
+            key: 'updatedAt',
+            dataIndex: 'updatedAt',
             align: 'center',
             width: 140,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                'updatedAt'
             ),
-            render: (value) => (
-                <span className="text-gray-500 text-xs truncate">
-                    {formattedDate(value)}
-                </span>
-            ),
+            render: (value) => <span>{formattedDate(value)}</span>,
         },
         {
             title: '',
@@ -165,26 +179,23 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             width: 80,
             align: 'center',
             render: (_, record) => (
-                <ActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
-                    }
-                    showUpdate
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_RELEASE_VIDEO.UPDATE, record)
-                    }
-                />
+                <PermissionGate permission={PERMISSION.RELEASE_VIDEO.UPDATE}>
+                    <ActionButton
+                        showDelete
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
+                        }
+                        showUpdate
+                        onShowUpdate={() =>
+                            router.push(
+                                `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`
+                            )
+                        }
+                    />
+                </PermissionGate>
             ),
         },
     ];
 
-    return (
-        <AppTable
-            {...props}
-            pagination={false}
-            columns={columns}
-            rowClassName={'group cursor-pointer'}
-        />
-    );
+    return <AppTable {...props} pagination={false} columns={columns} />;
 };

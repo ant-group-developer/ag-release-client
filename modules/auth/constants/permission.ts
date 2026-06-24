@@ -35,13 +35,21 @@ export const PERMISSION = {
         UPDATE: 'label.update',
         DELETE: 'label.delete',
     },
-    RELEASE: {
-        REVIEW: 'release.review',
-        CREATE: 'release.create',
-        READ: 'release.read',
-        TAKE_DOWN: 'release.take_down',
-        UPDATE: 'release.update',
-        DELETE: 'release.delete',
+    RELEASE_AUDIO: {
+        REVIEW: 'release_audio.review',
+        CREATE: 'release_audio.create',
+        READ: 'release_audio.read',
+        TAKE_DOWN: 'release_audio.take_down',
+        UPDATE: 'release_audio.update',
+        DELETE: 'release_audio.delete',
+    },
+    RELEASE_VIDEO: {
+        REVIEW: 'release_video.review',
+        CREATE: 'release_video.create',
+        READ: 'release_video.read',
+        TAKE_DOWN: 'release_video.take_down',
+        UPDATE: 'release_video.update',
+        DELETE: 'release_video.delete',
     },
     TRACK: {
         READ: 'track.read',
@@ -94,6 +102,12 @@ export const PERMISSION = {
     },
     REVENUE: {
         READ: 'revenue.read',
+    },
+    CHANNEL: {
+        CREATE: 'channel.create',
+        READ: 'channel.read',
+        UPDATE: 'channel.update',
+        DELETE: 'channel.delete',
     },
 } as const;
 

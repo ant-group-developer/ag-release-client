@@ -7,14 +7,26 @@ import { RELEASE_COVER_ART_SIZE } from '../../constants';
 import { ReleasesData } from '../../types';
 
 type Props = {
-    data: ReleasesData;
+    data?: ReleasesData;
+    fileId?: string;
+    src?: string | null;
+    width?: number;
+    height?: number;
 };
 
-export default function ReleaseCoverImage({ data }: Props) {
-    const [isLoading, setIsLoading] = useState(true);
+export default function ReleaseCoverImage({
+    data,
+    fileId,
+    src,
+    width = 56,
+    height = 56,
+}: Props) {
+    const [isLoading, setIsLoading] = useState(!src);
     const imgFileId =
+        fileId ??
         data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] ??
         data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
+    const imageSrc = src || undefined;
 
     const [ref, entry] = useIntersectionObserver({
         root: null,
@@ -23,25 +35,27 @@ export default function ReleaseCoverImage({ data }: Props) {
     });
 
     const { linkReadFile } = useGetLinkReadFile(imgFileId as string, {
-        enabled: !!entry?.isIntersecting,
+        enabled: !imageSrc && !!imgFileId && !!entry?.isIntersecting,
     });
+    const coverSrc = imageSrc ?? linkReadFile;
 
     useEffect(() => {
-        if (imgFileId && linkReadFile) {
+        if (coverSrc) {
             setIsLoading(false);
         }
-        if (!imgFileId) {
+        if (!imgFileId && !imageSrc) {
             const timeout = setTimeout(() => setIsLoading(false), 1000);
             return () => clearTimeout(timeout);
         }
-    }, [imgFileId, linkReadFile, isLoading]);
+    }, [coverSrc, imageSrc, imgFileId]);
 
     if (isLoading) {
         return (
             <div ref={ref}>
                 <Skeleton.Node
                     active
-                    className="aspect-square !h-14 !w-14 !rounded-lg"
+                    style={{ width, height }}
+                    className="aspect-square !rounded-lg"
                 />
             </div>
         );
@@ -50,10 +64,10 @@ export default function ReleaseCoverImage({ data }: Props) {
     return (
         <div ref={ref}>
             <ImageFallback
-                src={linkReadFile}
+                src={coverSrc ?? ''}
                 alt="cover"
-                width={56}
-                height={56}
+                width={width}
+                height={height}
                 className={`aspect-square rounded-lg object-cover transition-opacity duration-300`}
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsLoading(false)}

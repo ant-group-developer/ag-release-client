@@ -1,9 +1,10 @@
+import { PopoverProps } from 'antd';
 import { ReactNode } from 'react';
 
 /**
  * Filter content types supported by the FilterPanel
  */
-export type FilterType = 'checkbox' | 'dateRange' | 'input';
+export type FilterType = 'checkbox' | 'dateRange' | 'input' | 'radio';
 
 /**
  * Option item for checkbox filters
@@ -54,6 +55,8 @@ export interface FilterPanelProps<TFilter extends Record<string, any>> {
     configs: FilterConfig[];
     /** Current filter data from useFilter */
     dataFilter: TFilter;
+    /** Default filter data from useFilter */
+    defaultFilter?: Record<string, any>;
     /** Callback to change filter values */
     onChangeFilter: (newValue: Partial<TFilter>, backToFirstPage?: boolean) => void;
     /** Callback to remove all filters */
@@ -62,4 +65,8 @@ export interface FilterPanelProps<TFilter extends Record<string, any>> {
     canClearFilter: boolean;
     /** Optional CSS class */
     className?: string;
+    /** Optional popover placement */
+    placement?: PopoverProps['placement'];
+    /** Optional popover height */
+    popoverHeight?: number | string;
 }

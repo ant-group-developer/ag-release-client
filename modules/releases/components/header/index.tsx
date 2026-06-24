@@ -14,6 +14,7 @@ import {
     SearchOutlined,
     SoundOutlined,
     TagOutlined,
+    ImportOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
 import { Layers } from 'lucide-react';
@@ -24,21 +25,25 @@ import { ReleasesDataFilter } from '../../types';
 
 type Props = {
     dataFilter: ReleasesDataFilter;
+    defaultFilter?: ReleasesDataFilter;
     onChangeFilter: OnChangeFilter<ReleasesDataFilter>;
     canClearFilter: boolean;
     removeFilter: RemoveFilter;
+    hideLabelFilter?: boolean;
 };
 
 export default function ReleasesHeaderV2({
     dataFilter,
+    defaultFilter,
     onChangeFilter,
     canClearFilter,
     removeFilter,
+    hideLabelFilter = false,
 }: Props) {
     const messages = useTranslations();
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const { genresData } = useGetListSimpleGenres();
-    const { labelsData } = useGetListLabelsSimple();
+    const { labelsData } = useGetListLabelsSimple({ enabled: !hideLabelFilter });
     const { isAdmin } = useAuth();
     const { tenantSimpleData, isLoading: isLoadingTenants } =
         useGetListSimpleTenant();
@@ -88,6 +93,20 @@ export default function ReleasesHeaderV2({
         [tenantSimpleData]
     );
 
+    const isImportedFromReportOptions = useMemo(
+        () => [
+            {
+                label: messages('release.importedFromReport'),
+                value: 'true',
+            },
+            {
+                label: messages('release.createdDirectly'),
+                value: 'false',
+            },
+        ],
+        [messages]
+    );
+
     const filterConfigs: FilterConfig[] = useMemo(() => {
         const configs: FilterConfig[] = [
             {
@@ -109,7 +128,10 @@ export default function ReleasesHeaderV2({
                 options: releaseTypeOptions,
                 isCommaSeparated: true,
             },
-            {
+        ];
+
+        if (!hideLabelFilter) {
+            configs.push({
                 key: 'labelId',
                 label: messages('label.label'),
                 icon: <TagOutlined />,
@@ -117,7 +139,10 @@ export default function ReleasesHeaderV2({
                 filterKey: 'labelId',
                 options: labelOptions,
                 isCommaSeparated: true,
-            },
+            });
+        }
+
+        configs.push(
             {
                 key: 'status',
                 label: messages('common.status'),
@@ -137,6 +162,14 @@ export default function ReleasesHeaderV2({
                 isCommaSeparated: true,
             },
             {
+                key: 'isImportedFromReport',
+                label: messages('release.creationSource'),
+                icon: <ImportOutlined />,
+                type: 'radio',
+                filterKey: 'isImportedFromReport',
+                options: isImportedFromReportOptions,
+            },
+            {
                 key: 'dateCreated',
                 label: messages('common.dateCreated'),
                 icon: <CalendarOutlined />,
@@ -148,9 +181,9 @@ export default function ReleasesHeaderV2({
                 label: messages('common.dateUpdated'),
                 icon: <CalendarOutlined />,
                 type: 'dateRange',
-                filterKey: ['startUpdatedAt', 'endUpdatedAt'],
-            },
-        ];
+                filterKey: ['startCreatedAt', 'endCreatedAt'],
+            }
+        );
 
         if (isAdmin) {
             configs.splice(1, 0, {
@@ -169,13 +202,34 @@ export default function ReleasesHeaderV2({
     }, [
         messages,
         releaseTypeOptions,
+        hideLabelFilter,
         labelOptions,
         releaseStatusOptions,
         genreOptions,
         isAdmin,
         tenantOptions,
         isLoadingTenants,
+        isImportedFromReportOptions,
     ]);
+
+    const handleChangeFilter = (newValue: Partial<ReleasesDataFilter>, backToFirstPage?: boolean) => {
+        const nextValue = { ...newValue };
+        if ('isImportedFromReport' in nextValue) {
+            const val = nextValue.isImportedFromReport;
+            if (!val) {
+                nextValue.isImportedFromReport = 'all';
+            }
+        }
+        onChangeFilter(nextValue, backToFirstPage);
+    };
+
+    const mappedDataFilter = useMemo(() => {
+        const copy = { ...dataFilter };
+        if (copy.isImportedFromReport === 'all') {
+            copy.isImportedFromReport = undefined;
+        }
+        return copy;
+    }, [dataFilter]);
 
     return (
         <div className="app-header">
@@ -191,8 +245,9 @@ export default function ReleasesHeaderV2({
                 />
                 <FilterPanel
                     configs={filterConfigs}
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
+                    dataFilter={mappedDataFilter}
+                    defaultFilter={defaultFilter}
+                    onChangeFilter={handleChangeFilter}
                     removeFilter={removeFilter}
                     canClearFilter={canClearFilter}
                 />

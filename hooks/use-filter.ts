@@ -27,6 +27,7 @@ export type UseFilterProps<DataFilterType> = {
     onChangeFilter: OnChangeFilter<DataFilterType>;
     onChangePage: OnChangePage;
     removeFilter: RemoveFilter;
+    defaultFilter: DataFilterType;
 };
 
 const compareObjects = (obj1: any, obj2: any) => {
@@ -63,15 +64,30 @@ const compareObjects = (obj1: any, obj2: any) => {
     return true;
 };
 
+const serializeQueryParamValue = (value: unknown) => {
+    if (Array.isArray(value)) {
+        const hasObjectItem = value.some(
+            (item) => item && typeof item === 'object'
+        );
+
+        return hasObjectItem ? JSON.stringify(value) : value.join(',');
+    }
+
+    if (value && typeof value === 'object') {
+        return JSON.stringify(value);
+    }
+
+    return String(value);
+};
+
 export const useFilter = <DataFilterType extends CommonParams>(
     defaultFilter: DataFilterType
 ): UseFilterProps<DataFilterType> => {
-    const router = useRouter();
     const pathname = usePathname();
 
     const searchParams = useSearchParams();
     const queryParams = useQueryParams();
-
+    const router = useRouter();
     const dataFilter: DataFilterType = {
         ...defaultFilter,
         ...queryParams,
@@ -83,7 +99,7 @@ export const useFilter = <DataFilterType extends CommonParams>(
         );
         for (const [key, value] of Object.entries(params)) {
             if (value) {
-                current.set(key, value as string);
+                current.set(key, serializeQueryParamValue(value));
             } else {
                 current.delete(key);
             }
@@ -141,7 +157,7 @@ export const useFilter = <DataFilterType extends CommonParams>(
     };
 
     const removeFilter = () => {
-        router.push(pathname ?? '');
+        window.history.pushState(null, '', pathname ?? '');
     };
 
     removeNullValue(dataFilter);
@@ -158,5 +174,6 @@ export const useFilter = <DataFilterType extends CommonParams>(
         onChangePage,
         onSearch,
         removeFilter,
+        defaultFilter,
     };
 };

@@ -18,6 +18,7 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import {
     getReleaseDetailTabRoute,
+    getReleaseViewRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
@@ -30,6 +31,7 @@ import nProgress from 'nprogress';
 import {
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
+    RELEASES_TABLE_KEY,
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '../../enums';
@@ -57,8 +59,8 @@ export default function ReleasesTable({
     const { token } = theme.useToken();
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
-    const canDelete = hasPermission(PERMISSION.RELEASE.DELETE);
-    const canTakedown = hasPermission(PERMISSION.RELEASE.TAKE_DOWN);
+    const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
+    const canTakedown = hasPermission(PERMISSION.RELEASE_AUDIO.TAKE_DOWN);
     const setAction = useReleaseActionStore((state) => state.setAction);
     const { takedownRelease } = useTakedownRelease();
 
@@ -84,7 +86,7 @@ export default function ReleasesTable({
         {
             title: messages('common.title'),
             key: 'title',
-            dataIndex: 'title',
+            dataIndex: RELEASES_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
             width: 320,
@@ -101,7 +103,7 @@ export default function ReleasesTable({
         {
             title: 'Label',
             key: 'publisher',
-            dataIndex: 'publisher',
+            dataIndex: RELEASES_TABLE_KEY.PUBLISHER,
             align: 'left',
             width: 200,
             ellipsis: true,
@@ -128,7 +130,7 @@ export default function ReleasesTable({
         {
             title: messages('release.type'),
             key: 'type',
-            dataIndex: 'type',
+            dataIndex: RELEASES_TABLE_KEY.TYPE,
             align: 'left',
             width: 130,
             render: (_, record) => {
@@ -142,9 +144,9 @@ export default function ReleasesTable({
         {
             title: 'UPC',
             key: 'upc',
-            dataIndex: 'UPC',
+            dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value, record) => (
                 <Paragraph
                     data-stop-row-click="true"
@@ -158,9 +160,9 @@ export default function ReleasesTable({
         {
             title: messages('common.status'),
             key: 'status',
-            dataIndex: 'status',
+            dataIndex: RELEASES_TABLE_KEY.STATUS,
             align: 'left',
-            width: 120,
+            width: 150,
             render: (value, record) => {
                 return <ReleaseStatusTag status={record?.status} />;
             },
@@ -168,14 +170,14 @@ export default function ReleasesTable({
         {
             title: messages('release.trackCount'),
             key: 'tracks_count',
-            dataIndex: 'tracks_count',
+            dataIndex: RELEASES_TABLE_KEY.TRACK_COUNT,
             align: 'left',
             width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'tracks_count'
+                RELEASES_TABLE_KEY.TRACK_COUNT
             ),
             render: (value, record) => (
                 <span className="truncate"> {record?.tracksCount} </span>
@@ -184,9 +186,9 @@ export default function ReleasesTable({
         {
             title: messages('release.duration'),
             key: 'total_duration',
-            dataIndex: 'total_duration',
+            dataIndex: RELEASES_TABLE_KEY.DURATION,
             align: 'left',
-            width: 100,
+            width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -204,9 +206,9 @@ export default function ReleasesTable({
         {
             title: messages('release.releaseDate'),
             key: 'releaseDate',
-            dataIndex: 'releaseDate',
+            dataIndex: RELEASES_TABLE_KEY.RELEASE_DATE,
             align: 'left',
-            width: 130,
+            width: 160,
             // sorter: true,
             // sortOrder: getSortOrder(
             //     dataFilter.orderBy,
@@ -225,10 +227,10 @@ export default function ReleasesTable({
         },
         {
             title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            // key: 'createdAt',
+            dataIndex: RELEASES_TABLE_KEY.CREATED_AT,
             align: 'left',
-            width: 130,
+            width: 160,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -248,14 +250,14 @@ export default function ReleasesTable({
         {
             title: messages('common.updatedAt'),
             key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            dataIndex: RELEASES_TABLE_KEY.UPDATED_AT,
             align: 'left',
-            width: 130,
+            width: 160,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'updatedAt'
+                RELEASES_TABLE_KEY.UPDATED_AT
             ),
             render: (value, record) => (
                 <span className="truncate text-wrap">
@@ -278,6 +280,7 @@ export default function ReleasesTable({
                     <div onClick={(e) => e.stopPropagation()}>
                         <ActionButton
                             showDetail
+                            showUpdate
                             showDelete={
                                 status === RELEASES_STATUS.DRAFT && canDelete
                             }
@@ -287,6 +290,16 @@ export default function ReleasesTable({
                             onShowDetail={() => {
                                 nProgress.start();
                                 setAction(RELEASE_DETAIL_ACTION.READ);
+                                router.push(
+                                    getReleaseDetailTabRoute(
+                                        record?.id,
+                                        RELEASES_TABS.CORE_DETAIL
+                                    )
+                                );
+                            }}
+                            onShowUpdate={() => {
+                                nProgress.start();
+                                setAction(RELEASE_DETAIL_ACTION.EDIT);
                                 router.push(
                                     getReleaseDetailTabRoute(
                                         record?.id,
@@ -346,7 +359,7 @@ export default function ReleasesTable({
         column.splice(4, 0, {
             title: messages('tenant.label'),
             key: 'tenant',
-            dataIndex: 'tenant',
+            dataIndex: RELEASES_TABLE_KEY.TENANT,
             width: 180,
             render: (_, record) => {
                 return record.tenant?.name;
@@ -371,9 +384,7 @@ export default function ReleasesTable({
                 persistenceKey: 'releases-table-columns',
                 persistenceType: 'sessionStorage',
                 defaultValue: {
-                    tenant: { show: false },
-                    tracks_count: { show: false },
-                    total_duration: { show: false },
+                    tenant: { show: isSystemTenant },
                     updatedAt: { show: false },
                 },
             }}

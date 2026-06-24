@@ -12,13 +12,39 @@ export enum RELEASE_SUBMIT_STEP_TYPE {
     VALIDATE = 'VALIDATE',
 }
 
+export enum RELEASE_EXECUTION_STEP_TYPE {
+    GEN_UPC = 'GEN_UPC',
+    GEN_ISRCS = 'GEN_ISRCS',
+    GEN_ISRC = 'GEN_ISRC',
+    VALIDATE = 'VALIDATE',
+    PROCESS_DSPS = 'PROCESS_DSPS',
+    PROCESS_DIRECT = 'PROCESS_DIRECT',
+    PROCESS_DIRECT_CHILD = 'PROCESS_DIRECT_CHILD',
+    SYNC_DATA_PARTNER = 'SYNC_DATA_PARTNER',
+    PROCESS_AGG = 'PROCESS_AGG',
+    PROCESS_AGG_CI = 'PROCESS_AGG_CI',
+    IMPORT_CI = 'IMPORT_CI',
+    EXPORT_CI = 'EXPORT_CI',
+    CREATE_FOLDER_DONE_CI = 'CREATE_FOLDER_DONE_CI',
+    VALIDATE_QA_CI = 'VALIDATE_QA_CI',
+    EXPORT_AGG_CI_CI = 'EXPORT_CI_CI',
+    EXPORT_AGG_CI_STATE51 = 'EXPORT_AGG_CI_STATE51',
+    WAITING_ADMIN_EXPORT = 'WAITING_ADMIN_EXPORT',
+    SEND_EMAIL_STATE51 = 'SEND_EMAIL_STATE51',
+    SYNC_DATA_DSP_CI = 'SYNC_DATA_DSP_CI',
+    WAIT_PARTNER_PROCESS = 'WAIT_PARTNER_PROCESS',
+    CREATE_METADATA_ON_SERVER = 'CREATE_METADATA_ON_SERVER',
+    UPLOAD_METADATA_TO_SFTP = 'UPLOAD_METADATA_TO_SFTP',
+    SYNC_RESULT_TO_RELEASE = 'SYNC_RESULT_TO_RELEASE',
+}
+
 export enum RELEASE_SUBMIT_STATUS {
     NEW = 'NEW',
     PROCESSING = 'PROCESSING',
     WAITING_ACTION = 'WAITING_ACTION',
+    WAITING_PARTNER = 'WAITING_PARTNER',
     DONE = 'DONE',
     FAILED = 'FAILED',
-    PARTIAL_DONE = 'PARTIAL_DONE',
     CANCELLED = 'CANCELLED',
 }
 
@@ -60,4 +86,25 @@ export enum RELEASE_SUBMIT_LOG_LEVEL {
     LOG = 'LOG',
     ERROR = 'ERROR',
     WARNING = 'WARNING',
+}
+
+export enum CHILD_EXECUTION_MODE {
+    SEQUENTIAL = 'sequential',
+    PARALLEL = 'parallel',
+}
+
+export enum RELEASE_SUBMIT_SORT_FIELD {
+    CREATED_AT = 'execution.createdAt',
+    TYPE = 'execution.type',
+    RELEASE_TITLE = 'execution.releaseTitle',
+    RELEASE_UPC = 'execution.releaseUpc',
+    STATUS = 'execution.status',
+}
+
+export enum FieldOrderReleaseExecution3 {
+    execution_createdAt = 'execution.createdAt',
+    execution_type = 'execution.type',
+    execution_releaseTitle = 'execution.releaseTitle',
+    execution_releaseUpc = 'execution.releaseUpc',
+    execution_status = 'execution.status',
 }

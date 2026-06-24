@@ -4,12 +4,20 @@ import { ReleaseArtist } from '../types';
 import {
     CreateReleaseArtistPayload,
     UpdateReleaseArtistPayload,
+    BulkCreateReleaseArtistPayload,
 } from '../types/payload';
 
 export const releaseArtistApi = {
     createReleaseArtist: (payload: CreateReleaseArtistPayload) => {
         return axiosInstance.post<DetailResponse<ReleaseArtist>>(
             '/release-artists',
+            payload
+        );
+    },
+
+    bulkCreateReleaseArtist: (payload: BulkCreateReleaseArtistPayload) => {
+        return axiosInstance.post(
+            '/release-artists/bulk',
             payload
         );
     },

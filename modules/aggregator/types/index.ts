@@ -25,11 +25,19 @@ export interface AggregatorData extends CommonAttribute {
 }
 
 export interface SftpMetadata {
-    host: string;
-    port: number;
-    username: string;
-    password: string;
+    type?: string;
+    host?: string;
+    port?: number;
+    username?: string;
+    password?: string;
+    privateKey?: string;
     path?: string;
+    // S3 only
+    bucket?: string;
+    region?: string;
+    accessKeyId?: string;
+    secretAccessKey?: string;
+    endpoint?: string;
 }
 
 export interface AggregatorDataFilter extends CommonParams {}

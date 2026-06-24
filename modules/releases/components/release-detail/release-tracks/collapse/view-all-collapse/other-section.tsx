@@ -2,6 +2,7 @@
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
+import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -28,6 +29,10 @@ export default function OtherSection({
     const form = Form.useFormInstance();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+    const isInstrumental =
+        Form.useWatch('isInstrumental', form) ??
+        trackData?.isInstrumental ??
+        false;
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
@@ -280,11 +285,93 @@ export default function OtherSection({
                         />
                     </AppFormItem>
 
-                    {/* Lyrics */}
+                    <AppFormItem
+                        className="col-span-2"
+                        label="Lyrics"
+                        name="isInstrumental"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Radio.Group
+                            id={`tracks.${index}.isInstrumental`}
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                form.setFieldValue('isInstrumental', value);
+
+                                if (value) {
+                                    form.setFieldValue('lyric', '');
+                                    form.setFieldValue(
+                                        ['trackLanguage', 'audioLanguageId'],
+                                        null
+                                    );
+                                    updateTrackDraft({
+                                        isInstrumental: value,
+                                    });
+                                    return;
+                                }
+
+                                updateTrackDraft({
+                                    isInstrumental: value,
+                                });
+                            }}
+                        >
+                            <Radio value={false}>{messages('common.containsLyrics')}</Radio>
+                            <Radio value={true}>{messages('common.instrumental')}</Radio>
+                        </Radio.Group>
+                    </AppFormItem>
+
+                    <AppFormItem
+                        className="col-span-2"
+                        label={messages('release.audioLanguage')}
+                        name={['trackLanguage', 'audioLanguageId']}
+                        required
+                        hidden={isInstrumental}
+                        rules={[
+                            {
+                                required: !isInstrumental,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <LanguageSelect
+                            id={`tracks.${index}.trackLanguage.audioLanguageId`}
+                            className="w-full"
+                            showSearch
+                            disabled={isReadMode}
+                            onChange={(value) => {
+                                form.setFieldValue(
+                                    [
+                                        'tracks',
+                                        index,
+                                        'trackLanguage',
+                                        'audioLanguageId',
+                                    ],
+                                    value
+                                );
+                                updateTrackDraft(
+                                    {
+                                        trackLanguage: {
+                                            ...trackData.trackLanguage,
+                                            audioLanguageId: value,
+                                        },
+                                    },
+                                    'trackLanguage.audioLanguageId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
+
                     <AppFormItem
                         className="col-span-2"
                         label={messages('formFields.tracks.lyrics')}
                         name="lyric"
+                        hidden={isInstrumental}
                     >
                         <TextArea
                             id={`tracks.${index}.lyric`}

@@ -10,6 +10,7 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
@@ -22,7 +23,16 @@ import {
 } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { Breadcrumb, BreadcrumbProps, Tabs, TabsProps, theme } from 'antd';
-import { BookHeadphones, Box, Calendar, Eye, Music } from 'lucide-react';
+import {
+    BookHeadphones,
+    Box,
+    Calendar,
+    ChartColumn,
+    Eye,
+    Music,
+    ScrollText,
+    ShieldCheck,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
@@ -48,6 +58,7 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const setLastReleaseId = useReleaseActionStore((s) => s.setLastReleaseId);
     const lastReleaseId = useReleaseActionStore((s) => s.lastReleaseId);
     const { hasPermission } = usePermission();
+    const { isAdmin } = useAuth();
 
     // state
     const [activeTab, setActiveTab] = useState<string>(
@@ -56,12 +67,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const [isScrolled, setIsScrolled] = useState(false);
 
     // const
-    const releaseId = params[PATH_PARAMS.RELEASE_ID] ? `${params[PATH_PARAMS.RELEASE_ID]}` : '';
+    const releaseId = params[PATH_PARAMS.RELEASE_ID]
+        ? `${params[PATH_PARAMS.RELEASE_ID]}`
+        : '';
     const isCreateReleasePage =
         params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.CREATE;
     const isDisableTab = releaseId == '';
 
-    const canUpdate = hasPermission(PERMISSION.RELEASE.UPDATE);
+    const canUpdate = hasPermission(PERMISSION.RELEASE_AUDIO.UPDATE);
     const isDetailPage = pathname.includes(`/${RELEASES_TABS.CORE_DETAIL}`);
     // const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
     const coreDetailTabsNavigate = isCreateReleasePage
@@ -141,6 +154,24 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             disabled: isDisableTab,
         },
         {
+            key: RELEASES_TABS.ANALYTICS,
+            label: (
+                <Link
+                    className={cn(isDisableTab ? 'pointer-events-none' : '')}
+                    href={getReleaseTabRoute(
+                        releaseId,
+                        RELEASES_TABS.ANALYTICS
+                    )}
+                >
+                    <div className="flex items-center gap-1">
+                        <ChartColumn size={SIZE_ICON} />
+                        <span>{messages('analytics.label')}</span>
+                    </div>
+                </Link>
+            ),
+            disabled: isDisableTab,
+        },
+        {
             key: RELEASES_TABS.REVIEW,
             label: (
                 <Link
@@ -155,6 +186,54 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
             ),
             disabled: isDisableTab,
         },
+        ...(isAdmin && !isCreateReleasePage
+            ? [
+                  {
+                      key: RELEASES_TABS.SUBMITS,
+                      label: (
+                          <Link
+                              className={cn(
+                                  isDisableTab ? 'pointer-events-none' : ''
+                              )}
+                              href={getReleaseTabRoute(
+                                  releaseId,
+                                  RELEASES_TABS.SUBMITS
+                              )}
+                          >
+                              <div className="flex items-center gap-1">
+                                  <ScrollText size={SIZE_ICON} />
+                                  <span>
+                                      {messages('releaseVideo.tabs.submits')}
+                                  </span>
+                              </div>
+                          </Link>
+                      ),
+                      disabled: isDisableTab,
+                  },
+                  {
+                      key: RELEASES_TABS.SYSTEM_REVIEW,
+                      label: (
+                          <Link
+                              className={cn(
+                                  isDisableTab ? 'pointer-events-none' : ''
+                              )}
+                              href={getReleaseTabRoute(
+                                  releaseId,
+                                  RELEASES_TABS.SYSTEM_REVIEW
+                              )}
+                          >
+                              <div className="flex items-center gap-1">
+                                  <ShieldCheck size={SIZE_ICON} />
+                                  <span>
+                                      {messages('common.systemReview')}
+                                  </span>
+                              </div>
+                          </Link>
+                      ),
+                      disabled: isDisableTab,
+                  },
+              ]
+            : []),
     ];
 
     // apis
@@ -171,7 +250,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                 [RELEASES_TABS.TRACKS]: RELEASES_TABS.TRACKS,
                 [RELEASES_TABS.SCHEDULE]: RELEASES_TABS.SCHEDULE,
                 [RELEASES_TABS.DISTRIBUTION]: RELEASES_TABS.DISTRIBUTION,
+                [RELEASES_TABS.ANALYTICS]: RELEASES_TABS.ANALYTICS,
                 [RELEASES_TABS.REVIEW]: RELEASES_TABS.REVIEW,
+                [RELEASES_TABS.SUBMITS]: RELEASES_TABS.SUBMITS,
+                [RELEASES_TABS.SYSTEM_REVIEW]: RELEASES_TABS.SYSTEM_REVIEW,
             };
             const tabKey = pathname.split('/').pop();
             return map[tabKey ?? ''] || RELEASES_TABS.CORE_DETAIL;
@@ -195,7 +277,10 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
 
     // selective reset based on navigation transition and permissions
     useEffect(() => {
-        if (params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.DETAIL && releaseId) {
+        if (
+            params[PATH_PARAMS.ACTION] === RELEASE_ROUTE_ACTION.DETAIL &&
+            releaseId
+        ) {
             // Force READ if user doesn't have update permission
             if (!canUpdate) {
                 setReleaseAction(RELEASE_DETAIL_ACTION.READ);

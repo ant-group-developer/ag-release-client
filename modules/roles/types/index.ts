@@ -22,5 +22,4 @@ export interface RolePermission {
 export interface RolesDataDataFilter extends CommonParams {
     startDateCreated?: string;
     endDateCreated?: string;
-    isActive?: 'true' | 'false';
 }

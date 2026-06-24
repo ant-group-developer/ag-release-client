@@ -1,8 +1,9 @@
 import { cn } from '@/helpers/tailwind';
 import { useSideBarMenuItems } from '@/hooks/use-sidebar-menu-items';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { RightOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
+import { ConfigProvider, Menu } from 'antd';
 import { ROUTES_ID } from '../routes';
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -19,6 +20,7 @@ function SidebarMenu({
     ...props
 }: Props) {
     const { items, openKeys, bestActiveLink } = useSideBarMenuItems();
+    const { isDark } = useThemeMode();
 
     function pickLevel1AndChildren(items: MenuItem[] = []): MenuItem[] {
         return items.map((item) => {
@@ -63,21 +65,31 @@ function SidebarMenu({
     const items2Level = pickLevel1AndChildren(items);
 
     return (
-        <Menu
-            onClick={(e) => {
-                if (e.key === ROUTES_ID.GENERAL) {
-                    toggleSecondMenu?.();
-                } else {
-                    setCollapsedSecondMenu?.(true);
-                }
+        <ConfigProvider
+            theme={{
+                components: {
+                    Menu: {
+                        itemSelectedColor: isDark ? '#fff' : '#1890ff',
+                    },
+                },
             }}
-            defaultOpenKeys={openKeys}
-            // triggerSubMenuAction="click"
-            {...props}
-            className={cn('!border-none', props.className)}
-            items={items2Level}
-            selectedKeys={bestActiveLink ? [bestActiveLink.href] : []}
-        />
+        >
+            <Menu
+                onClick={(e) => {
+                    if (e.key === ROUTES_ID.GENERAL) {
+                        toggleSecondMenu?.();
+                    } else {
+                        setCollapsedSecondMenu?.(true);
+                    }
+                }}
+                defaultOpenKeys={openKeys}
+                // triggerSubMenuAction="click"
+                {...props}
+                className={cn('!border-none', props.className)}
+                items={items2Level}
+                selectedKeys={bestActiveLink ? [bestActiveLink.href] : []}
+            />
+        </ConfigProvider>
     );
 }
 

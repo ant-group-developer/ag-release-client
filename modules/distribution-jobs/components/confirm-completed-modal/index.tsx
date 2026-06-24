@@ -37,7 +37,7 @@ const ConfirmCompletedModal = ({
             onCancel={onCancel}
             onOk={handleOk}
             confirmLoading={loading}
-            destroyOnClose
+            destroyOnHidden
         >
             <Form form={form} layout="vertical">
                 <Form.Item

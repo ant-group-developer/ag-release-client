@@ -10,10 +10,12 @@ import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
+
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
 
 import {
+    RELEASE_TYPE,
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
     TYPE_MODAL_RELEASE,
@@ -39,12 +41,16 @@ export default function Releases({}: Props) {
         onChangeFilter,
         canClearFilter,
         removeFilter,
+        defaultFilter,
     } = useFilter<ReleasesDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+        type: RELEASE_TYPE.AUDIO,
+        isImportedFromReport: 'false',
     });
+
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
@@ -119,14 +125,14 @@ export default function Releases({}: Props) {
         },
         getCheckboxProps: (record: ReleasesData) => {
             return {
-                disabled: !isAdmin || record.status !== RELEASES_STATUS.DRAFT,
+                disabled: !isAdmin && record.status !== RELEASES_STATUS.DRAFT,
             };
         },
     };
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('release.releases')}>
+            <PageContainer title={messages('release.routeLabel')}>
                 {/* <ReleasesHeaderV2
                     dataFilter={dataFilter}
                     onChangeFilter={onChangeFilter}
@@ -138,6 +144,7 @@ export default function Releases({}: Props) {
                     headerTitle={
                         <ReleasesHeaderV2
                             dataFilter={dataFilter}
+                            defaultFilter={defaultFilter}
                             onChangeFilter={onChangeFilter}
                             canClearFilter={canClearFilter}
                             removeFilter={removeFilter}
@@ -162,19 +169,6 @@ export default function Releases({}: Props) {
                     tableAlertRender={({ selectedRowKeys }) => {
                         return (
                             <Space>
-                                {/* <Button
-                                    type="primary"
-                                    icon={<DownloadOutlined />}
-                                    onClick={() =>
-                                        openModal(
-                                            TYPE_MODAL_RELEASE.EXPORT_TEMPLATE,
-                                            selectedRowKeys
-                                        )
-                                    }
-                                    loading={isExportTemplateCiLoading}
-                                >
-                                    {messages('release.exportCiTemplate')}
-                                </Button> */}
                                 <Button
                                     type="primary"
                                     icon={<SendOutlined />}
@@ -227,6 +221,7 @@ export default function Releases({}: Props) {
                         })}
                     />
                 )}
+
                 {/* 
                 {typeModal === TYPE_MODAL_RELEASE.EXPORT_TEMPLATE && (
                     <ExportTemplateModal

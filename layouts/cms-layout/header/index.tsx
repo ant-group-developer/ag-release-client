@@ -1,14 +1,13 @@
 import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { toastPromise } from '@/helpers/messages-helper';
-import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useDownloadTemplate } from '@/modules/releases/hooks/use-download-template';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
 import { DownloadOutlined, EllipsisOutlined } from '@ant-design/icons';
@@ -26,11 +25,10 @@ type Props = {
 
 const { Header: AntdHeader } = Layout;
 
-function Header({ collapsed, toggleCollapsed }: Props) {
+function Header({ toggleCollapsed }: Props) {
     const messages = useTranslations();
-    const { isNotSystemTenant } = useAuth();
-    const { hasPermission } = usePermission();
     const router = useRouter();
+    const { isNotSystemTenant } = useAuth();
     const { mutateAsync: downloadTemplate } = useDownloadTemplate();
     const setReleaseAction = useReleaseActionStore((state) => state.setAction);
 
@@ -67,47 +65,38 @@ function Header({ collapsed, toggleCollapsed }: Props) {
                 </div>
             </div>
 
-            {/* <div className="flex max-w-[400px] flex-1 items-center">
-                <AppSearch
-                    onClick={() => openModal(TYPE_MODAL.SEARCH)}
-                    onSearch={() => openModal(TYPE_MODAL.SEARCH)}
-                />
-
-                {typeModal === TYPE_MODAL.SEARCH && <AppSearchModal />}
-            </div> */}
-
             <div className="flex flex-1 items-center justify-end gap-2">
-                <PermissionGate
-                    anyOf={[
-                        PERMISSION.RELEASE.CREATE,
-                        PERMISSION.RELEASE.UPDATE,
-                    ]}
-                >
-                    <Space.Compact>
-                        {/* <Link href={'/releases/create'}> */}
-
-                        <CreateButton
-                            text={messages('release.create')}
-                            onClick={() => {
-                                nProgress.start();
-                                setReleaseAction(RELEASE_DETAIL_ACTION.READ);
-                                router.push('/releases/create');
-                            }}
-                        />
-
-                        {/* </Link> */}
-
-                        <Dropdown
-                            menu={{ items: dropdownOptions }}
-                            trigger={['click']}
-                        >
-                            <Button
-                                type="primary"
-                                icon={<EllipsisOutlined />}
+                {isNotSystemTenant && (
+                    <PermissionGate
+                        anyOf={[
+                            PERMISSION.RELEASE_AUDIO.CREATE,
+                            PERMISSION.RELEASE_AUDIO.UPDATE,
+                        ]}
+                    >
+                        <Space.Compact>
+                            <CreateButton
+                                text={messages('release.create')}
+                                onClick={() => {
+                                    nProgress.start();
+                                    setReleaseAction(
+                                        RELEASE_DETAIL_ACTION.READ
+                                    );
+                                    router.push('/releases/create');
+                                }}
                             />
-                        </Dropdown>
-                    </Space.Compact>
-                </PermissionGate>
+
+                            <Dropdown
+                                menu={{ items: dropdownOptions }}
+                                trigger={['click']}
+                            >
+                                <Button
+                                    type="primary"
+                                    icon={<EllipsisOutlined />}
+                                />
+                            </Dropdown>
+                        </Space.Compact>
+                    </PermissionGate>
+                )}
                 <AppSupport />
                 <AppAvatar />
             </div>
@@ -116,4 +105,3 @@ function Header({ collapsed, toggleCollapsed }: Props) {
 }
 
 export default Header;
-

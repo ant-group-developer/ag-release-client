@@ -1,17 +1,50 @@
 import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
+import { APP_ROUTES } from '@/enums/routes';
 import { UseFilterProps } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
+import { RELEASE_TYPE } from '@/modules/releases/enums';
+import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_RELEASE_VIDEO } from '../../enums';
-import { ReleaseVideoDataFilter } from '../../types';
+import nProgress from 'nprogress';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 
-type Props = Pick<UseFilterProps<ReleaseVideoDataFilter>, 'dataFilter' | 'onSearch'>;
+type Props = Pick<
+    UseFilterProps<ReleasesDataFilter>,
+    'dataFilter' | 'onSearch'
+>;
 
 export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    const router = useRouter();
+    const { createReleaseDraft, isPending } = useCreateReleaseDraft();
+    const { isSystemTenant } = useAuth();
+
+    const handleCreateReleaseVideo = () => {
+        nProgress.start();
+        createReleaseDraft({
+            payload: {
+                title: 'New release video',
+                type: RELEASE_TYPE.VIDEO,
+            },
+            onSuccess: (data) => {
+                nProgress.done();
+                if (data?.id) {
+                    router.push(`${APP_ROUTES.RELEASE_VIDEOS}/${data.id}`);
+                } else {
+                    router.push(APP_ROUTES.RELEASE_VIDEOS);
+                }
+            },
+            onError: () => {
+                nProgress.done();
+            },
+        });
+    };
+
     return (
         <AppHeader className="app-header p-2">
             <AppHeaderGroup>
@@ -25,11 +58,16 @@ export default function ReleaseVideoHeader({ dataFilter, onSearch }: Props) {
             </AppHeaderGroup>
             <AppHeaderGroup position="end" className="flex-1">
                 <div className="flex items-center gap-2">
-                    <CreateButton
-                        canCreate={true}
-                        text={messages('releaseVideo.add')}
-                        onClick={() => openModal(TYPE_MODAL_RELEASE_VIDEO.CREATE)}
-                    />
+                    {!isSystemTenant && (
+                        <PermissionGate permission={PERMISSION.RELEASE_VIDEO.CREATE}>
+                            <CreateButton
+                                canCreate={true}
+                                text={messages('releaseVideo.add')}
+                                loading={isPending}
+                                onClick={handleCreateReleaseVideo}
+                            />
+                        </PermissionGate>
+                    )}
                 </div>
             </AppHeaderGroup>
         </AppHeader>

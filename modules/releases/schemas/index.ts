@@ -43,6 +43,7 @@ export const releaseSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         subGenreId: z.string().optional().nullable(),
+        isInstrumental: z.boolean(),
         releaseLanguage: z
             .object({
                 metadataLanguageId: z
@@ -57,12 +58,7 @@ export const releaseSchema = (messages: any) =>
                     .refine((val) => val !== null && val !== '', {
                         message: messages('validation.input'),
                     }),
-                audioLanguageId: z
-                    .string()
-                    .nullable()
-                    .refine((val) => val !== null && val !== '', {
-                        message: messages('validation.input'),
-                    }),
+                audioLanguageId: z.string().nullable(),
             })
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
@@ -204,24 +200,39 @@ export const releaseSchema = (messages: any) =>
 export type ReleaseSchema = z.infer<ReturnType<typeof releaseSchema>>;
 
 export const releaseDetailSchema = (messages: any) =>
-    releaseSchema(messages).pick({
-        upc: true,
-        primaryGenreId: true,
-        subGenreId: true,
-        releaseLanguage: true,
-        labelId: true,
-        catalogId: true,
-        title: true,
-        version: true,
-        releaseArtists: true,
-        albumFormatId: true,
-        // coverArtThumbnails: true,
-        pLineOwner: true,
-        pLineYear: true,
-        cLineYear: true,
-        cLineOwner: true,
-        isVariousArtist: true,
-    });
+    releaseSchema(messages)
+        .pick({
+            upc: true,
+            primaryGenreId: true,
+            subGenreId: true,
+            releaseLanguage: true,
+            isInstrumental: true,
+            labelId: true,
+            catalogId: true,
+            title: true,
+            version: true,
+            releaseArtists: true,
+            albumFormatId: true,
+            // coverArtThumbnails: true,
+            pLineOwner: true,
+            pLineYear: true,
+            cLineYear: true,
+            cLineOwner: true,
+            isVariousArtist: true,
+        })
+        .superRefine((val, ctx) => {
+            if (
+                !val.isInstrumental &&
+                (!val.releaseLanguage?.audioLanguageId ||
+                    val.releaseLanguage.audioLanguageId === '')
+            ) {
+                ctx.addIssue({
+                    path: ['releaseLanguage', 'audioLanguageId'],
+                    code: z.ZodIssueCode.custom,
+                    message: messages('validation.input'),
+                });
+            }
+        });
 // .superRefine((data, ctx) => {
 // Validate releaseArtists chỉ khi isVariousArtist là false
 //     if (!data.isVariousArtist) {
