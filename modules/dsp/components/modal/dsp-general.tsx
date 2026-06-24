@@ -134,6 +134,26 @@ export default function DspGeneral({ form, isActive }: Props) {
                 <Input allowClear />
             </AppFormItem>
             <AppFormItem
+                name="type"
+                label={messages('dsp.type')}
+                required
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.radio'),
+                    },
+                ]}
+            >
+                <Radio.Group disabled={isActive}>
+                    <Radio value={DSP_TYPE.AUDIO}>
+                        {messages('common.audio')}
+                    </Radio>
+                    <Radio value={DSP_TYPE.VIDEO}>
+                        {messages('common.video')}
+                    </Radio>
+                </Radio.Group>
+            </AppFormItem>
+            <AppFormItem
                 name="isActive"
                 valuePropName="checked"
                 label={
@@ -187,22 +207,6 @@ export default function DspGeneral({ form, isActive }: Props) {
                 }
             >
                 <Switch />
-            </AppFormItem>
-            <AppFormItem
-                name="type"
-                label={messages('dsp.type')}
-                required
-                rules={[
-                    {
-                        required: true,
-                        message: messages('validation.radio'),
-                    },
-                ]}
-            >
-                <Radio.Group disabled={isActive}>
-                    <Radio value={DSP_TYPE.AUDIO}>{messages('common.audio')}</Radio>
-                    <Radio value={DSP_TYPE.VIDEO}>{messages('common.video')}</Radio>
-                </Radio.Group>
             </AppFormItem>
         </>
     );
