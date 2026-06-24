@@ -263,7 +263,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                         };
 
                         const workers = [];
-                        const limit = Math.min(MAX_CONCURRENT_UPLOADS, matched.length);
+                        const limit = Math.min(
+                            MAX_CONCURRENT_UPLOADS,
+                            matched.length
+                        );
                         for (let i = 0; i < limit; i++) {
                             workers.push(uploadNext());
                         }
@@ -359,7 +362,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             okText={messages('common.submit')}
             cancelText={messages('common.cancel')}
             destroyOnHidden
-            width={startedJobId && jobStatus && !viewJobId ? 960 : 560}
+            width="50vw"
             closable={!isUploading}
             maskClosable={!isUploading}
             footer={
@@ -377,31 +380,38 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                 ) : undefined
             }
         >
-            {viewJobId && !validationResult ? (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        minHeight: 200,
-                    }}
-                >
-                    <Spin size="small" tip={messages('common.loading')} />
-                </div>
-            ) : validationResult ? (
-                <ImportResultView
-                    validationResult={validationResult}
-                    startedJobId={startedJobId}
-                    jobStatus={jobStatus}
-                    isUploading={isUploading}
-                    uploadStatus={uploadStatus}
-                    uploadError={uploadError}
-                    uploadResults={uploadResults}
-                    readOnly={!!viewJobId}
-                />
-            ) : (
-                <ImportForm form={form} onSubmit={handleSubmit} />
-            )}
+            <div
+                style={{
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                }}
+            >
+                {viewJobId && !validationResult ? (
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: 200,
+                        }}
+                    >
+                        <Spin size="small" tip={messages('common.loading')} />
+                    </div>
+                ) : validationResult ? (
+                    <ImportResultView
+                        validationResult={validationResult}
+                        startedJobId={startedJobId}
+                        jobStatus={jobStatus}
+                        isUploading={isUploading}
+                        uploadStatus={uploadStatus}
+                        uploadError={uploadError}
+                        uploadResults={uploadResults}
+                        readOnly={!!viewJobId}
+                    />
+                ) : (
+                    <ImportForm form={form} onSubmit={handleSubmit} />
+                )}
+            </div>
         </Modal>
     );
 };

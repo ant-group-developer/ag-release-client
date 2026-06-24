@@ -7,15 +7,15 @@ interface ImportJobProcessingStatsProps {
     rows: ImportJobStatusResponse['rows'];
 }
 
-export const ImportJobProcessingStats: React.FC<ImportJobProcessingStatsProps> = ({
-    rows,
-}) => {
+export const ImportJobProcessingStats: React.FC<
+    ImportJobProcessingStatsProps
+> = ({ rows }) => {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
     return (
         <div
-            className="grid grid-cols-2 gap-3 mt-2 p-3"
+            className="mt-2 grid grid-cols-2 gap-3 p-3"
             style={{
                 backgroundColor: token.colorBgLayout,
                 borderRadius: token.borderRadius,

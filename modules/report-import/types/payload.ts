@@ -70,6 +70,21 @@ export enum FileUploadStatus {
     FAILED = 'failed',
 }
 
+export interface ImportJobResultReleases {
+    total: number;
+    imported: number;
+    skipped: number;
+    errors: number;
+    inDb: number;
+    pending: number;
+}
+
+export interface ImportJobResult {
+    affectedPeriods?: string[] | null;
+    totalProcessedRows?: number | null;
+    releases?: ImportJobResultReleases | null;
+}
+
 export interface ImportJobStatusResponse {
     id: string;
     status: IMPORT_JOBS_STATUS;
@@ -94,7 +109,7 @@ export interface ImportJobStatusResponse {
     };
     file: string;
     error: string | null;
-    result: any;
+    result: ImportJobResult | null;
     startedAt: string | null;
     finishedAt: string | null;
     durationMs: number;
@@ -148,7 +163,7 @@ export interface EtlJobData {
             parserCode?: string;
         }[];
     };
-    result: any;
+    result: ImportJobResult | null;
     error: string | null;
     batchId: string | null;
     tenantId: string;

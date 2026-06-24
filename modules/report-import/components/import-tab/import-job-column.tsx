@@ -11,6 +11,7 @@ import { ImportJobDetailedProgress } from './import-job-detailed-progress';
 import { ImportJobProcessingStats } from './import-job-processing-stats';
 import { ImportJobErrorDisplay } from './import-job-error-display';
 import { ImportJobMetadata } from './import-job-metadata';
+import { ImportJobReleasesStats } from './import-job-releases-stats';
 
 interface ImportJobColumnProps {
     jobStatus: ImportJobStatusResponse;
@@ -129,6 +130,11 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
 
             {/* Processing Statistics */}
             <ImportJobProcessingStats rows={jobStatus.rows} />
+
+            {/* Releases Statistics */}
+            {jobStatus.result?.releases && (
+                <ImportJobReleasesStats releases={jobStatus.result.releases} />
+            )}
 
             {/* Error display if job failed */}
             <ImportJobErrorDisplay error={jobStatus.error} />

@@ -1755,6 +1755,7 @@
             "source": "Source",
             "dsp": "DSP",
             "ciCode": "CI code",
+            "pendingReleasesCount": "Pending releases",
             "assign": "Assign"
         },
         "placeholder": {
@@ -2750,6 +2751,13 @@
             "update": "Update report config"
         },
         "importResult": {
+            "releaseTotal": "Total releases",
+            "releaseImported": "Imported",
+            "releaseSkipped": "Skipped",
+            "releaseErrors": "Errors",
+            "releaseInDb": "In DB",
+            "releasePending": "Pending",
+            "releaseStats": "Releases Statistics",
             "processingStatus": "Report processing status",
             "statusPending": "Pending",
             "statusQueued": "Queued",

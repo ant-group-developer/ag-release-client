@@ -1747,6 +1747,7 @@
             "source": "Nguồn",
             "dsp": "DSP",
             "ciCode": "Mã CI",
+            "pendingReleasesCount": "Số phát hành chờ xử lý",
             "assign": "Gán"
         },
         "placeholder": {
@@ -2741,6 +2742,13 @@
             "update": "Cập nhật cấu hình báo cáo"
         },
         "importResult": {
+            "releaseTotal": "Tổng số phát hành",
+            "releaseImported": "Đã nhập",
+            "releaseSkipped": "Bỏ qua",
+            "releaseErrors": "Lỗi",
+            "releaseInDb": "Đã có trong DB",
+            "releasePending": "Chờ xử lý",
+            "releaseStats": "Thống kê Phát hành (Releases)",
             "processingStatus": "Trạng thái xử lý báo cáo",
             "statusPending": "Đang chờ",
             "statusQueued": "Đang xếp hàng",
