@@ -16,6 +16,7 @@ import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
 import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
+import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
@@ -33,7 +34,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             title,
         });
     const [detailModal, setDetailModal] = useState<{
-        type: 'release' | 'track' | 'label' | 'artist' | null;
+        type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | null;
         title: string;
         id: string;
     }>({
@@ -111,7 +112,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -124,7 +125,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -137,7 +138,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="artistName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -150,7 +151,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="labelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_LABELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_LABELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -163,7 +164,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="tenantName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_TENANTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_TENANTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -176,7 +177,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="dspName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS2_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
             </Row>
@@ -217,6 +218,16 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 }
                 title={detailModal.title}
                 artistId={detailModal.id}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailTenantAnalyticsModal
+                open={detailModal.type === 'tenant'}
+                onClose={() =>
+                    setDetailModal((prev) => ({ ...prev, type: null }))
+                }
+                title={detailModal.title}
+                tenantId={detailModal.id}
                 fromDate={fromDate}
                 toDate={toDate}
             />

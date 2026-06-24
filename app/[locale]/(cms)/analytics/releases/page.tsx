@@ -285,7 +285,7 @@ export default function ReleasesRankingPage() {
     const breadcrumbs = [
         {
             title: messages('analytics.label'),
-            href: APP_ROUTES.ANALYTICS2,
+            href: APP_ROUTES.ANALYTICS,
         },
         {
             title: pageTitle,

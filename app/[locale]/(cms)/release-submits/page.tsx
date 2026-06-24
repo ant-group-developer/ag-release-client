@@ -45,7 +45,6 @@ export default function ReleaseSubmitsPage() {
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: FieldOrderReleaseExecution3.execution_createdAt,
-        latestOnly: true,
     });
 
     const { releaseSubmitsData, isFetching, refetch } =

@@ -22,6 +22,9 @@ export const dspReportApi = {
     unassign: (id: number | string) => {
         return axiosInstance.put(`/dsp-report/${id}/unassign`);
     },
+    delete: (id: number | string) => {
+        return axiosInstance.delete(`/dsp-report/${id}`);
+    },
 };
 
 export const pgDspsSyncApi = {

@@ -8,3 +8,4 @@ const DSP_CONFIG = [
 ];
 
 export const ANALYTICS_RANKING_THUMBNAIL_SIZE = 32;
+export const RANK_COLUMN_WIDTH = 70;

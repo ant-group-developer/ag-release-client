@@ -353,7 +353,8 @@
         "isrc": "ISRC",
         "justNow": "just now",
         "ago": "ago",
-        "systemReview": "System Review"
+        "systemReview": "System Review",
+        "logs": "Logs"
     },
     "country": {
         "label": "Country",
@@ -2174,7 +2175,20 @@
 
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",
-        "detailChartTitle": "Views timeline"
+        "detailChartTitle": "Views timeline",
+        "splitMode": {
+            "label": "Export option",
+            "by_workspace": "Each workspace is a file",
+            "by_artist": "Each artist is a file",
+            "by_period": "Each month/quarter is a file",
+            "workspace_artist": "Each workspace is a folder, each artist is a file",
+            "workspace_period": "Each workspace is a folder, each month/quarter is a file",
+            "periodUnit": "Period type",
+            "month": "Month",
+            "quarter": "Quarter",
+            "none": "Summary",
+            "isExportArtist": "Export with artists"
+        }
     },
     "issue": {
         "label": "Issue",
@@ -2590,7 +2604,7 @@
         }
     },
     "reportConfigs": {
-        "label": "Report Import",
+        "label": "Report Management",
         "configReport": "Config report",
         "importReport": "Report logs",
         "importSftp": "Config import SFTP",
