@@ -352,7 +352,8 @@
         "isrc": "ISRC",
         "justNow": "vừa xong",
         "ago": "trước",
-        "systemReview": "Duyệt hệ thống"
+        "systemReview": "Duyệt hệ thống",
+        "logs": "Nhật ký"
     },
     "country": {
         "label": "Quốc gia",
@@ -2594,7 +2595,7 @@
         }
     },
     "reportConfigs": {
-        "label": "Report import",
+        "label": "Quản lý báo cáo",
         "configReport": "Cấu hình báo cáo",
         "importReport": "Nhật ký báo cáo",
         "importSftp": "Cấu hình SFTP",

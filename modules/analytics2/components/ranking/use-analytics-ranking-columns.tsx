@@ -10,9 +10,10 @@ import {
     TenantRankingItem,
     TrackRankingItem,
 } from '../../types';
+import { RANK_COLUMN_WIDTH } from '../../constants/types';
 
 interface DetailModalState {
-    type: 'release' | 'track' | 'label' | 'artist' | null;
+    type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | null;
     title: string;
     id: string;
 }
@@ -30,7 +31,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 60,
+                width: RANK_COLUMN_WIDTH,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -111,7 +112,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 60,
+                width: RANK_COLUMN_WIDTH,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -203,7 +204,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: RANK_COLUMN_WIDTH,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -277,7 +278,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: RANK_COLUMN_WIDTH,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -362,7 +363,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 60,
+                width: RANK_COLUMN_WIDTH,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (
@@ -385,9 +386,20 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             height={32}
                             src={record.logo}
                         />
-                        <span className="truncate text-gray-900 dark:text-zinc-100">
-                            {text || '-'}
-                        </span>
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: 'tenant',
+                                        title: text,
+                                        id: record.tenantId,
+                                    })
+                                }
+                            >
+                                {text || '-'}
+                            </span>
+                        </CustomTooltip>
                     </div>
                 ),
             },
@@ -403,7 +415,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages]
+        [messages, setDetailModal]
     );
 
     const dspColumns = useMemo(
@@ -412,7 +424,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 60,
+                width: RANK_COLUMN_WIDTH,
                 fixed: 'left' as const,
                 align: 'center' as const,
                 render: (rank: number) => (

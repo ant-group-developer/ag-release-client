@@ -522,5 +522,12 @@ export const QUERY_KEY = {
         ARTIST_REVENUE_LINE_CHART: 'artist-revenue-line-chart',
         ARTIST_REVENUE_DSP_BAR_CHART: 'artist-revenue-dsp-bar-chart',
         ARTIST_REVENUE_TER_BAR_CHART: 'artist-revenue-ter-bar-chart',
+        TENANT_OVERVIEW: 'tenant-overview',
+        TENANT_TREND_VIEW_LINE_CHART: 'tenant-trend-view-line-chart',
+        TENANT_TREND_VIEW_DSP_BAR_CHART: 'tenant-trend-view-dsp-bar-chart',
+        TENANT_TREND_VIEW_TER_BAR_CHART: 'tenant-trend-view-ter-bar-chart',
+        TENANT_REVENUE_LINE_CHART: 'tenant-revenue-line-chart',
+        TENANT_REVENUE_DSP_BAR_CHART: 'tenant-revenue-dsp-bar-chart',
+        TENANT_REVENUE_TER_BAR_CHART: 'tenant-revenue-ter-bar-chart',
     },
 };
