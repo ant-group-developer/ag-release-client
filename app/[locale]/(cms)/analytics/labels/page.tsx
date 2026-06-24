@@ -8,7 +8,10 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import {
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
+    RANK_COLUMN_WIDTH,
+} from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetLabelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenue-data';
@@ -22,6 +25,14 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 const DEFAULT_PAGE = 1;
+
+const RELEASES_COLUMN_WIDTH = 140;
+const TRACKS_COLUMN_WIDTH = 140;
+const TENANT_COLUMN_WIDTH = 180;
+const QUANTITY_COLUMN_WIDTH = 140;
+const REVENUE_COLUMN_WIDTH = 160;
+const VIEWS_COLUMN_WIDTH = 160;
+const LABEL_COLUMN_WIDTH = 300;
 
 interface RankingFilter extends CommonParams {
     startDate?: string;
@@ -90,7 +101,7 @@ export default function LabelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: RANK_COLUMN_WIDTH,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -103,6 +114,7 @@ export default function LabelsRankingPage() {
             dataIndex: 'labelName',
             key: 'labelName',
             ellipsis: true,
+            width: LABEL_COLUMN_WIDTH,
             render: (text: string, record: RevenueLabelItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -133,7 +145,7 @@ export default function LabelsRankingPage() {
             title: messages('common.releases'),
             dataIndex: 'releaseCount',
             key: 'releaseCount',
-            width: 150,
+            width: RELEASES_COLUMN_WIDTH,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -144,7 +156,7 @@ export default function LabelsRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 150,
+            width: TRACKS_COLUMN_WIDTH,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -155,6 +167,7 @@ export default function LabelsRankingPage() {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             key: 'tenant',
+            width: TENANT_COLUMN_WIDTH,
             ellipsis: true,
             render: (tenant: any) => {
                 if (!tenant) return '-';
@@ -178,7 +191,7 @@ export default function LabelsRankingPage() {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 150,
+            width: QUANTITY_COLUMN_WIDTH,
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -189,7 +202,7 @@ export default function LabelsRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 180,
+            width: REVENUE_COLUMN_WIDTH,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     $
@@ -209,7 +222,7 @@ export default function LabelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: RANK_COLUMN_WIDTH,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -222,6 +235,7 @@ export default function LabelsRankingPage() {
             dataIndex: 'labelName',
             key: 'labelName',
             ellipsis: true,
+            width: LABEL_COLUMN_WIDTH,
             render: (text: string, record: LabelRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -249,31 +263,10 @@ export default function LabelsRankingPage() {
             ),
         },
         {
-            title: messages('common.releases'),
-            dataIndex: 'releaseCount',
-            key: 'releaseCount',
-            width: 150,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.tracks'),
-            dataIndex: 'trackCount',
-            key: 'trackCount',
-            width: 150,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             key: 'tenant',
+            width: TENANT_COLUMN_WIDTH,
             ellipsis: true,
             render: (tenant: any) => {
                 if (!tenant) return '-';
@@ -294,10 +287,33 @@ export default function LabelsRankingPage() {
             },
         },
         {
+            title: messages('common.releases'),
+            dataIndex: 'releaseCount',
+            key: 'releaseCount',
+            width: RELEASES_COLUMN_WIDTH,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: TRACKS_COLUMN_WIDTH,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+
+        {
             title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 180,
+            width: VIEWS_COLUMN_WIDTH,
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
