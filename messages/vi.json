@@ -2622,6 +2622,7 @@
             "failedCount": "Thất bại",
             "notFoundCount": "Không tìm thấy",
             "pendingCount": "Đang chờ",
+            "processingCount": "Đang xử lý",
             "dryRun": "Chạy thử",
             "force": "Buộc chạy",
             "limitCount": "Giới hạn",
@@ -2638,7 +2639,51 @@
             "eventConnectionError": "Không thể kết nối tới sự kiện của quá trình chuẩn hoá",
             "cancelScan": "Hủy",
             "cancelScanConfirm": "Bạn có chắc chắn muốn hủy quét dữ liệu này không?",
-            "scanCancelled": "Đã hủy quét chuẩn hoá dữ liệu"
+            "scanCancelled": "Đã hủy quét chuẩn hoá dữ liệu",
+            "historyModalTitle": "Lịch sử chuẩn hoá dữ liệu",
+            "historySummaryTitle": "Thống kê chuẩn hoá",
+            "historyColumns": {
+                "entityType": "Loại thực thể",
+                "entityId": "ID thực thể",
+                "releaseId": "ID phát hành",
+                "isrc": "ISRC",
+                "upc": "UPC",
+                "fieldName": "Trường thay đổi",
+                "oldValue": "Giá trị cũ",
+                "newValue": "Giá trị mới",
+                "changeType": "Loại thay đổi",
+                "enrichmentSource": "Nguồn chuẩn hoá",
+                "status": "Trạng thái",
+                "errorMessage": "Thông báo lỗi",
+                "createdAt": "Ngày tạo"
+            },
+            "historyStatus": {
+                "applied": "Đã áp dụng",
+                "dry_run": "Chạy thử",
+                "error": "Lỗi"
+            },
+            "historyEntityType": {
+                "release": "Album / Release",
+                "track": "Bài hát / Track",
+                "artist": "Nghệ sĩ / Artist",
+                "release_artist": "Liên kết nghệ sĩ với Release",
+                "track_artist": "Liên kết nghệ sĩ với Track"
+            },
+            "historyChangeType": {
+                "create": "Tạo mới",
+                "update": "Cập nhật",
+                "link": "Liên kết",
+                "merge": "Gộp",
+                "skip": "Bỏ qua"
+            },
+            "historyEnrichmentSource": {
+                "spotify": "Spotify API",
+                "deezer": "Deezer API",
+                "local": "CSDL PostgreSQL cục bộ (Cache check)"
+            },
+            "historyAction": {
+                "viewLog": "Xem lịch sử"
+            }
         },
         "sftpExcludePatterns": {
             "title": "Mẫu loại trừ SFTP",

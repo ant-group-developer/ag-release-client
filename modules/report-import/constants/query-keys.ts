@@ -76,3 +76,17 @@ export const enrichScanScheduleQueryKeys = {
             ? ([...enrichScanScheduleQueryKeys.lists(), params] as const)
             : enrichScanScheduleQueryKeys.lists(),
 };
+
+export const enrichHistoryQueryKeys = {
+    all: [QUERY_KEY.ENRICH_HISTORY.KEY] as const,
+    lists: () =>
+        [
+            ...enrichHistoryQueryKeys.all,
+            QUERY_KEY.ENRICH_HISTORY.GET_LIST,
+        ] as const,
+    list: (params?: any) =>
+        params
+            ? ([...enrichHistoryQueryKeys.lists(), params] as const)
+            : enrichHistoryQueryKeys.lists(),
+};
+

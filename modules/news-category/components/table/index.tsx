@@ -33,7 +33,10 @@ type Props = Omit<SortableTableProps<NewsCategoryData>, 'columns'> & {
     loading?: boolean;
 };
 
-const addIndexStr = (list: NewsCategoryData[], prefix = ''): NewsCategoryData[] => {
+const addIndexStr = (
+    list: NewsCategoryData[],
+    prefix = ''
+): NewsCategoryData[] => {
     return list.map((item, index) => {
         const indexStr = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
         const newItem = {

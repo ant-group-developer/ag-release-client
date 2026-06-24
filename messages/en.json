@@ -2631,6 +2631,7 @@
             "failedCount": "Failed",
             "notFoundCount": "Not found",
             "pendingCount": "Pending",
+            "processingCount": "Processing",
             "dryRun": "Dry run",
             "force": "Force",
             "limitCount": "Limit",
@@ -2647,7 +2648,53 @@
             "eventConnectionError": "Cannot connect to scan events",
             "cancelScan": "Cancel",
             "cancelScanConfirm": "Are you sure you want to cancel this data scan?",
-            "scanCancelled": "Enrich data scan cancelled"
+            "scanCancelled": "Enrich data scan cancelled",
+            "historyModalTitle": "Enrichment History",
+            "historySummaryTitle": "Enrichment Summary",
+            "historyColumns": {
+                "entityType": "Entity Type",
+                "entityId": "Entity ID",
+                "releaseId": "Release ID",
+                "isrc": "ISRC",
+                "upc": "UPC",
+                "fieldName": "Field Name",
+                "oldValue": "Old Value",
+                "newValue": "New Value",
+                "changeType": "Change Type",
+                "enrichmentSource": "Enrichment Source",
+                "status": "Status",
+                "errorMessage": "Error Message",
+                "createdAt": "Created At"
+            },
+            "historyStatus": {
+                "applied": "Applied",
+                "dry_run": "Dry run",
+                "error": "Error"
+            },
+            "historyEntityType": {
+                "release": "Album / Release",
+                "track": "Track / Song",
+                "artist": "Artist",
+                "release_artist": "Link artist with Release",
+                "track_artist": "Link artist with Track"
+            },
+            "historyChangeType": {
+                "create": "Create",
+                "update": "Update",
+                "link": "Link",
+                "merge": "Merge",
+                "skip": "Skip",
+                "link_spotify": "Link Spotify",
+                "link_deezer": "Link Deezer"
+            },
+            "historyEnrichmentSource": {
+                "spotify": "Spotify API",
+                "deezer": "Deezer API",
+                "local": "Local PostgreSQL (Cache check)"
+            },
+            "historyAction": {
+                "viewLog": "View history"
+            }
         },
         "sftpExcludePatterns": {
             "title": "SFTP Exclude Patterns",

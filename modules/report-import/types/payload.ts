@@ -1,5 +1,12 @@
 import { ReportConfigData } from '.';
-import { ENRICH_SCAN_STATUS, ETL_JOB_SOURCE_TYPE } from '../enums';
+import {
+    ENRICH_CHANGE_TYPE,
+    ENRICH_ENTITY_TYPE,
+    ENRICH_HISTORY_STATUS,
+    ENRICH_SCAN_STATUS,
+    ENRICHMENT_SOURCE,
+    ETL_JOB_SOURCE_TYPE,
+} from '../enums';
 
 export interface CreateReportConfigPayload
     extends Pick<
@@ -309,3 +316,63 @@ export interface CreateEnrichScanSchedulePayload {
 
 export interface UpdateEnrichScanSchedulePayload
     extends Partial<CreateEnrichScanSchedulePayload> {}
+
+export interface EnrichHistorySummary {
+    totalReleases: number;
+    totalDone: number;
+    totalRemaining: number;
+    successCount: number;
+    failedCount: number;
+    notFoundCount: number;
+    pendingCount: number;
+    processingCount: number;
+    totalReleasesCount: number;
+    totalReleasesDone: number;
+    totalReleasesRemaining: number;
+    successReleasesCount: number;
+    failedReleasesCount: number;
+    notFoundReleasesCount: number;
+    pendingReleasesCount: number;
+    processingReleasesCount: number;
+}
+
+export interface EnrichHistoryItem {
+    id: string;
+    scanId: string;
+    entityType: ENRICH_ENTITY_TYPE | string;
+    entityId: string;
+    releaseId: string;
+    isrc: string;
+    upc: string;
+    fieldName: string;
+    oldValue: string;
+    newValue: string;
+    changeType: ENRICH_CHANGE_TYPE | string;
+    enrichmentSource: ENRICHMENT_SOURCE | string;
+    apiTrackId: string;
+    apiAlbumId: string;
+    apiArtistId: string;
+    status: ENRICH_HISTORY_STATUS | string;
+    errorMessage: string;
+    isDryRun: boolean;
+    createdAt: string;
+    createdBy: string;
+}
+
+export interface EnrichHistoryResponse {
+    items: EnrichHistoryItem[];
+    summary: EnrichHistorySummary;
+    metadata: {
+        page: number;
+        limit: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}
+
+export interface GetEnrichHistoryParams {
+    page?: number;
+    pageSize?: number;
+    scanId?: string | null;
+}
+
