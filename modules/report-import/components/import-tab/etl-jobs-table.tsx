@@ -1,7 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { formattedDate, formattedNumber, getIndex } from '@/helpers/common';
+import { convertSecondsToHHMMSS, formattedDate, formattedNumber, getIndex } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -199,6 +199,17 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
                 record.rows?.errors !== undefined &&
                 record.rows?.errors !== null
                     ? formattedNumber(record.rows.errors)
+                    : '-',
+        },
+        {
+            title: messages('common.executionTime'),
+            key: 'duration',
+            dataIndex: 'durationMs',
+            width: 160,
+            align: 'left',
+            render: (value: number) =>
+                value !== undefined && value !== null
+                    ? convertSecondsToHHMMSS(value / 1000)
                     : '-',
         },
         {

@@ -222,6 +222,7 @@
         "takenDown": "Taken down",
         "minutes": "minutes",
         "hours": "hours",
+        "executionTime": "Execution time",
         "dateRelease": "Date release",
         "genres": "Genre",
         "track": "Track",
