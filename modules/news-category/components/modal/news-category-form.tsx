@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import NewsCategoryTreeSelect from '@/components/ui/select/news-category-tree-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { SCREEN } from '@/enums/common';
 import { useActive } from '@/hooks/use-active';
@@ -71,6 +72,7 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
 
         const payloadValues = {
             ...res,
+            parentId: res.parentId || null,
         };
 
         return isUpdateModal
@@ -102,6 +104,17 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
                 disabled={isActive}
                 className="grid grid-cols-2 gap-4"
             >
+                <AppFormItem
+                    className="col-span-2"
+                    name="parentId"
+                    label={messages('newsCategory.parentLabel')}
+                >
+                    <NewsCategoryTreeSelect
+                        placeholder={messages('newsCategory.parentPlaceholder')}
+                        excludeId={dataEdit?.id}
+                    />
+                </AppFormItem>
+
                 <AppFormItem
                     name="nameVi"
                     label={`${messages('newsCategory.name')} Vi`}

@@ -19,7 +19,7 @@ export const useUpdateNewsCategory = () => {
         }: UpdateVariables<NewsCategoryData['id'], UpdateNewsCategoryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: newsCategoryQueryKeys.lists(),
+            queryKey: newsCategoryQueryKeys.all,
         });
 
         handleSuccess(data?.data);

@@ -6,31 +6,64 @@ import SortableTable, {
 } from '@/components/ui/table/sortable-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { LOCALE } from '@/enums/common';
-import { getIndex } from '@/helpers/common';
 import { getNameByLocale } from '@/helpers/string';
+import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { Button, Card, Spin } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { RotateCw } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 import { TYPE_MODAL_NEWS_CATEGORY } from '../../enums';
 import { useBulkUpdateNewsCategory } from '../../hooks/use-bulk-update';
 import { NewsCategoryData, NewsCategoryDataFilter } from '../../types';
 
 type Props = Omit<SortableTableProps<NewsCategoryData>, 'columns'> & {
-    pagination: {
-        pageSize: number;
-        current: number;
-    };
+    headerTitle?: React.ReactNode;
+    toolBarRender?: () => React.ReactNode[];
+    options?:
+        | {
+              reload?: () => void;
+              setting?: boolean;
+              density?: boolean;
+          }
+        | boolean;
     dataFilter: NewsCategoryDataFilter;
+    onChangeFilter?: OnChangeFilter<NewsCategoryDataFilter>;
+    loading?: boolean;
 };
 
-export default function NewsCategoryTable({ dataFilter, ...props }: Props) {
+const addIndexStr = (list: NewsCategoryData[], prefix = ''): NewsCategoryData[] => {
+    return list.map((item, index) => {
+        const indexStr = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
+        const newItem = {
+            ...item,
+            indexStr,
+        };
+        if (newItem.children && newItem.children.length > 0) {
+            newItem.children = addIndexStr(newItem.children, indexStr);
+        }
+        return newItem;
+    });
+};
+
+export default function NewsCategoryTable({
+    headerTitle,
+    toolBarRender,
+    options,
+    loading,
+    dataFilter,
+    onChangeFilter,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const locale = useLocale();
     const { bulkUpdateNewsCategory } = useBulkUpdateNewsCategory();
 
-    // const { isSystemTenant } = useAuth();
-    // const { hasPermission } = usePermission();
+    const dataWithIndex = useMemo(() => {
+        return addIndexStr(props.dataSource || []);
+    }, [props.dataSource]);
 
     const handleDragEnd: OnDragEnd<NewsCategoryData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -52,14 +85,9 @@ export default function NewsCategoryTable({ dataFilter, ...props }: Props) {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: 60,
             align: 'center',
-            render: (_, __, index) =>
-                getIndex(
-                    props.pagination.pageSize,
-                    props.pagination.current,
-                    index
-                ),
+            render: (_, record) => (record as any).indexStr,
         },
         {
             title: `${messages('common.name')}`,
@@ -75,12 +103,14 @@ export default function NewsCategoryTable({ dataFilter, ...props }: Props) {
                     locale
                 );
                 return (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                         <CopyText
                             tooltipProps={{ placement: 'right' }}
                             text={name}
                         >
-                            <p className="truncate">{name}</p>
+                            <p className="truncate font-medium text-gray-700">
+                                {name}
+                            </p>
                         </CopyText>
                     </div>
                 );
@@ -107,44 +137,6 @@ export default function NewsCategoryTable({ dataFilter, ...props }: Props) {
                 );
             },
         },
-        // {
-        //     title: messages('common.createdAt'),
-        //     key: 'createdAt',
-        //     dataIndex: 'createdAt',
-        //     align: 'center',
-        //     width: 70,
-        //     render: (value) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         'createdAt'
-        //     ),
-        // },
-        // {
-        //     title: messages('common.updatedAt'),
-        //     key: 'updatedAt',
-        //     dataIndex: 'updatedAt',
-        //     align: 'center',
-        //     width: 70,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter.orderBy,
-        //         dataFilter.fieldOrder,
-        //         'updatedAt'
-        //     ),
-        //     render: (value) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(value)}{' '}
-        //         </span>
-        //     ),
-        // },
         {
             key: 'actions',
             align: 'center',
@@ -164,16 +156,85 @@ export default function NewsCategoryTable({ dataFilter, ...props }: Props) {
         },
     ];
 
+    const expandedRowRender = (record: NewsCategoryData) => {
+        if (!record.children || record.children.length === 0) return null;
+        return (
+            <div className="my-2 rounded-lg border border-gray-200">
+                <SortableTable
+                    dataSource={record.children}
+                    columns={column}
+                    pagination={false}
+                    showHeader={false}
+                    rowClassName={(rec) =>
+                        rec.parentId ? 'group child-row' : 'group root-row'
+                    }
+                    onDragEnd={(newChildren) => {
+                        const payload = newChildren.map((item, index) => ({
+                            id: item.id,
+                            order: index + 1,
+                        }));
+                        bulkUpdateNewsCategory({
+                            newsCategories: payload,
+                        });
+                    }}
+                    childrenColumnName="subCategories"
+                    expandable={{
+                        defaultExpandAllRows: true,
+                        expandIconColumnIndex: 0,
+                        columnWidth: 50,
+                        rowExpandable: (rec) =>
+                            !!rec.children && rec.children.length > 0,
+                        expandedRowRender,
+                    }}
+                />
+            </div>
+        );
+    };
+
     return (
-        <div className="w-full">
-            <SortableTable
-                key="main"
-                {...props}
-                pagination={false}
-                columns={column}
-                rowClassName={'group'}
-                onDragEnd={handleDragEnd}
-            />
-        </div>
+        <Card
+            bordered={false}
+            bodyStyle={{ padding: 0 }}
+            className="rounded-md shadow-sm [&_.ant-card-head]:!px-4 [&_.ant-card-head]:!py-2"
+            title={headerTitle}
+            extra={
+                <div className="flex items-center gap-3">
+                    {toolBarRender && toolBarRender()}
+                    {options &&
+                        typeof options === 'object' &&
+                        options.reload && (
+                            <Button
+                                type="text"
+                                icon={<RotateCw size={16} />}
+                                onClick={options.reload}
+                                className="flex items-center justify-center rounded-full p-2 hover:bg-gray-100"
+                            />
+                        )}
+                </div>
+            }
+        >
+            <Spin spinning={loading}>
+                <SortableTable
+                    key="main"
+                    {...props}
+                    dataSource={dataWithIndex}
+                    pagination={false}
+                    columns={column}
+                    rowClassName={(record) =>
+                        record.parentId ? 'group child-row' : 'group root-row'
+                    }
+                    onDragEnd={handleDragEnd}
+                    childrenColumnName="subCategories"
+                    expandable={{
+                        defaultExpandAllRows: true,
+                        expandIconColumnIndex: 0,
+                        columnWidth: 50,
+                        rowExpandable: (record) =>
+                            !!record.children && record.children.length > 0,
+                        expandedRowRender,
+                    }}
+                />
+            </Spin>
+        </Card>
     );
 }

@@ -9,11 +9,11 @@ import { formattedDate } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
 import CopyLink from '@/modules/news/components/copy-link';
 import LatestNews from '@/modules/news/components/latest-news';
-import RelatedNews from '@/modules/news/components/related-news';
+import ShareFacebook from '@/modules/news/components/share-facebook';
 import { NewsData } from '@/modules/news/types';
 import { PaginationResponse } from '@/types/api';
 import { Breadcrumb } from 'antd';
-import { Facebook, Home, Newspaper } from 'lucide-react';
+import { Home, Newspaper } from 'lucide-react';
 import { getLocale, getTranslations } from 'next-intl/server';
 import 'swiper/css'; // style cơ bản
 import 'swiper/css/pagination'; // nếu dùng pagination
@@ -34,8 +34,6 @@ export default async function NewsDetail({ params }: Props) {
     });
     const content = post?.content;
     const newsData = res?.data as PaginationResponse<NewsData>['data'];
-    const currentURL =
-        typeof window === 'undefined' ? '' : window.location.href;
 
     const breadCrumbItems = [
         {
@@ -72,46 +70,42 @@ export default async function NewsDetail({ params }: Props) {
     }
 
     return (
-        <div className="mx-auto w-full max-w-screen-lg space-y-8 px-4 pb-5">
-            <div className="py-2">
-                <Breadcrumb items={breadCrumbItems} />
-            </div>
-            <div className="grid grid-cols-12 justify-center gap-8">
-                <div className="col-span-1">
-                    <div className="sticky top-5 flex flex-col gap-4">
-                        <CustomTooltip placement="right" title={''}>
-                            <Link
-                                href={`http://www.facebook.com/sharer.php?u=${currentURL}`}
-                                target="_blank"
-                            >
-                                <IconButton className="size-8 h-8 w-8 rounded-full border">
-                                    <Facebook size={SIZE_ICON} />
-                                </IconButton>
-                            </Link>
-                        </CustomTooltip>
-
-                        <CopyLink />
-                    </div>
+        <div className="min-h-full w-full bg-white">
+            <div className="mx-auto w-full max-w-screen-xl space-y-8 px-4 pb-5">
+                <div className="py-2">
+                    <Breadcrumb items={breadCrumbItems} />
                 </div>
-                <div className="col-span-11 rounded-lg lg:col-span-7">
-                    <div>
-                        <strong className="text-2xl font-extrabold">
-                            {post?.title}
-                        </strong>
-                        <div className="pt-4">
-                            <span className="italic text-gray-500">
-                                {formattedDate(post?.createdAt)}
-                            </span>
+                <div className="grid grid-cols-12 justify-center gap-8">
+                    <div className="col-span-1">
+                        <div className="sticky top-5 flex flex-col gap-4">
+                            <ShareFacebook />
+
+                            <CopyLink />
                         </div>
                     </div>
-                    <CKContent value={content || ''} className="font-normal" />
+                    <div className="col-span-11 rounded-lg lg:col-span-7">
+                        <div>
+                            <strong className="text-2xl font-extrabold">
+                                {post?.title}
+                            </strong>
+                            <div className="pt-4">
+                                <span className="italic text-gray-500">
+                                    {formattedDate(post?.createdAt)}
+                                </span>
+                            </div>
+                        </div>
+                        <CKContent
+                            value={content || ''}
+                            className="font-normal"
+                        />
+                    </div>
+                    <div className="col-span-4 hidden lg:block">
+                        <LatestNews />
+                    </div>
                 </div>
-                <div className="col-span-4 hidden lg:block">
-                    <LatestNews />
-                </div>
-            </div>
-            <div>
-                <RelatedNews data={newsData?.items} />
+                {/* <div>
+                    <RelatedNews data={newsData?.items} />
+                </div> */}
             </div>
         </div>
     );

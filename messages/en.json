@@ -2270,6 +2270,8 @@
     "newsCategory": {
         "label": "News category",
         "name": "Category name",
+        "parentLabel": "Parent category",
+        "parentPlaceholder": "Select parent category (optional)",
         "message": {
             "success": {
                 "create": "News category created successfully",

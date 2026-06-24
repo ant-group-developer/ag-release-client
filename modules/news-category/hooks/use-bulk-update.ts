@@ -15,7 +15,7 @@ export const useBulkUpdateNewsCategory = () => {
         { onSuccess }: BulkUpdateNewsCategoryPayload
     ) => {
         queryClient.invalidateQueries({
-            queryKey: newsCategoryQueryKeys.lists(),
+            queryKey: newsCategoryQueryKeys.all,
         });
 
         handleSuccess(data?.data);

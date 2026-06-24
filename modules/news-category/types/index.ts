@@ -6,6 +6,8 @@ export interface NewsCategoryData extends CommonAttribute {
     descriptionVi: string;
     descriptionEn: string;
     order: number;
+    parentId?: string;
+    children?: NewsCategoryData[];
 }
 
 export interface NewsCategoryDataFilter extends CommonParams {}

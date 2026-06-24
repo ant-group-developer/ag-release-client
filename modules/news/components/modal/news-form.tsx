@@ -4,7 +4,7 @@ import ImageListUpload from '@/components/ui/input/image-list-upload';
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import { AppModalProps } from '@/components/ui/modal/normal-modal';
 import CodeLanguageSelect from '@/components/ui/select/code-language-select';
-import NewsCategorySelect from '@/components/ui/select/news-category-select';
+import NewsCategoryTreeSelect from '@/components/ui/select/news-category-tree-select';
 import TagSelect from '@/components/ui/tag/tag-select';
 import TextEditor from '@/components/ui/text-editor';
 import { SIZE_ICON } from '@/constants/common';
@@ -38,6 +38,7 @@ export default function NewsFormModal({ ...props }: Props) {
     const [form] = Form.useForm();
     const locale = useLocale();
     const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as NewsData);
     const { active, isActive, deActive } = useActive();
     const { newsData } = useGetDetailNews(locale, dataEdit?.slug);
@@ -78,6 +79,7 @@ export default function NewsFormModal({ ...props }: Props) {
             onSuccess: () => {
                 deActive();
                 form.resetFields();
+                closeModal();
             },
             onError: () => {
                 deActive();
@@ -158,6 +160,9 @@ export default function NewsFormModal({ ...props }: Props) {
                 },
                 className: 'inline-flex items-center',
                 loading: isActive,
+                style: {
+                    height: 34,
+                },
             }}
             actionContent={messages('common.submit')}
         >
@@ -250,7 +255,7 @@ export default function NewsFormModal({ ...props }: Props) {
                                 },
                             ]}
                         >
-                            <TextEditor className="editor-large" />
+                            <TextEditor />
                         </AppFormItem>
                     </div>
                     <div className="sticky top-0 col-span-3 flex w-full flex-col gap-4 px-8 py-4">
@@ -299,7 +304,7 @@ export default function NewsFormModal({ ...props }: Props) {
                                 },
                             ]}
                         >
-                            <NewsCategorySelect
+                            <NewsCategoryTreeSelect
                                 placeholder={messages('newsCategory.label')}
                                 className="w-full"
                             />

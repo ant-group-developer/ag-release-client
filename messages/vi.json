@@ -2261,6 +2261,8 @@
     "newsCategory": {
         "label": "Danh mục tin tức",
         "name": "Tên danh mục",
+        "parentLabel": "Danh mục cha",
+        "parentPlaceholder": "Chọn danh mục cha (nếu có)",
         "message": {
             "success": {
                 "create": "Tạo danh mục tin tức thành công",

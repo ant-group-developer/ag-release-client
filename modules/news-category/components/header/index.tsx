@@ -1,42 +1,26 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
-import { UseFilterProps } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
+import { OnChangeFilter, TOnSearch } from '@/hooks/use-filter';
+import { Space } from 'antd';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_NEWS_CATEGORY } from '../../enums';
 import { NewsCategoryDataFilter } from '../../types';
 
-type Props = Pick<
-    UseFilterProps<NewsCategoryDataFilter>,
-    'dataFilter' | 'onSearch'
->;
+type Props = {
+    dataFilter: NewsCategoryDataFilter;
+    onChangeFilter?: OnChangeFilter<NewsCategoryDataFilter>;
+    onSearch: TOnSearch;
+};
 
 export const NewsCategoryHeader = ({ dataFilter, onSearch }: Props) => {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
     return (
-        <AppHeader className="border-b-0 !p-2 px-0">
-            <AppHeaderGroup>
-                <div>
-                    <AppSearch
-                        className="max-w-52"
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                    />
-                </div>
-            </AppHeaderGroup>
-            <AppHeaderGroup position="end" className="flex-1">
-                <div className="flex items-center gap-2">
-                    <CreateButton
-                        canCreate={true}
-                        text={messages('action.create.button')}
-                        onClick={() =>
-                            openModal(TYPE_MODAL_NEWS_CATEGORY.CREATE)
-                        }
-                    />
-                </div>
-            </AppHeaderGroup>
-        </AppHeader>
+        <Space className="font-normal">
+            <AppSearch
+                className="w-52"
+                placeholder={messages('common.search')}
+                onChange={onSearch}
+                defaultValue={dataFilter?.keyword}
+                allowClear
+            />
+        </Space>
     );
 };
