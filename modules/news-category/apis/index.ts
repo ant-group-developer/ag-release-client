@@ -17,6 +17,12 @@ export const newsCategoryApis = {
         );
     },
 
+    getTree: () => {
+        return axiosInstance.get<DetailResponse<NewsCategoryData[]>>(
+            '/news-categories/tree'
+        );
+    },
+
     getDetail: (id: NewsCategoryData['id']) => {
         return axiosInstance.get<DetailResponse<NewsCategoryData>>(
             `/news-categories/${id}`

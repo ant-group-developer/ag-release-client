@@ -296,6 +296,7 @@
         "remove": "Gỡ bỏ",
         "assignee": "Người thực hiện",
         "image": "Hình ảnh",
+        "audio": "Audio",
         "video": "Video",
         "type": "Thể loại",
         "status": "Trạng thái",
@@ -1757,6 +1758,7 @@
     },
     "dsp": {
         "label": "DSP",
+        "type": "Loại",
         "systemTenantNoAgreement": "Quản trị viên hệ thống không có thỏa thuận DSP.",
         "name": "Tên nền tảng",
         "codeCi": "Mã CI",
@@ -2259,6 +2261,8 @@
     "newsCategory": {
         "label": "Danh mục tin tức",
         "name": "Tên danh mục",
+        "parentLabel": "Danh mục cha",
+        "parentPlaceholder": "Chọn danh mục cha (nếu có)",
         "message": {
             "success": {
                 "create": "Tạo danh mục tin tức thành công",

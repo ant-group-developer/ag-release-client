@@ -349,6 +349,7 @@ export const QUERY_KEY = {
     NEWS_CATEGORY: {
         KEY: 'NEWS_CATEGORY',
         GET_LIST: 'GET_LIST_NEWS_CATEGORY',
+        GET_TREE: 'GET_TREE_NEWS_CATEGORY',
         UPDATE: 'UPDATE_NEWS_CATEGORY',
     },
     NEWS: {
