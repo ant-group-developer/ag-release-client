@@ -297,6 +297,7 @@
         "remove": "Remove",
         "assignee": "Assignee",
         "image": "Image",
+        "audio": "Audio",
         "video": "Video",
         "type": "Type",
         "status": "Status",
@@ -1765,6 +1766,7 @@
     },
     "dsp": {
         "label": "DSP",
+        "type": "Type",
         "systemTenantNoAgreement": "System administrators do not have DSP agreements.",
         "name": "Platform name",
         "codeCi": "CI Code",

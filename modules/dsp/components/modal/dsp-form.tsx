@@ -11,7 +11,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { TYPE_MODAL_DSP } from '../../enums';
+import { TYPE_MODAL_DSP, DSP_TYPE } from '../../enums';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
 import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
@@ -192,6 +192,7 @@ export default function DspFormModal({ ...props }: Props) {
                         hasDeal: false,
                         enablePolicy: false,
                         isDefault: false,
+                        type: DSP_TYPE.AUDIO,
                     }}
                     submitProps={{
                         loading: isActive,
