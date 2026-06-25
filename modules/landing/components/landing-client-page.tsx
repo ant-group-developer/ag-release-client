@@ -8,24 +8,28 @@ import Header from '@/modules/landing/components/header';
 import Hero from '@/modules/landing/components/hero';
 import HowItWorks from '@/modules/landing/components/how-it-works';
 import Platforms from '@/modules/landing/components/platforms';
-import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface LandingClientPageProps {
     newsSection: React.ReactNode;
 }
 
-export default function LandingClientPage({ newsSection }: LandingClientPageProps) {
-    const [activeTab, setActiveTab] = useState<'home' | 'news'>('home');
+export default function LandingClientPage({
+    newsSection,
+}: LandingClientPageProps) {
+    const [activeTab, setActiveTab] = useState<'home' | 'news' | 'docs'>('home');
     const searchParams = useSearchParams();
 
     useEffect(() => {
         const handleHashOrQueryChange = () => {
             const hash = window.location.hash;
             const tabParam = searchParams.get('tab');
-            
+
             if (hash === '#news' || tabParam === 'news') {
                 setActiveTab('news');
+            } else if (hash === '#docs' || tabParam === 'docs') {
+                setActiveTab('docs');
             } else {
                 setActiveTab('home');
             }
@@ -34,10 +38,11 @@ export default function LandingClientPage({ newsSection }: LandingClientPageProp
         handleHashOrQueryChange();
 
         window.addEventListener('hashchange', handleHashOrQueryChange);
-        return () => window.removeEventListener('hashchange', handleHashOrQueryChange);
+        return () =>
+            window.removeEventListener('hashchange', handleHashOrQueryChange);
     }, [searchParams]);
 
-    const handleTabChange = (tab: 'home' | 'news') => {
+    const handleTabChange = (tab: 'home' | 'news' | 'docs') => {
         setActiveTab(tab);
         window.location.hash = `#${tab}`;
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -86,16 +91,19 @@ export default function LandingClientPage({ newsSection }: LandingClientPageProp
             />
 
             {/* Background glow container that clips any orb overflow */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
                 {/* Glowing Ambient Light Orbs */}
                 <div className="animate-glow-1 absolute left-[5%] top-[-10%] h-[500px] w-[500px] rounded-full bg-purple-600/15 blur-[120px]" />
                 <div className="animate-glow-2 absolute right-[-5%] top-[20%] h-[600px] w-[600px] rounded-full bg-indigo-600/15 blur-[140px]" />
-                <div className="animate-glow-3 absolute left-[-10%] top-[60%] h-[550px] w-[550px] rounded-full bg-pink-600/12 blur-[130px]" />
+                <div className="animate-glow-3 bg-pink-600/12 absolute left-[-10%] top-[60%] h-[550px] w-[550px] rounded-full blur-[130px]" />
             </div>
 
             <Header activeTab={activeTab} onChangeTab={handleTabChange} />
-            
-            <main className="relative z-10 animate-fade-in" style={{ flexGrow: 1 }}>
+
+            <main
+                className="animate-fade-in relative z-10"
+                style={{ flexGrow: 1 }}
+            >
                 {activeTab === 'home' && (
                     <>
                         <Hero />
