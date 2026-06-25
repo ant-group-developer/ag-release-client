@@ -73,6 +73,7 @@ export enum APP_ROUTES {
     RELEASE_EXECUTIONS = '/release-executions',
     RELEASE_SUBMITS = '/release-submits',
     DISTRIBUTION_JOBS = '/distribution-jobs',
+    LANDING_NEWS_DETAIL = '/landing/news/*',
     LANDING = '/landing',
 }
 
@@ -82,7 +83,12 @@ export const DEFAULT_ROUTE = APP_ROUTES.RELEASES;
 
 export const HOME_ROUTE = APP_ROUTES.DASHBOARD;
 
-export const PUBLIC_ROUTES = [APP_ROUTES.NOT_FOUND, APP_ROUTES.SERVER_ERROR, APP_ROUTES.LANDING];
+export const PUBLIC_ROUTES = [
+    APP_ROUTES.NOT_FOUND,
+    APP_ROUTES.SERVER_ERROR,
+    APP_ROUTES.LANDING,
+    APP_ROUTES.LANDING_NEWS_DETAIL,
+];
 
 export enum PATH_PARAMS {
     ACTION = 'action',

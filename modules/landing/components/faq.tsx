@@ -4,9 +4,13 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronDown } from 'lucide-react';
 
+import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
+
 export default function FAQ() {
     const t = useTranslations('landing');
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const { settingConfig } = useGetSettingPublic();
+    const websiteName = settingConfig?.website?.name || 'ANT Group';
 
     const faqs = [
         { q: t('faqQ1'), a: t('faqA1') },
@@ -26,7 +30,7 @@ export default function FAQ() {
                         {t('faqTitle')}
                     </h2>
                     <p className="text-zinc-400 max-w-xl mx-auto text-sm sm:text-base font-light">
-                        {t('faqSubtitle')}
+                        {t('faqSubtitle', { appName: websiteName })}
                     </p>
                 </div>
 
