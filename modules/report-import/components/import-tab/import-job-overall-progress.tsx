@@ -11,15 +11,16 @@ interface ImportJobOverallProgressProps {
     jobStatus: ImportJobStatusResponse;
 }
 
-export const ImportJobOverallProgress: React.FC<ImportJobOverallProgressProps> = ({
-    jobStatus,
-}) => {
+export const ImportJobOverallProgress: React.FC<
+    ImportJobOverallProgressProps
+> = ({ jobStatus }) => {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
     return (
         <div className="mt-2">
             <Progress
+                size={'small'}
                 percent={
                     jobStatus.progress.total > 0
                         ? Math.round(
@@ -42,7 +43,7 @@ export const ImportJobOverallProgress: React.FC<ImportJobOverallProgressProps> =
             />
             {jobStatus.progress.label && (
                 <div
-                    className="text-xs mt-1"
+                    className="mt-1 text-xs"
                     style={{
                         color: token.colorTextDescription,
                     }}

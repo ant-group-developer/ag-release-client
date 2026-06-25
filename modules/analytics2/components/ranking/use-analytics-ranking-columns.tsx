@@ -3,6 +3,7 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+import { RANK_COLUMN_WIDTH } from '../../constants/types';
 import {
     ArtistRankingItem,
     LabelRankingItem,
@@ -10,7 +11,6 @@ import {
     TenantRankingItem,
     TrackRankingItem,
 } from '../../types';
-import { RANK_COLUMN_WIDTH } from '../../constants/types';
 
 interface DetailModalState {
     type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | null;
@@ -44,9 +44,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.track'),
                 dataIndex: 'title',
                 key: 'title',
-                width: 130,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: TrackRankingItem) => (
                     <div className="flex items-center gap-3">
                         <ReleaseCoverImage
@@ -83,7 +81,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: 'ISRC',
                 dataIndex: 'isrc',
                 key: 'isrc',
-                width: 85,
+                width: 140,
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -95,7 +93,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 70,
+                width: 100,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -125,9 +123,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.release'),
                 dataIndex: 'title',
                 key: 'title',
-                width: 130,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: ReleaseRankingItem) => (
                     <div className="flex items-center gap-3">
                         <ReleaseCoverImage
@@ -164,7 +160,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: 'UPC',
                 dataIndex: 'upc',
                 key: 'upc',
-                width: 95,
+                width: 140,
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -187,7 +183,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 70,
+                width: 100,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -217,9 +213,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.artist'),
                 dataIndex: 'artistName',
                 key: 'artistName',
-                width: 200,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: ArtistRankingItem) => (
                     <div className="flex items-center gap-3">
                         <ReleaseCoverImage
@@ -250,7 +244,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.tracks'),
                 dataIndex: 'trackCount',
                 key: 'trackCount',
-                width: 125,
+                width: 150,
                 render: (count: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {count || 0}
@@ -261,7 +255,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 125,
+                width: 150,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -291,9 +285,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.label'),
                 dataIndex: 'labelName',
                 key: 'labelName',
-                width: 200,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: LabelRankingItem) => (
                     <div className="flex items-center gap-3">
                         <ReleaseCoverImage
@@ -324,7 +316,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.release'),
                 dataIndex: 'releaseCount',
                 key: 'releaseCount',
-                width: 100,
+                width: 120,
                 render: (count: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {count || 0}
@@ -346,7 +338,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 90,
+                width: 100,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -376,9 +368,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('tenant.name'),
                 dataIndex: 'tenantName',
                 key: 'tenantName',
-                width: 200,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: TenantRankingItem) => (
                     <div className="flex items-center gap-3">
                         <ReleaseCoverImage
@@ -386,7 +376,9 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             height={32}
                             src={record.logo}
                         />
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
@@ -407,7 +399,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 90,
+                width: 200,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -437,9 +429,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
-                width: 200,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string) => (
                     <span className="truncate text-gray-900 dark:text-zinc-100">
                         {text || '—'}
@@ -450,7 +440,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 90,
+                width: 200,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}

@@ -383,6 +383,10 @@ export const QUERY_KEY = {
         KEY: 'ENRICH_SCAN_SCHEDULES',
         GET_LIST: 'GET_LIST_ENRICH_SCAN_SCHEDULES',
     },
+    ENRICH_HISTORY: {
+        KEY: 'ENRICH_HISTORY',
+        GET_LIST: 'GET_LIST_ENRICH_HISTORY',
+    },
     ETL_SYNC_CONFIG: {
         KEY: 'ETL_SYNC_CONFIG',
     },

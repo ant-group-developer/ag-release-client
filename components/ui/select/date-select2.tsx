@@ -15,7 +15,7 @@ type Props = Omit<RangePickerProps, 'value' | 'onChange'> & {
 const MONTH_PRESET_START_OFFSET = 2;
 const MONTH_PRESET_COUNT = 4;
 const PAST_YEAR_PRESET_COUNT = 4;
-const LIFETIME_START_DATE = '1970-01-01';
+const LIFETIME_START_DATE = '2000-01-01';
 
 export default function DateSelect2({
     value,
@@ -61,11 +61,14 @@ export default function DateSelect2({
 
                 return {
                     label: targetYear.format(DATE_FORMAT.YEAR),
-                    value: () =>
-                        [
-                            targetYear.startOf('year'),
-                            targetYear.endOf('year'),
-                        ] as [Dayjs, Dayjs],
+                    value: () => {
+                        const start = targetYear.startOf('year');
+                        let end = targetYear.endOf('year');
+                        if (end.isAfter(dayjs())) {
+                            end = dayjs().endOf('day');
+                        }
+                        return [start, end] as [Dayjs, Dayjs];
+                    },
                 };
             }
         );
