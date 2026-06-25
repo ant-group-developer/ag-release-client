@@ -21,13 +21,13 @@ export default async function LatestNews({}: Props) {
 
     return (
         <div className="sticky top-5 h-full max-h-[90vh] w-[300px] overflow-y-auto rounded-lg">
-            <p className="mb-4 text-lg font-bold uppercase text-gray-900">
+            <p className="mb-4 text-lg font-bold uppercase text-gray-900 dark:text-white">
                 {t('newsPost.latest')}
             </p>
 
             <ul>
                 {latestNews?.map((item, index) => (
-                    <li key={item.id} className="border-b border-gray-100 py-4">
+                    <li key={item.id} className="border-b border-gray-100 dark:border-zinc-700 py-4">
                         <Link
                             href={`/news/${item?.slug}`}
                             className="group/latest flex items-start gap-4"
@@ -37,7 +37,7 @@ export default async function LatestNews({}: Props) {
                             </span>
 
                             <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-gray-900 leading-snug group-hover/latest:text-blue-500 line-clamp-3 break-words text-sm sm:text-base lg:text-sm">
+                                <h3 className="font-semibold text-gray-900 dark:text-zinc-100 leading-snug group-hover/latest:text-blue-500 dark:group-hover/latest:text-blue-400 line-clamp-3 break-words text-sm sm:text-base lg:text-sm">
                                     {item?.title}
                                 </h3>
                             </div>

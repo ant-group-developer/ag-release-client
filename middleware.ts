@@ -33,16 +33,29 @@ export async function middleware(req: NextRequest) {
 
     // 2. Do your session check + redirects
     const token = await getToken(req);
-    const locale = cookies().get('NEXT_LOCALE')?.value || defaultLocale;
+    const pathnameParts = pathname.split('/');
+    const urlLocale = pathnameParts[1];
+    const locale = routing.locales.includes(urlLocale as any)
+        ? urlLocale
+        : cookies().get('NEXT_LOCALE')?.value || defaultLocale;
 
     const normalizePath = (path: string) => path.replace(/\/+$/, '');
     const normalizedPathname = normalizePath(pathname);
 
-    const isPublicRoutes = PUBLIC_ROUTES.some(
-        (item) =>
+    const isPublicRoutes = PUBLIC_ROUTES.some((item) => {
+        const pathToCheck = normalizePath(item);
+        if (pathToCheck.endsWith('/*')) {
+            const base = pathToCheck.slice(0, -2);
+            return (
+                normalizedPathname.startsWith(normalizePath(`/${locale}${base}`)) ||
+                normalizedPathname.startsWith(normalizePath(base))
+            );
+        }
+        return (
             normalizedPathname === normalizePath(`/${locale}${item}`) ||
             normalizedPathname === normalizePath(`${item}`)
-    );
+        );
+    });
     const isAuthRoutes = AUTH_ROUTES.some(
         (item) =>
             normalizedPathname === normalizePath(`/${locale}${item}`) ||

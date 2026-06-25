@@ -4,6 +4,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
@@ -18,7 +19,7 @@ import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenu
 import { LabelRankingItem, RevenueLabelItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Table, theme } from 'antd';
+import { Card, Segmented, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -363,11 +364,29 @@ export default function LabelsRankingPage() {
                 }
             >
                 <Card className="rounded-xl border-none shadow-sm">
-                    <div style={{ marginBottom: 16 }}>
+                    <div className="mb-4 flex items-center gap-4">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                             style={{ width: 200 }}
+                        />
+                        <Segmented
+                            value={dataFilter.type ?? ANALYTICS_VIEW_TYPE.VIEW}
+                            onChange={(value) => {
+                                onChangeFilter({
+                                    type: value as ANALYTICS_VIEW_TYPE,
+                                });
+                            }}
+                            options={[
+                                {
+                                    label: messages('common.views'),
+                                    value: ANALYTICS_VIEW_TYPE.VIEW,
+                                },
+                                {
+                                    label: messages('common.revenue'),
+                                    value: ANALYTICS_VIEW_TYPE.REVENUE,
+                                },
+                            ]}
                         />
                     </div>
                     {isRevenue ? (
@@ -378,16 +397,7 @@ export default function LabelsRankingPage() {
                             dataSource={topLabelData?.items}
                             loading={isFetching}
                             rowKey="labelId"
-                            pagination={{
-                                current: dataFilter.page,
-                                pageSize: dataFilter.pageSize,
-                                total: topLabelData?.metadata?.totalItems,
-                                pageSizeOptions: PAGE_SIZE_OPTIONS,
-                                showSizeChanger: true,
-                                showTotal: (totalCount, range) =>
-                                    `${range[0]}-${range[1]} / ${totalCount}`,
-                                onChange: onChangePage,
-                            }}
+                            pagination={false}
                         />
                     ) : (
                         <Table<LabelRankingItem>
@@ -397,18 +407,25 @@ export default function LabelsRankingPage() {
                             dataSource={labelRankingData?.items}
                             loading={isFetching}
                             rowKey="labelId"
-                            pagination={{
-                                current: dataFilter.page,
-                                pageSize: dataFilter.pageSize,
-                                total: labelRankingData?.metadata?.totalItems,
-                                pageSizeOptions: PAGE_SIZE_OPTIONS,
-                                showSizeChanger: true,
-                                showTotal: (totalCount, range) =>
-                                    `${range[0]}-${range[1]} / ${totalCount}`,
-                                onChange: onChangePage,
-                            }}
+                            pagination={false}
                         />
                     )}
+                    <AppPagination
+                        align="end"
+                        className="!mt-4"
+                        current={page}
+                        pageSize={pageSize}
+                        total={
+                            isRevenue
+                                ? topLabelData?.metadata?.totalItems || 0
+                                : labelRankingData?.metadata?.totalItems || 0
+                        }
+                        onChange={onChangePage}
+                        showTotalText
+                        showSizeChanger
+                        showQuickJumper
+                        pageSizeOptions={PAGE_SIZE_OPTIONS}
+                    />
                 </Card>
 
                 <DetailLabelAnalyticsModal

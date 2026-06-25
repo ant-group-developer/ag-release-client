@@ -1,12 +1,16 @@
 'use client';
 import AppSearch from '@/components/ui/input/search';
+import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import {
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
+    RANK_COLUMN_WIDTH,
+} from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
@@ -15,7 +19,7 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Table, theme } from 'antd';
+import { Card, Segmented, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -90,7 +94,7 @@ export default function TracksRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: RANK_COLUMN_WIDTH,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -182,7 +186,7 @@ export default function TracksRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: RANK_COLUMN_WIDTH,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -293,11 +297,29 @@ export default function TracksRankingPage() {
                 }
             >
                 <Card className="rounded-xl border-none shadow-sm">
-                    <div style={{ marginBottom: 16 }}>
+                    <div className="mb-4 flex items-center gap-4">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                             style={{ width: 200 }}
+                        />
+                        <Segmented
+                            value={dataFilter.type ?? ANALYTICS_VIEW_TYPE.VIEW}
+                            onChange={(value) => {
+                                onChangeFilter({
+                                    type: value as ANALYTICS_VIEW_TYPE,
+                                });
+                            }}
+                            options={[
+                                {
+                                    label: messages('common.views'),
+                                    value: ANALYTICS_VIEW_TYPE.VIEW,
+                                },
+                                {
+                                    label: messages('common.revenue'),
+                                    value: ANALYTICS_VIEW_TYPE.REVENUE,
+                                },
+                            ]}
                         />
                     </div>
                     {isRevenue ? (
@@ -308,16 +330,7 @@ export default function TracksRankingPage() {
                             loading={isFetching}
                             rowKey="isrc"
                             size="small"
-                            pagination={{
-                                current: dataFilter.page,
-                                pageSize: dataFilter.pageSize,
-                                total: topTrackData?.metadata?.totalItems,
-                                pageSizeOptions: PAGE_SIZE_OPTIONS,
-                                showSizeChanger: true,
-                                showTotal: (totalCount, range) =>
-                                    `${range[0]}-${range[1]} / ${totalCount}`,
-                                onChange: onChangePage,
-                            }}
+                            pagination={false}
                         />
                     ) : (
                         <Table<TrackRankingItem>
@@ -327,18 +340,25 @@ export default function TracksRankingPage() {
                             loading={isFetching}
                             rowKey="isrc"
                             size="small"
-                            pagination={{
-                                current: dataFilter.page,
-                                pageSize: dataFilter.pageSize,
-                                total: trackRankingData?.metadata?.totalItems,
-                                pageSizeOptions: PAGE_SIZE_OPTIONS,
-                                showSizeChanger: true,
-                                showTotal: (totalCount, range) =>
-                                    `${range[0]}-${range[1]} / ${totalCount}`,
-                                onChange: onChangePage,
-                            }}
+                            pagination={false}
                         />
                     )}
+                    <AppPagination
+                        align="end"
+                        className="!mt-4"
+                        current={page}
+                        pageSize={pageSize}
+                        total={
+                            isRevenue
+                                ? topTrackData?.metadata?.totalItems || 0
+                                : trackRankingData?.metadata?.totalItems || 0
+                        }
+                        onChange={onChangePage}
+                        showTotalText
+                        showSizeChanger
+                        showQuickJumper
+                        pageSizeOptions={PAGE_SIZE_OPTIONS}
+                    />
                 </Card>
 
                 <DetailTrackAnalyticsModal
