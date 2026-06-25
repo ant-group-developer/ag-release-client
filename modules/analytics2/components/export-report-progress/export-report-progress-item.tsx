@@ -79,6 +79,7 @@ export default function ExportReportProgressItem({
         const downloadLink = document.createElement('a');
         downloadLink.href = summary.result.downloadUrl;
         downloadLink.download = summary.result.fileName || '';
+        downloadLink.target = '_blank';
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);

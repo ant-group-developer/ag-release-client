@@ -1,12 +1,9 @@
 import { getDetailPostBySlug, getListPostPublic } from '@/app/api/newsPost';
-import IconButton from '@/components/ui/button/icon-button';
 import CKContent from '@/components/ui/text-editor/ck-content';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
-import { Link } from '@/i18n/routing';
 import CopyLink from '@/modules/news/components/copy-link';
 import LatestNews from '@/modules/news/components/latest-news';
 import ShareFacebook from '@/modules/news/components/share-facebook';
@@ -70,7 +67,7 @@ export default async function NewsDetail({ params }: Props) {
     }
 
     return (
-        <div className="min-h-full w-full bg-white">
+        <div className="min-h-full w-full bg-white dark:bg-zinc-800">
             <div className="mx-auto w-full max-w-screen-xl space-y-8 px-4 pb-5">
                 <div className="py-2">
                     <Breadcrumb items={breadCrumbItems} />
