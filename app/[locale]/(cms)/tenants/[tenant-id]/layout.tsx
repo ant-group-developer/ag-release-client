@@ -127,16 +127,6 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                 </Link>
             ),
         },
-        {
-            key: TENANT_TABS.DOMAIN,
-            label: (
-                <Link
-                    href={getTenantDetailRoute(tenantId, TENANT_TABS.DOMAIN)}
-                >
-                    {messages('tenantDomain.tabLabel')}
-                </Link>
-            ),
-        },
     ];
 
     if (error) {

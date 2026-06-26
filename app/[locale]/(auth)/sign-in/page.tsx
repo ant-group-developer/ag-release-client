@@ -4,7 +4,6 @@ import AppForm from '@/components/ui/antd-form/form';
 import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
 import { useApiNotify } from '@/hooks/use-api-notify';
-import { useCustomDomainStore } from '@/hooks/use-custom-domain-store';
 import { Link } from '@/i18n/routing';
 import { Alert, Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
@@ -27,10 +26,6 @@ export default function SignInPage() {
     const error = searchParams.get('error');
     const errorMessage = decodeURIComponent(error ?? '');
 
-    const customDomain = useCustomDomainStore((s) =>
-        !s.isPrimaryDomain ? s.domain : null
-    );
-
     // useEffect(() => {
     //     if (error) {
     //         toast(decodeURIComponent(error), {
@@ -46,7 +41,6 @@ export default function SignInPage() {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
-                customDomain: customDomain ?? '',
                 redirect: true,
                 callbackUrl: `${APP_ROUTES.DASHBOARD}`,
             });

@@ -58,22 +58,14 @@ export const authOptions: NextAuthOptions = {
             credentials: {
                 email: { label: 'Email', type: 'text' },
                 password: { label: 'Password', type: 'password' },
-                customDomain: { label: 'Custom Domain', type: 'text' },
             },
             // @ts-ignore
             async authorize(credentials) {
                 try {
-                    const headers: Record<string, string> = {};
-                    if (credentials?.customDomain) {
-                        headers['x-custom-domain'] = credentials.customDomain;
-                    }
-                    const res = await authApi.signin(
-                        {
-                            email: credentials!.email,
-                            password: credentials!.password,
-                        },
-                        headers
-                    );
+                    const res = await authApi.signin({
+                        email: credentials!.email,
+                        password: credentials!.password,
+                    });
                     const data = res.data.data;
                     // Khi login thành công, trả về đối tượng user chứa token
                     return {

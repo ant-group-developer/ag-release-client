@@ -8,7 +8,6 @@ import { adminRoutes } from '@/layouts/cms-layout/routes';
 import { getCurrentTenant } from '@/modules/auth/api';
 import { getSettingPublicServer } from '@/modules/setting/apis';
 import AntdProvider from '@/providers/antd';
-import CustomDomainProvider from '@/providers/custom-domain';
 import type { Metadata } from 'next';
 import { pathname } from 'next-extra/pathname';
 import { NextIntlClientProvider } from 'next-intl';
@@ -133,10 +132,9 @@ export default async function RootLayout({
         //         className={`${openSans.variable} ${openSans.className} ${inter.variable} ${inter.className} text-sm antialiased`}
         //     >
         <NextIntlClientProvider locale={locale} messages={messages}>
+            {/* <ThemeProvider /> */}
             <AntdProvider>
-                <CustomDomainProvider>
-                    <NuqsAdapter>{children}</NuqsAdapter>
-                </CustomDomainProvider>
+                <NuqsAdapter>{children}</NuqsAdapter>
                 <GoogleAnalytics />
             </AntdProvider>
         </NextIntlClientProvider>
