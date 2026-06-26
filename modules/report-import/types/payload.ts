@@ -359,9 +359,18 @@ export interface EnrichHistoryItem {
     createdBy: string;
 }
 
+export interface EnrichHistorySession {
+    startedAt: string | null;
+    finishedAt: string | null;
+    durationMs: number | null;
+    duration: string | null;
+    status: ENRICH_SCAN_STATUS | string;
+}
+
 export interface EnrichHistoryResponse {
     items: EnrichHistoryItem[];
     summary: EnrichHistorySummary;
+    session?: EnrichHistorySession | null;
     metadata: {
         page: number;
         limit: number;

@@ -2706,7 +2706,7 @@
                 "releaseId": "ID phát hành",
                 "isrc": "ISRC",
                 "upc": "UPC",
-                "fieldName": "Trường thay đổi",
+                "fieldName": "Tên trường",
                 "oldValue": "Giá trị cũ",
                 "newValue": "Giá trị mới",
                 "changeType": "Loại thay đổi",
