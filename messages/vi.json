@@ -413,7 +413,8 @@
         "justNow": "vừa xong",
         "ago": "trước",
         "systemReview": "Duyệt hệ thống",
-        "logs": "Nhật ký"
+        "logs": "Nhật ký",
+        "drag": "Kéo để sắp xếp"
     },
     "country": {
         "label": "Quốc gia",
@@ -2706,7 +2707,7 @@
                 "releaseId": "ID phát hành",
                 "isrc": "ISRC",
                 "upc": "UPC",
-                "fieldName": "Trường thay đổi",
+                "fieldName": "Tên trường",
                 "oldValue": "Giá trị cũ",
                 "newValue": "Giá trị mới",
                 "changeType": "Loại thay đổi",

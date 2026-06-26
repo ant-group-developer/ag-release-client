@@ -414,7 +414,8 @@
         "justNow": "just now",
         "ago": "ago",
         "systemReview": "System Review",
-        "logs": "Logs"
+        "logs": "Logs",
+        "drag": "Drag to reorder"
     },
     "country": {
         "label": "Country",

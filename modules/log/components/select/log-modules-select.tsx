@@ -15,11 +15,5 @@ export const LogModulesSelect = ({ ...props }: Props) => {
         };
     });
 
-    return (
-        <Select
-            loading={isLoading}
-            options={options}
-            {...props}
-        />
-    );
+    return <Select loading={isLoading} options={options} {...props} />;
 };
