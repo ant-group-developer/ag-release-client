@@ -33,7 +33,7 @@ function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
                 value={arrayFromString(dataFilter.level)}
                 allowClear
                 maxTagCount="responsive"
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 220 }}
             />
             <LogTypesSelect
                 mode="multiple"
@@ -44,7 +44,7 @@ function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
                 value={arrayFromString(dataFilter.type)}
                 allowClear
                 maxTagCount="responsive"
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 220 }}
             />
             <LogModulesSelect
                 mode="multiple"
@@ -55,7 +55,7 @@ function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
                 value={arrayFromString(dataFilter.module)}
                 allowClear
                 maxTagCount="responsive"
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 220 }}
             />
         </Space>
     );

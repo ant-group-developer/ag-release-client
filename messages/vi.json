@@ -413,7 +413,8 @@
         "justNow": "vừa xong",
         "ago": "trước",
         "systemReview": "Duyệt hệ thống",
-        "logs": "Nhật ký"
+        "logs": "Nhật ký",
+        "drag": "Kéo để sắp xếp"
     },
     "country": {
         "label": "Quốc gia",

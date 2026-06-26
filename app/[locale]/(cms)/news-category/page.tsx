@@ -138,7 +138,6 @@ export default function NewsCategory({}: Props) {
                             }
                         />,
                     ]}
-                    sticky
                     dataSource={filteredTreeData}
                     loading={isFetching}
                     dataFilter={dataFilter}

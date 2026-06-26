@@ -9,5 +9,6 @@ export interface BulkUpdateNewsCategoryPayload extends CommonFunction {
     newsCategories: {
         id: string;
         order: number;
+        parentId?: string | null;
     }[];
 }
