@@ -415,7 +415,12 @@
         "ago": "ago",
         "systemReview": "System Review",
         "logs": "Logs",
-        "drag": "Drag to reorder"
+        "drag": "Drag to reorder",
+        "errorList": "Error list",
+        "markAsResolved": "Mark as resolved",
+        "markAllAsResolved": "Mark all done",
+        "resolveAllErrorsConfirm": "Confirm all errors have been resolved, this action will update the error status",
+        "clickToUpdateErrorStatus": "Click here to update the status of this error"
     },
     "country": {
         "label": "Country",
@@ -1169,7 +1174,8 @@
             "partially_failed": "Partially failed",
             "partial_done": "Partial done",
             "failed": "Failed"
-        }
+        },
+        "releaseError": "Release error"
     },
     "releaseDsp": {
         "status": {
@@ -2235,7 +2241,6 @@
         "revenueDspDistribution": "Revenue by DSP",
         "revenueTerDistribution": "Revenue by Country",
         "totalSalesViews": "Total usage",
-
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",
         "detailChartTitle": "Views timeline",

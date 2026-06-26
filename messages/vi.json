@@ -414,7 +414,13 @@
         "ago": "trước",
         "systemReview": "Duyệt hệ thống",
         "logs": "Nhật ký",
-        "drag": "Kéo để sắp xếp"
+        "drag": "Kéo để sắp xếp",
+        "errorList": "Danh sách lỗi",
+        "markAsResolved": "Đánh dấu đã xử lý",
+        "markAllAsResolved": "Đánh dấu tất cả đã xong",
+        "resolveAllErrorsConfirm": "Xác nhận đã xử lý hết các lỗi, hành động này sẽ cập nhật lại trạng thái lỗi",
+        "confirm": "Đồng ý",
+        "clickToUpdateErrorStatus": "Nhấp vào đây để cập nhật trạng thái lỗi này"
     },
     "country": {
         "label": "Quốc gia",
@@ -1161,7 +1167,8 @@
             "partially_failed": "Phân phối thất bại một phần",
             "failed": "Thất bại",
             "partial_done": "Hoàn thành một phần"
-        }
+        },
+        "releaseError": "Lỗi phát hành"
     },
     "releaseDsp": {
         "status": {

@@ -7,6 +7,8 @@ import {
     ArtistDataSimple,
     ArtistProfileData,
 } from '@/modules/artist/types';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -76,7 +78,6 @@ export default function ArtistSelect({
             artistData: item,
         };
     });
-
 
     const optionRender = (oriOption: any) => {
         const item = oriOption.data.artistData as ArtistDataSimple;
@@ -165,15 +166,19 @@ export default function ArtistSelect({
                                 />
                             </div>
                             {showCreate && (
-                                <div className="py-1">
-                                    <Button
-                                        type="primary"
-                                        className="w-full"
-                                        onClick={() => setOpenCreate(true)}
-                                    >
-                                        {messages('release.createArtist')}
-                                    </Button>
-                                </div>
+                                <PermissionGate
+                                    permission={PERMISSION.ARTIST.CREATE}
+                                >
+                                    <div className="py-1">
+                                        <Button
+                                            type="primary"
+                                            className="w-full"
+                                            onClick={() => setOpenCreate(true)}
+                                        >
+                                            {messages('release.createArtist')}
+                                        </Button>
+                                    </div>
+                                </PermissionGate>
                             )}
                         </div>
                     );

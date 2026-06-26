@@ -4,7 +4,7 @@ import { LOG_LEVEL, LOG_TYPE } from '../enums';
 export interface DataFilterLogs extends CommonParams {
     level?: string;
     type?: string;
-    module?: string;
+    modules?: string;
     releaseSubmitId?: string;
     releaseSubmitStepId?: string;
     fieldOrder?: string;
@@ -13,7 +13,7 @@ export interface DataFilterLogs extends CommonParams {
 export interface LogsData extends CommonAttribute {
     level: LOG_LEVEL;
     type: LOG_TYPE;
-    module: string;
+    modules: string;
     message: string;
     releaseSubmitId: string | null;
     releaseSubmitStepId: string | null;

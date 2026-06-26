@@ -23,6 +23,14 @@ export const releasesQueryKeys = {
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.VALIDATE] as const,
     validate: (id: string) => [...releasesQueryKeys.validations(), id] as const,
 
+    enrichedErrors: () =>
+        [
+            ...releasesQueryKeys.all,
+            QUERY_KEY.RELEASES.GET_ENRICHED_ERRORS,
+        ] as const,
+    enrichedError: (id: string, isFixed?: boolean) =>
+        [...releasesQueryKeys.enrichedErrors(), id, { isFixed }] as const,
+
     captions: () =>
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.GET_CAPTIONS] as const,
     captionList: (id: string, type?: string) =>

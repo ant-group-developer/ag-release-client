@@ -1,11 +1,20 @@
 'use client';
 
 import { PATH_PARAMS } from '@/enums/routes';
+import { cn } from '@/helpers/common';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { Link } from '@/i18n/routing';
+import { RELEASES_TABS } from '@/modules/releases/enums';
+import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
+import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
 import {
+    Alert,
     Button,
     Card,
+    Checkbox,
     Form,
     Input,
     Modal,
@@ -14,14 +23,19 @@ import {
     Table,
     Tag,
     theme,
+    Tooltip,
 } from 'antd';
 import {
     AlertTriangle,
     CheckCircle,
     Clock,
+    ExternalLink,
     FileText,
+    Loader2,
     Music,
+    PackageX,
     Shield,
+    ShieldAlert,
     XCircle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -60,6 +74,169 @@ export default function SystemReviewTab() {
     const { releaseData, isLoading: isReleaseLoading } =
         useGetDetailRelease(releaseId);
 
+    // Lấy danh sách lỗi chất lượng (chưa được giải quyết)
+    const {
+        releaseEnrichedErrorsData = [],
+        isFetching: isFetchingEnrichedErrors,
+    } = useReleaseEnrichedErrors({ id: releaseId, isFixed: false });
+
+    // Mutation xử lý cập nhật lỗi
+    const { bulkUpdateReleaseErrors, isPending: isUpdatingErrors } =
+        useBulkUpdateReleaseErrors();
+
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+
+    // Trạng thái cục bộ khi đang update lỗi
+    const [updatingErrorId, setUpdatingErrorId] = useState<string | null>(null);
+    const [isUpdatingAll, setIsUpdatingAll] = useState(false);
+
+    // Hàm lấy mô tả chi tiết lỗi phát hành
+    const getEnrichedErrorMessages = (error: ReleaseEnrichedError) => {
+        return error.message || messages(error.messageCode as any);
+    };
+
+    // Hàm lấy nhãn hiển thị cho trang/tab lỗi
+    const getTabLabel = (page: string) => {
+        switch (page) {
+            case RELEASES_TABS.CORE_DETAIL:
+                return messages('common.coreInfo');
+            case RELEASES_TABS.TRACKS:
+                return messages('common.tracks');
+            case RELEASES_TABS.SCHEDULE:
+                return messages('release.scheduling.label');
+            case RELEASES_TABS.DISTRIBUTION:
+                return messages('distribute.label');
+            case RELEASES_TABS.ANALYTICS:
+                return messages('analytics.label');
+            case RELEASES_TABS.REVIEW:
+                return messages('common.overview');
+            default:
+                return page;
+        }
+    };
+
+    // Cập nhật trạng thái một lỗi thành đã giải quyết
+    const handleUpdateError = (id: string) => {
+        setUpdatingErrorId(id);
+        bulkUpdateReleaseErrors({
+            payload: {
+                items: [
+                    {
+                        id,
+                        isFixed: true,
+                    },
+                ],
+            },
+            onSuccess: () => {
+                setUpdatingErrorId(null);
+            },
+            onError: () => {
+                setUpdatingErrorId(null);
+            },
+        });
+    };
+
+    // Cập nhật hàng loạt tất cả lỗi thành đã giải quyết
+    const handleUpdateAllErrors = () => {
+        setIsUpdatingAll(true);
+        const items = releaseEnrichedErrorsData.map((err) => ({
+            id: err.id,
+            isFixed: true,
+        }));
+        bulkUpdateReleaseErrors({
+            payload: { items },
+            onSuccess: () => {
+                setIsUpdatingAll(false);
+            },
+            onError: () => {
+                setIsUpdatingAll(false);
+            },
+        });
+    };
+
+    // Định nghĩa các cột cho bảng lỗi chất lượng
+    const errorColumns = [
+        {
+            title: 'STT',
+            key: 'index',
+            width: '8%',
+            align: 'center' as const,
+            render: (_: any, __: any, index: number) => index + 1,
+        },
+        {
+            title: 'Nội dung lỗi',
+            key: 'message',
+            render: (record: ReleaseEnrichedError) => (
+                <span className="font-medium text-red-600 dark:text-red-400">
+                    {getEnrichedErrorMessages(record)}
+                </span>
+            ),
+        },
+        {
+            title: 'Vị trí lỗi',
+            key: 'position',
+            width: '25%',
+            render: (record: ReleaseEnrichedError) => {
+                const tabLabel = getTabLabel(record.page);
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        <Tag color="blue">{tabLabel}</Tag>
+                        {record.field && record.field !== 'unknown' && (
+                            <Tag color="purple">{record.field}</Tag>
+                        )}
+                    </div>
+                );
+            },
+        },
+        {
+            title: 'Thao tác',
+            key: 'action',
+            width: '20%',
+            align: 'center' as const,
+            render: (record: ReleaseEnrichedError) => {
+                const isUpdating =
+                    isUpdatingErrors && updatingErrorId === record.id;
+                const canLink =
+                    !!record.page &&
+                    !!record.field &&
+                    record.page !== 'unknown' &&
+                    record.field !== 'unknown';
+
+                return (
+                    <div className="flex items-center justify-center gap-4">
+                        {canLink && (
+                            <Tooltip title="Đi tới sửa lỗi">
+                                <Link
+                                    href={`${getReleaseTabRoute(releaseId, record.page as RELEASES_TABS)}#${record.field}`}
+                                    scroll={false}
+                                    className="flex items-center gap-1 text-blue-500 hover:text-blue-600 hover:underline"
+                                >
+                                    <ExternalLink size={14} />
+                                    <span>Sửa</span>
+                                </Link>
+                            </Tooltip>
+                        )}
+
+                        <Tooltip title={messages('common.markAsResolved')}>
+                            {isUpdating ? (
+                                <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
+                            ) : (
+                                <Checkbox
+                                    checked={false}
+                                    disabled={isUpdatingErrors}
+                                    onChange={() =>
+                                        handleUpdateError(record.id)
+                                    }
+                                    className="transition-transform hover:scale-105"
+                                />
+                            )}
+                        </Tooltip>
+                    </div>
+                );
+            },
+        },
+    ];
+
     const mockTracks = [
         {
             id: 'mock-track-1',
@@ -81,9 +258,10 @@ export default function SystemReviewTab() {
         },
     ] as any[];
 
-    const tracksToShow = releaseData?.tracks && releaseData.tracks.length > 0
-        ? releaseData.tracks
-        : mockTracks;
+    const tracksToShow =
+        releaseData?.tracks && releaseData.tracks.length > 0
+            ? releaseData.tracks
+            : mockTracks;
 
     // Trạng thái cục bộ của tiến trình duyệt
     const [executionStatus, setExecutionStatus] = useState<EXECUTION_STATUS>(
@@ -215,12 +393,35 @@ export default function SystemReviewTab() {
         }
     };
 
-
-
-
-
     return (
         <div className="flex flex-col gap-6 pb-12">
+            {/* ALERT CẢNH BÁO LỖI CHẤT LƯỢNG */}
+            {releaseEnrichedErrorsData.length > 0 &&
+                executionStatus === EXECUTION_STATUS.PENDING && (
+                    <Alert
+                        message={
+                            <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-200">
+                                <ShieldAlert size={18} />
+                                <span>Cảnh báo lỗi chất lượng phát hành</span>
+                            </div>
+                        }
+                        description={
+                            <span className="text-sm text-amber-700 dark:text-amber-300">
+                                Bản phát hành này hiện đang có{' '}
+                                <strong>
+                                    {releaseEnrichedErrorsData.length}
+                                </strong>{' '}
+                                lỗi chất lượng chưa giải quyết. Vui lòng kiểm
+                                tra và khắc phục toàn bộ lỗi chất lượng dưới đây
+                                trước khi tiến hành duyệt thực thi.
+                            </span>
+                        }
+                        type="warning"
+                        showIcon={false}
+                        className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/20"
+                    />
+                )}
+
             {/* CARD 1: KHUNG DUYỆT THỰC THI */}
             <Card
                 className="rounded-xl border border-gray-100 shadow-sm"
@@ -266,15 +467,40 @@ export default function SystemReviewTab() {
                         {executionStatus === EXECUTION_STATUS.PENDING ? (
                             <>
                                 <Popconfirm
-                                    title="Xác nhận duyệt thực thi?"
-                                    description="Hành động này sẽ duyệt phát hành và bắt đầu tiến trình đẩy nhạc."
+                                    title={
+                                        releaseEnrichedErrorsData.length > 0
+                                            ? 'Cảnh báo: Bản phát hành vẫn còn lỗi chưa sửa!'
+                                            : 'Xác nhận duyệt thực thi?'
+                                    }
+                                    description={
+                                        releaseEnrichedErrorsData.length > 0
+                                            ? 'Hệ thống phát hiện lỗi chất lượng chưa giải quyết. Bạn có chắc chắn vẫn muốn duyệt phát hành này?'
+                                            : 'Hành động này sẽ duyệt phát hành và bắt đầu tiến trình đẩy nhạc.'
+                                    }
                                     onConfirm={handleApprove}
-                                    okText="Đồng ý"
+                                    okText={
+                                        releaseEnrichedErrorsData.length > 0
+                                            ? 'Vẫn duyệt'
+                                            : 'Đồng ý'
+                                    }
                                     cancelText="Hủy"
+                                    okButtonProps={
+                                        releaseEnrichedErrorsData.length > 0
+                                            ? { danger: true }
+                                            : undefined
+                                    }
                                 >
                                     <Button
                                         type="primary"
-                                        className="flex items-center gap-1 border-none bg-emerald-600 font-semibold hover:bg-emerald-500"
+                                        danger={
+                                            releaseEnrichedErrorsData.length > 0
+                                        }
+                                        className={cn(
+                                            'flex items-center gap-1 border-none font-semibold',
+                                            releaseEnrichedErrorsData.length > 0
+                                                ? 'bg-red-600 hover:bg-red-500'
+                                                : 'bg-emerald-600 hover:bg-emerald-500'
+                                        )}
                                     >
                                         <CheckCircle size={16} />
                                         Duyệt thực thi
@@ -305,6 +531,88 @@ export default function SystemReviewTab() {
 
                 {/* BẢNG LỊCH SỬ DUYỆT */}
                 <AuditLogTable auditLogs={auditLogs} />
+            </Card>
+
+            {/* CARD 1.5: KIỂM TRA LỖI CHẤT LƯỢNG (ENRICHED ERRORS) */}
+            <Card
+                className="rounded-xl border border-gray-100 shadow-sm"
+                style={{ backgroundColor: token.colorBgContainer }}
+                title={
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
+                            <PackageX className="text-red-500" size={20} />
+                            <span>
+                                Lỗi phát hành (
+                                {releaseEnrichedErrorsData.length})
+                            </span>
+                        </div>
+                    </div>
+                }
+                extra={
+                    releaseEnrichedErrorsData.length > 0 && (
+                        <Popconfirm
+                            title={messages('common.resolveAllErrorsConfirm')}
+                            onConfirm={handleUpdateAllErrors}
+                            okText={messages('common.confirm')}
+                            cancelText={messages('common.cancel')}
+                            okButtonProps={{
+                                className:
+                                    'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-none',
+                            }}
+                            disabled={isUpdatingErrors}
+                            placement="bottomRight"
+                        >
+                            <Button
+                                type="link"
+                                disabled={isUpdatingErrors}
+                                className="flex items-center gap-1 p-0 text-xs font-semibold text-blue-500 hover:text-blue-600 disabled:opacity-50"
+                            >
+                                {isUpdatingAll && (
+                                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                                )}
+                                {messages('common.markAllAsResolved')}
+                            </Button>
+                        </Popconfirm>
+                    )
+                }
+            >
+                {isFetchingEnrichedErrors &&
+                releaseEnrichedErrorsData.length === 0 ? (
+                    <div className="flex justify-center py-6">
+                        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+                    </div>
+                ) : releaseEnrichedErrorsData.length === 0 ? (
+                    <Alert
+                        message="Đạt kiểm định chất lượng"
+                        description="Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối."
+                        type="success"
+                        showIcon
+                        icon={
+                            <CheckCircle
+                                size={18}
+                                className="text-emerald-500"
+                            />
+                        }
+                        className="rounded-lg border border-emerald-100 bg-emerald-50/50"
+                    />
+                ) : (
+                    <div className="flex flex-col gap-4">
+                        <p className="text-sm text-gray-500">
+                            Dưới đây là các lỗi được hệ thống tự động phát hiện
+                            trong các phần nhập liệu hoặc kiểm duyệt nội dung.
+                            Bạn có thể bấm &quot;Sửa&quot; để đi tới tab sửa lỗi
+                            hoặc tích chọn để đánh dấu đã xử lý xong.
+                        </p>
+                        <Table
+                            columns={errorColumns}
+                            dataSource={releaseEnrichedErrorsData}
+                            rowKey="id"
+                            pagination={false}
+                            size="small"
+                            bordered
+                        />
+                    </div>
+                )}
             </Card>
 
             {/* CARD 2: KẾT QUẢ QUÉT NHẠC TỪ ARC (ACRCLOUD) */}

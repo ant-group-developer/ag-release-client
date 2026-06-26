@@ -156,6 +156,15 @@ export interface ReleaseValidate {
     trackId?: string;
 }
 
+export interface ReleaseEnrichedError {
+    id: string;
+    messageCode: string;
+    message: string;
+    page: string;
+    field: string;
+    isFixed: boolean;
+}
+
 export type { TrackData } from '@/modules/tracks/types';
 
 export interface ReleaseCaptionData extends CommonAttribute {

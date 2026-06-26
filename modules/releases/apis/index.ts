@@ -3,21 +3,29 @@ import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import { Key } from 'react';
 import {
+    ReleaseCaptionData,
+    ReleaseEnrichedError,
     ReleasesData,
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
-    ReleaseCaptionData,
 } from '../types';
 import {
     BulkSubmitRelease,
-    UpsertReleaseCaptionsPayload,
+    BulkUpdateReleaseErrorsPayload,
     CreateReleaseDraftPayload,
     ExportTemplateCi,
     SyncReleaseDraftToTracksPayload,
-    UpdateReleaseDraftPayload,
     UpdateReleaseCaptionPayload,
+    UpdateReleaseDraftPayload,
+    UpsertReleaseCaptionsPayload,
 } from '../types/payload';
+
+const RELEASE_ENRICHED_ERRORS_API_PATH = '/release-errors/enriched';
+const RELEASE_ERRORS_BULK_API_PATH = '/release-errors/bulk';
+const RELEASE_ENRICHED_ERRORS_PARAMS = {
+    RELEASE_ID: 'releaseId',
+} as const;
 
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
@@ -83,6 +91,22 @@ export const releasesApi = {
                 `/releases/draft/${id}/validate`
             );
         }
+    },
+
+    getEnrichedErrors: (id: ReleasesData['id'], isFixed?: boolean) => {
+        return axiosInstance.get<DetailResponse<ReleaseEnrichedError[]>>(
+            RELEASE_ENRICHED_ERRORS_API_PATH,
+            {
+                params: {
+                    [RELEASE_ENRICHED_ERRORS_PARAMS.RELEASE_ID]: id,
+                    isFixed,
+                },
+            }
+        );
+    },
+
+    bulkUpdateReleaseErrors: (payload: BulkUpdateReleaseErrorsPayload) => {
+        return axiosInstance.put(RELEASE_ERRORS_BULK_API_PATH, payload);
     },
 
     downloadAssets: (id: ReleasesData['id']) => {
@@ -212,7 +236,10 @@ export const releasesApi = {
 
     upsertReleaseCaptions: (payload: UpsertReleaseCaptionsPayload) => {
         const { releaseId, ...rest } = payload;
-        return axiosInstance.post(`/releases/${releaseId}/release-captions`, rest);
+        return axiosInstance.post(
+            `/releases/${releaseId}/release-captions`,
+            rest
+        );
     },
 
     updateReleaseCaption: (payload: UpdateReleaseCaptionPayload) => {
