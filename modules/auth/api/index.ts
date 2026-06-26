@@ -18,8 +18,10 @@ const axiosAuth: AxiosInstance = axios.create({
 });
 
 export const authApi = {
-    signin: (payload: SigninDto) =>
-        axiosAuth.post<DetailResponse<GetTokenResponse>>(`/login`, payload),
+    signin: (payload: SigninDto, extraHeaders?: Record<string, string>) =>
+        axiosAuth.post<DetailResponse<GetTokenResponse>>(`/login`, payload, {
+            headers: extraHeaders,
+        }),
 
     refreshToken: (payload: RefreshDto) =>
         axiosAuth.post<DetailResponse<GetTokenResponse>>(`/refresh`, payload),

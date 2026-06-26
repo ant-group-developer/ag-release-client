@@ -2977,5 +2977,69 @@
     },
     "report-import": {
         "configExcludePattern": "Configure Exclude Pattern"
+    },
+    "tenantDomain": {
+        "tabLabel": "Custom Domain",
+        "cardTitle": "Custom Domain",
+        "noDomain": {
+            "description": "You haven't set up a custom domain yet. Enter your domain below to get started."
+        },
+        "field": {
+            "domain": "Domain",
+            "status": "Status",
+            "sslStatus": "SSL Status"
+        },
+        "validation": {
+            "domainRequired": "Domain is required",
+            "domainInvalid": "Please enter a valid domain (e.g. release.yourdomain.com)"
+        },
+        "status": {
+            "pending": "Pending",
+            "verifying": "Verifying",
+            "active": "Active",
+            "failed": "Failed",
+            "expired": "Expired"
+        },
+        "sslStatus": {
+            "pending": "Pending",
+            "initializing": "Initializing",
+            "active": "Active"
+        },
+        "dns": {
+            "type": "Type",
+            "name": "Name",
+            "value": "Value",
+            "propagationWarning": "DNS changes can take up to 48 hours to propagate."
+        },
+        "cfAuto": {
+            "title": "Auto setup via Cloudflare",
+            "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
+            "connectButton": "Connect Cloudflare Account",
+            "setupSuccess": "DNS records were added automatically via Cloudflare.",
+            "setupError": "Cloudflare setup failed. Please try again or add DNS records manually."
+        },
+        "manualSetup": {
+            "title": "Add DNS records manually"
+        },
+        "or": "or add manually",
+        "verifying": {
+            "title": "SSL certificate is being issued",
+            "description": "DNS records look good. Cloudflare is issuing your SSL certificate — this usually takes 5–15 minutes. Click \"Check Status\" after a few minutes."
+        },
+        "failed": {
+            "description": "DNS check failed. Please verify that the records below are correctly added to your DNS provider."
+        },
+        "expired": {
+            "description": "Your CNAME record has been removed. Please re-add the DNS records to reactivate your domain."
+        },
+        "active": {
+            "title": "Domain is active",
+            "deleteButton": "Remove Domain",
+            "deleteConfirmTitle": "Remove custom domain?",
+            "deleteConfirmDesc": "This will revoke the SSL certificate and remove the domain immediately."
+        },
+        "action": {
+            "checkStatus": "Check Status"
+        }
     }
 }
