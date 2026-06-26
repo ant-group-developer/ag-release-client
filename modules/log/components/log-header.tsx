@@ -50,9 +50,9 @@ function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
                 mode="multiple"
                 placeholder={messages('log.columns.module')}
                 onChange={(value) =>
-                    onChangeFilter({ module: arrayToString(value) })
+                    onChangeFilter({ modules: arrayToString(value) })
                 }
-                value={arrayFromString(dataFilter.module)}
+                value={arrayFromString(dataFilter.modules)}
                 allowClear
                 maxTagCount="responsive"
                 style={{ minWidth: 220 }}

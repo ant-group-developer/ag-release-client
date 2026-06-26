@@ -89,9 +89,9 @@ export default function NewsFormModal({ ...props }: Props) {
     };
 
     const onFinish = async (values: any) => {
+        active();
         const { pictureFile, keywords, ...res } = values;
         const file = values?.pictureFile?.fileList[0]?.originFileObj;
-        active();
 
         const payloadValues = {
             ...res,
@@ -140,7 +140,7 @@ export default function NewsFormModal({ ...props }: Props) {
                 : undefined,
         };
         form.setFieldsValue(initialData);
-    }, [newsData]);
+    }, [newsData, form]);
 
     return (
         <FullScreenModal
@@ -255,7 +255,7 @@ export default function NewsFormModal({ ...props }: Props) {
                                 },
                             ]}
                         >
-                            <TextEditor />
+                            <TextEditor className="editor-large" />
                         </AppFormItem>
                     </div>
                     <div className="sticky top-0 col-span-3 flex w-full flex-col gap-4 px-8 py-4">

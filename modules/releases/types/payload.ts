@@ -1,8 +1,8 @@
+import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
-import { ReleasesData, VideoData } from '.';
+import { ReleaseEnrichedError, ReleasesData, VideoData } from '.';
 import { RELEASES_TYPE, RELEASE_TYPE } from '../enums';
-import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
 
 interface CreateStandardReleaseDraftPayload {
     title: string;
@@ -52,6 +52,15 @@ export interface BulkDeleteRelease extends CommonFunction {
     ids: string[];
 }
 
+export interface BulkUpdateReleaseErrorItem {
+    id: ReleaseEnrichedError['id'];
+    isFixed: boolean;
+}
+
+export interface BulkUpdateReleaseErrorsPayload {
+    items: BulkUpdateReleaseErrorItem[];
+}
+
 export interface SyncReleaseDraftToTracksPayload {
     syncPrimaryGenre: boolean;
     syncSubGenre: boolean;
@@ -65,7 +74,6 @@ export interface SyncReleaseDraftToTracks extends CommonFunction {
     id: ReleasesData['id'];
     payload: SyncReleaseDraftToTracksPayload;
 }
-
 
 export interface UpsertReleaseCaptionsPayload extends CommonFunction {
     releaseId: string;

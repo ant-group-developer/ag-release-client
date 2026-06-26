@@ -4,9 +4,6 @@ import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
-import CopyLink from '@/modules/news/components/copy-link';
-import LatestNews from '@/modules/news/components/latest-news';
-import ShareFacebook from '@/modules/news/components/share-facebook';
 import { NewsData } from '@/modules/news/types';
 import { PaginationResponse } from '@/types/api';
 import { Breadcrumb } from 'antd';
@@ -58,7 +55,7 @@ export default async function NewsDetail({ params }: Props) {
 
     if (!post || !content) {
         return (
-            <div className="mx-auto w-full max-w-screen-xl py-5">
+            <div className="mx-auto w-full max-w-screen-2xl py-5">
                 <h2 className="text-center text-xl font-semibold">
                     {t('common.notAvailable')}
                 </h2>
@@ -67,20 +64,20 @@ export default async function NewsDetail({ params }: Props) {
     }
 
     return (
-        <div className="min-h-full w-full bg-white dark:bg-zinc-800">
-            <div className="mx-auto w-full max-w-screen-xl space-y-8 px-4 pb-5">
+        <div className="mx-auto min-h-full w-full bg-white dark:bg-zinc-900">
+            <div className="mx-auto w-full max-w-screen-2xl space-y-8 px-4 pb-5">
                 <div className="py-2">
                     <Breadcrumb items={breadCrumbItems} />
                 </div>
                 <div className="grid grid-cols-12 justify-center gap-8">
-                    <div className="col-span-1">
+                    {/* <div className="col-span-1">
                         <div className="sticky top-5 flex flex-col gap-4">
                             <ShareFacebook />
 
                             <CopyLink />
                         </div>
-                    </div>
-                    <div className="col-span-11 rounded-lg lg:col-span-7">
+                    </div> */}
+                    <div className="col-span-12 rounded-lg lg:col-span-8 lg:col-start-3">
                         <div>
                             <strong className="text-2xl font-extrabold">
                                 {post?.title}
@@ -96,9 +93,9 @@ export default async function NewsDetail({ params }: Props) {
                             className="font-normal"
                         />
                     </div>
-                    <div className="col-span-4 hidden lg:block">
+                    {/* <div className="col-span-4 hidden lg:block">
                         <LatestNews />
-                    </div>
+                    </div> */}
                 </div>
                 {/* <div>
                     <RelatedNews data={newsData?.items} />

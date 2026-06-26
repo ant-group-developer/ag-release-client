@@ -93,9 +93,9 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
                 LOG_SORT_FIELD.LOG_MODULE
             ),
             render: (_, record) => {
-                if (!record.module) return '-';
+                if (!record.modules) return '-';
 
-                const modules = record.module
+                const modules = record.modules
                     .split(',')
                     .map((m) => m.trim())
                     .filter(Boolean);
@@ -127,8 +127,13 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
                     <div className="flex flex-wrap gap-1">
                         {visibleTags.map((name) => renderTag(name))}
                         {hiddenTags.length > 0 && (
-                            <Popover content={renderHiddenTagsPopover()} trigger="hover">
-                                <Tag className="cursor-pointer !mr-0">+{hiddenTags.length}</Tag>
+                            <Popover
+                                content={renderHiddenTagsPopover()}
+                                trigger="hover"
+                            >
+                                <Tag className="!mr-0 cursor-pointer">
+                                    +{hiddenTags.length}
+                                </Tag>
                             </Popover>
                         )}
                     </div>

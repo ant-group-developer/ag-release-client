@@ -51,7 +51,7 @@ export default function Overview({}: Props) {
     );
 
     const defaultFromDate = useMemo(
-        () => dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
+        () => dayjs().subtract(12, 'month').format('YYYY-MM-DD'),
         []
     );
     const defaultToDate = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
