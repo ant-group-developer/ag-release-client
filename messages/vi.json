@@ -2966,5 +2966,69 @@
     },
     "report-import": {
         "configExcludePattern": "Cấu hình mẫu loại trừ"
+    },
+    "tenantDomain": {
+        "tabLabel": "Tên miền riêng",
+        "cardTitle": "Tên miền riêng",
+        "noDomain": {
+            "description": "Bạn chưa thiết lập tên miền riêng. Nhập tên miền bên dưới để bắt đầu."
+        },
+        "field": {
+            "domain": "Tên miền",
+            "status": "Trạng thái",
+            "sslStatus": "Trạng thái SSL"
+        },
+        "validation": {
+            "domainRequired": "Vui lòng nhập tên miền",
+            "domainInvalid": "Vui lòng nhập tên miền hợp lệ (vd: release.yourdomain.com)"
+        },
+        "status": {
+            "pending": "Chờ xác thực",
+            "verifying": "Đang xác thực",
+            "active": "Hoạt động",
+            "failed": "Thất bại",
+            "expired": "Hết hạn"
+        },
+        "sslStatus": {
+            "pending": "Chờ cấp",
+            "initializing": "Đang khởi tạo",
+            "active": "Hoạt động"
+        },
+        "dns": {
+            "type": "Loại",
+            "name": "Tên",
+            "value": "Giá trị",
+            "propagationWarning": "Thay đổi DNS có thể mất đến 48 giờ để lan truyền."
+        },
+        "cfAuto": {
+            "title": "Tự động cấu hình qua Cloudflare",
+            "description": "Domain của bạn phải dùng Cloudflare DNS. Hệ thống sẽ tự động thêm các bản ghi DNS cần thiết.",
+            "connectButton": "Kết nối tài khoản Cloudflare",
+            "setupSuccess": "Các bản ghi DNS đã được thêm tự động qua Cloudflare.",
+            "setupError": "Thiết lập Cloudflare thất bại. Vui lòng thử lại hoặc thêm DNS thủ công."
+        },
+        "manualSetup": {
+            "title": "Thêm bản ghi DNS thủ công"
+        },
+        "or": "hoặc thêm thủ công",
+        "verifying": {
+            "title": "Đang cấp chứng chỉ SSL",
+            "description": "Bản ghi DNS đã đúng. Cloudflare đang cấp chứng chỉ SSL — thường mất 5–15 phút. Nhấn \"Kiểm tra trạng thái\" sau vài phút."
+        },
+        "failed": {
+            "description": "Kiểm tra DNS thất bại. Vui lòng kiểm tra lại các bản ghi đã thêm vào DNS provider."
+        },
+        "expired": {
+            "description": "Bản ghi CNAME đã bị xóa. Vui lòng thêm lại các bản ghi DNS để kích hoạt lại tên miền."
+        },
+        "active": {
+            "title": "Tên miền đang hoạt động",
+            "deleteButton": "Xóa tên miền",
+            "deleteConfirmTitle": "Xóa tên miền riêng?",
+            "deleteConfirmDesc": "Thao tác này sẽ thu hồi chứng chỉ SSL và xóa tên miền ngay lập tức."
+        },
+        "action": {
+            "checkStatus": "Kiểm tra trạng thái"
+        }
     }
 }
