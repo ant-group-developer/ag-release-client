@@ -1,7 +1,9 @@
 services:
     app-dev:
         image: ag-music-client/dev:${TAG:-latest}
-        build: .
+        build:
+            context: .
+            network: host
         ports:
             - '${HOST_PORT:-3000}:3000'
         env_file:
