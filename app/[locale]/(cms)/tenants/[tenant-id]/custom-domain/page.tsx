@@ -30,7 +30,7 @@ import {
 } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 const TENANT_DOMAIN_STATUS_COLORS: Record<TENANT_DOMAIN_STATUS, string> = {
     [TENANT_DOMAIN_STATUS.PENDING]: 'gold',
@@ -161,6 +161,112 @@ function TenantCustomDomainPage() {
         });
     };
 
+    const domainDetailsItems = useMemo(() => {
+        if (!domainResult) return [];
+        return [
+            {
+                key: 'domain',
+                label: messages('tenant.domain'),
+                children: (
+                    <CopyText text={domainResult.domain.domain}>
+                        {domainResult.domain.domain}
+                    </CopyText>
+                ),
+            },
+            {
+                key: 'status',
+                label: messages('common.status'),
+                children: (
+                    <Tag
+                        color={
+                            TENANT_DOMAIN_STATUS_COLORS[
+                                domainResult.domain.status
+                            ]
+                        }
+                    >
+                        {domainResult.domain.status}
+                    </Tag>
+                ),
+            },
+            {
+                key: 'sslStatus',
+                label: messages(
+                    'tenant.customDomain.sslStatus'
+                ),
+                children: (
+                    <Tag
+                        color={
+                            TENANT_DOMAIN_SSL_STATUS_COLORS[
+                                domainResult.domain.sslStatus
+                            ]
+                        }
+                    >
+                        {domainResult.domain.sslStatus}
+                    </Tag>
+                ),
+            },
+            ...(!isDomainActive
+                ? [
+                      {
+                          key: 'verificationToken',
+                          label: messages(
+                              'tenant.customDomain.verificationToken'
+                          ),
+                          children: (
+                              <CopyText
+                                  text={
+                                      domainResult.domain
+                                          .verificationToken ??
+                                      ''
+                                  }
+                              >
+                                  {domainResult.domain
+                                      .verificationToken ??
+                                      messages(
+                                          'common.notAvailable'
+                                      )}
+                              </CopyText>
+                          ),
+                      },
+                  ]
+                : []),
+        ];
+    }, [domainResult, isDomainActive, messages]);
+
+    const dnsInstructionsItems = useMemo(() => {
+        if (!domainResult) return [];
+        return [
+            {
+                key: 'cnameRecord',
+                label: messages(
+                    'tenant.customDomain.cnameRecord'
+                ),
+                children: (
+                    <DnsRecordItem
+                        record={
+                            domainResult?.dnsInstructions
+                                ?.cnameRecord
+                        }
+                    />
+                ),
+            },
+            {
+                key: 'txtRecord',
+                label: messages(
+                    'tenant.customDomain.txtRecord'
+                ),
+                children: (
+                    <DnsRecordItem
+                        record={
+                            domainResult.dnsInstructions
+                                .txtRecord
+                        }
+                    />
+                ),
+            },
+        ];
+    }, [domainResult, messages]);
+
     if (isLoading) {
         return (
             <div className="flex h-64 items-center justify-center">
@@ -237,110 +343,14 @@ function TenantCustomDomainPage() {
                     <Descriptions
                         bordered
                         column={{ xs: 1, md: 2 }}
-                        items={[
-                            {
-                                key: 'domain',
-                                label: messages('tenant.domain'),
-                                children: (
-                                    <CopyText text={domainResult.domain.domain}>
-                                        {domainResult.domain.domain}
-                                    </CopyText>
-                                ),
-                            },
-                            {
-                                key: 'status',
-                                label: messages('common.status'),
-                                children: (
-                                    <Tag
-                                        color={
-                                            TENANT_DOMAIN_STATUS_COLORS[
-                                                domainResult.domain.status
-                                            ]
-                                        }
-                                    >
-                                        {domainResult.domain.status}
-                                    </Tag>
-                                ),
-                            },
-                            {
-                                key: 'sslStatus',
-                                label: messages(
-                                    'tenant.customDomain.sslStatus'
-                                ),
-                                children: (
-                                    <Tag
-                                        color={
-                                            TENANT_DOMAIN_SSL_STATUS_COLORS[
-                                                domainResult.domain.sslStatus
-                                            ]
-                                        }
-                                    >
-                                        {domainResult.domain.sslStatus}
-                                    </Tag>
-                                ),
-                            },
-                            ...(!isDomainActive
-                                ? [
-                                      {
-                                          key: 'verificationToken',
-                                          label: messages(
-                                              'tenant.customDomain.verificationToken'
-                                          ),
-                                          children: (
-                                              <CopyText
-                                                  text={
-                                                      domainResult.domain
-                                                          .verificationToken ??
-                                                      ''
-                                                  }
-                                              >
-                                                  {domainResult.domain
-                                                      .verificationToken ??
-                                                      messages(
-                                                          'common.notAvailable'
-                                                      )}
-                                              </CopyText>
-                                          ),
-                                      },
-                                  ]
-                                : []),
-                        ]}
+                        items={domainDetailsItems}
                     />
 
                     {!isDomainActive && (
                         <Descriptions
                             bordered
                             column={1}
-                            items={[
-                                {
-                                    key: 'cnameRecord',
-                                    label: messages(
-                                        'tenant.customDomain.cnameRecord'
-                                    ),
-                                    children: (
-                                        <DnsRecordItem
-                                            record={
-                                                domainResult?.dnsInstructions
-                                                    ?.cnameRecord
-                                            }
-                                        />
-                                    ),
-                                },
-                                {
-                                    key: 'txtRecord',
-                                    label: messages(
-                                        'tenant.customDomain.txtRecord'
-                                    ),
-                                    children: (
-                                        <DnsRecordItem
-                                            record={
-                                                domainResult.dnsInstructions
-                                                    .txtRecord
-                                            }
-                                        />
-                                    ),
-                                },
-                            ]}
+                            items={dnsInstructionsItems}
                         />
                     )}
 
@@ -379,4 +389,4 @@ function TenantCustomDomainPage() {
     );
 }
 
-export default TenantCustomDomainPage;
+export default TenantCustomDomainPage
