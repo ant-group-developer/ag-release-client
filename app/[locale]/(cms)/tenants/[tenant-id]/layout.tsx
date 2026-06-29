@@ -127,6 +127,20 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
                 </Link>
             ),
         },
+        {
+            key: TENANT_TABS.CUSTOM_DOMAIN,
+            disabled: !isAdmin,
+            label: (
+                <Link
+                    href={getTenantDetailRoute(
+                        tenantId,
+                        TENANT_TABS.CUSTOM_DOMAIN
+                    )}
+                >
+                    {messages('tenant.customDomain.label')}
+                </Link>
+            ),
+        },
     ];
 
     if (error) {

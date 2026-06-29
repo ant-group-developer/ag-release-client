@@ -1928,6 +1928,24 @@
         },
         "title": "Title",
         "domain": "Domain",
+        "customDomain": {
+            "label": "Custom domain",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "DNS records are ready",
+            "dnsDescription": "Add the CNAME and TXT records below in your DNS provider to verify this domain.",
+            "sslStatus": "SSL status",
+            "verificationToken": "Verification token",
+            "cnameRecord": "CNAME record",
+            "txtRecord": "TXT record",
+            "verify": "Verify domain",
+            "verifying": "Verifying...",
+            "delete": "Remove domain",
+            "deleting": "Removing...",
+            "deleteConfirm": "Are you sure you want to remove this domain?",
+            "validation": {
+                "required": "Please enter domain"
+            }
+        },
         "primaryColor": "Primary color",
         "owner": "Owner",
         "type": {

@@ -31,6 +31,10 @@ export async function middleware(req: NextRequest) {
         return nextIntl(req);
     }
 
+    if (pathname.startsWith('/api/v1/public')) {
+        return NextResponse.next();
+    }
+
     // 2. Do your session check + redirects
     const token = await getToken(req);
     const pathnameParts = pathname.split('/');
@@ -47,8 +51,9 @@ export async function middleware(req: NextRequest) {
         if (pathToCheck.endsWith('/*')) {
             const base = pathToCheck.slice(0, -2);
             return (
-                normalizedPathname.startsWith(normalizePath(`/${locale}${base}`)) ||
-                normalizedPathname.startsWith(normalizePath(base))
+                normalizedPathname.startsWith(
+                    normalizePath(`/${locale}${base}`)
+                ) || normalizedPathname.startsWith(normalizePath(base))
             );
         }
         return (

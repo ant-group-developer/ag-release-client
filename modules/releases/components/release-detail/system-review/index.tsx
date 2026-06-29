@@ -1,68 +1,23 @@
 'use client';
 
 import { PATH_PARAMS } from '@/enums/routes';
-import { cn } from '@/helpers/common';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import { Link } from '@/i18n/routing';
-import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
-import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
-import {
-    Alert,
-    Button,
-    Card,
-    Checkbox,
-    Form,
-    Input,
-    Modal,
-    notification,
-    Popconfirm,
-    Table,
-    Tag,
-    theme,
-    Tooltip,
-} from 'antd';
-import {
-    AlertTriangle,
-    CheckCircle,
-    Clock,
-    ExternalLink,
-    FileText,
-    Loader2,
-    Music,
-    PackageX,
-    Shield,
-    ShieldAlert,
-    XCircle,
-} from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { Alert, Card, notification, theme } from 'antd';
+import { Music, ShieldAlert } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import AcrTrackResultSection from './acr-track-result-section';
-
-// Định nghĩa Enums & Hằng số
-enum EXECUTION_STATUS {
-    PENDING = 'pending',
-    EXECUTED = 'executed',
-    REJECTED = 'rejected',
-}
-
-interface AuditLog {
-    id: string;
-    actor: string;
-    action: string;
-    status: EXECUTION_STATUS;
-    timestamp: string;
-    note?: string;
-}
+import { EXECUTION_STATUS, AuditLog } from './types';
+import ApprovalCard from './approval-card';
+import ReleaseErrorsCard from './release-errors-card';
+import RejectModal from './reject-modal';
 
 const MOCK_ADMIN_NAME = 'System Administrator';
 
 export default function SystemReviewTab() {
-    const messages = useTranslations();
     const params = useParams();
     const { token } = theme.useToken();
 
@@ -84,36 +39,9 @@ export default function SystemReviewTab() {
     const { bulkUpdateReleaseErrors, isPending: isUpdatingErrors } =
         useBulkUpdateReleaseErrors();
 
-    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
-
     // Trạng thái cục bộ khi đang update lỗi
     const [updatingErrorId, setUpdatingErrorId] = useState<string | null>(null);
     const [isUpdatingAll, setIsUpdatingAll] = useState(false);
-
-    // Hàm lấy mô tả chi tiết lỗi phát hành
-    const getEnrichedErrorMessages = (error: ReleaseEnrichedError) => {
-        return error.message || messages(error.messageCode as any);
-    };
-
-    // Hàm lấy nhãn hiển thị cho trang/tab lỗi
-    const getTabLabel = (page: string) => {
-        switch (page) {
-            case RELEASES_TABS.CORE_DETAIL:
-                return messages('common.coreInfo');
-            case RELEASES_TABS.TRACKS:
-                return messages('common.tracks');
-            case RELEASES_TABS.SCHEDULE:
-                return messages('release.scheduling.label');
-            case RELEASES_TABS.DISTRIBUTION:
-                return messages('distribute.label');
-            case RELEASES_TABS.ANALYTICS:
-                return messages('analytics.label');
-            case RELEASES_TABS.REVIEW:
-                return messages('common.overview');
-            default:
-                return page;
-        }
-    };
 
     // Cập nhật trạng thái một lỗi thành đã giải quyết
     const handleUpdateError = (id: string) => {
@@ -154,89 +82,6 @@ export default function SystemReviewTab() {
         });
     };
 
-    // Định nghĩa các cột cho bảng lỗi chất lượng
-    const errorColumns = [
-        {
-            title: 'STT',
-            key: 'index',
-            width: '8%',
-            align: 'center' as const,
-            render: (_: any, __: any, index: number) => index + 1,
-        },
-        {
-            title: 'Nội dung lỗi',
-            key: 'message',
-            render: (record: ReleaseEnrichedError) => (
-                <span className="font-medium text-red-600 dark:text-red-400">
-                    {getEnrichedErrorMessages(record)}
-                </span>
-            ),
-        },
-        {
-            title: 'Vị trí lỗi',
-            key: 'position',
-            width: '25%',
-            render: (record: ReleaseEnrichedError) => {
-                const tabLabel = getTabLabel(record.page);
-                return (
-                    <div className="flex flex-wrap gap-1.5">
-                        <Tag color="blue">{tabLabel}</Tag>
-                        {record.field && record.field !== 'unknown' && (
-                            <Tag color="purple">{record.field}</Tag>
-                        )}
-                    </div>
-                );
-            },
-        },
-        {
-            title: 'Thao tác',
-            key: 'action',
-            width: '20%',
-            align: 'center' as const,
-            render: (record: ReleaseEnrichedError) => {
-                const isUpdating =
-                    isUpdatingErrors && updatingErrorId === record.id;
-                const canLink =
-                    !!record.page &&
-                    !!record.field &&
-                    record.page !== 'unknown' &&
-                    record.field !== 'unknown';
-
-                return (
-                    <div className="flex items-center justify-center gap-4">
-                        {canLink && (
-                            <Tooltip title="Đi tới sửa lỗi">
-                                <Link
-                                    href={`${getReleaseTabRoute(releaseId, record.page as RELEASES_TABS)}#${record.field}`}
-                                    scroll={false}
-                                    className="flex items-center gap-1 text-blue-500 hover:text-blue-600 hover:underline"
-                                >
-                                    <ExternalLink size={14} />
-                                    <span>Sửa</span>
-                                </Link>
-                            </Tooltip>
-                        )}
-
-                        <Tooltip title={messages('common.markAsResolved')}>
-                            {isUpdating ? (
-                                <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
-                            ) : (
-                                <Checkbox
-                                    checked={false}
-                                    disabled={isUpdatingErrors}
-                                    onChange={() =>
-                                        handleUpdateError(record.id)
-                                    }
-                                    className="transition-transform hover:scale-105"
-                                />
-                            )}
-                        </Tooltip>
-                    </div>
-                );
-            },
-        },
-    ];
-
     const mockTracks = [
         {
             id: 'mock-track-1',
@@ -272,7 +117,6 @@ export default function SystemReviewTab() {
 
     // Trạng thái modal từ chối
     const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-    const [rejectForm] = Form.useForm();
 
     // Khởi tạo lịch sử kiểm duyệt ban đầu
     useEffect(() => {
@@ -313,7 +157,7 @@ export default function SystemReviewTab() {
     };
 
     // Xử lý từ chối
-    const handleRejectSubmit = (values: { reason: string }) => {
+    const handleRejectSubmit = (reason: string) => {
         const newLogs: AuditLog[] = [
             {
                 id: Date.now().toString(),
@@ -321,15 +165,14 @@ export default function SystemReviewTab() {
                 action: 'Từ chối thực thi phát hành',
                 status: EXECUTION_STATUS.REJECTED,
                 timestamp: new Date().toLocaleString(),
-                note: `Lý do từ chối: ${values.reason}`,
+                note: `Lý do từ chối: ${reason}`,
             },
             ...auditLogs,
         ];
         setExecutionStatus(EXECUTION_STATUS.REJECTED);
-        setRejectionReason(values.reason);
+        setRejectionReason(reason);
         setAuditLogs(newLogs);
         setIsRejectModalOpen(false);
-        rejectForm.resetFields();
 
         notification.warning({
             message: 'Đã từ chối',
@@ -358,39 +201,6 @@ export default function SystemReviewTab() {
             message: 'Đã khôi phục',
             description: 'Đã đặt lại trạng thái kiểm duyệt thành công.',
         });
-    };
-
-    // Render tag trạng thái
-    const renderStatusTag = (status: EXECUTION_STATUS) => {
-        switch (status) {
-            case EXECUTION_STATUS.EXECUTED:
-                return (
-                    <Tag color="success">
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                            <CheckCircle size={14} />
-                            ĐÃ DUYỆT THỰC THI
-                        </span>
-                    </Tag>
-                );
-            case EXECUTION_STATUS.REJECTED:
-                return (
-                    <Tag color="error">
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                            <XCircle size={14} />
-                            ĐÃ TỪ CHỐI THỰC THI
-                        </span>
-                    </Tag>
-                );
-            default:
-                return (
-                    <Tag color="processing">
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                            <Clock size={14} />
-                            ĐANG CHỜ DUYỆT
-                        </span>
-                    </Tag>
-                );
-        }
     };
 
     return (
@@ -423,197 +233,27 @@ export default function SystemReviewTab() {
                 )}
 
             {/* CARD 1: KHUNG DUYỆT THỰC THI */}
-            <Card
-                className="rounded-xl border border-gray-100 shadow-sm"
-                style={{ backgroundColor: token.colorBgContainer }}
-                title={
-                    <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
-                        <Shield className="text-blue-500" size={20} />
-                        <span>Duyệt phát hành</span>
-                    </div>
-                }
-            >
-                <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-12">
-                    <div className="flex flex-col gap-2 md:col-span-8">
-                        <div className="flex items-center gap-2">
-                            <span className="font-semibold text-gray-500">
-                                Trạng thái hiện tại:
-                            </span>
-                            {renderStatusTag(executionStatus)}
-                        </div>
-
-                        {rejectionReason && (
-                            <div className="mt-2 flex items-start gap-2 rounded-lg border border-red-100 bg-red-50 p-3 text-red-700">
-                                <AlertTriangle
-                                    size={18}
-                                    className="mt-0.5 shrink-0"
-                                />
-                                <div>
-                                    <span className="font-bold">
-                                        Lý do từ chối:{' '}
-                                    </span>
-                                    <span>{rejectionReason}</span>
-                                </div>
-                            </div>
-                        )}
-                        <p className="mt-1 text-xs text-gray-400">
-                            * Lưu ý: Khi duyệt thực thi, bản phát hành sẽ được
-                            xác nhận đủ điều kiện và gửi sang tiến trình nén/đẩy
-                            metadata DDEX sang các DSPs đã chọn.
-                        </p>
-                    </div>
-
-                    <div className="flex flex-wrap justify-end gap-2 md:col-span-4">
-                        {executionStatus === EXECUTION_STATUS.PENDING ? (
-                            <>
-                                <Popconfirm
-                                    title={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? 'Cảnh báo: Bản phát hành vẫn còn lỗi chưa sửa!'
-                                            : 'Xác nhận duyệt thực thi?'
-                                    }
-                                    description={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? 'Hệ thống phát hiện lỗi chất lượng chưa giải quyết. Bạn có chắc chắn vẫn muốn duyệt phát hành này?'
-                                            : 'Hành động này sẽ duyệt phát hành và bắt đầu tiến trình đẩy nhạc.'
-                                    }
-                                    onConfirm={handleApprove}
-                                    okText={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? 'Vẫn duyệt'
-                                            : 'Đồng ý'
-                                    }
-                                    cancelText="Hủy"
-                                    okButtonProps={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? { danger: true }
-                                            : undefined
-                                    }
-                                >
-                                    <Button
-                                        type="primary"
-                                        danger={
-                                            releaseEnrichedErrorsData.length > 0
-                                        }
-                                        className={cn(
-                                            'flex items-center gap-1 border-none font-semibold',
-                                            releaseEnrichedErrorsData.length > 0
-                                                ? 'bg-red-600 hover:bg-red-500'
-                                                : 'bg-emerald-600 hover:bg-emerald-500'
-                                        )}
-                                    >
-                                        <CheckCircle size={16} />
-                                        Duyệt thực thi
-                                    </Button>
-                                </Popconfirm>
-
-                                <Button
-                                    danger
-                                    onClick={() => setIsRejectModalOpen(true)}
-                                    className="flex items-center gap-1 font-semibold"
-                                >
-                                    <XCircle size={16} />
-                                    Từ chối duyệt
-                                </Button>
-                            </>
-                        ) : (
-                            <Button
-                                onClick={handleReset}
-                                type="dashed"
-                                className="flex items-center gap-1"
-                            >
-                                <Clock size={14} />
-                                Đặt lại trạng thái chờ duyệt
-                            </Button>
-                        )}
-                    </div>
-                </div>
-
-                {/* BẢNG LỊCH SỬ DUYỆT */}
-                <AuditLogTable auditLogs={auditLogs} />
-            </Card>
+            <ApprovalCard
+                executionStatus={executionStatus}
+                rejectionReason={rejectionReason}
+                releaseEnrichedErrorsCount={releaseEnrichedErrorsData.length}
+                auditLogs={auditLogs}
+                onApprove={handleApprove}
+                onRejectClick={() => setIsRejectModalOpen(true)}
+                onReset={handleReset}
+            />
 
             {/* CARD 1.5: KIỂM TRA LỖI CHẤT LƯỢNG (ENRICHED ERRORS) */}
-            <Card
-                className="rounded-xl border border-gray-100 shadow-sm"
-                style={{ backgroundColor: token.colorBgContainer }}
-                title={
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
-                            <PackageX className="text-red-500" size={20} />
-                            <span>
-                                Lỗi phát hành (
-                                {releaseEnrichedErrorsData.length})
-                            </span>
-                        </div>
-                    </div>
-                }
-                extra={
-                    releaseEnrichedErrorsData.length > 0 && (
-                        <Popconfirm
-                            title={messages('common.resolveAllErrorsConfirm')}
-                            onConfirm={handleUpdateAllErrors}
-                            okText={messages('common.confirm')}
-                            cancelText={messages('common.cancel')}
-                            okButtonProps={{
-                                className:
-                                    'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-none',
-                            }}
-                            disabled={isUpdatingErrors}
-                            placement="bottomRight"
-                        >
-                            <Button
-                                type="link"
-                                disabled={isUpdatingErrors}
-                                className="flex items-center gap-1 p-0 text-xs font-semibold text-blue-500 hover:text-blue-600 disabled:opacity-50"
-                            >
-                                {isUpdatingAll && (
-                                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                                )}
-                                {messages('common.markAllAsResolved')}
-                            </Button>
-                        </Popconfirm>
-                    )
-                }
-            >
-                {isFetchingEnrichedErrors &&
-                releaseEnrichedErrorsData.length === 0 ? (
-                    <div className="flex justify-center py-6">
-                        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-                    </div>
-                ) : releaseEnrichedErrorsData.length === 0 ? (
-                    <Alert
-                        message="Đạt kiểm định chất lượng"
-                        description="Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối."
-                        type="success"
-                        showIcon
-                        icon={
-                            <CheckCircle
-                                size={18}
-                                className="text-emerald-500"
-                            />
-                        }
-                        className="rounded-lg border border-emerald-100 bg-emerald-50/50"
-                    />
-                ) : (
-                    <div className="flex flex-col gap-4">
-                        <p className="text-sm text-gray-500">
-                            Dưới đây là các lỗi được hệ thống tự động phát hiện
-                            trong các phần nhập liệu hoặc kiểm duyệt nội dung.
-                            Bạn có thể bấm &quot;Sửa&quot; để đi tới tab sửa lỗi
-                            hoặc tích chọn để đánh dấu đã xử lý xong.
-                        </p>
-                        <Table
-                            columns={errorColumns}
-                            dataSource={releaseEnrichedErrorsData}
-                            rowKey="id"
-                            pagination={false}
-                            size="small"
-                            bordered
-                        />
-                    </div>
-                )}
-            </Card>
+            <ReleaseErrorsCard
+                releaseId={releaseId}
+                releaseEnrichedErrorsData={releaseEnrichedErrorsData}
+                isFetchingEnrichedErrors={isFetchingEnrichedErrors}
+                isUpdatingErrors={isUpdatingErrors}
+                updatingErrorId={updatingErrorId}
+                isUpdatingAll={isUpdatingAll}
+                onUpdateError={handleUpdateError}
+                onUpdateAllErrors={handleUpdateAllErrors}
+            />
 
             {/* CARD 2: KẾT QUẢ QUÉT NHẠC TỪ ARC (ACRCLOUD) */}
             <Card
@@ -650,111 +290,10 @@ export default function SystemReviewTab() {
             </Card>
 
             {/* MODAL TỪ CHỐI DUYỆT */}
-            <Modal
-                title={
-                    <div className="flex items-center gap-1.5 font-bold text-red-600">
-                        <AlertTriangle size={18} />
-                        <span>TỪ CHỐI THỰC THI PHÁT HÀNH</span>
-                    </div>
-                }
+            <RejectModal
                 open={isRejectModalOpen}
                 onCancel={() => setIsRejectModalOpen(false)}
-                okText="Xác nhận từ chối"
-                okButtonProps={{ danger: true }}
-                cancelText="Hủy"
-                onOk={() => rejectForm.submit()}
-                destroyOnClose
-            >
-                <div className="py-2">
-                    <p className="mb-4 text-sm text-gray-500">
-                        Vui lòng nhập lý do từ chối phê duyệt. Lý do này sẽ được
-                        ghi nhận vào lịch sử hệ thống và gửi thông báo tới chủ
-                        sở hữu bản phát hành.
-                    </p>
-                    <Form
-                        form={rejectForm}
-                        layout="vertical"
-                        onFinish={handleRejectSubmit}
-                    >
-                        <Form.Item
-                            name="reason"
-                            label={
-                                <span className="font-semibold text-gray-700">
-                                    Lý do từ chối
-                                </span>
-                            }
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        'Vui lòng nhập lý do từ chối duyệt!',
-                                },
-                            ]}
-                        >
-                            <Input.TextArea
-                                placeholder="Ví dụ: Bài hát số 1 trùng bản quyền nghiêm trọng với tác phẩm đã được phân phối trên Youtube ContentID..."
-                                rows={4}
-                                maxLength={250}
-                                showCount
-                            />
-                        </Form.Item>
-                    </Form>
-                </div>
-            </Modal>
-        </div>
-    );
-}
-
-interface AuditLogTableProps {
-    auditLogs: AuditLog[];
-}
-
-function AuditLogTable({ auditLogs }: AuditLogTableProps) {
-    const auditColumns = [
-        {
-            title: 'Thời gian',
-            dataIndex: 'timestamp',
-            key: 'timestamp',
-            width: '20%',
-        },
-        {
-            title: 'Người thực hiện',
-            dataIndex: 'actor',
-            key: 'actor',
-            width: '20%',
-            render: (text: string) => (
-                <span className="font-semibold text-gray-700">{text}</span>
-            ),
-        },
-        {
-            title: 'Hành động',
-            dataIndex: 'action',
-            key: 'action',
-            width: '25%',
-        },
-        {
-            title: 'Chi tiết / Ghi chú',
-            dataIndex: 'note',
-            key: 'note',
-            render: (text: string) => (
-                <span className="italic text-gray-500">{text || 'N/A'}</span>
-            ),
-        },
-    ];
-
-    return (
-        <div className="mt-6 border-t pt-6">
-            <div className="mb-3 flex items-center gap-1 text-sm font-semibold text-gray-600">
-                <FileText size={16} />
-                Lịch sử kiểm duyệt hệ thống
-            </div>
-            <Table
-                columns={auditColumns}
-                dataSource={auditLogs}
-                rowKey="id"
-                pagination={false}
-                size="small"
-                bordered
+                onReject={handleRejectSubmit}
             />
         </div>
     );
