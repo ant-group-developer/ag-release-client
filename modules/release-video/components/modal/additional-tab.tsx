@@ -247,13 +247,16 @@ export default function AdditionalTab({
                                 'releaseVideo.fields.partnerCustomId1'
                             )}
                             allowClear
-                            onBlur={(e) =>
-                                onFieldUpdate?.({
-                                    video: {
-                                        partnerCustomId1: e.target.value,
-                                    },
-                                })
-                            }
+                            onBlur={(e) => {
+                                const val = e.target.value;
+                                if (val !== dataEdit?.video?.partnerCustomId1) {
+                                    onFieldUpdate?.({
+                                        video: {
+                                            partnerCustomId1: val,
+                                        },
+                                    });
+                                }
+                            }}
                         />
                     </AppFormItem>
                 </Col>
@@ -267,13 +270,16 @@ export default function AdditionalTab({
                                 'releaseVideo.fields.partnerCustomId2'
                             )}
                             allowClear
-                            onBlur={(e) =>
-                                onFieldUpdate?.({
-                                    video: {
-                                        partnerCustomId2: e.target.value,
-                                    },
-                                })
-                            }
+                            onBlur={(e) => {
+                                const val = e.target.value;
+                                if (val !== dataEdit?.video?.partnerCustomId2) {
+                                    onFieldUpdate?.({
+                                        video: {
+                                            partnerCustomId2: val,
+                                        },
+                                    });
+                                }
+                            }}
                         />
                     </AppFormItem>
                 </Col>
@@ -369,9 +375,12 @@ export default function AdditionalTab({
                                 'releaseVideo.fields.copyright'
                             )}
                             allowClear
-                            onBlur={(e) =>
-                                onFieldUpdate?.({ cLineOwner: e.target.value })
-                            }
+                            onBlur={(e) => {
+                                const val = e.target.value;
+                                if (val !== dataEdit?.cLineOwner) {
+                                    onFieldUpdate?.({ cLineOwner: val });
+                                }
+                            }}
                         />
                     </AppFormItem>
                 </Col>
