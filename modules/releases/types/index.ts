@@ -108,6 +108,7 @@ export interface VideoData {
     copyrightOwner?: string;
     partnerCustomId1?: string;
     partnerCustomId2?: string;
+    label?: string;
     fileId?: string;
     videoFile?: FileBucket;
 }

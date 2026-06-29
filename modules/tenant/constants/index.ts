@@ -61,6 +61,12 @@ export const tenantQueryKeys = {
             QUERY_KEY.TENANT.RESOLVE_DOMAIN,
             domain,
         ] as const,
+    getCfOAuthUrl: (tenantId: string) =>
+        [
+            ...tenantQueryKeys.all,
+            QUERY_KEY.TENANT.GET_CF_OAUTH_URL,
+            tenantId,
+        ] as const,
 };
 
 export const SYSTEM_TENANT_ID = 'system-tenant';
@@ -72,4 +78,6 @@ export const TENANT_REQUEST_HEADERS = {
 export const TENANT_API_ENDPOINTS = {
     DOMAIN: (tenantId: string) => `/tenants/${tenantId}/domain`,
     VERIFY_DOMAIN: (tenantId: string) => `/tenants/${tenantId}/domain/verify`,
+    CF_OAUTH_URL: (tenantId: string) =>
+        `/tenants/${tenantId}/domain/cf-oauth-url`,
 } as const;

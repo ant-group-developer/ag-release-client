@@ -71,7 +71,14 @@ export async function middleware(req: NextRequest) {
         return nextIntl(req);
     }
 
-    // console.log(formatTime((token as any)?.accessTokenExp));
+    if (pathname === '/settings/domain' || pathname.endsWith('/settings/domain')) {
+        const tenantId = (token as any)?.tenantId;
+        if (tenantId) {
+            const url = req.nextUrl.clone();
+            url.pathname = `/${locale}/tenants/${tenantId}/custom-domain`;
+            return NextResponse.redirect(url);
+        }
+    }
 
     if (!token && !isAuthRoutes) {
         const url = req.nextUrl.clone();
