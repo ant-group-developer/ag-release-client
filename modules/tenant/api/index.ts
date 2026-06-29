@@ -144,9 +144,12 @@ export const tenantApi = {
         );
     },
 
-    getCfOAuthUrl(tenantId: string) {
+    getCfOAuthUrl(tenantId: string, params?: { returnUrl: string }) {
         return axiosInstance.get<DetailResponse<CfOAuthUrlResponse>>(
-            TENANT_API_ENDPOINTS.CF_OAUTH_URL(tenantId)
+            TENANT_API_ENDPOINTS.CF_OAUTH_URL(tenantId),
+            {
+                params,
+            }
         );
     },
 };

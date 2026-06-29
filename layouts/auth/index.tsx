@@ -10,14 +10,13 @@ import { PropsWithChildren } from 'react';
 export default function AuthLayout({ children }: PropsWithChildren) {
     const { token } = theme.useToken();
     const currentDomain = useCurrentDomain();
-    const { domainData, isFetching: isDomainLoading } = useResolveDomain(
-        currentDomain,
-        Boolean(currentDomain)
-    );
+    const { domainData, isLoading } = useResolveDomain(currentDomain);
+    const isDomainLoading = !currentDomain || isLoading;
+
     if (isDomainLoading) {
         return (
             <div className="flex h-screen items-center justify-center">
-                <Spin spinning={isDomainLoading} />
+                <Spin spinning={true} />
             </div>
         );
     }
