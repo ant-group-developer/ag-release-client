@@ -1,41 +1,47 @@
 'use client';
 
+import { DATE_FORMAT, ORDER } from '@/enums/common';
 import { PATH_PARAMS } from '@/enums/routes';
-import { cn } from '@/helpers/common';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import { Link } from '@/i18n/routing';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { cn, formattedDate } from '@/helpers/common';
+import { useBulkCreateReleaseErrors } from '@/modules/releases/hooks/use-bulk-create-release-errors';
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
-import { ReleaseEnrichedError } from '@/modules/releases/types';
+import { useUpdateReleaseReviewDecision } from '@/modules/releases/hooks/use-update-release-review-decision';
+import {
+    ErrorApprovalStatus,
+    ErrorSubmissionStatus,
+    FieldOrderReleaseError,
+    ReleaseEnrichedError,
+    ReleaseErrorType,
+    ReleaseReviewStatus,
+} from '@/modules/releases/types';
 import { SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
 import {
     Alert,
     Button,
     Card,
-    Checkbox,
     Form,
     Input,
     Modal,
     notification,
     Popconfirm,
+    Select,
     Table,
     Tag,
     theme,
-    Tooltip,
 } from 'antd';
 import {
-    AlertTriangle,
     CheckCircle,
     Clock,
-    ExternalLink,
     FileText,
     Loader2,
     Music,
     PackageX,
+    Plus,
     Shield,
     ShieldAlert,
+    Trash2,
     XCircle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -61,6 +67,26 @@ interface AuditLog {
 
 const MOCK_ADMIN_NAME = 'System Administrator';
 
+interface CreateReleaseErrorsFormValues {
+    items: {
+        message: string;
+    }[];
+}
+
+interface ReleaseErrorFilterState {
+    keyword?: string;
+    submissionStatus?: ErrorSubmissionStatus;
+    approvalStatus?: ErrorApprovalStatus;
+    type?: ReleaseErrorType;
+    fieldOrder?: FieldOrderReleaseError;
+    orderBy?: ORDER;
+}
+
+const DEFAULT_RELEASE_ERROR_FILTERS: ReleaseErrorFilterState = {
+    fieldOrder: FieldOrderReleaseError.createdAt,
+    orderBy: ORDER.DESC,
+};
+
 export default function SystemReviewTab() {
     const messages = useTranslations();
     const params = useParams();
@@ -75,20 +101,40 @@ export default function SystemReviewTab() {
         useGetDetailRelease(releaseId);
 
     // Lấy danh sách lỗi chất lượng (chưa được giải quyết)
+    const [releaseErrorFilters, setReleaseErrorFilters] =
+        useState<ReleaseErrorFilterState>(DEFAULT_RELEASE_ERROR_FILTERS);
+
     const {
         releaseEnrichedErrorsData = [],
         isFetching: isFetchingEnrichedErrors,
-    } = useReleaseEnrichedErrors({ id: releaseId, isFixed: false });
+    } = useReleaseEnrichedErrors({
+        id: releaseId,
+        ...releaseErrorFilters,
+    });
 
     // Mutation xử lý cập nhật lỗi
     const { bulkUpdateReleaseErrors, isPending: isUpdatingErrors } =
         useBulkUpdateReleaseErrors();
-
-    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const { bulkCreateReleaseErrors, isPending: isCreatingErrors } =
+        useBulkCreateReleaseErrors();
+    const { updateReleaseReviewDecision, isPending: isUpdatingReviewDecision } =
+        useUpdateReleaseReviewDecision();
 
     // Trạng thái cục bộ khi đang update lỗi
     const [updatingErrorId, setUpdatingErrorId] = useState<string | null>(null);
     const [isUpdatingAll, setIsUpdatingAll] = useState(false);
+    const [isCreateErrorsModalOpen, setIsCreateErrorsModalOpen] =
+        useState(false);
+    const [createErrorsForm] = Form.useForm<CreateReleaseErrorsFormValues>();
+
+    const hasReleaseErrorFilters =
+        Boolean(releaseErrorFilters.keyword?.trim()) ||
+        Boolean(releaseErrorFilters.submissionStatus) ||
+        Boolean(releaseErrorFilters.approvalStatus) ||
+        Boolean(releaseErrorFilters.type) ||
+        releaseErrorFilters.fieldOrder !==
+            DEFAULT_RELEASE_ERROR_FILTERS.fieldOrder ||
+        releaseErrorFilters.orderBy !== DEFAULT_RELEASE_ERROR_FILTERS.orderBy;
 
     // Hàm lấy mô tả chi tiết lỗi phát hành
     const getEnrichedErrorMessages = (error: ReleaseEnrichedError) => {
@@ -96,34 +142,18 @@ export default function SystemReviewTab() {
     };
 
     // Hàm lấy nhãn hiển thị cho trang/tab lỗi
-    const getTabLabel = (page: string) => {
-        switch (page) {
-            case RELEASES_TABS.CORE_DETAIL:
-                return messages('common.coreInfo');
-            case RELEASES_TABS.TRACKS:
-                return messages('common.tracks');
-            case RELEASES_TABS.SCHEDULE:
-                return messages('release.scheduling.label');
-            case RELEASES_TABS.DISTRIBUTION:
-                return messages('distribute.label');
-            case RELEASES_TABS.ANALYTICS:
-                return messages('analytics.label');
-            case RELEASES_TABS.REVIEW:
-                return messages('common.overview');
-            default:
-                return page;
-        }
-    };
-
     // Cập nhật trạng thái một lỗi thành đã giải quyết
-    const handleUpdateError = (id: string) => {
+    const handleUpdateError = (
+        id: string,
+        approvalStatus: ErrorApprovalStatus
+    ) => {
         setUpdatingErrorId(id);
         bulkUpdateReleaseErrors({
             payload: {
                 items: [
                     {
                         id,
-                        isFixed: true,
+                        approvalStatus,
                     },
                 ],
             },
@@ -141,7 +171,7 @@ export default function SystemReviewTab() {
         setIsUpdatingAll(true);
         const items = releaseEnrichedErrorsData.map((err) => ({
             id: err.id,
-            isFixed: true,
+            approvalStatus: ErrorApprovalStatus.APPROVED,
         }));
         bulkUpdateReleaseErrors({
             payload: { items },
@@ -155,11 +185,71 @@ export default function SystemReviewTab() {
     };
 
     // Định nghĩa các cột cho bảng lỗi chất lượng
+    const handleCreateErrorsSubmit = (
+        values: CreateReleaseErrorsFormValues
+    ) => {
+        const items = (values.items ?? [])
+            .map((item) => item.message?.trim())
+            .filter(Boolean)
+            .map((message) => ({
+                releaseId,
+                message,
+                type: ReleaseErrorType.ADMIN_CREATE,
+            }));
+
+        if (!items.length) return;
+
+        bulkCreateReleaseErrors({
+            payload: { items },
+            onSuccess: () => {
+                setIsCreateErrorsModalOpen(false);
+                createErrorsForm.resetFields();
+            },
+        });
+    };
+
+    const renderSubmissionStatus = (status?: ErrorSubmissionStatus) => {
+        switch (status) {
+            case ErrorSubmissionStatus.FIXED:
+                return <Tag color="success">FIXED</Tag>;
+            case ErrorSubmissionStatus.OPEN:
+                return <Tag color="warning">OPEN</Tag>;
+            default:
+                return <Tag>{status || 'N/A'}</Tag>;
+        }
+    };
+
+    const renderApprovalStatus = (status?: ErrorApprovalStatus) => {
+        switch (status) {
+            case ErrorApprovalStatus.APPROVED:
+                return <Tag color="success">APPROVED</Tag>;
+            case ErrorApprovalStatus.REJECTED:
+                return <Tag color="error">REJECTED</Tag>;
+            case ErrorApprovalStatus.PENDING:
+                return <Tag color="processing">PENDING</Tag>;
+            default:
+                return <Tag>{status || 'N/A'}</Tag>;
+        }
+    };
+
+    const renderErrorType = (type?: ReleaseErrorType | null) => {
+        switch (type) {
+            case ReleaseErrorType.ADMIN_CREATE:
+                return <Tag color="blue">ADMIN_CREATE</Tag>;
+            case ReleaseErrorType.IMPORT_CI:
+                return <Tag color="purple">IMPORT_CI</Tag>;
+            case ReleaseErrorType.QA_FLAG_CI:
+                return <Tag color="orange">QA_FLAG_CI</Tag>;
+            default:
+                return <Tag>N/A</Tag>;
+        }
+    };
+
     const errorColumns = [
         {
             title: 'STT',
             key: 'index',
-            width: '8%',
+            width: 72,
             align: 'center' as const,
             render: (_: any, __: any, index: number) => index + 1,
         },
@@ -173,64 +263,84 @@ export default function SystemReviewTab() {
             ),
         },
         {
-            title: 'Vị trí lỗi',
-            key: 'position',
-            width: '25%',
-            render: (record: ReleaseEnrichedError) => {
-                const tabLabel = getTabLabel(record.page);
-                return (
-                    <div className="flex flex-wrap gap-1.5">
-                        <Tag color="blue">{tabLabel}</Tag>
-                        {record.field && record.field !== 'unknown' && (
-                            <Tag color="purple">{record.field}</Tag>
-                        )}
-                    </div>
-                );
-            },
+            title: 'Submission Status',
+            dataIndex: 'submissionStatus',
+            key: 'submissionStatus',
+            width: 170,
+            render: renderSubmissionStatus,
+        },
+        {
+            title: 'Approval Status',
+            dataIndex: 'approvalStatus',
+            key: 'approvalStatus',
+            width: 160,
+            render: renderApprovalStatus,
+        },
+        {
+            title: 'Type',
+            dataIndex: 'type',
+            key: 'type',
+            width: 140,
+            render: renderErrorType,
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            width: 180,
+            render: (createdAt?: string) =>
+                formattedDate(createdAt, DATE_FORMAT.DATE_MINUTE) || 'N/A',
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updatedAt',
+            key: 'updatedAt',
+            width: 180,
+            render: (updatedAt?: string | null) =>
+                formattedDate(updatedAt, DATE_FORMAT.DATE_MINUTE) || 'N/A',
         },
         {
             title: 'Thao tác',
             key: 'action',
-            width: '20%',
+            width: 180,
             align: 'center' as const,
             render: (record: ReleaseEnrichedError) => {
                 const isUpdating =
                     isUpdatingErrors && updatingErrorId === record.id;
-                const canLink =
-                    !!record.page &&
-                    !!record.field &&
-                    record.page !== 'unknown' &&
-                    record.field !== 'unknown';
-
                 return (
-                    <div className="flex items-center justify-center gap-4">
-                        {canLink && (
-                            <Tooltip title="Đi tới sửa lỗi">
-                                <Link
-                                    href={`${getReleaseTabRoute(releaseId, record.page as RELEASES_TABS)}#${record.field}`}
-                                    scroll={false}
-                                    className="flex items-center gap-1 text-blue-500 hover:text-blue-600 hover:underline"
-                                >
-                                    <ExternalLink size={14} />
-                                    <span>Sửa</span>
-                                </Link>
-                            </Tooltip>
-                        )}
-
-                        <Tooltip title={messages('common.markAsResolved')}>
-                            {isUpdating ? (
-                                <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
-                            ) : (
-                                <Checkbox
-                                    checked={false}
+                    <div className="flex items-center justify-center gap-2">
+                        {isUpdating ? (
+                            <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    size="small"
+                                    type="primary"
                                     disabled={isUpdatingErrors}
-                                    onChange={() =>
-                                        handleUpdateError(record.id)
+                                    onClick={() =>
+                                        handleUpdateError(
+                                            record.id,
+                                            ErrorApprovalStatus.APPROVED
+                                        )
                                     }
-                                    className="transition-transform hover:scale-105"
-                                />
-                            )}
-                        </Tooltip>
+                                >
+                                    Approve
+                                </Button>
+                                <Button
+                                    size="small"
+                                    danger
+                                    disabled={isUpdatingErrors}
+                                    onClick={() =>
+                                        handleUpdateError(
+                                            record.id,
+                                            ErrorApprovalStatus.REJECTED
+                                        )
+                                    }
+                                >
+                                    Reject
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 );
             },
@@ -267,17 +377,11 @@ export default function SystemReviewTab() {
     const [executionStatus, setExecutionStatus] = useState<EXECUTION_STATUS>(
         EXECUTION_STATUS.PENDING
     );
-    const [rejectionReason, setRejectionReason] = useState<string>('');
     const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
-
-    // Trạng thái modal từ chối
-    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-    const [rejectForm] = Form.useForm();
 
     // Khởi tạo lịch sử kiểm duyệt ban đầu
     useEffect(() => {
         setExecutionStatus(EXECUTION_STATUS.PENDING);
-        setRejectionReason('');
         setAuditLogs([
             {
                 id: '1',
@@ -290,50 +394,63 @@ export default function SystemReviewTab() {
         ]);
     }, []);
 
-    // Xử lý duyệt thực thi
     const handleApprove = () => {
-        const newLogs: AuditLog[] = [
-            {
-                id: Date.now().toString(),
-                actor: MOCK_ADMIN_NAME,
-                action: 'Duyệt & Cho phép thực thi',
-                status: EXECUTION_STATUS.EXECUTED,
-                timestamp: new Date().toLocaleString(),
-                note: 'Đã duyệt điều kiện phân phối DDEX hoàn tất. Hệ thống bắt đầu đẩy nhạc lên các nền tảng DSPs.',
+        updateReleaseReviewDecision({
+            id: releaseId,
+            payload: {
+                status: ReleaseReviewStatus.COMPLETED,
             },
-            ...auditLogs,
-        ];
-        setExecutionStatus(EXECUTION_STATUS.EXECUTED);
-        setAuditLogs(newLogs);
+            onSuccess: () => {
+                const newLogs: AuditLog[] = [
+                    {
+                        id: Date.now().toString(),
+                        actor: MOCK_ADMIN_NAME,
+                        action: 'Duyệt & Cho phép thực thi',
+                        status: EXECUTION_STATUS.EXECUTED,
+                        timestamp: new Date().toLocaleString(),
+                        note: 'Đã duyệt điều kiện phân phối DDEX hoàn tất. Hệ thống bắt đầu đẩy nhạc lên các nền tảng DSPs.',
+                    },
+                    ...auditLogs,
+                ];
+                setExecutionStatus(EXECUTION_STATUS.EXECUTED);
+                setAuditLogs(newLogs);
 
-        notification.success({
-            message: 'Thành công',
-            description: 'Đã phê duyệt và thực thi bản phát hành thành công!',
+                notification.success({
+                    message: 'Thành công',
+                    description:
+                        'Đã phê duyệt và thực thi bản phát hành thành công!',
+                });
+            },
         });
     };
 
-    // Xử lý từ chối
-    const handleRejectSubmit = (values: { reason: string }) => {
-        const newLogs: AuditLog[] = [
-            {
-                id: Date.now().toString(),
-                actor: MOCK_ADMIN_NAME,
-                action: 'Từ chối thực thi phát hành',
-                status: EXECUTION_STATUS.REJECTED,
-                timestamp: new Date().toLocaleString(),
-                note: `Lý do từ chối: ${values.reason}`,
+    const handleReject = () => {
+        updateReleaseReviewDecision({
+            id: releaseId,
+            payload: {
+                status: ReleaseReviewStatus.FAILED,
             },
-            ...auditLogs,
-        ];
-        setExecutionStatus(EXECUTION_STATUS.REJECTED);
-        setRejectionReason(values.reason);
-        setAuditLogs(newLogs);
-        setIsRejectModalOpen(false);
-        rejectForm.resetFields();
+            onSuccess: () => {
+                const newLogs: AuditLog[] = [
+                    {
+                        id: Date.now().toString(),
+                        actor: MOCK_ADMIN_NAME,
+                        action: 'Từ chối thực thi phát hành',
+                        status: EXECUTION_STATUS.REJECTED,
+                        timestamp: new Date().toLocaleString(),
+                        note: 'Đã từ chối duyệt phát hành. Các lỗi đang chờ duyệt sẽ được cập nhật sang REJECTED.',
+                    },
+                    ...auditLogs,
+                ];
+                setExecutionStatus(EXECUTION_STATUS.REJECTED);
+                setAuditLogs(newLogs);
 
-        notification.warning({
-            message: 'Đã từ chối',
-            description: 'Đã cập nhật trạng thái từ chối thực thi phát hành.',
+                notification.warning({
+                    message: 'Đã từ chối',
+                    description:
+                        'Đã cập nhật trạng thái từ chối thực thi phát hành.',
+                });
+            },
         });
     };
 
@@ -351,7 +468,6 @@ export default function SystemReviewTab() {
             ...auditLogs,
         ];
         setExecutionStatus(EXECUTION_STATUS.PENDING);
-        setRejectionReason('');
         setAuditLogs(newLogs);
 
         notification.info({
@@ -442,20 +558,6 @@ export default function SystemReviewTab() {
                             {renderStatusTag(executionStatus)}
                         </div>
 
-                        {rejectionReason && (
-                            <div className="mt-2 flex items-start gap-2 rounded-lg border border-red-100 bg-red-50 p-3 text-red-700">
-                                <AlertTriangle
-                                    size={18}
-                                    className="mt-0.5 shrink-0"
-                                />
-                                <div>
-                                    <span className="font-bold">
-                                        Lý do từ chối:{' '}
-                                    </span>
-                                    <span>{rejectionReason}</span>
-                                </div>
-                            </div>
-                        )}
                         <p className="mt-1 text-xs text-gray-400">
                             * Lưu ý: Khi duyệt thực thi, bản phát hành sẽ được
                             xác nhận đủ điều kiện và gửi sang tiến trình nén/đẩy
@@ -467,54 +569,51 @@ export default function SystemReviewTab() {
                         {executionStatus === EXECUTION_STATUS.PENDING ? (
                             <>
                                 <Popconfirm
-                                    title={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? 'Cảnh báo: Bản phát hành vẫn còn lỗi chưa sửa!'
-                                            : 'Xác nhận duyệt thực thi?'
-                                    }
-                                    description={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? 'Hệ thống phát hiện lỗi chất lượng chưa giải quyết. Bạn có chắc chắn vẫn muốn duyệt phát hành này?'
-                                            : 'Hành động này sẽ duyệt phát hành và bắt đầu tiến trình đẩy nhạc.'
-                                    }
+                                    title="Xác nhận duyệt thực thi?"
+                                    description="Hành động này sẽ duyệt phát hành và cập nhật các lỗi đang chờ duyệt sang APPROVED."
                                     onConfirm={handleApprove}
-                                    okText={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? 'Vẫn duyệt'
-                                            : 'Đồng ý'
-                                    }
+                                    okText="Đồng ý"
                                     cancelText="Hủy"
-                                    okButtonProps={
-                                        releaseEnrichedErrorsData.length > 0
-                                            ? { danger: true }
-                                            : undefined
-                                    }
+                                    okButtonProps={{
+                                        loading: isUpdatingReviewDecision,
+                                    }}
                                 >
                                     <Button
                                         type="primary"
-                                        danger={
-                                            releaseEnrichedErrorsData.length > 0
-                                        }
-                                        className={cn(
-                                            'flex items-center gap-1 border-none font-semibold',
-                                            releaseEnrichedErrorsData.length > 0
-                                                ? 'bg-red-600 hover:bg-red-500'
-                                                : 'bg-emerald-600 hover:bg-emerald-500'
-                                        )}
+                                        loading={isUpdatingReviewDecision}
+                                        disabled={isUpdatingReviewDecision}
+                                        className="flex items-center gap-1 border-none bg-emerald-600 font-semibold hover:bg-emerald-500"
                                     >
                                         <CheckCircle size={16} />
                                         Duyệt thực thi
                                     </Button>
                                 </Popconfirm>
 
-                                <Button
-                                    danger
-                                    onClick={() => setIsRejectModalOpen(true)}
-                                    className="flex items-center gap-1 font-semibold"
+                                <Popconfirm
+                                    title="Xác nhận từ chối duyệt?"
+                                    description="Hành động này sẽ từ chối phát hành và cập nhật các lỗi đang chờ duyệt sang REJECTED."
+                                    onConfirm={handleReject}
+                                    okText="Đồng ý"
+                                    cancelText="Hủy"
+                                    okButtonProps={{
+                                        danger: true,
+                                        loading: isUpdatingReviewDecision,
+                                    }}
                                 >
-                                    <XCircle size={16} />
-                                    Từ chối duyệt
-                                </Button>
+                                    <Button
+                                        danger
+                                        disabled={isUpdatingReviewDecision}
+                                        className="flex items-center gap-1 font-semibold"
+                                    >
+                                        <XCircle size={16} />
+                                        Từ chối duyệt
+                                    </Button>
+                                </Popconfirm>
+                                <p className="w-full text-right text-xs text-gray-400">
+                                    API updateReleaseReview sẽ cập nhật Approval
+                                    Status của các lỗi đang chờ duyệt: COMPLETED
+                                    thành APPROVED, FAILED thành REJECTED.
+                                </p>
                             </>
                         ) : (
                             <Button
@@ -549,33 +648,171 @@ export default function SystemReviewTab() {
                     </div>
                 }
                 extra={
-                    releaseEnrichedErrorsData.length > 0 && (
-                        <Popconfirm
-                            title={messages('common.resolveAllErrorsConfirm')}
-                            onConfirm={handleUpdateAllErrors}
-                            okText={messages('common.confirm')}
-                            cancelText={messages('common.cancel')}
-                            okButtonProps={{
-                                className:
-                                    'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-none',
-                            }}
-                            disabled={isUpdatingErrors}
-                            placement="bottomRight"
+                    <div className="flex items-center gap-3">
+                        <Button
+                            size="small"
+                            type="primary"
+                            onClick={() => setIsCreateErrorsModalOpen(true)}
+                            className="flex items-center gap-1"
                         >
-                            <Button
-                                type="link"
+                            <Plus size={14} />
+                            Thêm lỗi
+                        </Button>
+
+                        {releaseEnrichedErrorsData.length > 0 && (
+                            <Popconfirm
+                                title="Approve all release errors?"
+                                onConfirm={handleUpdateAllErrors}
+                                okText={messages('common.confirm')}
+                                cancelText={messages('common.cancel')}
+                                okButtonProps={{
+                                    className:
+                                        'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-none',
+                                }}
                                 disabled={isUpdatingErrors}
-                                className="flex items-center gap-1 p-0 text-xs font-semibold text-blue-500 hover:text-blue-600 disabled:opacity-50"
+                                placement="bottomRight"
                             >
-                                {isUpdatingAll && (
-                                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                                )}
-                                {messages('common.markAllAsResolved')}
-                            </Button>
-                        </Popconfirm>
-                    )
+                                <Button
+                                    type="link"
+                                    disabled={isUpdatingErrors}
+                                    className="flex items-center gap-1 p-0 text-xs font-semibold text-blue-500 hover:text-blue-600 disabled:opacity-50"
+                                >
+                                    {isUpdatingAll && (
+                                        <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                                    )}
+                                    Approve all
+                                </Button>
+                            </Popconfirm>
+                        )}
+                    </div>
                 }
             >
+                <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+                    <Input.Search
+                        allowClear
+                        placeholder="Tìm nội dung lỗi"
+                        value={releaseErrorFilters.keyword}
+                        onChange={(event) =>
+                            setReleaseErrorFilters((prev) => ({
+                                ...prev,
+                                keyword: event.target.value || undefined,
+                            }))
+                        }
+                    />
+                    <Select
+                        allowClear
+                        placeholder="Submission status"
+                        value={releaseErrorFilters.submissionStatus}
+                        options={Object.values(ErrorSubmissionStatus).map(
+                            (status) => ({
+                                label: status,
+                                value: status,
+                            })
+                        )}
+                        onChange={(submissionStatus) =>
+                            setReleaseErrorFilters((prev) => ({
+                                ...prev,
+                                submissionStatus,
+                            }))
+                        }
+                    />
+                    <Select
+                        allowClear
+                        placeholder="Approval status"
+                        value={releaseErrorFilters.approvalStatus}
+                        options={Object.values(ErrorApprovalStatus).map(
+                            (status) => ({
+                                label: status,
+                                value: status,
+                            })
+                        )}
+                        onChange={(approvalStatus) =>
+                            setReleaseErrorFilters((prev) => ({
+                                ...prev,
+                                approvalStatus,
+                            }))
+                        }
+                    />
+                    <Select
+                        allowClear
+                        placeholder="Type"
+                        value={releaseErrorFilters.type}
+                        options={Object.values(ReleaseErrorType).map(
+                            (type) => ({
+                                label: type,
+                                value: type,
+                            })
+                        )}
+                        onChange={(type) =>
+                            setReleaseErrorFilters((prev) => ({
+                                ...prev,
+                                type,
+                            }))
+                        }
+                    />
+                    <Select
+                        value={releaseErrorFilters.fieldOrder}
+                        options={[
+                            {
+                                label: 'Ngày tạo',
+                                value: FieldOrderReleaseError.createdAt,
+                            },
+                            {
+                                label: 'Ngày cập nhật',
+                                value: FieldOrderReleaseError.updatedAt,
+                            },
+                            {
+                                label: 'Nội dung lỗi',
+                                value: FieldOrderReleaseError.message,
+                            },
+                            {
+                                label: 'Type',
+                                value: FieldOrderReleaseError.type,
+                            },
+                            {
+                                label: 'Submission status',
+                                value: FieldOrderReleaseError.submissionStatus,
+                            },
+                            {
+                                label: 'Approval status',
+                                value: FieldOrderReleaseError.approvalStatus,
+                            },
+                        ]}
+                        onChange={(fieldOrder) =>
+                            setReleaseErrorFilters((prev) => ({
+                                ...prev,
+                                fieldOrder,
+                            }))
+                        }
+                    />
+                    <div className="flex gap-2">
+                        <Select
+                            className="min-w-24 flex-1"
+                            value={releaseErrorFilters.orderBy}
+                            options={[
+                                { label: 'Mới nhất', value: ORDER.DESC },
+                                { label: 'Cũ nhất', value: ORDER.ASC },
+                            ]}
+                            onChange={(orderBy) =>
+                                setReleaseErrorFilters((prev) => ({
+                                    ...prev,
+                                    orderBy,
+                                }))
+                            }
+                        />
+                        <Button
+                            disabled={!hasReleaseErrorFilters}
+                            onClick={() =>
+                                setReleaseErrorFilters(
+                                    DEFAULT_RELEASE_ERROR_FILTERS
+                                )
+                            }
+                        >
+                            Xóa lọc
+                        </Button>
+                    </div>
+                </div>
+
                 {isFetchingEnrichedErrors &&
                 releaseEnrichedErrorsData.length === 0 ? (
                     <div className="flex justify-center py-6">
@@ -583,17 +820,34 @@ export default function SystemReviewTab() {
                     </div>
                 ) : releaseEnrichedErrorsData.length === 0 ? (
                     <Alert
-                        message="Đạt kiểm định chất lượng"
-                        description="Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối."
-                        type="success"
+                        message={
+                            hasReleaseErrorFilters
+                                ? 'Không tìm thấy lỗi phù hợp'
+                                : 'Đạt kiểm định chất lượng'
+                        }
+                        description={
+                            hasReleaseErrorFilters
+                                ? 'Không có lỗi phát hành nào khớp với bộ lọc hiện tại.'
+                                : 'Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối.'
+                        }
+                        type={hasReleaseErrorFilters ? 'info' : 'success'}
                         showIcon
                         icon={
                             <CheckCircle
                                 size={18}
-                                className="text-emerald-500"
+                                className={
+                                    hasReleaseErrorFilters
+                                        ? 'text-blue-500'
+                                        : 'text-emerald-500'
+                                }
                             />
                         }
-                        className="rounded-lg border border-emerald-100 bg-emerald-50/50"
+                        className={cn(
+                            'rounded-lg',
+                            hasReleaseErrorFilters
+                                ? 'border border-blue-100 bg-blue-50/50'
+                                : 'border border-emerald-100 bg-emerald-50/50'
+                        )}
                     />
                 ) : (
                     <div className="flex flex-col gap-4">
@@ -649,57 +903,109 @@ export default function SystemReviewTab() {
                 )}
             </Card>
 
-            {/* MODAL TỪ CHỐI DUYỆT */}
             <Modal
-                title={
-                    <div className="flex items-center gap-1.5 font-bold text-red-600">
-                        <AlertTriangle size={18} />
-                        <span>TỪ CHỐI THỰC THI PHÁT HÀNH</span>
-                    </div>
-                }
-                open={isRejectModalOpen}
-                onCancel={() => setIsRejectModalOpen(false)}
-                okText="Xác nhận từ chối"
-                okButtonProps={{ danger: true }}
-                cancelText="Hủy"
-                onOk={() => rejectForm.submit()}
+                title="Thêm lỗi phát hành"
+                open={isCreateErrorsModalOpen}
+                onCancel={() => {
+                    setIsCreateErrorsModalOpen(false);
+                    createErrorsForm.resetFields();
+                }}
+                okText="Tạo lỗi"
+                cancelText={messages('common.cancel')}
+                confirmLoading={isCreatingErrors}
+                onOk={() => createErrorsForm.submit()}
                 destroyOnClose
             >
-                <div className="py-2">
-                    <p className="mb-4 text-sm text-gray-500">
-                        Vui lòng nhập lý do từ chối phê duyệt. Lý do này sẽ được
-                        ghi nhận vào lịch sử hệ thống và gửi thông báo tới chủ
-                        sở hữu bản phát hành.
-                    </p>
-                    <Form
-                        form={rejectForm}
-                        layout="vertical"
-                        onFinish={handleRejectSubmit}
-                    >
-                        <Form.Item
-                            name="reason"
-                            label={
-                                <span className="font-semibold text-gray-700">
-                                    Lý do từ chối
-                                </span>
-                            }
-                            rules={[
-                                {
-                                    required: true,
-                                    message:
-                                        'Vui lòng nhập lý do từ chối duyệt!',
-                                },
-                            ]}
-                        >
-                            <Input.TextArea
-                                placeholder="Ví dụ: Bài hát số 1 trùng bản quyền nghiêm trọng với tác phẩm đã được phân phối trên Youtube ContentID..."
-                                rows={4}
-                                maxLength={250}
-                                showCount
-                            />
-                        </Form.Item>
-                    </Form>
-                </div>
+                <Form<CreateReleaseErrorsFormValues>
+                    form={createErrorsForm}
+                    layout="vertical"
+                    initialValues={{ items: [{ message: '' }] }}
+                    onFinish={handleCreateErrorsSubmit}
+                >
+                    <Form.List name="items">
+                        {(fields, { add, remove }) => (
+                            <div className="flex flex-col gap-3">
+                                <Table
+                                    columns={[
+                                        {
+                                            title: 'STT',
+                                            key: 'index',
+                                            width: 64,
+                                            align: 'center' as const,
+                                            render: (
+                                                _: unknown,
+                                                __: unknown,
+                                                index: number
+                                            ) => index + 1,
+                                        },
+                                        {
+                                            title: 'Nội dung lỗi',
+                                            key: 'message',
+                                            render: (_, field) => (
+                                                <Form.Item
+                                                    {...field}
+                                                    name={[
+                                                        field.name,
+                                                        'message',
+                                                    ]}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            whitespace: true,
+                                                            message:
+                                                                'Vui lòng nhập nội dung lỗi',
+                                                        },
+                                                    ]}
+                                                    className="mb-0"
+                                                >
+                                                    <Input.TextArea
+                                                        rows={2}
+                                                        maxLength={500}
+                                                        showCount
+                                                        placeholder="Nhập nội dung lỗi"
+                                                    />
+                                                </Form.Item>
+                                            ),
+                                        },
+                                        {
+                                            title: 'Thao tác',
+                                            key: 'action',
+                                            width: 96,
+                                            align: 'center' as const,
+                                            render: (_, field) => (
+                                                <Button
+                                                    danger
+                                                    type="text"
+                                                    disabled={
+                                                        fields.length <= 1
+                                                    }
+                                                    icon={<Trash2 size={16} />}
+                                                    onClick={() =>
+                                                        remove(field.name)
+                                                    }
+                                                />
+                                            ),
+                                        },
+                                    ]}
+                                    dataSource={fields}
+                                    rowKey="key"
+                                    pagination={false}
+                                    size="small"
+                                    bordered
+                                />
+
+                                <Button
+                                    type="dashed"
+                                    onClick={() => add({ message: '' })}
+                                    className="flex items-center justify-center gap-1"
+                                >
+                                    <Plus size={14} />
+                                    Thêm dòng lỗi
+                                </Button>
+                            </div>
+                        )}
+                    </Form.List>
+                </Form>
             </Modal>
         </div>
     );

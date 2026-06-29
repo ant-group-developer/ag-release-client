@@ -5,12 +5,14 @@ import { Key } from 'react';
 import {
     ReleaseCaptionData,
     ReleaseEnrichedError,
+    ReleaseEnrichedErrorFilter,
     ReleasesData,
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
 } from '../types';
 import {
+    BulkCreateReleaseErrorsPayload,
     BulkSubmitRelease,
     BulkUpdateReleaseErrorsPayload,
     CreateReleaseDraftPayload,
@@ -18,14 +20,12 @@ import {
     SyncReleaseDraftToTracksPayload,
     UpdateReleaseCaptionPayload,
     UpdateReleaseDraftPayload,
+    UpdateReleaseReviewDecisionPayload,
     UpsertReleaseCaptionsPayload,
 } from '../types/payload';
 
 const RELEASE_ENRICHED_ERRORS_API_PATH = '/release-errors/enriched';
 const RELEASE_ERRORS_BULK_API_PATH = '/release-errors/bulk';
-const RELEASE_ENRICHED_ERRORS_PARAMS = {
-    RELEASE_ID: 'releaseId',
-} as const;
 
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
@@ -93,20 +93,28 @@ export const releasesApi = {
         }
     },
 
-    getEnrichedErrors: (id: ReleasesData['id'], isFixed?: boolean) => {
+    getEnrichedErrors: (params: ReleaseEnrichedErrorFilter) => {
         return axiosInstance.get<DetailResponse<ReleaseEnrichedError[]>>(
             RELEASE_ENRICHED_ERRORS_API_PATH,
             {
-                params: {
-                    [RELEASE_ENRICHED_ERRORS_PARAMS.RELEASE_ID]: id,
-                    isFixed,
-                },
+                params,
             }
         );
     },
 
     bulkUpdateReleaseErrors: (payload: BulkUpdateReleaseErrorsPayload) => {
         return axiosInstance.put(RELEASE_ERRORS_BULK_API_PATH, payload);
+    },
+
+    bulkCreateReleaseErrors: (payload: BulkCreateReleaseErrorsPayload) => {
+        return axiosInstance.post(RELEASE_ERRORS_BULK_API_PATH, payload);
+    },
+
+    updateReleaseReviewDecision: (
+        id: ReleasesData['id'],
+        payload: UpdateReleaseReviewDecisionPayload
+    ) => {
+        return axiosInstance.post(`/releases/${id}/release-review`, payload);
     },
 
     downloadAssets: (id: ReleasesData['id']) => {

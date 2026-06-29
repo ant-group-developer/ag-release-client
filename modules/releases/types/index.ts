@@ -156,13 +156,63 @@ export interface ReleaseValidate {
     trackId?: string;
 }
 
-export interface ReleaseEnrichedError {
+export enum ReleaseErrorType {
+    ADMIN_CREATE = 'ADMIN_CREATE',
+    IMPORT_CI = 'IMPORT_CI',
+    QA_FLAG_CI = 'QA_FLAG_CI',
+}
+
+export enum ErrorSubmissionStatus {
+    OPEN = 'OPEN',
+    FIXED = 'FIXED',
+}
+
+export enum ErrorApprovalStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+}
+
+export enum ReleaseReviewStatus {
+    PENDING = 'PENDING',
+    PROCESSING = 'PROCESSING',
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED',
+    CANCEL = 'CANCEL',
+}
+
+export enum FieldOrderReleaseError {
+    createdAt = 'releaseError.createdAt',
+    updatedAt = 'releaseError.updatedAt',
+    message = 'releaseError.message',
+    messageCode = 'releaseError.messageCode',
+    type = 'releaseError.type',
+    submissionStatus = 'releaseError.submissionStatus',
+    approvalStatus = 'releaseError.approvalStatus',
+}
+
+export interface ReleaseEnrichedError extends CommonAttribute {
     id: string;
-    messageCode: string;
+    releaseId: string;
+    releaseExecutionId?: string | null;
+    stepId?: string | null;
+    submissionStatus: ErrorSubmissionStatus;
+    approvalStatus: ErrorApprovalStatus;
+    messageCode?: string | null;
     message: string;
-    page: string;
-    field: string;
-    isFixed: boolean;
+    page?: string | null;
+    field?: string | null;
+    trackId?: string | null;
+    type?: ReleaseErrorType | null;
+    releaseReviewId?: string | null;
+}
+
+export interface ReleaseEnrichedErrorFilter extends CommonParams {
+    releaseId: string;
+    submissionStatus?: ErrorSubmissionStatus;
+    approvalStatus?: ErrorApprovalStatus;
+    type?: ReleaseErrorType;
+    fieldOrder?: FieldOrderReleaseError;
 }
 
 export type { TrackData } from '@/modules/tracks/types';

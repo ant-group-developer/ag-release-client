@@ -7,7 +7,10 @@ import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
-import { ReleaseEnrichedError } from '@/modules/releases/types';
+import {
+    ErrorSubmissionStatus,
+    ReleaseEnrichedError,
+} from '@/modules/releases/types';
 import { Checkbox, Popconfirm } from 'antd';
 import { ListChecks, Loader2, PackageX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -55,7 +58,7 @@ export default function EnrichedErrorList({
                 items: [
                     {
                         id: id,
-                        isFixed: true,
+                        submissionStatus: ErrorSubmissionStatus.FIXED,
                     },
                 ],
             },
@@ -72,7 +75,7 @@ export default function EnrichedErrorList({
         setIsUpdatingAll(true);
         const items = errors.map((err) => ({
             id: err.id,
-            isFixed: true,
+            submissionStatus: ErrorSubmissionStatus.FIXED,
         }));
         bulkUpdateReleaseErrors({
             payload: { items },

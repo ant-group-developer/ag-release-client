@@ -10,6 +10,7 @@ import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
+import { ErrorSubmissionStatus } from '@/modules/releases/types';
 import { Grid, theme } from 'antd';
 import {
     AlertTriangle,
@@ -38,7 +39,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const { releaseEnrichedErrorsData, isFetching: isFetchingEnrichedErrors } =
         useReleaseEnrichedErrors({
             id: formValues?.id as string,
-            isFixed: false,
+            submissionStatus: ErrorSubmissionStatus.OPEN,
         });
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
