@@ -86,14 +86,17 @@ export interface UpdateTenant extends CommonFunction {
 }
 export enum TENANT_DOMAIN_STATUS {
     PENDING = 'pending',
+    VERIFYING = 'verifying',
     ACTIVE = 'active',
     FAILED = 'failed',
+    EXPIRED = 'expired',
 }
 export enum TENANT_DOMAIN_SETUP_MODE {
     MANUAL = 'manual',
 }
 export enum TENANT_DOMAIN_SSL_STATUS {
     PENDING = 'pending',
+    INITIALIZING = 'initializing',
     ACTIVE = 'active',
     FAILED = 'failed',
 }
@@ -225,4 +228,8 @@ export interface DomainResolveResponse {
     isPrimaryDomain: boolean;
     domain: string;
     tenant: TenantResolveInfo | null;
+}
+
+export interface CfOAuthUrlResponse {
+    url: string;
 }

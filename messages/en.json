@@ -1996,6 +1996,45 @@
                 "notFound": "No workspace was found with the provided information",
                 "blocked": "This workspace has been blocked"
             }
+        },
+        "customDomain": {
+            "label": "Custom Domain",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "DNS Records Ready",
+            "dnsDescription": "Add the CNAME and TXT records below to your DNS provider to verify this domain.",
+            "sslStatus": "SSL Status",
+            "verificationToken": "Verification Token",
+            "cnameRecord": "CNAME Record",
+            "txtRecord": "TXT Record",
+            "verify": "Verify Domain",
+            "verifying": "Verifying...",
+            "delete": "Remove Domain",
+            "deleting": "Removing...",
+            "deleteConfirm": "Are you sure you want to remove this domain?",
+            "validation": {
+                "required": "Please enter domain"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "verifying": "Verifying",
+                "active": "Active",
+                "failed": "Failed",
+                "expired": "Expired"
+            },
+            "autoSetup": {
+                "title": "⚡ Auto setup via Cloudflare",
+                "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
+                "button": "Connect Cloudflare Account"
+            },
+            "orAddManually": "or add manually",
+            "autoSetupSuccess": "DNS records added automatically",
+            "errors": {
+                "access_denied": "Cloudflare account access denied. Please try again and authorize the request.",
+                "zone_not_found": "Could not find the domain zone in your Cloudflare account. Please make sure the domain is added to Cloudflare first.",
+                "dns_create_failed": "Failed to automatically create DNS records. Please check your Cloudflare account permissions or try manual setup.",
+                "invalid_scope": "The requested permissions are invalid or insufficient.",
+                "unauthorized": "Cloudflare account authentication failed."
+            }
         }
     },
     "integration": {

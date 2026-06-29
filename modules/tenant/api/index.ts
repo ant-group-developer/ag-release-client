@@ -17,6 +17,7 @@ import {
     UpdateTenantDspPayload,
     UpdateTenantPayload,
     UpdateTenantRolesPayload,
+    CfOAuthUrlResponse,
 } from '../types/data';
 
 export const tenantApi = {
@@ -140,6 +141,12 @@ export const tenantApi = {
             {
                 params,
             }
+        );
+    },
+
+    getCfOAuthUrl(tenantId: string) {
+        return axiosInstance.get<DetailResponse<CfOAuthUrlResponse>>(
+            TENANT_API_ENDPOINTS.CF_OAUTH_URL(tenantId)
         );
     },
 };

@@ -1,8 +1,13 @@
 'use client';
 
-import SubmitButton from '@/components/ui/button/submit-button';
-import CopyText from '@/components/ui/copy-text/copy-text';
+import { showNotification } from '@/helpers/messages-helper';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { tenantApi } from '@/modules/tenant/api';
+import CustomDomainAutoSetup from '@/modules/tenant/components/custom-domain/custom-domain-auto-setup';
+import CustomDomainDetails from '@/modules/tenant/components/custom-domain/custom-domain-details';
+import CustomDomainDnsInstructions from '@/modules/tenant/components/custom-domain/custom-domain-dns-instructions';
+import CustomDomainForm from '@/modules/tenant/components/custom-domain/custom-domain-form';
 import { useCreateTenantDomain } from '@/modules/tenant/hooks/use-create-tenant-domain';
 import { useDeleteTenantDomain } from '@/modules/tenant/hooks/use-delete-tenant-domain';
 import { useGetTenantDomain } from '@/modules/tenant/hooks/use-get-tenant-domain';
@@ -10,63 +15,29 @@ import { useVerifyTenantDomain } from '@/modules/tenant/hooks/use-verify-tenant-
 import {
     CreateTenantDomainPayload,
     DNS_RECORD_TYPE,
-    TENANT_DOMAIN_SSL_STATUS,
     TENANT_DOMAIN_STATUS,
     TenantDomainData,
-    TenantDomainDnsRecord,
     TenantDomainResponse,
 } from '@/modules/tenant/types/data';
-import {
-    Alert,
-    Button,
-    Descriptions,
-    Form,
-    Input,
-    Popconfirm,
-    Spin,
-    Tag,
-    theme,
-    Typography,
-} from 'antd';
+import { Alert, Button, Popconfirm, Spin, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
-import { useEffect, useState, useMemo } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-const TENANT_DOMAIN_STATUS_COLORS: Record<TENANT_DOMAIN_STATUS, string> = {
-    [TENANT_DOMAIN_STATUS.PENDING]: 'gold',
-    [TENANT_DOMAIN_STATUS.ACTIVE]: 'green',
-    [TENANT_DOMAIN_STATUS.FAILED]: 'red',
+const CF_ERROR_MESSAGES: Record<string, string> = {
+    access_denied: 'tenant.customDomain.errors.access_denied',
+    zone_not_found: 'tenant.customDomain.errors.zone_not_found',
+    dns_create_failed: 'tenant.customDomain.errors.dns_create_failed',
+    invalid_scope: 'tenant.customDomain.errors.invalid_scope',
+    unauthorized: 'tenant.customDomain.errors.unauthorized',
 };
-
-const TENANT_DOMAIN_SSL_STATUS_COLORS: Record<
-    TENANT_DOMAIN_SSL_STATUS,
-    string
-> = {
-    [TENANT_DOMAIN_SSL_STATUS.PENDING]: 'gold',
-    [TENANT_DOMAIN_SSL_STATUS.ACTIVE]: 'green',
-    [TENANT_DOMAIN_SSL_STATUS.FAILED]: 'red',
-};
-
-function DnsRecordItem({ record }: { record: TenantDomainDnsRecord }) {
-    return (
-        <div className="space-y-2">
-            <div className="grid gap-2 md:grid-cols-2">
-                <Typography.Text copyable={{ text: record.name }}>
-                    <span className="truncate font-medium">{record.name}</span>
-                </Typography.Text>
-                <Typography.Text copyable={{ text: record.value }}>
-                    <span className="truncate font-medium">{record.value}</span>
-                </Typography.Text>
-            </div>
-        </div>
-    );
-}
 
 function TenantCustomDomainPage() {
     const messages = useTranslations();
     const { token } = theme.useToken();
-    const [form] = Form.useForm<CreateTenantDomainPayload>();
     const { isAdmin } = useAuth();
+    const searchParams = useSearchParams();
+    const { handleError } = useApiNotify();
 
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
@@ -76,13 +47,32 @@ function TenantCustomDomainPage() {
         useVerifyTenantDomain();
     const { deleteTenantDomain, isPending: isDeleting } =
         useDeleteTenantDomain();
-    const { data: tenantDomainData, isLoading } = useGetTenantDomain(tenantId);
 
     const [domainResult, setDomainResult] =
         useState<TenantDomainResponse | null>(null);
 
+    const isPendingStatus =
+        domainResult?.domain?.status === TENANT_DOMAIN_STATUS.PENDING ||
+        domainResult?.domain?.status === TENANT_DOMAIN_STATUS.VERIFYING;
+
+    const { data: tenantDomainData, isLoading } = useGetTenantDomain(tenantId, {
+        refetchInterval: isPendingStatus ? 5000 : false,
+    }) as any;
+
+    const [cfSetupStatus, setCfSetupStatus] = useState<
+        'success' | 'error' | null
+    >(null);
+    const [cfErrorMsg, setCfErrorMsg] = useState<string | null>(null);
+    const [isFetchingOAuthUrl, setIsFetchingOAuthUrl] = useState(false);
+
     const isDomainActive =
         domainResult?.domain?.status === TENANT_DOMAIN_STATUS.ACTIVE;
+
+    const showDnsInstructions =
+        domainResult &&
+        (domainResult.domain.status === TENANT_DOMAIN_STATUS.PENDING ||
+            domainResult.domain.status === TENANT_DOMAIN_STATUS.FAILED ||
+            domainResult.domain.status === TENANT_DOMAIN_STATUS.EXPIRED);
 
     useEffect(() => {
         if (tenantDomainData?.data?.data) {
@@ -127,11 +117,9 @@ function TenantCustomDomainPage() {
         });
 
         setDomainResult(response.data.data);
-        form.resetFields();
     };
 
-    const handleVerify = async () => {
-        if (!domainResult) return;
+    const triggerVerify = async () => {
         const response = await verifyTenantDomain({
             tenantId,
         });
@@ -152,6 +140,52 @@ function TenantCustomDomainPage() {
         }
     };
 
+    const handleVerify = async () => {
+        if (!domainResult) return;
+        await triggerVerify();
+    };
+
+    const handleConnectCloudflare = async () => {
+        setIsFetchingOAuthUrl(true);
+        try {
+            const response = await tenantApi.getCfOAuthUrl(tenantId);
+            const url = response.data?.data?.url;
+            if (url) {
+                window.location.href = url;
+            } else {
+                showNotification(
+                    'error',
+                    messages('common.somethingWentWrong')
+                );
+            }
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setIsFetchingOAuthUrl(false);
+        }
+    };
+
+    useEffect(() => {
+        const cfSetup = searchParams.get('cf_setup');
+        if (cfSetup === 'success') {
+            setCfSetupStatus('success');
+            triggerVerify();
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+        } else if (cfSetup === 'error') {
+            setCfSetupStatus('error');
+            const cfError = searchParams.get('cf_error') || '';
+            const cfErrorDesc = searchParams.get('cf_error_description') || '';
+            const translationKey = CF_ERROR_MESSAGES[cfError];
+            const friendlyMsg = translationKey
+                ? messages(translationKey as any)
+                : cfErrorDesc || messages('common.somethingWentWrong' as any);
+            setCfErrorMsg(friendlyMsg);
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+        }
+    }, [searchParams]);
+
     const handleDelete = async () => {
         await deleteTenantDomain({
             tenantId,
@@ -160,112 +194,6 @@ function TenantCustomDomainPage() {
             },
         });
     };
-
-    const domainDetailsItems = useMemo(() => {
-        if (!domainResult) return [];
-        return [
-            {
-                key: 'domain',
-                label: messages('tenant.domain'),
-                children: (
-                    <CopyText text={domainResult.domain.domain}>
-                        {domainResult.domain.domain}
-                    </CopyText>
-                ),
-            },
-            {
-                key: 'status',
-                label: messages('common.status'),
-                children: (
-                    <Tag
-                        color={
-                            TENANT_DOMAIN_STATUS_COLORS[
-                                domainResult.domain.status
-                            ]
-                        }
-                    >
-                        {domainResult.domain.status}
-                    </Tag>
-                ),
-            },
-            {
-                key: 'sslStatus',
-                label: messages(
-                    'tenant.customDomain.sslStatus'
-                ),
-                children: (
-                    <Tag
-                        color={
-                            TENANT_DOMAIN_SSL_STATUS_COLORS[
-                                domainResult.domain.sslStatus
-                            ]
-                        }
-                    >
-                        {domainResult.domain.sslStatus}
-                    </Tag>
-                ),
-            },
-            ...(!isDomainActive
-                ? [
-                      {
-                          key: 'verificationToken',
-                          label: messages(
-                              'tenant.customDomain.verificationToken'
-                          ),
-                          children: (
-                              <CopyText
-                                  text={
-                                      domainResult.domain
-                                          .verificationToken ??
-                                      ''
-                                  }
-                              >
-                                  {domainResult.domain
-                                      .verificationToken ??
-                                      messages(
-                                          'common.notAvailable'
-                                      )}
-                              </CopyText>
-                          ),
-                      },
-                  ]
-                : []),
-        ];
-    }, [domainResult, isDomainActive, messages]);
-
-    const dnsInstructionsItems = useMemo(() => {
-        if (!domainResult) return [];
-        return [
-            {
-                key: 'cnameRecord',
-                label: messages(
-                    'tenant.customDomain.cnameRecord'
-                ),
-                children: (
-                    <DnsRecordItem
-                        record={
-                            domainResult?.dnsInstructions
-                                ?.cnameRecord
-                        }
-                    />
-                ),
-            },
-            {
-                key: 'txtRecord',
-                label: messages(
-                    'tenant.customDomain.txtRecord'
-                ),
-                children: (
-                    <DnsRecordItem
-                        record={
-                            domainResult.dnsInstructions
-                                .txtRecord
-                        }
-                    />
-                ),
-            },
-        ];
-    }, [domainResult, messages]);
 
     if (isLoading) {
         return (
@@ -278,50 +206,11 @@ function TenantCustomDomainPage() {
     return (
         <div className="space-y-4">
             {!domainResult && (
-                <div
-                    className="rounded-lg p-4"
-                    style={{ background: token.colorBgContainer }}
-                >
-                    <Form
-                        form={form}
-                        layout="vertical"
-                        onFinish={onFinish}
-                        disabled={!isAdmin || isPending}
-                    >
-                        <label
-                            className="mb-2 block text-sm font-medium"
-                            style={{ color: token.colorText }}
-                        >
-                            {messages('tenant.customDomain.label')}
-                        </label>
-                        <div className="flex items-start gap-2">
-                            <Form.Item
-                                className="mb-0 !w-full flex-1"
-                                name="domain"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: messages(
-                                            'tenant.customDomain.validation.required'
-                                        ),
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    placeholder={messages(
-                                        'tenant.customDomain.placeholder'
-                                    )}
-                                    allowClear
-                                />
-                            </Form.Item>
-
-                            <SubmitButton
-                                htmlType="submit"
-                                loading={isPending}
-                            />
-                        </div>
-                    </Form>
-                </div>
+                <CustomDomainForm
+                    isAdmin={isAdmin}
+                    isPending={isPending}
+                    onSubmit={onFinish}
+                />
             )}
 
             {domainResult && (
@@ -329,36 +218,50 @@ function TenantCustomDomainPage() {
                     className="space-y-4 rounded-lg p-4"
                     style={{ background: token.colorBgContainer }}
                 >
-                    {!isDomainActive && (
+                    {cfSetupStatus === 'success' && (
                         <Alert
-                            type="info"
+                            type="success"
                             showIcon
-                            message={messages('tenant.customDomain.dnsTitle')}
-                            description={messages(
-                                'tenant.customDomain.dnsDescription'
+                            closable
+                            message={messages(
+                                'tenant.customDomain.autoSetupSuccess'
                             )}
+                            className="mb-4"
+                            onClose={() => setCfSetupStatus(null)}
                         />
                     )}
 
-                    <Descriptions
-                        bordered
-                        column={{ xs: 1, md: 2 }}
-                        items={domainDetailsItems}
+                    {cfSetupStatus === 'error' && (
+                        <Alert
+                            type="error"
+                            showIcon
+                            closable
+                            message={cfErrorMsg}
+                            className="mb-4"
+                            onClose={() => setCfSetupStatus(null)}
+                        />
+                    )}
+
+                    <CustomDomainDetails
+                        domainResult={domainResult}
+                        isDomainActive={isDomainActive}
                     />
 
-                    {!isDomainActive && (
-                        <Descriptions
-                            bordered
-                            column={1}
-                            items={dnsInstructionsItems}
-                        />
+                    {showDnsInstructions && (
+                        <>
+                            <CustomDomainAutoSetup
+                                onConnectCloudflare={handleConnectCloudflare}
+                                isFetchingOAuthUrl={isFetchingOAuthUrl}
+                            />
+                            <CustomDomainDnsInstructions
+                                domainResult={domainResult}
+                            />
+                        </>
                     )}
 
                     <div className="flex justify-end gap-2 pt-2">
                         <Popconfirm
-                            title={messages(
-                                'tenant.customDomain.deleteConfirm'
-                            )}
+                            title={messages('tenant.customDomain.deleteConfirm')}
                             onConfirm={handleDelete}
                             okText={messages('common.confirm') || 'OK'}
                             cancelText={messages('common.cancel') || 'Cancel'}
@@ -372,16 +275,18 @@ function TenantCustomDomainPage() {
                                 {messages('tenant.customDomain.delete')}
                             </Button>
                         </Popconfirm>
-                        {!isDomainActive && (
-                            <Button
-                                type="primary"
-                                loading={isVerifying}
-                                disabled={!isAdmin}
-                                onClick={handleVerify}
-                            >
-                                {messages('tenant.customDomain.verify')}
-                            </Button>
-                        )}
+                        {!isDomainActive &&
+                            domainResult.domain.status !==
+                                TENANT_DOMAIN_STATUS.VERIFYING && (
+                                <Button
+                                    type="primary"
+                                    loading={isVerifying}
+                                    disabled={!isAdmin}
+                                    onClick={handleVerify}
+                                >
+                                    {messages('tenant.customDomain.verify')}
+                                </Button>
+                            )}
                     </div>
                 </div>
             )}
@@ -389,4 +294,4 @@ function TenantCustomDomainPage() {
     );
 }
 
-export default TenantCustomDomainPage
+export default TenantCustomDomainPage;

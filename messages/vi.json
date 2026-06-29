@@ -1988,6 +1988,27 @@
             "deleteConfirm": "Bạn có chắc chắn muốn gỡ bỏ tên miền này không?",
             "validation": {
                 "required": "Vui lòng nhập tên miền"
+            },
+            "statuses": {
+                "pending": "Đang chờ",
+                "verifying": "Đang xác minh",
+                "active": "Đang hoạt động",
+                "failed": "Lỗi",
+                "expired": "Hết hạn"
+            },
+            "autoSetup": {
+                "title": "Tự động cấu hình qua Cloudflare",
+                "description": "Tên miền của bạn phải sử dụng Cloudflare DNS. Chúng tôi sẽ tự động thêm các bản ghi cần thiết.",
+                "button": "Kết nối tài khoản Cloudflare"
+            },
+            "orAddManually": "hoặc cấu hình thủ công",
+            "autoSetupSuccess": "Các bản ghi DNS đã được tự động thêm thành công",
+            "errors": {
+                "access_denied": "Quyền truy cập tài khoản Cloudflare bị từ chối. Vui lòng thử lại và cấp quyền.",
+                "zone_not_found": "Không tìm thấy thông tin tên miền trên tài khoản Cloudflare của bạn. Hãy đảm bảo bạn đã thêm tên miền này vào Cloudflare trước.",
+                "dns_create_failed": "Không thể thêm bản ghi DNS tự động. Vui lòng kiểm tra quyền hạn tài khoản Cloudflare hoặc thêm thủ công.",
+                "invalid_scope": "Quyền hạn được yêu cầu không hợp lệ hoặc không đủ.",
+                "unauthorized": "Xác thực tài khoản Cloudflare thất bại."
             }
         }
     },

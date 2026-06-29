@@ -46,6 +46,7 @@ function Dashboard({}: Props) {
         pageSize: PAGE_SIZE,
         startDate,
         endDate,
+        isImportedFromReport: 'false',
     });
     const messages = useTranslations();
     const { releasesData, isLoading } = useGetListReleases(dataFilter);
