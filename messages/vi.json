@@ -1971,6 +1971,24 @@
                 "notFound": "Không tìm thấy Workspace nào với thông tin đã cung cấp",
                 "blocked": "Workspace này đã bị chặn"
             }
+        },
+        "customDomain": {
+            "label": "Tên miền tuỳ chỉnh",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "Bản ghi DNS đã sẵn sàng",
+            "dnsDescription": "Thêm các bản ghi CNAME và TXT bên dưới vào nhà cung cấp DNS để xác minh tên miền này.",
+            "sslStatus": "Trạng thái SSL",
+            "verificationToken": "Mã xác minh",
+            "cnameRecord": "Bản ghi CNAME",
+            "txtRecord": "Bản ghi TXT",
+            "verify": "Kiểm tra tên miền",
+            "verifying": "Đang kiểm tra...",
+            "delete": "Gỡ bỏ tên miền",
+            "deleting": "Đang gỡ bỏ...",
+            "deleteConfirm": "Bạn có chắc chắn muốn gỡ bỏ tên miền này không?",
+            "validation": {
+                "required": "Vui lòng nhập tên miền"
+            }
         }
     },
     "integration": {

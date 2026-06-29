@@ -2,12 +2,25 @@
 
 import AppLocale from '@/components/cms/app-locale';
 import AppLogoWithText from '@/components/logo/app-logo-with-text';
-import { theme } from 'antd';
+import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
+import { useResolveDomain } from '@/modules/tenant/hooks/use-resolve-domain';
+import { Spin, theme } from 'antd';
 import { PropsWithChildren } from 'react';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
     const { token } = theme.useToken();
-
+    const currentDomain = useCurrentDomain();
+    const { domainData, isFetching: isDomainLoading } = useResolveDomain(
+        currentDomain,
+        Boolean(currentDomain)
+    );
+    if (isDomainLoading) {
+        return (
+            <div className="flex h-screen items-center justify-center">
+                <Spin spinning={isDomainLoading} />
+            </div>
+        );
+    }
     return (
         <div
             className="flex min-h-screen flex-col items-center justify-center bg-cover bg-center px-4 py-6"
@@ -19,6 +32,8 @@ export default function AuthLayout({ children }: PropsWithChildren) {
                         wrapperClassName="mx-auto"
                         size={50}
                         className="text-2xl"
+                        name={domainData?.tenant?.name}
+                        logo={domainData?.tenant?.logo || ''}
                     />
                 </div>
                 <div
