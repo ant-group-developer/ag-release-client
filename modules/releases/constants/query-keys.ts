@@ -1,5 +1,5 @@
 import { QUERY_KEY } from '@/constants/query-key';
-import { ReleasesDataFilter, UseReleaseEnrichedErrorsParams } from '../types';
+import { ReleaseEnrichedErrorFilter, ReleasesDataFilter } from '../types';
 
 export const releasesQueryKeys = {
     all: [QUERY_KEY.RELEASES.KEY] as const,
@@ -28,7 +28,7 @@ export const releasesQueryKeys = {
             ...releasesQueryKeys.all,
             QUERY_KEY.RELEASES.GET_ENRICHED_ERRORS,
         ] as const,
-    enrichedError: (params: UseReleaseEnrichedErrorsParams) =>
+    enrichedError: (params: ReleaseEnrichedErrorFilter) =>
         [...releasesQueryKeys.enrichedErrors(), params] as const,
 
     captions: () =>

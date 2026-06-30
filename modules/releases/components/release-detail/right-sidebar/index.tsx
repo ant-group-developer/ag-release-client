@@ -41,7 +41,7 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     );
     const { releaseEnrichedErrorsData, isFetching: isFetchingEnrichedErrors } =
         useReleaseEnrichedErrors({
-            releaseId: formValues?.id as string,
+            id: formValues?.id as string,
             submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.OPEN,
             pageSize: PAGE_SIZE_EXTRA_LARGE,
         });

@@ -1,19 +1,16 @@
 'use client';
 
-import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { PATH_PARAMS } from '@/enums/routes';
-import { RELEASE_ERROR_SUBMISSION_STATUS } from '@/modules/releases/enums';
-import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
+import { RELEASE_ERROR_APPROVAL_STATUS } from '@/modules/releases/enums';
 import { SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
-import { notification } from 'antd';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
 import AcrCloudCard from './acr-cloud-card';
 import ApprovalCard from './approval-card';
-import QualityAlert from './quality-alert';
-import RejectModal from './reject-modal';
+import CreateErrorsModal from './create-errors-modal';
 import ReleaseErrorsCard from './release-errors-card';
 
 export default function SystemReviewTab() {
@@ -26,44 +23,17 @@ export default function SystemReviewTab() {
     const { releaseData, isLoading: isReleaseLoading } =
         useGetDetailRelease(releaseId);
 
-    // Lấy danh sách lỗi chất lượng (chưa được giải quyết)
+    // Lấy danh sách lỗi chất lượng
     const {
         releaseEnrichedErrorsData = [],
         isFetching: isFetchingEnrichedErrors,
     } = useReleaseEnrichedErrors({
-        releaseId,
-        submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.OPEN,
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
+        id: releaseId,
     });
 
-    // Mutation xử lý cập nhật lỗi
-    const { bulkUpdateReleaseErrors, isPending: isUpdatingErrors } =
-        useBulkUpdateReleaseErrors();
-
-    // Cập nhật trạng thái một lỗi thành đã giải quyết
-    const handleUpdateError = (id: string) => {
-        bulkUpdateReleaseErrors({
-            payload: {
-                items: [
-                    {
-                        id,
-                        submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
-                    },
-                ],
-            },
-        });
-    };
-
-    // Cập nhật hàng loạt tất cả lỗi thành đã giải quyết
-    const handleUpdateAllErrors = () => {
-        const items = releaseEnrichedErrorsData.map((err) => ({
-            id: err.id,
-            submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
-        }));
-        bulkUpdateReleaseErrors({
-            payload: { items },
-        });
-    };
+    // Modal Store chung của hệ thống
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
 
     const mockTracks = [
         {
@@ -91,39 +61,16 @@ export default function SystemReviewTab() {
             ? releaseData.tracks
             : mockTracks;
 
-    // Trạng thái cục bộ của tiến trình duyệt
-
-    // Trạng thái modal từ chối
-    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-
-    // Xử lý duyệt thực thi
-    const handleApprove = () => {
-        notification.success({
-            message: 'Thành công',
-            description: 'Đã phê duyệt và thực thi bản phát hành thành công!',
-        });
-    };
-
-    // Xử lý từ chối
-    const handleRejectSubmit = () => {
-        setIsRejectModalOpen(false);
-
-        notification.warning({
-            message: 'Đã từ chối',
-            description: 'Đã cập nhật trạng thái từ chối thực thi phát hành.',
-        });
-    };
+    const unresolvedErrorsCount = releaseEnrichedErrorsData.filter(
+        (err) => err.approvalStatus === RELEASE_ERROR_APPROVAL_STATUS.PENDING
+    ).length;
 
     return (
         <div className="flex flex-col gap-6 pb-12">
-            {/* ALERT CẢNH BÁO LỖI CHẤT LƯỢNG */}
-            <QualityAlert errorsCount={releaseEnrichedErrorsData.length} />
-
             {/* CARD 1: KHUNG DUYỆT THỰC THI */}
             <ApprovalCard
-                releaseEnrichedErrorsCount={releaseEnrichedErrorsData.length}
-                onApprove={handleApprove}
-                onRejectClick={() => setIsRejectModalOpen(true)}
+                releaseId={releaseId}
+                releaseEnrichedErrorsCount={unresolvedErrorsCount}
             />
 
             {/* CARD 1.5: KIỂM TRA LỖI CHẤT LƯỢNG (ENRICHED ERRORS) */}
@@ -131,20 +78,19 @@ export default function SystemReviewTab() {
                 releaseId={releaseId}
                 releaseEnrichedErrorsData={releaseEnrichedErrorsData}
                 isFetchingEnrichedErrors={isFetchingEnrichedErrors}
-                isUpdatingErrors={isUpdatingErrors}
-                onUpdateError={handleUpdateError}
-                onUpdateAllErrors={handleUpdateAllErrors}
             />
 
             {/* CARD 2: KẾT QUẢ QUÉT NHẠC TỪ ARC (ACRCLOUD) */}
             <AcrCloudCard tracks={tracksToShow} isLoading={isReleaseLoading} />
 
-            {/* MODAL TỪ CHỐI DUYỆT */}
-            <RejectModal
-                open={isRejectModalOpen}
-                onCancel={() => setIsRejectModalOpen(false)}
-                onReject={handleRejectSubmit}
-            />
+            {/* MODAL TẠO LỖI PHÁT HÀNH */}
+            {typeModal === TYPE_MODAL_RELEASE.CREATE_ERROR && (
+                <CreateErrorsModal
+                    open
+                    releaseId={releaseId}
+                    onCancel={closeModal}
+                />
+            )}
         </div>
     );
 }

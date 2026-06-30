@@ -1168,7 +1168,67 @@
             "failed": "Thất bại",
             "partial_done": "Hoàn thành một phần"
         },
-        "releaseError": "Lỗi phát hành"
+        "releaseError": "Lỗi phát hành",
+        "error": {
+            "description": "Nội dung lỗi",
+            "submissionStatusLabel": "Trạng thái sửa",
+            "approvalStatusLabel": "Trạng thái duyệt",
+            "submissionStatus": {
+                "OPEN": "Chưa sửa",
+                "FIXED": "Đã sửa"
+            },
+            "approvalStatus": {
+                "PENDING": "Chờ duyệt",
+                "APPROVED": "Đã duyệt",
+                "REJECTED": "Từ chối"
+            },
+            "type": {
+                "ADMIN_CREATE": "Admin tạo",
+                "IMPORT_CI": "Import CI",
+                "QA_FLAG_CI": "QA Flag CI"
+            }
+        },
+        "systemReview": {
+            "title": "Duyệt phát hành",
+            "executionNote": "* Lưu ý: Khi duyệt thực thi, bản phát hành sẽ được xác nhận đủ điều kiện và gửi sang tiến trình nén/đẩy metadata DDEX sang các DSPs đã chọn.",
+            "confirmApproveWithErrors": "Cảnh báo: Bản phát hành vẫn còn lỗi chưa sửa!",
+            "confirmApprove": "Xác nhận duyệt thực thi?",
+            "confirmApproveDescWithErrors": "Hệ thống phát hiện lỗi chất lượng chưa giải quyết. Bạn có chắc chắn vẫn muốn duyệt phát hành này?",
+            "confirmApproveDesc": "Hành động này sẽ duyệt phát hành và bắt đầu tiến trình đẩy nhạc.",
+            "stillApprove": "Vẫn duyệt",
+            "approve": "Duyệt thực thi",
+            "reject": "Từ chối duyệt",
+            "approveSuccess": "Đã phê duyệt và thực thi bản phát hành thành công!",
+            "rejectSuccess": "Đã cập nhật trạng thái từ chối thực thi phát hành.",
+            "rejectModal": {
+                "title": "TỪ CHỐI THỰC THI PHÁT HÀNH",
+                "confirmReject": "Xác nhận từ chối",
+                "description": "Vui lòng nhập lý do từ chối phê duyệt. Lý do này sẽ được ghi nhận vào lịch sử hệ thống và gửi thông báo tới chủ sở hữu bản phát hành.",
+                "reasonLabel": "Lý do từ chối",
+                "reasonRequired": "Vui lòng nhập lý do từ chối duyệt!",
+                "reasonPlaceholder": "Ví dụ: Bài hát số 1 trùng bản quyền nghiêm trọng với tác phẩm đã được phân phối trên Youtube ContentID..."
+            },
+            "errorsCard": {
+                "title": "Lỗi phát hành ({count})",
+                "addError": "Thêm lỗi",
+                "qualityPassed": "Đạt kiểm định chất lượng",
+                "qualityPassedDesc": "Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối."
+            },
+            "createErrorsModal": {
+                "title": "Thêm lỗi phát hành",
+                "submit": "Tạo lỗi",
+                "required": "Vui lòng nhập nội dung lỗi",
+                "placeholder": "Nhập nội dung lỗi",
+                "addErrorRow": "Thêm dòng lỗi"
+            },
+            "acrCloudCard": {
+                "title": "KẾT QUẢ QUÉT BẢN QUYỀN ARC (ACRCLOUD DATA)",
+                "loading": "Đang tải danh sách bài hát...",
+                "description": "Hệ thống tự động thực hiện đối soát âm thanh của từng track trong Release với kho dữ liệu bản quyền thế giới ACRCloud.",
+                "noTracks": "Đạt kiểm định bản quyền âm nhạc",
+                "noTracksDesc": "Tuyệt vời! Không phát hiện vấn đề bản quyền hoặc trùng lặp âm thanh nào cho các bài hát trong bản phát hành này."
+            }
+        }
     },
     "releaseDsp": {
         "status": {

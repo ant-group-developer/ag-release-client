@@ -1175,7 +1175,67 @@
             "partial_done": "Partial done",
             "failed": "Failed"
         },
-        "releaseError": "Release error"
+        "releaseError": "Release error",
+        "error": {
+            "description": "Error description",
+            "submissionStatusLabel": "Submission Status",
+            "approvalStatusLabel": "Approval Status",
+            "submissionStatus": {
+                "OPEN": "Open",
+                "FIXED": "Fixed"
+            },
+            "approvalStatus": {
+                "PENDING": "Pending",
+                "APPROVED": "Approved",
+                "REJECTED": "Rejected"
+            },
+            "type": {
+                "ADMIN_CREATE": "Admin Created",
+                "IMPORT_CI": "Import CI",
+                "QA_FLAG_CI": "QA Flag CI"
+            }
+        },
+        "systemReview": {
+            "title": "Approve Release",
+            "executionNote": "* Note: Upon approval, the release will be verified as eligible and sent to the processing pipeline for compression and DDEX metadata delivery to the selected DSPs.",
+            "confirmApproveWithErrors": "Warning: The release still has unresolved errors!",
+            "confirmApprove": "Confirm execution approval?",
+            "confirmApproveDescWithErrors": "The system detected unresolved quality errors. Are you sure you still want to approve this release?",
+            "confirmApproveDesc": "This action will approve the release and start the music delivery process.",
+            "stillApprove": "Still approve",
+            "approve": "Approve execution",
+            "reject": "Reject approval",
+            "approveSuccess": "Release approved and executed successfully!",
+            "rejectSuccess": "Release execution rejection status updated.",
+            "rejectModal": {
+                "title": "REJECT RELEASE EXECUTION",
+                "confirmReject": "Confirm Rejection",
+                "description": "Please enter the reason for rejecting approval. This reason will be recorded in the system history and sent as a notification to the release owner.",
+                "reasonLabel": "Rejection Reason",
+                "reasonRequired": "Please enter the rejection reason!",
+                "reasonPlaceholder": "Example: Track 1 has a serious copyright conflict with work already distributed on YouTube ContentID..."
+            },
+            "errorsCard": {
+                "title": "Release errors ({count})",
+                "addError": "Add error",
+                "qualityPassed": "Quality check passed",
+                "qualityPassedDesc": "Excellent! No quality errors or metadata structure issues detected for this release. Eligible for distribution."
+            },
+            "createErrorsModal": {
+                "title": "Add release error",
+                "submit": "Create error",
+                "required": "Please enter error description",
+                "placeholder": "Enter error description",
+                "addErrorRow": "Add error row"
+            },
+            "acrCloudCard": {
+                "title": "ARC COPYRIGHT SCAN RESULTS (ACRCLOUD DATA)",
+                "loading": "Loading track list...",
+                "description": "The system automatically performs audio matching for each track in the Release with the ACRCloud global copyright database.",
+                "noTracks": "Music copyright check passed",
+                "noTracksDesc": "Excellent! No copyright issues or audio fingerprint matches detected for the tracks in this release."
+            }
+        }
     },
     "releaseDsp": {
         "status": {

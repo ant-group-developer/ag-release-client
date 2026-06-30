@@ -12,13 +12,14 @@ import { FileBucket } from '@/modules/upload/types/data';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import {
-    RELEASE_ERROR_APPROVAL_STATUS,
-    RELEASE_ERROR_ORDER_FIELD,
-    RELEASE_ERROR_SUBMISSION_STATUS,
-    RELEASE_ERROR_TYPE,
     RELEASE_TIME_MODE,
     RELEASE_TYPE,
     RELEASES_STATUS,
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    RELEASE_ERROR_APPROVAL_STATUS,
+    RELEASE_ERROR_TYPE,
+    RELEASE_ERROR_ORDER_FIELD,
+    RELEASE_REVIEW_STATUS,
 } from '../enums';
 
 export interface ReleaseCoverArt {
@@ -116,7 +117,6 @@ export interface VideoData {
     copyrightOwner?: string;
     partnerCustomId1?: string;
     partnerCustomId2?: string;
-    label?: string;
     fileId?: string;
     videoFile?: FileBucket;
 }
@@ -165,18 +165,24 @@ export interface ReleaseValidate {
     trackId?: string;
 }
 
-export interface ReleaseEnrichedError {
+export interface ReleaseEnrichedError extends CommonAttribute {
     id: string;
-    messageCode: string;
+    releaseId: string;
+    releaseExecutionId?: string | null;
+    stepId?: string | null;
+    submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS;
+    approvalStatus: RELEASE_ERROR_APPROVAL_STATUS;
+    messageCode?: string | null;
     message: string;
-    page: string;
-    field: string;
-    isFixed: boolean;
+    page?: string | null;
+    field?: string | null;
+    trackId?: string | null;
+    type?: RELEASE_ERROR_TYPE | null;
+    releaseReviewId?: string | null;
 }
 
-export interface UseReleaseEnrichedErrorsParams extends CommonParams {
+export interface ReleaseEnrichedErrorFilter extends CommonParams {
     releaseId: string;
-    keyword?: string;
     submissionStatus?: RELEASE_ERROR_SUBMISSION_STATUS;
     approvalStatus?: RELEASE_ERROR_APPROVAL_STATUS;
     type?: RELEASE_ERROR_TYPE;
