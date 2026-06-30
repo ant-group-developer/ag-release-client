@@ -1219,8 +1219,8 @@
             "errorsCard": {
                 "title": "Lỗi phát hành ({count})",
                 "addError": "Thêm lỗi",
-                "qualityPassed": "Đạt kiểm định chất lượng",
-                "qualityPassedDesc": "Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối."
+                "qualityPassed": "Không có lỗi kiểm duyệt",
+                "qualityPassedDesc": "Không có lỗi kiểm duyệt từ admin hay hệ thống phân phối."
             },
             "createErrorsModal": {
                 "title": "Thêm lỗi phát hành",
@@ -2731,7 +2731,9 @@
             "WAIT_PARTNER_PROCESS": "Chờ đối tác xử lý",
             "CREATE_METADATA_ON_SERVER": "Tạo metadata trên server",
             "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
-            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành"
+            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành",
+            "REVIEW_RELEASE": "Duyệt phát hành",
+            "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI"
         },
         "action": {
             "markCompleted": "Đánh dấu hoàn thành"

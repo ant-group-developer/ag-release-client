@@ -1226,8 +1226,8 @@
             "errorsCard": {
                 "title": "Release errors ({count})",
                 "addError": "Add error",
-                "qualityPassed": "Quality check passed",
-                "qualityPassedDesc": "Excellent! No quality errors or metadata structure issues detected for this release. Eligible for distribution."
+                "qualityPassed": "No moderation errors",
+                "qualityPassedDesc": "No moderation errors from admins or distribution systems."
             },
             "createErrorsModal": {
                 "title": "Add release error",
@@ -2756,7 +2756,9 @@
             "WAIT_PARTNER_PROCESS": "Wait partner process",
             "CREATE_METADATA_ON_SERVER": "Create metadata on server",
             "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
-            "SYNC_RESULT_TO_RELEASE": "Sync result to release"
+            "SYNC_RESULT_TO_RELEASE": "Sync result to release",
+            "REVIEW_RELEASE": "Review release",
+            "GET_RESULT_IMPORT_CI": "Get result import CI"
         },
         "action": {
             "markCompleted": "Mark completed"

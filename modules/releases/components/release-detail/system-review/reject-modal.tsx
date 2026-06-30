@@ -43,7 +43,6 @@ export default function RejectModal({
                 onCancel();
             }}
             okText={messages('release.systemReview.rejectModal.confirmReject')}
-            okButtonProps={{ danger: true }}
             cancelText={messages('common.cancel')}
             onOk={handleOk}
         >

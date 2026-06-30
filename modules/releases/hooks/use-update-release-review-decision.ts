@@ -26,6 +26,9 @@ export const useUpdateReleaseReviewDecision = () => {
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.enrichedErrors(),
         });
+        queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.releaseReviews(),
+        });
 
         handleSuccess(data?.data);
         onSuccess?.(data?.data?.data);

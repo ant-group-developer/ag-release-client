@@ -1,6 +1,7 @@
 'use client';
 
 import AppForm from '@/components/ui/antd-form/form';
+import { LOCALHOST } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
 import { useApiNotify } from '@/hooks/use-api-notify';
@@ -8,7 +9,6 @@ import { Link } from '@/i18n/routing';
 import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
 import { useResolveDomain } from '@/modules/tenant/hooks/use-resolve-domain';
 import { Alert, Button, Input, theme } from 'antd';
-import { LOCALHOST } from '@/constants/common';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
@@ -24,7 +24,7 @@ export default function SignInPage() {
     const currentDomain = useCurrentDomain();
     const { domainData } = useResolveDomain(
         currentDomain,
-        Boolean(currentDomain)
+        false
     );
 
     const [isLoading, setIsLoading] = useState(false);
@@ -55,11 +55,13 @@ export default function SignInPage() {
                 password: values.password,
                 redirect: false,
                 callbackUrl,
-                ...(customDomain && customDomain !== LOCALHOST ? { customDomain } : {}),
+                ...(customDomain && customDomain !== LOCALHOST
+                    ? { customDomain }
+                    : {}),
             });
 
             if (result?.error) {
-                handleError(result.error);
+                // handleError(result.error);
                 const newUrl = `${window.location.pathname}?error=${encodeURIComponent(result.error)}`;
                 window.history.replaceState(null, '', newUrl);
             } else if (result?.ok && result?.url) {

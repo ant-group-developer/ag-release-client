@@ -15,7 +15,7 @@ import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-d
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
-import { RELEASE_ROUTE_ACTION, RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASE_ROUTE_ACTION, RELEASES_STATUS, RELEASES_TABS } from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import {
     ReleaseFormStoreData,
@@ -80,6 +80,14 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
     const coreDetailTabsNavigate = isCreateReleasePage
         ? APP_ROUTES.RELEASES_CREATE
         : getReleaseTabRoute(releaseId, RELEASES_TABS.CORE_DETAIL);
+
+    // apis
+    const {
+        releaseData,
+        isLoading: isReleaseDataLoading,
+        error,
+    } = useGetDetailRelease(releaseId);
+
     const items: TabsProps['items'] = [
         {
             key: RELEASES_TABS.CORE_DETAIL,
@@ -210,38 +218,35 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                       ),
                       disabled: isDisableTab,
                   },
-                  {
-                      key: RELEASES_TABS.SYSTEM_REVIEW,
-                      label: (
-                          <Link
-                              className={cn(
-                                  isDisableTab ? 'pointer-events-none' : ''
-                              )}
-                              href={getReleaseTabRoute(
-                                  releaseId,
-                                  RELEASES_TABS.SYSTEM_REVIEW
-                              )}
-                          >
-                              <div className="flex items-center gap-1">
-                                  <ShieldCheck size={SIZE_ICON} />
-                                  <span>
-                                      {messages('common.systemReview')}
-                                  </span>
-                              </div>
-                          </Link>
-                      ),
-                      disabled: isDisableTab,
-                  },
+                  ...(releaseData?.status !== RELEASES_STATUS.DRAFT
+                      ? [
+                            {
+                                key: RELEASES_TABS.SYSTEM_REVIEW,
+                                label: (
+                                    <Link
+                                        className={cn(
+                                            isDisableTab ? 'pointer-events-none' : ''
+                                        )}
+                                        href={getReleaseTabRoute(
+                                            releaseId,
+                                            RELEASES_TABS.SYSTEM_REVIEW
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-1">
+                                            <ShieldCheck size={SIZE_ICON} />
+                                            <span>
+                                                {messages('common.systemReview')}
+                                            </span>
+                                        </div>
+                                    </Link>
+                                ),
+                                disabled: isDisableTab,
+                            },
+                        ]
+                      : []),
               ]
             : []),
     ];
-
-    // apis
-    const {
-        releaseData,
-        isLoading: isReleaseDataLoading,
-        error,
-    } = useGetDetailRelease(releaseId);
 
     useEffect(() => {
         const getActiveTab = () => {
