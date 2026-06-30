@@ -5,7 +5,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link } from '@/i18n/routing';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASES_TABS, RELEASE_ERROR_SUBMISSION_STATUS } from '@/modules/releases/enums';
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { Checkbox, Popconfirm } from 'antd';
@@ -55,7 +55,7 @@ export default function EnrichedErrorList({
                 items: [
                     {
                         id: id,
-                        isFixed: true,
+                        submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
                     },
                 ],
             },
@@ -72,7 +72,7 @@ export default function EnrichedErrorList({
         setIsUpdatingAll(true);
         const items = errors.map((err) => ({
             id: err.id,
-            isFixed: true,
+            submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
         }));
         bulkUpdateReleaseErrors({
             payload: { items },
@@ -84,6 +84,7 @@ export default function EnrichedErrorList({
             },
         });
     };
+
 
     return (
         <li className="space-y-2">

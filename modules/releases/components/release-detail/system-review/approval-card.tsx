@@ -1,69 +1,68 @@
 'use client';
 
-import { Button, Card, Popconfirm, Tag, theme } from 'antd';
-import {
-    AlertTriangle,
-    CheckCircle,
-    Clock,
-    Shield,
-    XCircle,
-} from 'lucide-react';
-import { cn } from '@/helpers/common';
-import { EXECUTION_STATUS, AuditLog } from './types';
-import AuditLogTable from './audit-log-table';
+import { SIZE_ICON } from '@/constants/common';
+import { showNotification } from '@/helpers/messages-helper';
+import { RELEASE_REVIEW_STATUS } from '@/modules/releases/enums';
+import { useUpdateReleaseReviewDecision } from '@/modules/releases/hooks/use-update-release-review-decision';
+import { Button, Card, Popconfirm, theme } from 'antd';
+import { CheckCircle, History, Shield, XCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import RejectModal from './reject-modal';
+import ReviewHistoryModal from './review-history-modal';
 
 interface ApprovalCardProps {
-    executionStatus: EXECUTION_STATUS;
-    rejectionReason: string;
+    releaseId: string;
     releaseEnrichedErrorsCount: number;
-    auditLogs: AuditLog[];
-    onApprove: () => void;
-    onRejectClick: () => void;
-    onReset: () => void;
 }
 
 export default function ApprovalCard({
-    executionStatus,
-    rejectionReason,
+    releaseId,
     releaseEnrichedErrorsCount,
-    auditLogs,
-    onApprove,
-    onRejectClick,
-    onReset,
 }: ApprovalCardProps) {
+    const messages = useTranslations();
     const { token } = theme.useToken();
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
-    // Render tag trạng thái
-    const renderStatusTag = (status: EXECUTION_STATUS) => {
-        switch (status) {
-            case EXECUTION_STATUS.EXECUTED:
-                return (
-                    <Tag color="success">
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                            <CheckCircle size={14} />
-                            ĐÃ DUYỆT THỰC THI
-                        </span>
-                    </Tag>
+    // Mutation xử lý cập nhật quyết định duyệt
+    const { updateReleaseReviewDecision, isPending: isUpdatingReviewDecision } =
+        useUpdateReleaseReviewDecision();
+
+    // Xử lý duyệt thực thi
+    const handleApprove = () => {
+        updateReleaseReviewDecision({
+            id: releaseId,
+            payload: {
+                status: RELEASE_REVIEW_STATUS.COMPLETED,
+            },
+            onSuccess: () => {
+                showNotification(
+                    'success',
+                    messages('release.systemReview.approveSuccess')
                 );
-            case EXECUTION_STATUS.REJECTED:
-                return (
-                    <Tag color="error">
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                            <XCircle size={14} />
-                            ĐÃ TỪ CHỐI THỰC THI
-                        </span>
-                    </Tag>
+            },
+        });
+    };
+
+    // Xử lý từ chối
+    const handleRejectSubmit = (note: string) => {
+        updateReleaseReviewDecision({
+            id: releaseId,
+            payload: {
+                status: RELEASE_REVIEW_STATUS.FAILED,
+                note,
+            },
+            onSuccess: () => {
+                setIsRejectModalOpen(false);
+                showNotification(
+                    'warning',
+                    messages('release.systemReview.rejectSuccess')
                 );
-            default:
-                return (
-                    <Tag color="processing">
-                        <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                            <Clock size={14} />
-                            ĐANG CHỜ DUYỆT
-                        </span>
-                    </Tag>
-                );
-        }
+            },
+        });
     };
 
     return (
@@ -73,106 +72,111 @@ export default function ApprovalCard({
             title={
                 <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
                     <Shield className="text-blue-500" size={20} />
-                    <span>Duyệt phát hành</span>
+                    <span>{messages('release.systemReview.title')}</span>
                 </div>
+            }
+            extra={
+                <Button
+                    type="text"
+                    icon={
+                        <div>
+                            <History size={SIZE_ICON} />
+                        </div>
+                    }
+                    onClick={() => setIsHistoryModalOpen(true)}
+                    className="flex items-center gap-1 font-semibold text-blue-500 hover:text-blue-600"
+                >
+                    {messages('common.history')}
+                </Button>
             }
         >
             <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-12">
                 <div className="flex flex-col gap-2 md:col-span-8">
-                    <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-500">
-                            Trạng thái hiện tại:
-                        </span>
-                        {renderStatusTag(executionStatus)}
-                    </div>
-
-                    {rejectionReason && (
-                        <div className="mt-2 flex items-start gap-2 rounded-lg border border-red-100 bg-red-50 p-3 text-red-700">
-                            <AlertTriangle
-                                size={18}
-                                className="mt-0.5 shrink-0"
-                            />
-                            <div>
-                                <span className="font-bold">
-                                    Lý do từ chối:{' '}
-                                </span>
-                                <span>{rejectionReason}</span>
-                            </div>
-                        </div>
-                    )}
                     <p className="mt-1 text-xs text-gray-400">
-                        * Lưu ý: Khi duyệt thực thi, bản phát hành sẽ được xác
-                        nhận đủ điều kiện và gửi sang tiến trình nén/đẩy metadata
-                        DDEX sang các DSPs đã chọn.
+                        {messages('release.systemReview.executionNote')}
                     </p>
                 </div>
 
                 <div className="flex flex-wrap justify-end gap-2 md:col-span-4">
-                    {executionStatus === EXECUTION_STATUS.PENDING ? (
-                        <>
+                    <>
+                        <PermissionGate permission={PERMISSION.RELEASE_REVIEW.APPROVE}>
                             <Popconfirm
                                 title={
                                     releaseEnrichedErrorsCount > 0
-                                        ? 'Cảnh báo: Bản phát hành vẫn còn lỗi chưa sửa!'
-                                        : 'Xác nhận duyệt thực thi?'
+                                        ? messages(
+                                              'release.systemReview.confirmApproveWithErrors'
+                                          )
+                                        : messages(
+                                              'release.systemReview.confirmApprove'
+                                          )
                                 }
                                 description={
                                     releaseEnrichedErrorsCount > 0
-                                        ? 'Hệ thống phát hiện lỗi chất lượng chưa giải quyết. Bạn có chắc chắn vẫn muốn duyệt phát hành này?'
-                                        : 'Hành động này sẽ duyệt phát hành và bắt đầu tiến trình đẩy nhạc.'
+                                        ? messages(
+                                              'release.systemReview.confirmApproveDescWithErrors'
+                                          )
+                                        : messages(
+                                              'release.systemReview.confirmApproveDesc'
+                                          )
                                 }
-                                onConfirm={onApprove}
+                                onConfirm={handleApprove}
                                 okText={
                                     releaseEnrichedErrorsCount > 0
-                                        ? 'Vẫn duyệt'
-                                        : 'Đồng ý'
+                                        ? messages(
+                                              'release.systemReview.stillApprove'
+                                          )
+                                        : messages('common.submit')
                                 }
-                                cancelText="Hủy"
+                                cancelText={messages('common.cancel')}
                                 okButtonProps={
                                     releaseEnrichedErrorsCount > 0
-                                        ? { danger: true }
-                                        : undefined
+                                        ? {
+                                              danger: true,
+                                              loading: isUpdatingReviewDecision,
+                                          }
+                                        : { loading: isUpdatingReviewDecision }
                                 }
+                                disabled={isUpdatingReviewDecision}
                             >
                                 <Button
                                     type="primary"
-                                    danger={releaseEnrichedErrorsCount > 0}
-                                    className={cn(
-                                        'flex items-center gap-1 border-none font-semibold',
-                                        releaseEnrichedErrorsCount > 0
-                                            ? 'bg-red-600 hover:bg-red-500'
-                                            : 'bg-emerald-600 hover:bg-emerald-500'
-                                    )}
+                                    loading={isUpdatingReviewDecision}
+                                    disabled={isUpdatingReviewDecision}
                                 >
                                     <CheckCircle size={16} />
-                                    Duyệt thực thi
+                                    {messages('release.systemReview.approve')}
                                 </Button>
                             </Popconfirm>
+                        </PermissionGate>
 
+                        <PermissionGate permission={PERMISSION.RELEASE_REVIEW.REJECT}>
                             <Button
                                 danger
-                                onClick={onRejectClick}
+                                onClick={() => setIsRejectModalOpen(true)}
+                                disabled={isUpdatingReviewDecision}
                                 className="flex items-center gap-1 font-semibold"
                             >
                                 <XCircle size={16} />
-                                Từ chối duyệt
+                                {messages('release.systemReview.reject')}
                             </Button>
-                        </>
-                    ) : (
-                        <Button
-                            onClick={onReset}
-                            type="dashed"
-                            className="flex items-center gap-1"
-                        >
-                            <Clock size={14} />
-                            Đặt lại trạng thái chờ duyệt
-                        </Button>
-                    )}
+                        </PermissionGate>
+                    </>
                 </div>
             </div>
 
-            {/* BẢNG LỊCH SỬ DUYỆT */}
-            <AuditLogTable auditLogs={auditLogs} />
+            {/* MODAL LỊCH SỬ DUYỆT */}
+            <ReviewHistoryModal
+                releaseId={releaseId}
+                open={isHistoryModalOpen}
+                onCancel={() => setIsHistoryModalOpen(false)}
+            />
+
+            {/* MODAL TỪ CHỐI DUYỆT */}
+            <RejectModal
+                open={isRejectModalOpen}
+                onCancel={() => setIsRejectModalOpen(false)}
+                onReject={handleRejectSubmit}
+            />
         </Card>
     );
 }

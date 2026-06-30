@@ -17,6 +17,7 @@ export enum TYPE_MODAL_RELEASE {
     BULK_SUBMIT = 'BULK_SUBMIT_RELEASE',
     BULK_DELETE = 'BULK_DELETE_RELEASE',
     DELETE_REPORT = 'DELETE_REPORT_RELEASE',
+    CREATE_ERROR = 'CREATE_ERROR_RELEASE',
 }
 
 export enum RELEASE_ROUTE_ACTION {
@@ -141,4 +142,39 @@ export enum RELEASE_MADE_FOR_KIDS {
     YES = 'YES',
     NO = 'NO',
     CHANNEL_DEFAULT = 'CHANNEL_DEFAULT',
+}
+
+export enum RELEASE_ERROR_SUBMISSION_STATUS {
+    OPEN = 'OPEN',
+    FIXED = 'FIXED',
+}
+
+export enum RELEASE_ERROR_APPROVAL_STATUS {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+}
+
+export enum RELEASE_ERROR_TYPE {
+    ADMIN_CREATE = 'ADMIN_CREATE',
+    IMPORT_CI = 'IMPORT_CI',
+    QA_FLAG_CI = 'QA_FLAG_CI',
+}
+
+export enum RELEASE_ERROR_ORDER_FIELD {
+    CREATED_AT = 'releaseError.createdAt',
+    UPDATED_AT = 'releaseError.updatedAt',
+    MESSAGE = 'releaseError.message',
+    MESSAGE_CODE = 'releaseError.messageCode',
+    TYPE = 'releaseError.type',
+    SUBMISSION_STATUS = 'releaseError.submissionStatus',
+    APPROVAL_STATUS = 'releaseError.approvalStatus',
+}
+
+export enum RELEASE_REVIEW_STATUS {
+    PENDING = 'PENDING',
+    PROCESSING = 'PROCESSING',
+    COMPLETED = 'COMPLETED',
+    FAILED = 'FAILED',
+    CANCEL = 'CANCEL',
 }

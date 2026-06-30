@@ -2,7 +2,14 @@ import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleaseEnrichedError, ReleasesData, VideoData } from '.';
-import { RELEASES_TYPE, RELEASE_TYPE } from '../enums';
+import {
+    RELEASES_TYPE,
+    RELEASE_ERROR_APPROVAL_STATUS,
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    RELEASE_ERROR_TYPE,
+    RELEASE_REVIEW_STATUS,
+    RELEASE_TYPE,
+} from '../enums';
 
 interface CreateStandardReleaseDraftPayload {
     title: string;
@@ -54,11 +61,34 @@ export interface BulkDeleteRelease extends CommonFunction {
 
 export interface BulkUpdateReleaseErrorItem {
     id: ReleaseEnrichedError['id'];
-    isFixed: boolean;
+    submissionStatus?: RELEASE_ERROR_SUBMISSION_STATUS;
+    approvalStatus?: RELEASE_ERROR_APPROVAL_STATUS;
 }
 
 export interface BulkUpdateReleaseErrorsPayload {
     items: BulkUpdateReleaseErrorItem[];
+}
+
+export interface CreateReleaseErrorItem {
+    releaseId: ReleasesData['id'];
+    releaseExecutionId?: string;
+    stepId?: string;
+    releaseReviewId?: string;
+    messageCode?: string;
+    message: string;
+    page?: string;
+    field?: string;
+    trackId?: string;
+    type?: RELEASE_ERROR_TYPE;
+}
+
+export interface BulkCreateReleaseErrorsPayload {
+    items: CreateReleaseErrorItem[];
+}
+
+export interface UpdateReleaseReviewDecisionPayload {
+    status: RELEASE_REVIEW_STATUS.COMPLETED | RELEASE_REVIEW_STATUS.FAILED;
+    note?: string;
 }
 
 export interface SyncReleaseDraftToTracksPayload {

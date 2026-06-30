@@ -25,7 +25,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
     const columns: ProColumns<LogsData>[] = [
         {
             title: messages('log.columns.level'),
-            dataIndex: 'level',
+            dataIndex: LOG_SORT_FIELD.LOG_LEVEL,
             width: 120,
             align: 'center',
             ellipsis: true,
@@ -61,7 +61,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         },
         {
             title: messages('log.columns.type'),
-            dataIndex: 'type',
+            dataIndex: LOG_SORT_FIELD.LOG_TYPE,
             width: 120,
             align: 'center',
             ellipsis: true,
@@ -83,7 +83,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         },
         {
             title: messages('log.columns.module'),
-            dataIndex: 'module',
+            dataIndex: LOG_SORT_FIELD.LOG_MODULE,
             width: 200,
             ellipsis: true,
             sorter: true,
@@ -155,7 +155,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            dataIndex: 'createdAt',
+            dataIndex: LOG_SORT_FIELD.LOG_CREATED_AT,
             align: 'center',
             width: 180,
             sorter: true,

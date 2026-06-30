@@ -3,9 +3,13 @@
 import IconButton from '@/components/ui/button/icon-button';
 import { ScrollArea } from '@/components/ui/scroll/scroll-area';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { cn } from '@/helpers/common';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { RELEASE_ROUTE_ACTION } from '@/modules/releases/enums';
+import {
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    RELEASE_ROUTE_ACTION,
+} from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
@@ -38,7 +42,8 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
     const { releaseEnrichedErrorsData, isFetching: isFetchingEnrichedErrors } =
         useReleaseEnrichedErrors({
             id: formValues?.id as string,
-            isFixed: false,
+            submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.OPEN,
+            pageSize: PAGE_SIZE_EXTRA_LARGE,
         });
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
