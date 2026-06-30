@@ -2,7 +2,7 @@ import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleaseEnrichedError, ReleasesData, VideoData } from '.';
-import { RELEASES_TYPE, RELEASE_TYPE } from '../enums';
+import { RELEASE_ERROR_SUBMISSION_STATUS, RELEASES_TYPE, RELEASE_TYPE } from '../enums';
 
 interface CreateStandardReleaseDraftPayload {
     title: string;
@@ -54,7 +54,7 @@ export interface BulkDeleteRelease extends CommonFunction {
 
 export interface BulkUpdateReleaseErrorItem {
     id: ReleaseEnrichedError['id'];
-    isFixed: boolean;
+    submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS;
 }
 
 export interface BulkUpdateReleaseErrorsPayload {

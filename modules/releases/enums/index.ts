@@ -142,3 +142,32 @@ export enum RELEASE_MADE_FOR_KIDS {
     NO = 'NO',
     CHANNEL_DEFAULT = 'CHANNEL_DEFAULT',
 }
+
+export enum RELEASE_ERROR_SUBMISSION_STATUS {
+    OPEN = 'OPEN',
+    FIXED = 'FIXED',
+}
+
+export enum RELEASE_ERROR_APPROVAL_STATUS {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+}
+
+export enum RELEASE_ERROR_TYPE {
+    ADMIN_CREATE = 'ADMIN_CREATE',
+    IMPORT_CI = 'IMPORT_CI',
+    QA_FLAG_CI = 'QA_FLAG_CI',
+}
+
+export enum RELEASE_ERROR_ORDER_FIELD {
+    CREATED_AT = 'releaseError.createdAt',
+    UPDATED_AT = 'releaseError.updatedAt',
+    MESSAGE = 'releaseError.message',
+    MESSAGE_CODE = 'releaseError.messageCode',
+    TYPE = 'releaseError.type',
+    SUBMISSION_STATUS = 'releaseError.submissionStatus',
+    APPROVAL_STATUS = 'releaseError.approvalStatus',
+}
+
+

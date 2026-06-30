@@ -11,7 +11,15 @@ import { TrackData } from '@/modules/tracks/types';
 import { FileBucket } from '@/modules/upload/types/data';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { RELEASE_TIME_MODE, RELEASE_TYPE, RELEASES_STATUS } from '../enums';
+import {
+    RELEASE_ERROR_APPROVAL_STATUS,
+    RELEASE_ERROR_ORDER_FIELD,
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    RELEASE_ERROR_TYPE,
+    RELEASE_TIME_MODE,
+    RELEASE_TYPE,
+    RELEASES_STATUS,
+} from '../enums';
 
 export interface ReleaseCoverArt {
     '75x75': string | null;
@@ -164,6 +172,15 @@ export interface ReleaseEnrichedError {
     page: string;
     field: string;
     isFixed: boolean;
+}
+
+export interface UseReleaseEnrichedErrorsParams extends CommonParams {
+    releaseId: string;
+    keyword?: string;
+    submissionStatus?: RELEASE_ERROR_SUBMISSION_STATUS;
+    approvalStatus?: RELEASE_ERROR_APPROVAL_STATUS;
+    type?: RELEASE_ERROR_TYPE;
+    fieldOrder?: RELEASE_ERROR_ORDER_FIELD;
 }
 
 export type { TrackData } from '@/modules/tracks/types';

@@ -1,26 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { releasesApi } from '../apis';
 import { releasesQueryKeys } from '../constants/query-keys';
-import { ReleasesData } from '../types';
+import { UseReleaseEnrichedErrorsParams } from '../types';
 
-interface UseReleaseEnrichedErrorsParams {
-    id: ReleasesData['id'];
-    isFixed?: boolean;
-}
-
-export const useReleaseEnrichedErrors = ({
-    id,
-    isFixed,
-}: UseReleaseEnrichedErrorsParams) => {
+export const useReleaseEnrichedErrors = (
+    params: UseReleaseEnrichedErrorsParams
+) => {
     const { data, ...res } = useQuery({
-        queryKey: releasesQueryKeys.enrichedError(id, isFixed),
-        queryFn: () => releasesApi.getEnrichedErrors(id, isFixed),
+        queryKey: releasesQueryKeys.enrichedError(params),
+        queryFn: () => releasesApi.getEnrichedErrors(params),
         placeholderData: (prev) => prev,
-        enabled: !!id,
+        enabled: !!params?.releaseId,
     });
 
     return {
-        releaseEnrichedErrorsData: data?.data?.data ?? [],
+        releaseEnrichedErrorsData: data?.data?.data?.items ?? [],
+        metadata: data?.data?.data?.metadata,
         ...res,
     };
 };
+

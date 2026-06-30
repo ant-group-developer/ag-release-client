@@ -9,6 +9,7 @@ import {
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
+    UseReleaseEnrichedErrorsParams,
 } from '../types';
 import {
     BulkSubmitRelease,
@@ -93,14 +94,11 @@ export const releasesApi = {
         }
     },
 
-    getEnrichedErrors: (id: ReleasesData['id'], isFixed?: boolean) => {
-        return axiosInstance.get<DetailResponse<ReleaseEnrichedError[]>>(
+    getEnrichedErrors: (params: UseReleaseEnrichedErrorsParams) => {
+        return axiosInstance.get<PaginationResponse<ReleaseEnrichedError>>(
             RELEASE_ENRICHED_ERRORS_API_PATH,
             {
-                params: {
-                    [RELEASE_ENRICHED_ERRORS_PARAMS.RELEASE_ID]: id,
-                    isFixed,
-                },
+                params,
             }
         );
     },

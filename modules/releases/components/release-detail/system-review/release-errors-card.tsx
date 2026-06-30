@@ -1,20 +1,28 @@
 'use client';
 
-import { Alert, Button, Card, Checkbox, Popconfirm, Table, Tag, theme, Tooltip } from 'antd';
-import { CheckCircle, ExternalLink, Loader2, PackageX } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { Link } from '@/i18n/routing';
 import { RELEASES_TABS } from '@/modules/releases/enums';
 import { ReleaseEnrichedError } from '@/modules/releases/types';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import {
+    Alert,
+    Button,
+    Card,
+    Checkbox,
+    Popconfirm,
+    Table,
+    Tag,
+    theme,
+    Tooltip,
+} from 'antd';
+import { CheckCircle, ExternalLink, Loader2, PackageX } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface ReleaseErrorsCardProps {
     releaseId: string;
     releaseEnrichedErrorsData: ReleaseEnrichedError[];
     isFetchingEnrichedErrors: boolean;
     isUpdatingErrors: boolean;
-    updatingErrorId: string | null;
-    isUpdatingAll: boolean;
     onUpdateError: (id: string) => void;
     onUpdateAllErrors: () => void;
 }
@@ -24,8 +32,6 @@ export default function ReleaseErrorsCard({
     releaseEnrichedErrorsData,
     isFetchingEnrichedErrors,
     isUpdatingErrors,
-    updatingErrorId,
-    isUpdatingAll,
     onUpdateError,
     onUpdateAllErrors,
 }: ReleaseErrorsCardProps) {
@@ -98,8 +104,6 @@ export default function ReleaseErrorsCard({
             width: '20%',
             align: 'center' as const,
             render: (record: ReleaseEnrichedError) => {
-                const isUpdating =
-                    isUpdatingErrors && updatingErrorId === record.id;
                 const canLink =
                     !!record.page &&
                     !!record.field &&
@@ -122,18 +126,12 @@ export default function ReleaseErrorsCard({
                         )}
 
                         <Tooltip title={messages('common.markAsResolved')}>
-                            {isUpdating ? (
-                                <Loader2 className="h-4 w-4 animate-spin text-emerald-600 dark:text-emerald-400" />
-                            ) : (
-                                <Checkbox
-                                    checked={false}
-                                    disabled={isUpdatingErrors}
-                                    onChange={() =>
-                                        onUpdateError(record.id)
-                                    }
-                                    className="transition-transform hover:scale-105"
-                                />
-                            )}
+                            <Checkbox
+                                checked={false}
+                                disabled={isUpdatingErrors}
+                                onChange={() => onUpdateError(record.id)}
+                                className="transition-transform hover:scale-105"
+                            />
                         </Tooltip>
                     </div>
                 );
@@ -172,11 +170,9 @@ export default function ReleaseErrorsCard({
                         <Button
                             type="link"
                             disabled={isUpdatingErrors}
+                            loading={isUpdatingErrors}
                             className="flex items-center gap-1 p-0 text-xs font-semibold text-blue-500 hover:text-blue-600 disabled:opacity-50"
                         >
-                            {isUpdatingAll && (
-                                <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                            )}
                             {messages('common.markAllAsResolved')}
                         </Button>
                     </Popconfirm>
@@ -195,20 +191,17 @@ export default function ReleaseErrorsCard({
                     type="success"
                     showIcon
                     icon={
-                        <CheckCircle
-                            size={18}
-                            className="text-emerald-500"
-                        />
+                        <CheckCircle size={18} className="text-emerald-500" />
                     }
                     className="rounded-lg border border-emerald-100 bg-emerald-50/50"
                 />
             ) : (
                 <div className="flex flex-col gap-4">
                     <p className="text-sm text-gray-500">
-                        Dưới đây là các lỗi được hệ thống tự động phát hiện trong
-                        các phần nhập liệu hoặc kiểm duyệt nội dung. Bạn có thể
-                        bấm &quot;Sửa&quot; để đi tới tab sửa lỗi hoặc tích chọn để
-                        đánh dấu đã xử lý xong.
+                        Dưới đây là các lỗi được hệ thống tự động phát hiện
+                        trong các phần nhập liệu hoặc kiểm duyệt nội dung. Bạn
+                        có thể bấm &quot;Sửa&quot; để đi tới tab sửa lỗi hoặc
+                        tích chọn để đánh dấu đã xử lý xong.
                     </p>
                     <Table
                         columns={errorColumns}
