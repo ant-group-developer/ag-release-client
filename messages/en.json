@@ -2022,7 +2022,7 @@
                 "expired": "Expired"
             },
             "autoSetup": {
-                "title": "⚡ Auto setup via Cloudflare",
+                "title": "Auto setup via Cloudflare",
                 "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
                 "button": "Connect Cloudflare Account"
             },
