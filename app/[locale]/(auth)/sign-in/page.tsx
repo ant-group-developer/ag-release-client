@@ -8,6 +8,7 @@ import { Link } from '@/i18n/routing';
 import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
 import { useResolveDomain } from '@/modules/tenant/hooks/use-resolve-domain';
 import { Alert, Button, Input, theme } from 'antd';
+import { LOCALHOST } from '@/constants/common';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
@@ -47,13 +48,14 @@ export default function SignInPage() {
         setIsLoading(true);
 
         const callbackUrl = `${window.location.origin}${APP_ROUTES.DASHBOARD}`;
+        const customDomain = domainData?.domain ?? currentDomain;
         try {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
                 redirect: true,
                 callbackUrl,
-                customDomain: domainData?.domain ?? currentDomain,
+                ...(customDomain && customDomain !== LOCALHOST ? { customDomain } : {}),
             });
 
             if (result?.error) {
