@@ -53,13 +53,17 @@ export default function SignInPage() {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
-                redirect: true,
+                redirect: false,
                 callbackUrl,
                 ...(customDomain && customDomain !== LOCALHOST ? { customDomain } : {}),
             });
 
             if (result?.error) {
                 handleError(result.error);
+                const newUrl = `${window.location.pathname}?error=${encodeURIComponent(result.error)}`;
+                window.history.replaceState(null, '', newUrl);
+            } else if (result?.ok && result?.url) {
+                window.location.href = result.url;
             }
         } catch (error: any) {
             handleError(error);

@@ -119,6 +119,7 @@ export interface VideoData {
     partnerCustomId2?: string;
     fileId?: string;
     videoFile?: FileBucket;
+    label?: string;
 }
 
 export interface ReleasesDataSimple
