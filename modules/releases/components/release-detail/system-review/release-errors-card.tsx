@@ -1,17 +1,15 @@
 'use client';
 
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_RELEASE, RELEASE_ERROR_APPROVAL_STATUS } from '@/modules/releases/enums';
+import { TYPE_MODAL_RELEASE, RELEASE_ERROR_APPROVAL_STATUS, RELEASE_ERROR_SUBMISSION_STATUS } from '@/modules/releases/enums';
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { Alert, Button, Card, theme } from 'antd';
 import { CheckCircle, Loader2, PackageX, Plus } from 'lucide-react';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import ReleaseErrorsTable from './release-errors-table';
 import { useTranslations } from 'next-intl';
-
-
-// Wait, let's verify if import path is correct: use-bulk-update-release-errors
-// Yes: useBulkUpdateReleaseErrors is in @/modules/releases/hooks/use-bulk-update-release-errors
 
 interface ReleaseErrorsCardProps {
     releaseId: string;
@@ -31,14 +29,17 @@ export default function ReleaseErrorsCard({
 
     const handleUpdateError = (
         id: string,
-        approvalStatus: RELEASE_ERROR_APPROVAL_STATUS
+        payload: {
+            approvalStatus?: RELEASE_ERROR_APPROVAL_STATUS;
+            submissionStatus?: RELEASE_ERROR_SUBMISSION_STATUS;
+        }
     ) => {
         bulkUpdateReleaseErrors({
             payload: {
                 items: [
                     {
                         id,
-                        approvalStatus,
+                        ...payload,
                     },
                 ],
             },
@@ -58,19 +59,21 @@ export default function ReleaseErrorsCard({
                 </div>
             }
             extra={
-                <div className="flex items-center gap-3">
-                    <Button
-                        size="small"
-                        type="primary"
-                        onClick={() =>
-                            openModal(TYPE_MODAL_RELEASE.CREATE_ERROR)
-                        }
-                        className="flex items-center gap-1"
-                    >
-                        <Plus size={14} />
-                        {messages('release.systemReview.errorsCard.addError')}
-                    </Button>
-                </div>
+                <PermissionGate permission={PERMISSION.RELEASE_REVIEW.CREATE}>
+                    <div className="flex items-center gap-3">
+                        <Button
+                            size="small"
+                            type="primary"
+                            onClick={() =>
+                                openModal(TYPE_MODAL_RELEASE.CREATE_ERROR)
+                            }
+                            className="flex items-center gap-1"
+                        >
+                            <Plus size={14} />
+                            {messages('release.systemReview.errorsCard.addError')}
+                        </Button>
+                    </div>
+                </PermissionGate>
             }
         >
             {isFetchingEnrichedErrors &&

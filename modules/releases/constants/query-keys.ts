@@ -1,5 +1,5 @@
 import { QUERY_KEY } from '@/constants/query-key';
-import { ReleaseEnrichedErrorFilter, ReleasesDataFilter } from '../types';
+import { ReleaseEnrichedErrorFilter, ReleasesDataFilter, ReleaseReviewFilter } from '../types';
 
 export const releasesQueryKeys = {
     all: [QUERY_KEY.RELEASES.KEY] as const,
@@ -35,4 +35,14 @@ export const releasesQueryKeys = {
         [...releasesQueryKeys.all, QUERY_KEY.RELEASES.GET_CAPTIONS] as const,
     captionList: (id: string, type?: string) =>
         [...releasesQueryKeys.captions(), id, type] as const,
+
+    releaseReviews: () =>
+        [
+            ...releasesQueryKeys.all,
+            QUERY_KEY.RELEASES.GET_RELEASE_REVIEWS,
+        ] as const,
+    releaseReviewList: (params?: ReleaseReviewFilter) =>
+        params
+            ? ([...releasesQueryKeys.releaseReviews(), params] as const)
+            : releasesQueryKeys.releaseReviews(),
 };

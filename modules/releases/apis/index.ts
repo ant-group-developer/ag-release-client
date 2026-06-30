@@ -10,6 +10,8 @@ import {
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
+    ReleaseReview,
+    ReleaseReviewFilter,
 } from '../types';
 import {
     BulkCreateReleaseErrorsPayload,
@@ -257,5 +259,14 @@ export const releasesApi = {
 
     deleteReleaseCaption: (id: string) => {
         return axiosInstance.delete(`/releases/release-captions/${id}`);
+    },
+
+    getReleaseReviews: (params: ReleaseReviewFilter) => {
+        return axiosInstance.get<PaginationResponse<ReleaseReview>>(
+            '/release-reviews',
+            {
+                params,
+            }
+        );
     },
 };

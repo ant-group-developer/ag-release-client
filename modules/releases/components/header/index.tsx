@@ -15,6 +15,8 @@ import {
     SoundOutlined,
     TagOutlined,
     ImportOutlined,
+    AuditOutlined,
+    WarningOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
 import { Layers } from 'lucide-react';
@@ -170,6 +172,34 @@ export default function ReleasesHeaderV2({
                 options: isImportedFromReportOptions,
             },
             {
+                key: 'needsReview',
+                label: messages('common.releaseReview'),
+                icon: <AuditOutlined />,
+                type: 'checkbox',
+                filterKey: 'needsReview',
+                options: [
+                    {
+                        label: messages('common.needsReview'),
+                        value: 'true',
+                    },
+                ],
+                isCommaSeparated: true,
+            },
+            {
+                key: 'hasError',
+                label: messages('common.releaseError'),
+                icon: <WarningOutlined />,
+                type: 'checkbox',
+                filterKey: 'hasError',
+                options: [
+                    {
+                        label: messages('common.hasError'),
+                        value: 'true',
+                    },
+                ],
+                isCommaSeparated: true,
+            },
+            {
                 key: 'dateCreated',
                 label: messages('common.dateCreated'),
                 icon: <CalendarOutlined />,
@@ -227,6 +257,16 @@ export default function ReleasesHeaderV2({
         const copy = { ...dataFilter };
         if (copy.isImportedFromReport === 'all') {
             copy.isImportedFromReport = undefined;
+        }
+        if (copy.needsReview === true || copy.needsReview === 'true') {
+            copy.needsReview = 'true';
+        } else {
+            copy.needsReview = undefined;
+        }
+        if (copy.hasError === true || copy.hasError === 'true') {
+            copy.hasError = 'true';
+        } else {
+            copy.hasError = undefined;
         }
         return copy;
     }, [dataFilter]);

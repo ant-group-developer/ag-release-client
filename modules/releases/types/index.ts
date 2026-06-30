@@ -12,13 +12,13 @@ import { FileBucket } from '@/modules/upload/types/data';
 import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams } from '@/types/api';
 import {
+    RELEASE_ERROR_APPROVAL_STATUS,
+    RELEASE_ERROR_ORDER_FIELD,
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    RELEASE_ERROR_TYPE,
     RELEASE_TIME_MODE,
     RELEASE_TYPE,
     RELEASES_STATUS,
-    RELEASE_ERROR_SUBMISSION_STATUS,
-    RELEASE_ERROR_APPROVAL_STATUS,
-    RELEASE_ERROR_TYPE,
-    RELEASE_ERROR_ORDER_FIELD,
     RELEASE_REVIEW_STATUS,
 } from '../enums';
 
@@ -139,6 +139,8 @@ export interface ReleasesDataFilter extends CommonParams {
     isVariousArtist?: string;
     idInclude?: string;
     isImportedFromReport?: string;
+    needsReview?: boolean | string;
+    hasError?: boolean | string;
 }
 
 export interface ReleaseTerritory extends CommonParams {
@@ -171,7 +173,11 @@ export interface ReleaseEnrichedError extends CommonAttribute {
     releaseExecutionId?: string | null;
     stepId?: string | null;
     submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS;
+    submitterId?: string | null;
+    submitter?: UserData | null;
     approvalStatus: RELEASE_ERROR_APPROVAL_STATUS;
+    reviewerId?: string | null;
+    reviewer?: UserData | null;
     messageCode?: string | null;
     message: string;
     page?: string | null;
@@ -199,3 +205,20 @@ export interface ReleaseCaptionData extends CommonAttribute {
     file?: FileBucket;
     language?: LanguagesData;
 }
+
+export interface ReleaseReview extends CommonAttribute {
+    releaseId: string;
+    releaseExecutionId: string | null;
+    stepId: string | null;
+    reviewerId: string | null;
+    note: string | null;
+    status: RELEASE_REVIEW_STATUS;
+    release: ReleasesData;
+    reviewer: UserData | null;
+}
+
+export interface ReleaseReviewFilter extends CommonParams {
+    releaseId?: string;
+    status?: RELEASE_REVIEW_STATUS;
+}
+

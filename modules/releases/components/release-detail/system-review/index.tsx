@@ -2,13 +2,14 @@
 
 import { PATH_PARAMS } from '@/enums/routes';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import {
+    RELEASE_ERROR_APPROVAL_STATUS,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
-import { RELEASE_ERROR_APPROVAL_STATUS } from '@/modules/releases/enums';
 import { SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
 import { useParams } from 'next/navigation';
-import AcrCloudCard from './acr-cloud-card';
 import ApprovalCard from './approval-card';
 import CreateErrorsModal from './create-errors-modal';
 import ReleaseErrorsCard from './release-errors-card';
@@ -81,7 +82,7 @@ export default function SystemReviewTab() {
             />
 
             {/* CARD 2: KẾT QUẢ QUÉT NHẠC TỪ ARC (ACRCLOUD) */}
-            <AcrCloudCard tracks={tracksToShow} isLoading={isReleaseLoading} />
+            {/* <AcrCloudCard tracks={tracksToShow} isLoading={isReleaseLoading} /> */}
 
             {/* MODAL TẠO LỖI PHÁT HÀNH */}
             {typeModal === TYPE_MODAL_RELEASE.CREATE_ERROR && (
