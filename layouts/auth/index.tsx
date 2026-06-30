@@ -10,8 +10,8 @@ import { PropsWithChildren } from 'react';
 export default function AuthLayout({ children }: PropsWithChildren) {
     const { token } = theme.useToken();
     const currentDomain = useCurrentDomain();
-    const { domainData, isLoading } = useResolveDomain(currentDomain);
-    const isDomainLoading = !currentDomain || isLoading;
+    const { domainData, isLoading, isError } = useResolveDomain(currentDomain);
+    const isDomainLoading = !currentDomain || (isLoading && !isError);
 
     if (isDomainLoading) {
         return (

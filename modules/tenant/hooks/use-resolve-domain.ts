@@ -8,6 +8,7 @@ export function useResolveDomain(domain: string, enabled = true) {
         queryKey: tenantQueryKeys.resolveDomain(domain),
         queryFn: () => tenantApi.resolveDomain({ domain }),
         enabled: Boolean(domain) && enabled,
+        refetchOnMount: false,
     });
 
     return {

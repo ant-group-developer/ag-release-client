@@ -97,6 +97,8 @@
         },
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details",
+        "domain_restricted": "Tài khoản không có quyền vào domain này",
+        "domain_not_active": "Tên miền này không hoạt động",
         "message": {
             "error": {
                 "invalidCredentials": "Email hoặc mật khẩu không đúng.",

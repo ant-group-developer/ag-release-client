@@ -97,6 +97,8 @@
         },
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details",
+        "domain_restricted": "Account does not have permission to access this domain",
+        "domain_not_active": "This domain is not active",
         "message": {
             "error": {
                 "invalidCredentials": "Invalid email or password.",
