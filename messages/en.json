@@ -314,7 +314,9 @@
         "exportExcel": "Export excel",
         "exportReport": "Export report",
         "export": "Export",
+        "import": "Import",
         "time": "Time",
+        "modifyTime": "Modify time",
         "copy": "Copy",
         "from": "from",
         "to": "to",
@@ -3121,6 +3123,14 @@
             "existsOnCi": "Exists on CI",
             "notFoundOnCi": "Not found on CI"
         },
-        "latestSyncedAt": "Latest sync"
+        "latestSyncedAt": "Latest sync",
+        "export": {
+            "exportOrder": "Export order",
+            "exportTask": "Export task",
+            "requestorOrganisation": "Requestor organisation",
+            "deliveryPoint": "Delivery point",
+            "deliveryPointStatus": "Delivery point status",
+            "transferEndDate": "Transfer end date"
+        }
     }
 }

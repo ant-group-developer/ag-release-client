@@ -314,7 +314,9 @@
         "exportExcel": "Xuất excel",
         "exportReport": "Xuất báo cáo",
         "export": "Xuất",
+        "import": "Nhập",
         "time": "Thời gian",
+        "modifyTime": "Thời gian sửa đổi",
         "copy": "Sao chép",
         "from": "Từ",
         "to": "Đến",
@@ -3094,6 +3096,14 @@
             "existsOnCi": "Tồn tại trên CI",
             "notFoundOnCi": "Không tìm thấy trên CI"
         },
-        "latestSyncedAt": "Lần đồng bộ cuối"
+        "latestSyncedAt": "Lần đồng bộ cuối",
+        "export": {
+            "exportOrder": "Đơn hàng xuất",
+            "exportTask": "Nhiệm vụ xuất",
+            "requestorOrganisation": "Tổ chức yêu cầu",
+            "deliveryPoint": "Điểm phân phối",
+            "deliveryPointStatus": "Trạng thái điểm phân phối",
+            "transferEndDate": "Ngày kết thúc giao"
+        }
     }
 }

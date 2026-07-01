@@ -13,7 +13,7 @@ export const useGetReleaseCiDataDetail = (
         queryFn: () => releaseDistributionApi.getReleaseCiDataDetail(id),
         enabled: (options?.enabled ?? true) && !!id,
     });
-    const releaseCiDataDetail = data?.data;
+    const releaseCiDataDetail = data?.data?.data;
 
     return {
         releaseCiDataDetail,

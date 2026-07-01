@@ -1,5 +1,5 @@
 import axiosInstance from '@/api/axios-auth';
-import { PaginationResponse } from '@/types/api';
+import { DetailResponse, PaginationResponse } from '@/types/api';
 import { ReleaseCiData, ReleaseCiDataFilter } from '../types';
 
 export const releaseDistributionApi = {
@@ -18,6 +18,8 @@ export const releaseDistributionApi = {
         return axiosInstance.post('/release-ci-data/bulk-sync-data-ci');
     },
     getReleaseCiDataDetail: (id: string) => {
-        return axiosInstance.get<ReleaseCiData>(`/release-ci-data/${id}`);
+        return axiosInstance.get<DetailResponse<ReleaseCiData>>(
+            `/release-ci-data/${id}`
+        );
     },
 };

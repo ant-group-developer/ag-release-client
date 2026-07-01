@@ -1,44 +1,10 @@
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 
-export interface ReleaseCiExportRawDataLink {
+export interface ReleaseCiRawDataLink {
     href: string;
 }
 
-export interface ReleaseCiExportRawDataLinks {
-    self: ReleaseCiExportRawDataLink;
-    export: ReleaseCiExportRawDataLink;
-}
-
-export interface ReleaseCiExportOrganisation {
-    type: string;
-    name: string;
-    DPID: string;
-    merlin_member_id: string | null;
-    id: number;
-    modify_time: string;
-    organisation_id: string;
-}
-
-export interface ReleaseCiExportExportRequest {
-    type: string;
-    name: string;
-    asset_type: string;
-    completion_date: string | null;
-    identifier: string;
-    notes: string | null;
-    number_of_tracks: number;
-    status: string;
-    export_external_id: string;
-    number_of_services: number;
-    task: string;
-    total_tracks: number;
-    organisation: ReleaseCiExportOrganisation;
-    id: number;
-    modify_time: string;
-    export_id: string;
-}
-
-export interface ReleaseCiExportReleaseFormat {
+export interface ReleaseCiRawDataReleaseFormat {
     type: string;
     additional_identifier: string;
     barcode: string;
@@ -72,7 +38,41 @@ export interface ReleaseCiExportReleaseFormat {
     release_start_date: string;
 }
 
-export interface ReleaseCiExportExportBatch {
+export interface ReleaseCiExportRawDataLinks {
+    self: ReleaseCiRawDataLink;
+    export: ReleaseCiRawDataLink;
+}
+
+export interface ReleaseCiExportOrganisation {
+    type: string;
+    name: string;
+    DPID: string;
+    merlin_member_id: string | null;
+    id: number;
+    modify_time: string;
+    organisation_id: string;
+}
+
+export interface ReleaseCiExportRequest {
+    type: string;
+    name: string;
+    asset_type: string;
+    completion_date: string | null;
+    identifier: string;
+    notes: string | null;
+    number_of_tracks: number;
+    status: string;
+    export_external_id: string;
+    number_of_services: number;
+    task: string;
+    total_tracks: number;
+    organisation: ReleaseCiExportOrganisation;
+    id: number;
+    modify_time: string;
+    export_id: string;
+}
+
+export interface ReleaseCiExportBatch {
     type: string;
     exported_products_count: number;
     exported_tracks_count: number;
@@ -98,9 +98,9 @@ export interface ReleaseCiExportMusicService {
 export interface ReleaseCiExportEmbeddedItem {
     type: string;
     status: string;
-    exportRequest: ReleaseCiExportExportRequest;
-    releaseFormat: ReleaseCiExportReleaseFormat;
-    exportBatch: ReleaseCiExportExportBatch;
+    exportRequest: ReleaseCiExportRequest;
+    releaseFormat: ReleaseCiRawDataReleaseFormat;
+    exportBatch: ReleaseCiExportBatch;
     musicService: ReleaseCiExportMusicService;
     deliver_desire_id: string;
     status_cause: string;
@@ -114,6 +114,102 @@ export interface ReleaseCiExportRawData {
     _embedded: ReleaseCiExportEmbeddedItem[];
 }
 
+export interface ReleaseCiImportRawDataLinks {
+    self: ReleaseCiRawDataLink;
+    file: ReleaseCiRawDataLink;
+    import: ReleaseCiRawDataLink;
+}
+
+export interface ReleaseCiImportEntity {
+    type: string;
+    name: string;
+    asset_type: string;
+    completion_date: string | null;
+    identifier: string;
+    notes: string | null;
+    number_of_tracks: number;
+    status: string;
+    task: string;
+    number_of_releases: number;
+    priority: string;
+    import_external_identifier: string;
+    releaseFormats: ReleaseCiRawDataReleaseFormat[];
+    id: number;
+    create_time: string;
+    modify_time: string;
+    import_id: string;
+}
+
+export interface ReleaseCiImportFileLinks {
+    self: ReleaseCiRawDataLink;
+    download: ReleaseCiRawDataLink;
+    files_api: ReleaseCiRawDataLink;
+}
+
+export interface ReleaseCiImportFileDescription {
+    warnings: string[];
+}
+
+export interface ReleaseCiImportFile {
+    sha512: string;
+    status: string;
+    caption: string;
+    crc32: number;
+    credit: string | null;
+    digest: string;
+    directory: string | null;
+    encoded_by_us: boolean;
+    extension: string;
+    filesize: number;
+    height: number | null;
+    mime_major: string;
+    mime_minor: string;
+    stored_in_ceph: number;
+    stored_in_mogile: boolean;
+    subject_date: string | null;
+    uploader_ip: string | null;
+    width: number | null;
+    storage_backend: string;
+    track_count: number;
+    import_status: string;
+    status_cause: string;
+    package_id: string;
+    filesApi: ReleaseCiRawDataLink;
+    _links: ReleaseCiImportFileLinks;
+    type: string;
+    file_id: string;
+    asset_controller_id: string;
+    creator_id: string | null;
+    description: ReleaseCiImportFileDescription[];
+    name: string;
+    id: number;
+    create_time: string;
+    modify_time: string;
+    import_file_id: string;
+    GTIN: string;
+}
+
+export interface ReleaseCiImportEmbeddedItem {
+    type: string;
+    batch_size: number;
+    external_identifier: string;
+    status: string;
+    status_cause: string;
+    importEntity: ReleaseCiImportEntity;
+    import_file: ReleaseCiImportFile[];
+    id: number;
+    create_time: string;
+    modify_time: string;
+    internal_batch_identifier: string;
+    import_external_identifier: string;
+    notes: string | null;
+    _links: ReleaseCiImportRawDataLinks;
+}
+
+export interface ReleaseCiImportRawData {
+    _embedded: ReleaseCiImportEmbeddedItem[];
+}
+
 export interface ReleaseCiData {
     id: string;
     createdAt: string;
@@ -123,7 +219,7 @@ export interface ReleaseCiData {
     status: string;
     release: ReleasesData;
     exportRawData: ReleaseCiExportRawData;
+    importRawData: ReleaseCiImportRawData;
 }
 
 export type ReleaseCiDataFilter = ReleasesDataFilter;
-

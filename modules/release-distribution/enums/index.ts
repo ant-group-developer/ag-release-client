@@ -9,3 +9,14 @@ export enum RELEASE_CI_DATA_STATUS {
     EXISTS_ON_CI = 'EXISTS_ON_CI',
     NOT_FOUND_ON_CI = 'NOT_FOUND_ON_CI',
 }
+
+export enum RELEASE_CI_IMPORT_STATUS {
+    COMPLETE = 'complete',
+    PROBLEM = 'problem',
+}
+
+export enum RELEASE_CI_EXPORT_STATUS {
+    SYSFAIL = 'sysfail',
+    INVALID = 'invalid',
+    COMPLETE = 'complete',
+}

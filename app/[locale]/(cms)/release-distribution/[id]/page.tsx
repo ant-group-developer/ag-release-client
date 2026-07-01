@@ -2,11 +2,12 @@
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import { APP_ROUTES } from '@/enums/routes';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import ExportTab from '@/modules/release-distribution/components/detail/export-tab';
 import ImportTab from '@/modules/release-distribution/components/detail/import-tab';
+import { useGetReleaseCiDataDetail } from '@/modules/release-distribution/hooks/use-get-release-ci-data-detail';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Tabs } from 'antd';
+import { Card, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {
@@ -16,7 +17,7 @@ type Props = {
 export default function ReleaseDistributionDetailPage({ params }: Props) {
     const id = params?.id;
     const messages = useTranslations();
-    const router = useRouter();
+    const { releaseCiDataDetail, isFetching } = useGetReleaseCiDataDetail(id);
 
     const breadcrumbItems = [
         {
@@ -27,20 +28,30 @@ export default function ReleaseDistributionDetailPage({ params }: Props) {
             ),
         },
         {
-            title: `${messages('common.detail')} #${id}`,
+            title: `${messages('common.detail')}`,
         },
     ];
 
-    const tabItems = [
-        {
-            key: 'export',
-            label: 'Export',
-            children: <ExportTab />,
-        },
+    const tabItems: TabsProps['items'] = [
         {
             key: 'import',
-            label: 'Import',
-            children: <ImportTab />,
+            label: messages('common.import'),
+            children: (
+                <ImportTab
+                    data={releaseCiDataDetail?.importRawData}
+                    loading={isFetching}
+                />
+            ),
+        },
+        {
+            key: 'export',
+            label: messages('common.export'),
+            children: (
+                <ExportTab
+                    data={releaseCiDataDetail?.exportRawData}
+                    loading={isFetching}
+                />
+            ),
         },
     ];
 

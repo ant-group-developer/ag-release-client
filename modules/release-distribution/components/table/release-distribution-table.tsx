@@ -13,9 +13,8 @@ import {
     ReleaseCiDataFilter,
 } from '@/modules/release-distribution/types';
 import { RELEASES_TABLE_KEY } from '@/modules/releases/enums';
-import { ReleasesData } from '@/modules/releases/types';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag, theme } from 'antd';
+import { Tag, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import DspStatusModal from './dsp-status-modal';
@@ -37,7 +36,7 @@ export default function ReleaseDistributionTable({
     const messages = useTranslations();
     const { token } = theme.useToken();
     const [isDspModalOpen, setIsDspModalOpen] = useState(false);
-    const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
+    const [selectedRecord, setSelectedRecord] = useState<ReleaseCiData | null>(
         null
     );
 
@@ -85,14 +84,33 @@ export default function ReleaseDistributionTable({
             },
         },
         {
+            title: 'UPC',
+            key: 'upc',
+            align: 'center',
+            width: 150,
+            render: (_, record) => (
+                <Typography.Text copyable={!!record?.release?.upc}>
+                    {record?.release?.upc || '-'}
+                </Typography.Text>
+            ),
+        },
+        {
             title: messages('release.dspLive'),
             key: 'dsp',
             dataIndex: RELEASES_TABLE_KEY.DSP,
             align: 'center',
             width: 150,
             render: (_, record) => {
-                const release = record.release;
-                if (!release) return null;
+                const items = record?.exportRawData?._embedded ?? [];
+                const total = items.length;
+
+                const successTotal = items.filter(
+                    (item) =>
+                        item.status === 'complete' &&
+                        item.exportBatch?.batch_transfer_status ===
+                            'transferred'
+                ).length;
+                if (!items) return '-';
                 return (
                     <div
                         data-stop-row-click="true"
@@ -102,11 +120,11 @@ export default function ReleaseDistributionTable({
                             className="cursor-pointer hover:text-blue-500"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setSelectedRecord(release);
+                                setSelectedRecord(record);
                                 setIsDspModalOpen(true);
                             }}
                         >
-                            5/10
+                            {`${successTotal}/${total}`}
                         </span>
                     </div>
                 );
@@ -139,11 +157,7 @@ export default function ReleaseDistributionTable({
                     label: status || 'Unknown',
                 };
 
-                return (
-                    <Tag color={config.color} bordered={false}>
-                        {config.label}
-                    </Tag>
-                );
+                return <Tag color={config.color}>{config.label}</Tag>;
             },
         },
         {

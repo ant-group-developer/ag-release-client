@@ -7,7 +7,6 @@ import { validatePassword } from '@/helpers/validation';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { Link } from '@/i18n/routing';
 import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
-import { useResolveDomain } from '@/modules/tenant/hooks/use-resolve-domain';
 import { Alert, Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -22,7 +21,7 @@ interface FormValues {
 export default function SignInPage() {
     const { token } = theme.useToken();
     const currentDomain = useCurrentDomain();
-    const { domainData } = useResolveDomain(currentDomain);
+    // const { domainData } = useResolveDomain(currentDomain);
 
     const [isLoading, setIsLoading] = useState(false);
     const messages = useTranslations();
@@ -45,15 +44,14 @@ export default function SignInPage() {
         setIsLoading(true);
 
         const callbackUrl = `${window.location.origin}${APP_ROUTES.DASHBOARD}`;
-        const customDomain = domainData?.domain ?? currentDomain;
         try {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
                 redirect: false,
                 callbackUrl,
-                ...(customDomain && customDomain !== LOCALHOST
-                    ? { customDomain }
+                ...(currentDomain && currentDomain !== LOCALHOST
+                    ? { currentDomain }
                     : {}),
             });
 

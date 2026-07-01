@@ -1,139 +1,98 @@
 'use client';
 
+import { formattedDate } from '@/helpers/common';
+import { RELEASE_CI_IMPORT_STATUS } from '@/modules/release-distribution/enums';
+import {
+    ReleaseCiImportEmbeddedItem,
+    ReleaseCiImportRawData,
+} from '@/modules/release-distribution/types';
 import { Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 
-enum IMPORT_STATUS {
-    COMPLETE = 'complete',
-    PROBLEM = 'problem',
-}
+type Props = {
+    data?: ReleaseCiImportRawData;
+    loading?: boolean;
+};
 
-const IMPORT_COLUMNS_TITLE = {
-    BATCH_EXTERNAL_ID: 'Batch external ID',
-    REQUEST_ID: 'Request ID',
-    MODIFY_TIME: 'Modify time',
-    IMPORT_FILE_ID: 'Import file ID',
-    UPC: 'upc',
-    STATUS: 'status',
-} as const;
+export default function ImportTab({ data, loading }: Props) {
+    const messages = useTranslations();
 
-interface ImportRecord {
-    key: string;
-    batchExternalId: string;
-    requestId: string;
-    modifyTime: string;
-    importFileId: string;
-    upc: string;
-    status: IMPORT_STATUS;
-}
+    const importColumns: ColumnsType<ReleaseCiImportEmbeddedItem> = useMemo(
+        () => [
+            {
+                title: 'Batch external ID',
+                key: 'batchExternalId',
+                render: (_, record) => record.import_external_identifier ?? '-',
+            },
+            {
+                title: 'Request ID',
+                key: 'requestId',
+                render: (_, record) => record.importEntity?.import_id ?? '-',
+            },
 
-const mockImportData: ImportRecord[] = [
-    {
-        key: '1',
-        batchExternalId: '20260616202846501',
-        requestId: '118083900220192',
-        modifyTime: '2026-06-16 14:34:37',
-        importFileId: '118083900370238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.COMPLETE,
-    },
-    {
-        key: '2',
-        batchExternalId: '20260613124742375',
-        requestId: '118077415340192',
-        modifyTime: '2026-06-13 06:52:56',
-        importFileId: '118077415360238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.COMPLETE,
-    },
-    {
-        key: '3',
-        batchExternalId: '20260613111220054',
-        requestId: '118077297740192',
-        modifyTime: '2026-06-13 05:21:55',
-        importFileId: '118077297760238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.COMPLETE,
-    },
-    {
-        key: '4',
-        batchExternalId: '20260613001536662',
-        requestId: '118075403190192',
-        modifyTime: '2026-06-12 18:30:55',
-        importFileId: '118075403210238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.COMPLETE,
-    },
-    {
-        key: '5',
-        batchExternalId: '20260612190204308',
-        requestId: '118074119600192',
-        modifyTime: '2026-06-12 13:07:23',
-        importFileId: '118074119620238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.PROBLEM,
-    },
-    {
-        key: '6',
-        batchExternalId: '20260612112053245',
-        requestId: '118072799300192',
-        modifyTime: '2026-06-12 05:25:22',
-        importFileId: '118072799320238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.PROBLEM,
-    },
-    {
-        key: '7',
-        batchExternalId: '20260612104900207',
-        requestId: '118072770850192',
-        modifyTime: '2026-06-12 04:52:33',
-        importFileId: '118072770870238',
-        upc: '7316482525096',
-        status: IMPORT_STATUS.PROBLEM,
-    },
-];
+            {
+                title: 'Import file ID',
+                key: 'importFileId',
+                render: (_, record) => {
+                    const importFile = record.import_file?.[0];
 
-const importColumns = [
-    {
-        title: IMPORT_COLUMNS_TITLE.BATCH_EXTERNAL_ID,
-        dataIndex: 'batchExternalId',
-        key: 'batchExternalId',
-    },
-    {
-        title: IMPORT_COLUMNS_TITLE.REQUEST_ID,
-        dataIndex: 'requestId',
-        key: 'requestId',
-    },
-    {
-        title: IMPORT_COLUMNS_TITLE.MODIFY_TIME,
-        dataIndex: 'modifyTime',
-        key: 'modifyTime',
-    },
-    {
-        title: IMPORT_COLUMNS_TITLE.IMPORT_FILE_ID,
-        dataIndex: 'importFileId',
-        key: 'importFileId',
-    },
-    {
-        title: IMPORT_COLUMNS_TITLE.UPC,
-        dataIndex: 'upc',
-        key: 'upc',
-    },
-    {
-        title: IMPORT_COLUMNS_TITLE.STATUS,
-        dataIndex: 'status',
-        key: 'status',
-        render: (status: IMPORT_STATUS) => {
-            const color = status === IMPORT_STATUS.COMPLETE ? 'success' : 'error';
-            return <Tag color={color}>{status.toUpperCase()}</Tag>;
-        },
-    },
-];
+                    return (
+                        importFile?.import_file_id ?? importFile?.file_id ?? '-'
+                    );
+                },
+            },
+            {
+                title: 'UPC',
+                key: 'upc',
+                render: (_, record) => record.import_file?.[0]?.GTIN ?? '-',
+            },
+            {
+                title: messages('common.status'),
+                key: 'status',
+                render: (_, record) => {
+                    const status = record.status;
 
-export default function ImportTab() {
+                    if (!status) return '-';
+
+                    const config = {
+                        [RELEASE_CI_IMPORT_STATUS.COMPLETE]: {
+                            color: 'success',
+                            label: status,
+                        },
+                        [RELEASE_CI_IMPORT_STATUS.PROBLEM]: {
+                            color: 'error',
+                            label: status,
+                        },
+                    }[status as RELEASE_CI_IMPORT_STATUS] || {
+                        color: 'default',
+                        label: status,
+                    };
+
+                    return (
+                        <Tag color={config.color} className="capitalize">
+                            {config.label}
+                        </Tag>
+                    );
+                },
+            },
+            {
+                title: messages('common.modifyTime'),
+                key: 'modifyTime',
+                render: (_, record) => formattedDate(record.modify_time) ?? '-',
+            },
+        ],
+        [messages]
+    );
+
     return (
         <Table
-            dataSource={mockImportData}
+            sticky
+            rowKey={(record) => record.id}
+            dataSource={data?._embedded ?? []}
             columns={importColumns}
+            loading={loading}
             pagination={false}
             className="mt-2"
         />
