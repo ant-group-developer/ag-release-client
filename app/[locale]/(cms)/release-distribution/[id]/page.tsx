@@ -34,21 +34,21 @@ export default function ReleaseDistributionDetailPage({ params }: Props) {
 
     const tabItems: TabsProps['items'] = [
         {
-            key: 'import',
-            label: messages('common.import'),
-            children: (
-                <ImportTab
-                    data={releaseCiDataDetail?.importRawData}
-                    loading={isFetching}
-                />
-            ),
-        },
-        {
             key: 'export',
             label: messages('common.export'),
             children: (
                 <ExportTab
                     data={releaseCiDataDetail?.exportRawData}
+                    loading={isFetching}
+                />
+            ),
+        },
+        {
+            key: 'import',
+            label: messages('common.import'),
+            children: (
+                <ImportTab
+                    data={releaseCiDataDetail?.importRawData}
                     loading={isFetching}
                 />
             ),
