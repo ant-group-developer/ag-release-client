@@ -1,15 +1,14 @@
 'use client';
 
 import { SIZE_ICON } from '@/constants/common';
-import { showNotification } from '@/helpers/messages-helper';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { RELEASE_REVIEW_STATUS } from '@/modules/releases/enums';
 import { useUpdateReleaseReviewDecision } from '@/modules/releases/hooks/use-update-release-review-decision';
 import { Button, Card, Popconfirm, theme } from 'antd';
 import { CheckCircle, History, Shield, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 import RejectModal from './reject-modal';
 import ReviewHistoryModal from './review-history-modal';
 
@@ -39,10 +38,10 @@ export default function ApprovalCard({
                 status: RELEASE_REVIEW_STATUS.COMPLETED,
             },
             onSuccess: () => {
-                showNotification(
-                    'success',
-                    messages('release.systemReview.approveSuccess')
-                );
+                // showNotification(
+                //     'success',
+                //     messages('release.systemReview.approveSuccess')
+                // );
             },
         });
     };
@@ -57,10 +56,10 @@ export default function ApprovalCard({
             },
             onSuccess: () => {
                 setIsRejectModalOpen(false);
-                showNotification(
-                    'warning',
-                    messages('release.systemReview.rejectSuccess')
-                );
+                // showNotification(
+                //     'warning',
+                //     messages('release.systemReview.rejectSuccess')
+                // );
             },
         });
     };
@@ -99,7 +98,9 @@ export default function ApprovalCard({
 
                 <div className="flex flex-wrap justify-end gap-2 md:col-span-4">
                     <>
-                        <PermissionGate permission={PERMISSION.RELEASE_REVIEW.APPROVE}>
+                        <PermissionGate
+                            permission={PERMISSION.RELEASE_REVIEW.APPROVE}
+                        >
                             <Popconfirm
                                 title={
                                     releaseEnrichedErrorsCount > 0
@@ -128,14 +129,6 @@ export default function ApprovalCard({
                                         : messages('common.submit')
                                 }
                                 cancelText={messages('common.cancel')}
-                                okButtonProps={
-                                    releaseEnrichedErrorsCount > 0
-                                        ? {
-                                              danger: true,
-                                              loading: isUpdatingReviewDecision,
-                                          }
-                                        : { loading: isUpdatingReviewDecision }
-                                }
                                 disabled={isUpdatingReviewDecision}
                             >
                                 <Button
@@ -149,7 +142,9 @@ export default function ApprovalCard({
                             </Popconfirm>
                         </PermissionGate>
 
-                        <PermissionGate permission={PERMISSION.RELEASE_REVIEW.REJECT}>
+                        <PermissionGate
+                            permission={PERMISSION.RELEASE_REVIEW.REJECT}
+                        >
                             <Button
                                 danger
                                 onClick={() => setIsRejectModalOpen(true)}

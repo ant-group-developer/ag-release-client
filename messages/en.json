@@ -303,6 +303,7 @@
         "lastTimeUpdated": "Last time updated",
         "refresh": "Refresh",
         "retry": "Retry",
+        "resync": "Re-sync",
         "department": "Department",
         "icon": "Icon",
         "listLayout": "List layout",
@@ -314,7 +315,11 @@
         "exportExcel": "Export excel",
         "exportReport": "Export report",
         "export": "Export",
+        "import": "Import",
         "time": "Time",
+        "modifyTime": "Modify time",
+        "importStatus": "Last import",
+        "importTime": "Import time",
         "copy": "Copy",
         "from": "from",
         "to": "to",
@@ -369,6 +374,8 @@
         "iNo": "No.",
         "update": "Update",
         "bulkUpdate": "Bulk update",
+        "bulkCreate": "Bulk create",
+        "autoSyncCi": "Auto Sync CI",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
@@ -427,7 +434,11 @@
         "markAsResolved": "Mark as resolved",
         "markAllAsResolved": "Mark all done",
         "resolveAllErrorsConfirm": "Confirm all errors have been resolved, this action will update the error status",
-        "clickToUpdateErrorStatus": "Click here to update the status of this error"
+        "clickToUpdateErrorStatus": "Click here to update the status of this error",
+        "sortAsc": "Ascending",
+        "sortDesc": "Descending",
+        "sortOrder": "Sort order",
+        "sortField": "Sort by"
     },
     "country": {
         "label": "Country",
@@ -821,6 +832,7 @@
         "deleteSuccessfully": "Delete successfully!",
         "somethingWentWrong": "Something went wrong!",
         "updateSuccessfully": "Update successfully!",
+        "syncSuccessfully": "Synced successfully!",
         "eachLanguageCanOnlyHaveOneFile": "Each language can only have 1 file.",
         "pleaseLoginChannelAgain": "Please login again to get new token",
         "dataAlreadyExists": "Data already exists",
@@ -997,6 +1009,7 @@
             "matchedTracks": "Matched tracks"
         },
         "onlyDraftCanBeDeleted": "Only releases in Draft status can be deleted.",
+        "dspLive": "DSPs live",
         "audioLanguage": "Audio language",
         "metadataLanguageCountry": "Metadata language country",
         "metadataLanguage": "Metadata language",
@@ -1015,6 +1028,8 @@
         "importedFromReport": "Imported from report",
         "createdDirectly": "Created directly",
         "routeLabel": "Music releases",
+        "releaseDistribution": "Release Distribution",
+        "releaseDistributionRouteLabel": "Release Distribution",
         "create": "Create release",
         "latestReleases": "Latest releases",
         "name": "Release name",
@@ -1226,8 +1241,8 @@
             "errorsCard": {
                 "title": "Release errors ({count})",
                 "addError": "Add error",
-                "qualityPassed": "Quality check passed",
-                "qualityPassedDesc": "Excellent! No quality errors or metadata structure issues detected for this release. Eligible for distribution."
+                "qualityPassed": "No moderation errors",
+                "qualityPassedDesc": "No moderation errors from admins or distribution systems."
             },
             "createErrorsModal": {
                 "title": "Add release error",
@@ -2756,7 +2771,9 @@
             "WAIT_PARTNER_PROCESS": "Wait partner process",
             "CREATE_METADATA_ON_SERVER": "Create metadata on server",
             "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
-            "SYNC_RESULT_TO_RELEASE": "Sync result to release"
+            "SYNC_RESULT_TO_RELEASE": "Sync result to release",
+            "REVIEW_RELEASE": "Review release",
+            "GET_RESULT_IMPORT_CI": "Get result import CI"
         },
         "action": {
             "markCompleted": "Mark completed"
@@ -3107,5 +3124,22 @@
     },
     "report-import": {
         "configExcludePattern": "Configure Exclude Pattern"
+    },
+    "releaseCiData": {
+        "status": {
+            "existsOnCi": "Exists on CI",
+            "notFoundOnCi": "Not found on CI"
+        },
+        "latestSyncedAt": "Latest sync",
+        "neverExported": "Never exported",
+        "lastImportIsFailed": "Last import failed",
+        "export": {
+            "exportOrder": "Export order",
+            "exportTask": "Export task",
+            "requestorOrganisation": "Requestor organisation",
+            "deliveryPoint": "Delivery point",
+            "deliveryPointStatus": "Delivery point status",
+            "transferEndDate": "Transfer end date"
+        }
     }
 }

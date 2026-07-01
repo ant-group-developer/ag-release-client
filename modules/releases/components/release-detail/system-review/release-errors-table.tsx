@@ -2,6 +2,9 @@
 
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { Wrench, CheckCircle, XCircle } from 'lucide-react';
 import {
     RELEASE_ERROR_APPROVAL_STATUS,
     RELEASE_ERROR_SUBMISSION_STATUS,
@@ -11,8 +14,6 @@ import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { Button, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 
 interface ReleaseErrorsTableProps {
     data: ReleaseEnrichedError[];
@@ -170,10 +171,13 @@ export default function ReleaseErrorsTable({
                     <div className="flex items-center justify-end gap-2">
                         {record.submissionStatus !==
                             RELEASE_ERROR_SUBMISSION_STATUS.FIXED && (
-                            <PermissionGate permission={PERMISSION.RELEASE_REVIEW.CAN_FIX}>
+                            <PermissionGate
+                                permission={PERMISSION.RELEASE_REVIEW.CAN_FIX}
+                            >
                                 <Button
                                     size="small"
-                                    className="!border-blue-200 !bg-blue-50 !text-blue-700 hover:!border-blue-300 hover:!bg-blue-100"
+                                    type="primary"
+                                    className="flex items-center gap-1"
                                     onClick={() =>
                                         onUpdateError(record.id, {
                                             submissionStatus:
@@ -181,16 +185,22 @@ export default function ReleaseErrorsTable({
                                         })
                                     }
                                 >
-                                    {messages(
-                                        'release.error.submissionStatus.FIXED'
-                                    )}
+                                    <Wrench size={14} />
+                                    <span>
+                                        {messages(
+                                            'release.error.submissionStatus.FIXED'
+                                        )}
+                                    </span>
                                 </Button>
                             </PermissionGate>
                         )}
-                        <PermissionGate permission={PERMISSION.RELEASE_REVIEW.APPROVE}>
+                        <PermissionGate
+                            permission={PERMISSION.RELEASE_REVIEW.APPROVE}
+                        >
                             <Button
                                 size="small"
                                 type="primary"
+                                className="flex items-center gap-1 !bg-green-600 hover:!bg-green-700 !border-none !text-white"
                                 onClick={() =>
                                     onUpdateError(record.id, {
                                         approvalStatus:
@@ -198,13 +208,18 @@ export default function ReleaseErrorsTable({
                                     })
                                 }
                             >
-                                {messages('status.approve')}
+                                <CheckCircle size={14} />
+                                <span>{messages('status.approve')}</span>
                             </Button>
                         </PermissionGate>
-                        <PermissionGate permission={PERMISSION.RELEASE_REVIEW.REJECT}>
+                        <PermissionGate
+                            permission={PERMISSION.RELEASE_REVIEW.REJECT}
+                        >
                             <Button
                                 size="small"
+                                type="primary"
                                 danger
+                                className="flex items-center gap-1"
                                 onClick={() =>
                                     onUpdateError(record.id, {
                                         approvalStatus:
@@ -212,7 +227,8 @@ export default function ReleaseErrorsTable({
                                     })
                                 }
                             >
-                                {messages('status.reject')}
+                                <XCircle size={14} />
+                                <span>{messages('status.reject')}</span>
                             </Button>
                         </PermissionGate>
                     </div>

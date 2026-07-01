@@ -16,9 +16,10 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
+import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import {
     getReleaseDetailTabRoute,
-    getReleaseViewRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
@@ -28,6 +29,7 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import { CircleX } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
+import { useState } from 'react';
 import {
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
@@ -37,7 +39,40 @@ import {
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
+import DspStatusModal from './dsp-status-modal';
 import ReleaseTitleColumn from './title-column';
+
+function DspLiveCountCell({
+    releaseId,
+    onClick,
+}: {
+    releaseId: string;
+    onClick: () => void;
+}) {
+    const { releaseDsp, isLoading } = useGetListReleaseDsp(releaseId);
+
+    if (isLoading) {
+        return <span className="text-gray-400">...</span>;
+    }
+
+    const items = releaseDsp?.items ?? [];
+    const releasedCount = items.filter(
+        (item) => item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+    ).length;
+    const totalCount = items.length;
+
+    return (
+        <span
+            className="cursor-pointer hover:text-blue-500"
+            onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+            }}
+        >
+            {`${releasedCount}/${totalCount}`}
+        </span>
+    );
+}
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
     dataFilter: ReleasesDataFilter;
@@ -57,6 +92,10 @@ export default function ReleasesTable({
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
+    const [isDspModalOpen, setIsDspModalOpen] = useState(false);
+    const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
+        null
+    );
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
     const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
@@ -142,31 +181,52 @@ export default function ReleasesTable({
             },
         },
         {
-            title: 'UPC',
-            key: 'upc',
-            dataIndex: RELEASES_TABLE_KEY.UPC,
+            title: 'UPC / ' + messages('common.status'),
+            key: 'upc_status',
             align: 'left',
             width: 200,
-            render: (value, record) => (
-                <Paragraph
-                    data-stop-row-click="true"
-                    className="!mb-0"
-                    copyable={!!record?.upc}
-                >
-                    {record?.upc}
-                </Paragraph>
+            render: (_, record) => (
+                <div className="flex flex-col gap-1">
+                    {record?.upc ? (
+                        <Paragraph
+                            data-stop-row-click="true"
+                            className="!mb-0"
+                            copyable={{ text: record.upc }}
+                        >
+                            {record.upc}
+                        </Paragraph>
+                    ) : (
+                        '-'
+                    )}
+                    <div>
+                        <ReleaseStatusTag status={record?.status} />
+                    </div>
+                </div>
             ),
         },
-        {
-            title: messages('common.status'),
-            key: 'status',
-            dataIndex: RELEASES_TABLE_KEY.STATUS,
-            align: 'left',
-            width: 150,
-            render: (value, record) => {
-                return <ReleaseStatusTag status={record?.status} />;
-            },
-        },
+        // {
+        //     title: messages('release.dspLive'),
+        //     key: 'dsp',
+        //     dataIndex: RELEASES_TABLE_KEY.DSP,
+        //     align: 'center',
+        //     width: 150,
+        //     render: (_, record) => {
+        //         return (
+        //             <div
+        //                 data-stop-row-click="true"
+        //                 className="flex justify-center"
+        //             >
+        //                 <DspLiveCountCell
+        //                     releaseId={record.id}
+        //                     onClick={() => {
+        //                         setSelectedRecord(record);
+        //                         setIsDspModalOpen(true);
+        //                     }}
+        //                 />
+        //             </div>
+        //         );
+        //     },
+        // },
         {
             title: messages('release.trackCount'),
             key: 'tracks_count',
@@ -368,41 +428,50 @@ export default function ReleasesTable({
     }
 
     return (
-        // <div className="rounded-lg bg-white px-6 pt-2">
-        <AppProTable
-            headerTitle={messages('release.list')}
-            {...props}
-            pagination={false}
-            columns={column}
-            rowClassName={'group'}
-            className={`rounded-t-lg ${props?.className}`}
-            style={{
-                backgroundColor: token.colorBgContainer,
-                ...props?.style,
-            }}
-            columnsState={{
-                persistenceKey: 'releases-table-columns',
-                persistenceType: 'sessionStorage',
-                defaultValue: {
-                    tenant: { show: isSystemTenant },
-                    updatedAt: { show: false },
-                },
-            }}
-            // onRow={(record) => ({
-            //     onClick: (e) => {
-            //         const target = e.target as HTMLElement;
-            //         if (target.closest('[data-stop-row-click="true"]')) return;
+        <>
+            <AppProTable
+                headerTitle={messages('release.list')}
+                {...props}
+                pagination={false}
+                columns={column}
+                rowClassName={'group'}
+                className={`rounded-t-lg ${props?.className}`}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                    ...props?.style,
+                }}
+                columnsState={{
+                    persistenceKey: 'releases-table-columns',
+                    persistenceType: 'sessionStorage',
+                    defaultValue: {
+                        tenant: { show: isSystemTenant },
+                        updatedAt: { show: false },
+                        dsp: { show: true },
+                    },
+                }}
+                // onRow={(record) => ({
+                //     onClick: (e) => {
+                //         const target = e.target as HTMLElement;
+                //         if (target.closest('[data-stop-row-click="true"]')) return;
 
-            //         nProgress.start();
-            //         router.push(
-            //             getReleaseDetailTabRoute(
-            //                 record?.id,
-            //                 RELEASES_TABS.CORE_DETAIL
-            //             )
-            //         );
-            //     },
-            // })}
-        />
-        // </div>
+                //         nProgress.start();
+                //         router.push(
+                //             getReleaseDetailTabRoute(
+                //                 record?.id,
+                //                 RELEASES_TABS.CORE_DETAIL
+                //             )
+                //         );
+                //     },
+                // })}
+            />
+            <DspStatusModal
+                open={isDspModalOpen}
+                onCancel={() => {
+                    setIsDspModalOpen(false);
+                    setSelectedRecord(null);
+                }}
+                record={selectedRecord}
+            />
+        </>
     );
 }

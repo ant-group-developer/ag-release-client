@@ -303,6 +303,7 @@
         "lastTimeUpdated": "Lần cập nhật cuối",
         "refresh": "Làm mới",
         "retry": "Thử lại",
+        "resync": "Đồng bộ lại",
         "department": "Phòng ban",
         "icon": "Biểu tượng",
         "listLayout": "Bố cục dạng danh sách",
@@ -314,7 +315,11 @@
         "exportExcel": "Xuất excel",
         "exportReport": "Xuất báo cáo",
         "export": "Xuất",
+        "import": "Nhập",
         "time": "Thời gian",
+        "modifyTime": "Thời gian sửa đổi",
+        "importStatus": "Lần nhập cuối",
+        "importTime": "Thời gian nhập",
         "copy": "Sao chép",
         "from": "Từ",
         "to": "Đến",
@@ -368,6 +373,8 @@
         "iNo": "STT",
         "update": "Cập nhật",
         "bulkUpdate": "Cập nhật hàng loạt",
+        "bulkCreate": "Tạo hàng loạt",
+        "autoSyncCi": "Tự động đồng bộ CI",
         "create": "Thêm mới",
         "detail": "Chi tiết ",
         "delete": "Xoá",
@@ -427,7 +434,11 @@
         "markAllAsResolved": "Đánh dấu tất cả đã xong",
         "resolveAllErrorsConfirm": "Xác nhận đã xử lý hết các lỗi, hành động này sẽ cập nhật lại trạng thái lỗi",
         "confirm": "Đồng ý",
-        "clickToUpdateErrorStatus": "Nhấp vào đây để cập nhật trạng thái lỗi này"
+        "clickToUpdateErrorStatus": "Nhấp vào đây để cập nhật trạng thái lỗi này",
+        "sortAsc": "Tăng dần",
+        "sortDesc": "Giảm dần",
+        "sortOrder": "Thứ tự sắp xếp",
+        "sortField": "Sắp xếp theo"
     },
     "country": {
         "label": "Quốc gia",
@@ -818,6 +829,7 @@
         "deleteSuccessfully": "Xoá thành công!",
         "somethingWentWrong": "Đã xảy ra lỗi, vui lòng thử lại!",
         "updateSuccessfully": "Cập nhật thông tin thành công!",
+        "syncSuccessfully": "Đồng bộ thành công!",
         "eachLanguageCanOnlyHaveOneFile": "Mỗi ngôn ngữ chỉ được có 1 file",
         "pleaseLoginChannelAgain": "Vui lòng đăng nhập lại để lấy token mới",
         "dataAlreadyExists": "Dữ liệu đã tồn tại",
@@ -994,6 +1006,7 @@
             "matchedTracks": "Track khớp"
         },
         "onlyDraftCanBeDeleted": "Chỉ những phát hành ở trạng thái Nháp mới có thể bị xoá.",
+        "dspLive": "DSPs live",
         "audioLanguage": "Ngôn ngữ âm thanh",
         "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
         "metadataLanguage": "Ngôn ngữ metadata",
@@ -1012,6 +1025,8 @@
         "importedFromReport": "Nhập từ báo cáo",
         "createdDirectly": "Tạo trực tiếp",
         "routeLabel": "Phát hành âm nhạc",
+        "releaseDistribution": "Phân phối phát hành",
+        "releaseDistributionRouteLabel": "Phân phối phát hành",
         "create": "Tạo phát hành ",
         "latestReleases": "Phát hành gần đây",
         "name": "Tên phát hành",
@@ -1219,8 +1234,8 @@
             "errorsCard": {
                 "title": "Lỗi phát hành ({count})",
                 "addError": "Thêm lỗi",
-                "qualityPassed": "Đạt kiểm định chất lượng",
-                "qualityPassedDesc": "Tuyệt vời! Không phát hiện lỗi chất lượng hoặc cấu trúc metadata nào cho bản phát hành này. Đạt tiêu chuẩn phân phối."
+                "qualityPassed": "Không có lỗi kiểm duyệt",
+                "qualityPassedDesc": "Không có lỗi kiểm duyệt từ admin hay hệ thống phân phối."
             },
             "createErrorsModal": {
                 "title": "Thêm lỗi phát hành",
@@ -2731,7 +2746,9 @@
             "WAIT_PARTNER_PROCESS": "Chờ đối tác xử lý",
             "CREATE_METADATA_ON_SERVER": "Tạo metadata trên server",
             "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
-            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành"
+            "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành",
+            "REVIEW_RELEASE": "Duyệt phát hành",
+            "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI"
         },
         "action": {
             "markCompleted": "Đánh dấu hoàn thành"
@@ -3080,5 +3097,22 @@
     },
     "report-import": {
         "configExcludePattern": "Cấu hình mẫu loại trừ"
+    },
+    "releaseCiData": {
+        "status": {
+            "existsOnCi": "Tồn tại trên CI",
+            "notFoundOnCi": "Không tìm thấy trên CI"
+        },
+        "latestSyncedAt": "Lần đồng bộ cuối",
+        "neverExported": "Chưa từng export",
+        "lastImportIsFailed": "Lần nhập cuối thất bại",
+        "export": {
+            "exportOrder": "Đơn hàng xuất",
+            "exportTask": "Nhiệm vụ xuất",
+            "requestorOrganisation": "Tổ chức yêu cầu",
+            "deliveryPoint": "Điểm phân phối",
+            "deliveryPointStatus": "Trạng thái điểm phân phối",
+            "transferEndDate": "Ngày kết thúc giao"
+        }
     }
 }

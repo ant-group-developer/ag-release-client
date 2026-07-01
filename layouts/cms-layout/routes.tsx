@@ -160,6 +160,25 @@ export const adminRoutes: RouteNode[] = [
                 icon: DiscAlbum,
                 required: { permission: [PERMISSION.RELEASE_AUDIO.READ] },
             },
+            {
+                id: 'release-distribution',
+                type: 'link',
+                label: 'release.releaseDistributionRouteLabel',
+                title: 'Release Distribution',
+                href: APP_ROUTES.RELEASE_DISTRIBUTION,
+                icon: Globe,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'releaseDistributionDetail',
+                type: 'link',
+                label: 'release.releaseDistributionRouteLabel',
+                title: 'Release Distribution Detail',
+                hidden: true,
+                href: APP_ROUTES.RELEASE_DISTRIBUTION_DETAIL,
+                icon: Globe,
+                required: SYS_ADMIN_REQ,
+            },
 
             {
                 id: 'releaseDetail',

@@ -5,7 +5,7 @@ import { TYPE_MODAL_RELEASE, RELEASE_ERROR_APPROVAL_STATUS, RELEASE_ERROR_SUBMIS
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { Alert, Button, Card, theme } from 'antd';
-import { CheckCircle, Loader2, PackageX, Plus } from 'lucide-react';
+import { Info, Loader2, PackageX, Plus } from 'lucide-react';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import ReleaseErrorsTable from './release-errors-table';
@@ -85,12 +85,12 @@ export default function ReleaseErrorsCard({
                 <Alert
                     message={messages('release.systemReview.errorsCard.qualityPassed')}
                     description={messages('release.systemReview.errorsCard.qualityPassedDesc')}
-                    type="success"
+                    type="info"
                     showIcon
                     icon={
-                        <CheckCircle size={18} className="text-emerald-500" />
+                        <Info size={18} className="text-blue-500" />
                     }
-                    className="rounded-lg border border-emerald-100 bg-emerald-50/50"
+                    className="rounded-lg border border-blue-100 bg-blue-50/50"
                 />
             ) : (
                 <div className="flex flex-col gap-4">
