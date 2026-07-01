@@ -36,7 +36,7 @@ export default function DspStatusModal({
             <div className="py-2">
                 {record && (
                     <ExportTable
-                        dataSource={record?.exportRawData?._embedded ?? []}
+                        dataSource={record?.exportParsedData ?? []}
                         size="middle"
                         scroll={{
                             x: '70vh',
