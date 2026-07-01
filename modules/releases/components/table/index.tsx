@@ -17,7 +17,6 @@ import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
-import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
@@ -41,38 +40,6 @@ import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
 import DspStatusModal from './dsp-status-modal';
 import ReleaseTitleColumn from './title-column';
-
-function DspLiveCountCell({
-    releaseId,
-    onClick,
-}: {
-    releaseId: string;
-    onClick: () => void;
-}) {
-    const { releaseDsp, isLoading } = useGetListReleaseDsp(releaseId);
-
-    if (isLoading) {
-        return <span className="text-gray-400">...</span>;
-    }
-
-    const items = releaseDsp?.items ?? [];
-    const releasedCount = items.filter(
-        (item) => item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
-    ).length;
-    const totalCount = items.length;
-
-    return (
-        <span
-            className="cursor-pointer hover:text-blue-500"
-            onClick={(e) => {
-                e.stopPropagation();
-                onClick();
-            }}
-        >
-            {`${releasedCount}/${totalCount}`}
-        </span>
-    );
-}
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
     dataFilter: ReleasesDataFilter;
@@ -181,52 +148,61 @@ export default function ReleasesTable({
             },
         },
         {
-            title: 'UPC / ' + messages('common.status'),
-            key: 'upc_status',
+            title: 'UPC',
+            key: 'upc',
+            dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
             width: 200,
-            render: (_, record) => (
-                <div className="flex flex-col gap-1">
-                    {record?.upc ? (
-                        <Paragraph
-                            data-stop-row-click="true"
-                            className="!mb-0"
-                            copyable={{ text: record.upc }}
-                        >
-                            {record.upc}
-                        </Paragraph>
-                    ) : (
-                        '-'
-                    )}
-                    <div>
-                        <ReleaseStatusTag status={record?.status} />
-                    </div>
-                </div>
+            render: (value, record) => (
+                <Paragraph
+                    data-stop-row-click="true"
+                    className="!mb-0"
+                    copyable={!!record?.upc}
+                >
+                    {record?.upc}
+                </Paragraph>
             ),
         },
-        // {
-        //     title: messages('release.dspLive'),
-        //     key: 'dsp',
-        //     dataIndex: RELEASES_TABLE_KEY.DSP,
-        //     align: 'center',
-        //     width: 150,
-        //     render: (_, record) => {
-        //         return (
-        //             <div
-        //                 data-stop-row-click="true"
-        //                 className="flex justify-center"
-        //             >
-        //                 <DspLiveCountCell
-        //                     releaseId={record.id}
-        //                     onClick={() => {
-        //                         setSelectedRecord(record);
-        //                         setIsDspModalOpen(true);
-        //                     }}
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
+        {
+            title: messages('common.status'),
+            key: 'status',
+            dataIndex: RELEASES_TABLE_KEY.STATUS,
+            align: 'left',
+            width: 150,
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.status} />;
+            },
+        },
+        {
+            title: messages('release.dspLive'),
+            key: 'dsp',
+            dataIndex: RELEASES_TABLE_KEY.DSP,
+            align: 'center',
+            width: 150,
+            render: (_, record) => {
+                const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
+                const liveCount = releaseDspDeliveries.filter(
+                    (item) => item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                ).length;
+                const totalCount = releaseDspDeliveries.length;
+                return (
+                    <div
+                        data-stop-row-click="true"
+                        className="flex justify-center"
+                    >
+                        <span
+                            className="cursor-pointer hover:text-blue-500"
+                            onClick={() => {
+                                setSelectedRecord(record);
+                                setIsDspModalOpen(true);
+                            }}
+                        >
+                            {`${liveCount}/${totalCount}`}
+                        </span>
+                    </div>
+                );
+            },
+        },
         {
             title: messages('release.trackCount'),
             key: 'tracks_count',

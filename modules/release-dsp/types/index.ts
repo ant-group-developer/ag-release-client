@@ -10,6 +10,7 @@ export interface ReleaseDspData extends CommonAttribute {
     lastDeliveredAt: string | null;
     issues?: any;
     isActive: boolean;
+    hasLiveVersion: boolean;
 }
 
 export interface ReleaseDspDataFilter extends CommonParams {

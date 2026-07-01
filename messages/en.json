@@ -1721,7 +1721,8 @@
         "digitalServiceProviders": "Digital service providers",
         "lastEnqueue": "Last Enqueue",
         "lastDelivered": "Last Delivered",
-        "inactiveDsp": "This DSP is locked, cannot be distributed"
+        "inactiveDsp": "This DSP is locked, cannot be distributed",
+        "hasLiveVersion": "Has live version"
     },
     "formFields": {
         "contributorsMustIncludeProducer": "Contributors must include producer",

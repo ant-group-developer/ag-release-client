@@ -1,5 +1,4 @@
 import { formatCurrency, formattedNumber } from '@/helpers/common';
-import { Typography } from 'antd';
 
 const TWO_COLUMN_TOOLTIP_GRID_TEMPLATE = 'minmax(100px, 1fr) 96px';
 const THREE_COLUMN_TOOLTIP_GRID_TEMPLATE = 'minmax(160px, 1fr) 96px 96px';
@@ -61,43 +60,23 @@ export const CustomTooltip = ({
                 '#1890ff';
 
             return (
-                <div
-                    style={{
-                        backgroundColor: '#fff',
-                        padding: '8px 12px',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                        border: '1px solid #f0f0f0',
-                        display: 'flex',
-                        alignItems: 'center',
-                        minWidth: '130px',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                        }}
-                    >
+                <div className="flex min-w-[130px] items-center justify-between gap-3 rounded-lg border border-[#f0f0f0] bg-white px-3 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
+                    <div className="flex items-center gap-2">
                         <div
+                            className="h-2.5 w-2.5 rounded-full"
                             style={{
-                                width: '10px',
-                                height: '10px',
-                                borderRadius: '50%',
                                 backgroundColor: color,
                             }}
                         />
-                        <Typography.Text>{displayLabel}</Typography.Text>
+                        <span className="text-[13px] font-medium text-gray-700 dark:text-zinc-300">
+                            {displayLabel}
+                        </span>
                     </div>
-                    <Typography.Text
-                        style={{ marginLeft: '12px', fontWeight: 500 }}
-                    >
+                    <span className="ml-3 text-[13px] font-medium text-gray-900 dark:text-zinc-100">
                         {formatter
                             ? formatter(displayValue)
                             : formattedNumber(displayValue)}
-                    </Typography.Text>
+                    </span>
                 </div>
             );
         }
@@ -111,60 +90,24 @@ export const CustomTooltip = ({
         }, 0);
 
         return (
-            <div
-                style={{
-                    backgroundColor: '#fff',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    border: '1px solid #f0f0f0',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '6px',
-                    minWidth: '220px',
-                }}
-            >
+            <div className="flex min-w-[220px] flex-col gap-1.5 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
                 {label && (
-                    <Typography.Text
-                        style={{
-                            fontWeight: 600,
-                            fontSize: '13px',
-                            borderBottom: '1px solid #f0f0f0',
-                            paddingBottom: '4px',
-                            marginBottom: '2px',
-                        }}
-                    >
+                    <span className="mb-0.5 border-b border-[#f0f0f0] pb-1 text-[13px] font-semibold text-gray-900 dark:border-zinc-700 dark:text-zinc-100">
                         {label}
-                    </Typography.Text>
+                    </span>
                 )}
                 <div
+                    className="mb-0.5 grid items-center border-b border-[#f0f0f0] pb-1 gap-x-3 dark:border-zinc-700"
                     style={{
-                        display: 'grid',
                         gridTemplateColumns: TWO_COLUMN_TOOLTIP_GRID_TEMPLATE,
-                        alignItems: 'center',
-                        columnGap: '12px',
-                        borderBottom: '1px solid #f0f0f0',
-                        paddingBottom: '4px',
-                        marginBottom: '2px',
                     }}
                 >
-                    <Typography.Text
-                        type="secondary"
-                        style={{ fontSize: '11px', fontWeight: 500 }}
-                    >
+                    <span className="text-[11px] font-medium text-gray-500 dark:text-zinc-400">
                         {headers[0]}
-                    </Typography.Text>
-                    <Typography.Text
-                        type="secondary"
-                        style={{
-                            fontSize: '11px',
-                            fontWeight: 500,
-                            textAlign: 'right',
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
+                    </span>
+                    <span className="whitespace-nowrap text-right text-[11px] font-medium text-gray-500 dark:text-zinc-400">
                         {headers[1]}
-                    </Typography.Text>
+                    </span>
                 </div>
                 {sortedPayload.map((item, idx) => {
                     const itemDataKey = item?.dataKey;
@@ -181,82 +124,47 @@ export const CustomTooltip = ({
                     return (
                         <div
                             key={idx}
+                            className="grid items-center gap-x-3"
                             style={{
-                                display: 'grid',
                                 gridTemplateColumns:
                                     TWO_COLUMN_TOOLTIP_GRID_TEMPLATE,
-                                alignItems: 'center',
-                                columnGap: '12px',
                             }}
                         >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    minWidth: 0,
-                                }}
-                            >
+                            <div className="flex min-w-0 items-center gap-2">
                                 <div
+                                    className="h-2 w-2 rounded-full"
                                     style={{
-                                        width: '8px',
-                                        height: '8px',
-                                        borderRadius: '50%',
                                         backgroundColor: color,
                                     }}
                                 />
-                                <Typography.Text
-                                    ellipsis
-                                    style={{ fontSize: '12px', minWidth: 0 }}
-                                >
+                                <span className="truncate text-xs text-gray-600 dark:text-zinc-400">
                                     {displayLabel}
-                                </Typography.Text>
+                                </span>
                             </div>
-                            <Typography.Text
-                                style={{
-                                    fontWeight: 500,
-                                    fontSize: '12px',
-                                    textAlign: 'right',
-                                    whiteSpace: 'nowrap',
-                                }}
-                            >
+                            <span className="whitespace-nowrap text-right text-xs font-medium text-gray-900 dark:text-zinc-100">
                                 {formatter
                                     ? formatter(displayValue)
                                     : formattedNumber(displayValue)}
-                            </Typography.Text>
+                            </span>
                         </div>
                     );
                 })}
                 {showTotal && (
                     <div
+                        className="mt-0.5 grid items-center border-t border-[#f0f0f0] pt-1.5 gap-x-3 dark:border-zinc-700"
                         style={{
-                            display: 'grid',
                             gridTemplateColumns:
                                 TWO_COLUMN_TOOLTIP_GRID_TEMPLATE,
-                            alignItems: 'center',
-                            columnGap: '12px',
-                            borderTop: '1px solid #f0f0f0',
-                            paddingTop: '6px',
-                            marginTop: '2px',
                         }}
                     >
-                        <Typography.Text
-                            style={{ fontWeight: 600, fontSize: '12px' }}
-                        >
+                        <span className="text-xs font-semibold text-gray-900 dark:text-zinc-100">
                             {totalLabel}
-                        </Typography.Text>
-                        <Typography.Text
-                            style={{
-                                fontWeight: 600,
-                                fontSize: '12px',
-                                textAlign: 'right',
-                                whiteSpace: 'nowrap',
-                            }}
-                        >
+                        </span>
+                        <span className="whitespace-nowrap text-right text-xs font-semibold text-gray-900 dark:text-zinc-100">
                             {formatter
                                 ? formatter(totalValue)
                                 : formattedNumber(totalValue)}
-                        </Typography.Text>
+                        </span>
                     </div>
                 )}
             </div>
@@ -298,71 +206,43 @@ export const ThreeColumnTooltip = ({
         { primary: 0, extra: 0 }
     );
 
+    const getTextColorClass = (type?: 'secondary' | 'success' | 'warning' | 'danger') => {
+        switch (type) {
+            case 'success':
+                return 'text-green-600 dark:text-green-400';
+            case 'warning':
+                return 'text-amber-500 dark:text-amber-400';
+            case 'danger':
+                return 'text-red-500 dark:text-red-400';
+            case 'secondary':
+            default:
+                return 'text-gray-500 dark:text-zinc-400';
+        }
+    };
+
     return (
         <div
-            style={{
-                backgroundColor: '#fff',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                border: '1px solid #f0f0f0',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                minWidth,
-            }}
+            className="flex flex-col gap-2 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800"
+            style={{ minWidth }}
         >
             {label && (
-                <Typography.Text
-                    style={{
-                        fontWeight: 600,
-                        fontSize: '13px',
-                        borderBottom: '1px solid #f0f0f0',
-                        paddingBottom: '4px',
-                    }}
-                >
+                <span className="border-b border-[#f0f0f0] pb-1 text-[13px] font-semibold text-gray-900 dark:border-zinc-700 dark:text-zinc-100">
                     {label}
-                </Typography.Text>
+                </span>
             )}
             <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns,
-                    alignItems: 'center',
-                    columnGap: '12px',
-                    borderBottom: '1px solid #f0f0f0',
-                    paddingBottom: '4px',
-                    marginBottom: '2px',
-                }}
+                className="grid items-center border-b border-[#f0f0f0] pb-1 gap-x-3 dark:border-zinc-700"
+                style={{ gridTemplateColumns }}
             >
-                <Typography.Text
-                    type="secondary"
-                    style={{ fontSize: '11px', fontWeight: 500 }}
-                >
+                <span className="text-[11px] font-medium text-gray-500 dark:text-zinc-400">
                     {headers[0]}
-                </Typography.Text>
-                <Typography.Text
-                    type="secondary"
-                    style={{
-                        fontSize: '11px',
-                        fontWeight: 500,
-                        textAlign: 'right',
-                        whiteSpace: 'nowrap',
-                    }}
-                >
+                </span>
+                <span className="whitespace-nowrap text-right text-[11px] font-medium text-gray-500 dark:text-zinc-400">
                     {headers[1]}
-                </Typography.Text>
-                <Typography.Text
-                    type="secondary"
-                    style={{
-                        fontSize: '11px',
-                        fontWeight: 500,
-                        textAlign: 'right',
-                        whiteSpace: 'nowrap',
-                    }}
-                >
+                </span>
+                <span className="whitespace-nowrap text-right text-[11px] font-medium text-gray-500 dark:text-zinc-400">
                     {headers[2]}
-                </Typography.Text>
+                </span>
             </div>
             {sortedPayload.map((item, idx) => {
                 const itemDataKey = item?.dataKey;
@@ -386,106 +266,59 @@ export const ThreeColumnTooltip = ({
                 return (
                     <div
                         key={idx}
-                        style={{
-                            display: 'grid',
-                            gridTemplateColumns,
-                            alignItems: 'center',
-                            columnGap: '12px',
-                        }}
+                        className="grid items-center gap-x-3"
+                        style={{ gridTemplateColumns }}
                     >
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                minWidth: 0,
-                            }}
-                        >
+                        <div className="flex min-w-0 items-center gap-2">
                             <div
+                                className="h-2 w-2 flex-shrink-0 rounded-full"
                                 style={{
-                                    width: '8px',
-                                    height: '8px',
-                                    borderRadius: '50%',
                                     backgroundColor: color,
-                                    flex: '0 0 auto',
                                 }}
                             />
-                            <Typography.Text
-                                ellipsis
-                                style={{ fontSize: '12px', minWidth: 0 }}
-                            >
+                            <span className="truncate text-xs text-gray-600 dark:text-zinc-400">
                                 {displayLabel}
-                            </Typography.Text>
+                            </span>
                         </div>
-                        <Typography.Text
-                            style={{
-                                fontWeight: 500,
-                                fontSize: '12px',
-                                textAlign: 'right',
-                                whiteSpace: 'nowrap',
-                            }}
-                        >
+                        <span className="whitespace-nowrap text-right text-xs font-medium text-gray-900 dark:text-zinc-100">
                             {primaryFormatter
                                 ? primaryFormatter(displayValue)
                                 : formattedNumber(displayValue)}
-                        </Typography.Text>
-                        <Typography.Text
-                            type={extraColumn.textType ?? 'secondary'}
-                            style={{
-                                fontSize: '12px',
-                                textAlign: 'right',
-                                whiteSpace: 'nowrap',
-                            }}
+                        </span>
+                        <span
+                            className={`whitespace-nowrap text-right text-xs ${getTextColorClass(
+                                extraColumn.textType
+                            )}`}
                         >
                             {extraColumn.formatter
                                 ? extraColumn.formatter(extraValue)
                                 : formattedNumber(extraValue as any)}
-                        </Typography.Text>
+                        </span>
                     </div>
                 );
             })}
             {showTotal && (
                 <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns,
-                        alignItems: 'center',
-                        columnGap: '12px',
-                        borderTop: '1px solid #f0f0f0',
-                        paddingTop: '6px',
-                        marginTop: '2px',
-                    }}
+                    className="grid items-center border-t border-[#f0f0f0] pt-1.5 gap-x-3 dark:border-zinc-700"
+                    style={{ gridTemplateColumns }}
                 >
-                    <Typography.Text
-                        style={{ fontWeight: 600, fontSize: '12px' }}
-                    >
+                    <span className="text-xs font-semibold text-gray-900 dark:text-zinc-100">
                         {totalLabel}
-                    </Typography.Text>
-                    <Typography.Text
-                        style={{
-                            fontWeight: 600,
-                            fontSize: '12px',
-                            textAlign: 'right',
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
+                    </span>
+                    <span className="whitespace-nowrap text-right text-xs font-semibold text-gray-900 dark:text-zinc-100">
                         {primaryFormatter
                             ? primaryFormatter(totals.primary)
                             : formattedNumber(totals.primary)}
-                    </Typography.Text>
-                    <Typography.Text
-                        type={extraColumn.textType ?? 'secondary'}
-                        style={{
-                            fontWeight: 600,
-                            fontSize: '12px',
-                            textAlign: 'right',
-                            whiteSpace: 'nowrap',
-                        }}
+                    </span>
+                    <span
+                        className={`whitespace-nowrap text-right text-xs font-semibold ${getTextColorClass(
+                            extraColumn.textType
+                        )}`}
                     >
                         {extraColumn.formatter
                             ? extraColumn.formatter(totals.extra)
                             : formattedNumber(totals.extra as any)}
-                    </Typography.Text>
+                    </span>
                 </div>
             )}
         </div>
