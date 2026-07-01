@@ -318,7 +318,7 @@
         "import": "Import",
         "time": "Time",
         "modifyTime": "Modify time",
-        "importStatus": "Import status",
+        "importStatus": "Last import",
         "importTime": "Import time",
         "copy": "Copy",
         "from": "from",
@@ -3127,6 +3127,8 @@
             "notFoundOnCi": "Not found on CI"
         },
         "latestSyncedAt": "Latest sync",
+        "neverExported": "Never exported",
+        "lastImportIsFailed": "Last import failed",
         "export": {
             "exportOrder": "Export order",
             "exportTask": "Export task",

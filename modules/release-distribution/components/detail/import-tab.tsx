@@ -74,11 +74,12 @@ export default function ImportTab({ data, loading }: Props) {
                     };
 
                     const warnings =
-                        record.import_file?.flatMap(
-                            (file) =>
-                                file.description?.flatMap(
-                                    (desc) => desc.warnings || []
-                                ) || []
+                        record?.import_file?.flatMap((file) =>
+                            Array.isArray(file?.description)
+                                ? file.description.flatMap(
+                                      (desc) => desc?.warnings || []
+                                  )
+                                : []
                         ) || [];
 
                     const hasWarnings =

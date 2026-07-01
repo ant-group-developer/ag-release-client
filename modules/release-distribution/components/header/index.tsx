@@ -6,6 +6,8 @@ import {
     CalendarOutlined,
     SearchOutlined,
     ImportOutlined,
+    ExportOutlined,
+    WarningOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -88,6 +90,34 @@ export default function ReleaseDistributionHeader({
                 isCommaSeparated: true,
             },
             {
+                key: 'neverExported',
+                label: messages('releaseCiData.neverExported'),
+                icon: <ExportOutlined />,
+                type: 'checkbox',
+                filterKey: 'neverExported',
+                options: [
+                    {
+                        label: messages('releaseCiData.neverExported'),
+                        value: 'true',
+                    },
+                ],
+                isCommaSeparated: true,
+            },
+            {
+                key: 'lastImportIsFailed',
+                label: messages('releaseCiData.lastImportIsFailed'),
+                icon: <WarningOutlined />,
+                type: 'checkbox',
+                filterKey: 'lastImportIsFailed',
+                options: [
+                    {
+                        label: messages('releaseCiData.lastImportIsFailed'),
+                        value: 'true',
+                    },
+                ],
+                isCommaSeparated: true,
+            },
+            {
                 key: 'dateCreated',
                 label: messages('common.dateCreated'),
                 icon: <CalendarOutlined />,
@@ -99,7 +129,7 @@ export default function ReleaseDistributionHeader({
                 label: messages('common.dateUpdated'),
                 icon: <CalendarOutlined />,
                 type: 'dateRange',
-                filterKey: ['startUpdatedAt', 'endUpdatedAt'],
+                filterKey: ['startCreatedAt', 'endCreatedAt'],
             },
         ];
     }, [messages, isImportedFromReportOptions, releaseCiStatusOptions]);
@@ -123,12 +153,22 @@ export default function ReleaseDistributionHeader({
         if (copy.isImportedFromReport === 'all') {
             copy.isImportedFromReport = undefined;
         }
+        if (copy.neverExported === true || copy.neverExported === 'true') {
+            copy.neverExported = 'true';
+        } else {
+            copy.neverExported = undefined;
+        }
+        if (copy.lastImportIsFailed === true || copy.lastImportIsFailed === 'true') {
+            copy.lastImportIsFailed = 'true';
+        } else {
+            copy.lastImportIsFailed = undefined;
+        }
         return copy;
     }, [dataFilter]);
 
     return (
         <div className="app-header">
-            <Space>
+            <Space size="middle">
                 <AppSearch
                     defaultValue={dataFilter?.keyword}
                     style={{

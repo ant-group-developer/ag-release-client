@@ -11,10 +11,11 @@ import ReleaseDistributionTable from '@/modules/release-distribution/components/
 import { RELEASE_CI_DATA_COLUMNS_DISPLAY } from '@/modules/release-distribution/enums';
 import { useAutoSyncCi } from '@/modules/release-distribution/hooks/use-auto-sync-ci';
 import { useCreateMissingReleaseCiData } from '@/modules/release-distribution/hooks/use-create-missing-release-ci-data';
+import { useExportReleaseCiData } from '@/modules/release-distribution/hooks/use-export-release-ci-data';
 import { useGetListReleaseCiData } from '@/modules/release-distribution/hooks/use-get-list-release-ci-data';
 import { ReleaseCiDataFilter } from '@/modules/release-distribution/types';
 import { RELEASE_TYPE } from '@/modules/releases/enums';
-import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
+import { DownloadOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -48,6 +49,8 @@ export default function ReleaseDistributionPage() {
     const { createMissingReleaseCiData, isPending: isBulkCreating } =
         useCreateMissingReleaseCiData();
     const { autoSyncCi, isPending: isAutoSyncing } = useAutoSyncCi();
+    const { exportReleaseCiData, isPending: isExporting } =
+        useExportReleaseCiData();
 
     const handleRefresh = () => {
         refetch();
@@ -69,6 +72,10 @@ export default function ReleaseDistributionPage() {
         });
     };
 
+    const handleExport = () => {
+        exportReleaseCiData(dataFilter);
+    };
+
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -86,6 +93,14 @@ export default function ReleaseDistributionPage() {
             <PageContainer
                 title={messages('release.releaseDistribution')}
                 extra={[
+                    <Button
+                        key="export"
+                        icon={<DownloadOutlined />}
+                        loading={isExporting}
+                        onClick={handleExport}
+                    >
+                        {messages('common.export')}
+                    </Button>,
                     <Button
                         key="auto-sync-ci"
                         icon={<SyncOutlined />}

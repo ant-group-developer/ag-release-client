@@ -8,44 +8,47 @@ import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
-type ExportTableProps = Omit<TableProps<any>, 'columns'>;
+type ExportTableProps = Omit<TableProps<ReleaseCiExportEmbeddedItem>, 'columns'>;
 
 export default function ExportTable({ dataSource, ...props }: ExportTableProps) {
     const messages = useTranslations();
 
-    const exportColumns: ColumnsType<any> = useMemo(
+    const exportColumns: ColumnsType<ReleaseCiExportEmbeddedItem> = useMemo(
         () => [
             {
                 title: messages('releaseCiData.export.exportOrder'),
                 key: 'exportOrder',
-                render: (_, record) => record.exportOrder ?? record.exportRequest?.export_id ?? '-',
+                render: (_, record) => record.exportRequest?.export_id ?? '-',
             },
             {
                 title: messages('releaseCiData.export.exportTask'),
                 key: 'exportTask',
-                render: (_, record) => record.exportTask ?? record.exportRequest?.type ?? '-',
+                render: (_, record) => record.exportRequest?.type ?? '-',
             },
             {
                 title: messages('releaseCiData.export.requestorOrganisation'),
                 key: 'requestorOrganisation',
-                render: (_, record) => record.requestorOrganisation ?? record.exportRequest?.organisation?.name ?? '-',
+                render: (_, record) => record.exportRequest?.organisation?.name ?? '-',
             },
             {
                 title: messages('releaseCiData.export.deliveryPoint'),
                 key: 'deliveryPoint',
-                render: (_, record) => record.deliveryPoint ?? record?.musicService?.name ?? '-',
+                render: (_, record) => record?.musicService?.name ?? '-',
             },
             {
                 title: messages('releaseCiData.export.deliveryPointStatus'),
                 key: 'deliveryPointStatus',
                 render: (_, record) => {
-                    const status =
-                        record.status ?? record.deliveryPointStatus ?? record.musicService?.development_status;
+                    const status = record.musicService?.development_status;
 
                     if (!status) return '-';
 
                     const config = {
                         [RELEASE_CI_EXPORT_STATUS.COMPLETE]: {
+                            color: 'success',
+                            label: status,
+                        },
+                        [RELEASE_CI_EXPORT_STATUS.LIVE]: {
                             color: 'success',
                             label: status,
                         },
@@ -72,12 +75,12 @@ export default function ExportTable({ dataSource, ...props }: ExportTableProps) 
             {
                 title: 'External batch ID',
                 key: 'externalBatchId',
-                render: (_, record) => record.externalBatchId ?? record.exportBatch?.external_batch_id ?? '-',
+                render: (_, record) => record.exportBatch?.external_batch_id ?? '-',
             },
             {
                 title: messages('releaseCiData.export.transferEndDate'),
                 key: 'transferEndDate',
-                render: (_, record) => formattedDate(record.transferEndDate ?? record.modify_time) ?? '-',
+                render: (_, record) => formattedDate(record.modify_time) ?? '-',
             },
         ],
         [messages]
@@ -85,7 +88,7 @@ export default function ExportTable({ dataSource, ...props }: ExportTableProps) 
 
     return (
         <Table
-            rowKey={(record, index) => record.id ?? `parsed-${index}`}
+            rowKey={(record) => record.id}
             dataSource={dataSource}
             columns={exportColumns}
             pagination={false}

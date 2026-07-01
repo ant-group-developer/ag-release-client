@@ -20,4 +20,5 @@ export enum RELEASE_CI_EXPORT_STATUS {
     SYSFAIL = 'sysfail',
     INVALID = 'invalid',
     COMPLETE = 'complete',
+    LIVE = 'live',
 }

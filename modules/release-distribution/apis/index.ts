@@ -17,6 +17,11 @@ export const releaseDistributionApi = {
     autoSyncCi: (data?: { ids?: string[] }) => {
         return axiosInstance.post('/release-ci-data/bulk-sync-data-ci', data);
     },
+    exportReleaseCiData: (data?: ReleaseCiDataFilter) => {
+        return axiosInstance.post('/release-ci-data/export', data, {
+            responseType: 'blob',
+        });
+    },
     getReleaseCiDataDetail: (id: string) => {
         return axiosInstance.get<DetailResponse<ReleaseCiData>>(
             `/release-ci-data/${id}`

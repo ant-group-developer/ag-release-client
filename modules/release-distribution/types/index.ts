@@ -234,4 +234,7 @@ export interface ReleaseCiData {
     }[];
 }
 
-export type ReleaseCiDataFilter = ReleasesDataFilter;
+export type ReleaseCiDataFilter = ReleasesDataFilter & {
+    neverExported?: boolean | string;
+    lastImportIsFailed?: boolean | string;
+};

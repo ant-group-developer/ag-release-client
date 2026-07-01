@@ -318,7 +318,7 @@
         "import": "Nhập",
         "time": "Thời gian",
         "modifyTime": "Thời gian sửa đổi",
-        "importStatus": "Trạng thái nhập",
+        "importStatus": "Lần nhập cuối",
         "importTime": "Thời gian nhập",
         "copy": "Sao chép",
         "from": "Từ",
@@ -3100,6 +3100,8 @@
             "notFoundOnCi": "Không tìm thấy trên CI"
         },
         "latestSyncedAt": "Lần đồng bộ cuối",
+        "neverExported": "Chưa từng export",
+        "lastImportIsFailed": "Lần nhập cuối thất bại",
         "export": {
             "exportOrder": "Đơn hàng xuất",
             "exportTask": "Nhiệm vụ xuất",

@@ -1,12 +1,25 @@
-import { Button, Modal } from 'antd';
+import { formattedDate } from '@/helpers/common';
+import { Button, Modal, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
+import { RELEASE_CI_EXPORT_STATUS } from '../../enums';
 import { ReleaseCiData } from '../../types';
-import ExportTable from './export-table';
 
 interface DspStatusModalProps {
     open: boolean;
     onCancel: () => void;
     record: ReleaseCiData | null;
+}
+
+interface ExportParsedItem {
+    exportTask: string;
+    exportOrder: string;
+    deliveryPoint: string;
+    externalBatchId: string;
+    transferEndDate: string;
+    requestorOrganisation: string;
+    status?: string;
 }
 
 export default function DspStatusModal({
@@ -15,6 +28,84 @@ export default function DspStatusModal({
     record,
 }: DspStatusModalProps) {
     const messages = useTranslations();
+
+    const columns: ColumnsType<ExportParsedItem> = useMemo(
+        () => [
+            {
+                title: messages('releaseCiData.export.exportOrder'),
+                key: 'exportOrder',
+                dataIndex: 'exportOrder',
+                render: (value) => value || '-',
+            },
+            {
+                title: messages('releaseCiData.export.exportTask'),
+                key: 'exportTask',
+                dataIndex: 'exportTask',
+                render: (value) => value || '-',
+            },
+            {
+                title: messages('releaseCiData.export.requestorOrganisation'),
+                key: 'requestorOrganisation',
+                dataIndex: 'requestorOrganisation',
+                render: (value) => value || '-',
+            },
+            {
+                title: messages('releaseCiData.export.deliveryPoint'),
+                key: 'deliveryPoint',
+                dataIndex: 'deliveryPoint',
+                render: (value) => value || '-',
+            },
+            {
+                title: messages('releaseCiData.export.deliveryPointStatus'),
+                key: 'deliveryPointStatus',
+                dataIndex: 'deliveryPointStatus',
+                render: (status) => {
+                    if (!status) return '-';
+
+                    const config = {
+                        [RELEASE_CI_EXPORT_STATUS.COMPLETE]: {
+                            color: 'success',
+                            label: status,
+                        },
+                        [RELEASE_CI_EXPORT_STATUS.LIVE]: {
+                            color: 'success',
+                            label: status,
+                        },
+                        [RELEASE_CI_EXPORT_STATUS.SYSFAIL]: {
+                            color: 'error',
+                            label: status,
+                        },
+                        [RELEASE_CI_EXPORT_STATUS.INVALID]: {
+                            color: 'warning',
+                            label: status,
+                        },
+                    }[status as RELEASE_CI_EXPORT_STATUS] || {
+                        color: 'default',
+                        label: status,
+                    };
+
+                    return (
+                        <Tag color={config.color} className="capitalize">
+                            {config.label}
+                        </Tag>
+                    );
+                },
+            },
+            {
+                title: 'External batch ID',
+                key: 'externalBatchId',
+                dataIndex: 'externalBatchId',
+                render: (value) => value || '-',
+            },
+            {
+                title: messages('releaseCiData.export.transferEndDate'),
+                key: 'transferEndDate',
+                dataIndex: 'transferEndDate',
+                render: (value) => formattedDate(value) || '-',
+            },
+        ],
+        [messages]
+    );
 
     return (
         <Modal
@@ -35,8 +126,13 @@ export default function DspStatusModal({
         >
             <div className="py-2">
                 {record && (
-                    <ExportTable
-                        dataSource={record?.exportParsedData ?? []}
+                    <Table
+                        dataSource={
+                            (record?.exportParsedData as ExportParsedItem[]) ??
+                            []
+                        }
+                        columns={columns}
+                        pagination={false}
                         size="middle"
                         scroll={{
                             x: '70vh',
