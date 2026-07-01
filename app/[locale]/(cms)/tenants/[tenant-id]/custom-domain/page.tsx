@@ -148,8 +148,11 @@ function TenantCustomDomainPage() {
     const handleConnectCloudflare = async () => {
         setIsFetchingOAuthUrl(true);
         try {
-            const response = await tenantApi.getCfOAuthUrl(tenantId);
+            const response = await tenantApi.getCfOAuthUrl(tenantId, {
+                returnUrl: window.location.href,
+            });
             const url = response.data?.data?.url;
+            // return;
             if (url) {
                 window.location.href = url;
             } else {
@@ -261,7 +264,9 @@ function TenantCustomDomainPage() {
 
                     <div className="flex justify-end gap-2 pt-2">
                         <Popconfirm
-                            title={messages('tenant.customDomain.deleteConfirm')}
+                            title={messages(
+                                'tenant.customDomain.deleteConfirm'
+                            )}
                             onConfirm={handleDelete}
                             okText={messages('common.confirm') || 'OK'}
                             cancelText={messages('common.cancel') || 'Cancel'}

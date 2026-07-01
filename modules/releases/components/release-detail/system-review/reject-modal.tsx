@@ -2,6 +2,7 @@
 
 import { Form, Input, Modal } from 'antd';
 import { AlertTriangle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface RejectModalProps {
     open: boolean;
@@ -14,14 +15,15 @@ export default function RejectModal({
     onCancel,
     onReject,
 }: RejectModalProps) {
+    const messages = useTranslations();
     const [form] = Form.useForm();
 
     const handleOk = () => {
         form.submit();
     };
 
-    const handleFinish = (values: { reason: string }) => {
-        onReject(values.reason);
+    const handleFinish = (values: { note: string }) => {
+        onReject(values.note);
         form.resetFields();
     };
 
@@ -30,7 +32,9 @@ export default function RejectModal({
             title={
                 <div className="flex items-center gap-1.5 font-bold text-red-600">
                     <AlertTriangle size={18} />
-                    <span>TỪ CHỐI THỰC THI PHÁT HÀNH</span>
+                    <span>
+                        {messages('release.systemReview.rejectModal.title')}
+                    </span>
                 </div>
             }
             open={open}
@@ -38,39 +42,38 @@ export default function RejectModal({
                 form.resetFields();
                 onCancel();
             }}
-            okText="Xác nhận từ chối"
+            okText={messages('release.systemReview.rejectModal.confirmReject')}
             okButtonProps={{ danger: true }}
-            cancelText="Hủy"
+            cancelText={messages('common.cancel')}
             onOk={handleOk}
-            destroyOnClose
         >
             <div className="py-2">
                 <p className="mb-4 text-sm text-gray-500">
-                    Vui lòng nhập lý do từ chối phê duyệt. Lý do này sẽ được
-                    ghi nhận vào lịch sử hệ thống và gửi thông báo tới chủ sở
-                    hữu bản phát hành.
+                    {messages('release.systemReview.rejectModal.description')}
                 </p>
-                <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={handleFinish}
-                >
+                <Form form={form} layout="vertical" onFinish={handleFinish}>
                     <Form.Item
-                        name="reason"
+                        name="note"
                         label={
                             <span className="font-semibold text-gray-700">
-                                Lý do từ chối
+                                {messages(
+                                    'release.systemReview.rejectModal.reasonLabel'
+                                )}
                             </span>
                         }
                         rules={[
                             {
                                 required: true,
-                                message: 'Vui lòng nhập lý do từ chối duyệt!',
+                                message: messages(
+                                    'release.systemReview.rejectModal.reasonRequired'
+                                ),
                             },
                         ]}
                     >
                         <Input.TextArea
-                            placeholder="Ví dụ: Bài hát số 1 trùng bản quyền nghiêm trọng với tác phẩm đã được phân phối trên Youtube ContentID..."
+                            placeholder={messages(
+                                'release.systemReview.rejectModal.reasonPlaceholder'
+                            )}
                             rows={4}
                             maxLength={250}
                             showCount

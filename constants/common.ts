@@ -84,3 +84,6 @@ export const ICON_SOURCE = '/icon/source-drive.svg';
 export const OPACITY_TAG = 0.1;
 
 export const ARRAY_SEPARATOR = ',';
+
+export const LOCALHOST = 'localhost';
+
