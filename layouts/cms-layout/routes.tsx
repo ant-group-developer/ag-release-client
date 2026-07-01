@@ -167,7 +167,6 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Release Distribution',
                 href: APP_ROUTES.RELEASE_DISTRIBUTION,
                 icon: Globe,
-                hidden: true,
                 required: SYS_ADMIN_REQ,
             },
             {
