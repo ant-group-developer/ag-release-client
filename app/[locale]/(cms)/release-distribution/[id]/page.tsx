@@ -64,7 +64,7 @@ export default function ReleaseDistributionDetailPage({ params }: Props) {
                 }}
             >
                 <Card className="shadow-sm">
-                    <Tabs defaultActiveKey="export" items={tabItems} />
+                    <Tabs defaultActiveKey="import" items={tabItems} />
                 </Card>
             </PageContainer>
         </AppPageWrapper>

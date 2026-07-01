@@ -434,7 +434,11 @@
         "markAsResolved": "Mark as resolved",
         "markAllAsResolved": "Mark all done",
         "resolveAllErrorsConfirm": "Confirm all errors have been resolved, this action will update the error status",
-        "clickToUpdateErrorStatus": "Click here to update the status of this error"
+        "clickToUpdateErrorStatus": "Click here to update the status of this error",
+        "sortAsc": "Ascending",
+        "sortDesc": "Descending",
+        "sortOrder": "Sort order",
+        "sortField": "Sort by"
     },
     "country": {
         "label": "Country",

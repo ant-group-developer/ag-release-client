@@ -19,6 +19,8 @@ import { DownloadOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons'
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import ExportModal from '@/modules/release-distribution/components/export-modal';
 
 export default function ReleaseDistributionPage() {
     const {
@@ -39,6 +41,7 @@ export default function ReleaseDistributionPage() {
 
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
     // apis
     const {
@@ -73,7 +76,16 @@ export default function ReleaseDistributionPage() {
     };
 
     const handleExport = () => {
-        exportReleaseCiData(dataFilter);
+        setIsExportModalOpen(true);
+    };
+
+    const handleConfirmExport = async (values: ReleaseCiDataFilter) => {
+        try {
+            await exportReleaseCiData(values);
+            setIsExportModalOpen(false);
+        } catch (error) {
+            // Error is handled by toastPromise
+        }
     };
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
@@ -159,6 +171,13 @@ export default function ReleaseDistributionPage() {
                     showSizeChanger
                     showQuickJumper
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
+                />
+
+                <ExportModal
+                    open={isExportModalOpen}
+                    onCancel={() => setIsExportModalOpen(false)}
+                    onOk={handleConfirmExport}
+                    confirmLoading={isExporting}
                 />
             </PageContainer>
         </AppPageWrapper>

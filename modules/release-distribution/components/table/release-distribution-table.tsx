@@ -208,7 +208,7 @@ export default function ReleaseDistributionTable({
                             </span>
                         </div>
                         {modify_time && (
-                            <span className="text-xs font-normal text-slate-500">
+                            <span className="text-xs font-normal">
                                 {formattedDate(
                                     modify_time,
                                     DATE_FORMAT.DATE_MINUTE

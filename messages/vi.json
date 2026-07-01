@@ -434,7 +434,11 @@
         "markAllAsResolved": "Đánh dấu tất cả đã xong",
         "resolveAllErrorsConfirm": "Xác nhận đã xử lý hết các lỗi, hành động này sẽ cập nhật lại trạng thái lỗi",
         "confirm": "Đồng ý",
-        "clickToUpdateErrorStatus": "Nhấp vào đây để cập nhật trạng thái lỗi này"
+        "clickToUpdateErrorStatus": "Nhấp vào đây để cập nhật trạng thái lỗi này",
+        "sortAsc": "Tăng dần",
+        "sortDesc": "Giảm dần",
+        "sortOrder": "Thứ tự sắp xếp",
+        "sortField": "Sắp xếp theo"
     },
     "country": {
         "label": "Quốc gia",
