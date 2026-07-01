@@ -62,44 +62,22 @@ const PieChartTooltip = ({ active, payload, valuePrefix = '' }: any) => {
         const color = item?.payload?.fill || item?.color || '#1890ff';
 
         return (
-            <div
-                style={{
-                    backgroundColor: '#fff',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    border: '1px solid #f0f0f0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    justifyContent: 'space-between',
-                    minWidth: '160px',
-                    whiteSpace: 'nowrap',
-                }}
-            >
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                    }}
-                >
+            <div className="flex min-w-[160px] items-center justify-between gap-4 whitespace-nowrap rounded-lg border border-[#f0f0f0] bg-white px-3 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
+                <div className="flex items-center gap-2">
                     <div
+                        className="h-2 w-2 rounded-full"
                         style={{
-                            width: '8px',
-                            height: '8px',
-                            borderRadius: '50%',
                             backgroundColor: color,
                         }}
                     />
-                    <Typography.Text style={{ fontSize: 13, fontWeight: 500 }}>
+                    <span className="text-[13px] font-medium text-gray-700 dark:text-zinc-300">
                         {displayLabel}
-                    </Typography.Text>
+                    </span>
                 </div>
-                <Typography.Text style={{ fontWeight: 600, fontSize: 13 }}>
+                <span className="text-[13px] font-semibold text-gray-900 dark:text-zinc-100">
                     {valuePrefix}
                     {formattedNumber(displayValue)}
-                </Typography.Text>
+                </span>
             </div>
         );
     }

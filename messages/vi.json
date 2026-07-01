@@ -1714,7 +1714,8 @@
         "digitalServiceProviders": "Nền tảng phát hành",
         "lastEnqueue": "Lần xếp hàng cuối",
         "lastDelivered": "Lần gửi cuối",
-        "inactiveDsp": "Nền tảng phát hành này đã bị khoá, không thể phát hành"
+        "inactiveDsp": "Nền tảng phát hành này đã bị khoá, không thể phát hành",
+        "hasLiveVersion": "Có phiên bản Live"
     },
     "formFields": {
         "contributorsMustIncludeProducer": "Người đóng góp phải bao gồm nhà sản xuất",

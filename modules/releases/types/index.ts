@@ -4,6 +4,7 @@ import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
+import { ReleaseDspData } from '@/modules/release-dsp/types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { TimezoneData } from '@/modules/timezone/types';
@@ -16,10 +17,10 @@ import {
     RELEASE_ERROR_ORDER_FIELD,
     RELEASE_ERROR_SUBMISSION_STATUS,
     RELEASE_ERROR_TYPE,
+    RELEASE_REVIEW_STATUS,
     RELEASE_TIME_MODE,
     RELEASE_TYPE,
     RELEASES_STATUS,
-    RELEASE_REVIEW_STATUS,
 } from '../enums';
 
 export interface ReleaseCoverArt {
@@ -78,6 +79,7 @@ export interface ReleasesData extends CommonAttribute {
     metadataExternal?: ReleaseMetadataExternal;
     isImportedFromReport?: boolean;
     isrc?: string;
+    releaseDspDeliveries?: ReleaseDspData[];
 }
 
 export interface SpotifyCoverImage {
@@ -222,4 +224,3 @@ export interface ReleaseReviewFilter extends CommonParams {
     releaseId?: string;
     status?: RELEASE_REVIEW_STATUS;
 }
-

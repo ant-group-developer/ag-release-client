@@ -16,7 +16,7 @@ import {
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Space } from 'antd';
+import { Avatar, Space, Tag } from 'antd';
 import { Box, Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -121,6 +121,20 @@ export default function DistributionTable({
         //         </span>
         //     ),
         // },
+        {
+            title: messages('distribution.hasLiveVersion'),
+            key: 'hasLiveVersion',
+            dataIndex: 'hasLiveVersion',
+            align: 'center',
+            width: 150,
+            render: (value, record) => {
+                return (
+                    <Tag color={record.hasLiveVersion ? 'success' : 'default'}>
+                        {record.hasLiveVersion ? 'Live' : 'Not Live'}
+                    </Tag>
+                );
+            },
+        },
         {
             title: messages('common.status'),
             key: 'status',
