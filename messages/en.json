@@ -369,6 +369,8 @@
         "iNo": "No.",
         "update": "Update",
         "bulkUpdate": "Bulk update",
+        "bulkCreate": "Bulk create",
+        "autoSyncCi": "Auto Sync CI",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
@@ -821,6 +823,7 @@
         "deleteSuccessfully": "Delete successfully!",
         "somethingWentWrong": "Something went wrong!",
         "updateSuccessfully": "Update successfully!",
+        "syncSuccessfully": "Synced successfully!",
         "eachLanguageCanOnlyHaveOneFile": "Each language can only have 1 file.",
         "pleaseLoginChannelAgain": "Please login again to get new token",
         "dataAlreadyExists": "Data already exists",
@@ -997,6 +1000,7 @@
             "matchedTracks": "Matched tracks"
         },
         "onlyDraftCanBeDeleted": "Only releases in Draft status can be deleted.",
+        "dspLive": "DSPs live",
         "audioLanguage": "Audio language",
         "metadataLanguageCountry": "Metadata language country",
         "metadataLanguage": "Metadata language",
@@ -1015,6 +1019,8 @@
         "importedFromReport": "Imported from report",
         "createdDirectly": "Created directly",
         "routeLabel": "Music releases",
+        "releaseDistribution": "Release Distribution",
+        "releaseDistributionRouteLabel": "Release Distribution",
         "create": "Create release",
         "latestReleases": "Latest releases",
         "name": "Release name",
@@ -3109,5 +3115,12 @@
     },
     "report-import": {
         "configExcludePattern": "Configure Exclude Pattern"
+    },
+    "releaseCiData": {
+        "status": {
+            "existsOnCi": "Exists on CI",
+            "notFoundOnCi": "Not found on CI"
+        },
+        "latestSyncedAt": "Latest sync"
     }
 }

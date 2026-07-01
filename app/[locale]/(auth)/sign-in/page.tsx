@@ -22,10 +22,7 @@ interface FormValues {
 export default function SignInPage() {
     const { token } = theme.useToken();
     const currentDomain = useCurrentDomain();
-    const { domainData } = useResolveDomain(
-        currentDomain,
-        false
-    );
+    const { domainData } = useResolveDomain(currentDomain);
 
     const [isLoading, setIsLoading] = useState(false);
     const messages = useTranslations();

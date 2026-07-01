@@ -14,6 +14,8 @@ export enum APP_ROUTES {
     RELEASES = '/releases',
     RELEASES_CREATE = '/releases/create',
     RELEASES_DETAIL = '/releases/*',
+    RELEASE_DISTRIBUTION = '/release-distribution',
+    RELEASE_DISTRIBUTION_DETAIL = '/release-distribution/*',
     RELEASE_TYPE = '/release-type',
     TRACKS = '/tracks',
     TRACK_DETAIL = '/tracks/*',

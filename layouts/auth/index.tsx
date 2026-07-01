@@ -5,13 +5,21 @@ import AppLogoWithText from '@/components/logo/app-logo-with-text';
 import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
 import { useResolveDomain } from '@/modules/tenant/hooks/use-resolve-domain';
 import { Spin, theme } from 'antd';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 export default function AuthLayout({ children }: PropsWithChildren) {
     const { token } = theme.useToken();
     const currentDomain = useCurrentDomain();
     const { domainData, isLoading, isError } = useResolveDomain(currentDomain);
-    const isDomainLoading = !currentDomain || (isLoading && !isError);
+    const [hasResolved, setHasResolved] = useState(false);
+
+    useEffect(() => {
+        if (!isLoading && currentDomain) {
+            setHasResolved(true);
+        }
+    }, [isLoading, currentDomain]);
+
+    const isDomainLoading = !hasResolved && (!currentDomain || (isLoading && !isError));
 
     if (isDomainLoading) {
         return (

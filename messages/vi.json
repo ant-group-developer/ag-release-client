@@ -368,6 +368,8 @@
         "iNo": "STT",
         "update": "Cập nhật",
         "bulkUpdate": "Cập nhật hàng loạt",
+        "bulkCreate": "Tạo hàng loạt",
+        "autoSyncCi": "Tự động đồng bộ CI",
         "create": "Thêm mới",
         "detail": "Chi tiết ",
         "delete": "Xoá",
@@ -818,6 +820,7 @@
         "deleteSuccessfully": "Xoá thành công!",
         "somethingWentWrong": "Đã xảy ra lỗi, vui lòng thử lại!",
         "updateSuccessfully": "Cập nhật thông tin thành công!",
+        "syncSuccessfully": "Đồng bộ thành công!",
         "eachLanguageCanOnlyHaveOneFile": "Mỗi ngôn ngữ chỉ được có 1 file",
         "pleaseLoginChannelAgain": "Vui lòng đăng nhập lại để lấy token mới",
         "dataAlreadyExists": "Dữ liệu đã tồn tại",
@@ -994,6 +997,7 @@
             "matchedTracks": "Track khớp"
         },
         "onlyDraftCanBeDeleted": "Chỉ những phát hành ở trạng thái Nháp mới có thể bị xoá.",
+        "dspLive": "DSPs live",
         "audioLanguage": "Ngôn ngữ âm thanh",
         "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
         "metadataLanguage": "Ngôn ngữ metadata",
@@ -1012,6 +1016,8 @@
         "importedFromReport": "Nhập từ báo cáo",
         "createdDirectly": "Tạo trực tiếp",
         "routeLabel": "Phát hành âm nhạc",
+        "releaseDistribution": "Phân phối phát hành",
+        "releaseDistributionRouteLabel": "Phân phối phát hành",
         "create": "Tạo phát hành ",
         "latestReleases": "Phát hành gần đây",
         "name": "Tên phát hành",
@@ -3082,5 +3088,12 @@
     },
     "report-import": {
         "configExcludePattern": "Cấu hình mẫu loại trừ"
+    },
+    "releaseCiData": {
+        "status": {
+            "existsOnCi": "Tồn tại trên CI",
+            "notFoundOnCi": "Không tìm thấy trên CI"
+        },
+        "latestSyncedAt": "Lần đồng bộ cuối"
     }
 }
