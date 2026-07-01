@@ -28,21 +28,11 @@ export default function ReleaseDistributionDetailPage({ params }: Props) {
             ),
         },
         {
-            title: `${messages('common.detail')}`,
+            title: `${releaseCiDataDetail?.release?.title}`,
         },
     ];
 
     const tabItems: TabsProps['items'] = [
-        {
-            key: 'export',
-            label: messages('common.export'),
-            children: (
-                <ExportTab
-                    data={releaseCiDataDetail?.exportRawData}
-                    loading={isFetching}
-                />
-            ),
-        },
         {
             key: 'import',
             label: messages('common.import'),
@@ -53,13 +43,23 @@ export default function ReleaseDistributionDetailPage({ params }: Props) {
                 />
             ),
         },
+        {
+            key: 'export',
+            label: messages('common.export'),
+            children: (
+                <ExportTab
+                    data={releaseCiDataDetail?.exportRawData}
+                    loading={isFetching}
+                />
+            ),
+        },
     ];
 
     return (
         <AppPageWrapper>
             <PageContainer
                 header={{
-                    title: `${messages('common.detail')}`,
+                    title: `${releaseCiDataDetail?.release?.title} - ${releaseCiDataDetail?.release?.upc}`,
                     breadcrumb: { items: breadcrumbItems },
                 }}
             >

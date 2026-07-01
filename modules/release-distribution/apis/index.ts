@@ -14,8 +14,8 @@ export const releaseDistributionApi = {
     createMissingReleaseCiData: () => {
         return axiosInstance.post('/release-ci-data/create-missing');
     },
-    autoSyncCi: () => {
-        return axiosInstance.post('/release-ci-data/bulk-sync-data-ci');
+    autoSyncCi: (data?: { ids?: string[] }) => {
+        return axiosInstance.post('/release-ci-data/bulk-sync-data-ci', data);
     },
     getReleaseCiDataDetail: (id: string) => {
         return axiosInstance.get<DetailResponse<ReleaseCiData>>(

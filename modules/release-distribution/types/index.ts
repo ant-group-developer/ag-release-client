@@ -220,6 +220,18 @@ export interface ReleaseCiData {
     release: ReleasesData;
     exportRawData: ReleaseCiExportRawData;
     importRawData: ReleaseCiImportRawData;
+    importParsedData?: {
+        status: string;
+        modify_time: string;
+    };
+    exportParsedData?: {
+        exportTask: string;
+        exportOrder: string;
+        deliveryPoint: string;
+        externalBatchId: string;
+        transferEndDate: string;
+        requestorOrganisation: string;
+    }[];
 }
 
 export type ReleaseCiDataFilter = ReleasesDataFilter;

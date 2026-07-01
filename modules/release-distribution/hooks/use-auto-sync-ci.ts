@@ -5,31 +5,38 @@ import { useTranslations } from 'next-intl';
 import { releaseDistributionApi } from '../apis';
 import { releaseDistributionQueryKeys } from '../constants/query-keys';
 
+export interface AutoSyncCiVariables extends CommonFunction {
+    payload?: {
+        ids?: string[];
+    };
+}
+
 export function useAutoSyncCi() {
     const queryClient = useQueryClient();
     const messages = useTranslations();
     const { handleError, handleSuccess } = useApiNotify();
 
-    const handleOnSuccess = (data: any, { onSuccess }: CommonFunction = {}) => {
+    const handleOnSuccess = (data: any, variables?: AutoSyncCiVariables) => {
         queryClient.invalidateQueries({
             queryKey: releaseDistributionQueryKeys.lists(),
         });
         handleSuccess(data?.data);
-        onSuccess?.();
+        variables?.onSuccess?.();
     };
 
-    const handleOnError = (error: any, { onError }: CommonFunction = {}) => {
+    const handleOnError = (error: any, variables?: AutoSyncCiVariables) => {
         handleError(error);
-        onError?.();
+        variables?.onError?.();
     };
 
     const mutation = useMutation({
-        mutationFn: () => releaseDistributionApi.autoSyncCi(),
-        onSuccess: handleOnSuccess,
-        onError: handleOnError,
+        mutationFn: (variables?: AutoSyncCiVariables) =>
+            releaseDistributionApi.autoSyncCi(variables?.payload),
+        onSuccess: (data, variables) => handleOnSuccess(data, variables),
+        onError: (error, variables) => handleOnError(error, variables),
     });
 
-    const autoSyncCi = (variables?: CommonFunction) => {
+    const autoSyncCi = (variables?: AutoSyncCiVariables) => {
         mutation.mutate(variables);
     };
 

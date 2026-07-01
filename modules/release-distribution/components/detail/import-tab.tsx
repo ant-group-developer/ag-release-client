@@ -6,8 +6,9 @@ import {
     ReleaseCiImportEmbeddedItem,
     ReleaseCiImportRawData,
 } from '@/modules/release-distribution/types';
-import { Table, Tag } from 'antd';
+import { Popover, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
@@ -51,6 +52,8 @@ export default function ImportTab({ data, loading }: Props) {
             {
                 title: messages('common.status'),
                 key: 'status',
+                align: 'left',
+                width: 150,
                 render: (_, record) => {
                     const status = record.status;
 
@@ -70,10 +73,59 @@ export default function ImportTab({ data, loading }: Props) {
                         label: status,
                     };
 
-                    return (
+                    const warnings =
+                        record.import_file?.flatMap(
+                            (file) =>
+                                file.description?.flatMap(
+                                    (desc) => desc.warnings || []
+                                ) || []
+                        ) || [];
+
+                    const hasWarnings =
+                        status === RELEASE_CI_IMPORT_STATUS.PROBLEM &&
+                        warnings.length > 0;
+
+                    const tagElement = (
                         <Tag color={config.color} className="capitalize">
                             {config.label}
                         </Tag>
+                    );
+
+                    if (hasWarnings) {
+                        const content = (
+                            <ul className="max-w-xs list-disc break-words pl-4">
+                                {warnings.map((warning, idx) => (
+                                    <li
+                                        key={idx}
+                                        className="text-sm text-red-500"
+                                    >
+                                        {warning}
+                                    </li>
+                                ))}
+                            </ul>
+                        );
+
+                        return (
+                            <div className="flex items-center justify-start gap-1.5">
+                                {tagElement}
+                                <Popover
+                                    content={content}
+                                    title={messages('common.detail')}
+                                    trigger="hover"
+                                    placement="top"
+                                >
+                                    <span className="cursor-pointer text-red-400 hover:text-red-500">
+                                        <Eye size={16} />
+                                    </span>
+                                </Popover>
+                            </div>
+                        );
+                    }
+
+                    return (
+                        <div className="flex items-center justify-start">
+                            {tagElement}
+                        </div>
                     );
                 },
             },
