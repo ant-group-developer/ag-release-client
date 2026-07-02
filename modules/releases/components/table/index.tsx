@@ -178,8 +178,8 @@ export default function ReleasesTable({
             title: messages('release.dspLive'),
             key: 'dsp',
             dataIndex: RELEASES_TABLE_KEY.DSP,
-            align: 'center',
-            width: 150,
+            align: 'left',
+            width: 120,
             render: (_, record) => {
                 const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
                 const liveCount = releaseDspDeliveries.filter(
@@ -188,10 +188,7 @@ export default function ReleasesTable({
                 ).length;
                 const totalCount = releaseDspDeliveries.length;
                 return (
-                    <div
-                        data-stop-row-click="true"
-                        className="flex justify-center"
-                    >
+                    <div data-stop-row-click="true">
                         <span
                             className="cursor-pointer hover:text-blue-500"
                             onClick={() => {
