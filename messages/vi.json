@@ -2779,7 +2779,8 @@
             "WAITING_PARTNER": "Chờ đối tác",
             "DONE": "Hoàn thành",
             "FAILED": "Thất bại",
-            "CANCELLED": "Đã hủy"
+            "CANCELLED": "Đã hủy",
+            "PARTIAL_DONE": "Hoàn thành một phần"
         },
         "stepStatus": {
             "PENDING": "Chưa bắt đầu",
