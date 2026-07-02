@@ -4,7 +4,6 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { Wrench, CheckCircle, XCircle } from 'lucide-react';
 import {
     RELEASE_ERROR_APPROVAL_STATUS,
     RELEASE_ERROR_SUBMISSION_STATUS,
@@ -13,6 +12,7 @@ import {
 import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { Button, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { CheckCircle, Wrench, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface ReleaseErrorsTableProps {
@@ -95,7 +95,7 @@ export default function ReleaseErrorsTable({
             title: messages('release.error.submissionStatusLabel'),
             dataIndex: 'submissionStatus',
             key: 'submissionStatus',
-            width: 150,
+            width: 180,
             sorter: (a, b) => {
                 const statusA = a.submissionStatus || '';
                 const statusB = b.submissionStatus || '';
@@ -200,7 +200,7 @@ export default function ReleaseErrorsTable({
                             <Button
                                 size="small"
                                 type="primary"
-                                className="flex items-center gap-1 !bg-green-600 hover:!bg-green-700 !border-none !text-white"
+                                className="flex items-center gap-1 !border-none !bg-green-600 !text-white hover:!bg-green-700"
                                 onClick={() =>
                                     onUpdateError(record.id, {
                                         approvalStatus:

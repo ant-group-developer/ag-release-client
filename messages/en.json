@@ -3139,7 +3139,7 @@
             "exportTask": "Export task",
             "requestorOrganisation": "Requestor organisation",
             "deliveryPoint": "Delivery point",
-            "deliveryPointStatus": "Delivery point status",
+            "deliveryPointStatus": "Status",
             "transferEndDate": "Transfer end date"
         }
     }
