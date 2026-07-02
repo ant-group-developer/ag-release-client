@@ -25,7 +25,7 @@ import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-releas
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { CircleX } from 'lucide-react';
+import { CircleX, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import { useState } from 'react';
@@ -182,7 +182,8 @@ export default function ReleasesTable({
             render: (_, record) => {
                 const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
                 const liveCount = releaseDspDeliveries.filter(
-                    (item) => item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                    (item) =>
+                        item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
                 ).length;
                 const totalCount = releaseDspDeliveries.length;
                 return (
@@ -381,6 +382,24 @@ export default function ReleasesTable({
                                                 });
                                             },
                                         });
+                                    },
+                                },
+                                {
+                                    key: 'distribution',
+                                    label: (
+                                        <div className="flex items-center gap-2">
+                                            <Globe size={SIZE_ICON_SMALL} />
+                                            {messages('common.distribute')}
+                                        </div>
+                                    ),
+                                    show:
+                                        record?.status !==
+                                        RELEASES_STATUS.DRAFT,
+                                    onClick: () => {
+                                        nProgress.start();
+                                        router.push(
+                                            `/releases/distribution/${record?.id}`
+                                        );
                                     },
                                 },
                             ]}

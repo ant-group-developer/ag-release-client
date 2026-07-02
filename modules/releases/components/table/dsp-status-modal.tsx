@@ -1,10 +1,9 @@
 'use client';
 
-import { Button, Modal } from 'antd';
+import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
+import { Modal } from 'antd';
 import { useTranslations } from 'next-intl';
 import { ReleasesData } from '../../types';
-import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
-import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 
 interface DspStatusModalProps {
     open: boolean;
@@ -18,7 +17,6 @@ export default function DspStatusModal({
     record,
 }: DspStatusModalProps) {
     const messages = useTranslations();
-    const { releaseDsp, isLoading } = useGetListReleaseDsp(record?.id ?? '');
 
     return (
         <Modal
@@ -29,19 +27,14 @@ export default function DspStatusModal({
             }
             open={open}
             onCancel={onCancel}
-            footer={[
-                <Button key="close" type="primary" onClick={onCancel}>
-                    {messages('common.close')}
-                </Button>,
-            ]}
             width={'80vw'}
             centered
+            footer={null}
         >
             <div className="py-2">
                 {record && (
                     <DistributionTable
-                        dataSource={releaseDsp?.items ?? []}
-                        loading={isLoading}
+                        dataSource={record?.releaseDspDeliveries ?? []}
                         size="middle"
                         rowKey={(record) => record.dsp?.id}
                         pagination={{
@@ -49,10 +42,11 @@ export default function DspStatusModal({
                             pageSize: 999,
                         }}
                         scroll={{
-                            x: '70vh',
-                            y: '50vh',
+                            x: '70vw',
+                            y: '60vh',
                         }}
                         className="overflow-hidden rounded-lg border border-slate-100 dark:border-zinc-800"
+                        options={false}
                     />
                 )}
             </div>
