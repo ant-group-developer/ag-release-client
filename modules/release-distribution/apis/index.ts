@@ -27,4 +27,9 @@ export const releaseDistributionApi = {
             `/release-ci-data/${id}`
         );
     },
+    getReleaseCiDataDetailByReleaseId: (releaseId: string) => {
+        return axiosInstance.get<DetailResponse<ReleaseCiData>>(
+            `/release-ci-data/release/${releaseId}`
+        );
+    },
 };

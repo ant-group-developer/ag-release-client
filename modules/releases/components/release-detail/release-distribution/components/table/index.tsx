@@ -1,10 +1,13 @@
 import IconButton from '@/components/ui/button/icon-button';
+import JsonViewer from '@/components/ui/json-viewer';
+import AppModal from '@/components/ui/modal/normal-modal';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
 import { getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
@@ -19,6 +22,7 @@ import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space, Tag } from 'antd';
 import { Box, Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
     dataFilter?: ReleaseDspDataFilter;
@@ -37,6 +41,15 @@ export default function DistributionTable({
     const openModal = useModalStore((state) => state.openModal);
     const releaseAction = useReleaseActionStore((state) => state.action);
     const isEditMode = releaseAction === RELEASE_DETAIL_ACTION.EDIT;
+    const { isDark } = useThemeMode();
+
+    const [issueModal, setIssueModal] = useState<{
+        open: boolean;
+        data: ReleaseDspData['issues'];
+    }>({
+        open: false,
+        data: null,
+    });
 
     const column: ProColumns<ReleaseDspData>[] = [
         {
@@ -125,8 +138,8 @@ export default function DistributionTable({
             title: messages('distribution.hasLiveVersion'),
             key: 'hasLiveVersion',
             dataIndex: 'hasLiveVersion',
-            align: 'center',
-            width: 150,
+            align: 'left',
+            width: 200,
             render: (value, record) => {
                 return (
                     <Tag color={record.hasLiveVersion ? 'success' : 'default'}>
@@ -144,14 +157,21 @@ export default function DistributionTable({
             render: (value, record) => {
                 if (record?.status === RELEASE_DSP_DELIVERY_STATUS.ISSUES) {
                     return (
-                        <CustomTooltip title={messages('common.viewDetail')}>
+                        <CustomTooltip
+                            title={
+                                record?.issues
+                                    ? messages('common.viewDetail')
+                                    : ''
+                            }
+                        >
                             <div
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    openModal(
-                                        TYPE_MODAL_RELEASE_DISTRIBUTION.ISSUES,
-                                        record?.issues
-                                    );
+                                    if (!record?.issues) return;
+                                    setIssueModal({
+                                        open: true,
+                                        data: record?.issues,
+                                    });
                                 }}
                                 className="inline-block cursor-pointer"
                             >
@@ -177,7 +197,9 @@ export default function DistributionTable({
             render: (value, record) => {
                 if (!isEditMode || record?.isActive === false) return;
                 return (
-                    <PermissionGate permission={PERMISSION.RELEASE_AUDIO.UPDATE}>
+                    <PermissionGate
+                        permission={PERMISSION.RELEASE_AUDIO.UPDATE}
+                    >
                         <Space>
                             {isEditMode && (
                                 <CustomTooltip
@@ -203,15 +225,43 @@ export default function DistributionTable({
     ];
 
     return (
-        <AppProTable
-            {...props}
-            pagination={false}
-            columns={column}
-            rowClassName={(record) =>
-                record.isActive === false
-                    ? 'bg-zinc-50 opacity-50'
-                    : 'group cursor-pointer'
-            }
-        />
+        <>
+            <AppProTable
+                {...props}
+                pagination={false}
+                columns={column}
+                rowClassName={(record) =>
+                    record.isActive === false
+                        ? 'bg-zinc-50 opacity-50'
+                        : 'group cursor-pointer'
+                }
+            />
+
+            <AppModal
+                open={issueModal.open}
+                onCancel={() => setIssueModal({ open: false, data: null })}
+                title={messages('common.issues')}
+                footer={null}
+                width={'60vw'}
+                styles={{
+                    body: {
+                        height: 'calc(100vh - 140px)',
+                        overflowY: 'auto',
+                    },
+                }}
+                centered
+            >
+                {issueModal.data && (
+                    <JsonViewer
+                        src={issueModal.data}
+                        theme={isDark ? 'ocean' : 'rjv-default'}
+                        style={{
+                            height: 'calc(100vh - 150px)',
+                            overflowY: 'auto',
+                        }}
+                    />
+                )}
+            </AppModal>
+        </>
     );
 }

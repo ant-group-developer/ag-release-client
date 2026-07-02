@@ -70,7 +70,7 @@ export default function ApprovalCard({
             style={{ backgroundColor: token.colorBgContainer }}
             title={
                 <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
-                    <Shield className="text-blue-500" size={20} />
+                    <Shield className="text-blue-500" size={SIZE_ICON} />
                     <span>{messages('release.systemReview.title')}</span>
                 </div>
             }

@@ -3,6 +3,7 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
@@ -25,7 +26,7 @@ import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-releas
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { CircleX } from 'lucide-react';
+import { CircleX, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import { useState } from 'react';
@@ -177,19 +178,17 @@ export default function ReleasesTable({
             title: messages('release.dspLive'),
             key: 'dsp',
             dataIndex: RELEASES_TABLE_KEY.DSP,
-            align: 'center',
-            width: 150,
+            align: 'left',
+            width: 120,
             render: (_, record) => {
                 const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
                 const liveCount = releaseDspDeliveries.filter(
-                    (item) => item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                    (item) =>
+                        item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
                 ).length;
                 const totalCount = releaseDspDeliveries.length;
                 return (
-                    <div
-                        data-stop-row-click="true"
-                        className="flex justify-center"
-                    >
+                    <div data-stop-row-click="true">
                         <span
                             className="cursor-pointer hover:text-blue-500"
                             onClick={() => {
@@ -381,6 +380,24 @@ export default function ReleasesTable({
                                                 });
                                             },
                                         });
+                                    },
+                                },
+                                {
+                                    key: 'distribution',
+                                    label: (
+                                        <div className="flex items-center gap-2">
+                                            <Globe size={SIZE_ICON_SMALL} />
+                                            {messages('common.distribute')}
+                                        </div>
+                                    ),
+                                    show:
+                                        record?.status !==
+                                        RELEASES_STATUS.DRAFT,
+                                    onClick: () => {
+                                        nProgress.start();
+                                        router.push(
+                                            `${APP_ROUTES.RELEASES_DISTRIBUTION}/${record?.id}`
+                                        );
                                     },
                                 },
                             ]}

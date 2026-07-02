@@ -5,30 +5,30 @@ import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
 import ExportTab from '@/modules/release-distribution/components/detail/export-tab';
 import ImportTab from '@/modules/release-distribution/components/detail/import-tab';
-import { useGetReleaseCiDataDetail } from '@/modules/release-distribution/hooks/use-get-release-ci-data-detail';
+import { useGetReleaseCiDataDetailByReleaseId } from '@/modules/release-distribution/hooks/use-get-release-ci-data-detail-by-release-id';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-    params: { id: string };
+    params: { releaseId: string; locale: string };
 };
 
 export default function ReleaseDistributionDetailPage({ params }: Props) {
-    const id = params?.id;
+    const releaseId = params?.releaseId;
     const messages = useTranslations();
-    const { releaseCiDataDetail, isFetching } = useGetReleaseCiDataDetail(id);
+    const { releaseCiDataDetail, isFetching } = useGetReleaseCiDataDetailByReleaseId(releaseId);
 
     const breadcrumbItems = [
         {
             title: (
-                <Link href={APP_ROUTES.RELEASE_DISTRIBUTION}>
-                    {messages('release.releaseDistribution')}
+                <Link href={APP_ROUTES.RELEASES}>
+                    {messages('release.releases')}
                 </Link>
             ),
         },
         {
-            title: `${releaseCiDataDetail?.release?.title}`,
+            title: `${releaseCiDataDetail?.release?.title || ''}`,
         },
     ];
 
@@ -59,7 +59,7 @@ export default function ReleaseDistributionDetailPage({ params }: Props) {
         <AppPageWrapper>
             <PageContainer
                 header={{
-                    title: `${releaseCiDataDetail?.release?.title} - ${releaseCiDataDetail?.release?.upc}`,
+                    title: `${releaseCiDataDetail?.release?.title || ''} - ${releaseCiDataDetail?.release?.upc || ''}`,
                     breadcrumb: { items: breadcrumbItems },
                 }}
             >

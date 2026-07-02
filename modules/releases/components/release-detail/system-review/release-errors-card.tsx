@@ -1,15 +1,20 @@
 'use client';
 
+import { SIZE_ICON } from '@/constants/common';
 import useModalStore from '@/hooks/use-modal';
-import { TYPE_MODAL_RELEASE, RELEASE_ERROR_APPROVAL_STATUS, RELEASE_ERROR_SUBMISSION_STATUS } from '@/modules/releases/enums';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import {
+    RELEASE_ERROR_APPROVAL_STATUS,
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    TYPE_MODAL_RELEASE,
+} from '@/modules/releases/enums';
 import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { ReleaseEnrichedError } from '@/modules/releases/types';
 import { Alert, Button, Card, theme } from 'antd';
 import { Info, Loader2, PackageX, Plus } from 'lucide-react';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
-import ReleaseErrorsTable from './release-errors-table';
 import { useTranslations } from 'next-intl';
+import ReleaseErrorsTable from './release-errors-table';
 
 interface ReleaseErrorsCardProps {
     releaseId: string;
@@ -52,9 +57,11 @@ export default function ReleaseErrorsCard({
             style={{ backgroundColor: token.colorBgContainer }}
             title={
                 <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
-                    <PackageX className="text-red-500" size={20} />
+                    <PackageX className="text-red-500" size={SIZE_ICON} />
                     <span>
-                        {messages('release.systemReview.errorsCard.title', { count: releaseEnrichedErrorsData.length })}
+                        {messages('release.systemReview.errorsCard.title', {
+                            count: releaseEnrichedErrorsData.length,
+                        })}
                     </span>
                 </div>
             }
@@ -62,7 +69,6 @@ export default function ReleaseErrorsCard({
                 <PermissionGate permission={PERMISSION.RELEASE_REVIEW.CREATE}>
                     <div className="flex items-center gap-3">
                         <Button
-                            size="small"
                             type="primary"
                             onClick={() =>
                                 openModal(TYPE_MODAL_RELEASE.CREATE_ERROR)
@@ -70,7 +76,9 @@ export default function ReleaseErrorsCard({
                             className="flex items-center gap-1"
                         >
                             <Plus size={14} />
-                            {messages('release.systemReview.errorsCard.addError')}
+                            {messages(
+                                'release.systemReview.errorsCard.addError'
+                            )}
                         </Button>
                     </div>
                 </PermissionGate>
@@ -83,13 +91,15 @@ export default function ReleaseErrorsCard({
                 </div>
             ) : releaseEnrichedErrorsData.length === 0 ? (
                 <Alert
-                    message={messages('release.systemReview.errorsCard.qualityPassed')}
-                    description={messages('release.systemReview.errorsCard.qualityPassedDesc')}
+                    message={messages(
+                        'release.systemReview.errorsCard.qualityPassed'
+                    )}
+                    description={messages(
+                        'release.systemReview.errorsCard.qualityPassedDesc'
+                    )}
                     type="info"
                     showIcon
-                    icon={
-                        <Info size={18} className="text-blue-500" />
-                    }
+                    icon={<Info size={18} className="text-blue-500" />}
                     className="rounded-lg border border-blue-100 bg-blue-50/50"
                 />
             ) : (

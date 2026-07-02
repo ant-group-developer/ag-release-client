@@ -3112,7 +3112,7 @@
             "exportTask": "Nhiệm vụ xuất",
             "requestorOrganisation": "Tổ chức yêu cầu",
             "deliveryPoint": "Điểm phân phối",
-            "deliveryPointStatus": "Trạng thái điểm phân phối",
+            "deliveryPointStatus": "Trạng thái",
             "transferEndDate": "Ngày kết thúc giao"
         }
     }

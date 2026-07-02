@@ -8,9 +8,15 @@ import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
-type ExportTableProps = Omit<TableProps<ReleaseCiExportEmbeddedItem>, 'columns'>;
+type ExportTableProps = Omit<
+    TableProps<ReleaseCiExportEmbeddedItem>,
+    'columns'
+>;
 
-export default function ExportTable({ dataSource, ...props }: ExportTableProps) {
+export default function ExportTable({
+    dataSource,
+    ...props
+}: ExportTableProps) {
     const messages = useTranslations();
 
     const exportColumns: ColumnsType<ReleaseCiExportEmbeddedItem> = useMemo(
@@ -28,7 +34,8 @@ export default function ExportTable({ dataSource, ...props }: ExportTableProps) 
             {
                 title: messages('releaseCiData.export.requestorOrganisation'),
                 key: 'requestorOrganisation',
-                render: (_, record) => record.exportRequest?.organisation?.name ?? '-',
+                render: (_, record) =>
+                    record.exportRequest?.organisation?.name ?? '-',
             },
             {
                 title: messages('releaseCiData.export.deliveryPoint'),
@@ -38,6 +45,7 @@ export default function ExportTable({ dataSource, ...props }: ExportTableProps) 
             {
                 title: messages('releaseCiData.export.deliveryPointStatus'),
                 key: 'deliveryPointStatus',
+                width: 150,
                 render: (_, record) => {
                     const status = record.musicService?.development_status;
 
@@ -75,7 +83,8 @@ export default function ExportTable({ dataSource, ...props }: ExportTableProps) 
             {
                 title: 'External batch ID',
                 key: 'externalBatchId',
-                render: (_, record) => record.exportBatch?.external_batch_id ?? '-',
+                render: (_, record) =>
+                    record.exportBatch?.external_batch_id ?? '-',
             },
             {
                 title: messages('releaseCiData.export.transferEndDate'),
