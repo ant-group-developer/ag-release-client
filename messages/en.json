@@ -2804,7 +2804,8 @@
             "WAITING_PARTNER": "Waiting partner",
             "DONE": "Done",
             "FAILED": "Failed",
-            "CANCELLED": "Cancelled"
+            "CANCELLED": "Cancelled",
+            "PARTIAL_DONE": "Partially done"
         },
         "stepStatus": {
             "PENDING": "Not started",

@@ -15,7 +15,11 @@ import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-d
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import ReleaseDetailHeader from '@/modules/releases/components/release-detail/header';
 import RightSidebar from '@/modules/releases/components/release-detail/right-sidebar';
-import { RELEASE_ROUTE_ACTION, RELEASES_STATUS, RELEASES_TABS } from '@/modules/releases/enums';
+import {
+    RELEASE_ROUTE_ACTION,
+    RELEASES_STATUS,
+    RELEASES_TABS,
+} from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import {
     ReleaseFormStoreData,
@@ -87,6 +91,8 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
         isLoading: isReleaseDataLoading,
         error,
     } = useGetDetailRelease(releaseId);
+
+    const isDraft = releaseData?.status === RELEASES_STATUS.DRAFT;
 
     const items: TabsProps['items'] = [
         {
@@ -218,32 +224,36 @@ export default function ReleaseDetail({ children }: PropsWithChildren) {
                       ),
                       disabled: isDisableTab,
                   },
-                  ...(releaseData?.status !== RELEASES_STATUS.DRAFT
-                      ? [
-                            {
-                                key: RELEASES_TABS.SYSTEM_REVIEW,
-                                label: (
-                                    <Link
-                                        className={cn(
-                                            isDisableTab ? 'pointer-events-none' : ''
-                                        )}
-                                        href={getReleaseTabRoute(
-                                            releaseId,
-                                            RELEASES_TABS.SYSTEM_REVIEW
-                                        )}
-                                    >
-                                        <div className="flex items-center gap-1">
-                                            <ShieldCheck size={SIZE_ICON} />
-                                            <span>
-                                                {messages('common.systemReview')}
-                                            </span>
-                                        </div>
-                                    </Link>
-                                ),
-                                disabled: isDisableTab,
-                            },
-                        ]
-                      : []),
+              ]
+            : []),
+        ...(!isCreateReleasePage && !isDraft
+            ? [
+                  {
+                      key: RELEASES_TABS.SYSTEM_REVIEW,
+                      label: (
+                          <Link
+                              className={cn(
+                                  isDisableTab
+                                      ? 'pointer-events-none'
+                                      : ''
+                              )}
+                              href={getReleaseTabRoute(
+                                  releaseId,
+                                  RELEASES_TABS.SYSTEM_REVIEW
+                              )}
+                          >
+                              <div className="flex items-center gap-1">
+                                  <ShieldCheck size={SIZE_ICON} />
+                                  <span>
+                                      {messages(
+                                          'common.systemReview'
+                                      )}
+                                  </span>
+                              </div>
+                          </Link>
+                      ),
+                      disabled: isDisableTab,
+                  },
               ]
             : []),
     ];
