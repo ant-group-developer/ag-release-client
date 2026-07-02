@@ -3,6 +3,7 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
@@ -398,7 +399,7 @@ export default function ReleasesTable({
                                     onClick: () => {
                                         nProgress.start();
                                         router.push(
-                                            `/releases/distribution/${record?.id}`
+                                            `${APP_ROUTES.RELEASES_DISTRIBUTION}/${record?.id}`
                                         );
                                     },
                                 },
