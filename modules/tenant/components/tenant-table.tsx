@@ -190,7 +190,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             title: messages('tenant.labels.max.label'),
             dataIndex: 'maxLabels',
             align: 'center',
-            width: 120,
+            width: 140,
             sorter: true,
             render: (cell, record) => formattedNumber(record.maxLabels),
         },

@@ -25,7 +25,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
     const columns: ProColumns<LogsData>[] = [
         {
             title: messages('log.columns.level'),
-            dataIndex: 'level',
+            dataIndex: LOG_SORT_FIELD.LOG_LEVEL,
             width: 120,
             align: 'center',
             ellipsis: true,
@@ -61,7 +61,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         },
         {
             title: messages('log.columns.type'),
-            dataIndex: 'type',
+            dataIndex: LOG_SORT_FIELD.LOG_TYPE,
             width: 120,
             align: 'center',
             ellipsis: true,
@@ -83,7 +83,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         },
         {
             title: messages('log.columns.module'),
-            dataIndex: 'module',
+            dataIndex: LOG_SORT_FIELD.LOG_MODULE,
             width: 200,
             ellipsis: true,
             sorter: true,
@@ -93,9 +93,9 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
                 LOG_SORT_FIELD.LOG_MODULE
             ),
             render: (_, record) => {
-                if (!record.module) return '-';
+                if (!record.modules) return '-';
 
-                const modules = record.module
+                const modules = record.modules
                     .split(',')
                     .map((m) => m.trim())
                     .filter(Boolean);
@@ -127,8 +127,13 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
                     <div className="flex flex-wrap gap-1">
                         {visibleTags.map((name) => renderTag(name))}
                         {hiddenTags.length > 0 && (
-                            <Popover content={renderHiddenTagsPopover()} trigger="hover">
-                                <Tag className="cursor-pointer !mr-0">+{hiddenTags.length}</Tag>
+                            <Popover
+                                content={renderHiddenTagsPopover()}
+                                trigger="hover"
+                            >
+                                <Tag className="!mr-0 cursor-pointer">
+                                    +{hiddenTags.length}
+                                </Tag>
                             </Popover>
                         )}
                     </div>
@@ -150,7 +155,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         },
         {
             title: messages('common.createdAt'),
-            dataIndex: 'createdAt',
+            dataIndex: LOG_SORT_FIELD.LOG_CREATED_AT,
             align: 'center',
             width: 180,
             sorter: true,

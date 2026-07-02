@@ -2,9 +2,10 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import { ACCEPT_IMAGE, MAX_NAME_LENGTH } from '@/constants/validate';
 import { useCommonFormRules } from '@/hooks/useCommonFormRules';
-import { FormInstance, Input, Switch } from 'antd';
+import { FormInstance, Input, Radio, Switch } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
+import { DSP_TYPE } from '../../enums';
 
 type Props = {
     form: FormInstance<any>;
@@ -131,6 +132,26 @@ export default function DspGeneral({ form, isActive }: Props) {
                 ]}
             >
                 <Input allowClear />
+            </AppFormItem>
+            <AppFormItem
+                name="type"
+                label={messages('dsp.type')}
+                required
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.radio'),
+                    },
+                ]}
+            >
+                <Radio.Group disabled={isActive}>
+                    <Radio value={DSP_TYPE.AUDIO}>
+                        {messages('common.audio')}
+                    </Radio>
+                    <Radio value={DSP_TYPE.VIDEO}>
+                        {messages('common.video')}
+                    </Radio>
+                </Radio.Group>
             </AppFormItem>
             <AppFormItem
                 name="isActive"

@@ -2,6 +2,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+import { RANK_COLUMN_WIDTH } from '../../constants/types';
 import {
     RevenueArtistItem,
     RevenueLabelItem,
@@ -9,7 +10,6 @@ import {
     RevenueTenantItem,
     RevenueTrackItem,
 } from '../../types';
-import { RANK_COLUMN_WIDTH } from '../../constants/types';
 
 interface DetailModalState {
     type: 'artist' | 'track' | 'release' | 'label' | 'tenant' | null;
@@ -43,9 +43,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.artist'),
                 dataIndex: 'artistName',
                 key: 'artistName',
-                width: 200,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: RevenueArtistItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
@@ -136,9 +134,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.track'),
                 dataIndex: 'title',
                 key: 'title',
-                width: 130,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: RevenueTrackItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
@@ -173,7 +169,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: 'ISRC',
                 dataIndex: 'isrc',
                 key: 'isrc',
-                width: 100,
+                width: 140,
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -185,7 +181,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 90,
+                width: 110,
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -232,9 +228,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.release'),
                 dataIndex: 'title',
                 key: 'title',
-                width: 130,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: RevenueReleaseItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
@@ -269,7 +263,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: 'UPC',
                 dataIndex: 'upc',
                 key: 'upc',
-                width: 95,
+                width: 140,
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -281,7 +275,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 90,
+                width: 110,
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -328,9 +322,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
-                width: 150,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string) => (
                     <span className="font-medium text-gray-900 dark:text-zinc-100">
                         {text}
@@ -341,7 +333,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 100,
+                width: 150,
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -352,7 +344,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 120,
+                width: 150,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         $
@@ -388,9 +380,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('tenant.name'),
                 dataIndex: 'tenantName',
                 key: 'tenantName',
-                width: 200,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: RevenueTenantItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">
@@ -400,7 +390,9 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 src={record.logo}
                             />
                         </div>
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
@@ -421,7 +413,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 100,
+                width: 150,
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -432,7 +424,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 120,
+                width: 150,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         $
@@ -468,9 +460,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.label'),
                 dataIndex: 'labelName',
                 key: 'labelName',
-                width: 180,
                 ellipsis: true,
-                fixed: 'left' as const,
                 render: (text: string, record: RevenueLabelItem) => (
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0">

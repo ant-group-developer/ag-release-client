@@ -79,6 +79,7 @@ export default function ExportReportProgressItem({
         const downloadLink = document.createElement('a');
         downloadLink.href = summary.result.downloadUrl;
         downloadLink.download = summary.result.fileName || '';
+        downloadLink.target = '_blank';
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
@@ -99,10 +100,7 @@ export default function ExportReportProgressItem({
                     target="_blank"
                     rel="noopener noreferrer"
                     // ellipsis={{ tooltip: messages('common.exportReportSuccess') }}
-                    style={{
-                        maxWidth: 190,
-                        fontWeight: 500,
-                    }}
+                    className="!max-w-[190px] font-medium"
                 >
                     {messages('common.exportReportSuccess')}
                 </Typography.Link>
@@ -116,11 +114,7 @@ export default function ExportReportProgressItem({
         return (
             <Typography.Text
                 ellipsis={{ tooltip: text }}
-                style={{
-                    maxWidth: 190,
-                    fontWeight: 500,
-                    color: 'rgba(0, 0, 0, 0.45)',
-                }}
+                className="!max-w-[190px] font-medium !text-gray-500 dark:!text-zinc-400"
             >
                 {text}
             </Typography.Text>
@@ -132,13 +126,7 @@ export default function ExportReportProgressItem({
             <div className="flex w-full items-center justify-between gap-3">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                     <FolderArchive
-                        className="lucide lucide-folder-archive"
-                        style={{
-                            width: 20,
-                            height: 20,
-                            color: 'rgba(0, 0, 0, 0.45)',
-                            flexShrink: 0,
-                        }}
+                        className="lucide lucide-folder-archive h-5 w-5 shrink-0 text-gray-500 dark:text-zinc-400"
                     />
                     <div className="min-w-0 flex-1">{renderContent()}</div>
                 </div>
@@ -147,13 +135,11 @@ export default function ExportReportProgressItem({
                     <div className="flex h-full w-full items-center justify-center group-hover:hidden">
                         {isCompleted ? (
                             <CircleCheck
-                                className="lucide lucide-check-circle text-green-500"
-                                style={{ width: 20, height: 20 }}
+                                className="lucide lucide-check-circle h-5 w-5 text-green-500"
                             />
                         ) : isFailed ? (
                             <AlertCircle
-                                className="lucide lucide-alert-circle text-red-500"
-                                style={{ width: 20, height: 20 }}
+                                className="lucide lucide-alert-circle h-5 w-5 text-red-500"
                             />
                         ) : (
                             <Progress
@@ -166,8 +152,7 @@ export default function ExportReportProgressItem({
                         )}
                     </div>
                     <CircleX
-                        className="lucide lucide-circle-x hidden cursor-pointer text-red-400 hover:text-red-500 group-hover:block"
-                        style={{ width: 25, height: 25 }}
+                        className="lucide lucide-circle-x h-[25px] w-[25px] hidden cursor-pointer text-red-400 hover:text-red-500 group-hover:block"
                         onClick={handleRemove}
                     />
                 </div>

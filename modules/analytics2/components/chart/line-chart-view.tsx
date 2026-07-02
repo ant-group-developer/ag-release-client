@@ -48,54 +48,29 @@ const CustomLineTooltip = ({
         const originalData = firstEntry.payload;
 
         return (
-            <div
-                style={{
-                    backgroundColor: '#fff',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    border: '1px solid #f0f0f0',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px',
-                }}
-            >
-                <Typography.Text style={{ fontWeight: 600, fontSize: '13px' }}>
+            <div className="flex flex-col gap-1 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
+                <span className="text-[13px] font-semibold text-gray-900 dark:text-zinc-100">
                     {label}
-                </Typography.Text>
+                </span>
 
                 {/* Main line item */}
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                    }}
-                >
+                <div className="flex items-center gap-2">
                     <div
+                        className="h-2 w-2 rounded-full"
                         style={{
-                            width: '8px',
-                            height: '8px',
-                            borderRadius: '50%',
                             backgroundColor:
                                 firstEntry.color ||
                                 firstEntry.stroke ||
                                 '#1890ff',
                         }}
                     />
-                    <Typography.Text style={{ fontSize: '12px' }}>
+                    <span className="text-xs text-gray-600 dark:text-zinc-400">
                         {firstEntry.name || lineName}:
-                    </Typography.Text>
-                    <Typography.Text
-                        style={{
-                            fontWeight: 600,
-                            fontSize: '12px',
-                            marginLeft: '4px',
-                        }}
-                    >
+                    </span>
+                    <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
                         {valuePrefix}
                         {formattedNumber(firstEntry.value)}
-                    </Typography.Text>
+                    </span>
                 </div>
 
                 {/* Additional metrics */}
@@ -104,35 +79,15 @@ const CustomLineTooltip = ({
                         const val = originalData?.[cfg.key];
                         if (val === undefined || val === null) return null;
                         return (
-                            <div
-                                key={idx}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        width: '8px',
-                                        height: '8px',
-                                        borderRadius: '50%',
-                                        backgroundColor: '#8c8c8c',
-                                    }}
-                                />
-                                <Typography.Text style={{ fontSize: '12px' }}>
+                            <div key={idx} className="flex items-center gap-2">
+                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-zinc-500" />
+                                <span className="text-xs text-gray-600 dark:text-zinc-400">
                                     {cfg.name}:
-                                </Typography.Text>
-                                <Typography.Text
-                                    style={{
-                                        fontWeight: 600,
-                                        fontSize: '12px',
-                                        marginLeft: '4px',
-                                    }}
-                                >
+                                </span>
+                                <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
                                     {cfg.valuePrefix || ''}
                                     {formattedNumber(val)}
-                                </Typography.Text>
+                                </span>
                             </div>
                         );
                     }

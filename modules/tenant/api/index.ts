@@ -1,17 +1,23 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+import { TENANT_API_ENDPOINTS } from '../constants';
 import {
+    CreateTenantDomainPayload,
     CreateTenantPayload,
     DataFilterTenant,
+    DomainResolveParams,
+    DomainResolveResponse,
     TenantData,
     TenantDetail,
+    TenantDomainResponse,
+    TenantDomainData,
     TenantDspAgreementData,
     TenantDspData,
-    TenantRoleData,
-    UpdateTenantPayload,
-    UpdateTenantRolesPayload,
     UpdateTenantDspAgreementPayload,
     UpdateTenantDspPayload,
+    UpdateTenantPayload,
+    UpdateTenantRolesPayload,
+    CfOAuthUrlResponse,
 } from '../types/data';
 
 export const tenantApi = {
@@ -52,6 +58,31 @@ export const tenantApi = {
         );
     },
 
+    createDomain(tenantId: string, payload: CreateTenantDomainPayload) {
+        return axiosInstance.post<DetailResponse<TenantDomainResponse>>(
+            TENANT_API_ENDPOINTS.DOMAIN(tenantId),
+            payload
+        );
+    },
+
+    getDomain(tenantId: string) {
+        return axiosInstance.get<DetailResponse<TenantDomainResponse>>(
+            TENANT_API_ENDPOINTS.DOMAIN(tenantId)
+        );
+    },
+
+    verifyDomain(tenantId: string) {
+        return axiosInstance.post<DetailResponse<TenantDomainData>>(
+            TENANT_API_ENDPOINTS.VERIFY_DOMAIN(tenantId)
+        );
+    },
+
+    deleteDomain(tenantId: string) {
+        return axiosInstance.delete<DetailResponse<any>>(
+            TENANT_API_ENDPOINTS.DOMAIN(tenantId)
+        );
+    },
+
     update(id: string, payload: UpdateTenantPayload) {
         return axiosInstance.put<DetailResponse<TenantDetail>>(
             `/tenants/${id}`,
@@ -77,7 +108,10 @@ export const tenantApi = {
         );
     },
 
-    updateTenantDspAgreement(tenantId: string, payload: UpdateTenantDspAgreementPayload) {
+    updateTenantDspAgreement(
+        tenantId: string,
+        payload: UpdateTenantDspAgreementPayload
+    ) {
         return axiosInstance.patch(
             `/tenant-dsp-agreements/admin/tenants/${tenantId}/dsps`,
             payload
@@ -98,6 +132,24 @@ export const tenantApi = {
         return axiosInstance.post(
             `tenants/${tenantId}/configured-roles`,
             payload
+        );
+    },
+
+    resolveDomain(params: DomainResolveParams) {
+        return axiosInstance.get<DetailResponse<DomainResolveResponse>>(
+            '/public/domain-resolve',
+            {
+                params,
+            }
+        );
+    },
+
+    getCfOAuthUrl(tenantId: string, params?: { returnUrl: string }) {
+        return axiosInstance.get<DetailResponse<CfOAuthUrlResponse>>(
+            TENANT_API_ENDPOINTS.CF_OAUTH_URL(tenantId),
+            {
+                params,
+            }
         );
     },
 };

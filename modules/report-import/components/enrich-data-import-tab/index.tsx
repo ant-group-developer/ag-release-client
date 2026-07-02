@@ -9,6 +9,7 @@ import { ENRICH_SCAN_STATUS } from '../../enums';
 import { useEnrichScanEvents } from '../../hooks/use-enrich-scan-events';
 import { useGetListEnrichScanSessions } from '../../hooks/use-get-list-enrich-scan-sessions';
 import { EnrichScanSessionData } from '../../types/payload';
+import EnrichHistoryModal from './enrich-history-modal';
 import EnrichScanModal from './enrich-scan-modal';
 import EnrichScanSessionsTable from './enrich-scan-sessions-table';
 
@@ -22,6 +23,8 @@ export default function EnrichDataImportTab() {
     });
     const [isScanModalOpen, setIsScanModalOpen] = useState(false);
     const [viewScanId, setViewScanId] = useState<string | null>(null);
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+    const [historyScanId, setHistoryScanId] = useState<string | null>(null);
 
     const { enrichScanSessionsData, isLoading, isFetching, refetch } =
         useGetListEnrichScanSessions(dataFilter);
@@ -54,6 +57,16 @@ export default function EnrichDataImportTab() {
     const handleCloseScanModal = () => {
         setIsScanModalOpen(false);
         setViewScanId(null);
+    };
+
+    const handleViewHistory = (record: EnrichScanSessionData) => {
+        setHistoryScanId(record.id);
+        setIsHistoryModalOpen(true);
+    };
+
+    const handleCloseHistoryModal = () => {
+        setIsHistoryModalOpen(false);
+        setHistoryScanId(null);
     };
 
     return (
@@ -109,6 +122,7 @@ export default function EnrichDataImportTab() {
                 }}
                 onChange={() => undefined}
                 onViewDetail={handleViewDetail}
+                onViewHistory={handleViewHistory}
             />
             <AppPagination
                 style={{
@@ -128,6 +142,11 @@ export default function EnrichDataImportTab() {
                 open={isScanModalOpen}
                 onClose={handleCloseScanModal}
                 initialScanId={viewScanId}
+            />
+            <EnrichHistoryModal
+                open={isHistoryModalOpen}
+                onClose={handleCloseHistoryModal}
+                scanId={historyScanId}
             />
         </div>
     );

@@ -7,7 +7,8 @@ import { DetailResponse } from '@/types/api';
 import { Button, Checkbox, Form, Modal, Radio } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
 import {
     Analytics2DataFilter,
     EXPORT_OPTION,
@@ -35,6 +36,11 @@ export default function ExportReportModal({
 
     const { exportAnalyticsReport, isPending: isExporting } =
         useExportAnalyticsReport();
+
+    const { data: tenantActiveData } = useTenantActive();
+    const activeTenantIds = useMemo(() => {
+        return tenantActiveData?.items?.map((t: any) => t.id) ?? [];
+    }, [tenantActiveData]);
 
     const splitMode = Form.useWatch('splitMode', form);
     const periodUnit = Form.useWatch('periodUnit', form);
@@ -72,14 +78,15 @@ export default function ExportReportModal({
     useEffect(() => {
         if (open) {
             const currentTenantId = profile?.tenantId;
+            const hasActiveTenant = currentTenantId && activeTenantIds.includes(currentTenantId);
             form.setFieldsValue({
                 splitMode: EXPORT_OPTION.BY_WORKSPACE,
-                tenantIds: currentTenantId ? [currentTenantId] : [],
+                tenantIds: hasActiveTenant ? [currentTenantId] : [],
                 isExportArtist: false,
                 periodUnit: PERIOD_TYPE.NONE,
             });
         }
-    }, [open, form, profile]);
+    }, [open, form, profile, activeTenantIds]);
 
     const getMonthFromQuarter = (quarterStr: string, isEnd: boolean) => {
         const match = quarterStr.match(/^(\d{4})-Q([1-4])$/);
@@ -243,6 +250,19 @@ export default function ExportReportModal({
                 <AppFormItem
                     name="tenantIds"
                     label={messages('tenant.selectTitle')}
+                    rules={[
+                        {
+                            validator: (_, value) => {
+                                const validValues = value?.filter((id: string) => id && activeTenantIds.includes(id)) ?? [];
+                                if (!validValues.length) {
+                                    return Promise.reject(
+                                        new Error(messages('validation.select'))
+                                    );
+                                }
+                                return Promise.resolve();
+                            },
+                        },
+                    ]}
                 >
                     <TenantSelectTable />
                 </AppFormItem>

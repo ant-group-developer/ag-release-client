@@ -17,7 +17,7 @@ export const useCreateNewsCategory = () => {
         { onSuccess }: CreateVariables<CreateNewsCategoryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: newsCategoryQueryKeys.lists(),
+            queryKey: newsCategoryQueryKeys.all,
         });
 
         const responseMessages = messages(data?.data?.messageCode);

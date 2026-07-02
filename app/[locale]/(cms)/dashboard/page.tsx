@@ -31,7 +31,7 @@ function Dashboard({}: Props) {
     // const router = useRouter();
     const { token } = theme.useToken();
     const [startDate] = useState(() =>
-        dayjs().subtract(30, 'day').toISOString()
+        dayjs().subtract(12, 'month').toISOString()
     );
     const [endDate] = useState(() => dayjs().toISOString());
 
@@ -46,6 +46,7 @@ function Dashboard({}: Props) {
         pageSize: PAGE_SIZE,
         startDate,
         endDate,
+        isImportedFromReport: 'false',
     });
     const messages = useTranslations();
     const { releasesData, isLoading } = useGetListReleases(dataFilter);

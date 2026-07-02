@@ -19,8 +19,10 @@ import {
     CreateReportConfigPayload,
     DeleteImportedReleasesPayload,
     DeleteImportedReleasesResponse,
+    EnrichHistoryResponse,
     EnrichScanSessionData,
     EtlJobData,
+    GetEnrichHistoryParams,
     ImportJobStatusResponse,
     PreValidateImportPayload,
     PreValidateImportResponse,
@@ -34,6 +36,7 @@ import {
 const REPORT_IMPORT_API_PATHS = {
     ENRICH_SCAN: '/partners/enrich/scan',
     ENRICH_SCAN_SESSIONS: '/partners/enrich/scan/sessions',
+    ENRICH_HISTORY: '/partners/enrich/history',
     RELEASES_DELETE: '/report-import/releases/delete',
 } as const;
 
@@ -97,6 +100,12 @@ export const reportConfigApis = {
     getListEnrichScanSessions: (params: CommonParams) => {
         return axiosInstance.get<PaginationResponse<EnrichScanSessionData>>(
             REPORT_IMPORT_API_PATHS.ENRICH_SCAN_SESSIONS,
+            { params }
+        );
+    },
+    getEnrichHistory: (params: GetEnrichHistoryParams) => {
+        return axiosInstance.get<DetailResponse<EnrichHistoryResponse>>(
+            REPORT_IMPORT_API_PATHS.ENRICH_HISTORY,
             { params }
         );
     },

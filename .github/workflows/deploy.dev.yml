@@ -27,9 +27,9 @@ jobs:
                   # disable host checking (only if you trust the server)
                   # run each step with sudo
                     ssh -o StrictHostKeyChecking=no -p ${PORT:-22} ${USER}@${HOST} '
-                        git config --global --add safe.directory /www/wwwroot/dev/ag-music-client
+                        git config --global --add safe.directory /www/wwwroot/dev/ag-release-client
 
-                        cd /www/wwwroot/dev/ag-music-client || exit 1
+                        cd /www/wwwroot/dev/ag-release-client || exit 1
                         sudo git pull origin dev
 
                         TAG=$(git rev-parse --short HEAD || echo "latest")

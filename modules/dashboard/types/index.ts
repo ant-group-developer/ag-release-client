@@ -47,6 +47,7 @@ export interface CountryCountData {
 export interface DashboardDataFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
+    isImportedFromReport?: string;
 }
 
 export interface AnalyticDashboardParams {

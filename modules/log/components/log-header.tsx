@@ -33,7 +33,7 @@ function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
                 value={arrayFromString(dataFilter.level)}
                 allowClear
                 maxTagCount="responsive"
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 220 }}
             />
             <LogTypesSelect
                 mode="multiple"
@@ -44,18 +44,18 @@ function LogHeader({ dataFilter, onChangeFilter, onSearch }: Props) {
                 value={arrayFromString(dataFilter.type)}
                 allowClear
                 maxTagCount="responsive"
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 220 }}
             />
             <LogModulesSelect
                 mode="multiple"
                 placeholder={messages('log.columns.module')}
                 onChange={(value) =>
-                    onChangeFilter({ module: arrayToString(value) })
+                    onChangeFilter({ modules: arrayToString(value) })
                 }
-                value={arrayFromString(dataFilter.module)}
+                value={arrayFromString(dataFilter.modules)}
                 allowClear
                 maxTagCount="responsive"
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 220 }}
             />
         </Space>
     );

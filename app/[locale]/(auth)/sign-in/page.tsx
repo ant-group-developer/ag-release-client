@@ -1,10 +1,12 @@
 'use client';
 
 import AppForm from '@/components/ui/antd-form/form';
+import { LOCALHOST } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { Link } from '@/i18n/routing';
+import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
 import { Alert, Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -18,6 +20,9 @@ interface FormValues {
 
 export default function SignInPage() {
     const { token } = theme.useToken();
+    const currentDomain = useCurrentDomain();
+    // const { domainData } = useResolveDomain(currentDomain);
+
     const [isLoading, setIsLoading] = useState(false);
     const messages = useTranslations();
     const { handleError } = useApiNotify();
@@ -37,16 +42,25 @@ export default function SignInPage() {
 
     const onFinish = async (values: FormValues) => {
         setIsLoading(true);
+
+        const callbackUrl = `${window.location.origin}${APP_ROUTES.DASHBOARD}`;
         try {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
-                redirect: true,
-                callbackUrl: `${APP_ROUTES.DASHBOARD}`,
+                redirect: false,
+                callbackUrl,
+                ...(currentDomain && currentDomain !== LOCALHOST
+                    ? { currentDomain }
+                    : {}),
             });
 
             if (result?.error) {
-                handleError(result.error);
+                // handleError(result.error);
+                const newUrl = `${window.location.pathname}?error=${encodeURIComponent(result.error)}`;
+                window.history.replaceState(null, '', newUrl);
+            } else if (result?.ok && result?.url) {
+                window.location.href = result.url;
             }
         } catch (error: any) {
             handleError(error);

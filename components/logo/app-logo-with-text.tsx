@@ -9,15 +9,23 @@ type Props = {
     className?: string;
     wrapperClassName?: string;
     size?: number;
+    name?: string;
+    logo?: string;
 } & AppLogoProps;
 
-function AppLogoWithText({ className, wrapperClassName, size = 70 }: Props) {
+function AppLogoWithText({
+    className,
+    wrapperClassName,
+    size = 70,
+    name,
+    logo,
+}: Props) {
     // const { data } = useGetSettingPublic();
     // const companyName = data?.website || defaultConfig.APP_SHORT_NAME;
     // const companyLogo = data?.logoUrl || defaultConfig.APP_LOGO;
 
-    const companyName = defaultConfig.APP_SHORT_NAME;
-    const companyLogo = defaultConfig.APP_LOGO;
+    const companyName = name || defaultConfig.APP_SHORT_NAME;
+    const companyLogo = logo || defaultConfig.APP_LOGO;
 
     return (
         <Link

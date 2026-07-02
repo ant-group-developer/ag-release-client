@@ -57,3 +57,32 @@ export enum ENRICH_SCAN_STATUS {
     FAILED = 'FAILED',
     CANCELED = 'CANCELLED',
 }
+
+export enum ENRICH_ENTITY_TYPE {
+    RELEASE = 'release',
+    TRACK = 'track',
+    ARTIST = 'artist',
+    RELEASE_ARTIST = 'release_artist',
+    TRACK_ARTIST = 'track_artist',
+}
+
+export enum ENRICH_CHANGE_TYPE {
+    CREATE = 'create',
+    UPDATE = 'update',
+    LINK = 'link',
+    MERGE = 'merge',
+    SKIP = 'skip',
+}
+
+export enum ENRICHMENT_SOURCE {
+    SPOTIFY = 'spotify',
+    DEEZER = 'deezer',
+    LOCAL = 'local',
+}
+
+export enum ENRICH_HISTORY_STATUS {
+    APPLIED = 'applied',
+    DRY_RUN = 'dry_run',
+    ERROR = 'error',
+}
+

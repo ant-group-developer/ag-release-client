@@ -1,7 +1,5 @@
 'use client';
 
-import JsonViewer from '@/components/ui/json-viewer';
-import AppModal from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import {
     PAGE_SIZE_EXTRA_LARGE,
@@ -11,9 +9,7 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { useThemeMode } from '@/hooks/use-theme-mode';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { RELEASE_DSP_TABLE_KEY } from '@/modules/release-dsp/enums';
@@ -24,12 +20,10 @@ import {
 } from '@/modules/release-dsp/types';
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
-import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { ReleasesData } from '@/modules/releases/types';
 import { theme } from 'antd';
-import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 type Props = {
@@ -48,14 +42,14 @@ export default function DistributionTab({ releaseData }: Props) {
     >();
     const headerHeight = useElementHeightById('release-header');
 
-    const openModal = useModalStore((state) => state.openModal);
-    const dataEdit = useModalStore((state) => state.dataEdit);
-    const typeModal = useModalStore((state) => state.typeModal);
-    const closeModal = useModalStore((state) => state.closeModal);
+    // const openModal = useModalStore((state) => state.openModal);
+    // const dataEdit = useModalStore((state) => state.dataEdit);
+    // const typeModal = useModalStore((state) => state.typeModal);
+    // const closeModal = useModalStore((state) => state.closeModal);
 
     const { token } = theme.useToken();
-    const { isDark } = useThemeMode();
-    const messages = useTranslations();
+    // const { isDark } = useThemeMode();
+    // const messages = useTranslations();
 
     // Thiết lập hành động là READ để các bảng rơi vào chế độ chỉ đọc
     useEffect(() => {
@@ -69,22 +63,19 @@ export default function DistributionTab({ releaseData }: Props) {
         }
     }, [releaseData, setFormValues]);
 
-    const {
-        dataFilter,
-        onChangeFilter,
-        onChangePage,
-    } = useFilter<ReleaseDspDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
-        status: releaseDspStatus,
-        orderBy: ORDER.ASC,
-        fieldOrder: RELEASE_DSP_TABLE_KEY.DSP_NAME,
-    });
+    const { dataFilter, onChangeFilter, onChangePage } =
+        useFilter<ReleaseDspDataFilter>({
+            page: 1,
+            pageSize: PAGE_SIZE_EXTRA_LARGE,
+            status: releaseDspStatus,
+            orderBy: ORDER.ASC,
+            fieldOrder: RELEASE_DSP_TABLE_KEY.DSP_NAME,
+        });
 
-    const {
-        releaseDsp,
-        isLoading: isLoadingReleaseDsp,
-    } = useGetListReleaseDsp(releaseData?.id ?? '', dataFilter);
+    const { releaseDsp, isLoading: isLoadingReleaseDsp } = useGetListReleaseDsp(
+        releaseData?.id ?? '',
+        dataFilter
+    );
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
@@ -159,7 +150,7 @@ export default function DistributionTab({ releaseData }: Props) {
             </div>
 
             <AppPagination
-                className="rounded-b-lg mt-4"
+                className="mt-4 rounded-b-lg"
                 style={{ backgroundColor: token.colorBgContainer }}
                 align="end"
                 current={dataFilter.page}
@@ -171,34 +162,6 @@ export default function DistributionTab({ releaseData }: Props) {
                 showQuickJumper
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
             />
-
-            {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.ISSUES && (
-                <AppModal
-                    open={true}
-                    onCancel={closeModal}
-                    title={messages('common.issues')}
-                    footer={null}
-                    width={800}
-                    className="!top-10 !w-[60vw]"
-                    styles={{
-                        body: {
-                            height: 'calc(100vh - 140px)',
-                            overflowY: 'auto',
-                        },
-                    }}
-                >
-                    {dataEdit && (
-                        <JsonViewer
-                            src={dataEdit}
-                            theme={isDark ? 'ocean' : 'rjv-default'}
-                            style={{
-                                height: 'calc(100vh - 150px)',
-                                overflowY: 'auto',
-                            }}
-                        />
-                    )}
-                </AppModal>
-            )}
         </div>
     );
 }

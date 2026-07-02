@@ -3,9 +3,9 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, formattedNumber, getIndex } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Tag, Typography } from 'antd';
+import { Tag, Tooltip, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { Eye } from 'lucide-react';
+import { Eye, FileText } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ENRICH_SCAN_STATUS } from '../../enums';
 import { EnrichScanSessionData } from '../../types/payload';
@@ -24,10 +24,12 @@ type Props = Omit<AppTableProps<EnrichScanSessionData>, 'columns'> & {
         current: number;
     };
     onViewDetail: (record: EnrichScanSessionData) => void;
+    onViewHistory: (record: EnrichScanSessionData) => void;
 };
 
 export default function EnrichScanSessionsTable({
     onViewDetail,
+    onViewHistory,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -191,12 +193,21 @@ export default function EnrichScanSessionsTable({
         },
         {
             key: 'actions',
-            width: 90,
+            width: 100,
             align: 'center',
             render: (_, record) => (
-                <IconButton onClick={() => onViewDetail(record)}>
-                    <Eye size={SIZE_ICON} />
-                </IconButton>
+                <div className="flex items-center justify-center gap-2">
+                    <Tooltip title={messages('common.viewDetail')}>
+                        <IconButton onClick={() => onViewDetail(record)}>
+                            <Eye size={SIZE_ICON} />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={messages('reportConfigs.enrichDataImport.historyAction.viewLog')}>
+                        <IconButton onClick={() => onViewHistory(record)}>
+                            <FileText size={SIZE_ICON} />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             ),
         },
     ];

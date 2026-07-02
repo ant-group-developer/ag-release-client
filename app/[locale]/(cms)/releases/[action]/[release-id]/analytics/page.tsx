@@ -21,7 +21,7 @@ import { useGetReleaseTrendViewTerBarChart } from '@/modules/analytics2/hooks/us
 
 const { Title } = Typography;
 
-const ANALYTICS_MONTHLY_RANGE_DAYS = 29;
+const ANALYTICS_DEFAULT_RANGE_MONTHS = 12;
 
 export default function AnalyticsPage() {
     const params = useParams();
@@ -38,7 +38,7 @@ export default function AnalyticsPage() {
 
     const [fromDate, setFromDate] = useState<string>(
         dayjs()
-            .subtract(ANALYTICS_MONTHLY_RANGE_DAYS, 'day')
+            .subtract(ANALYTICS_DEFAULT_RANGE_MONTHS, 'month')
             .format('YYYY-MM-DD')
     );
     const [toDate, setToDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
@@ -288,3 +288,4 @@ export default function AnalyticsPage() {
         </div>
     );
 }
+

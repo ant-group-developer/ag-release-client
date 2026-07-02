@@ -121,6 +121,7 @@ export default function RankingCard({
                     pagination={false}
                     scroll={{ x: scrollX }}
                     size="small"
+                    tableLayout="fixed"
                 />
             ) : loading ? (
                 <Skeleton active paragraph={{ rows: 8 }} />

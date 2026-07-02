@@ -3,6 +3,64 @@
         "title": "ANT Group",
         "description": "Together we will succeed"
     },
+    "landing": {
+        "heroTitle": "Global music distribution made simple and fast",
+        "heroSubtitle": "{appName} helps you release your music to Spotify, Apple Music, TikTok, and over 150 digital stores worldwide.",
+        "getStarted": "Get Started",
+        "digitalStores": "Digital Stores & DSPs",
+        "distributionUptime": "Distribution Uptime",
+        "tracksDistributed": "Tracks Distributed",
+        "automatedSupport": "Automated Support",
+        "featuresTitle": "Core Features",
+        "featuresSubtitle": "Everything you need to release and manage your music professionally",
+        "easyUpload": "Easy Upload",
+        "easyUploadDesc": "Upload releases, tracks, and manage your music assets in just a few steps.",
+        "smartDist": "Smart Distribution",
+        "smartDistDesc": "Distribute your music to the largest global DSPs automatically.",
+        "detailedAnalytics": "Detailed Analytics",
+        "detailedAnalyticsDesc": "Track streams, revenues, and artist growth trends visually.",
+        "howItWorksTitle": "Simple Workflow",
+        "howItWorksSubtitle": "Just 4 steps to deliver your music to millions of listeners worldwide",
+        "step1Title": "1. Sign Up & Upload",
+        "step1Desc": "Create your account quickly and upload your high-quality tracks to our system.",
+        "step2Title": "2. Quality & Metadata Check",
+        "step2Desc": "Our review team will inspect audio quality and ensure all copyright information is accurate.",
+        "step3Title": "3. Global Distribution",
+        "step3Desc": "Your music is automatically sent to Spotify, Apple Music, TikTok, and other major partners.",
+        "step4Title": "4. Earnings & Analytics",
+        "step4Desc": "Get detailed reports from every single store, withdraw your royalties securely.",
+        "platformsTitle": "Supported Platforms",
+        "platformsSubtitle": "Your music will be available on all leading streaming stores and social media apps",
+        "faqTitle": "Frequently Asked Questions",
+        "faqSubtitle": "Everything you need to know about distributing with {appName}",
+        "faqQ1": "How long does it take for my music to go live?",
+        "faqA1": "Our review process usually takes 1-3 business days. Once approved, your releases will typically appear on major stores within 24-48 hours.",
+        "faqQ2": "What audio and cover art formats do you accept?",
+        "faqA2": "We require high-quality WAV files (16-bit/44.1kHz or 24-bit). Cover art must be at least 3000x3000px in JPG or PNG format.",
+        "faqQ3": "How are royalties calculated and paid?",
+        "faqA3": "Royalties from streaming services are compiled monthly. You can withdraw your earnings directly to your bank account or PayPal once you meet the minimum threshold.",
+        "ctaTitle": "Ready to release your music globally?",
+        "ctaSubtitle": "Create an account today to start your professional distribution journey with {appName}.",
+        "ctaButton": "Start Distributing Now",
+        "navHome": "Home",
+        "navNews": "News",
+        "navDocs": "Documentation",
+        "newsTitle": "News",
+        "newsSubtitle": "Stay updated with the latest news, trends, and tutorials from {appName}",
+        "newsEmpty": "No posts found",
+        "newsEmptyDesc": "We will update the latest news here soon.",
+        "newsBadge": "News",
+        "newsReadMore": "Read more →",
+        "newsBackToList": "Back to list",
+        "newsNotFound": "Post not found",
+        "docsTitle": "Documentation Guides",
+        "docsSubtitle": "Find distribution guides, metadata rules, and detailed payment policies.",
+        "docsReadGuide": "Read Guide",
+        "docsLoading": "Loading documentation...",
+        "docsNoDataTitle": "No documentation available",
+        "docsNoDataDesc": "We will update the documentation guides here soon.",
+        "docsAllCategory": "All"
+    },
     "accessDenied": {
         "label": "Access denied",
         "title": "Looks like you don't have permission to access this page",
@@ -39,6 +97,8 @@
         },
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details",
+        "domain_restricted": "Account does not have permission to access this domain",
+        "domain_not_active": "This domain is not active",
         "message": {
             "error": {
                 "invalidCredentials": "Invalid email or password.",
@@ -222,6 +282,7 @@
         "takenDown": "Taken down",
         "minutes": "minutes",
         "hours": "hours",
+        "executionTime": "Execution time",
         "dateRelease": "Date release",
         "genres": "Genre",
         "track": "Track",
@@ -242,6 +303,7 @@
         "lastTimeUpdated": "Last time updated",
         "refresh": "Refresh",
         "retry": "Retry",
+        "resync": "Re-sync",
         "department": "Department",
         "icon": "Icon",
         "listLayout": "List layout",
@@ -253,7 +315,11 @@
         "exportExcel": "Export excel",
         "exportReport": "Export report",
         "export": "Export",
+        "import": "Import",
         "time": "Time",
+        "modifyTime": "Modify time",
+        "importStatus": "Last import",
+        "importTime": "Import time",
         "copy": "Copy",
         "from": "from",
         "to": "to",
@@ -297,6 +363,7 @@
         "remove": "Remove",
         "assignee": "Assignee",
         "image": "Image",
+        "audio": "Audio",
         "video": "Video",
         "type": "Type",
         "status": "Status",
@@ -307,6 +374,8 @@
         "iNo": "No.",
         "update": "Update",
         "bulkUpdate": "Bulk update",
+        "bulkCreate": "Bulk create",
+        "autoSyncCi": "Auto Sync CI",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
@@ -331,10 +400,15 @@
         "next": "Next",
         "of": "of",
         "creator": "Creator",
+        "submitter": "Submitter",
         "yes": "Yes",
         "no": "No",
         "other": "Other",
         "review": "Review",
+        "needsReview": "Needs review",
+        "releaseReview": "Release review",
+        "hasError": "Pending fix",
+        "releaseError": "Release error",
         "comment": "Comment",
         "download": "Download",
         "code": "Code",
@@ -354,7 +428,17 @@
         "justNow": "just now",
         "ago": "ago",
         "systemReview": "System Review",
-        "logs": "Logs"
+        "logs": "Logs",
+        "drag": "Drag to reorder",
+        "errorList": "Error list",
+        "markAsResolved": "Mark as resolved",
+        "markAllAsResolved": "Mark all done",
+        "resolveAllErrorsConfirm": "Confirm all errors have been resolved, this action will update the error status",
+        "clickToUpdateErrorStatus": "Click here to update the status of this error",
+        "sortAsc": "Ascending",
+        "sortDesc": "Descending",
+        "sortOrder": "Sort order",
+        "sortField": "Sort by"
     },
     "country": {
         "label": "Country",
@@ -748,6 +832,7 @@
         "deleteSuccessfully": "Delete successfully!",
         "somethingWentWrong": "Something went wrong!",
         "updateSuccessfully": "Update successfully!",
+        "syncSuccessfully": "Synced successfully!",
         "eachLanguageCanOnlyHaveOneFile": "Each language can only have 1 file.",
         "pleaseLoginChannelAgain": "Please login again to get new token",
         "dataAlreadyExists": "Data already exists",
@@ -924,6 +1009,7 @@
             "matchedTracks": "Matched tracks"
         },
         "onlyDraftCanBeDeleted": "Only releases in Draft status can be deleted.",
+        "dspLive": "DSPs live",
         "audioLanguage": "Audio language",
         "metadataLanguageCountry": "Metadata language country",
         "metadataLanguage": "Metadata language",
@@ -942,6 +1028,8 @@
         "importedFromReport": "Imported from report",
         "createdDirectly": "Created directly",
         "routeLabel": "Music releases",
+        "releaseDistribution": "Release Distribution",
+        "releaseDistributionRouteLabel": "Release Distribution",
         "create": "Create release",
         "latestReleases": "Latest releases",
         "name": "Release name",
@@ -1108,6 +1196,68 @@
             "partially_failed": "Partially failed",
             "partial_done": "Partial done",
             "failed": "Failed"
+        },
+        "releaseError": "Release error",
+        "error": {
+            "description": "Error description",
+            "submissionStatusLabel": "Submission Status",
+            "approvalStatusLabel": "Approval Status",
+            "submissionStatus": {
+                "OPEN": "Open",
+                "FIXED": "Fixed"
+            },
+            "approvalStatus": {
+                "PENDING": "Pending",
+                "APPROVED": "Approved",
+                "REJECTED": "Rejected"
+            },
+            "type": {
+                "ADMIN_CREATE": "Admin Created",
+                "IMPORT_CI": "Import CI",
+                "QA_FLAG_CI": "QA Flag CI"
+            }
+        },
+        "systemReview": {
+            "title": "Approve Release",
+            "executionNote": "* Note: Upon approval, the release will be verified as eligible and sent to the processing pipeline for compression and DDEX metadata delivery to the selected DSPs.",
+            "confirmApproveWithErrors": "Warning: The release still has unresolved errors!",
+            "confirmApprove": "Confirm execution approval?",
+            "confirmApproveDescWithErrors": "The system detected unresolved quality errors. Are you sure you still want to approve this release?",
+            "confirmApproveDesc": "This action will approve the release and start the music delivery process.",
+            "stillApprove": "Still approve",
+            "approve": "Approve execution",
+            "reject": "Reject approval",
+            "approveSuccess": "Release approved and executed successfully!",
+            "rejectSuccess": "Release execution rejection status updated.",
+            "historyTitle": "Release review history",
+            "rejectModal": {
+                "title": "REJECT RELEASE EXECUTION",
+                "confirmReject": "Confirm Rejection",
+                "description": "Please enter the reason for rejecting approval. This reason will be recorded in the system history and sent as a notification to the release owner.",
+                "reasonLabel": "Rejection Reason",
+                "reasonRequired": "Please enter the rejection reason!",
+                "reasonPlaceholder": "Example: Track 1 has a serious copyright conflict with work already distributed on YouTube ContentID..."
+            },
+            "errorsCard": {
+                "title": "Release errors ({count})",
+                "addError": "Add error",
+                "qualityPassed": "No moderation errors",
+                "qualityPassedDesc": "No moderation errors from admins or distribution systems."
+            },
+            "createErrorsModal": {
+                "title": "Add release error",
+                "submit": "Create error",
+                "required": "Please enter error description",
+                "placeholder": "Enter error description",
+                "addErrorRow": "Add error row"
+            },
+            "acrCloudCard": {
+                "title": "ARC COPYRIGHT SCAN RESULTS (ACRCLOUD DATA)",
+                "loading": "Loading track list...",
+                "description": "The system automatically performs audio matching for each track in the Release with the ACRCloud global copyright database.",
+                "noTracks": "Music copyright check passed",
+                "noTracksDesc": "Excellent! No copyright issues or audio fingerprint matches detected for the tracks in this release."
+            }
         }
     },
     "releaseDsp": {
@@ -1571,7 +1721,8 @@
         "digitalServiceProviders": "Digital service providers",
         "lastEnqueue": "Last Enqueue",
         "lastDelivered": "Last Delivered",
-        "inactiveDsp": "This DSP is locked, cannot be distributed"
+        "inactiveDsp": "This DSP is locked, cannot be distributed",
+        "hasLiveVersion": "Has live version"
     },
     "formFields": {
         "contributorsMustIncludeProducer": "Contributors must include producer",
@@ -1753,6 +1904,7 @@
             "source": "Source",
             "dsp": "DSP",
             "ciCode": "CI code",
+            "pendingReleasesCount": "Pending releases",
             "assign": "Assign"
         },
         "placeholder": {
@@ -1765,6 +1917,7 @@
     },
     "dsp": {
         "label": "DSP",
+        "type": "Type",
         "systemTenantNoAgreement": "System administrators do not have DSP agreements.",
         "name": "Platform name",
         "codeCi": "CI Code",
@@ -1859,6 +2012,24 @@
         },
         "title": "Title",
         "domain": "Domain",
+        "customDomain": {
+            "label": "Custom domain",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "DNS records are ready",
+            "dnsDescription": "Add the CNAME and TXT records below in your DNS provider to verify this domain.",
+            "sslStatus": "SSL status",
+            "verificationToken": "Verification token",
+            "cnameRecord": "CNAME record",
+            "txtRecord": "TXT record",
+            "verify": "Verify domain",
+            "verifying": "Verifying...",
+            "delete": "Remove domain",
+            "deleting": "Removing...",
+            "deleteConfirm": "Are you sure you want to remove this domain?",
+            "validation": {
+                "required": "Please enter domain"
+            }
+        },
         "primaryColor": "Primary color",
         "owner": "Owner",
         "type": {
@@ -1908,6 +2079,45 @@
             "error": {
                 "notFound": "No workspace was found with the provided information",
                 "blocked": "This workspace has been blocked"
+            }
+        },
+        "customDomain": {
+            "label": "Custom Domain",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "DNS Records Ready",
+            "dnsDescription": "Add the CNAME and TXT records below to your DNS provider to verify this domain.",
+            "sslStatus": "SSL Status",
+            "verificationToken": "Verification Token",
+            "cnameRecord": "CNAME Record",
+            "txtRecord": "TXT Record",
+            "verify": "Verify Domain",
+            "verifying": "Verifying...",
+            "delete": "Remove Domain",
+            "deleting": "Removing...",
+            "deleteConfirm": "Are you sure you want to remove this domain?",
+            "validation": {
+                "required": "Please enter domain"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "verifying": "Verifying",
+                "active": "Active",
+                "failed": "Failed",
+                "expired": "Expired"
+            },
+            "autoSetup": {
+                "title": "Auto setup via Cloudflare",
+                "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
+                "button": "Connect Cloudflare Account"
+            },
+            "orAddManually": "or add manually",
+            "autoSetupSuccess": "DNS records added automatically",
+            "errors": {
+                "access_denied": "Cloudflare account access denied. Please try again and authorize the request.",
+                "zone_not_found": "Could not find the domain zone in your Cloudflare account. Please make sure the domain is added to Cloudflare first.",
+                "dns_create_failed": "Failed to automatically create DNS records. Please check your Cloudflare account permissions or try manual setup.",
+                "invalid_scope": "The requested permissions are invalid or insufficient.",
+                "unauthorized": "Cloudflare account authentication failed."
             }
         }
     },
@@ -2172,7 +2382,6 @@
         "revenueDspDistribution": "Revenue by DSP",
         "revenueTerDistribution": "Revenue by Country",
         "totalSalesViews": "Total usage",
-
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",
         "detailChartTitle": "Views timeline",
@@ -2268,6 +2477,8 @@
     "newsCategory": {
         "label": "News category",
         "name": "Category name",
+        "parentLabel": "Parent category",
+        "parentPlaceholder": "Select parent category (optional)",
         "message": {
             "success": {
                 "create": "News category created successfully",
@@ -2561,7 +2772,9 @@
             "WAIT_PARTNER_PROCESS": "Wait partner process",
             "CREATE_METADATA_ON_SERVER": "Create metadata on server",
             "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
-            "SYNC_RESULT_TO_RELEASE": "Sync result to release"
+            "SYNC_RESULT_TO_RELEASE": "Sync result to release",
+            "REVIEW_RELEASE": "Review release",
+            "GET_RESULT_IMPORT_CI": "Get result import CI"
         },
         "action": {
             "markCompleted": "Mark completed"
@@ -2625,6 +2838,7 @@
             "failedCount": "Failed",
             "notFoundCount": "Not found",
             "pendingCount": "Pending",
+            "processingCount": "Processing",
             "dryRun": "Dry run",
             "force": "Force",
             "limitCount": "Limit",
@@ -2641,7 +2855,53 @@
             "eventConnectionError": "Cannot connect to scan events",
             "cancelScan": "Cancel",
             "cancelScanConfirm": "Are you sure you want to cancel this data scan?",
-            "scanCancelled": "Enrich data scan cancelled"
+            "scanCancelled": "Enrich data scan cancelled",
+            "historyModalTitle": "Enrichment History",
+            "historySummaryTitle": "Enrichment Summary",
+            "historyColumns": {
+                "entityType": "Entity Type",
+                "entityId": "Entity ID",
+                "releaseId": "Release ID",
+                "isrc": "ISRC",
+                "upc": "UPC",
+                "fieldName": "Field Name",
+                "oldValue": "Old Value",
+                "newValue": "New Value",
+                "changeType": "Change Type",
+                "enrichmentSource": "Enrichment Source",
+                "status": "Status",
+                "errorMessage": "Error Message",
+                "createdAt": "Created At"
+            },
+            "historyStatus": {
+                "applied": "Applied",
+                "dry_run": "Dry run",
+                "error": "Error"
+            },
+            "historyEntityType": {
+                "release": "Album / Release",
+                "track": "Track / Song",
+                "artist": "Artist",
+                "release_artist": "Link artist with Release",
+                "track_artist": "Link artist with Track"
+            },
+            "historyChangeType": {
+                "create": "Create",
+                "update": "Update",
+                "link": "Link",
+                "merge": "Merge",
+                "skip": "Skip",
+                "link_spotify": "Link Spotify",
+                "link_deezer": "Link Deezer"
+            },
+            "historyEnrichmentSource": {
+                "spotify": "Spotify API",
+                "deezer": "Deezer API",
+                "local": "Local PostgreSQL (Cache check)"
+            },
+            "historyAction": {
+                "viewLog": "View history"
+            }
         },
         "sftpExcludePatterns": {
             "title": "SFTP Exclude Patterns",
@@ -2745,6 +3005,13 @@
             "update": "Update report config"
         },
         "importResult": {
+            "releaseTotal": "Total releases",
+            "releaseImported": "Imported",
+            "releaseSkipped": "Skipped",
+            "releaseErrors": "Errors",
+            "releaseInDb": "In DB",
+            "releasePending": "Pending",
+            "releaseStats": "Releases Statistics",
             "processingStatus": "Report processing status",
             "statusPending": "Pending",
             "statusQueued": "Queued",
@@ -2858,5 +3125,22 @@
     },
     "report-import": {
         "configExcludePattern": "Configure Exclude Pattern"
+    },
+    "releaseCiData": {
+        "status": {
+            "existsOnCi": "Exists on CI",
+            "notFoundOnCi": "Not found on CI"
+        },
+        "latestSyncedAt": "Latest sync",
+        "neverExported": "Never exported",
+        "lastImportIsFailed": "Last import failed",
+        "export": {
+            "exportOrder": "Export order",
+            "exportTask": "Export task",
+            "requestorOrganisation": "Requestor organisation",
+            "deliveryPoint": "Delivery point",
+            "deliveryPointStatus": "Status",
+            "transferEndDate": "Transfer end date"
+        }
     }
 }

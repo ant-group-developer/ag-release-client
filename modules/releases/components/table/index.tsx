@@ -3,6 +3,7 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON_SMALL } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
     formattedDate,
@@ -16,18 +17,19 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import {
     getReleaseDetailTabRoute,
-    getReleaseViewRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { CircleX } from 'lucide-react';
+import { CircleX, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
+import { useState } from 'react';
 import {
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_STATUS,
@@ -37,6 +39,7 @@ import {
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
+import DspStatusModal from './dsp-status-modal';
 import ReleaseTitleColumn from './title-column';
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
@@ -57,6 +60,10 @@ export default function ReleasesTable({
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
+    const [isDspModalOpen, setIsDspModalOpen] = useState(false);
+    const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
+        null
+    );
     const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
     const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
@@ -165,6 +172,34 @@ export default function ReleasesTable({
             width: 150,
             render: (value, record) => {
                 return <ReleaseStatusTag status={record?.status} />;
+            },
+        },
+        {
+            title: messages('release.dspLive'),
+            key: 'dsp',
+            dataIndex: RELEASES_TABLE_KEY.DSP,
+            align: 'left',
+            width: 120,
+            render: (_, record) => {
+                const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
+                const liveCount = releaseDspDeliveries.filter(
+                    (item) =>
+                        item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                ).length;
+                const totalCount = releaseDspDeliveries.length;
+                return (
+                    <div data-stop-row-click="true">
+                        <span
+                            className="cursor-pointer hover:text-blue-500"
+                            onClick={() => {
+                                setSelectedRecord(record);
+                                setIsDspModalOpen(true);
+                            }}
+                        >
+                            {`${liveCount}/${totalCount}`}
+                        </span>
+                    </div>
+                );
             },
         },
         {
@@ -347,6 +382,24 @@ export default function ReleasesTable({
                                         });
                                     },
                                 },
+                                {
+                                    key: 'distribution',
+                                    label: (
+                                        <div className="flex items-center gap-2">
+                                            <Globe size={SIZE_ICON_SMALL} />
+                                            {messages('common.distribute')}
+                                        </div>
+                                    ),
+                                    show:
+                                        record?.status !==
+                                        RELEASES_STATUS.DRAFT,
+                                    onClick: () => {
+                                        nProgress.start();
+                                        router.push(
+                                            `${APP_ROUTES.RELEASES_DISTRIBUTION}/${record?.id}`
+                                        );
+                                    },
+                                },
                             ]}
                         />
                     </div>
@@ -368,41 +421,50 @@ export default function ReleasesTable({
     }
 
     return (
-        // <div className="rounded-lg bg-white px-6 pt-2">
-        <AppProTable
-            headerTitle={messages('release.list')}
-            {...props}
-            pagination={false}
-            columns={column}
-            rowClassName={'group'}
-            className={`rounded-t-lg ${props?.className}`}
-            style={{
-                backgroundColor: token.colorBgContainer,
-                ...props?.style,
-            }}
-            columnsState={{
-                persistenceKey: 'releases-table-columns',
-                persistenceType: 'sessionStorage',
-                defaultValue: {
-                    tenant: { show: isSystemTenant },
-                    updatedAt: { show: false },
-                },
-            }}
-            // onRow={(record) => ({
-            //     onClick: (e) => {
-            //         const target = e.target as HTMLElement;
-            //         if (target.closest('[data-stop-row-click="true"]')) return;
+        <>
+            <AppProTable
+                headerTitle={messages('release.list')}
+                {...props}
+                pagination={false}
+                columns={column}
+                rowClassName={'group'}
+                className={`rounded-t-lg ${props?.className}`}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                    ...props?.style,
+                }}
+                columnsState={{
+                    persistenceKey: 'releases-table-columns',
+                    persistenceType: 'sessionStorage',
+                    defaultValue: {
+                        tenant: { show: isSystemTenant },
+                        updatedAt: { show: false },
+                        dsp: { show: true },
+                    },
+                }}
+                // onRow={(record) => ({
+                //     onClick: (e) => {
+                //         const target = e.target as HTMLElement;
+                //         if (target.closest('[data-stop-row-click="true"]')) return;
 
-            //         nProgress.start();
-            //         router.push(
-            //             getReleaseDetailTabRoute(
-            //                 record?.id,
-            //                 RELEASES_TABS.CORE_DETAIL
-            //             )
-            //         );
-            //     },
-            // })}
-        />
-        // </div>
+                //         nProgress.start();
+                //         router.push(
+                //             getReleaseDetailTabRoute(
+                //                 record?.id,
+                //                 RELEASES_TABS.CORE_DETAIL
+                //             )
+                //         );
+                //     },
+                // })}
+            />
+            <DspStatusModal
+                open={isDspModalOpen}
+                onCancel={() => {
+                    setIsDspModalOpen(false);
+                    setSelectedRecord(null);
+                }}
+                record={selectedRecord}
+            />
+        </>
     );
 }

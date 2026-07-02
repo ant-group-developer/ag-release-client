@@ -15,6 +15,11 @@ export enum STORAGE_TYPE {
     S3 = 'S3',
 }
 
+export enum DSP_TYPE {
+    AUDIO = 'audio',
+    VIDEO = 'video',
+}
+
 export enum DSP_TABLE_KEY {
     NAME = 'name',
     CODE = 'code',

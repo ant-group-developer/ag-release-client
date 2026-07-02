@@ -1,12 +1,13 @@
 import { AggregatorData, SftpMetadata } from '@/modules/aggregator/types';
 import { DspActionData } from '@/modules/dsp-action/types';
 import { CommonAttribute, CommonParams } from '@/types/api';
-import { DSP_DEAL } from '../enums';
+import { DSP_DEAL, DSP_TYPE } from '../enums';
 
 export interface DspData extends CommonAttribute {
     creatorId: string;
     modifierId?: string;
     name: string;
+    type: DSP_TYPE;
     picture?: string | null;
     isActive: boolean;
     isDefault: boolean;

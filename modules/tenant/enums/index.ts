@@ -23,6 +23,7 @@ export enum TENANT_TABS {
     RELEASE = 'releases',
     ROLES = 'roles',
     DSP = 'dsps',
+    CUSTOM_DOMAIN = 'custom-domain',
 }
 
 export enum TENANT_USER_TYPE {

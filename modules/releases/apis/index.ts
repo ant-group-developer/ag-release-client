@@ -3,21 +3,31 @@ import { CreateBucketFile } from '@/modules/upload/types/data';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import { Key } from 'react';
 import {
+    ReleaseCaptionData,
+    ReleaseEnrichedError,
+    ReleaseEnrichedErrorFilter,
     ReleasesData,
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
-    ReleaseCaptionData,
+    ReleaseReview,
+    ReleaseReviewFilter,
 } from '../types';
 import {
+    BulkCreateReleaseErrorsPayload,
     BulkSubmitRelease,
-    UpsertReleaseCaptionsPayload,
+    BulkUpdateReleaseErrorsPayload,
     CreateReleaseDraftPayload,
     ExportTemplateCi,
     SyncReleaseDraftToTracksPayload,
-    UpdateReleaseDraftPayload,
     UpdateReleaseCaptionPayload,
+    UpdateReleaseDraftPayload,
+    UpdateReleaseReviewDecisionPayload,
+    UpsertReleaseCaptionsPayload,
 } from '../types/payload';
+
+const RELEASE_ENRICHED_ERRORS_API_PATH = '/release-errors/enriched';
+const RELEASE_ERRORS_BULK_API_PATH = '/release-errors/bulk';
 
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
@@ -83,6 +93,30 @@ export const releasesApi = {
                 `/releases/draft/${id}/validate`
             );
         }
+    },
+
+    getEnrichedErrors: (params: ReleaseEnrichedErrorFilter) => {
+        return axiosInstance.get<DetailResponse<ReleaseEnrichedError[]>>(
+            RELEASE_ENRICHED_ERRORS_API_PATH,
+            {
+                params,
+            }
+        );
+    },
+
+    bulkUpdateReleaseErrors: (payload: BulkUpdateReleaseErrorsPayload) => {
+        return axiosInstance.put(RELEASE_ERRORS_BULK_API_PATH, payload);
+    },
+
+    bulkCreateReleaseErrors: (payload: BulkCreateReleaseErrorsPayload) => {
+        return axiosInstance.post(RELEASE_ERRORS_BULK_API_PATH, payload);
+    },
+
+    updateReleaseReviewDecision: (
+        id: ReleasesData['id'],
+        payload: UpdateReleaseReviewDecisionPayload
+    ) => {
+        return axiosInstance.post(`/releases/${id}/release-review`, payload);
     },
 
     downloadAssets: (id: ReleasesData['id']) => {
@@ -212,7 +246,10 @@ export const releasesApi = {
 
     upsertReleaseCaptions: (payload: UpsertReleaseCaptionsPayload) => {
         const { releaseId, ...rest } = payload;
-        return axiosInstance.post(`/releases/${releaseId}/release-captions`, rest);
+        return axiosInstance.post(
+            `/releases/${releaseId}/release-captions`,
+            rest
+        );
     },
 
     updateReleaseCaption: (payload: UpdateReleaseCaptionPayload) => {
@@ -222,5 +259,14 @@ export const releasesApi = {
 
     deleteReleaseCaption: (id: string) => {
         return axiosInstance.delete(`/releases/release-captions/${id}`);
+    },
+
+    getReleaseReviews: (params: ReleaseReviewFilter) => {
+        return axiosInstance.get<PaginationResponse<ReleaseReview>>(
+            '/release-reviews',
+            {
+                params,
+            }
+        );
     },
 };

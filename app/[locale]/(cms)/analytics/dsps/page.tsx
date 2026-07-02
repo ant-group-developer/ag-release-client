@@ -2,6 +2,7 @@
 
 import AppSearch from '@/components/ui/input/search';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
@@ -11,7 +12,7 @@ import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-
 import { DspRankingItem, RevenueDspItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Table, theme } from 'antd';
+import { Card, Segmented, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -219,11 +220,29 @@ export default function DspsRankingPage() {
                 }
             >
                 <Card className="rounded-xl border-none shadow-sm">
-                    <div style={{ marginBottom: 16 }}>
+                    <div className="mb-4 flex items-center gap-4">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                             style={{ width: 200 }}
+                        />
+                        <Segmented
+                            value={dataFilter.type ?? ANALYTICS_VIEW_TYPE.VIEW}
+                            onChange={(value) => {
+                                onChangeFilter({
+                                    type: value as ANALYTICS_VIEW_TYPE,
+                                });
+                            }}
+                            options={[
+                                {
+                                    label: messages('common.views'),
+                                    value: ANALYTICS_VIEW_TYPE.VIEW,
+                                },
+                                {
+                                    label: messages('common.revenue'),
+                                    value: ANALYTICS_VIEW_TYPE.REVENUE,
+                                },
+                            ]}
                         />
                     </div>
                     {isRevenue ? (
@@ -234,16 +253,7 @@ export default function DspsRankingPage() {
                             dataSource={revenueDataWithRank}
                             loading={isFetching}
                             rowKey="dspName"
-                            pagination={{
-                                current: dataFilter.page,
-                                pageSize: dataFilter.pageSize,
-                                total: topDspData?.metadata?.totalItems,
-                                pageSizeOptions: PAGE_SIZE_OPTIONS,
-                                showSizeChanger: true,
-                                showTotal: (totalCount, range) =>
-                                    `${range[0]}-${range[1]} / ${totalCount}`,
-                                onChange: onChangePage,
-                            }}
+                            pagination={false}
                         />
                     ) : (
                         <Table<DspRankingItem & { rank: number }>
@@ -253,18 +263,25 @@ export default function DspsRankingPage() {
                             dataSource={viewsDataWithRank}
                             loading={isFetching}
                             rowKey="dspName"
-                            pagination={{
-                                current: dataFilter.page,
-                                pageSize: dataFilter.pageSize,
-                                total: dspRankingData?.metadata?.totalItems,
-                                pageSizeOptions: PAGE_SIZE_OPTIONS,
-                                showSizeChanger: true,
-                                showTotal: (totalCount, range) =>
-                                    `${range[0]}-${range[1]} / ${totalCount}`,
-                                onChange: onChangePage,
-                            }}
+                            pagination={false}
                         />
                     )}
+                    <AppPagination
+                        align="end"
+                        className="!mt-4"
+                        current={page}
+                        pageSize={pageSize}
+                        total={
+                            isRevenue
+                                ? topDspData?.metadata?.totalItems || 0
+                                : dspRankingData?.metadata?.totalItems || 0
+                        }
+                        onChange={onChangePage}
+                        showTotalText
+                        showSizeChanger
+                        showQuickJumper
+                        pageSizeOptions={PAGE_SIZE_OPTIONS}
+                    />
                 </Card>
             </PageContainer>
         </div>

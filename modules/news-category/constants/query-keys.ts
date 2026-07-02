@@ -12,4 +12,9 @@ export const newsCategoryQueryKeys = {
         params
             ? ([...newsCategoryQueryKeys.lists(), params] as const)
             : newsCategoryQueryKeys.lists(),
+    trees: () =>
+        [
+            ...newsCategoryQueryKeys.all,
+            QUERY_KEY.NEWS_CATEGORY.GET_TREE,
+        ] as const,
 };

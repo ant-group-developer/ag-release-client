@@ -85,6 +85,13 @@ export const DspReportTable = ({ ...props }: Props) => {
             render: (_, record) => record.pgDspsSync?.dspCiCode || '-',
         },
         {
+            title: messages('dspReport.table.pendingReleasesCount'),
+            key: 'pendingReleasesCount',
+            dataIndex: 'pendingReleasesCount',
+            width: 180,
+            render: (_, record) => record.pendingReleasesCount ?? '-',
+        },
+        {
             title: messages('dspReport.table.assign'),
             key: 'assign',
             width: 260,

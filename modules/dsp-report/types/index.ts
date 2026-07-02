@@ -20,6 +20,7 @@ export interface DspReportData {
     createdAt: string;
     updatedAt: string;
     pgDspsSync?: PgDspsSyncData | null;
+    pendingReleasesCount?: number;
 }
 
 export interface DspReportDataFilter extends CommonParams {

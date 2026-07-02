@@ -2,9 +2,9 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
-import { usePermission } from '@/hooks/use-permission';
+import { MAX_NOTE_LENGTH } from '@/constants/validate';
 import { showNotification } from '@/helpers/messages-helper';
+import { usePermission } from '@/hooks/use-permission';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import ChannelSelect from '@/modules/channels/components/select/channel-select';
@@ -62,7 +62,8 @@ export default function MetadataFields({
     const featuredRoleId = featuredRole?.id;
 
     const isUpdateForm = !!dataEdit?.id;
-    const canEditReleaseVideo = !isUpdateForm || hasPermission(PERMISSION.RELEASE_VIDEO.UPDATE);
+    const canEditReleaseVideo =
+        !isUpdateForm || hasPermission(PERMISSION.RELEASE_VIDEO.UPDATE);
 
     const isCanEditChannel =
         canEditReleaseVideo &&
@@ -205,9 +206,9 @@ export default function MetadataFields({
                         message: messages('validation.input'),
                     },
                     {
-                        max: MAX_NAME_LENGTH,
+                        max: 100,
                         message: messages('validation.stringMax', {
-                            max: MAX_NAME_LENGTH,
+                            max: 100,
                             field: messages('releaseVideo.fields.videoTitle'),
                         }),
                     },
@@ -219,10 +220,11 @@ export default function MetadataFields({
                     )}
                     allowClear
                     showCount
-                    maxLength={MAX_NAME_LENGTH}
+                    maxLength={100}
                     onBlur={(e) => {
-                        if (e.target.value?.trim()) {
-                            onFieldUpdate?.({ title: e.target.value });
+                        const val = e.target.value;
+                        if (val !== dataEdit?.title) {
+                            onFieldUpdate?.({ title: val });
                         }
                     }}
                 />
@@ -400,11 +402,14 @@ export default function MetadataFields({
                                 'releaseVideo.fields.isrcPlaceholder'
                             )}
                             allowClear
-                            onBlur={(e) =>
-                                onFieldUpdate?.({
-                                    video: { isrc: e.target.value },
-                                })
-                            }
+                            onBlur={(e) => {
+                                const val = e.target.value;
+                                if (val !== dataEdit?.video?.isrc) {
+                                    onFieldUpdate?.({
+                                        video: { isrc: val },
+                                    });
+                                }
+                            }}
                         />
                     </AppFormItem>
                 </Col>
@@ -494,13 +499,16 @@ export default function MetadataFields({
                         <Input
                             placeholder={messages('formFields.labelId')}
                             allowClear
-                            onBlur={(e) =>
-                                onFieldUpdate?.({
-                                    video: {
-                                        label: e.target.value,
-                                    },
-                                })
-                            }
+                            onBlur={(e) => {
+                                const val = e.target.value;
+                                if (val !== dataEdit?.video?.label) {
+                                    onFieldUpdate?.({
+                                        video: {
+                                            label: val,
+                                        },
+                                    });
+                                }
+                            }}
                         />
                     </AppFormItem>
                 </Col>
@@ -632,11 +640,14 @@ export default function MetadataFields({
                     rows={4}
                     maxLength={MAX_NOTE_LENGTH}
                     className="mb-2"
-                    onBlur={(e) =>
-                        onFieldUpdate?.({
-                            video: { description: e.target.value },
-                        })
-                    }
+                    onBlur={(e) => {
+                        const val = e.target.value;
+                        if (val !== dataEdit?.video?.description) {
+                            onFieldUpdate?.({
+                                video: { description: val },
+                            });
+                        }
+                    }}
                 />
             </AppFormItem>
 
