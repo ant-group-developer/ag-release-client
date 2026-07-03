@@ -3,21 +3,21 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { SIZE_ICON } from '@/constants/common';
+import { formattedNumber } from '@/helpers/common';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetDspOverview } from '../../hooks/use-get-dsp-overview';
-import { useGetDspRevenueTenantBarChart } from '../../hooks/use-get-dsp-revenue-tenant-bar-chart';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
+import { useGetDspRevenueTenantBarChart } from '../../hooks/use-get-dsp-revenue-tenant-bar-chart';
 import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
-import { useGetDspTrendViewTenantBarChart } from '../../hooks/use-get-dsp-trend-view-tenant-bar-chart';
 import { useGetDspTrendViewLineChart } from '../../hooks/use-get-dsp-trend-view-line-chart';
+import { useGetDspTrendViewTenantBarChart } from '../../hooks/use-get-dsp-trend-view-tenant-bar-chart';
 import { useGetDspTrendViewTerBarChart } from '../../hooks/use-get-dsp-trend-view-ter-bar-chart';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
-import { formattedNumber } from '@/helpers/common';
 
 interface DetailDspAnalyticsModalProps {
     open: boolean;
@@ -61,11 +61,13 @@ export default function DetailDspAnalyticsModal({
     );
 
     // Gọi API lấy thông tin biểu đồ doanh thu của DSP
-    const { lineChartData: revenueLineChartData, isFetching: isLineChartFetching } =
-        useGetDspRevenueLineChart(
-            { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    const {
+        lineChartData: revenueLineChartData,
+        isFetching: isLineChartFetching,
+    } = useGetDspRevenueLineChart(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        open
+    );
 
     // Gọi API lấy thông tin biểu đồ lượt nghe của DSP
     const {
@@ -95,18 +97,22 @@ export default function DetailDspAnalyticsModal({
     );
 
     // Gọi API lấy thông tin phân bố doanh thu theo Tenant/Workspace của DSP
-    const { tenantBarChartData: revenueTenantBarChartData, isFetching: isRevenueTenantBarChartFetching } =
-        useGetDspRevenueTenantBarChart(
-            { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    const {
+        tenantBarChartData: revenueTenantBarChartData,
+        isFetching: isRevenueTenantBarChartFetching,
+    } = useGetDspRevenueTenantBarChart(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        open
+    );
 
     // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của DSP
-    const { terBarChartData: revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
-        useGetDspRevenueTerBarChart(
-            { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    const {
+        terBarChartData: revenueTerBarChartData,
+        isFetching: isRevenueTerBarChartFetching,
+    } = useGetDspRevenueTerBarChart(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        open
+    );
 
     const tenantColumns = useMemo(
         () => [
@@ -114,7 +120,7 @@ export default function DetailDspAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -154,7 +160,7 @@ export default function DetailDspAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -208,7 +214,7 @@ export default function DetailDspAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -248,7 +254,7 @@ export default function DetailDspAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -430,7 +436,7 @@ export default function DetailDspAnalyticsModal({
                     </Col>
                 </Row>
 
-                <Row gutter={[24, 24]}>
+                {/* <Row gutter={[24, 24]}>
                     <Col xs={24} lg={12}>
                         <RankingCard
                             title={messages('analytics.tenantDistribution')}
@@ -445,7 +451,9 @@ export default function DetailDspAnalyticsModal({
                     </Col>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.revenueTenantDistribution')}
+                            title={messages(
+                                'analytics.revenueTenantDistribution'
+                            )}
                             columns={revenueTenantColumns}
                             dataSource={mappedRevenueTenantRankData}
                             loading={isRevenueTenantBarChartFetching}
@@ -456,7 +464,7 @@ export default function DetailDspAnalyticsModal({
                             valuePrefix="$"
                         />
                     </Col>
-                </Row>
+                </Row> */}
 
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={12}>

@@ -47,6 +47,7 @@ export enum APP_ROUTES {
     TENANT_TIERS = '/tenant-tiers',
     TENANT_ISSUE = '/tenant-issue',
     SETTING = '/setting',
+    YOUTUBE_KEYS = '/youtube-keys',
     SIGN_IN = '/sign-in',
     FORGOT_PASSWORD = '/forgot-password',
     RESET_PASSWORD = '/reset-password',

@@ -333,6 +333,7 @@
         "notUsed": "Chưa sử dụng",
         "use": "Sử dụng",
         "source": "Tài nguyên",
+        "sourcePlatform": "Nguồn",
         "userUpload": "Người tải lên",
         "imageAi": "Hình ảnh AI",
         "thumbnail": "Thumbnail",
@@ -705,6 +706,20 @@
             "description": "Chúng tôi đang khắc phục ngay. Bạn vui lòng quay lại sau ít phút"
         }
     },
+    "youtubeKeys": {
+        "label": "Youtube Keys",
+        "alias": "Alias",
+        "apiKey": "API Key",
+        "keyHint": "Gợi ý khoá",
+        "status": "Trạng thái",
+        "dailyQuotaLimit": "Hạn mức quota hàng ngày",
+        "unitsConsumedToday": "Đã dùng hôm nay",
+        "unitsRemaining": "Còn lại",
+        "lastResetAt": "Lần reset cuối",
+        "lastUsedAt": "Lần dùng cuối",
+        "lastError": "Lỗi cuối",
+        "consecutiveErrorCount": "Số lỗi liên tiếp"
+    },
     "validation": {
         "error": "Lỗi xác thực",
         "missingRequiredFields": "Vui lòng nhập đầy đủ các thông tin yêu cầu",
@@ -763,6 +778,7 @@
         "inActive": "Không kích hoạt",
         "enable": "Kích hoạt",
         "disable": "Vô hiệu hóa",
+        "disabled": "Vô hiệu hóa",
         "on": "Bật",
         "off": "Tắt",
         "block": "Khoá",

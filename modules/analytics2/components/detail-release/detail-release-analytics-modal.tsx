@@ -3,6 +3,7 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { SIZE_ICON } from '@/constants/common';
+import { formattedNumber } from '@/helpers/common';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -17,7 +18,6 @@ import { useGetReleaseTrendViewTerBarChart } from '../../hooks/use-get-release-t
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
-import { formattedNumber } from '@/helpers/common';
 
 interface DetailReleaseAnalyticsModalProps {
     open: boolean;
@@ -119,7 +119,7 @@ export default function DetailReleaseAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -159,7 +159,7 @@ export default function DetailReleaseAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -213,7 +213,7 @@ export default function DetailReleaseAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">
@@ -253,7 +253,7 @@ export default function DetailReleaseAnalyticsModal({
                 title: messages('analytics2.rank'),
                 dataIndex: 'rank',
                 key: 'rank',
-                width: 70,
+                width: 120,
                 align: 'center' as const,
                 render: (rank: number) => (
                     <span className="text-gray-700 dark:text-zinc-300">

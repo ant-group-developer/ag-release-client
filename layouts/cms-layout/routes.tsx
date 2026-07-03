@@ -26,6 +26,7 @@ import {
     Flag,
     Globe,
     House,
+    Key,
     Layers,
     LayoutList,
     Library,
@@ -573,6 +574,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Setting',
                 href: APP_ROUTES.SETTING,
                 icon: Settings,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'youtube-keys',
+                type: 'link',
+                label: 'youtubeKeys.label',
+                title: 'Youtube Keys',
+                href: APP_ROUTES.YOUTUBE_KEYS,
+                icon: Key,
                 required: SYS_ADMIN_REQ,
             },
             {

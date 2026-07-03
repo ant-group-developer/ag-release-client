@@ -334,6 +334,7 @@
         "notUsed": "Not used",
         "use": "Use status",
         "source": "Source",
+        "sourcePlatform": "Source",
         "userUpload": "User upload",
         "imageAi": "Image AI",
         "thumbnail": "Thumbnail",
@@ -708,6 +709,20 @@
             "description": "An unexpected error has occurred. Please try again later."
         }
     },
+    "youtubeKeys": {
+        "label": "Youtube Keys",
+        "alias": "Alias",
+        "apiKey": "API Key",
+        "keyHint": "Key Hint",
+        "status": "Status",
+        "dailyQuotaLimit": "Daily Quota Limit",
+        "unitsConsumedToday": "Units Consumed Today",
+        "unitsRemaining": "Units Remaining",
+        "lastResetAt": "Last Reset At",
+        "lastUsedAt": "Last Used At",
+        "lastError": "Last Error",
+        "consecutiveErrorCount": "Consecutive Error Count"
+    },
     "validation": {
         "error": "Validation errors",
         "missingRequiredFields": "Please fill in all required fields",
@@ -766,6 +781,7 @@
         "inActive": "Inactive",
         "enable": "Enable",
         "disable": "Disable",
+        "disabled": "Disabled",
         "on": "On",
         "off": "Off",
         "block": "Blocked",

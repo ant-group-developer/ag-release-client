@@ -2,25 +2,26 @@
 
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
+import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
-import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
+import { useFilter } from '@/hooks/use-filter';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTenant } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
+    BySourceItem,
     RevenueTenantItem,
     TenantRankingItem,
 } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -70,6 +71,7 @@ export default function TenantsRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
+                groupBySource: true,
             },
             { enabled: !isRevenue }
         );
@@ -84,6 +86,7 @@ export default function TenantsRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
+                groupBySource: true,
             },
             { enabled: isRevenue }
         );
@@ -133,6 +136,23 @@ export default function TenantsRankingPage() {
                     </CustomTooltip>
                 </div>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            render: (bySource?: BySourceItem[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <Tag key={item.source} className="m-0">
+                                {item.sourceLabel}
+                            </Tag>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.usage'),
@@ -201,6 +221,23 @@ export default function TenantsRankingPage() {
                     </CustomTooltip>
                 </div>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            render: (bySource?: BySourceItem[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <Tag key={item.source} className="m-0">
+                                {item.sourceLabel}
+                            </Tag>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.viewCount'),

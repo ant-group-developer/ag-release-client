@@ -558,4 +558,9 @@ export const QUERY_KEY = {
         DSP_REVENUE_TER_BAR_CHART: 'dsp-revenue-ter-bar-chart',
         DSP_REVENUE_TENANT_BAR_CHART: 'dsp-revenue-tenant-bar-chart',
     },
+    YOUTUBE_KEY: {
+        KEY: 'YOUTUBE_KEY',
+        GET_YOUTUBE_KEYS_LIST: 'GET_YOUTUBE_KEYS_LIST',
+        GET_YOUTUBE_KEY_DETAIL: 'GET_YOUTUBE_KEY_DETAIL',
+    },
 };

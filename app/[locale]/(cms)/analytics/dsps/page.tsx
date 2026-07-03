@@ -1,19 +1,23 @@
 'use client';
 
 import AppSearch from '@/components/ui/input/search';
-import DateSelect2 from '@/components/ui/select/date-select2';
 import AppPagination from '@/components/ui/pagination';
+import DateSelect2 from '@/components/ui/select/date-select2';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
-import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
+import { useFilter } from '@/hooks/use-filter';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import { DspRankingItem, RevenueDspItem } from '@/modules/analytics2/types';
+import {
+    BySourceItem,
+    DspRankingItem,
+    RevenueDspItem,
+} from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -25,6 +29,7 @@ interface RankingFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
+    groupBySource?: boolean;
 }
 
 export default function DspsRankingPage() {
@@ -52,6 +57,7 @@ export default function DspsRankingPage() {
             page,
             pageSize,
             keyword: dataFilter.keyword ?? undefined,
+            groupBySource: true,
         },
         { enabled: !isRevenue }
     );
@@ -65,6 +71,7 @@ export default function DspsRankingPage() {
             pageSize,
             keyword: dataFilter.keyword ?? undefined,
             includeOther: false,
+            groupBySource: true,
         },
         { enabled: isRevenue }
     );
@@ -114,6 +121,23 @@ export default function DspsRankingPage() {
             ),
         },
         {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            render: (bySource?: BySourceItem[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <Tag key={item.source} className="m-0">
+                                {item.sourceLabel}
+                            </Tag>
+                        ))}
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
@@ -160,6 +184,23 @@ export default function DspsRankingPage() {
                     {text || '—'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            render: (bySource?: BySourceItem[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <Tag key={item.source} className="m-0">
+                                {item.sourceLabel }
+                            </Tag>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.viewCount'),
@@ -241,7 +282,7 @@ export default function DspsRankingPage() {
                         />
                     </div>
                     {isRevenue ? (
-                        <Table<RevenueDspItem & { rank: number }>
+                        <Table
                             sticky
                             size="small"
                             columns={revenueColumns}
@@ -251,7 +292,7 @@ export default function DspsRankingPage() {
                             pagination={false}
                         />
                     ) : (
-                        <Table<DspRankingItem & { rank: number }>
+                        <Table
                             sticky
                             size="small"
                             columns={viewColumns}

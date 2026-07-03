@@ -59,6 +59,7 @@ export interface RankingParams {
     page: number;
     pageSize: number;
     keyword?: string;
+    groupBySource?: boolean;
 }
 
 export interface TrackRankingItem {
@@ -126,6 +127,7 @@ export interface TenantRankingItem {
     tenantName: string;
     logo: string | null;
     totalViews: number;
+    bySource?: BySourceItem[];
 }
 
 export interface ChannelRankingItem {
@@ -178,6 +180,7 @@ export interface RevenueQueryParams extends CommonParams {
     toDate: string;
     topN?: number;
     includeOther?: boolean;
+    groupBySource?: boolean;
 }
 
 // Summary Response
@@ -213,6 +216,7 @@ export interface RevenueDspItem {
     quantity: number;
     pgDspId: string;
     dspReportId: string;
+    bySource?: BySourceItem[];
 }
 
 export interface RevenueTenantItem {
@@ -222,6 +226,7 @@ export interface RevenueTenantItem {
     logo: string | null;
     revenueUsd: number;
     quantity: number;
+    bySource?: BySourceItem[];
 }
 
 export interface RevenueChannelItem {
@@ -351,6 +356,13 @@ export interface DspRankingItem {
     totalViews: number;
     pgDspId: string;
     dspReportId: string;
+    bySource?: BySourceItem[];
+}
+
+export interface BySourceItem {
+    source: string;
+    sourceLabel: string;
+    quantity: number;
 }
 
 export interface RevenueLineChartParams {
@@ -497,5 +509,3 @@ export interface RevenueTenantBarChartItem {
     revenueUsd: number;
     quantity: number;
 }
-
-
