@@ -3,6 +3,7 @@
 import { theme } from 'antd';
 import { DollarSign, Globe, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { formattedNumber } from '@/helpers/common';
 import { useGetRevenueSummary } from '../../hooks/use-get-revenue-data';
 
 interface Props {
@@ -23,10 +24,7 @@ export default function RevenueMetricCards({ fromDate, toDate }: Props) {
         {
             title: 'analytics.revenue.totalRevenue',
             value: summaryData?.totalRevenueUsd
-                ? `$${summaryData.totalRevenueUsd.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                  })}`
+                ? `$${formattedNumber(summaryData.totalRevenueUsd)}`
                 : '$0.00',
             icon: DollarSign,
             colors: {

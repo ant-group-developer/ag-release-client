@@ -152,3 +152,22 @@ export const useGetRevenueTopLabel = (
     };
 };
 
+export const useGetRevenueTopChannel = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopChannel(params),
+        queryFn: () => analytics2Apis.getRevenueTopChannel(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topChannelData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topChannelData,
+        ...query,
+    };
+};
+

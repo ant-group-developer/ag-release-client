@@ -4,14 +4,16 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { Link } from '@/i18n/routing';
 import { Button, Card, Empty, Segmented, Skeleton, Space, Table } from 'antd';
-import { ArrowRight, BarChart3, List } from 'lucide-react';
+import { ArrowRight, BarChart3, List, PieChart } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import RankingBar from '../ranking/ranking-bar';
+import RankingPie from '../ranking/ranking-pie';
 
 export enum RankingCardView {
     LIST = 'list',
     BAR = 'bar',
+    PIE = 'pie',
 }
 
 interface RankingCardProps<T> {
@@ -25,6 +27,7 @@ interface RankingCardProps<T> {
     valueKey: keyof T;
     defaultView?: RankingCardView;
     viewMoreHref?: string;
+    valuePrefix?: string;
 }
 
 export default function RankingCard({
@@ -38,6 +41,7 @@ export default function RankingCard({
     valueKey,
     defaultView = RankingCardView.LIST,
     viewMoreHref,
+    valuePrefix,
 }: RankingCardProps<any>) {
     const [viewType, setViewType] = useState<RankingCardView>(defaultView);
     const messages = useTranslations();
@@ -78,6 +82,22 @@ export default function RankingCard({
                                     >
                                         <div className="flex h-full items-center justify-center">
                                             <BarChart3
+                                                size={SIZE_ICON}
+                                                height={22}
+                                            />
+                                        </div>
+                                    </CustomTooltip>
+                                ),
+                            },
+                            {
+                                value: RankingCardView.PIE,
+                                label: (
+                                    <CustomTooltip
+                                        title={messages('common.pieChart')}
+                                        size="small"
+                                    >
+                                        <div className="flex h-full items-center justify-center">
+                                            <PieChart
                                                 size={SIZE_ICON}
                                                 height={22}
                                             />
@@ -130,11 +150,18 @@ export default function RankingCard({
                     className="py-12"
                     description={messages('common.noDataAvailable')}
                 />
-            ) : (
+            ) : viewType === RankingCardView.BAR ? (
                 <RankingBar
                     data={dataSource}
                     labelKey={labelKey}
                     valueKey={valueKey}
+                />
+            ) : (
+                <RankingPie
+                    data={dataSource}
+                    labelKey={labelKey}
+                    valueKey={valueKey}
+                    valuePrefix={valuePrefix}
                 />
             )}
         </Card>

@@ -19,9 +19,11 @@ import {
     RELEASE_SUBMIT_STATUS,
 } from '@/modules/release-submit/enums';
 import { useGetListReleaseSubmits } from '@/modules/release-submit/hooks/use-get-list';
+import { useAutoRetrySyncDataDspCi } from '@/modules/release-submit/hooks/use-auto-retry-sync-data-dsp-ci';
 import { ReleaseSubmitFilter } from '@/modules/release-submit/types';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Button, Popconfirm, theme } from 'antd';
+import { RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -32,6 +34,7 @@ export default function ReleaseSubmitsPage() {
     const [snapshotModalOpen, setSnapshotModalOpen] = useState(false);
     const [selectedRecord, setSelectedRecord] = useState<any>(null);
     const { isDark } = useThemeMode();
+    const { autoRetrySyncDataDspCi, isPending } = useAutoRetrySyncDataDspCi();
 
     const {
         dataFilter,
@@ -76,7 +79,27 @@ export default function ReleaseSubmitsPage() {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('releaseExecution.label')}>
+            <PageContainer
+                title={messages('releaseExecution.label')}
+                extra={
+                    <Popconfirm
+                        title={messages('releaseExecution.confirm.autoRetrySyncDataDspCiTitle')}
+                        description={messages('releaseExecution.confirm.autoRetrySyncDataDspCiDescription')}
+                        onConfirm={() => autoRetrySyncDataDspCi()}
+                        okText={messages('common.yes')}
+                        cancelText={messages('common.no')}
+                        disabled={isPending}
+                    >
+                        <Button
+                            type="primary"
+                            icon={<RotateCcw className="h-4 w-4" />}
+                            loading={isPending}
+                        >
+                            {messages('releaseExecution.action.autoRetrySyncDataDspCi')}
+                        </Button>
+                    </Popconfirm>
+                }
+            >
                 <ReleaseSubmitStatusSummary
                     items={statusSummary}
                     loading={isFetching}

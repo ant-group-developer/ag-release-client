@@ -100,10 +100,7 @@ export const formatEnumLabel = (value?: string | null) => {
         .join(' ');
 };
 
-export const formatRelativeShort = (
-    date?: string | null,
-    messages?: any
-) => {
+export const formatRelativeShort = (date?: string | null, messages?: any) => {
     if (!date) return null;
 
     const targetDate = dayjs(date);

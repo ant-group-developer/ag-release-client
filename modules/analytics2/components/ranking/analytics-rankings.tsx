@@ -11,6 +11,7 @@ import {
     useGetReleaseRanking,
     useGetTenantRanking,
     useGetTrackRanking,
+    useGetChannelRanking,
 } from '../../hooks/use-get-rankings';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
@@ -18,6 +19,8 @@ import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-mo
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
+import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
+import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
 interface Props {
@@ -34,13 +37,23 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             title,
         });
     const [detailModal, setDetailModal] = useState<{
-        type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | null;
+        type:
+            | 'release'
+            | 'track'
+            | 'label'
+            | 'artist'
+            | 'tenant'
+            | 'channel'
+            | 'dsp'
+            | null;
         title: string;
         id: string;
+        dspReportId?: string;
     }>({
         type: null,
         title: '',
         id: '',
+        dspReportId: '',
     });
 
     const {
@@ -50,6 +63,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         labelColumns,
         tenantColumns,
         dspColumns,
+        channelColumns,
     } = useAnalyticsRankingColumns({ setDetailModal });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
@@ -98,6 +112,14 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         page: 1,
         pageSize: topN,
     });
+
+    const { channelRankingData, isFetching: isChannelsFetching } =
+        useGetChannelRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
 
     return (
         <div className="flex flex-col gap-6">
@@ -180,6 +202,19 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         viewMoreHref={`${APP_ROUTES.ANALYTICS_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.channel'))}
+                        columns={channelColumns}
+                        dataSource={channelRankingData?.items}
+                        loading={isChannelsFetching}
+                        rowKey="channelId"
+                        labelKey="channelName"
+                        valueKey="totalViews"
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_CHANNELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                    />
+                </Col>
             </Row>
             <DetailReleaseAnalyticsModal
                 open={detailModal.type === 'release'}
@@ -228,6 +263,27 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 }
                 title={detailModal.title}
                 tenantId={detailModal.id}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailChannelAnalyticsModal
+                open={detailModal.type === 'channel'}
+                onClose={() =>
+                    setDetailModal((prev) => ({ ...prev, type: null }))
+                }
+                title={detailModal.title}
+                channelId={detailModal.id}
+                fromDate={fromDate}
+                toDate={toDate}
+            />
+            <DetailDspAnalyticsModal
+                open={detailModal.type === 'dsp'}
+                onClose={() =>
+                    setDetailModal((prev) => ({ ...prev, type: null }))
+                }
+                title={detailModal.title}
+                pgDspId={detailModal.id}
+                dspReportId={detailModal.dspReportId || ''}
                 fromDate={fromDate}
                 toDate={toDate}
             />

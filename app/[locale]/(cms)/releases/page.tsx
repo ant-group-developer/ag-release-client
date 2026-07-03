@@ -133,13 +133,6 @@ export default function Releases({}: Props) {
     return (
         <AppPageWrapper>
             <PageContainer title={messages('release.routeLabel')}>
-                {/* <ReleasesHeaderV2
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                /> */}
-
                 <ReleasesTable
                     headerTitle={
                         <ReleasesHeaderV2

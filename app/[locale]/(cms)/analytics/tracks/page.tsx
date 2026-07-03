@@ -6,6 +6,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import { formattedNumber } from '@/helpers/common';
 import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
@@ -169,13 +170,7 @@ export default function TracksRankingPage() {
             width: 180,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
-                    $
-                    {val
-                        ? val.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                          })
-                        : '0.00'}
+                    ${val ? formattedNumber(val) : '0.00'}
                 </span>
             ),
         },

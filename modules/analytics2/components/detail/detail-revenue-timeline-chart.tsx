@@ -151,7 +151,7 @@ export default function DetailRevenueTimelineChart({
                                                 ),
                                             ]}
                                             primaryFormatter={(v) =>
-                                                `$${Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                                `$${formattedNumber(Number(v))}`
                                             }
                                             extraColumn={{
                                                 metaKey: 'Quantity',

@@ -119,3 +119,22 @@ export const useGetDspRanking = (
     };
 };
 
+export const useGetChannelRanking = (
+    params: RankingParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.channelRanking(params),
+        queryFn: () => analytics2Apis.getChannelRanking(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const channelRankingData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        channelRankingData,
+        ...query,
+    };
+};
+

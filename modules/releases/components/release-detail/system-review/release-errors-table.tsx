@@ -2,6 +2,7 @@
 
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import { usePermission } from '@/hooks/use-permission';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
@@ -31,6 +32,12 @@ export default function ReleaseErrorsTable({
     onUpdateError,
 }: ReleaseErrorsTableProps) {
     const messages = useTranslations();
+    const { hasPermission } = usePermission();
+
+    const canFix = hasPermission(PERMISSION.RELEASE_REVIEW.CAN_FIX);
+    const canApprove = hasPermission(PERMISSION.RELEASE_REVIEW.APPROVE);
+    const canReject = hasPermission(PERMISSION.RELEASE_REVIEW.REJECT);
+    const hasActionPermission = canFix || canApprove || canReject;
 
     const getEnrichedErrorMessages = (error: ReleaseEnrichedError) => {
         return error.message || messages(error.messageCode as any);
@@ -86,7 +93,7 @@ export default function ReleaseErrorsTable({
             key: 'message',
             width: 400,
             render: (record: ReleaseEnrichedError) => (
-                <span className="font-medium text-red-600 dark:text-red-400">
+                <span className="text-red-500">
                     {getEnrichedErrorMessages(record)}
                 </span>
             ),
@@ -160,81 +167,102 @@ export default function ReleaseErrorsTable({
             render: (updatedAt?: string | null) =>
                 formattedDate(updatedAt, DATE_FORMAT.DATE_MINUTE) || '-',
         },
-        {
-            title: messages('common.action'),
-            key: 'action',
-            width: 220,
-            align: 'center',
-            fixed: 'right',
-            render: (record: ReleaseEnrichedError) => {
-                return (
-                    <div className="flex items-center justify-end gap-2">
-                        {record.submissionStatus !==
-                            RELEASE_ERROR_SUBMISSION_STATUS.FIXED && (
-                            <PermissionGate
-                                permission={PERMISSION.RELEASE_REVIEW.CAN_FIX}
-                            >
-                                <Button
-                                    size="small"
-                                    type="primary"
-                                    className="flex items-center gap-1"
-                                    onClick={() =>
-                                        onUpdateError(record.id, {
-                                            submissionStatus:
-                                                RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
-                                        })
-                                    }
-                                >
-                                    <Wrench size={14} />
-                                    <span>
-                                        {messages(
-                                            'release.error.submissionStatus.FIXED'
-                                        )}
-                                    </span>
-                                </Button>
-                            </PermissionGate>
-                        )}
-                        <PermissionGate
-                            permission={PERMISSION.RELEASE_REVIEW.APPROVE}
-                        >
-                            <Button
-                                size="small"
-                                type="primary"
-                                className="flex items-center gap-1 !border-none !bg-green-600 !text-white hover:!bg-green-700"
-                                onClick={() =>
-                                    onUpdateError(record.id, {
-                                        approvalStatus:
-                                            RELEASE_ERROR_APPROVAL_STATUS.APPROVED,
-                                    })
-                                }
-                            >
-                                <CheckCircle size={14} />
-                                <span>{messages('status.approve')}</span>
-                            </Button>
-                        </PermissionGate>
-                        <PermissionGate
-                            permission={PERMISSION.RELEASE_REVIEW.REJECT}
-                        >
-                            <Button
-                                size="small"
-                                type="primary"
-                                danger
-                                className="flex items-center gap-1"
-                                onClick={() =>
-                                    onUpdateError(record.id, {
-                                        approvalStatus:
-                                            RELEASE_ERROR_APPROVAL_STATUS.REJECTED,
-                                    })
-                                }
-                            >
-                                <XCircle size={14} />
-                                <span>{messages('status.reject')}</span>
-                            </Button>
-                        </PermissionGate>
-                    </div>
-                );
-            },
-        },
+        ...(hasActionPermission
+            ? [
+                  {
+                      title: messages('common.action'),
+                      key: 'action',
+                      align: 'left' as const,
+                      fixed: 'right' as const,
+                      render: (record: ReleaseEnrichedError) => {
+                          const isFixed =
+                              record.submissionStatus ===
+                              RELEASE_ERROR_SUBMISSION_STATUS.FIXED;
+                          const isApproved =
+                              record.approvalStatus ===
+                              RELEASE_ERROR_APPROVAL_STATUS.APPROVED;
+                          return (
+                              <div className="flex items-center gap-2">
+                                  {!isFixed && (
+                                      <PermissionGate
+                                          permission={
+                                              PERMISSION.RELEASE_REVIEW.CAN_FIX
+                                          }
+                                      >
+                                          <Button
+                                              size="small"
+                                              type="primary"
+                                              className="flex items-center gap-1"
+                                              onClick={() =>
+                                                  onUpdateError(record.id, {
+                                                      submissionStatus:
+                                                          RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
+                                                  })
+                                              }
+                                          >
+                                              <Wrench size={14} />
+                                              <span>
+                                                  {messages(
+                                                      'release.error.submissionStatus.FIXED'
+                                                  )}
+                                              </span>
+                                          </Button>
+                                      </PermissionGate>
+                                  )}
+                                  {!isApproved && (
+                                      <PermissionGate
+                                          permission={
+                                              PERMISSION.RELEASE_REVIEW.APPROVE
+                                          }
+                                      >
+                                          <Button
+                                              size="small"
+                                              type="primary"
+                                              className="flex items-center gap-1 !border-none !bg-green-600 !text-white hover:!bg-green-700"
+                                              onClick={() =>
+                                                  onUpdateError(record.id, {
+                                                      approvalStatus:
+                                                          RELEASE_ERROR_APPROVAL_STATUS.APPROVED,
+                                                  })
+                                              }
+                                          >
+                                              <CheckCircle size={14} />
+                                              <span>
+                                                  {messages('status.approve')}
+                                              </span>
+                                          </Button>
+                                      </PermissionGate>
+                                  )}
+
+                                  <PermissionGate
+                                      permission={
+                                          PERMISSION.RELEASE_REVIEW.REJECT
+                                      }
+                                  >
+                                      <Button
+                                          size="small"
+                                          type="primary"
+                                          danger
+                                          className="flex items-center gap-1"
+                                          onClick={() =>
+                                              onUpdateError(record.id, {
+                                                  approvalStatus:
+                                                      RELEASE_ERROR_APPROVAL_STATUS.REJECTED,
+                                              })
+                                          }
+                                      >
+                                          <XCircle size={14} />
+                                          <span>
+                                              {messages('status.reject')}
+                                          </span>
+                                      </Button>
+                                  </PermissionGate>
+                              </div>
+                          );
+                      },
+                  },
+              ]
+            : []),
     ];
 
     return (

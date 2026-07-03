@@ -132,6 +132,8 @@
         "select": "Select...",
         "ownership": "Ownership",
         "direct": "Direct",
+        "distributionMethod": "Distribution method",
+        "releaseVia": "Distributed via",
         "others": "Others",
         "save": "Save",
         "viewXml": "View XML",
@@ -287,6 +289,7 @@
         "genres": "Genre",
         "track": "Track",
         "artist": "Artist",
+        "channel": "Channel",
         "release": "Release",
         "releases": "Releases",
         "plays": "Plays",
@@ -333,6 +336,7 @@
         "notUsed": "Not used",
         "use": "Use status",
         "source": "Source",
+        "sourcePlatform": "Source",
         "userUpload": "User upload",
         "imageAi": "Image AI",
         "thumbnail": "Thumbnail",
@@ -707,6 +711,20 @@
             "description": "An unexpected error has occurred. Please try again later."
         }
     },
+    "youtubeKeys": {
+        "label": "Youtube Keys",
+        "alias": "Alias",
+        "apiKey": "API Key",
+        "keyHint": "Key Hint",
+        "status": "Status",
+        "dailyQuotaLimit": "Daily Quota Limit",
+        "unitsConsumedToday": "Units Consumed Today",
+        "unitsRemaining": "Units Remaining",
+        "lastResetAt": "Last Reset At",
+        "lastUsedAt": "Last Used At",
+        "lastError": "Last Error",
+        "consecutiveErrorCount": "Consecutive Error Count"
+    },
     "validation": {
         "error": "Validation errors",
         "missingRequiredFields": "Please fill in all required fields",
@@ -765,6 +783,7 @@
         "inActive": "Inactive",
         "enable": "Enable",
         "disable": "Disable",
+        "disabled": "Disabled",
         "on": "On",
         "off": "Off",
         "block": "Blocked",
@@ -987,6 +1006,7 @@
     },
     "release": {
         "excludeTitle": "Exclude releases",
+        "excludeSearchEmptyText": "Search for releases to exclude",
         "excludeAlertMsg": "Selected to exclude <b>{count}</b> releases",
         "takeDown": "Take down",
         "takeDownConfirmTitle": "Take down release?",
@@ -2379,8 +2399,12 @@
         "totalRevenueByMonth": "Revenue by month",
         "dspDistribution": "Views by DSP",
         "terDistribution": "Views by Country",
+        "tenantDistribution": "Views by Workspace",
         "revenueDspDistribution": "Revenue by DSP",
         "revenueTerDistribution": "Revenue by Country",
+        "revenueTenantDistribution": "Revenue by Workspace",
+        "viewsDistribution": "Views Distribution",
+        "revenueDistribution": "Revenue Distribution",
         "totalSalesViews": "Total usage",
         "totalRevenueUsd": "Total Revenue",
         "detailTitle": "Detailed Analytics",
@@ -2681,7 +2705,9 @@
             "retryTitle": "Are you sure you want to retry?",
             "retryDescription": "This action will restart the distribution process.",
             "markCompletedTitle": "Are you sure you want to mark as completed?",
-            "markCompletedDescription": "This action will mark the selected records as completed."
+            "markCompletedDescription": "This action will mark the selected records as completed.",
+            "autoRetrySyncDataDspCiTitle": "Confirm auto retry failed DSP CI steps?",
+            "autoRetrySyncDataDspCiDescription": "This action will retry failed SYNC_DATA_DSP_CI steps in the latest executions."
         },
         "detail": {
             "columns": {
@@ -2777,7 +2803,8 @@
             "GET_RESULT_IMPORT_CI": "Get result import CI"
         },
         "action": {
-            "markCompleted": "Mark completed"
+            "markCompleted": "Mark completed",
+            "autoRetrySyncDataDspCi": "Auto retry DSP CI"
         },
         "statusOptions": {
             "QUEUED": "Queued",
@@ -2804,7 +2831,8 @@
             "WAITING_PARTNER": "Waiting partner",
             "DONE": "Done",
             "FAILED": "Failed",
-            "CANCELLED": "Cancelled"
+            "CANCELLED": "Cancelled",
+            "PARTIAL_DONE": "Partially done"
         },
         "stepStatus": {
             "PENDING": "Not started",

@@ -5,14 +5,16 @@ import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { useBulkSubmitRelease } from '@/modules/releases/hooks/use-bulk-submit-release';
+import { SearchOutlined } from '@ant-design/icons';
 import { ProColumns } from '@ant-design/pro-components';
-import { Alert, Avatar, Button, Form, Select, Space, Tag } from 'antd';
+import { Alert, Avatar, Button, Form, Space, Tag } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useMemo, useState } from 'react';
 
 import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import DspSelectionTable from './dsp-selection-table';
 import ReleasesHeaderV2 from '../header';
 import ReleaseTitleColumn from '../table/title-column';
 import ReleaseStatusTag from '../tag/release-status-tag';
@@ -43,14 +45,17 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
     const [idsExclude, setIdsExclude] = useState<string[]>([]);
     const [filterState, setFilterState] = useState<ReleasesDataFilter>({
         page: 1,
-        pageSize: 3,
+        pageSize: 2,
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
         type: RELEASE_TYPE.AUDIO,
+        isImportedFromReport: 'false',
     });
 
     const { releasesData, isFetching: isReleaseDataLoading } =
-        useGetListReleases(filterState);
+        useGetListReleases(filterState, {
+            enabled: !!filterState?.keyword,
+        });
 
     const { dspData, isFetching: isFetchingDsp } = useGetListDsp({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
@@ -60,22 +65,6 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
     const dspDataFilter = useMemo(() => {
         return dspData?.items?.filter((item) => !!item.codeCi) || [];
     }, [dspData?.items]);
-
-    const options = useMemo(() => {
-        return dspDataFilter?.map((item) => {
-            return {
-                label: (
-                    <Space>
-                        <Avatar size={18} src={item?.picture}>
-                            {item?.name[0]}
-                        </Avatar>
-                        <span>{item.name}</span>
-                    </Space>
-                ),
-                value: item.code,
-            };
-        });
-    }, [dspDataFilter]);
 
     useEffect(() => {
         if (dspDataFilter && dspDataFilter.length > 0) {
@@ -132,13 +121,13 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
         });
     };
 
-    const defaultFilter = {
-        page: 1,
-        pageSize: 4,
-        orderBy: ORDER.DESC,
-        fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
-        type: RELEASE_TYPE.AUDIO,
-    };
+    // const defaultFilter = {
+    //     page: 1,
+    //     pageSize: 4,
+    //     orderBy: ORDER.DESC,
+    //     fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+    //     type: RELEASE_TYPE.AUDIO,
+    // };
 
     const isSameValue =
         filterState.keyword === undefined &&
@@ -282,6 +271,12 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
             title={messages('release.bulkSubmit')}
             onCancel={closeModal}
             width={'80vw'}
+            styles={{
+                body: {
+                    height: '80vh',
+                    overflowY: 'auto',
+                },
+            }}
             footer={[
                 <Button key="cancel" onClick={closeModal}>
                     {messages('common.cancel')}
@@ -295,9 +290,9 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
                     {messages('common.submit')}
                 </Button>,
             ]}
-            spinning={isFetchingDsp}
+            centered
         >
-            <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+            <div className="flex flex-col gap-4">
                 <Form form={form} onFinish={onFinish} layout="vertical">
                     <Form.Item
                         name="dspIds"
@@ -310,10 +305,8 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
                         ]}
                         style={{ marginBottom: 0 }}
                     >
-                        <Select
-                            mode="multiple"
-                            placeholder={messages('placeholder.selectDsp')}
-                            options={options}
+                        <DspSelectionTable
+                            dataSource={dspDataFilter}
                             loading={isFetchingDsp}
                         />
                     </Form.Item>
@@ -365,6 +358,19 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
                         options={false}
                         tableAlertRender={false}
                         tableAlertOptionRender={false}
+                        size="small"
+                        locale={{
+                            emptyText: (
+                                <div className="flex flex-col items-center justify-center gap-3 py-6 text-gray-400">
+                                    <SearchOutlined className="text-3xl text-gray-300" />
+                                    <span className="text-sm">
+                                        {messages(
+                                            'release.excludeSearchEmptyText'
+                                        )}
+                                    </span>
+                                </div>
+                            ),
+                        }}
                         onRow={(record) => ({
                             onClick: (e) => {
                                 const key = record.id;
@@ -379,7 +385,7 @@ const BulkSubmitModal = ({ onFinished }: BulkSubmitModalProps) => {
                         })}
                     />
                 </div>
-            </Space>
+            </div>
         </AppModal>
     );
 };
