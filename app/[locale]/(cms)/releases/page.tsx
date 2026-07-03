@@ -9,6 +9,7 @@ import { useFilter } from '@/hooks/use-filter';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import AutoSubmitUndistributedMusicModal from '@/modules/releases/components/auto-submit-undistributed-music-modal';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
@@ -25,7 +26,7 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -158,6 +159,33 @@ export default function Releases({}: Props) {
                             handleRefresh();
                         },
                     }}
+                    toolBarRender={() => [
+                        <Button
+                            key="preview-auto-submit"
+                            icon={<EyeOutlined />}
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.PREVIEW_AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
+                                )
+                            }
+                        >
+                            {messages(
+                                'release.previewAutoSubmitUndistributedMusic'
+                            )}
+                        </Button>,
+                        <Button
+                            key="auto-submit"
+                            type="primary"
+                            icon={<SendOutlined />}
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
+                                )
+                            }
+                        >
+                            {messages('release.autoSubmitUndistributedMusic')}
+                        </Button>,
+                    ]}
                     rowSelection={rowSelection}
                     tableAlertRender={({ selectedRowKeys }) => {
                         return (
@@ -224,6 +252,21 @@ export default function Releases({}: Props) {
 
                 {typeModal === TYPE_MODAL_RELEASE.BULK_SUBMIT && (
                     <BulkSubmitModal onFinished={() => setSelectedRows([])} />
+                )}
+
+                {typeModal ===
+                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
+                    <AutoSubmitUndistributedMusicModal
+                        onFinished={handleRefresh}
+                    />
+                )}
+
+                {typeModal ===
+                    TYPE_MODAL_RELEASE.PREVIEW_AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
+                    <AutoSubmitUndistributedMusicModal
+                        preview
+                        onFinished={handleRefresh}
+                    />
                 )}
 
                 {typeModal === TYPE_MODAL_RELEASE.BULK_DELETE && (
