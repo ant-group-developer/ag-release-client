@@ -6,14 +6,15 @@ import {
     ReleaseCaptionData,
     ReleaseEnrichedError,
     ReleaseEnrichedErrorFilter,
+    ReleaseReview,
+    ReleaseReviewFilter,
     ReleasesData,
     ReleasesDataFilter,
     ReleasesDataSimple,
     ReleaseValidate,
-    ReleaseReview,
-    ReleaseReviewFilter,
 } from '../types';
 import {
+    AutoSubmitUndistributedMusicRelease,
     BulkCreateReleaseErrorsPayload,
     BulkSubmitRelease,
     BulkUpdateReleaseErrorsPayload,
@@ -219,6 +220,25 @@ export const releasesApi = {
             codes,
             idsExclude,
         });
+    },
+
+    autoSubmitUndistributedMusic: ({
+        dspCodes,
+    }: AutoSubmitUndistributedMusicRelease) => {
+        return axiosInstance.post('/releases/auto-submit-undistributed-music', {
+            dspCodes,
+        });
+    },
+
+    previewAutoSubmitUndistributedMusic: ({
+        dspCodes,
+    }: AutoSubmitUndistributedMusicRelease) => {
+        return axiosInstance.post(
+            '/releases/auto-submit-undistributed-music/preview',
+            {
+                dspCodes,
+            }
+        );
     },
 
     bulkDeleteReleaseDraft: (ids: Key[]) => {
