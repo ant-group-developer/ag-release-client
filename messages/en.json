@@ -2705,7 +2705,9 @@
             "retryTitle": "Are you sure you want to retry?",
             "retryDescription": "This action will restart the distribution process.",
             "markCompletedTitle": "Are you sure you want to mark as completed?",
-            "markCompletedDescription": "This action will mark the selected records as completed."
+            "markCompletedDescription": "This action will mark the selected records as completed.",
+            "autoRetrySyncDataDspCiTitle": "Confirm auto retry failed DSP CI steps?",
+            "autoRetrySyncDataDspCiDescription": "This action will retry failed SYNC_DATA_DSP_CI steps in the latest executions."
         },
         "detail": {
             "columns": {
@@ -2801,7 +2803,8 @@
             "GET_RESULT_IMPORT_CI": "Get result import CI"
         },
         "action": {
-            "markCompleted": "Mark completed"
+            "markCompleted": "Mark completed",
+            "autoRetrySyncDataDspCi": "Auto retry DSP CI"
         },
         "statusOptions": {
             "QUEUED": "Queued",

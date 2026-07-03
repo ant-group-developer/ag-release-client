@@ -2680,7 +2680,9 @@
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",
             "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
             "markCompletedTitle": "Bạn có chắc chắn muốn đánh dấu hoàn thành?",
-            "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành."
+            "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành.",
+            "autoRetrySyncDataDspCiTitle": "Xác nhận tự động thử lại các bước đồng bộ DSP CI?",
+            "autoRetrySyncDataDspCiDescription": "Hành động này sẽ thực hiện lại các bước SYNC_DATA_DSP_CI bị lỗi ở các lần triển khai mới nhất."
         },
         "message": {
             "retrySuccess": "Thử lại tiến trình thành công"
@@ -2776,7 +2778,8 @@
             "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI"
         },
         "action": {
-            "markCompleted": "Đánh dấu hoàn thành"
+            "markCompleted": "Đánh dấu hoàn thành",
+            "autoRetrySyncDataDspCi": "Tự động thử lại DSP CI"
         },
         "statusOptions": {
             "QUEUED": "Đang chờ",

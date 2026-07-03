@@ -96,4 +96,7 @@ export const releaseSubmitApis = {
     retryStep: (stepId: string) => {
         return axiosInstance.post(`/release-executions3/steps/${stepId}/retry`);
     },
+    autoRetrySyncDataDspCi: () => {
+        return axiosInstance.post('/release-executions3/auto-retry-sync-data-dsp-ci');
+    },
 };
