@@ -8,6 +8,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import { formattedNumber } from '@/helpers/common';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -151,13 +152,7 @@ export default function TenantsRankingPage() {
             width: 180,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
-                    $
-                    {val
-                        ? val.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                          })
-                        : '0.00'}
+                    ${val ? formattedNumber(val) : '0.00'}
                 </span>
             ),
         },

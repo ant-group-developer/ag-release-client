@@ -1,5 +1,6 @@
 import { QUERY_KEY } from '@/constants/query-key';
 import {
+    DspDetailParams,
     DspTimelineParams,
     RankingParams,
     ReleaseOverviewParams,
@@ -100,6 +101,12 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.DSP_RANKING,
             params,
         ] as const,
+    channelRanking: (params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_RANKING,
+            params,
+        ] as const,
     syncJob: (jobId?: string) =>
         [
             ...analytics2QueryKeys.all,
@@ -170,6 +177,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_TOP_LABEL,
+            params,
+        ] as const,
+    revenueTopChannel: (params: RevenueQueryParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_TOP_CHANNEL,
             params,
         ] as const,
     releaseOverview: (releaseId: string, params: ReleaseOverviewParams) =>
@@ -415,10 +428,7 @@ export const analytics2QueryKeys = {
             labelId,
             params,
         ] as const,
-    labelRevenueLineChart: (
-        labelId: string,
-        params: RevenueLineChartParams
-    ) =>
+    labelRevenueLineChart: (labelId: string, params: RevenueLineChartParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.LABEL_REVENUE_LINE_CHART,
@@ -605,6 +615,118 @@ export const analytics2QueryKeys = {
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TENANT_REVENUE_TER_BAR_CHART,
             tenantId,
+            params,
+        ] as const,
+    channelOverview: (channelId: string, params: ReleaseOverviewParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_OVERVIEW,
+            channelId,
+            params,
+        ] as const,
+    channelTrendViewLineChart: (
+        channelId: string,
+        params: TrendViewLineChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_TREND_VIEW_LINE_CHART,
+            channelId,
+            params,
+        ] as const,
+    channelTrendViewDspBarChart: (
+        channelId: string,
+        params: TrendViewDspBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_TREND_VIEW_DSP_BAR_CHART,
+            channelId,
+            params,
+        ] as const,
+    channelTrendViewTerBarChart: (
+        channelId: string,
+        params: TrendViewTerBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_TREND_VIEW_TER_BAR_CHART,
+            channelId,
+            params,
+        ] as const,
+    channelRevenueLineChart: (
+        channelId: string,
+        params: RevenueLineChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_REVENUE_LINE_CHART,
+            channelId,
+            params,
+        ] as const,
+    channelRevenueDspBarChart: (
+        channelId: string,
+        params: RevenueDspBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_REVENUE_DSP_BAR_CHART,
+            channelId,
+            params,
+        ] as const,
+    channelRevenueTerBarChart: (
+        channelId: string,
+        params: RevenueTerBarChartParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_REVENUE_TER_BAR_CHART,
+            channelId,
+            params,
+        ] as const,
+    dspOverview: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_OVERVIEW,
+
+            params,
+        ] as const,
+    dspTrendViewLineChart: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_TREND_VIEW_LINE_CHART,
+
+            params,
+        ] as const,
+    dspTrendViewTerBarChart: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_TREND_VIEW_TER_BAR_CHART,
+            params,
+        ] as const,
+    dspTrendViewTenantBarChart: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_TREND_VIEW_TENANT_BAR_CHART,
+            params,
+        ] as const,
+    dspRevenueLineChart: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_REVENUE_LINE_CHART,
+
+            params,
+        ] as const,
+    dspRevenueTerBarChart: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_REVENUE_TER_BAR_CHART,
+            params,
+        ] as const,
+    dspRevenueTenantBarChart: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_REVENUE_TENANT_BAR_CHART,
             params,
         ] as const,
 };

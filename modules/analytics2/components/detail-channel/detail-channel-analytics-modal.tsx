@@ -7,35 +7,35 @@ import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
-import { useGetLabelRevenueDspBarChart } from '../../hooks/use-get-label-revenue-dsp-bar-chart';
-import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
-import { useGetLabelRevenueTerBarChart } from '../../hooks/use-get-label-revenue-ter-bar-chart';
-import { useGetLabelTrendViewDspBarChart } from '../../hooks/use-get-label-trend-view-dsp-bar-chart';
-import { useGetLabelTrendViewLineChart } from '../../hooks/use-get-label-trend-view-line-chart';
-import { useGetLabelTrendViewTerBarChart } from '../../hooks/use-get-label-trend-view-ter-bar-chart';
+import { useGetChannelOverview } from '../../hooks/use-get-channel-overview';
+import { useGetChannelRevenueDspBarChart } from '../../hooks/use-get-channel-revenue-dsp-bar-chart';
+import { useGetChannelRevenueLineChart } from '../../hooks/use-get-channel-revenue-line-chart';
+import { useGetChannelRevenueTerBarChart } from '../../hooks/use-get-channel-revenue-ter-bar-chart';
+import { useGetChannelTrendViewDspBarChart } from '../../hooks/use-get-channel-trend-view-dsp-bar-chart';
+import { useGetChannelTrendViewLineChart } from '../../hooks/use-get-channel-trend-view-line-chart';
+import { useGetChannelTrendViewTerBarChart } from '../../hooks/use-get-channel-trend-view-ter-bar-chart';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
 import { formattedNumber } from '@/helpers/common';
 
-interface DetailLabelAnalyticsModalProps {
+interface DetailChannelAnalyticsModalProps {
     open: boolean;
     onClose: () => void;
     title: string;
-    labelId: string;
+    channelId: string;
     fromDate: string;
     toDate: string;
 }
 
-export default function DetailLabelAnalyticsModal({
+export default function DetailChannelAnalyticsModal({
     open,
     onClose,
     title,
-    labelId,
+    channelId,
     fromDate,
     toDate,
-}: DetailLabelAnalyticsModalProps) {
+}: DetailChannelAnalyticsModalProps) {
     const messages = useTranslations();
 
     const [localFromDate, setLocalFromDate] = useState(fromDate);
@@ -52,66 +52,72 @@ export default function DetailLabelAnalyticsModal({
         }
     }, [open, fromDate, toDate]);
 
-    // Gọi API lấy thông tin tổng quan của Label
-    const { overviewData, isFetching } = useGetLabelOverview(
-        labelId,
+    // Gọi API lấy thông tin tổng quan của Channel
+    const { overviewData, isFetching } = useGetChannelOverview(
+        channelId,
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin biểu đồ doanh thu của Label
-    const { revenueLineChartData, isFetching: isLineChartFetching } =
-        useGetLabelRevenueLineChart(
-            labelId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    // Gọi API lấy thông tin biểu đồ doanh thu của Channel
+    const {
+        lineChartData: revenueLineChartData,
+        isFetching: isLineChartFetching,
+    } = useGetChannelRevenueLineChart(
+        channelId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open
+    );
 
-    // Gọi API lấy thông tin biểu đồ lượt nghe của Label
+    // Gọi API lấy thông tin biểu đồ lượt nghe của Channel
     const {
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
-    } = useGetLabelTrendViewLineChart(
-        labelId,
+    } = useGetChannelTrendViewLineChart(
+        channelId,
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin phân bố theo DSP của Label
+    // Gọi API lấy thông tin phân bố theo DSP của Channel
     const {
         dspBarChartData: trendViewDspBarChartData,
         isFetching: isTrendViewDspBarChartFetching,
-    } = useGetLabelTrendViewDspBarChart(
-        labelId,
+    } = useGetChannelTrendViewDspBarChart(
+        channelId,
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin phân bố theo quốc gia của Label
+    // Gọi API lấy thông tin phân bố theo quốc gia của Channel
     const {
         terBarChartData: trendViewTerBarChartData,
         isFetching: isTrendViewTerBarChartFetching,
-    } = useGetLabelTrendViewTerBarChart(
-        labelId,
+    } = useGetChannelTrendViewTerBarChart(
+        channelId,
         { fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Label
-    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
-        useGetLabelRevenueDspBarChart(
-            labelId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Channel
+    const {
+        dspBarChartData: revenueDspBarChartData,
+        isFetching: isRevenueDspBarChartFetching,
+    } = useGetChannelRevenueDspBarChart(
+        channelId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open
+    );
 
-    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Label
-    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
-        useGetLabelRevenueTerBarChart(
-            labelId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Channel
+    const {
+        terBarChartData: revenueTerBarChartData,
+        isFetching: isRevenueTerBarChartFetching,
+    } = useGetChannelRevenueTerBarChart(
+        channelId,
+        { fromDate: localFromDate, toDate: localToDate },
+        open
+    );
 
     const dspColumns = useMemo(
         () => [
@@ -307,7 +313,7 @@ export default function DetailLabelAnalyticsModal({
                 <div className="flex w-full items-center justify-between">
                     <Space>
                         <Tag className="!mr-0 !px-2 !py-1" color="green">
-                            {messages('common.label')}
+                            {messages('common.channel')}
                         </Tag>
                         <span className="">{`${messages('analytics.label')}: ${title}`}</span>
                     </Space>

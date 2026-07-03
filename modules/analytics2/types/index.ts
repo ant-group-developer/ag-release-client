@@ -128,6 +128,15 @@ export interface TenantRankingItem {
     totalViews: number;
 }
 
+export interface ChannelRankingItem {
+    rank: number;
+    channelId: string;
+    channelName: string;
+    thumbUrl?: string | null;
+    totalViews: number;
+    tenant?: TenantInfo | null;
+}
+
 export interface SyncRequest {
     period: string;
     force: boolean;
@@ -202,6 +211,8 @@ export interface RevenueDspItem {
     dspName: string;
     revenueUsd: number;
     quantity: number;
+    pgDspId: string;
+    dspReportId: string;
 }
 
 export interface RevenueTenantItem {
@@ -211,6 +222,16 @@ export interface RevenueTenantItem {
     logo: string | null;
     revenueUsd: number;
     quantity: number;
+}
+
+export interface RevenueChannelItem {
+    rank: number;
+    channelId: string;
+    channelName: string;
+    thumbUrl?: string | null;
+    revenueUsd: number;
+    quantity: number;
+    tenant?: TenantInfo | null;
 }
 
 // Top Artist Response
@@ -328,6 +349,8 @@ export interface DspRankingItem {
     rank: number;
     dspName: string;
     totalViews: number;
+    pgDspId: string;
+    dspReportId: string;
 }
 
 export interface RevenueLineChartParams {
@@ -456,3 +479,23 @@ export interface ExportReportEventData {
     summary?: Partial<ExportReportEventSummary>;
     [key: string]: any;
 }
+
+export interface DspDetailParams {
+    pgDspId: string;
+    dspReportId: string;
+    fromDate: string;
+    toDate: string;
+}
+
+export interface TrendViewTenantBarChartItem {
+    tenantName: string;
+    totalViews: number;
+}
+
+export interface RevenueTenantBarChartItem {
+    tenantName: string;
+    revenueUsd: number;
+    quantity: number;
+}
+
+

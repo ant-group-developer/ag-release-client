@@ -126,7 +126,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('release.label'),
-            key: 'releaseCount',
+            key: 'release_count',
             dataIndex: LABEL_TABLE_KEY.RELEASE_COUNT,
             width: 120,
             sorter: true,
@@ -141,7 +141,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('track.label'),
-            key: 'trackCount',
+            key: 'track_count',
             dataIndex: LABEL_TABLE_KEY.TRACK_COUNT,
             width: 120,
             sorter: true,

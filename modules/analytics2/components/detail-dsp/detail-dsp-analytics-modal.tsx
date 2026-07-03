@@ -7,35 +7,37 @@ import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
-import { useGetLabelRevenueDspBarChart } from '../../hooks/use-get-label-revenue-dsp-bar-chart';
-import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
-import { useGetLabelRevenueTerBarChart } from '../../hooks/use-get-label-revenue-ter-bar-chart';
-import { useGetLabelTrendViewDspBarChart } from '../../hooks/use-get-label-trend-view-dsp-bar-chart';
-import { useGetLabelTrendViewLineChart } from '../../hooks/use-get-label-trend-view-line-chart';
-import { useGetLabelTrendViewTerBarChart } from '../../hooks/use-get-label-trend-view-ter-bar-chart';
+import { useGetDspOverview } from '../../hooks/use-get-dsp-overview';
+import { useGetDspRevenueTenantBarChart } from '../../hooks/use-get-dsp-revenue-tenant-bar-chart';
+import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
+import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
+import { useGetDspTrendViewTenantBarChart } from '../../hooks/use-get-dsp-trend-view-tenant-bar-chart';
+import { useGetDspTrendViewLineChart } from '../../hooks/use-get-dsp-trend-view-line-chart';
+import { useGetDspTrendViewTerBarChart } from '../../hooks/use-get-dsp-trend-view-ter-bar-chart';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
 import { formattedNumber } from '@/helpers/common';
 
-interface DetailLabelAnalyticsModalProps {
+interface DetailDspAnalyticsModalProps {
     open: boolean;
     onClose: () => void;
     title: string;
-    labelId: string;
+    pgDspId: string;
+    dspReportId: string;
     fromDate: string;
     toDate: string;
 }
 
-export default function DetailLabelAnalyticsModal({
+export default function DetailDspAnalyticsModal({
     open,
     onClose,
     title,
-    labelId,
+    pgDspId,
+    dspReportId,
     fromDate,
     toDate,
-}: DetailLabelAnalyticsModalProps) {
+}: DetailDspAnalyticsModalProps) {
     const messages = useTranslations();
 
     const [localFromDate, setLocalFromDate] = useState(fromDate);
@@ -52,68 +54,61 @@ export default function DetailLabelAnalyticsModal({
         }
     }, [open, fromDate, toDate]);
 
-    // Gọi API lấy thông tin tổng quan của Label
-    const { overviewData, isFetching } = useGetLabelOverview(
-        labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+    // Gọi API lấy thông tin tổng quan của DSP
+    const { overviewData, isFetching } = useGetDspOverview(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin biểu đồ doanh thu của Label
-    const { revenueLineChartData, isFetching: isLineChartFetching } =
-        useGetLabelRevenueLineChart(
-            labelId,
-            { fromDate: localFromDate, toDate: localToDate },
+    // Gọi API lấy thông tin biểu đồ doanh thu của DSP
+    const { lineChartData: revenueLineChartData, isFetching: isLineChartFetching } =
+        useGetDspRevenueLineChart(
+            { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
             open
         );
 
-    // Gọi API lấy thông tin biểu đồ lượt nghe của Label
+    // Gọi API lấy thông tin biểu đồ lượt nghe của DSP
     const {
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
-    } = useGetLabelTrendViewLineChart(
-        labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+    } = useGetDspTrendViewLineChart(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin phân bố theo DSP của Label
+    // Gọi API lấy thông tin phân bố theo Tenant/Workspace của DSP
     const {
-        dspBarChartData: trendViewDspBarChartData,
-        isFetching: isTrendViewDspBarChartFetching,
-    } = useGetLabelTrendViewDspBarChart(
-        labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        tenantBarChartData: trendViewTenantBarChartData,
+        isFetching: isTrendViewTenantBarChartFetching,
+    } = useGetDspTrendViewTenantBarChart(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin phân bố theo quốc gia của Label
+    // Gọi API lấy thông tin phân bố theo quốc gia của DSP
     const {
         terBarChartData: trendViewTerBarChartData,
         isFetching: isTrendViewTerBarChartFetching,
-    } = useGetLabelTrendViewTerBarChart(
-        labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+    } = useGetDspTrendViewTerBarChart(
+        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
         open
     );
 
-    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Label
-    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
-        useGetLabelRevenueDspBarChart(
-            labelId,
-            { fromDate: localFromDate, toDate: localToDate },
+    // Gọi API lấy thông tin phân bố doanh thu theo Tenant/Workspace của DSP
+    const { tenantBarChartData: revenueTenantBarChartData, isFetching: isRevenueTenantBarChartFetching } =
+        useGetDspRevenueTenantBarChart(
+            { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
             open
         );
 
-    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Label
-    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
-        useGetLabelRevenueTerBarChart(
-            labelId,
-            { fromDate: localFromDate, toDate: localToDate },
+    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của DSP
+    const { terBarChartData: revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
+        useGetDspRevenueTerBarChart(
+            { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
             open
         );
 
-    const dspColumns = useMemo(
+    const tenantColumns = useMemo(
         () => [
             {
                 title: messages('analytics2.rank'),
@@ -128,9 +123,9 @@ export default function DetailLabelAnalyticsModal({
                 ),
             },
             {
-                title: 'DSP',
-                dataIndex: 'dspName',
-                key: 'dspName',
+                title: messages('tenant.label'),
+                dataIndex: 'tenantName',
+                key: 'tenantName',
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-900 dark:text-zinc-100">
@@ -193,12 +188,12 @@ export default function DetailLabelAnalyticsModal({
         [messages]
     );
 
-    const mappedTrendDspRankData = useMemo(() => {
-        return trendViewDspBarChartData.map((item, index) => ({
+    const mappedTrendTenantRankData = useMemo(() => {
+        return trendViewTenantBarChartData.map((item, index) => ({
             ...item,
             rank: index + 1,
         }));
-    }, [trendViewDspBarChartData]);
+    }, [trendViewTenantBarChartData]);
 
     const mappedTrendTerRankData = useMemo(() => {
         return trendViewTerBarChartData.map((item, index) => ({
@@ -207,7 +202,7 @@ export default function DetailLabelAnalyticsModal({
         }));
     }, [trendViewTerBarChartData]);
 
-    const revenueDspColumns = useMemo(
+    const revenueTenantColumns = useMemo(
         () => [
             {
                 title: messages('analytics2.rank'),
@@ -222,9 +217,9 @@ export default function DetailLabelAnalyticsModal({
                 ),
             },
             {
-                title: 'DSP',
-                dataIndex: 'dspName',
-                key: 'dspName',
+                title: messages('tenant.label'),
+                dataIndex: 'tenantName',
+                key: 'tenantName',
                 ellipsis: true,
                 render: (text: string) => (
                     <span className="truncate text-gray-900 dark:text-zinc-100">
@@ -287,12 +282,12 @@ export default function DetailLabelAnalyticsModal({
         [messages]
     );
 
-    const mappedRevenueDspRankData = useMemo(() => {
-        return revenueDspBarChartData.map((item, index) => ({
+    const mappedRevenueTenantRankData = useMemo(() => {
+        return revenueTenantBarChartData.map((item, index) => ({
             ...item,
             rank: index + 1,
         }));
-    }, [revenueDspBarChartData]);
+    }, [revenueTenantBarChartData]);
 
     const mappedRevenueTerRankData = useMemo(() => {
         return revenueTerBarChartData.map((item, index) => ({
@@ -307,7 +302,7 @@ export default function DetailLabelAnalyticsModal({
                 <div className="flex w-full items-center justify-between">
                     <Space>
                         <Tag className="!mr-0 !px-2 !py-1" color="green">
-                            {messages('common.label')}
+                            {messages('dsp.label')}
                         </Tag>
                         <span className="">{`${messages('analytics.label')}: ${title}`}</span>
                     </Space>
@@ -438,24 +433,24 @@ export default function DetailLabelAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.dspDistribution')}
-                            columns={dspColumns}
-                            dataSource={mappedTrendDspRankData}
-                            loading={isTrendViewDspBarChartFetching}
-                            rowKey="dspName"
-                            labelKey="dspName"
+                            title={messages('analytics.tenantDistribution')}
+                            columns={tenantColumns}
+                            dataSource={mappedTrendTenantRankData}
+                            loading={isTrendViewTenantBarChartFetching}
+                            rowKey="tenantName"
+                            labelKey="tenantName"
                             valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
                         />
                     </Col>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.revenueDspDistribution')}
-                            columns={revenueDspColumns}
-                            dataSource={mappedRevenueDspRankData}
-                            loading={isRevenueDspBarChartFetching}
-                            rowKey="dspName"
-                            labelKey="dspName"
+                            title={messages('analytics.revenueTenantDistribution')}
+                            columns={revenueTenantColumns}
+                            dataSource={mappedRevenueTenantRankData}
+                            loading={isRevenueTenantBarChartFetching}
+                            rowKey="tenantName"
+                            labelKey="tenantName"
                             valueKey="revenueUsd"
                             defaultView={RankingCardView.LIST}
                             valuePrefix="$"

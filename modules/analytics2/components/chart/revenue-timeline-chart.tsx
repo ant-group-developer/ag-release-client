@@ -88,10 +88,10 @@ export default function RevenueTimelineChart({
     );
 
     const formatValue = (v: any) => {
-        return `$${Number(v).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })}`;
+        return `$${formattedNumber(Number(v))}`;
+
+
+
     };
 
     const formatAxisValue = (v: any) => {

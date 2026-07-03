@@ -6,6 +6,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
@@ -130,13 +131,7 @@ export default function DspsRankingPage() {
             width: 180,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
-                    $
-                    {val
-                        ? val.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                          })
-                        : '0.00'}
+                    ${val ? formattedNumber(val) : '0.00'}
                 </span>
             ),
         },

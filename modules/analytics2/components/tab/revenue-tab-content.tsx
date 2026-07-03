@@ -1,6 +1,6 @@
 'use client';
 
-import { Col, Row, Select, Typography } from 'antd';
+import { Col, Row, Segmented } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
@@ -90,40 +90,28 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
                 <Col xs={24} lg={9}>
                     <PieChartView
                         title={
-                            <Select
-                                variant="borderless"
-                                value={viewType}
-                                onChange={(val) => setViewType(val)}
-                                options={[
-                                    {
-                                        value: 'dsp',
-                                        label: (
-                                            <Typography.Title
-                                                level={5}
-                                                className="!text-sm"
-                                            >
-                                                {messages(
-                                                    'analytics.revenueDspDistribution'
-                                                )}
-                                            </Typography.Title>
-                                        ),
-                                    },
-                                    {
-                                        value: 'ter',
-                                        label: (
-                                            <Typography.Title
-                                                level={4}
-                                                className="!text-sm"
-                                            >
-                                                {messages(
-                                                    'analytics.revenueTerDistribution'
-                                                )}
-                                            </Typography.Title>
-                                        ),
-                                    },
-                                ]}
-                                className="w-[200px]"
-                            />
+                            <div className="flex w-full items-center justify-between">
+                                <span className="text-base font-bold">
+                                    {messages('analytics.revenueDistribution')}
+                                </span>
+                                <Segmented
+                                    options={[
+                                        {
+                                            label: 'DSP',
+                                            value: 'dsp',
+                                        },
+                                        {
+                                            label: messages('country.label'),
+                                            value: 'ter',
+                                        },
+                                    ]}
+                                    value={viewType}
+                                    onChange={(val) =>
+                                        setViewType(val as 'dsp' | 'ter')
+                                    }
+                                    className="flex-shrink-0"
+                                />
+                            </div>
                         }
                         data={mappedPieData}
                         loading={isBarChartFetching}
