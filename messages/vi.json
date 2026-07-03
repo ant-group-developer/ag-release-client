@@ -132,6 +132,8 @@
         "select": "Chọn...",
         "ownership": "Quyền sở hữu",
         "direct": "Trực tiếp",
+        "distributionMethod": "Phương thức phát hành",
+        "releaseVia": "Phát hành thông qua",
         "others": "Khác",
         "save": "Lưu",
         "viewXml": "Xem XML",
@@ -1001,6 +1003,7 @@
     },
     "release": {
         "excludeTitle": "Loại trừ các phát hành",
+        "excludeSearchEmptyText": "Tìm kiếm bản phát hành muốn loại trừ",
         "excludeAlertMsg": "Đã chọn loại trừ <b>{count}</b> bản phát hành",
         "takeDown": "Gỡ phát hành",
         "takeDownConfirmTitle": "Gỡ phát hành?",

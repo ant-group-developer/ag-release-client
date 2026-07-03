@@ -132,6 +132,8 @@
         "select": "Select...",
         "ownership": "Ownership",
         "direct": "Direct",
+        "distributionMethod": "Distribution method",
+        "releaseVia": "Distributed via",
         "others": "Others",
         "save": "Save",
         "viewXml": "View XML",
@@ -1004,6 +1006,7 @@
     },
     "release": {
         "excludeTitle": "Exclude releases",
+        "excludeSearchEmptyText": "Search for releases to exclude",
         "excludeAlertMsg": "Selected to exclude <b>{count}</b> releases",
         "takeDown": "Take down",
         "takeDownConfirmTitle": "Take down release?",
