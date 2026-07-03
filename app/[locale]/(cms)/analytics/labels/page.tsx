@@ -2,12 +2,13 @@
 
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
+import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
+import { formattedNumber } from '@/helpers/common';
 import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
@@ -143,28 +144,6 @@ export default function LabelsRankingPage() {
             ),
         },
         {
-            title: messages('common.releases'),
-            dataIndex: 'releaseCount',
-            key: 'releaseCount',
-            width: RELEASES_COLUMN_WIDTH,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
-            title: messages('common.tracks'),
-            dataIndex: 'trackCount',
-            key: 'trackCount',
-            width: TRACKS_COLUMN_WIDTH,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
-            ),
-        },
-        {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             key: 'tenant',
@@ -189,6 +168,29 @@ export default function LabelsRankingPage() {
             },
         },
         {
+            title: messages('common.releases'),
+            dataIndex: 'releaseCount',
+            key: 'releaseCount',
+            width: RELEASES_COLUMN_WIDTH,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.tracks'),
+            dataIndex: 'trackCount',
+            key: 'trackCount',
+            width: TRACKS_COLUMN_WIDTH,
+            render: (count: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {count || 0}
+                </span>
+            ),
+        },
+
+        {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
@@ -206,13 +208,7 @@ export default function LabelsRankingPage() {
             width: REVENUE_COLUMN_WIDTH,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
-                    $
-                    {val
-                        ? val.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                          })
-                        : '0.00'}
+                    ${val ? formattedNumber(val) : '0.00'}
                 </span>
             ),
         },

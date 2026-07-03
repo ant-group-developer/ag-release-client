@@ -2,6 +2,7 @@
 
 import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { RevenueArtistItem } from '@/modules/analytics2/types';
@@ -167,13 +168,7 @@ export default function ArtistRevenueTable({
             width: COLUMN_WIDTH_REVENUE,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
-                    $
-                    {val
-                        ? val.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                          })
-                        : '0.00'}
+                    ${val ? formattedNumber(val) : '0.00'}
                 </span>
             ),
         },

@@ -10,12 +10,15 @@ import {
     ReleaseRankingItem,
     TenantRankingItem,
     TrackRankingItem,
+    ChannelRankingItem,
+    DspRankingItem,
 } from '../../types';
 
 interface DetailModalState {
-    type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | null;
+    type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | 'channel' | 'dsp' | null;
     title: string;
     id: string;
+    dspReportId?: string;
 }
 
 interface Props {
@@ -430,10 +433,26 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 dataIndex: 'dspName',
                 key: 'dspName',
                 ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
+                render: (text: string, record: DspRankingItem) => (
+                    <div className="flex items-center gap-3">
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: 'dsp',
+                                        title: text,
+                                        id: record.pgDspId,
+                                        dspReportId: record.dspReportId,
+                                    })
+                                }
+                            >
+                                {text || '—'}
+                            </span>
+                        </CustomTooltip>
+                    </div>
                 ),
             },
             {
@@ -448,7 +467,66 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages]
+        [messages, setDetailModal]
+    );
+
+    const channelColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.channel'),
+                dataIndex: 'channelName',
+                key: 'channelName',
+                ellipsis: true,
+                render: (text: string, record: ChannelRankingItem) => (
+                    <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={32}
+                            height={32}
+                            src={record.thumbUrl}
+                        />
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: 'channel',
+                                        title: text,
+                                        id: record.channelId,
+                                    })
+                                }
+                            >
+                                {text || '-'}
+                            </span>
+                        </CustomTooltip>
+                    </div>
+                ),
+            },
+            {
+                title: messages('common.viewCount'),
+                dataIndex: 'totalViews',
+                key: 'totalViews',
+                width: 200,
+                render: (views: number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        {views ? views.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+        ],
+        [messages, setDetailModal]
     );
 
     return {
@@ -458,5 +536,6 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
         labelColumns,
         tenantColumns,
         dspColumns,
+        channelColumns,
     };
 }

@@ -2,6 +2,7 @@
 
 import { Card, Empty, Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
+import { formattedNumber } from '@/helpers/common';
 import {
     Bar,
     BarChart,
@@ -28,10 +29,10 @@ export function formatAbbreviatedNumber(num: number): string {
     if (num >= 1_000) {
         return `${(num / 1_000).toFixed(2).replace(/\.00$/, '')}K`;
     }
-    return num.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
+    return formattedNumber(num);
+
+
+
 }
 
 const truncateText = (text: string, maxLength: number = 22) => {
@@ -118,10 +119,10 @@ export default function RevenueHorizontalBarChart({
                                         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                                     }}
                                     formatter={(value: any) => [
-                                        `$${Number(value).toLocaleString(undefined, {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2,
-                                        })}`,
+                                        `$${formattedNumber(Number(value))}`,
+
+
+
                                         messages('analytics.revenue.label'),
                                     ]}
                                     animationEasing="ease"

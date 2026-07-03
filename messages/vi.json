@@ -132,6 +132,8 @@
         "select": "Chọn...",
         "ownership": "Quyền sở hữu",
         "direct": "Trực tiếp",
+        "distributionMethod": "Phương thức phát hành",
+        "releaseVia": "Phát hành thông qua",
         "others": "Khác",
         "save": "Lưu",
         "viewXml": "Xem XML",
@@ -287,6 +289,7 @@
         "genres": "Thể loại nhạc",
         "track": "Bài hát",
         "artist": "Nghệ sĩ",
+        "channel": "Kênh",
         "release": "Bản phát hành",
         "releases": "Phát hành",
         "plays": "Lượt phát",
@@ -332,6 +335,7 @@
         "notUsed": "Chưa sử dụng",
         "use": "Sử dụng",
         "source": "Tài nguyên",
+        "sourcePlatform": "Nguồn",
         "userUpload": "Người tải lên",
         "imageAi": "Hình ảnh AI",
         "thumbnail": "Thumbnail",
@@ -704,6 +708,20 @@
             "description": "Chúng tôi đang khắc phục ngay. Bạn vui lòng quay lại sau ít phút"
         }
     },
+    "youtubeKeys": {
+        "label": "Youtube Keys",
+        "alias": "Alias",
+        "apiKey": "API Key",
+        "keyHint": "Gợi ý khoá",
+        "status": "Trạng thái",
+        "dailyQuotaLimit": "Hạn mức quota hàng ngày",
+        "unitsConsumedToday": "Đã dùng hôm nay",
+        "unitsRemaining": "Còn lại",
+        "lastResetAt": "Lần reset cuối",
+        "lastUsedAt": "Lần dùng cuối",
+        "lastError": "Lỗi cuối",
+        "consecutiveErrorCount": "Số lỗi liên tiếp"
+    },
     "validation": {
         "error": "Lỗi xác thực",
         "missingRequiredFields": "Vui lòng nhập đầy đủ các thông tin yêu cầu",
@@ -762,6 +780,7 @@
         "inActive": "Không kích hoạt",
         "enable": "Kích hoạt",
         "disable": "Vô hiệu hóa",
+        "disabled": "Vô hiệu hóa",
         "on": "Bật",
         "off": "Tắt",
         "block": "Khoá",
@@ -984,6 +1003,7 @@
     },
     "release": {
         "excludeTitle": "Loại trừ các phát hành",
+        "excludeSearchEmptyText": "Tìm kiếm bản phát hành muốn loại trừ",
         "excludeAlertMsg": "Đã chọn loại trừ <b>{count}</b> bản phát hành",
         "takeDown": "Gỡ phát hành",
         "takeDownConfirmTitle": "Gỡ phát hành?",
@@ -2354,8 +2374,12 @@
         "totalRevenueByMonth": "Doanh thu theo tháng",
         "dspDistribution": "Lượt xem theo DSP",
         "terDistribution": "Lượt xem theo quốc gia",
+        "tenantDistribution": "Lượt xem theo Workspace",
         "revenueDspDistribution": "Doanh thu theo DSP",
         "revenueTerDistribution": "Doanh thu theo quốc gia",
+        "revenueTenantDistribution": "Doanh thu theo Workspace",
+        "viewsDistribution": "Phân bổ lượt xem",
+        "revenueDistribution": "Phân bổ doanh thu",
         "totalSalesViews": "Lượt sử dụng",
         "totalRevenueUsd": "Tổng doanh thu",
         "detailTitle": "Chi tiết phân tích",
@@ -2656,7 +2680,9 @@
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",
             "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
             "markCompletedTitle": "Bạn có chắc chắn muốn đánh dấu hoàn thành?",
-            "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành."
+            "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành.",
+            "autoRetrySyncDataDspCiTitle": "Xác nhận tự động thử lại các bước đồng bộ DSP CI?",
+            "autoRetrySyncDataDspCiDescription": "Hành động này sẽ thực hiện lại các bước SYNC_DATA_DSP_CI bị lỗi ở các lần triển khai mới nhất."
         },
         "message": {
             "retrySuccess": "Thử lại tiến trình thành công"
@@ -2752,7 +2778,8 @@
             "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI"
         },
         "action": {
-            "markCompleted": "Đánh dấu hoàn thành"
+            "markCompleted": "Đánh dấu hoàn thành",
+            "autoRetrySyncDataDspCi": "Tự động thử lại DSP CI"
         },
         "statusOptions": {
             "QUEUED": "Đang chờ",

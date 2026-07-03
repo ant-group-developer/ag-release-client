@@ -1,10 +1,13 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { formattedNumber } from '@/helpers/common';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { RANK_COLUMN_WIDTH } from '../../constants/types';
 import {
     RevenueArtistItem,
+    RevenueChannelItem,
+    RevenueDspItem,
     RevenueLabelItem,
     RevenueReleaseItem,
     RevenueTenantItem,
@@ -12,9 +15,18 @@ import {
 } from '../../types';
 
 interface DetailModalState {
-    type: 'artist' | 'track' | 'release' | 'label' | 'tenant' | null;
+    type:
+        | 'artist'
+        | 'track'
+        | 'release'
+        | 'label'
+        | 'tenant'
+        | 'channel'
+        | 'dsp'
+        | null;
     title: string;
     id: string;
+    dspReportId?: string;
 }
 
 interface Props {
@@ -101,13 +113,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 width: 125,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                        $
-                        {val
-                            ? val.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                              })
-                            : '0.00'}
+                        ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
             },
@@ -195,13 +201,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 width: 100,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                        $
-                        {val
-                            ? val.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                              })
-                            : '0.00'}
+                        ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
             },
@@ -289,20 +289,13 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 width: 100,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                        $
-                        {val
-                            ? val.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                              })
-                            : '0.00'}
+                        ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
             },
         ],
         [messages, setDetailModal]
     );
-
     const dspColumns = useMemo(
         () => [
             {
@@ -323,10 +316,26 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 dataIndex: 'dspName',
                 key: 'dspName',
                 ellipsis: true,
-                render: (text: string) => (
-                    <span className="font-medium text-gray-900 dark:text-zinc-100">
-                        {text}
-                    </span>
+                render: (text: string, record: RevenueDspItem) => (
+                    <div className="flex items-center gap-3">
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: 'dsp',
+                                        title: text,
+                                        id: record.pgDspId,
+                                        dspReportId: record.dspReportId,
+                                    })
+                                }
+                            >
+                                {text || '—'}
+                            </span>
+                        </CustomTooltip>
+                    </div>
                 ),
             },
             {
@@ -347,18 +356,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 width: 150,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                        $
-                        {val
-                            ? val.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                              })
-                            : '0.00'}
+                        ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
             },
         ],
-        [messages]
+        [messages, setDetailModal]
     );
 
     const tenantColumns = useMemo(
@@ -427,13 +430,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 width: 150,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                        $
-                        {val
-                            ? val.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                              })
-                            : '0.00'}
+                        ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
             },
@@ -529,13 +526,79 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 width: 100,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
-                        $
-                        {val
-                            ? val.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                              })
-                            : '0.00'}
+                        ${val ? formattedNumber(val) : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages, setDetailModal]
+    );
+
+    const channelColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.channel'),
+                dataIndex: 'channelName',
+                key: 'channelName',
+                ellipsis: true,
+                render: (text: string, record: RevenueChannelItem) => (
+                    <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={32}
+                            height={32}
+                            src={record.thumbUrl}
+                        />
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: 'channel',
+                                        title: text,
+                                        id: record.channelId,
+                                    })
+                                }
+                            >
+                                {text || '-'}
+                            </span>
+                        </CustomTooltip>
+                    </div>
+                ),
+            },
+            {
+                title: messages('common.usage'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 150,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'revenueUsd',
+                key: 'revenueUsd',
+                width: 150,
+                render: (val: number) => (
+                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                        ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
             },
@@ -550,5 +613,6 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
         dspColumns,
         tenantColumns,
         labelColumns,
+        channelColumns,
     };
 }

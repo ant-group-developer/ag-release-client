@@ -22,7 +22,7 @@ export interface TooltipKeyConfig {
 const DEFAULT_MIN_TICK_GAP = 15;
 
 interface LineChartViewProps {
-    title: string;
+    title: React.ReactNode;
     data: any[];
     xAxisKey: string;
     lineKey: string;
@@ -42,6 +42,7 @@ const CustomLineTooltip = ({
     lineName,
     valuePrefix = '',
     additionalTooltipKeys = [],
+    any,
 }: any) => {
     if (active && payload && payload.length) {
         const firstEntry = payload[0];
@@ -125,8 +126,12 @@ export default function LineChartView({
                 },
             }}
         >
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-base font-bold">{title}</span>
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
+                {typeof title === 'string' ? (
+                    <span className="text-base font-bold">{title}</span>
+                ) : (
+                    title
+                )}
             </div>
 
             {loading ? (
