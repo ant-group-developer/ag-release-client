@@ -1,6 +1,7 @@
 import { QUERY_KEY } from '@/constants/query-key';
 import {
     DspDetailParams,
+    DspRankingParams,
     DspTimelineParams,
     RankingParams,
     ReleaseOverviewParams,
@@ -455,10 +456,38 @@ export const analytics2QueryKeys = {
             labelId,
             params,
         ] as const,
+    labelTopReleases: (labelId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.LABEL_TOP_RELEASES,
+            labelId,
+            params,
+        ] as const,
+    labelTopTracks: (labelId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.LABEL_TOP_TRACKS,
+            labelId,
+            params,
+        ] as const,
     artistOverview: (artistId: string, params: ReleaseOverviewParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.ARTIST_OVERVIEW,
+            artistId,
+            params,
+        ] as const,
+    artistTopReleases: (artistId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ARTIST_TOP_RELEASES,
+            artistId,
+            params,
+        ] as const,
+    artistTopTracks: (artistId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ARTIST_TOP_TRACKS,
             artistId,
             params,
         ] as const,
@@ -557,6 +586,20 @@ export const analytics2QueryKeys = {
             tenantId,
             params,
         ] as const,
+    tenantTopReleases: (tenantId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_TOP_RELEASES,
+            tenantId,
+            params,
+        ] as const,
+    tenantTopTracks: (tenantId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_TOP_TRACKS,
+            tenantId,
+            params,
+        ] as const,
     tenantTrendViewLineChart: (
         tenantId: string,
         params: TrendViewLineChartParams
@@ -621,6 +664,13 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.CHANNEL_OVERVIEW,
+            channelId,
+            params,
+        ] as const,
+    channelTopReleases: (channelId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_TOP_RELEASES,
             channelId,
             params,
         ] as const,
@@ -689,6 +739,18 @@ export const analytics2QueryKeys = {
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.DSP_OVERVIEW,
 
+            params,
+        ] as const,
+    dspTopReleases: (params: DspRankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_TOP_RELEASES,
+            params,
+        ] as const,
+    dspTopTracks: (params: DspRankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_TOP_TRACKS,
             params,
         ] as const,
     dspTrendViewLineChart: (params: DspDetailParams) =>

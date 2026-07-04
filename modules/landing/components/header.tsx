@@ -1,5 +1,6 @@
 'use client';
 
+import AppLocale from '@/components/cms/app-locale';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link, useRouter } from '@/i18n/routing';
 import { Button } from 'antd';
@@ -80,6 +81,12 @@ export default function Header({ activeTab, onChangeTab }: HeaderProps) {
 
                 {/* CTA Action Section */}
                 <div className="flex items-center gap-4">
+                    <AppLocale
+                        buttonProps={{
+                            type: 'text',
+                            className: 'flex h-10 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 px-4 text-zinc-300 hover:text-white transition-colors cursor-pointer !flex !items-center !gap-2',
+                        }}
+                    />
                     <Link href={APP_ROUTES.SIGN_IN}>
                         <Button
                             type="primary"

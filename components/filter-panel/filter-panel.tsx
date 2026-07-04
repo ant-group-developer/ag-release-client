@@ -149,7 +149,13 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
                 placement={placement}
                 arrow={false}
                 autoAdjustOverflow={false}
-                overlayInnerStyle={{ padding: 0, overflow: 'hidden' }}
+                // overlayInnerStyle={{ padding: 0, overflow: 'hidden' }}
+                styles={{
+                    body: {
+                        padding: 0,
+                        overflow: 'hidden',
+                    },
+                }}
                 content={
                     <div>
                         {popoverContent}

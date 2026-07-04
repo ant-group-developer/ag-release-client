@@ -47,6 +47,7 @@ import {
     ChannelRankingItem,
     RevenueChannelItem,
     DspDetailParams,
+    DspRankingParams,
     TrendViewTenantBarChartItem,
     RevenueTenantBarChartItem,
 } from '../types';
@@ -488,9 +489,33 @@ export const analytics2Apis = {
             params
         );
     },
+    getLabelTopReleases: (labelId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/label/${labelId}/top-releases`,
+            params
+        );
+    },
+    getLabelTopTracks: (labelId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
+            `/analytics/label/${labelId}/top-tracks`,
+            params
+        );
+    },
     getArtistOverview: (artistId: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/artist/${artistId}/overview`,
+            params
+        );
+    },
+    getArtistTopReleases: (artistId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/artist/${artistId}/top-releases`,
+            params
+        );
+    },
+    getArtistTopTracks: (artistId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
+            `/analytics/artist/${artistId}/top-tracks`,
             params
         );
     },
@@ -604,6 +629,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getTenantTopReleases: (tenantId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/tenant/${tenantId}/top-releases`,
+            params
+        );
+    },
+    getTenantTopTracks: (tenantId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
+            `/analytics/tenant/${tenantId}/top-tracks`,
+            params
+        );
+    },
     getTenantTrendViewLineChart: (
         tenantId: string,
         params: TrendViewLineChartParams
@@ -661,6 +698,12 @@ export const analytics2Apis = {
     getChannelOverview: (channelId: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/channel/${channelId}/overview`,
+            params
+        );
+    },
+    getChannelTopReleases: (channelId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/channel/${channelId}/top-releases`,
             params
         );
     },
@@ -757,6 +800,18 @@ export const analytics2Apis = {
     getDspRevenueTenantBarChart: (params: DspDetailParams) => {
         return axiosInstance.post<DetailResponse<RevenueTenantBarChartItem[]>>(
             '/analytics/dsp/revenue/tenant/bar-chart',
+            params
+        );
+    },
+    getDspTopReleases: (params: DspRankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            '/analytics/dsp/top-releases',
+            params
+        );
+    },
+    getDspTopTracks: (params: DspRankingParams) => {
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
+            '/analytics/dsp/top-tracks',
             params
         );
     },

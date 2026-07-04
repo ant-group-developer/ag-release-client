@@ -1,0 +1,26 @@
+import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
+import { useQuery } from '@tanstack/react-query';
+import { analytics2Apis } from '../apis';
+import { analytics2QueryKeys } from '../constants/query-keys';
+import { RankingParams } from '../types';
+
+export const useGetTenantTopReleases = (
+    tenantId: string,
+    params: RankingParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.tenantTopReleases(tenantId, params),
+        queryFn: () => analytics2Apis.getTenantTopReleases(tenantId, params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const tenantTopReleasesData =
+        query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        tenantTopReleasesData,
+        ...query,
+    };
+};

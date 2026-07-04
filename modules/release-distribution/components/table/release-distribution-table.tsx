@@ -111,9 +111,15 @@ export default function ReleaseDistributionTable({
         },
         {
             title: messages('release.dspLive'),
-            key: 'dsp',
-            dataIndex: RELEASES_TABLE_KEY.DSP,
+            key: 'dsps_live',
+            dataIndex: 'dsps_live',
             align: 'center',
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'dsp_live'
+            ),
             width: 150,
             render: (_, record) => {
                 const items = record?.exportParsedData ?? [];
