@@ -162,20 +162,6 @@ export default function Releases({}: Props) {
                     }}
                     toolBarRender={() => [
                         <CreateButton
-                            type="default"
-                            canCreate={isAdmin}
-                            key="preview-auto-submit"
-                            icon={<EyeOutlined />}
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE.PREVIEW_AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
-                                )
-                            }
-                            text={messages(
-                                'release.previewAutoSubmitUndistributedMusic'
-                            )}
-                        />,
-                        <CreateButton
                             canCreate={isAdmin}
                             key="auto-submit"
                             icon={<SendOutlined />}
@@ -260,14 +246,6 @@ export default function Releases({}: Props) {
                 {typeModal ===
                     TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
                     <AutoSubmitUndistributedMusicModal
-                        onFinished={handleRefresh}
-                    />
-                )}
-
-                {typeModal ===
-                    TYPE_MODAL_RELEASE.PREVIEW_AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
-                    <AutoSubmitUndistributedMusicModal
-                        preview
                         onFinished={handleRefresh}
                     />
                 )}

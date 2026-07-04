@@ -58,6 +58,9 @@ export interface BulkSubmitRelease extends CommonFunction {
 
 export interface AutoSubmitUndistributedMusicRelease extends CommonFunction {
     dspCodes: string[];
+    status?: string;
+    neverExported?: boolean;
+    lastImportFailed?: boolean;
 }
 export interface BulkDeleteRelease extends CommonFunction {
     ids: string[];

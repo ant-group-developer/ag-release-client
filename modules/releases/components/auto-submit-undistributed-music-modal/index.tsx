@@ -4,17 +4,23 @@ import AppModal from '@/components/ui/modal/normal-modal';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
+import { RELEASE_CI_DATA_STATUS } from '@/modules/release-distribution/enums';
 import { useAutoSubmitUndistributedMusicRelease } from '@/modules/releases/hooks/use-auto-submit-undistributed-music-release';
-import { Alert, Button, Form, Space, Table, Tag } from 'antd';
+import { Alert, Button, Form, Space, Table, Tabs, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import DspSelectionTable from '../bulk-submit-modal/dsp-selection-table';
+import DspTabContent from './dsp-tab-content';
+import OptionsTabContent from './options-tab-content';
 
 interface AutoSubmitUndistributedMusicModalProps {
-    preview?: boolean;
     onFinished?: () => void;
+}
+
+export enum AUTO_SUBMIT_TAB_KEY {
+    DSP = 'dsp',
+    OPTIONS = 'options',
 }
 
 interface AutoSubmitPreviewItem {
@@ -29,16 +35,24 @@ interface AutoSubmitPreviewResult {
 }
 
 const AutoSubmitUndistributedMusicModal = ({
-    preview = false,
     onFinished,
 }: AutoSubmitUndistributedMusicModalProps) => {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
+    const [activeTab, setActiveTab] = useState<'dsp' | 'options'>(
+        AUTO_SUBMIT_TAB_KEY.DSP
+    );
     const [previewResult, setPreviewResult] =
         useState<AutoSubmitPreviewResult | null>(null);
-    const { autoSubmitUndistributedMusicRelease, isPending: isSubmitting } =
-        useAutoSubmitUndistributedMusicRelease(preview);
+    const {
+        autoSubmitUndistributedMusicRelease: autoSubmitReal,
+        isPending: isSubmitting,
+    } = useAutoSubmitUndistributedMusicRelease(false);
+    const {
+        autoSubmitUndistributedMusicRelease: autoSubmitPreview,
+        isPending: isPendingPreview,
+    } = useAutoSubmitUndistributedMusicRelease(true);
 
     const { dspData, isFetching: isFetchingDsp } = useGetListDsp({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
@@ -49,6 +63,20 @@ const AutoSubmitUndistributedMusicModal = ({
         return dspData?.items?.filter((item) => !!item.codeCi) || [];
     }, [dspData?.items]);
 
+    const statusOptions = useMemo(
+        () => [
+            {
+                label: messages('releaseCiData.status.existsOnCi'),
+                value: RELEASE_CI_DATA_STATUS.EXISTS_ON_CI,
+            },
+            {
+                label: messages('releaseCiData.status.notFoundOnCi'),
+                value: RELEASE_CI_DATA_STATUS.NOT_FOUND_ON_CI,
+            },
+        ],
+        [messages]
+    );
+
     useEffect(() => {
         if (dspDataFilter.length > 0) {
             form.setFieldsValue({
@@ -57,21 +85,31 @@ const AutoSubmitUndistributedMusicModal = ({
         }
     }, [dspDataFilter, form]);
 
-    const onFinish = (values: { dspCodes: string[] }) => {
-        autoSubmitUndistributedMusicRelease({
-            payload: {
-                dspCodes: values.dspCodes,
-            },
-            onSuccess: (data) => {
-                if (preview) {
-                    setPreviewResult(data);
-                    return;
-                }
+    const handleAction = async (isPreview: boolean) => {
+        try {
+            const values = await form.validateFields();
+            const autoSubmit = isPreview ? autoSubmitPreview : autoSubmitReal;
 
-                closeModal();
-                onFinished?.();
-            },
-        });
+            autoSubmit({
+                payload: {
+                    dspCodes: values.dspCodes,
+                    status: values.status,
+                    neverExported: values.neverExported,
+                    lastImportFailed: values.lastImportFailed,
+                } as any,
+                onSuccess: (data) => {
+                    if (isPreview) {
+                        setPreviewResult(data);
+                        return;
+                    }
+
+                    closeModal();
+                    onFinished?.();
+                },
+            });
+        } catch (error) {
+            console.error('Validation failed:', error);
+        }
     };
 
     const columns: ColumnsType<AutoSubmitPreviewItem> = [
@@ -111,14 +149,22 @@ const AutoSubmitUndistributedMusicModal = ({
     return (
         <AppModal
             open
-            title={
-                preview
-                    ? messages('release.previewAutoSubmitUndistributedMusic')
-                    : messages('release.autoSubmitUndistributedMusic')
-            }
+            title={messages('release.autoSubmitUndistributedMusic')}
             onCancel={closeModal}
             width={'60vw'}
+            styles={{
+                body: {
+                    minHeight: 400,
+                },
+            }}
             footer={[
+                <Button
+                    key="review"
+                    loading={isPendingPreview}
+                    onClick={() => handleAction(true)}
+                >
+                    {messages('common.review')}
+                </Button>,
                 <Button key="cancel" onClick={closeModal}>
                     {messages('common.cancel')}
                 </Button>,
@@ -126,33 +172,43 @@ const AutoSubmitUndistributedMusicModal = ({
                     key="submit"
                     type="primary"
                     loading={isSubmitting}
-                    onClick={() => form.submit()}
+                    onClick={() => handleAction(false)}
                 >
-                    {preview
-                        ? messages('common.review')
-                        : messages('common.submit')}
+                    {messages('common.submit')}
                 </Button>,
             ]}
             centered
+            loading={isFetchingDsp}
         >
-            <div className="flex flex-col gap-4">
-                <Form form={form} onFinish={onFinish} layout="vertical">
-                    <Form.Item
-                        name="dspCodes"
-                        label={messages('placeholder.selectDsp')}
-                        rules={[
+            <div className="flex flex-col">
+                <Form form={form} layout="vertical">
+                    <Tabs
+                        activeKey={activeTab}
+                        onChange={(key) =>
+                            setActiveTab(key as 'dsp' | 'options')
+                        }
+                        items={[
                             {
-                                required: true,
-                                message: messages('validation.select'),
+                                key: AUTO_SUBMIT_TAB_KEY.DSP,
+                                label: 'DSPs',
+                                children: (
+                                    <DspTabContent
+                                        dspDataFilter={dspDataFilter}
+                                        isFetchingDsp={isFetchingDsp}
+                                    />
+                                ),
+                            },
+                            {
+                                key: AUTO_SUBMIT_TAB_KEY.OPTIONS,
+                                label: messages('common.optional'),
+                                children: (
+                                    <OptionsTabContent
+                                        statusOptions={statusOptions}
+                                    />
+                                ),
                             },
                         ]}
-                        style={{ marginBottom: 0 }}
-                    >
-                        <DspSelectionTable
-                            dataSource={dspDataFilter}
-                            loading={isFetchingDsp}
-                        />
-                    </Form.Item>
+                    />
                 </Form>
 
                 {previewResult && (
