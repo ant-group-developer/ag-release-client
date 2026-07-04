@@ -3097,6 +3097,8 @@
     "analytics2": {
         "rank": "Thứ hạng",
         "topRankingTitle": "Top {count} {title}",
+        "topReleases": "Top bản phát hành",
+        "topTracks": "Top bài hát",
         "detailEntityTitle": "({entity}: {title})",
         "filters": {
             "allPlatforms": "Tất cả nền tảng",
