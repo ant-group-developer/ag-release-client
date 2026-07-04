@@ -19,15 +19,25 @@ import {
     UpdateNewsCategoryPayload,
 } from '../../types/payloads';
 
-type Props = Omit<AppModalProps, 'children'> & {};
+type Props = Omit<AppModalProps, 'children'> & {
+    onCreateSuccess?: (data: NewsCategoryData) => void;
+    onUpdateSuccess?: (data: NewsCategoryData) => void;
+    dataEdit?: NewsCategoryData;
+};
 
-export default function NewsCategoryFormModal({ ...props }: Props) {
+export default function NewsCategoryFormModal({
+    onCreateSuccess,
+    onUpdateSuccess,
+    dataEdit: customDataEdit,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore(
+    const storeDataEdit = useModalStore(
         (state) => state.dataEdit as NewsCategoryData
     );
+    const dataEdit = customDataEdit ?? storeDataEdit;
     const { active, isActive, deActive } = useActive();
     const isUpdateModal = dataEdit?.id;
 
@@ -41,8 +51,9 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
         > = {
             id: dataEdit?.id,
             payload: value,
-            onSuccess: () => {
+            onSuccess: (data: NewsCategoryData) => {
                 deActive();
+                onUpdateSuccess?.(data);
             },
             onError: () => {
                 deActive();
@@ -54,9 +65,10 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
     const handleCreate = (value: any) => {
         const variables: CreateVariables<CreateNewsCategoryPayload> = {
             payload: value,
-            onSuccess: () => {
+            onSuccess: (data: NewsCategoryData) => {
                 deActive();
                 form.resetFields();
+                onCreateSuccess?.(data);
             },
             onError: () => {
                 deActive();
@@ -90,11 +102,11 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
     return (
         <AppModal
             width={SCREEN.LG}
-            {...props}
             title={`${isUpdateModal ? messages('common.update') : messages('common.create')} ${messages('newsCategory.label').toLowerCase()}`}
-            open
+            open={props.open ?? true}
             onOk={form.submit}
             loading={isActive}
+            {...props}
         >
             <AppForm
                 form={form}
@@ -112,6 +124,7 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
                     <NewsCategoryTreeSelect
                         placeholder={messages('newsCategory.parentPlaceholder')}
                         excludeId={dataEdit?.id}
+                        showCreate={false}
                     />
                 </AppFormItem>
 

@@ -22,7 +22,7 @@ export const useCreateNewsCategory = () => {
 
         const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
         showNotification('success', responseMessages);
     };
 

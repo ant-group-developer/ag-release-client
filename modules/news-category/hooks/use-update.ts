@@ -23,7 +23,7 @@ export const useUpdateNewsCategory = () => {
         });
 
         handleSuccess(data?.data);
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
     };
 
     const onError = (

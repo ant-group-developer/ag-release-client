@@ -1,3 +1,4 @@
+import CKContent from '@/components/ui/text-editor/ck-content';
 import { DATE_FORMAT } from '@/enums/common';
 import { Link } from '@/i18n/routing';
 import Footer from '@/modules/landing/components/footer';
@@ -220,10 +221,7 @@ export default async function LandingNewsDetailPage({ params }: PageProps) {
                         </div>
                     )} */}
 
-                    <div
-                        className="prose prose-invert max-w-none space-y-4 text-sm font-light leading-relaxed text-zinc-300 sm:text-base"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                    />
+                    <CKContent value={post.content} />
                 </div>
             </main>
 

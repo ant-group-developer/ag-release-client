@@ -124,6 +124,7 @@ export default function NewsFormModal({ ...props }: Props) {
     };
 
     useEffect(() => {
+        if (!isUpdateModal) return;
         const initialData = {
             ...newsData,
             pictureFile: newsData?.thumbnail
@@ -140,7 +141,7 @@ export default function NewsFormModal({ ...props }: Props) {
                 : undefined,
         };
         form.setFieldsValue(initialData);
-    }, [newsData, form]);
+    }, [newsData, form, isUpdateModal]);
 
     return (
         <FullScreenModal
