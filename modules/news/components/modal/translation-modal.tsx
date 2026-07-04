@@ -40,7 +40,7 @@ export default function TranslationModal({ ...props }: Props) {
     });
     const { updateTranslation } = useUpdateTranslation();
     const { deleteTranslation } = useDeleteTranslation();
-    const [openAddTranslate, setOpenAddTranslate] = useState(false);
+    // const [openAddTranslate, setOpenAddTranslate] = useState(false);
     const [openDeleteTranslate, setOpenDeleteTranslate] = useState<{
         isOpen: boolean;
         record: TranslationData | null;

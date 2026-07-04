@@ -18,6 +18,15 @@ import { useGetTenantTrendViewTerBarChart } from '../../hooks/use-get-tenant-tre
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
+import { ANALYTICS_RANKING_THUMBNAIL_SIZE, RANK_COLUMN_WIDTH } from '../../constants/types';
+import { useGetTenantTopReleases } from '../../hooks/use-get-tenant-top-releases';
+import { useGetTenantTopTracks } from '../../hooks/use-get-tenant-top-tracks';
+import { ReleaseRankingItem, TrackRankingItem } from '../../types';
+import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
+import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 
 interface DetailTenantAnalyticsModalProps {
     open: boolean;
@@ -44,6 +53,26 @@ export default function DetailTenantAnalyticsModal({
         'views' | 'revenue'
     >('views');
 
+    const [detailReleaseModal, setDetailReleaseModal] = useState<{
+        open: boolean;
+        title: string;
+        releaseId: string;
+    }>({
+        open: false,
+        title: '',
+        releaseId: '',
+    });
+
+    const [detailTrackModal, setDetailTrackModal] = useState<{
+        open: boolean;
+        title: string;
+        isrc: string;
+    }>({
+        open: false,
+        title: '',
+        isrc: '',
+    });
+
     // Đồng bộ lại ngày từ component cha khi mở modal
     useEffect(() => {
         if (open) {
@@ -51,6 +80,32 @@ export default function DetailTenantAnalyticsModal({
             setLocalToDate(toDate);
         }
     }, [open, fromDate, toDate]);
+
+    // Gọi API lấy thông tin Top Releases của Tenant
+    const { tenantTopReleasesData, isFetching: isTopReleasesFetching } =
+        useGetTenantTopReleases(
+            tenantId,
+            {
+                fromDate: localFromDate,
+                toDate: localToDate,
+                page: 1,
+                pageSize: 5,
+            },
+            { enabled: open }
+        );
+
+    // Gọi API lấy thông tin Top Tracks của Tenant
+    const { tenantTopTracksData, isFetching: isTopTracksFetching } =
+        useGetTenantTopTracks(
+            tenantId,
+            {
+                fromDate: localFromDate,
+                toDate: localToDate,
+                page: 1,
+                pageSize: 5,
+            },
+            { enabled: open }
+        );
 
     // Gọi API lấy thông tin tổng quan của Tenant
     const { overviewData, isFetching } = useGetTenantOverview(
@@ -301,6 +356,205 @@ export default function DetailTenantAnalyticsModal({
         }));
     }, [revenueTerBarChartData]);
 
+    const releaseColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.release'),
+                dataIndex: 'title',
+                key: 'title',
+                ellipsis: true,
+                render: (text: string, record: ReleaseRankingItem) => (
+                    <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            fileId={
+                                record.release?.coverArtThumbnails?.[
+                                    RELEASE_COVER_ART_SIZE.S75
+                                ] as string
+                            }
+                        />
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailReleaseModal({
+                                        open: true,
+                                        title: text,
+                                        releaseId: record.releaseId,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
+                    </div>
+                ),
+            },
+            {
+                title: 'UPC',
+                dataIndex: 'upc',
+                key: 'upc',
+                width: 140,
+                ellipsis: true,
+                render: (text: string) => (
+                    <span className="truncate text-gray-500 dark:text-zinc-400">
+                        {text || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.tracks'),
+                dataIndex: 'trackCount',
+                key: 'trackCount',
+                width: 80,
+                render: (count: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {count || 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.viewCount'),
+                dataIndex: 'totalViews',
+                key: 'totalViews',
+                width: 100,
+                render: (views: number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        {views ? views.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'totalRevenueUsd',
+                key: 'totalRevenueUsd',
+                width: 120,
+                render: (val: string | number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        ${val ? formattedNumber(Number(val)) : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages]
+    );
+
+    const mappedTopReleasesRankData = useMemo(() => {
+        return (tenantTopReleasesData?.items ?? []).map((item, index) => ({
+            ...item,
+            rank: index + 1,
+        }));
+    }, [tenantTopReleasesData]);
+
+    const trackColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.track'),
+                dataIndex: 'title',
+                key: 'title',
+                ellipsis: true,
+                render: (text: string, record: TrackRankingItem) => (
+                    <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                            fileId={
+                                record.release?.coverArtThumbnails?.[
+                                    RELEASE_COVER_ART_SIZE.S75
+                                ] as string
+                            }
+                        />
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailTrackModal({
+                                        open: true,
+                                        title: text,
+                                        isrc: record.isrc,
+                                    })
+                                }
+                            >
+                                {text}
+                            </span>
+                        </CustomTooltip>
+                    </div>
+                ),
+            },
+            {
+                title: 'ISRC',
+                dataIndex: 'isrc',
+                key: 'isrc',
+                width: 140,
+                ellipsis: true,
+                render: (text: string) => (
+                    <span className="truncate text-gray-500 dark:text-zinc-400">
+                        {text || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.viewCount'),
+                dataIndex: 'totalViews',
+                key: 'totalViews',
+                width: 100,
+                render: (views: number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        {views ? views.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'totalRevenueUsd',
+                key: 'totalRevenueUsd',
+                width: 120,
+                render: (val: string | number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        ${val ? formattedNumber(Number(val)) : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages]
+    );
+
+    const mappedTopTracksRankData = useMemo(() => {
+        return (tenantTopTracksData?.items ?? []).map((item, index) => ({
+            ...item,
+            rank: index + 1,
+        }));
+    }, [tenantTopTracksData]);
+
     return (
         <FullScreenModal
             title={
@@ -438,6 +692,33 @@ export default function DetailTenantAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={12}>
                         <RankingCard
+                            title={messages('analytics2.topReleases')}
+                            columns={releaseColumns}
+                            dataSource={mappedTopReleasesRankData}
+                            loading={isTopReleasesFetching}
+                            rowKey="releaseId"
+                            labelKey="title"
+                            valueKey="totalViews"
+                            defaultView={RankingCardView.LIST}
+                        />
+                    </Col>
+                    <Col xs={24} lg={12}>
+                        <RankingCard
+                            title={messages('analytics2.topTracks')}
+                            columns={trackColumns}
+                            dataSource={mappedTopTracksRankData}
+                            loading={isTopTracksFetching}
+                            rowKey="isrc"
+                            labelKey="title"
+                            valueKey="totalViews"
+                            defaultView={RankingCardView.LIST}
+                        />
+                    </Col>
+                </Row>
+
+                <Row gutter={[24, 24]}>
+                    <Col xs={24} lg={12}>
+                        <RankingCard
                             title={messages('analytics.dspDistribution')}
                             columns={dspColumns}
                             dataSource={mappedTrendDspRankData}
@@ -491,6 +772,26 @@ export default function DetailTenantAnalyticsModal({
                     </Col>
                 </Row>
             </div>
+            <DetailReleaseAnalyticsModal
+                open={detailReleaseModal.open}
+                onClose={() =>
+                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
+                }
+                title={detailReleaseModal.title}
+                releaseId={detailReleaseModal.releaseId}
+                fromDate={localFromDate}
+                toDate={localToDate}
+            />
+            <DetailTrackAnalyticsModal
+                open={detailTrackModal.open}
+                onClose={() =>
+                    setDetailTrackModal((prev) => ({ ...prev, open: false }))
+                }
+                title={detailTrackModal.title}
+                isrc={detailTrackModal.isrc}
+                fromDate={localFromDate}
+                toDate={localToDate}
+            />
         </FullScreenModal>
     );
 }

@@ -499,6 +499,11 @@ export interface DspDetailParams {
     toDate: string;
 }
 
+export interface DspRankingParams extends DspDetailParams {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface TrendViewTenantBarChartItem {
     tenantName: string;
     totalViews: number;
