@@ -2,7 +2,6 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
-import { MAX_NOTE_LENGTH } from '@/constants/validate';
 import { showNotification } from '@/helpers/messages-helper';
 import { usePermission } from '@/hooks/use-permission';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
@@ -22,6 +21,7 @@ import { CloseOutlined, CopyOutlined } from '@ant-design/icons';
 import {
     Button,
     Col,
+    Form,
     FormInstance,
     Input,
     Popconfirm,
@@ -29,6 +29,7 @@ import {
     Select,
     Tag,
     Tooltip,
+    Typography,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
@@ -47,6 +48,10 @@ export default function MetadataFields({
     form,
 }: MetadataFieldsProps) {
     const messages = useTranslations();
+    const keywordsValue = Form.useWatch(['video', 'keywords'], form);
+    const keywordsLength = Array.isArray(keywordsValue)
+        ? keywordsValue.join(',').length
+        : 0;
     const { hasPermission } = usePermission();
     const [isManageCollaboratorsOpen, setIsManageCollaboratorsOpen] =
         useState(false);
@@ -601,22 +606,50 @@ export default function MetadataFields({
                         </Tooltip>
                     </div>
                 }
+                rules={[
+                    {
+                        validator: (_, value) => {
+                            if (value && Array.isArray(value)) {
+                                const joined = value.join(',');
+                                if (joined.length > 500) {
+                                    return Promise.reject(
+                                        messages('validation.stringMax', {
+                                            max: 500,
+                                            field: messages('common.keyword'),
+                                        })
+                                    );
+                                }
+                            }
+                            return Promise.resolve();
+                        },
+                    },
+                ]}
             >
-                <Select
-                    mode="tags"
-                    placeholder={messages(
-                        'releaseVideo.fields.keywordsPlaceholder'
-                    )}
-                    allowClear
-                    tokenSeparators={[',']}
-                    onChange={(value) =>
-                        onFieldUpdate?.({
-                            video: {
-                                keywords: value,
-                            },
-                        })
-                    }
-                />
+                <div>
+                    <Select
+                        mode="tags"
+                        placeholder={messages(
+                            'releaseVideo.fields.keywordsPlaceholder'
+                        )}
+                        allowClear
+                        tokenSeparators={[',']}
+                        onChange={(value) =>
+                            onFieldUpdate?.({
+                                video: {
+                                    keywords: value,
+                                },
+                            })
+                        }
+                    />
+                    <div className="mt-1 text-right">
+                        <Typography.Text
+                            type={keywordsLength > 500 ? 'danger' : 'secondary'}
+                            className="text-xs"
+                        >
+                            {keywordsLength} / 500
+                        </Typography.Text>
+                    </div>
+                </div>
             </AppFormItem>
 
             {/* Description (Full Width) */}
@@ -625,9 +658,9 @@ export default function MetadataFields({
                 label={messages('common.description')}
                 rules={[
                     {
-                        max: MAX_NOTE_LENGTH,
+                        max: 5000,
                         message: messages('validation.stringMax', {
-                            max: MAX_NOTE_LENGTH,
+                            max: 5000,
                             field: messages('common.description'),
                         }),
                     },
@@ -637,8 +670,8 @@ export default function MetadataFields({
                     showCount
                     placeholder={messages('common.description')}
                     allowClear
-                    rows={4}
-                    maxLength={MAX_NOTE_LENGTH}
+                    rows={6}
+                    maxLength={5000}
                     className="mb-2"
                     onBlur={(e) => {
                         const val = e.target.value;
