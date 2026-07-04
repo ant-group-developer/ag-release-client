@@ -3,11 +3,10 @@ import { Link } from '@/i18n/routing';
 import Footer from '@/modules/landing/components/footer';
 import Header from '@/modules/landing/components/header';
 import { NewsData } from '@/modules/news/types';
+import { getSettingPublicServer } from '@/modules/setting/apis';
 import dayjs from 'dayjs';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import { getSettingPublicServer } from '@/modules/setting/apis';
-import Image from 'next/image';
 
 export const revalidate = 60; // ISR: revalidate every 60 seconds
 
@@ -209,7 +208,7 @@ export default async function LandingNewsDetailPage({ params }: PageProps) {
                         </div>
                     </div>
 
-                    {post.thumbnail && (
+                    {/* {post.thumbnail && (
                         <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl border border-zinc-900 bg-zinc-950">
                             <Image
                                 src={post.thumbnail}
@@ -219,7 +218,7 @@ export default async function LandingNewsDetailPage({ params }: PageProps) {
                                 priority
                             />
                         </div>
-                    )}
+                    )} */}
 
                     <div
                         className="prose prose-invert max-w-none space-y-4 text-sm font-light leading-relaxed text-zinc-300 sm:text-base"

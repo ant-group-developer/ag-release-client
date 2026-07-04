@@ -176,10 +176,16 @@ export default function ReleasesTable({
         },
         {
             title: messages('release.dspLive'),
-            key: 'dsp',
-            dataIndex: RELEASES_TABLE_KEY.DSP,
+            key: 'dsps_live',
+            dataIndex: 'dsps_live',
             align: 'left',
             width: 120,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'dsps_live'
+            ),
             render: (_, record) => {
                 const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
                 const liveCount = releaseDspDeliveries.filter(

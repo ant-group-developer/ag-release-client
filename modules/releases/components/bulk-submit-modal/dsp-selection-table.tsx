@@ -2,7 +2,7 @@ import AppProTable from '@/components/ui/table/pro-table';
 import { DSP_DEAL } from '@/modules/dsp/enums';
 import { DspData } from '@/modules/dsp/types';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Space } from 'antd';
+import { Avatar, Space, TableProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key } from 'react';
 
@@ -10,12 +10,10 @@ const VIA_CI = 'CI';
 const VIA_STATE51 = 'State51';
 const MODE_AGGREGATOR = 'Aggregator';
 
-interface DspSelectionTableProps {
+type DspSelectionTableProps = {
     value?: string[];
     onChange?: (value: string[]) => void;
-    dataSource: DspData[];
-    loading: boolean;
-}
+} & TableProps<DspData>;
 
 const DspSelectionTable = ({
     value = [],
@@ -80,6 +78,7 @@ const DspSelectionTable = ({
             tableAlertOptionRender={false}
             scroll={{
                 y: 300,
+                x: 'max-content',
             }}
             onRow={(record) => ({
                 onClick: () => {
