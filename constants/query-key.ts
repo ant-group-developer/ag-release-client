@@ -550,6 +550,7 @@ export const QUERY_KEY = {
         TENANT_REVENUE_DSP_BAR_CHART: 'tenant-revenue-dsp-bar-chart',
         TENANT_REVENUE_TER_BAR_CHART: 'tenant-revenue-ter-bar-chart',
         CHANNEL_OVERVIEW: 'channel-overview',
+        CHANNEL_TOP_RELEASES: 'channel-top-releases',
         CHANNEL_TREND_VIEW_LINE_CHART: 'channel-trend-view-line-chart',
         CHANNEL_TREND_VIEW_DSP_BAR_CHART: 'channel-trend-view-dsp-bar-chart',
         CHANNEL_TREND_VIEW_TER_BAR_CHART: 'channel-trend-view-ter-bar-chart',
