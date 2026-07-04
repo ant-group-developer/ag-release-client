@@ -117,7 +117,7 @@ const AutoSubmitUndistributedMusicModal = ({
                     : messages('release.autoSubmitUndistributedMusic')
             }
             onCancel={closeModal}
-            width={900}
+            width={'60vw'}
             footer={[
                 <Button key="cancel" onClick={closeModal}>
                     {messages('common.cancel')}
@@ -177,7 +177,7 @@ const AutoSubmitUndistributedMusicModal = ({
                                 pageSize: 10,
                                 showSizeChanger: true,
                             }}
-                            scroll={{ x: 760, y: 360 }}
+                            scroll={{ x: 760, y: 200 }}
                         />
                     </div>
                 )}

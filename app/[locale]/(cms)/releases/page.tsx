@@ -1,5 +1,6 @@
 'use client';
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -160,7 +161,9 @@ export default function Releases({}: Props) {
                         },
                     }}
                     toolBarRender={() => [
-                        <Button
+                        <CreateButton
+                            type="default"
+                            canCreate={isAdmin}
                             key="preview-auto-submit"
                             icon={<EyeOutlined />}
                             onClick={() =>
@@ -168,23 +171,23 @@ export default function Releases({}: Props) {
                                     TYPE_MODAL_RELEASE.PREVIEW_AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
                                 )
                             }
-                        >
-                            {messages(
+                            text={messages(
                                 'release.previewAutoSubmitUndistributedMusic'
                             )}
-                        </Button>,
-                        <Button
+                        />,
+                        <CreateButton
+                            canCreate={isAdmin}
                             key="auto-submit"
-                            type="primary"
                             icon={<SendOutlined />}
                             onClick={() =>
                                 openModal(
                                     TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
                                 )
                             }
-                        >
-                            {messages('release.autoSubmitUndistributedMusic')}
-                        </Button>,
+                            text={messages(
+                                'release.autoSubmitUndistributedMusic'
+                            )}
+                        />,
                     ]}
                     rowSelection={rowSelection}
                     tableAlertRender={({ selectedRowKeys }) => {
