@@ -20,6 +20,7 @@ const DspSelectionTable = ({
     onChange,
     dataSource,
     loading,
+    ...props
 }: DspSelectionTableProps) => {
     const messages = useTranslations();
 
@@ -68,9 +69,7 @@ const DspSelectionTable = ({
     return (
         <AppProTable
             rowKey="code"
-            dataSource={dataSource}
             loading={loading}
-            columns={columns}
             rowSelection={rowSelection}
             pagination={false}
             options={false}
@@ -89,6 +88,9 @@ const DspSelectionTable = ({
                     onChange?.(nextValue);
                 },
             })}
+            {...props}
+            dataSource={dataSource}
+            columns={columns}
         />
     );
 };

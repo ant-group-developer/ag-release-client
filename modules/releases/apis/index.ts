@@ -224,19 +224,31 @@ export const releasesApi = {
 
     autoSubmitUndistributedMusic: ({
         dspCodes,
+        status,
+        neverExported,
+        lastImportFailed,
     }: AutoSubmitUndistributedMusicRelease) => {
         return axiosInstance.post('/releases/auto-submit-undistributed-music', {
             dspCodes,
+            status,
+            neverExported,
+            lastImportFailed,
         });
     },
 
     previewAutoSubmitUndistributedMusic: ({
         dspCodes,
+        status,
+        neverExported,
+        lastImportFailed,
     }: AutoSubmitUndistributedMusicRelease) => {
         return axiosInstance.post(
             '/releases/auto-submit-undistributed-music/preview',
             {
                 dspCodes,
+                status,
+                neverExported,
+                lastImportFailed,
             }
         );
     },
