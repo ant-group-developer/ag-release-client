@@ -667,6 +667,13 @@ export const analytics2QueryKeys = {
             channelId,
             params,
         ] as const,
+    channelTopReleases: (channelId: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.CHANNEL_TOP_RELEASES,
+            channelId,
+            params,
+        ] as const,
     channelTrendViewLineChart: (
         channelId: string,
         params: TrendViewLineChartParams

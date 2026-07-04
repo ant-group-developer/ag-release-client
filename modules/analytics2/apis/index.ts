@@ -701,6 +701,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getChannelTopReleases: (channelId: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/channel/${channelId}/top-releases`,
+            params
+        );
+    },
     getChannelTrendViewLineChart: (
         channelId: string,
         params: TrendViewLineChartParams
