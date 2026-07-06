@@ -30,52 +30,11 @@ import {
 const RELEASE_ENRICHED_ERRORS_API_PATH = '/release-errors/enriched';
 const RELEASE_ERRORS_BULK_API_PATH = '/release-errors/bulk';
 
-const serializeParams = (params: Record<string, unknown>) => {
-    const searchParams = new URLSearchParams();
-
-    const appendParam = (key: string, value: unknown) => {
-        if (value === undefined || value === null || value === '') return;
-
-        if (Array.isArray(value)) {
-            value.forEach((item, index) => {
-                const arrayKey =
-                    item && typeof item === 'object'
-                        ? `${key}[${index}]`
-                        : `${key}[]`;
-                appendParam(arrayKey, item);
-            });
-            return;
-        }
-
-        if (value && typeof value === 'object') {
-            Object.entries(value as Record<string, unknown>).forEach(
-                ([childKey, childValue]) => {
-                    appendParam(`${key}[${childKey}]`, childValue);
-                }
-            );
-            return;
-        }
-
-        searchParams.append(key, String(value));
-    };
-
-    Object.entries(params).forEach(([key, value]) => {
-        appendParam(key, value);
-    });
-
-    return searchParams.toString();
-};
-
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
-        return axiosInstance.get<PaginationResponse<ReleasesData>>(
-            '/releases',
-            {
-                params,
-                paramsSerializer: {
-                    serialize: serializeParams,
-                },
-            }
+        return axiosInstance.post<PaginationResponse<ReleasesData>>(
+            '/releases/get-list',
+            params
         );
     },
 
@@ -259,6 +218,7 @@ export const releasesApi = {
         idsExclude,
         status,
         ciImportAction,
+        skipDistributed,
     }: BulkSubmitRelease) => {
         return axiosInstance.post('/releases/bulk-submit', {
             ids,
@@ -266,6 +226,7 @@ export const releasesApi = {
             idsExclude,
             status,
             ciImportAction,
+            skipDistributed,
         });
     },
 

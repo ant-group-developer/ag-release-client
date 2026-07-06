@@ -24,6 +24,7 @@ import {
     Modal,
     Popover,
     Select,
+    Switch,
     TableProps,
     Tabs,
     Tag,
@@ -52,6 +53,7 @@ interface AutoSubmitUndistributedMusicV2ModalProps {
 interface AutoSubmitV2FormValues {
     dspCodes: string[];
     ciImportAction?: CI_IMPORT_ACTION;
+    skipDistributed?: boolean;
 }
 
 const DEFAULT_FILTER: ReleasesDataFilter = {
@@ -77,8 +79,7 @@ const getSubmitData = (data: any) => data?.submitData ?? data?.data?.submitData;
 const getPreviewRowKey = (record: any) =>
     record?.id ?? record?.dsp?.id ?? record?.dspCode;
 
-const hasStatusChange = (record: any) =>
-    !!record?.targetStatus && record?.status !== record?.targetStatus;
+const hasTargetStatus = (record: any) => !!record?.targetStatus;
 
 const AutoSubmitUndistributedMusicV2Modal = ({
     onFinished,
@@ -160,6 +161,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
             form.setFieldsValue({
                 dspCodes: defaultDspCodes,
                 ciImportAction: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
+                skipDistributed: true,
             });
         }
     }, [defaultDspCodes, dspDataFilter.length, form]);
@@ -210,6 +212,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
             status: RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED,
             ciImportAction:
                 values.ciImportAction ?? CI_IMPORT_ACTION.SKIP_CI_IMPORT,
+            skipDistributed: values.skipDistributed ?? true,
         };
     };
 
@@ -431,87 +434,105 @@ const AutoSubmitUndistributedMusicV2Modal = ({
                         key: 'options',
                         label: 'Tuy chon',
                         children: (
-                            <Form.Item
-                                name="ciImportAction"
-                                label="Hanh dong import CI"
-                                initialValue={CI_IMPORT_ACTION.SKIP_CI_IMPORT}
-                                style={{ marginBottom: 0 }}
-                            >
-                                <Select
-                                    optionLabelProp="title"
-                                    options={[
-                                        {
-                                            value: CI_IMPORT_ACTION.KEEP_CURRENT_STATUS,
-                                            title: 'Giu trang thai hien tai',
-                                            label: (
-                                                <div>
-                                                    <div className="font-medium">
-                                                        Giu trang thai hien tai
+                            <>
+                                <Form.Item
+                                    name="ciImportAction"
+                                    label="Hanh dong import CI"
+                                    initialValue={
+                                        CI_IMPORT_ACTION.SKIP_CI_IMPORT
+                                    }
+                                    style={{ marginBottom: 0 }}
+                                >
+                                    <Select
+                                        optionLabelProp="title"
+                                        options={[
+                                            {
+                                                value: CI_IMPORT_ACTION.KEEP_CURRENT_STATUS,
+                                                title: 'Giu trang thai hien tai',
+                                                label: (
+                                                    <div>
+                                                        <div className="font-medium">
+                                                            Giu trang thai hien
+                                                            tai
+                                                        </div>
+                                                        <div className="text-xs text-gray-500">
+                                                            Giu nguyen
+                                                            release.ciData.status,
+                                                            khong can thiep
+                                                            trang thai CI hien
+                                                            tai. Neu release
+                                                            dang EXISTS_ON_CI
+                                                            thi van la
+                                                            EXISTS_ON_CI; neu
+                                                            dang NOT_FOUND_ON_CI
+                                                            thi van la
+                                                            NOT_FOUND_ON_CI.
+                                                        </div>
                                                     </div>
-                                                    <div className="text-xs text-gray-500">
-                                                        Giu nguyen
-                                                        release.ciData.status,
-                                                        khong can thiep trang
-                                                        thai CI hien tai. Neu
-                                                        release dang
-                                                        EXISTS_ON_CI thi van la
-                                                        EXISTS_ON_CI; neu dang
-                                                        NOT_FOUND_ON_CI thi van
-                                                        la NOT_FOUND_ON_CI.
+                                                ),
+                                            },
+                                            {
+                                                value: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
+                                                title: 'Bo qua import CI',
+                                                label: (
+                                                    <div>
+                                                        <div className="font-medium">
+                                                            Bo qua import CI
+                                                        </div>
+                                                        <div className="text-xs text-gray-500">
+                                                            Chi skip import CI
+                                                            khi release hien
+                                                            tai da co tren CI,
+                                                            tuc
+                                                            release.ciData.status
+                                                            = EXISTS_ON_CI. Neu
+                                                            release dang
+                                                            NOT_FOUND_ON_CI thi
+                                                            khong ep skip, giu
+                                                            nguyen trang thai do
+                                                            de he thong van co
+                                                            the chay import khi
+                                                            can.
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ),
-                                        },
-                                        {
-                                            value: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
-                                            title: 'Bo qua import CI',
-                                            label: (
-                                                <div>
-                                                    <div className="font-medium">
-                                                        Bo qua import CI
+                                                ),
+                                            },
+                                            {
+                                                value: CI_IMPORT_ACTION.FORCE_CI_IMPORT,
+                                                title: 'Bat buoc import CI',
+                                                label: (
+                                                    <div>
+                                                        <div className="font-medium">
+                                                            Bat buoc import CI
+                                                        </div>
+                                                        <div className="text-xs text-gray-500">
+                                                            Ep chay import CI
+                                                            bang cach set
+                                                            release.ciData.status
+                                                            = NOT_FOUND_ON_CI,
+                                                            du truoc do release
+                                                            co the dang
+                                                            EXISTS_ON_CI. Muc
+                                                            tieu la lam he thong
+                                                            coi release nhu chua
+                                                            co tren CI de luon
+                                                            chay import lai.
+                                                        </div>
                                                     </div>
-                                                    <div className="text-xs text-gray-500">
-                                                        Chi skip import CI khi
-                                                        release hien tai da co
-                                                        tren CI, tuc
-                                                        release.ciData.status =
-                                                        EXISTS_ON_CI. Neu
-                                                        release dang
-                                                        NOT_FOUND_ON_CI thi
-                                                        khong ep skip, giu
-                                                        nguyen trang thai do de
-                                                        he thong van co the chay
-                                                        import khi can.
-                                                    </div>
-                                                </div>
-                                            ),
-                                        },
-                                        {
-                                            value: CI_IMPORT_ACTION.FORCE_CI_IMPORT,
-                                            title: 'Bat buoc import CI',
-                                            label: (
-                                                <div>
-                                                    <div className="font-medium">
-                                                        Bat buoc import CI
-                                                    </div>
-                                                    <div className="text-xs text-gray-500">
-                                                        Ep chay import CI bang
-                                                        cach set
-                                                        release.ciData.status =
-                                                        NOT_FOUND_ON_CI, du
-                                                        truoc do release co the
-                                                        dang EXISTS_ON_CI. Muc
-                                                        tieu la lam he thong coi
-                                                        release nhu chua co tren
-                                                        CI de luon chay import
-                                                        lai.
-                                                    </div>
-                                                </div>
-                                            ),
-                                        },
-                                    ]}
-                                />
-                            </Form.Item>
+                                                ),
+                                            },
+                                        ]}
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name="skipDistributed"
+                                    label="Bo qua ban da distributed"
+                                    valuePropName="checked"
+                                    initialValue
+                                >
+                                    <Switch />
+                                </Form.Item>
+                            </>
                         ),
                     },
                 ]}
@@ -817,7 +838,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
                     rowKey={getPreviewRowKey}
                     columns={previewColumns}
                     rowClassName={(record: any) =>
-                        hasStatusChange(record)
+                        hasTargetStatus(record)
                             ? 'bg-blue-50/60'
                             : 'bg-gray-50 opacity-45'
                     }

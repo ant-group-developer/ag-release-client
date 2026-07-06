@@ -58,6 +58,7 @@ export interface BulkSubmitRelease extends CommonFunction {
     idsExclude?: string[];
     status?: RELEASE_DSP_DELIVERY_STATUS;
     ciImportAction?: CI_IMPORT_ACTION;
+    skipDistributed?: boolean;
 }
 
 export interface AutoSubmitUndistributedMusicRelease extends CommonFunction {
