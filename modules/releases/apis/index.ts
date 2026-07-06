@@ -214,12 +214,27 @@ export const releasesApi = {
         );
     },
 
-    bulkSubmit: ({ ids, codes, idsExclude }: BulkSubmitRelease) => {
+    bulkSubmit: ({
+        ids,
+        codes,
+        idsExclude,
+        status,
+        ciImportAction,
+    }: BulkSubmitRelease) => {
         return axiosInstance.post('/releases/bulk-submit', {
             ids,
             codes,
             idsExclude,
+            status,
+            ciImportAction,
         });
+    },
+
+    previewBulkSubmitResult: (payload: BulkSubmitRelease) => {
+        return axiosInstance.post(
+            '/releases/bulk-submit/preview-result',
+            payload
+        );
     },
 
     autoSubmitUndistributedMusic: ({

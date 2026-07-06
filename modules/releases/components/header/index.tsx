@@ -5,17 +5,19 @@ import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
 import { useGetListLabelsSimple } from '@/modules/labels/hooks/use-get-list-simple-labels';
+import { RELEASE_CI_DATA_STATUS } from '@/modules/release-distribution/enums';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import {
     AppstoreOutlined,
+    AuditOutlined,
     BarsOutlined,
     CalendarOutlined,
+    ExportOutlined,
+    ImportOutlined,
     SearchOutlined,
     SoundOutlined,
     TagOutlined,
-    ImportOutlined,
-    AuditOutlined,
     WarningOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
@@ -45,7 +47,9 @@ export default function ReleasesHeaderV2({
     const messages = useTranslations();
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const { genresData } = useGetListSimpleGenres();
-    const { labelsData } = useGetListLabelsSimple({ enabled: !hideLabelFilter });
+    const { labelsData } = useGetListLabelsSimple({
+        enabled: !hideLabelFilter,
+    });
     const { isAdmin } = useAuth();
     const { tenantSimpleData, isLoading: isLoadingTenants } =
         useGetListSimpleTenant();
@@ -104,6 +108,20 @@ export default function ReleasesHeaderV2({
             {
                 label: messages('release.createdDirectly'),
                 value: 'false',
+            },
+        ],
+        [messages]
+    );
+
+    const releaseCiStatusOptions = useMemo(
+        () => [
+            {
+                label: messages('releaseCiData.status.existsOnCi'),
+                value: RELEASE_CI_DATA_STATUS.EXISTS_ON_CI,
+            },
+            {
+                label: messages('releaseCiData.status.notFoundOnCi'),
+                value: RELEASE_CI_DATA_STATUS.NOT_FOUND_ON_CI,
             },
         ],
         [messages]
@@ -200,6 +218,42 @@ export default function ReleasesHeaderV2({
                 isCommaSeparated: true,
             },
             {
+                key: 'ciDataStatus',
+                label: messages('releaseCiData.status.label'),
+                icon: <BarsOutlined />,
+                type: 'radio',
+                filterKey: 'ciDataStatus',
+                options: releaseCiStatusOptions,
+            },
+            {
+                key: 'neverExported',
+                label: messages('releaseCiData.neverExported'),
+                icon: <ExportOutlined />,
+                type: 'checkbox',
+                filterKey: 'neverExported',
+                options: [
+                    {
+                        label: messages('releaseCiData.neverExported'),
+                        value: 'true',
+                    },
+                ],
+                isCommaSeparated: true,
+            },
+            {
+                key: 'lastImportIsFailed',
+                label: messages('releaseCiData.lastImportIsFailed'),
+                icon: <WarningOutlined />,
+                type: 'checkbox',
+                filterKey: 'lastImportIsFailed',
+                options: [
+                    {
+                        label: messages('releaseCiData.lastImportIsFailed'),
+                        value: 'true',
+                    },
+                ],
+                isCommaSeparated: true,
+            },
+            {
                 key: 'dateCreated',
                 label: messages('common.dateCreated'),
                 icon: <CalendarOutlined />,
@@ -240,9 +294,13 @@ export default function ReleasesHeaderV2({
         tenantOptions,
         isLoadingTenants,
         isImportedFromReportOptions,
+        releaseCiStatusOptions,
     ]);
 
-    const handleChangeFilter = (newValue: Partial<ReleasesDataFilter>, backToFirstPage?: boolean) => {
+    const handleChangeFilter = (
+        newValue: Partial<ReleasesDataFilter>,
+        backToFirstPage?: boolean
+    ) => {
         const nextValue = { ...newValue };
         if ('isImportedFromReport' in nextValue) {
             const val = nextValue.isImportedFromReport;
@@ -267,6 +325,19 @@ export default function ReleasesHeaderV2({
             copy.hasError = 'true';
         } else {
             copy.hasError = undefined;
+        }
+        if (copy.neverExported === true || copy.neverExported === 'true') {
+            copy.neverExported = 'true';
+        } else {
+            copy.neverExported = undefined;
+        }
+        if (
+            copy.lastImportIsFailed === true ||
+            copy.lastImportIsFailed === 'true'
+        ) {
+            copy.lastImportIsFailed = 'true';
+        } else {
+            copy.lastImportIsFailed = undefined;
         }
         return copy;
     }, [dataFilter]);

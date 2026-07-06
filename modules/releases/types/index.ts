@@ -4,6 +4,7 @@ import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
+import { RELEASE_CI_DATA_STATUS } from '@/modules/release-distribution/enums';
 import { ReleaseDspData } from '@/modules/release-dsp/types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
@@ -144,6 +145,9 @@ export interface ReleasesDataFilter extends CommonParams {
     isImportedFromReport?: string;
     needsReview?: boolean | string;
     hasError?: boolean | string;
+    ciDataStatus?: RELEASE_CI_DATA_STATUS;
+    neverExported?: boolean | string;
+    lastImportIsFailed?: boolean | string;
 }
 
 export interface ReleaseTerritory extends CommonParams {

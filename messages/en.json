@@ -1015,6 +1015,8 @@
         "bulkSubmit": "Bulk Submit",
         "autoSubmitUndistributedMusic": "Auto Submit",
         "previewAutoSubmitUndistributedMusic": "Review Auto Submit",
+        "autoSubmitDspTab": "DSPs",
+        "autoSubmitOptionsTab": "Options",
         "autoSubmitPreviewTotal": "Matched {count} releases",
         "bulkSubmitConfirm": "Are you sure you want to submit {count} selected releases?",
         "bulkDelete": "Bulk Delete",
@@ -3161,6 +3163,7 @@
     },
     "releaseCiData": {
         "status": {
+            "label": "CI status",
             "existsOnCi": "Exists on CI",
             "notFoundOnCi": "Not found on CI"
         },
