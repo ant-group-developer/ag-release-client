@@ -117,6 +117,17 @@ export interface ImportJobStatusResponse {
     file: string;
     error: string | null;
     result: ImportJobResult | null;
+    sourceType?: string;
+    detailR2Sync?: {
+        zipsFound: number;
+        zipsImported: number;
+        zipsSkipped: number;
+    } | null;
+    detailExport?: {
+        jobSpoId: string;
+        foldersUploaded: number;
+        r2ObjectKeys: string[];
+    } | null;
     startedAt: string | null;
     finishedAt: string | null;
     durationMs: number;
@@ -171,6 +182,16 @@ export interface EtlJobData {
         }[];
     };
     result: ImportJobResult | null;
+    detailR2Sync?: {
+        zipsFound: number;
+        zipsImported: number;
+        zipsSkipped: number;
+    } | null;
+    detailExport?: {
+        jobSpoId: string;
+        foldersUploaded: number;
+        r2ObjectKeys: string[];
+    } | null;
     error: string | null;
     batchId: string | null;
     tenantId: string;
@@ -308,8 +329,8 @@ export interface CreateEnrichScanSchedulePayload {
     name: string;
     enabled: boolean;
     cronExpression: string;
-    timezone: string;
-    isImportedFromReport: boolean;
+    timezone?: string;
+    isImportedFromReport?: boolean;
     limitCount: number;
     force: boolean;
 }
@@ -384,4 +405,3 @@ export interface GetEnrichHistoryParams {
     pageSize?: number;
     scanId?: string | null;
 }
-

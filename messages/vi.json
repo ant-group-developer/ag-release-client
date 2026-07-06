@@ -2858,6 +2858,7 @@
             "forceTooltip": "Nếu bật, dữ liệu đã được xử lý sẽ được xử lý lại.",
             "isImportedFromReport": "Đồng bộ phát hành",
             "isImportedFromReportTooltip": "Chọn hình thức phát hành muốn đồng bộ dữ liệu.",
+            "isImportedFromReportAll": "Tất cả",
             "isImportedFromReportDirect": "Đồng bộ phát hành tạo trực tiếp",
             "isImportedFromReportImport": "Đồng bộ phát hành nhập từ báo cáo",
             "eventConnectionError": "Không thể kết nối tới sự kiện của quá trình chuẩn hoá",
@@ -3056,6 +3057,8 @@
             "sourceTypeFtpAutoCron": "Tự động đồng bộ FTP",
             "sourceTypeAnalyticsReportExport": "Xuất báo cáo phân tích",
             "sourceTypeReportReleaseDelete": "Xóa phát hành báo cáo",
+            "sourceTypeSpotifyR2Sync": "Đồng bộ Spotify R2",
+            "sourceTypeSpotifyExportTrigger": "Xuất báo cáo Box -> R2",
             "totalRows": "Tổng số dòng",
             "processedRows": "Đã xử lý",
             "skippedRows": "Bỏ qua",
@@ -3073,6 +3076,7 @@
             "timezone": "Múi giờ",
             "isImportedFromReport": "Đồng bộ phát hành",
             "isImportedFromReportTooltip": "Chọn hình thức phát hành muốn đồng bộ dữ liệu.",
+            "isImportedFromReportAll": "Tất cả",
             "isImportedFromReportDirect": "Đồng bộ phát hành tạo trực tiếp",
             "isImportedFromReportImport": "Đồng bộ phát hành nhập từ báo cáo",
             "limitCount": "Giới hạn",
@@ -3094,6 +3098,42 @@
                     "delete": "Xóa lịch quét thành công!"
                 }
             }
+        },
+        "spotifyR2SyncConfig": {
+            "label": "Đồng bộ Spotify R2",
+            "title": "Cấu hình tự động đồng bộ Spotify R2",
+            "enabled": "Kích hoạt đồng bộ",
+            "cron": "Lịch đồng bộ",
+            "prefix": "Prefix thư mục",
+            "prefixTooltip": "Thư mục chứa báo cáo trên R2",
+            "retentionDays": "Thời gian lưu trữ (ngày)",
+            "retentionDaysTooltip": "Số ngày lưu trữ báo cáo trước khi tự động xóa",
+            "save": "Lưu cấu hình",
+            "saveSuccess": "Cập nhật cấu hình tự động đồng bộ Spotify R2 thành công!",
+            "saveFailed": "Cập nhật cấu hình tự động đồng bộ Spotify R2 thất bại!",
+            "syncNow": "Đồng bộ ngay",
+            "syncProgressTitle": "Tiến trình đồng bộ Spotify R2",
+            "zipsFound": "Số tệp ZIP tìm thấy",
+            "zipsImported": "Số tệp ZIP đã nhập",
+            "zipsSkipped": "Số tệp ZIP bỏ qua",
+            "jobSpoId": "Mã Job Spotify",
+            "foldersUploaded": "Số thư mục đã tải lên",
+            "r2ObjectKeys": "Tệp đã tải lên R2",
+            "exportNow": "Trigger Box -> R2",
+            "exportModalTitle": "Trigger Box -> R2 Export",
+            "exportModalDesc": "Kích hoạt tiến trình đồng bộ báo cáo từ Box.com sang R2. Sau khi xuất thành công, hệ thống sẽ tự động nhập dữ liệu mới.",
+            "forceLabel": "Bắt buộc ghi đè (Force)"
+        },
+        "spotifyExportSchedulerConfig": {
+            "label": "Tự động xuất dữ liệu Spotify",
+            "title": "Cấu hình lịch tự động xuất dữ liệu Spotify",
+            "enabled": "Kích hoạt tự động xuất",
+            "cron": "Lịch tự động xuất",
+            "force": "Ép buộc xuất dữ liệu (Force)",
+            "forceTooltip": "Nếu được bật, dữ liệu sẽ được xuất đè ngay cả khi đã tồn tại báo cáo",
+            "save": "Lưu cấu hình",
+            "saveSuccess": "Cập nhật cấu hình tự động xuất dữ liệu Spotify thành công!",
+            "saveFailed": "Cập nhật cấu hình tự động xuất dữ liệu Spotify thất bại!"
         }
     },
     "analytics2": {

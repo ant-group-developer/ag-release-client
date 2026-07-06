@@ -514,3 +514,131 @@ export interface RevenueTenantBarChartItem {
     revenueUsd: number;
     quantity: number;
 }
+
+export interface AnalyticsCommonParams {
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: string;
+    sortBy?: string;
+    page?: number;
+    pageSize?: number;
+    includeOther?: boolean;
+}
+
+export type ReleaseDspParams = AnalyticsCommonParams;
+
+export interface ReleaseDspItem {
+    rank: number;
+    dspId: string;
+    dspName: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type ReleaseTerParams = AnalyticsCommonParams;
+
+export interface ReleaseTerItem {
+    rank: number;
+    territory: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type TrackDspParams = AnalyticsCommonParams;
+
+export interface TrackDspItem {
+    rank: number;
+    dspId: string;
+    dspName: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type TrackTerParams = AnalyticsCommonParams;
+
+export interface TrackTerItem {
+    rank: number;
+    territory: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type ArtistDspParams = AnalyticsCommonParams;
+
+export interface ArtistDspItem {
+    rank: number;
+    dspId: string;
+    dspName: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type ArtistTerParams = AnalyticsCommonParams;
+
+export interface ArtistTerItem {
+    rank: number;
+    territory: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type LabelDspParams = AnalyticsCommonParams;
+
+export interface LabelDspItem {
+    rank: number;
+    dspId: string;
+    dspName: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type LabelTerParams = AnalyticsCommonParams;
+
+export interface LabelTerItem {
+    rank: number;
+    territory: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type TenantDspParams = AnalyticsCommonParams;
+
+export interface TenantDspItem {
+    rank: number;
+    dspId: string;
+    dspName: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type TenantTerParams = AnalyticsCommonParams;
+
+export interface TenantTerItem {
+    rank: number;
+    territory: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type ChannelDspParams = AnalyticsCommonParams;
+
+export interface ChannelDspItem {
+    rank: number;
+    dspId: string;
+    dspName: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+export type ChannelTerParams = AnalyticsCommonParams;
+
+export interface ChannelTerItem {
+    rank: number;
+    territory: string;
+    totalViews: number;
+    totalRevenueUsd: string;
+}
+
+
+
+

@@ -2,36 +2,33 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import {
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
+    RANK_COLUMN_WIDTH,
+} from '../../constants/types';
+import { useGetArtistDsp } from '../../hooks/use-get-artist-dsp';
 import { useGetArtistOverview } from '../../hooks/use-get-artist-overview';
-import { useGetArtistRevenueDspBarChart } from '../../hooks/use-get-artist-revenue-dsp-bar-chart';
 import { useGetArtistRevenueLineChart } from '../../hooks/use-get-artist-revenue-line-chart';
-import { useGetArtistRevenueTerBarChart } from '../../hooks/use-get-artist-revenue-ter-bar-chart';
-import { useGetArtistTrendViewDspBarChart } from '../../hooks/use-get-artist-trend-view-dsp-bar-chart';
-import { useGetArtistTrendViewLineChart } from '../../hooks/use-get-artist-trend-view-line-chart';
-import { useGetArtistTrendViewTerBarChart } from '../../hooks/use-get-artist-trend-view-ter-bar-chart';
-import RankingCard, { RankingCardView } from '../card/ranking-card';
-import LineChartView from '../chart/line-chart-view';
-import DetailStatsOverview from '../detail/detail-stats-overview';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE, RANK_COLUMN_WIDTH } from '../../constants/types';
+import { useGetArtistTer } from '../../hooks/use-get-artist-ter';
 import { useGetArtistTopReleases } from '../../hooks/use-get-artist-top-releases';
 import { useGetArtistTopTracks } from '../../hooks/use-get-artist-top-tracks';
+import { useGetArtistTrendViewLineChart } from '../../hooks/use-get-artist-trend-view-line-chart';
 import { ReleaseRankingItem, TrackRankingItem } from '../../types';
+import RankingCard, { RankingCardView } from '../card/ranking-card';
+import LineChartView from '../chart/line-chart-view';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
-
-enum AnalyticsViewType {
-    DSP = 'dsp',
-    TER = 'ter',
-}
+import DetailStatsOverview from '../detail/detail-stats-overview';
 
 interface DetailArtistAnalyticsModalProps {
     open: boolean;
@@ -54,12 +51,6 @@ export default function DetailArtistAnalyticsModal({
 
     const [localFromDate, setLocalFromDate] = useState(fromDate);
     const [localToDate, setLocalToDate] = useState(toDate);
-    const [trendViewType, setTrendViewType] = useState<AnalyticsViewType>(
-        AnalyticsViewType.DSP
-    );
-    const [revenueViewType, setRevenueViewType] = useState<AnalyticsViewType>(
-        AnalyticsViewType.DSP
-    );
     const [lineChartViewType, setLineChartViewType] = useState<
         'views' | 'revenue'
     >('views');
@@ -143,81 +134,39 @@ export default function DetailArtistAnalyticsModal({
         open
     );
 
-    // Gọi API lấy thông tin phân bố theo DSP của Artist
-    const {
-        dspBarChartData: trendViewDspBarChartData,
-        isFetching: isTrendViewDspBarChartFetching,
-    } = useGetArtistTrendViewDspBarChart(
-        artistId,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
+    const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
+        ANALYTIC_SORT_BY.REVENUE
     );
 
-    // Gọi API lấy thông tin phân bố theo quốc gia của Artist
-    const {
-        terBarChartData: trendViewTerBarChartData,
-        isFetching: isTrendViewTerBarChartFetching,
-    } = useGetArtistTrendViewTerBarChart(
+    // Gọi API lấy danh sách DSP chi tiết phân trang của Artist
+    const { artistDspData, isFetching: isArtistDspFetching } = useGetArtistDsp(
         artistId,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
+        {
+            fromDate: localFromDate,
+            toDate: localToDate,
+            sortBy: dspSortBy,
+            pageSize: 5,
+            includeOther: true,
+        }
     );
 
-    const mappedTrendPieData = useMemo(() => {
-        if (trendViewType === AnalyticsViewType.DSP) {
-            return trendViewDspBarChartData.map((item) => ({
-                type: item.dspName,
-                value: item.totalViews,
-            }));
-        } else {
-            return trendViewTerBarChartData.map((item) => ({
-                type: item.territory,
-                value: item.totalViews,
-            }));
+    const [terSortBy, setTerSortBy] = useState<ANALYTIC_SORT_BY>(
+        ANALYTIC_SORT_BY.REVENUE
+    );
+
+    // Gọi API lấy danh sách Territory chi tiết phân trang của Artist
+    const { artistTerData, isFetching: isArtistTerFetching } = useGetArtistTer(
+        artistId,
+        {
+            fromDate: localFromDate,
+            toDate: localToDate,
+            sortBy: terSortBy,
+            pageSize: 5,
+            includeOther: true,
         }
-    }, [trendViewType, trendViewDspBarChartData, trendViewTerBarChartData]);
+    );
 
-    const isTrendBarChartFetching =
-        trendViewType === AnalyticsViewType.DSP
-            ? isTrendViewDspBarChartFetching
-            : isTrendViewTerBarChartFetching;
-
-    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Artist
-    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
-        useGetArtistRevenueDspBarChart(
-            artistId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
-
-    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Artist
-    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
-        useGetArtistRevenueTerBarChart(
-            artistId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
-
-    const mappedRevenuePieData = useMemo(() => {
-        if (revenueViewType === AnalyticsViewType.DSP) {
-            return revenueDspBarChartData.map((item) => ({
-                type: item.dspName,
-                value: item.revenueUsd,
-            }));
-        } else {
-            return revenueTerBarChartData.map((item) => ({
-                type: item.territory,
-                value: item.revenueUsd,
-            }));
-        }
-    }, [revenueViewType, revenueDspBarChartData, revenueTerBarChartData]);
-
-    const isRevenueBarChartFetching =
-        revenueViewType === AnalyticsViewType.DSP
-            ? isRevenueDspBarChartFetching
-            : isRevenueTerBarChartFetching;
-
-    const dspColumns = useMemo(
+    const artistDspColumns = useMemo(
         () => [
             {
                 title: messages('analytics2.rank'),
@@ -246,18 +195,42 @@ export default function DetailArtistAnalyticsModal({
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 150,
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    dspSortBy === ANALYTIC_SORT_BY.VIEWS
+                        ? ('descend' as const)
+                        : undefined,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
             },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'totalRevenueUsd',
+                key: 'totalRevenueUsd',
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    dspSortBy === ANALYTIC_SORT_BY.REVENUE
+                        ? ('descend' as const)
+                        : undefined,
+                render: (val: string) => {
+                    const numVal = parseFloat(val);
+                    return (
+                        <span className="text-gray-900 dark:text-zinc-100">
+                            ${isNaN(numVal) ? '0.00' : formattedNumber(numVal)}
+                        </span>
+                    );
+                },
+            },
         ],
-        [messages]
+        [messages, dspSortBy]
     );
 
-    const terColumns = useMemo(
+    const artistTerColumns = useMemo(
         () => [
             {
                 title: messages('analytics2.rank'),
@@ -286,124 +259,54 @@ export default function DetailArtistAnalyticsModal({
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 150,
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    terSortBy === ANALYTIC_SORT_BY.VIEWS
+                        ? ('descend' as const)
+                        : undefined,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
             },
-        ],
-        [messages]
-    );
-
-    const mappedTrendDspRankData = useMemo(() => {
-        return trendViewDspBarChartData.map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [trendViewDspBarChartData]);
-
-    const mappedTrendTerRankData = useMemo(() => {
-        return trendViewTerBarChartData.map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [trendViewTerBarChartData]);
-
-    const revenueDspColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: 120,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: 'DSP',
-                dataIndex: 'dspName',
-                key: 'dspName',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
             {
                 title: messages('common.revenue'),
-                dataIndex: 'revenueUsd',
-                key: 'revenueUsd',
-                width: 150,
-                render: (val: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        ${val ? formattedNumber(val) : '0.00'}
-                    </span>
-                ),
+                dataIndex: 'totalRevenueUsd',
+                key: 'totalRevenueUsd',
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    terSortBy === ANALYTIC_SORT_BY.REVENUE
+                        ? ('descend' as const)
+                        : undefined,
+                render: (val: string) => {
+                    const numVal = parseFloat(val);
+                    return (
+                        <span className="text-gray-900 dark:text-zinc-100">
+                            ${isNaN(numVal) ? '0.00' : formattedNumber(numVal)}
+                        </span>
+                    );
+                },
             },
         ],
-        [messages]
+        [messages, terSortBy]
     );
 
-    const revenueTerColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: 120,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: messages('country.label'),
-                dataIndex: 'territory',
-                key: 'territory',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.revenue'),
-                dataIndex: 'revenueUsd',
-                key: 'revenueUsd',
-                width: 150,
-                render: (val: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        ${val ? formattedNumber(val) : '0.00'}
-                    </span>
-                ),
-            },
-        ],
-        [messages]
-    );
-
-    const mappedRevenueDspRankData = useMemo(() => {
-        return revenueDspBarChartData.map((item, index) => ({
+    const mappedArtistDspData = useMemo(() => {
+        return (artistDspData.items || []).map((item: any) => ({
             ...item,
-            rank: index + 1,
+            totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
         }));
-    }, [revenueDspBarChartData]);
+    }, [artistDspData.items]);
 
-    const mappedRevenueTerRankData = useMemo(() => {
-        return revenueTerBarChartData.map((item, index) => ({
+    const mappedArtistTerData = useMemo(() => {
+        return (artistTerData.items || []).map((item: any) => ({
             ...item,
-            rank: index + 1,
+            totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
         }));
-    }, [revenueTerBarChartData]);
+    }, [artistTerData.items]);
 
     const releaseColumns = useMemo(
         () => [
@@ -768,59 +671,77 @@ export default function DetailArtistAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.dspDistribution')}
-                            columns={dspColumns}
-                            dataSource={mappedTrendDspRankData}
-                            loading={isTrendViewDspBarChartFetching}
+                            title={
+                                dspSortBy === ANALYTIC_SORT_BY.VIEWS
+                                    ? messages('analytics.dspDistribution')
+                                    : messages(
+                                          'analytics.revenueDspDistribution'
+                                      )
+                            }
+                            columns={artistDspColumns}
+                            dataSource={mappedArtistDspData}
+                            loading={isArtistDspFetching}
                             rowKey="dspName"
                             labelKey="dspName"
-                            valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
+                            valueKey={
+                                dspSortBy === ANALYTIC_SORT_BY.VIEWS
+                                    ? 'totalViews'
+                                    : 'totalRevenueUsdNum'
+                            }
+                            valuePrefix={
+                                dspSortBy === ANALYTIC_SORT_BY.REVENUE
+                                    ? '$'
+                                    : undefined
+                            }
+                            onChange={(pagination, filters, sorter: any) => {
+                                const field = sorter.field;
+                                if (field === 'totalViews') {
+                                    setDspSortBy(ANALYTIC_SORT_BY.VIEWS);
+                                } else if (field === 'totalRevenueUsd') {
+                                    setDspSortBy(ANALYTIC_SORT_BY.REVENUE);
+                                }
+                            }}
                         />
                     </Col>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.revenueDspDistribution')}
-                            columns={revenueDspColumns}
-                            dataSource={mappedRevenueDspRankData}
-                            loading={isRevenueDspBarChartFetching}
-                            rowKey="dspName"
-                            labelKey="dspName"
-                            valueKey="revenueUsd"
-                            defaultView={RankingCardView.LIST}
-                            valuePrefix="$"
-                        />
-                    </Col>
-                </Row>
-
-                <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={messages('analytics.terDistribution')}
-                            columns={terColumns}
-                            dataSource={mappedTrendTerRankData}
-                            loading={isTrendViewTerBarChartFetching}
+                            title={
+                                terSortBy === ANALYTIC_SORT_BY.VIEWS
+                                    ? messages('analytics.terDistribution')
+                                    : messages(
+                                          'analytics.revenueTerDistribution'
+                                      )
+                            }
+                            columns={artistTerColumns}
+                            dataSource={mappedArtistTerData}
+                            loading={isArtistTerFetching}
                             rowKey="territory"
                             labelKey="territory"
-                            valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
-                        />
-                    </Col>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={messages('analytics.revenueTerDistribution')}
-                            columns={revenueTerColumns}
-                            dataSource={mappedRevenueTerRankData}
-                            loading={isRevenueTerBarChartFetching}
-                            rowKey="territory"
-                            labelKey="territory"
-                            valueKey="revenueUsd"
-                            defaultView={RankingCardView.LIST}
-                            valuePrefix="$"
+                            valueKey={
+                                terSortBy === ANALYTIC_SORT_BY.VIEWS
+                                    ? 'totalViews'
+                                    : 'totalRevenueUsdNum'
+                            }
+                            valuePrefix={
+                                terSortBy === ANALYTIC_SORT_BY.REVENUE
+                                    ? '$'
+                                    : undefined
+                            }
+                            onChange={(pagination, filters, sorter: any) => {
+                                const field = sorter.field;
+                                if (field === 'totalViews') {
+                                    setTerSortBy(ANALYTIC_SORT_BY.VIEWS);
+                                } else if (field === 'totalRevenueUsd') {
+                                    setTerSortBy(ANALYTIC_SORT_BY.REVENUE);
+                                }
+                            }}
                         />
                     </Col>
                 </Row>
             </div>
+
             <DetailReleaseAnalyticsModal
                 open={detailReleaseModal.open}
                 onClose={() =>

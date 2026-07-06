@@ -37,7 +37,7 @@ export default function FtpExcludePatternTableFilter({
     ];
 
     return (
-        <Space size="middle">
+        <Space size="middle" wrap>
             <AppSearch
                 onChange={(e) => onChangeFilter({ keyword: e.target.value })}
                 value={filter.keyword}

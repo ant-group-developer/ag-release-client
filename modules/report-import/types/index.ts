@@ -59,3 +59,17 @@ export interface EnrichScanScheduleData extends CommonAttribute {
 
 export interface EnrichScanScheduleDataFilter extends CommonParams {}
 
+export interface SpotifyR2SyncConfig {
+    enabled: boolean;
+    cron: string;
+    prefix: string;
+    retentionDays: number;
+}
+
+export interface SpotifyExportSchedulerConfig {
+    enabled: boolean;
+    cron: string;
+    force: boolean;
+}
+
+

@@ -195,6 +195,7 @@ export default function EnrichScanSessionsTable({
             key: 'actions',
             width: 100,
             align: 'center',
+            fixed: 'right',
             render: (_, record) => (
                 <div className="flex items-center justify-center gap-2">
                     <Tooltip title={messages('common.viewDetail')}>
@@ -202,7 +203,11 @@ export default function EnrichScanSessionsTable({
                             <Eye size={SIZE_ICON} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title={messages('reportConfigs.enrichDataImport.historyAction.viewLog')}>
+                    <Tooltip
+                        title={messages(
+                            'reportConfigs.enrichDataImport.historyAction.viewLog'
+                        )}
+                    >
                         <IconButton onClick={() => onViewHistory(record)}>
                             <FileText size={SIZE_ICON} />
                         </IconButton>

@@ -123,7 +123,7 @@ export default function SftpExcludePatternList() {
                         style={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            alignItems: 'center',
+                            alignItems: 'start',
                             width: '100%',
                         }}
                     >
@@ -165,7 +165,8 @@ export default function SftpExcludePatternList() {
                     page,
                     pageSize,
                     keyword: debouncedKeyword,
-                    scope: scope && scope.length > 0 ? scope.join(',') : undefined,
+                    scope:
+                        scope && scope.length > 0 ? scope.join(',') : undefined,
                     patternType,
                     isActive: isActiveFilter,
                 }}

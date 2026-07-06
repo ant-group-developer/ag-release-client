@@ -1,82 +1,39 @@
+'use client';
+
 import { LoadingOutlined } from '@ant-design/icons';
-import { Descriptions, Tag, theme } from 'antd';
+import { Alert, Descriptions, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import React from 'react';
 import {
     IMPORT_JOBS_STATUS,
     ImportJobStatusResponse,
 } from '../../types/payload';
-import { ImportJobDetailedProgress } from './import-job-detailed-progress';
-import { ImportJobErrorDisplay } from './import-job-error-display';
-import { ImportJobMetadata } from './import-job-metadata';
-import { ImportJobOverallProgress } from './import-job-overall-progress';
-import { ImportJobProcessingStats } from './import-job-processing-stats';
-import { ImportJobReleasesStats } from './import-job-releases-stats';
 
-interface ImportJobColumnProps {
+interface SpotifyR2SyncProgressProps {
     jobStatus: ImportJobStatusResponse;
-    validationResult: any;
 }
 
-export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
+export default function SpotifyR2SyncProgress({
     jobStatus,
-    validationResult,
-}) => {
+}: SpotifyR2SyncProgressProps) {
     const messages = useTranslations();
     const { token } = theme.useToken();
 
-    const filesList = React.useMemo(() => {
-        if (
-            jobStatus?.progress?.detail?.files &&
-            jobStatus.progress.detail.files.length > 0
-        ) {
-            return jobStatus.progress.detail.files.map((f: any) => ({
-                path: f.name,
-                status: f.status,
-            }));
-        }
-
-        if (validationResult?.matched && validationResult.matched.length > 0) {
-            return validationResult.matched.map((f: any) => ({
-                path: f.path || f.name || 'Unknown',
-                status: undefined,
-            }));
-        }
-
-        return [];
-    }, [jobStatus?.progress?.detail?.files, validationResult?.matched]);
+    if (!jobStatus) return null;
 
     return (
-        <div
-            style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 16,
-                padding: 16,
-                border: `1px solid ${token.colorBorderSecondary}`,
-                borderRadius: token.borderRadiusLG,
-                backgroundColor: token.colorBgContainer,
-                minWidth: 0,
-            }}
-        >
+        <div className="mt-6">
             <div
                 style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    marginBottom: 16,
                 }}
             >
-                <span
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                        fontWeight: 600,
-                        fontSize: 16,
-                    }}
-                >
-                    {messages('reportConfigs.importResult.processingStatus')}
+                <span style={{ fontWeight: 600, fontSize: 16 }}>
+                    {messages(
+                        'reportConfigs.spotifyR2SyncConfig.syncProgressTitle'
+                    )}
                 </span>
                 <div>
                     {jobStatus.status === IMPORT_JOBS_STATUS.PENDING && (
@@ -117,11 +74,46 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
                 </div>
             </div>
 
-            {/* Progress bar */}
-            <ImportJobOverallProgress jobStatus={jobStatus} />
+            {/* Progress Bar */}
+            <div style={{ marginBottom: 16 }}>
+                {/* <Progress
+                    percent={
+                        jobStatus.progress?.total && jobStatus.progress.total > 0
+                            ? Math.round(
+                                  (jobStatus.progress.current /
+                                      jobStatus.progress.total) *
+                                      100
+                              )
+                            : 0
+                    }
+                    status={
+                        jobStatus.status === IMPORT_JOBS_STATUS.FAILED
+                            ? 'exception'
+                            : jobStatus.status === IMPORT_JOBS_STATUS.COMPLETED
+                              ? 'success'
+                              : 'active'
+                    }
+                    format={() => {
+                        return `${jobStatus.progress?.current || 0}/${jobStatus.progress?.total || 0}`;
+                    }}
+                /> */}
+                {jobStatus.progress?.label && (
+                    <div
+                        className="mt-1 text-xs"
+                        style={{
+                            color: token.colorTextDescription,
+                        }}
+                    >
+                        {messages('reportConfigs.importResult.runningFile', {
+                            file: jobStatus.progress.label,
+                        })}
+                    </div>
+                )}
+            </div>
 
+            {/* ZIP stats */}
             {jobStatus.detailR2Sync && (
-                <Descriptions column={1} size="small" bordered className="mt-3">
+                <Descriptions column={3} bordered size="small">
                     <Descriptions.Item
                         label={messages(
                             'reportConfigs.spotifyR2SyncConfig.zipsFound'
@@ -146,6 +138,7 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
                 </Descriptions>
             )}
 
+            {/* Export stats */}
             {jobStatus.detailExport && (
                 <div
                     style={{
@@ -154,12 +147,7 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
                         gap: 12,
                     }}
                 >
-                    <Descriptions
-                        column={1}
-                        size="small"
-                        bordered
-                        className="mt-3"
-                    >
+                    <Descriptions column={2} bordered size="small">
                         <Descriptions.Item
                             label={messages(
                                 'reportConfigs.spotifyR2SyncConfig.jobSpoId'
@@ -190,8 +178,9 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
                                     className="mt-1 max-h-40 overflow-y-auto rounded border p-2 text-xs"
                                     style={{
                                         fontFamily: 'monospace',
-                                        backgroundColor: token.colorBgLayout,
-                                        borderColor: token.colorBorderSecondary,
+                                        borderColor: token.colorBorder,
+                                        backgroundColor:
+                                            token.colorBgContainerDisabled,
                                     }}
                                 >
                                     {jobStatus.detailExport.r2ObjectKeys.map(
@@ -210,33 +199,18 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
                 </div>
             )}
 
-            {!jobStatus.detailR2Sync && !jobStatus.detailExport && (
-                <>
-                    {/* Individual Files Progress */}
-                    {filesList.length > 0 && (
-                        <ImportJobDetailedProgress
-                            filesList={filesList}
-                            jobStatus={jobStatus}
-                        />
+            {/* Error display */}
+            {jobStatus.error && (
+                <Alert
+                    type="error"
+                    message={messages(
+                        'reportConfigs.importResult.errorDetails'
                     )}
-
-                    {/* Processing Statistics */}
-                    <ImportJobProcessingStats rows={jobStatus.rows} />
-
-                    {/* Releases Statistics */}
-                    {jobStatus.result?.releases && (
-                        <ImportJobReleasesStats
-                            releases={jobStatus.result.releases}
-                        />
-                    )}
-                </>
+                    description={jobStatus.error}
+                    showIcon
+                    style={{ marginTop: 16 }}
+                />
             )}
-
-            {/* Error display if job failed */}
-            <ImportJobErrorDisplay error={jobStatus.error} />
-
-            {/* Processing metadata */}
-            <ImportJobMetadata jobStatus={jobStatus} />
         </div>
     );
-};
+}
