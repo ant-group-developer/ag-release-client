@@ -148,6 +148,7 @@ export interface ReleasesDataFilter extends CommonParams {
     hasError?: boolean | string;
     channelId?: string;
     isrc?: string;
+    genres?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {
