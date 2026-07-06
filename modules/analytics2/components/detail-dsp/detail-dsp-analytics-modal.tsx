@@ -2,30 +2,32 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { formattedNumber } from '@/helpers/common';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import {
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
+    RANK_COLUMN_WIDTH,
+} from '../../constants/types';
 import { useGetDspOverview } from '../../hooks/use-get-dsp-overview';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
-import { useGetDspRevenueTenantBarChart } from '../../hooks/use-get-dsp-revenue-tenant-bar-chart';
 import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
-import { useGetDspTrendViewLineChart } from '../../hooks/use-get-dsp-trend-view-line-chart';
-import { useGetDspTrendViewTerBarChart } from '../../hooks/use-get-dsp-trend-view-ter-bar-chart';
-import RankingCard, { RankingCardView } from '../card/ranking-card';
-import LineChartView from '../chart/line-chart-view';
-import DetailStatsOverview from '../detail/detail-stats-overview';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE, RANK_COLUMN_WIDTH } from '../../constants/types';
 import { useGetDspTopReleases } from '../../hooks/use-get-dsp-top-releases';
 import { useGetDspTopTracks } from '../../hooks/use-get-dsp-top-tracks';
+import { useGetDspTrendViewLineChart } from '../../hooks/use-get-dsp-trend-view-line-chart';
+import { useGetDspTrendViewTerBarChart } from '../../hooks/use-get-dsp-trend-view-ter-bar-chart';
 import { ReleaseRankingItem, TrackRankingItem } from '../../types';
+import RankingCard, { RankingCardView } from '../card/ranking-card';
+import LineChartView from '../chart/line-chart-view';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
+import DetailStatsOverview from '../detail/detail-stats-overview';
 
 interface DetailDspAnalyticsModalProps {
     open: boolean;
@@ -144,13 +146,13 @@ export default function DetailDspAnalyticsModal({
     );
 
     // Gọi API lấy thông tin phân bố doanh thu theo Tenant/Workspace của DSP
-    const {
-        tenantBarChartData: revenueTenantBarChartData,
-        isFetching: isRevenueTenantBarChartFetching,
-    } = useGetDspRevenueTenantBarChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    // const {
+    //     tenantBarChartData: revenueTenantBarChartData,
+    //     isFetching: isRevenueTenantBarChartFetching,
+    // } = useGetDspRevenueTenantBarChart(
+    //     { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+    //     open
+    // );
 
     // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của DSP
     const {
@@ -248,12 +250,12 @@ export default function DetailDspAnalyticsModal({
         [messages]
     );
 
-    const mappedRevenueTenantRankData = useMemo(() => {
-        return revenueTenantBarChartData.map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [revenueTenantBarChartData]);
+    // const mappedRevenueTenantRankData = useMemo(() => {
+    //     return revenueTenantBarChartData.map((item, index) => ({
+    //         ...item,
+    //         rank: index + 1,
+    //     }));
+    // }, [revenueTenantBarChartData]);
 
     const mappedRevenueTerRankData = useMemo(() => {
         return revenueTerBarChartData.map((item, index) => ({

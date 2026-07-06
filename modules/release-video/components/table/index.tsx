@@ -10,9 +10,10 @@ import { PERMISSION } from '@/modules/auth/constants/permission';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
-import { Typography } from 'antd';
+import { Tooltip, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
+import nProgress from 'nprogress';
 import { TYPE_MODAL_RELEASE_VIDEO } from '../../enums';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
@@ -27,7 +28,6 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
     const router = useRouter();
-    const { Text } = Typography;
 
     const columns: ColumnType<ReleasesData>[] = [
         {
@@ -66,11 +66,13 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                         </Link>
                         <div className="flex flex-col truncate">
                             <div className="flex items-center gap-1">
-                                <Link href={detailUrl} className="truncate">
-                                    <span className="cursor-pointer font-medium hover:underline">
-                                        {value}
-                                    </span>
-                                </Link>
+                                <Tooltip title={value}>
+                                    <Link href={detailUrl} className="truncate">
+                                        <span className="cursor-pointer font-medium hover:underline">
+                                            {value}
+                                        </span>
+                                    </Link>
+                                </Tooltip>
                                 <span
                                     className="inline-block align-middle"
                                     data-stop-row-click="true"
@@ -83,10 +85,29 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                                     />
                                 </span>
                             </div>
-                            {record.video?.channel && (
-                                <span className="truncate text-xs text-gray-500">
-                                    {record.video.channel}
-                                </span>
+                            {record.video?.channel?.name && (
+                                <div
+                                    className="truncate text-xs"
+                                    data-stop-row-click="true"
+                                >
+                                    <Tooltip
+                                        title={messages('common.viewOnYoutube')}
+                                    >
+                                        <a
+                                            href={`https://www.youtube.com/channel/${record.video.channel.youtubeChannelId}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="hover:underline"
+                                        >
+                                            <Typography.Text
+                                                type="secondary"
+                                                className="truncate"
+                                            >
+                                                {record.video.channel.name}
+                                            </Typography.Text>
+                                        </a>
+                                    </Tooltip>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -97,7 +118,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             title: messages('releaseVideo.fields.primaryArtists'),
             key: 'releaseArtists',
             dataIndex: 'releaseArtists',
-            width: 220,
+            width: 200,
             render: (value: ReleasesData['releaseArtists']) => {
                 const artists =
                     value
@@ -121,16 +142,52 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
         {
             title: 'ISRC',
             key: 'ISRC',
-            dataIndex: 'ISRC',
-            align: 'center',
+            dataIndex: ['video', 'isrc'],
+            align: 'left',
             width: 180,
             ellipsis: true,
             render: (value, record) => {
-                if (!record?.isrc) return '-';
+                if (!value) return '-';
                 return (
                     <Typography.Text copyable={{ tooltips: false }}>
-                        {record?.isrc}
+                        {value}
                     </Typography.Text>
+                );
+            },
+        },
+        {
+            title: messages('common.youtubeId'),
+            key: 'youtubeId',
+            dataIndex: ['video', 'externalId'],
+            align: 'left',
+            width: 180,
+            ellipsis: true,
+            render: (value) => {
+                if (!value) return '-';
+                return (
+                    <div className="flex items-center gap-1">
+                        <Tooltip title={messages('common.viewOnYoutube')}>
+                            <a
+                                href={`https://www.youtube.com/watch?v=${value}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="truncate font-medium text-blue-500 hover:underline"
+                            >
+                                {value}
+                            </a>
+                        </Tooltip>
+                        <span
+                            className="inline-block align-middle"
+                            data-stop-row-click="true"
+                        >
+                            <Typography.Text
+                                copyable={{
+                                    text: value,
+                                    tooltips: false,
+                                }}
+                            />
+                        </span>
+                    </div>
                 );
             },
         },
@@ -186,11 +243,12 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                             openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
                         }
                         showUpdate
-                        onShowUpdate={() =>
+                        onShowUpdate={() => {
+                            nProgress.start();
                             router.push(
                                 `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`
-                            )
-                        }
+                            );
+                        }}
                     />
                 </PermissionGate>
             ),

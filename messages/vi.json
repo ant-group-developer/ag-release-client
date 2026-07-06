@@ -125,6 +125,8 @@
     },
     "common": {
         "back": "Quay lại",
+        "youtubeId": "YouTube ID",
+        "viewOnYoutube": "Xem trên YouTube",
         "close": "Đóng",
         "undetermined": "Chưa xác định",
         "partly": "Một phần",

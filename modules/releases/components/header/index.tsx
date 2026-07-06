@@ -9,13 +9,13 @@ import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-
 import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import {
     AppstoreOutlined,
+    AuditOutlined,
     BarsOutlined,
     CalendarOutlined,
+    ImportOutlined,
     SearchOutlined,
     SoundOutlined,
     TagOutlined,
-    ImportOutlined,
-    AuditOutlined,
     WarningOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
@@ -45,7 +45,9 @@ export default function ReleasesHeaderV2({
     const messages = useTranslations();
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const { genresData } = useGetListSimpleGenres();
-    const { labelsData } = useGetListLabelsSimple({ enabled: !hideLabelFilter });
+    const { labelsData } = useGetListLabelsSimple({
+        enabled: !hideLabelFilter,
+    });
     const { isAdmin } = useAuth();
     const { tenantSimpleData, isLoading: isLoadingTenants } =
         useGetListSimpleTenant();
@@ -155,11 +157,11 @@ export default function ReleasesHeaderV2({
                 isCommaSeparated: true,
             },
             {
-                key: 'genres',
+                key: 'primaryGenreId',
                 label: messages('genre.label'),
                 icon: <SoundOutlined />,
                 type: 'checkbox',
-                filterKey: 'genres',
+                filterKey: 'primaryGenreId',
                 options: genreOptions,
                 isCommaSeparated: true,
             },
@@ -242,7 +244,10 @@ export default function ReleasesHeaderV2({
         isImportedFromReportOptions,
     ]);
 
-    const handleChangeFilter = (newValue: Partial<ReleasesDataFilter>, backToFirstPage?: boolean) => {
+    const handleChangeFilter = (
+        newValue: Partial<ReleasesDataFilter>,
+        backToFirstPage?: boolean
+    ) => {
         const nextValue = { ...newValue };
         if ('isImportedFromReport' in nextValue) {
             const val = nextValue.isImportedFromReport;

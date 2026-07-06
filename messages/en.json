@@ -125,6 +125,8 @@
     },
     "common": {
         "back": "Back",
+        "youtubeId": "YouTube ID",
+        "viewOnYoutube": "View on YouTube",
         "close": "Close",
         "undetermined": "Undetermined",
         "partly": "Partly",

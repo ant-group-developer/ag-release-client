@@ -8,6 +8,7 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import LogHeader from '@/modules/log/components/log-header';
 import LogTable from '@/modules/log/components/log-table';
+import { LOG_SORT_FIELD } from '@/modules/log/enums';
 import { useGetLogs } from '@/modules/log/hooks/useGetLogs';
 import { DataFilterLogs } from '@/modules/log/types/data';
 import { PageContainer } from '@ant-design/pro-components';
@@ -23,6 +24,8 @@ function LogPage({}: Props) {
     const defaultFilter: DataFilterLogs = {
         page: 1,
         pageSize: PAGE_SIZE,
+        orderBy: ORDER.DESC,
+        fieldOrder: LOG_SORT_FIELD.LOG_CREATED_AT,
     };
 
     const { dataFilter, onChangePage, onChangeFilter, onSearch } =
