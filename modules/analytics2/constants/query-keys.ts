@@ -791,4 +791,67 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.DSP_REVENUE_TENANT_BAR_CHART,
             params,
         ] as const,
+    sourceTypeOverview: (sourceType: string, params: ReleaseOverviewParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_OVERVIEW,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeTopReleases: (sourceType: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TOP_RELEASES,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeTopTracks: (sourceType: string, params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TOP_TRACKS,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeRevenueLineChart: (sourceType: string, params: RevenueLineChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_REVENUE_LINE_CHART,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeTrendViewLineChart: (sourceType: string, params: TrendViewLineChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_LINE_CHART,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeRevenueDspBarChart: (sourceType: string, params: RevenueDspBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_REVENUE_DSP_BAR_CHART,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeRevenueTerBarChart: (sourceType: string, params: RevenueTerBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_REVENUE_TER_BAR_CHART,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeTrendViewDspBarChart: (sourceType: string, params: TrendViewDspBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_DSP_BAR_CHART,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeTrendViewTerBarChart: (sourceType: string, params: TrendViewTerBarChartParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_TER_BAR_CHART,
+            sourceType,
+            params,
+        ] as const,
 };

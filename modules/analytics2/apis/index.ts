@@ -815,6 +815,60 @@ export const analytics2Apis = {
             params
         );
     },
+    getSourceTypeOverview: (sourceType: string, params: ReleaseOverviewParams) => {
+        return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
+            `/analytics/source-type/${sourceType}/overview`,
+            params
+        );
+    },
+    getSourceTypeTopReleases: (sourceType: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/source-type/${sourceType}/top-releases`,
+            params
+        );
+    },
+    getSourceTypeTopTracks: (sourceType: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
+            `/analytics/source-type/${sourceType}/top-tracks`,
+            params
+        );
+    },
+    getSourceTypeRevenueLineChart: (sourceType: string, params: RevenueLineChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/source-type/${sourceType}/revenue/line-chart`,
+            params
+        );
+    },
+    getSourceTypeTrendViewLineChart: (sourceType: string, params: TrendViewLineChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/source-type/${sourceType}/trend-view/line-chart`,
+            params
+        );
+    },
+    getSourceTypeRevenueDspBarChart: (sourceType: string, params: RevenueDspBarChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getSourceTypeRevenueTerBarChart: (sourceType: string, params: RevenueTerBarChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/revenue/ter/bar-chart`,
+            params
+        );
+    },
+    getSourceTypeTrendViewDspBarChart: (sourceType: string, params: TrendViewDspBarChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getSourceTypeTrendViewTerBarChart: (sourceType: string, params: TrendViewTerBarChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/trend-view/ter/bar-chart`,
+            params
+        );
+    },
 };
 
 export const getExportReportEventsUrl = (jobId: string) => {
