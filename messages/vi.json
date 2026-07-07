@@ -1014,6 +1014,8 @@
         "bulkSubmit": "Gửi hàng loạt",
         "autoSubmitUndistributedMusic": "Tự động submit",
         "previewAutoSubmitUndistributedMusic": "Review tự động submit",
+        "autoSubmitDspTab": "DSP",
+        "autoSubmitOptionsTab": "Tuỳ chọn",
         "autoSubmitPreviewTotal": "Tìm thấy {count} phát hành",
         "bulkSubmitConfirm": "Bạn có chắc chắn muốn gửi {count} phát hành đã chọn không?",
         "bulkDelete": "Xoá hàng loạt",
@@ -3176,6 +3178,7 @@
     },
     "releaseCiData": {
         "status": {
+            "label": "Trạng thái CI",
             "existsOnCi": "Tồn tại trên CI",
             "notFoundOnCi": "Không tìm thấy trên CI"
         },

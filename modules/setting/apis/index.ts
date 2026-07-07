@@ -20,6 +20,18 @@ export const settingApis = {
             payload
         );
     },
+
+    refreshCiToolToken: () => {
+        return axiosInstance.post<DetailResponse<any>>(
+            '/app-config/v2/refresh-ci-tool-token'
+        );
+    },
+
+    testCiToken: () => {
+        return axiosInstance.post<DetailResponse<any>>(
+            '/app-config/v2/test-ci-token'
+        );
+    },
 };
 
 export async function getSettingPublicServer() {

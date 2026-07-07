@@ -11,6 +11,7 @@ import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import AutoSubmitUndistributedMusicModal from '@/modules/releases/components/auto-submit-undistributed-music-modal';
+import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
@@ -27,7 +28,7 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import { DeleteOutlined, EyeOutlined, SendOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -174,6 +175,17 @@ export default function Releases({}: Props) {
                                 'release.autoSubmitUndistributedMusic'
                             )}
                         />,
+                        <CreateButton
+                            canCreate={isAdmin}
+                            key="auto-submit-v2"
+                            icon={<SendOutlined />}
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2
+                                )
+                            }
+                            text="Tự động submit2"
+                        />,
                     ]}
                     rowSelection={rowSelection}
                     tableAlertRender={({ selectedRowKeys }) => {
@@ -246,6 +258,13 @@ export default function Releases({}: Props) {
                 {typeModal ===
                     TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
                     <AutoSubmitUndistributedMusicModal
+                        onFinished={handleRefresh}
+                    />
+                )}
+
+                {typeModal ===
+                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2 && (
+                    <AutoSubmitUndistributedMusicV2Modal
                         onFinished={handleRefresh}
                     />
                 )}
