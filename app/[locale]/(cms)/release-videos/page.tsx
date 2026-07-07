@@ -22,14 +22,21 @@ import { useTranslations } from 'next-intl';
 export default function ReleaseVideos() {
     // hooks - state
     const messages = useTranslations();
-    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<ReleasesDataFilter>({
-            page: 1,
-            pageSize: PAGE_SIZE,
-            type: RELEASE_TYPE.VIDEO,
-            orderBy: ORDER.DESC,
-            fieldOrder: RELEASES_TABLE_KEY.UPDATED_AT,
-        });
+    const {
+        dataFilter,
+        defaultFilter,
+        onChangeFilter,
+        onChangePage,
+        onSearch,
+        canClearFilter,
+        removeFilter,
+    } = useFilter<ReleasesDataFilter>({
+        page: 1,
+        pageSize: PAGE_SIZE,
+        type: RELEASE_TYPE.VIDEO,
+        orderBy: ORDER.DESC,
+        fieldOrder: RELEASES_TABLE_KEY.UPDATED_AT,
+    });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<ReleasesData>((state) => state.dataEdit);
@@ -70,6 +77,10 @@ export default function ReleaseVideos() {
                     title={() => (
                         <ReleaseVideoHeader
                             dataFilter={dataFilter}
+                            defaultFilter={defaultFilter}
+                            onChangeFilter={onChangeFilter}
+                            canClearFilter={canClearFilter}
+                            removeFilter={removeFilter}
                             onSearch={onSearch}
                         />
                     )}

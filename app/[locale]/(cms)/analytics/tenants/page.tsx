@@ -10,6 +10,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
@@ -47,6 +48,16 @@ export default function TenantsRankingPage() {
         open: false,
         title: '',
         tenantId: '',
+    });
+
+    const [detailSourceModal, setDetailSourceModal] = useState<{
+        open: boolean;
+        title: string;
+        sourceType: string;
+    }>({
+        open: false,
+        title: '',
+        sourceType: '',
     });
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
@@ -146,9 +157,23 @@ export default function TenantsRankingPage() {
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
-                            <Tag key={item.source} className="m-0">
-                                {item.sourceLabel}
-                            </Tag>
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}
+                                </Tag>
+                            </CustomTooltip>
                         ))}
                     </div>
                 );
@@ -231,9 +256,23 @@ export default function TenantsRankingPage() {
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
-                            <Tag key={item.source} className="m-0">
-                                {item.sourceLabel}
-                            </Tag>
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}
+                                </Tag>
+                            </CustomTooltip>
                         ))}
                     </div>
                 );
@@ -364,6 +403,17 @@ export default function TenantsRankingPage() {
                     }
                     title={detailModal.title}
                     tenantId={detailModal.tenantId}
+                    fromDate={dataFilter.startDate!}
+                    toDate={dataFilter.endDate!}
+                />
+
+                <DetailSourceTypeAnalyticsModal
+                    open={detailSourceModal.open}
+                    onClose={() =>
+                        setDetailSourceModal((prev) => ({ ...prev, open: false }))
+                    }
+                    title={detailSourceModal.title}
+                    sourceType={detailSourceModal.sourceType}
                     fromDate={dataFilter.startDate!}
                     toDate={dataFilter.endDate!}
                 />

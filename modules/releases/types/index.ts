@@ -1,9 +1,12 @@
+import { ChannelsData } from '@/modules/channels/types';
 import { CountriesData } from '@/modules/countries/types';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { GenresData } from '@/modules/genres/types';
 import { LabelData } from '@/modules/labels/types';
 import { LanguagesData } from '@/modules/languages/types';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
+import { RELEASE_CI_DATA_STATUS } from '@/modules/release-distribution/enums';
 import { ReleaseDspData } from '@/modules/release-dsp/types';
 import { ReleaseTypesData } from '@/modules/release-types/types';
 import { TenantData } from '@/modules/tenant/types/data';
@@ -108,7 +111,7 @@ export interface VideoData {
     isrc: string;
     explicit: boolean;
     aiContent: string;
-    channel: string;
+    channel?: ChannelsData;
     title?: string;
     description?: string;
     keywords?: string[];
@@ -122,10 +125,21 @@ export interface VideoData {
     fileId?: string;
     videoFile?: FileBucket;
     label?: string;
+    externalId?: string;
 }
 
 export interface ReleasesDataSimple
     extends Pick<ReleasesData, 'id' | 'title'> {}
+
+export interface QueryReleaseDspDeliveryItem {
+    code: string;
+    status: RELEASE_DSP_DELIVERY_STATUS;
+}
+
+export interface QueryReleaseDspDelivery {
+    include?: QueryReleaseDspDeliveryItem[];
+    exclude?: QueryReleaseDspDeliveryItem[];
+}
 
 export interface ReleasesDataFilter extends CommonParams {
     type?: RELEASE_TYPE;
@@ -134,7 +148,7 @@ export interface ReleasesDataFilter extends CommonParams {
     endDateCreated?: string;
     startDateRelease?: string;
     endDateRelease?: string;
-    genres?: string;
+    primaryGenreId?: string;
     artistId?: string;
     labelId?: string;
     albumFormatId?: string;
@@ -144,6 +158,13 @@ export interface ReleasesDataFilter extends CommonParams {
     isImportedFromReport?: string;
     needsReview?: boolean | string;
     hasError?: boolean | string;
+    channelId?: string;
+    isrc?: string;
+    genres?: string;
+    ciDataStatus?: RELEASE_CI_DATA_STATUS;
+    neverExported?: boolean | string;
+    lastImportIsFailed?: boolean | string;
+    dspDelivery?: QueryReleaseDspDelivery;
 }
 
 export interface ReleaseTerritory extends CommonParams {

@@ -3,18 +3,17 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { SIZE_ICON } from '@/constants/common';
+import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { useGetReleaseDsp } from '../../hooks/use-get-release-dsp';
 import { useGetReleaseOverview } from '../../hooks/use-get-release-overview';
-import { useGetReleaseRevenueDspBarChart } from '../../hooks/use-get-release-revenue-dsp-bar-chart';
 import { useGetReleaseRevenueLineChart } from '../../hooks/use-get-release-revenue-line-chart';
-import { useGetReleaseRevenueTerBarChart } from '../../hooks/use-get-release-revenue-ter-bar-chart';
-import { useGetReleaseTrendViewDspBarChart } from '../../hooks/use-get-release-trend-view-dsp-bar-chart';
+import { useGetReleaseTer } from '../../hooks/use-get-release-ter';
 import { useGetReleaseTrendViewLineChart } from '../../hooks/use-get-release-trend-view-line-chart';
-import { useGetReleaseTrendViewTerBarChart } from '../../hooks/use-get-release-trend-view-ter-bar-chart';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
 import DetailStatsOverview from '../detail/detail-stats-overview';
@@ -77,43 +76,35 @@ export default function DetailReleaseAnalyticsModal({
         open
     );
 
-    // Gọi API lấy thông tin phân bố theo DSP của Release
-    const {
-        dspBarChartData: trendViewDspBarChartData,
-        isFetching: isTrendViewDspBarChartFetching,
-    } = useGetReleaseTrendViewDspBarChart(
-        releaseId,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
+    const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
+        ANALYTIC_SORT_BY.REVENUE
     );
 
-    // Gọi API lấy thông tin phân bố theo quốc gia của Release
-    const {
-        terBarChartData: trendViewTerBarChartData,
-        isFetching: isTrendViewTerBarChartFetching,
-    } = useGetReleaseTrendViewTerBarChart(
-        releaseId,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
+    // Gọi API lấy danh sách DSP chi tiết phân trang của Release
+    const { releaseDspData, isFetching: isReleaseDspFetching } =
+        useGetReleaseDsp(releaseId, {
+            fromDate: localFromDate,
+            toDate: localToDate,
+            sortBy: dspSortBy,
+            pageSize: 5,
+            includeOther: true,
+        });
+
+    const [terSortBy, setTerSortBy] = useState<ANALYTIC_SORT_BY>(
+        ANALYTIC_SORT_BY.REVENUE
     );
 
-    // Gọi API lấy thông tin phân bố doanh thu theo DSP của Release
-    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
-        useGetReleaseRevenueDspBarChart(
-            releaseId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+    // Gọi API lấy danh sách Territory chi tiết phân trang của Release
+    const { releaseTerData, isFetching: isReleaseTerFetching } =
+        useGetReleaseTer(releaseId, {
+            fromDate: localFromDate,
+            toDate: localToDate,
+            sortBy: terSortBy,
+            pageSize: 5,
+            includeOther: true,
+        });
 
-    // Gọi API lấy thông tin phân bố doanh thu theo quốc gia của Release
-    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
-        useGetReleaseRevenueTerBarChart(
-            releaseId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
-
-    const dspColumns = useMemo(
+    const releaseDspColumns = useMemo(
         () => [
             {
                 title: messages('analytics2.rank'),
@@ -142,18 +133,52 @@ export default function DetailReleaseAnalyticsModal({
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 150,
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    dspSortBy === ANALYTIC_SORT_BY.VIEWS
+                        ? ('descend' as const)
+                        : undefined,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
             },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'totalRevenueUsd',
+                key: 'totalRevenueUsd',
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    dspSortBy === ANALYTIC_SORT_BY.REVENUE
+                        ? ('descend' as const)
+                        : undefined,
+                render: (val: string) => {
+                    const numVal = parseFloat(val);
+                    return (
+                        <span className="font-medium text-gray-900 dark:text-zinc-100">
+                            ${!isNaN(numVal) ? formattedNumber(numVal) : '0.00'}
+                        </span>
+                    );
+                },
+            },
         ],
-        [messages]
+        [messages, dspSortBy]
     );
 
-    const terColumns = useMemo(
+    const mappedReleaseDspData = useMemo(() => {
+        const rawData = Array.isArray(releaseDspData)
+            ? releaseDspData
+            : releaseDspData?.items || [];
+        return rawData.map((item) => ({
+            ...item,
+            totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
+        }));
+    }, [releaseDspData]);
+
+    const releaseTerColumns = useMemo(
         () => [
             {
                 title: messages('analytics2.rank'),
@@ -182,124 +207,50 @@ export default function DetailReleaseAnalyticsModal({
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 150,
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    terSortBy === ANALYTIC_SORT_BY.VIEWS
+                        ? ('descend' as const)
+                        : undefined,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
             },
-        ],
-        [messages]
-    );
-
-    const mappedTrendDspRankData = useMemo(() => {
-        return trendViewDspBarChartData.map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [trendViewDspBarChartData]);
-
-    const mappedTrendTerRankData = useMemo(() => {
-        return trendViewTerBarChartData.map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [trendViewTerBarChartData]);
-
-    const revenueDspColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: 120,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: 'DSP',
-                dataIndex: 'dspName',
-                key: 'dspName',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
             {
                 title: messages('common.revenue'),
-                dataIndex: 'revenueUsd',
-                key: 'revenueUsd',
-                width: 150,
-                render: (val: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        ${val ? formattedNumber(val) : '0.00'}
-                    </span>
-                ),
+                dataIndex: 'totalRevenueUsd',
+                key: 'totalRevenueUsd',
+                width: 180,
+                sorter: true,
+                sortOrder:
+                    terSortBy === ANALYTIC_SORT_BY.REVENUE
+                        ? ('descend' as const)
+                        : undefined,
+                render: (val: string) => {
+                    const numVal = parseFloat(val);
+                    return (
+                        <span className="font-medium text-gray-900 dark:text-zinc-100">
+                            ${!isNaN(numVal) ? formattedNumber(numVal) : '0.00'}
+                        </span>
+                    );
+                },
             },
         ],
-        [messages]
+        [messages, terSortBy]
     );
 
-    const revenueTerColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: 120,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: messages('country.label'),
-                dataIndex: 'territory',
-                key: 'territory',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.revenue'),
-                dataIndex: 'revenueUsd',
-                key: 'revenueUsd',
-                width: 150,
-                render: (val: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        ${val ? formattedNumber(val) : '0.00'}
-                    </span>
-                ),
-            },
-        ],
-        [messages]
-    );
-
-    const mappedRevenueDspRankData = useMemo(() => {
-        return revenueDspBarChartData.map((item, index) => ({
+    const mappedReleaseTerData = useMemo(() => {
+        const rawData = Array.isArray(releaseTerData)
+            ? releaseTerData
+            : releaseTerData?.items || [];
+        return rawData.map((item) => ({
             ...item,
-            rank: index + 1,
+            totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
         }));
-    }, [revenueDspBarChartData]);
-
-    const mappedRevenueTerRankData = useMemo(() => {
-        return revenueTerBarChartData.map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [revenueTerBarChartData]);
+    }, [releaseTerData]);
 
     return (
         <FullScreenModal
@@ -438,55 +389,72 @@ export default function DetailReleaseAnalyticsModal({
                 <Row gutter={[24, 24]}>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.dspDistribution')}
-                            columns={dspColumns}
-                            dataSource={mappedTrendDspRankData}
-                            loading={isTrendViewDspBarChartFetching}
-                            rowKey="dspName"
+                            title={
+                                dspSortBy === ANALYTIC_SORT_BY.VIEWS
+                                    ? messages('analytics.dspDistribution')
+                                    : messages(
+                                          'analytics.revenueDspDistribution'
+                                      )
+                            }
+                            columns={releaseDspColumns}
+                            dataSource={mappedReleaseDspData}
+                            loading={isReleaseDspFetching}
+                            rowKey="dspId"
                             labelKey="dspName"
-                            valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
+                            valueKey={
+                                lineChartViewType === 'views'
+                                    ? 'totalViews'
+                                    : 'totalRevenueUsdNum'
+                            }
+                            valuePrefix={
+                                lineChartViewType === 'revenue'
+                                    ? '$'
+                                    : undefined
+                            }
+                            onChange={(pagination, filters, sorter: any) => {
+                                const field = sorter.field;
+                                if (field === 'totalViews') {
+                                    setDspSortBy(ANALYTIC_SORT_BY.VIEWS);
+                                } else if (field === 'totalRevenueUsd') {
+                                    setDspSortBy(ANALYTIC_SORT_BY.REVENUE);
+                                }
+                            }}
                         />
                     </Col>
                     <Col xs={24} lg={12}>
                         <RankingCard
-                            title={messages('analytics.revenueDspDistribution')}
-                            columns={revenueDspColumns}
-                            dataSource={mappedRevenueDspRankData}
-                            loading={isRevenueDspBarChartFetching}
-                            rowKey="dspName"
-                            labelKey="dspName"
-                            valueKey="revenueUsd"
-                            defaultView={RankingCardView.LIST}
-                            valuePrefix="$"
-                        />
-                    </Col>
-                </Row>
-
-                <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={messages('analytics.terDistribution')}
-                            columns={terColumns}
-                            dataSource={mappedTrendTerRankData}
-                            loading={isTrendViewTerBarChartFetching}
+                            title={
+                                terSortBy === ANALYTIC_SORT_BY.VIEWS
+                                    ? messages('analytics.terDistribution')
+                                    : messages(
+                                          'analytics.revenueTerDistribution'
+                                      )
+                            }
+                            columns={releaseTerColumns}
+                            dataSource={mappedReleaseTerData}
+                            loading={isReleaseTerFetching}
                             rowKey="territory"
                             labelKey="territory"
-                            valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
-                        />
-                    </Col>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={messages('analytics.revenueTerDistribution')}
-                            columns={revenueTerColumns}
-                            dataSource={mappedRevenueTerRankData}
-                            loading={isRevenueTerBarChartFetching}
-                            rowKey="territory"
-                            labelKey="territory"
-                            valueKey="revenueUsd"
-                            defaultView={RankingCardView.LIST}
-                            valuePrefix="$"
+                            valueKey={
+                                lineChartViewType === 'views'
+                                    ? 'totalViews'
+                                    : 'totalRevenueUsdNum'
+                            }
+                            valuePrefix={
+                                lineChartViewType === 'revenue'
+                                    ? '$'
+                                    : undefined
+                            }
+                            onChange={(pagination, filters, sorter: any) => {
+                                const field = sorter.field;
+                                if (field === 'totalViews') {
+                                    setTerSortBy(ANALYTIC_SORT_BY.VIEWS);
+                                } else if (field === 'totalRevenueUsd') {
+                                    setTerSortBy(ANALYTIC_SORT_BY.REVENUE);
+                                }
+                            }}
                         />
                     </Col>
                 </Row>

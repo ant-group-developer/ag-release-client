@@ -17,6 +17,10 @@ const IMPORT_SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
         'reportConfigs.importResult.sourceTypeAnalyticsReportExport',
     [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]:
         'reportConfigs.importResult.sourceTypeReportReleaseDelete',
+    [ETL_JOB_SOURCE_TYPE.SPOTIFY_R2_SYNC]:
+        'reportConfigs.importResult.sourceTypeSpotifyR2Sync',
+    [ETL_JOB_SOURCE_TYPE.SPOTIFY_EXPORT_TRIGGER]:
+        'reportConfigs.importResult.sourceTypeSpotifyExportTrigger',
 };
 
 const IMPORT_SOURCE_TYPE_SELECT_EXCLUDED_VALUES = [

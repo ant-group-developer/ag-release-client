@@ -12,6 +12,8 @@ import {
     ReportConfigData,
     ReportConfigDataFilter,
     SyncConfigData,
+    SpotifyR2SyncConfig,
+    SpotifyExportSchedulerConfig,
 } from '../types';
 import {
     CreateEnrichScanSchedulePayload,
@@ -210,3 +212,42 @@ export const enrichScanScheduleApis = {
         return axiosInstance.delete(`/partners/enrich/scan/schedules/${id}`);
     },
 };
+
+export const spotifyR2SyncConfigApis = {
+    get: () => {
+        return axiosInstance.get<DetailResponse<SpotifyR2SyncConfig>>(
+            '/report-import/spotify/r2-sync-config'
+        );
+    },
+    update: (payload: SpotifyR2SyncConfig) => {
+        return axiosInstance.put<DetailResponse<SpotifyR2SyncConfig>>(
+            '/report-import/spotify/r2-sync-config',
+            payload
+        );
+    },
+    syncR2: () => {
+        return axiosInstance.post<
+            DetailResponse<{ jobId: string; status: string; message: string }>
+        >('/report-import/spotify/sync-r2');
+    },
+    exportTrigger: (payload: { force: boolean }) => {
+        return axiosInstance.post<
+            DetailResponse<{ jobId: string; status: string; message: string }>
+        >('/report-import/spotify/export-trigger', payload);
+    },
+};
+
+export const spotifyExportSchedulerConfigApis = {
+    get: () => {
+        return axiosInstance.get<DetailResponse<SpotifyExportSchedulerConfig>>(
+            '/report-import/spotify/export-scheduler-config'
+        );
+    },
+    update: (payload: SpotifyExportSchedulerConfig) => {
+        return axiosInstance.put<DetailResponse<SpotifyExportSchedulerConfig>>(
+            '/report-import/spotify/export-scheduler-config',
+            payload
+        );
+    },
+};
+

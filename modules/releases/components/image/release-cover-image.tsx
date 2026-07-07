@@ -12,6 +12,7 @@ type Props = {
     src?: string | null;
     width?: number;
     height?: number;
+    className?: string;
 };
 
 export default function ReleaseCoverImage({
@@ -20,6 +21,7 @@ export default function ReleaseCoverImage({
     src,
     width = 56,
     height = 56,
+    className,
 }: Props) {
     const [isLoading, setIsLoading] = useState(!src);
     const imgFileId =
@@ -51,7 +53,7 @@ export default function ReleaseCoverImage({
 
     if (isLoading) {
         return (
-            <div ref={ref}>
+            <div ref={ref} className={`flex-shrink-0 ${className || ''}`}>
                 <Skeleton.Node
                     active
                     style={{ width, height }}
@@ -62,7 +64,7 @@ export default function ReleaseCoverImage({
     }
 
     return (
-        <div ref={ref}>
+        <div ref={ref} className={`flex-shrink-0 ${className || ''}`}>
             <ImageFallback
                 src={coverSrc ?? ''}
                 alt="cover"

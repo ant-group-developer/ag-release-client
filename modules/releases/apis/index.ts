@@ -32,11 +32,9 @@ const RELEASE_ERRORS_BULK_API_PATH = '/release-errors/bulk';
 
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
-        return axiosInstance.get<PaginationResponse<ReleasesData>>(
-            '/releases',
-            {
-                params,
-            }
+        return axiosInstance.post<PaginationResponse<ReleasesData>>(
+            '/releases/get-list',
+            params
         );
     },
 
@@ -214,12 +212,29 @@ export const releasesApi = {
         );
     },
 
-    bulkSubmit: ({ ids, codes, idsExclude }: BulkSubmitRelease) => {
+    bulkSubmit: ({
+        ids,
+        codes,
+        idsExclude,
+        status,
+        ciImportAction,
+        skipDistributed,
+    }: BulkSubmitRelease) => {
         return axiosInstance.post('/releases/bulk-submit', {
             ids,
             codes,
             idsExclude,
+            status,
+            ciImportAction,
+            skipDistributed,
         });
+    },
+
+    previewBulkSubmitResult: (payload: BulkSubmitRelease) => {
+        return axiosInstance.post(
+            '/releases/bulk-submit/preview-result',
+            payload
+        );
     },
 
     autoSubmitUndistributedMusic: ({

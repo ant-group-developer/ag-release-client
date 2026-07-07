@@ -73,10 +73,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     >({});
 
     const [startedJobId, setStartedJobId] = useState<string | null>(null);
-    const { jobStatus } = useGetImportJobStatus(
-        startedJobId ?? undefined,
-        !!startedJobId
-    );
+    const { jobStatus } = useGetImportJobStatus(startedJobId as string);
 
     const isJobProcessing = !!(
         jobStatus?.status &&
