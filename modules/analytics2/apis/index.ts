@@ -50,6 +50,21 @@ import {
     DspRankingParams,
     TrendViewTenantBarChartItem,
     RevenueTenantBarChartItem,
+    ReleaseDspParams,
+    ReleaseDspItem,
+    ReleaseTerParams,
+    ReleaseTerItem,
+    AnalyticsCommonParams,
+    TrackDspItem,
+    TrackTerItem,
+    ArtistDspItem,
+    ArtistTerItem,
+    LabelDspItem,
+    LabelTerItem,
+    TenantDspItem,
+    TenantTerItem,
+    ChannelDspItem,
+    ChannelTerItem,
 } from '../types';
 
 export const analytics2Apis = {
@@ -261,6 +276,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getReleaseDsp: (releaseId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseDspItem>>(
+            `/analytics/release/${releaseId}/dsp`,
+            params
+        );
+    },
+    getReleaseTer: (releaseId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseTerItem>>(
+            `/analytics/release/${releaseId}/ter`,
+            params
+        );
+    },
     getReleaseRevenueTimeline: (
         releaseId: string,
         params: RevenueQueryParams
@@ -405,6 +432,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getTrackDsp: (isrc: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<TrackDspItem>>(
+            `/analytics/track/${isrc}/dsp`,
+            params
+        );
+    },
+    getTrackTer: (isrc: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<TrackTerItem>>(
+            `/analytics/track/${isrc}/ter`,
+            params
+        );
+    },
     getLabelOverview: (labelId: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/label/${labelId}/overview`,
@@ -486,6 +525,18 @@ export const analytics2Apis = {
     ) => {
         return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
             `/analytics/label/${labelId}/revenue/ter/bar-chart`,
+            params
+        );
+    },
+    getLabelDsp: (labelId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<LabelDspItem>>(
+            `/analytics/label/${labelId}/dsp`,
+            params
+        );
+    },
+    getLabelTer: (labelId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<LabelTerItem>>(
+            `/analytics/label/${labelId}/ter`,
             params
         );
     },
@@ -606,6 +657,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getArtistDsp: (artistId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<ArtistDspItem>>(
+            `/analytics/artist/${artistId}/dsp`,
+            params
+        );
+    },
+    getArtistTer: (artistId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<ArtistTerItem>>(
+            `/analytics/artist/${artistId}/ter`,
+            params
+        );
+    },
     exportReport: (params: ExportReportRequest) => {
         return axiosInstance.post<ExportReportResponse>(
             '/analytics/reports/export',
@@ -695,6 +758,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getTenantDsp: (tenantId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<TenantDspItem>>(
+            `/analytics/tenant/${tenantId}/dsp`,
+            params
+        );
+    },
+    getTenantTer: (tenantId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<TenantTerItem>>(
+            `/analytics/tenant/${tenantId}/ter`,
+            params
+        );
+    },
     getChannelOverview: (channelId: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/channel/${channelId}/overview`,
@@ -761,6 +836,18 @@ export const analytics2Apis = {
             params
         );
     },
+    getChannelDsp: (channelId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<ChannelDspItem>>(
+            `/analytics/channel/${channelId}/dsp`,
+            params
+        );
+    },
+    getChannelTer: (channelId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<ChannelTerItem>>(
+            `/analytics/channel/${channelId}/ter`,
+            params
+        );
+    },
     getDspOverview: (params: DspDetailParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             '/analytics/dsp/overview',
@@ -812,6 +899,60 @@ export const analytics2Apis = {
     getDspTopTracks: (params: DspRankingParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             '/analytics/dsp/top-tracks',
+            params
+        );
+    },
+    getSourceTypeOverview: (sourceType: string, params: ReleaseOverviewParams) => {
+        return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
+            `/analytics/source-type/${sourceType}/overview`,
+            params
+        );
+    },
+    getSourceTypeTopReleases: (sourceType: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
+            `/analytics/source-type/${sourceType}/top-releases`,
+            params
+        );
+    },
+    getSourceTypeTopTracks: (sourceType: string, params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
+            `/analytics/source-type/${sourceType}/top-tracks`,
+            params
+        );
+    },
+    getSourceTypeRevenueLineChart: (sourceType: string, params: RevenueLineChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
+            `/analytics/source-type/${sourceType}/revenue/line-chart`,
+            params
+        );
+    },
+    getSourceTypeTrendViewLineChart: (sourceType: string, params: TrendViewLineChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
+            `/analytics/source-type/${sourceType}/trend-view/line-chart`,
+            params
+        );
+    },
+    getSourceTypeRevenueDspBarChart: (sourceType: string, params: RevenueDspBarChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/revenue/dsp/bar-chart`,
+            params
+        );
+    },
+    getSourceTypeRevenueTerBarChart: (sourceType: string, params: RevenueTerBarChartParams) => {
+        return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/revenue/ter/bar-chart`,
+            params
+        );
+    },
+    getSourceTypeTrendViewDspBarChart: (sourceType: string, params: TrendViewDspBarChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/trend-view/dsp/bar-chart`,
+            params
+        );
+    },
+    getSourceTypeTrendViewTerBarChart: (sourceType: string, params: TrendViewTerBarChartParams) => {
+        return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
+            `/analytics/source-type/${sourceType}/trend-view/ter/bar-chart`,
             params
         );
     },

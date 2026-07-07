@@ -1,16 +1,16 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Tag, theme } from 'antd';
+import { Descriptions, Tag, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import {
     IMPORT_JOBS_STATUS,
     ImportJobStatusResponse,
 } from '../../types/payload';
-import { ImportJobOverallProgress } from './import-job-overall-progress';
 import { ImportJobDetailedProgress } from './import-job-detailed-progress';
-import { ImportJobProcessingStats } from './import-job-processing-stats';
 import { ImportJobErrorDisplay } from './import-job-error-display';
 import { ImportJobMetadata } from './import-job-metadata';
+import { ImportJobOverallProgress } from './import-job-overall-progress';
+import { ImportJobProcessingStats } from './import-job-processing-stats';
 import { ImportJobReleasesStats } from './import-job-releases-stats';
 
 interface ImportJobColumnProps {
@@ -120,20 +120,116 @@ export const ImportJobColumn: React.FC<ImportJobColumnProps> = ({
             {/* Progress bar */}
             <ImportJobOverallProgress jobStatus={jobStatus} />
 
-            {/* Individual Files Progress */}
-            {filesList.length > 0 && (
-                <ImportJobDetailedProgress
-                    filesList={filesList}
-                    jobStatus={jobStatus}
-                />
+            {jobStatus.detailR2Sync && (
+                <Descriptions column={1} size="small" bordered className="mt-3">
+                    <Descriptions.Item
+                        label={messages(
+                            'reportConfigs.spotifyR2SyncConfig.zipsFound'
+                        )}
+                    >
+                        {jobStatus.detailR2Sync.zipsFound}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                        label={messages(
+                            'reportConfigs.spotifyR2SyncConfig.zipsImported'
+                        )}
+                    >
+                        {jobStatus.detailR2Sync.zipsImported}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                        label={messages(
+                            'reportConfigs.spotifyR2SyncConfig.zipsSkipped'
+                        )}
+                    >
+                        {jobStatus.detailR2Sync.zipsSkipped}
+                    </Descriptions.Item>
+                </Descriptions>
             )}
 
-            {/* Processing Statistics */}
-            <ImportJobProcessingStats rows={jobStatus.rows} />
+            {jobStatus.detailExport && (
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 12,
+                    }}
+                >
+                    <Descriptions
+                        column={1}
+                        size="small"
+                        bordered
+                        className="mt-3"
+                    >
+                        <Descriptions.Item
+                            label={messages(
+                                'reportConfigs.spotifyR2SyncConfig.jobSpoId'
+                            )}
+                        >
+                            <span style={{ fontFamily: 'monospace' }}>
+                                {jobStatus.detailExport.jobSpoId}
+                            </span>
+                        </Descriptions.Item>
+                        <Descriptions.Item
+                            label={messages(
+                                'reportConfigs.spotifyR2SyncConfig.foldersUploaded'
+                            )}
+                        >
+                            {jobStatus.detailExport.foldersUploaded}
+                        </Descriptions.Item>
+                    </Descriptions>
+                    {jobStatus.detailExport.r2ObjectKeys &&
+                        jobStatus.detailExport.r2ObjectKeys.length > 0 && (
+                            <div className="mt-2">
+                                <span style={{ fontWeight: 600, fontSize: 13 }}>
+                                    {messages(
+                                        'reportConfigs.spotifyR2SyncConfig.r2ObjectKeys'
+                                    )}
+                                    :
+                                </span>
+                                <div
+                                    className="mt-1 max-h-40 overflow-y-auto rounded border p-2 text-xs"
+                                    style={{
+                                        fontFamily: 'monospace',
+                                        backgroundColor: token.colorBgLayout,
+                                        borderColor: token.colorBorderSecondary,
+                                    }}
+                                >
+                                    {jobStatus.detailExport.r2ObjectKeys.map(
+                                        (key) => (
+                                            <div
+                                                key={key}
+                                                style={{ padding: '2px 0' }}
+                                            >
+                                                {key}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                </div>
+            )}
 
-            {/* Releases Statistics */}
-            {jobStatus.result?.releases && (
-                <ImportJobReleasesStats releases={jobStatus.result.releases} />
+            {!jobStatus.detailR2Sync && !jobStatus.detailExport && (
+                <>
+                    {/* Individual Files Progress */}
+                    {filesList.length > 0 && (
+                        <ImportJobDetailedProgress
+                            filesList={filesList}
+                            jobStatus={jobStatus}
+                        />
+                    )}
+
+                    {/* Processing Statistics */}
+                    <ImportJobProcessingStats rows={jobStatus.rows} />
+
+                    {/* Releases Statistics */}
+                    {jobStatus.result?.releases && (
+                        <ImportJobReleasesStats
+                            releases={jobStatus.result.releases}
+                        />
+                    )}
+                </>
             )}
 
             {/* Error display if job failed */}

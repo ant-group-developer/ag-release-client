@@ -3,27 +3,14 @@
 import DateSelect2 from '@/components/ui/select/date-select2';
 import LabelSelect from '@/components/ui/select/label-select';
 import TenantSelect from '@/components/ui/select/tenant-select';
-import { formattedNumber } from '@/helpers/common';
-import { ETL_JOB_SOURCE_TYPE } from '@/modules/report-import/enums';
 import { useDeleteImportedReleaseEvents } from '@/modules/report-import/hooks/use-delete-imported-release-events';
 import { useDeleteImportedReleases } from '@/modules/report-import/hooks/use-delete-imported-releases';
-import {
-    DeleteImportedReleasesResponse,
-    IMPORT_JOBS_STATUS,
-} from '@/modules/report-import/types/payload';
-import {
-    Alert,
-    Button,
-    Card,
-    Descriptions,
-    Form,
-    Input,
-    Progress,
-    Switch,
-    Typography,
-} from 'antd';
+import { DeleteImportedReleasesResponse } from '@/modules/report-import/types/payload';
+import { Button, Card, Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
+import { ETL_JOB_SOURCE_TYPE } from '../../enums';
+import DeleteJobProgress from './delete-job-progress';
 
 interface DeleteReportFormValues {
     dateRange?: string;
@@ -66,14 +53,7 @@ export default function DeleteReportTab() {
             },
         });
 
-    const progressPercent = useMemo(
-        () => getProgressPercent(summary?.progress),
-        [summary?.progress]
-    );
-
-    const isCompleted = summary?.status === IMPORT_JOBS_STATUS.COMPLETED;
-    const isFailed = summary?.status === IMPORT_JOBS_STATUS.FAILED || !!error;
-    const isJobStarted = !!jobId;
+    // Progress logic is now encapsulated inside DeleteJobProgress
 
     const handleCancel = () => {
         if (isPending || (isListening && !isTerminalEvent)) return;
@@ -184,83 +164,7 @@ export default function DeleteReportTab() {
                 </div>
             </Form>
 
-            {isJobStarted && (
-                <div className="mt-4 rounded-md border border-gray-200 p-4">
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                        <Typography.Text strong>
-                            {messages('common.progress')}
-                        </Typography.Text>
-                        <Typography.Text type={isFailed ? 'danger' : undefined}>
-                            {summary?.status || messages('common.processing')}
-                        </Typography.Text>
-                    </div>
-
-                    <Progress
-                        percent={progressPercent}
-                        status={
-                            isFailed
-                                ? 'exception'
-                                : isCompleted
-                                  ? 'success'
-                                  : 'active'
-                        }
-                    />
-
-                    {summary?.progress?.label && (
-                        <Typography.Paragraph className="!mb-3">
-                            {summary.progress.label}
-                        </Typography.Paragraph>
-                    )}
-
-                    <Descriptions column={2} size="small" bordered>
-                        <Descriptions.Item
-                            label={messages(
-                                'reportConfigs.importResult.totalRows'
-                            )}
-                        >
-                            {formattedNumber(summary?.rows?.total || 0)}
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label={messages(
-                                'reportConfigs.importResult.processedRows'
-                            )}
-                        >
-                            {formattedNumber(summary?.rows?.processed || 0)}
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label={messages(
-                                'release.deleteReport.matchedReleases'
-                            )}
-                        >
-                            {formattedNumber(
-                                summary?.params?.matchedReleases || 0
-                            )}
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label={messages(
-                                'release.deleteReport.matchedTracks'
-                            )}
-                        >
-                            {formattedNumber(
-                                summary?.params?.matchedTracks || 0
-                            )}
-                        </Descriptions.Item>
-                    </Descriptions>
-
-                    {(summary?.error || error) && (
-                        <Alert
-                            className="!mt-3"
-                            type="error"
-                            showIcon
-                            message={
-                                summary?.error ||
-                                error?.message ||
-                                messages('common.somethingWentWrong')
-                            }
-                        />
-                    )}
-                </div>
-            )}
+            <DeleteJobProgress jobId={jobId} summary={summary} error={error} />
         </Card>
     );
 }

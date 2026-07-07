@@ -1,29 +1,30 @@
 'use client';
 
-import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import ConfigTab from '@/modules/report-import/components/config-tab';
+import DeleteReportTab from '@/modules/report-import/components/delete-report-tab';
+import EnrichDataCronTab from '@/modules/report-import/components/enrich-data-cron-tab';
 import EnrichDataImportTab from '@/modules/report-import/components/enrich-data-import-tab';
 import ImportTab from '@/modules/report-import/components/import-tab';
 import SftpExcludeTab from '@/modules/report-import/components/sftp-exclude-tab';
-import EnrichDataCronTab from '@/modules/report-import/components/enrich-data-cron-tab';
-import DeleteReportTab from '@/modules/report-import/components/delete-report-tab';
+import SpotifyR2SyncTab from '@/modules/report-import/components/spotify-r2-sync-tab';
 import { reportConfigQueryKeys } from '@/modules/report-import/constants/query-keys';
 import { REPORT_IMPORT_TAB } from '@/modules/report-import/enums';
 import { useGetListReportConfig } from '@/modules/report-import/hooks/use-get-list';
 import { ReportConfigDataFilter } from '@/modules/report-import/types';
 import {
+    ClockCircleOutlined,
     CloudServerOutlined,
     DatabaseOutlined,
+    DeleteOutlined,
     ImportOutlined,
     SettingOutlined,
-    ClockCircleOutlined,
-    DeleteOutlined,
+    SyncOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Tabs, TabsProps } from 'antd';
+import { Spin, Tabs, TabsProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -32,6 +33,7 @@ type ReportConfigFilter = ReportConfigDataFilter & {
 };
 
 export default function ReportConfigs() {
+    const { token } = theme.useToken();
     const messages = useTranslations();
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<ReportConfigFilter>({
@@ -108,6 +110,12 @@ export default function ReportConfigs() {
                 icon: <DeleteOutlined />,
                 children: <DeleteReportTab />,
             },
+            {
+                key: REPORT_IMPORT_TAB.SPOTIFY_R2_SYNC,
+                label: messages('reportConfigs.spotifyR2SyncConfig.label'),
+                icon: <SyncOutlined />,
+                children: <SpotifyR2SyncTab />,
+            },
         ],
         [
             dataFilter,
@@ -120,15 +128,25 @@ export default function ReportConfigs() {
     );
 
     return (
-        <AppPageWrapper>
-            <PageContainer>
-                <Tabs
-                    activeKey={activeTab}
-                    onChange={handleTabChange}
-                    items={tabItems}
-                    className="!mt-4"
-                />
-            </PageContainer>
-        </AppPageWrapper>
+        <PageContainer title={messages('reportConfigs.label')}>
+            <div
+                className="rounded-lg"
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                }}
+            >
+                <Spin spinning={isLoading}>
+                    <div className="m-auto">
+                        <Tabs
+                            activeKey={activeTab}
+                            onChange={handleTabChange}
+                            items={tabItems}
+                            className="!p-6"
+                            tabPosition="left"
+                        />
+                    </div>
+                </Spin>
+            </div>
+        </PageContainer>
     );
 }

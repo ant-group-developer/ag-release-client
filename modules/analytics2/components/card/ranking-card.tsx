@@ -28,6 +28,7 @@ interface RankingCardProps<T> {
     defaultView?: RankingCardView;
     viewMoreHref?: string;
     valuePrefix?: string;
+    onChange?: (pagination: any, filters: any, sorter: any, extra: any) => void;
 }
 
 export default function RankingCard({
@@ -42,6 +43,7 @@ export default function RankingCard({
     defaultView = RankingCardView.LIST,
     viewMoreHref,
     valuePrefix,
+    onChange,
 }: RankingCardProps<any>) {
     const [viewType, setViewType] = useState<RankingCardView>(defaultView);
     const messages = useTranslations();
@@ -142,6 +144,7 @@ export default function RankingCard({
                     scroll={{ x: scrollX }}
                     size="small"
                     tableLayout="fixed"
+                    onChange={onChange}
                 />
             ) : loading ? (
                 <Skeleton active paragraph={{ rows: 8 }} />

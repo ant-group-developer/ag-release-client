@@ -1,3 +1,4 @@
+import { ChannelsData } from '@/modules/channels/types';
 import { CountriesData } from '@/modules/countries/types';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { GenresData } from '@/modules/genres/types';
@@ -110,7 +111,7 @@ export interface VideoData {
     isrc: string;
     explicit: boolean;
     aiContent: string;
-    channel: string;
+    channel?: ChannelsData;
     title?: string;
     description?: string;
     keywords?: string[];
@@ -124,6 +125,7 @@ export interface VideoData {
     fileId?: string;
     videoFile?: FileBucket;
     label?: string;
+    externalId?: string;
 }
 
 export interface ReleasesDataSimple
@@ -146,7 +148,7 @@ export interface ReleasesDataFilter extends CommonParams {
     endDateCreated?: string;
     startDateRelease?: string;
     endDateRelease?: string;
-    genres?: string;
+    primaryGenreId?: string;
     artistId?: string;
     labelId?: string;
     albumFormatId?: string;
@@ -156,6 +158,9 @@ export interface ReleasesDataFilter extends CommonParams {
     isImportedFromReport?: string;
     needsReview?: boolean | string;
     hasError?: boolean | string;
+    channelId?: string;
+    isrc?: string;
+    genres?: string;
     ciDataStatus?: RELEASE_CI_DATA_STATUS;
     neverExported?: boolean | string;
     lastImportIsFailed?: boolean | string;

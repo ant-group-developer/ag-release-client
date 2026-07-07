@@ -21,8 +21,8 @@ import {
 type EnrichScanScheduleFormValues = {
     name: string;
     enabled: boolean;
-    timezone: string;
-    isImportedFromReport: boolean;
+    timezone?: string;
+    isImportedFromReport: boolean | 'all';
     limitCount: number;
     force: boolean;
 };
@@ -49,15 +49,22 @@ export default function EnrichScanScheduleForm({ ...props }: Props) {
 
     const buildPayload = (
         values: EnrichScanScheduleFormValues
-    ): CreateEnrichScanSchedulePayload => ({
-        name: values.name,
-        enabled: values.enabled,
-        cronExpression: cronValue,
-        timezone: values.timezone,
-        isImportedFromReport: values.isImportedFromReport,
-        limitCount: values.limitCount,
-        force: values.force,
-    });
+    ): CreateEnrichScanSchedulePayload => {
+        const payload: CreateEnrichScanSchedulePayload = {
+            name: values.name,
+            enabled: values.enabled,
+            cronExpression: cronValue,
+            // timezone: values.timezone,
+            limitCount: values.limitCount,
+            force: values.force,
+        };
+
+        if (values.isImportedFromReport !== 'all') {
+            payload.isImportedFromReport = values.isImportedFromReport;
+        }
+
+        return payload;
+    };
 
     const handleCreate = (values: EnrichScanScheduleFormValues) => {
         const variables: CreateVariables<CreateEnrichScanSchedulePayload> = {
@@ -102,7 +109,11 @@ export default function EnrichScanScheduleForm({ ...props }: Props) {
                 name: dataEdit.name,
                 enabled: !!dataEdit.enabled,
                 timezone: dataEdit.timezone,
-                isImportedFromReport: !!dataEdit.isImportedFromReport,
+                isImportedFromReport:
+                    dataEdit.isImportedFromReport === null ||
+                    dataEdit.isImportedFromReport === undefined
+                        ? 'all'
+                        : !!dataEdit.isImportedFromReport,
                 limitCount: dataEdit.limitCount ?? 500,
                 force: !!dataEdit.force,
             });
@@ -113,7 +124,7 @@ export default function EnrichScanScheduleForm({ ...props }: Props) {
             form.setFieldsValue({
                 enabled: true,
                 timezone: 'Asia/Ho_Chi_Minh',
-                isImportedFromReport: true,
+                isImportedFromReport: 'all',
                 limitCount: 500,
                 force: false,
             });
@@ -220,6 +231,11 @@ export default function EnrichScanScheduleForm({ ...props }: Props) {
                         )}
                     >
                         <Radio.Group>
+                            <Radio value="all">
+                                {messages(
+                                    'reportConfigs.enrichScanSchedules.isImportedFromReportAll'
+                                )}
+                            </Radio>
                             <Radio value={false}>
                                 {messages(
                                     'reportConfigs.enrichScanSchedules.isImportedFromReportDirect'

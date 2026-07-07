@@ -200,3 +200,8 @@ export enum WEEK_DAY {
     SATURDAY = 'SATURDAY',
     SUNDAY = 'SUNDAY',
 }
+
+export enum ANALYTIC_SORT_BY {
+    VIEWS = 'views',
+    REVENUE = 'revenue',
+}

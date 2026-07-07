@@ -1,7 +1,12 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { convertSecondsToHHMMSS, formattedDate, formattedNumber, getIndex } from '@/helpers/common';
+import {
+    convertSecondsToHHMMSS,
+    formattedDate,
+    formattedNumber,
+    getIndex,
+} from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -25,6 +30,10 @@ const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
         'reportConfigs.importResult.sourceTypeAnalyticsReportExport',
     [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]:
         'reportConfigs.importResult.sourceTypeReportReleaseDelete',
+    [ETL_JOB_SOURCE_TYPE.SPOTIFY_R2_SYNC]:
+        'reportConfigs.importResult.sourceTypeSpotifyR2Sync',
+    [ETL_JOB_SOURCE_TYPE.SPOTIFY_EXPORT_TRIGGER]:
+        'reportConfigs.importResult.sourceTypeSpotifyExportTrigger',
 };
 
 const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
@@ -35,6 +44,8 @@ const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
     [ETL_JOB_SOURCE_TYPE.FTP_AUTO_CRON]: 'green',
     [ETL_JOB_SOURCE_TYPE.ANALYTICS_REPORT_EXPORT]: 'geekblue',
     [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]: 'red',
+    [ETL_JOB_SOURCE_TYPE.SPOTIFY_R2_SYNC]: 'volcano',
+    [ETL_JOB_SOURCE_TYPE.SPOTIFY_EXPORT_TRIGGER]: 'gold',
 };
 
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
@@ -120,7 +131,7 @@ export default function EtlJobsTable({ onViewDetail, ...props }: Props) {
             title: messages('reportConfigs.importResult.sourceType'),
             key: 'sourceType',
             dataIndex: 'sourceType',
-            width: 180,
+            width: 220,
             ellipsis: true,
             render: (sourceType: string, record) =>
                 record?.sourceType ? (

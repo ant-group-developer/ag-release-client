@@ -125,6 +125,8 @@
     },
     "common": {
         "back": "Back",
+        "youtubeId": "YouTube ID",
+        "viewOnYoutube": "View on YouTube",
         "close": "Close",
         "undetermined": "Undetermined",
         "partly": "Partly",
@@ -2883,6 +2885,7 @@
             "forceTooltip": "If enabled, existing enriched data will be processed again.",
             "isImportedFromReport": "Sync releases",
             "isImportedFromReportTooltip": "Select release sync type.",
+            "isImportedFromReportAll": "All",
             "isImportedFromReportDirect": "Sync direct releases",
             "isImportedFromReportImport": "Sync imported releases",
             "eventConnectionError": "Cannot connect to scan events",
@@ -3083,6 +3086,8 @@
             "sourceTypeFtpAutoCron": "FTP auto cron",
             "sourceTypeAnalyticsReportExport": "Analytics report export",
             "sourceTypeReportReleaseDelete": "Report release delete",
+            "sourceTypeSpotifyR2Sync": "Spotify R2 sync",
+            "sourceTypeSpotifyExportTrigger": "Export report Box -> R2",
             "totalRows": "Total Rows",
             "processedRows": "Processed",
             "skippedRows": "Skipped",
@@ -3100,6 +3105,7 @@
             "timezone": "Timezone",
             "isImportedFromReport": "Sync releases",
             "isImportedFromReportTooltip": "Select release sync type.",
+            "isImportedFromReportAll": "All",
             "isImportedFromReportDirect": "Sync direct releases",
             "isImportedFromReportImport": "Sync imported releases",
             "limitCount": "Limit",
@@ -3121,6 +3127,42 @@
                     "delete": "Scan schedule deleted successfully!"
                 }
             }
+        },
+        "spotifyR2SyncConfig": {
+            "label": "Spotify R2 Sync",
+            "title": "Spotify R2 Auto-Sync Config",
+            "enabled": "Enable Auto-Sync",
+            "cron": "Sync Schedule",
+            "prefix": "Folder Prefix",
+            "prefixTooltip": "Folder prefix on R2 containing reports",
+            "retentionDays": "Retention Period (days)",
+            "retentionDaysTooltip": "Number of days to retain reports before deletion",
+            "save": "Save Config",
+            "saveSuccess": "Spotify R2 auto-sync configuration updated successfully!",
+            "saveFailed": "Failed to update Spotify R2 auto-sync configuration!",
+            "syncNow": "Sync Now",
+            "syncProgressTitle": "Spotify R2 Sync Progress",
+            "zipsFound": "ZIP files found",
+            "zipsImported": "ZIP files imported",
+            "zipsSkipped": "ZIP files skipped",
+            "jobSpoId": "Spotify Job ID",
+            "foldersUploaded": "Folders uploaded",
+            "r2ObjectKeys": "Uploaded to R2",
+            "exportNow": "Trigger Box -> R2",
+            "exportModalTitle": "Trigger Box -> R2 Export",
+            "exportModalDesc": "Trigger report synchronization from Box.com to R2. Once successfully exported, the system will automatically import the new files.",
+            "forceLabel": "Force Overwrite"
+        },
+        "spotifyExportSchedulerConfig": {
+            "label": "Spotify Export Scheduler",
+            "title": "Spotify Export Auto-Trigger Scheduler Config",
+            "enabled": "Enable Auto-Export",
+            "cron": "Export Schedule",
+            "force": "Force Export",
+            "forceTooltip": "If enabled, reports will be re-exported even if they already exist",
+            "save": "Save Config",
+            "saveSuccess": "Spotify export scheduler configuration updated successfully!",
+            "saveFailed": "Failed to update Spotify export scheduler configuration!"
         }
     },
     "analytics2": {

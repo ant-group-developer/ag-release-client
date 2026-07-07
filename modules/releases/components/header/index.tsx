@@ -268,11 +268,11 @@ export default function ReleasesHeaderV2({
                 isCommaSeparated: true,
             },
             {
-                key: 'genres',
+                key: 'primaryGenreId',
                 label: messages('genre.label'),
                 icon: <SoundOutlined />,
                 type: 'checkbox',
-                filterKey: 'genres',
+                filterKey: 'primaryGenreId',
                 options: genreOptions,
                 isCommaSeparated: true,
             },
