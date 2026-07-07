@@ -1,8 +1,10 @@
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { RELEASE_VIDEO_CAPTION_TYPE } from '@/modules/release-video/enums';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleaseEnrichedError, ReleasesData, VideoData } from '.';
 import {
+    CI_IMPORT_ACTION,
     RELEASES_TYPE,
     RELEASE_ERROR_APPROVAL_STATUS,
     RELEASE_ERROR_SUBMISSION_STATUS,
@@ -54,6 +56,9 @@ export interface BulkSubmitRelease extends CommonFunction {
     ids: string[];
     codes: string[];
     idsExclude?: string[];
+    status?: RELEASE_DSP_DELIVERY_STATUS;
+    ciImportAction?: CI_IMPORT_ACTION;
+    skipDistributed?: boolean;
 }
 
 export interface AutoSubmitUndistributedMusicRelease extends CommonFunction {

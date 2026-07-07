@@ -2,11 +2,15 @@ import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { useActive } from '@/hooks/use-active';
-import { Form, Input, Typography } from 'antd';
+import { Button, Form, Input, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Cron } from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
+import {
+    useRefreshCiToolToken,
+    useTestCiToken,
+} from '../../hooks/use-ci-token-actions';
 import { useGetSetting } from '../../hooks/use-get-setting';
 import { useUpdateSetting } from '../../hooks/use-update-role';
 import { UpdateSettingPayload } from '../../types/payload';
@@ -18,6 +22,9 @@ export default function PartnersForm({}: Props) {
     const [form] = Form.useForm();
     const { settingConfig } = useGetSetting();
     const { updateSetting } = useUpdateSetting();
+    const { refreshCiToolToken, isPending: isRefreshingCiToolToken } =
+        useRefreshCiToolToken();
+    const { testCiToken, isPending: isTestingCiToken } = useTestCiToken();
     const { active, deActive, isActive } = useActive();
     const partnersConfigData = settingConfig?.partners;
     const [dailySendCronValue, setDailySendCronValue] = useState<string>(
@@ -167,9 +174,29 @@ export default function PartnersForm({}: Props) {
                     </AppFormItem>
                 </div>
 
-                <Typography.Title level={5} className="!mt-8">
-                    CI
-                </Typography.Title>
+                <div className="!mt-8 flex items-center justify-between gap-3">
+                    <Typography.Title level={5} className="!mb-0">
+                        CI
+                    </Typography.Title>
+                    <Space>
+                        <Button
+                            type="default"
+                            loading={isRefreshingCiToolToken}
+                            disabled={isActive || isTestingCiToken}
+                            onClick={() => refreshCiToolToken()}
+                        >
+                            Refresh cache
+                        </Button>
+                        <Button
+                            type="default"
+                            loading={isTestingCiToken}
+                            disabled={isActive || isRefreshingCiToolToken}
+                            onClick={() => testCiToken()}
+                        >
+                            Test
+                        </Button>
+                    </Space>
+                </div>
                 <div className="pl-4">
                     <AppFormItem label={'Daily Send Cron'}>
                         <Cron
