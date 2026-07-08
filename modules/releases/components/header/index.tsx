@@ -26,15 +26,7 @@ import {
     TagOutlined,
     WarningOutlined,
 } from '@ant-design/icons';
-import {
-    Button,
-    Checkbox,
-    Popover,
-    Radio,
-    Select,
-    Space,
-    Table,
-} from 'antd';
+import { Button, Checkbox, Popover, Radio, Select, Space, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Layers, Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
