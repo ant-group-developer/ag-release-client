@@ -92,8 +92,8 @@ export default function DetailDspAnalyticsModal({
                 dspReportId,
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                isIncludeOther: true,
             },
             { enabled: open }
         );
@@ -106,8 +106,8 @@ export default function DetailDspAnalyticsModal({
                 dspReportId,
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                isIncludeOther: true,
             },
             { enabled: open }
         );
@@ -682,26 +682,36 @@ export default function DetailDspAnalyticsModal({
                     </Col>
                 </Row>
             </div>
-            <DetailReleaseAnalyticsModal
-                open={detailReleaseModal.open}
-                onClose={() =>
-                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailReleaseModal.title}
-                releaseId={detailReleaseModal.releaseId}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailTrackModal.open}
-                onClose={() =>
-                    setDetailTrackModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailTrackModal.title}
-                isrc={detailTrackModal.isrc}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
+            {detailReleaseModal.open && (
+                <DetailReleaseAnalyticsModal
+                    open={detailReleaseModal.open}
+                    onClose={() =>
+                        setDetailReleaseModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailReleaseModal.title}
+                    releaseId={detailReleaseModal.releaseId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                />
+            )}
+            {detailTrackModal.open && (
+                <DetailTrackAnalyticsModal
+                    open={detailTrackModal.open}
+                    onClose={() =>
+                        setDetailTrackModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailTrackModal.title}
+                    isrc={detailTrackModal.isrc}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                />
+            )}
         </FullScreenModal>
     );
 }

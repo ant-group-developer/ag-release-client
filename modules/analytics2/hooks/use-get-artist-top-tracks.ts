@@ -2,11 +2,11 @@ import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
-import { RankingParams } from '../types';
+import { AnalyticsCommonParams } from '../types';
 
 export const useGetArtistTopTracks = (
     artistId: string,
-    params: RankingParams,
+    params: AnalyticsCommonParams,
     options?: { enabled?: boolean }
 ) => {
     const query = useQuery({

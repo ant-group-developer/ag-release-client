@@ -8,6 +8,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
 import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
@@ -20,7 +21,7 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -57,6 +58,16 @@ export default function TracksRankingPage() {
         isrc: '',
     });
 
+    const [detailSourceModal, setDetailSourceModal] = useState<{
+        open: boolean;
+        title: string;
+        sourceType: string;
+    }>({
+        open: false,
+        title: '',
+        sourceType: '',
+    });
+
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
@@ -70,6 +81,7 @@ export default function TracksRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword,
+                groupBySource: true,
             },
             { enabled: !isRevenue }
         );
@@ -84,6 +96,7 @@ export default function TracksRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 includeOther: false,
+                groupBySource: true,
             },
             { enabled: isRevenue }
         );
@@ -151,6 +164,38 @@ export default function TracksRankingPage() {
                     {text || '—'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            width: 280,
+            render: (bySource?: any[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                </Tag>
+                            </CustomTooltip>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.usage'),
@@ -237,6 +282,38 @@ export default function TracksRankingPage() {
                     {text || '—'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            width: 280,
+            render: (bySource?: any[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                </Tag>
+                            </CustomTooltip>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.viewCount'),
@@ -356,19 +433,37 @@ export default function TracksRankingPage() {
                     />
                 </Card>
 
-                <DetailTrackAnalyticsModal
-                    open={trackDetailModal.open}
-                    onClose={() =>
-                        setTrackDetailModal((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    title={trackDetailModal.title}
-                    isrc={trackDetailModal.isrc}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {trackDetailModal.open && (
+                    <DetailTrackAnalyticsModal
+                        open={trackDetailModal.open}
+                        onClose={() =>
+                            setTrackDetailModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={trackDetailModal.title}
+                        isrc={trackDetailModal.isrc}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
+
+                {detailSourceModal.open && (
+                    <DetailSourceTypeAnalyticsModal
+                        open={detailSourceModal.open}
+                        onClose={() =>
+                            setDetailSourceModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={detailSourceModal.title}
+                        sourceType={detailSourceModal.sourceType}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

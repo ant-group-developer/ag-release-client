@@ -1,7 +1,9 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
+import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
+import AppSwitch from '@/components/ui/switch/status-switch';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { SIZE_ICON } from '@/constants/common';
+import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
@@ -26,7 +28,15 @@ import {
     TagOutlined,
     WarningOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Popover, Select, Space, Table } from 'antd';
+import {
+    Button,
+    Checkbox,
+    Popover,
+    Select,
+    Space,
+    Table,
+    Typography,
+} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Layers, Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -51,6 +61,7 @@ type DspDeliveryFilterTableRow = {
     code: string;
     name: string;
     isActive?: boolean;
+    picture?: string | null;
     enabled: boolean;
     includeStatuses: RELEASE_DSP_DELIVERY_STATUS[];
     excludeStatuses: RELEASE_DSP_DELIVERY_STATUS[];
@@ -68,6 +79,7 @@ const createDspDeliveryFilterRows = (
             code: dsp.code,
             name: dsp.name,
             isActive: dsp.isActive,
+            picture: dsp.picture,
             enabled: false,
             includeStatuses: [],
             excludeStatuses: [],
@@ -80,12 +92,14 @@ const createDspDeliveryFilterRows = (
     ) => {
         if (!item.code || !item.status) return;
 
+        const dsp = dsps.find((d) => d.code === item.code);
         const row =
             rowMap.get(item.code) ??
             ({
                 code: item.code,
-                name: item.code,
-                isActive: true,
+                name: dsp?.name ?? item.code,
+                isActive: dsp?.isActive ?? true,
+                picture: dsp?.picture,
                 enabled: false,
                 includeStatuses: [],
                 excludeStatuses: [],
@@ -558,56 +572,83 @@ export default function ReleasesHeaderV2({
     );
 
     const dspDeliveryFilterColumns: ColumnsType<DspDeliveryFilterTableRow> = [
+        // {
+        //     title: messages('common.iNo'),
+        //     key: 'iNo',
+        //     width: 56,
+        //     align: 'center',
+        //     render: (_, __, index) => index + 1,
+        // },
         {
-            title: messages('common.iNo'),
-            key: 'iNo',
-            width: 56,
-            align: 'center',
-            render: (_, __, index) => index + 1,
-        },
-        {
-            title: 'Apply',
+            title: messages('common.apply'),
             dataIndex: 'enabled',
             width: 64,
             align: 'center',
             render: (_, record) => (
-                <Checkbox
+                // <Checkbox
+                //     checked={record.enabled}
+                //     onChange={(event) =>
+                //         updateDspDeliveryFilterRow(record.code, {
+                //             enabled: event.target.checked,
+                //         })
+                //     }
+                // />
+                <AppSwitch
                     checked={record.enabled}
-                    onChange={(event) =>
+                    onChange={(checked) =>
                         updateDspDeliveryFilterRow(record.code, {
-                            enabled: event.target.checked,
+                            enabled: checked,
                         })
                     }
                 />
             ),
         },
         {
-            title: 'DSP',
+            title: messages('dsp.label'),
             dataIndex: 'name',
             width: 180,
             render: (_, record) => (
-                <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                        <span className="font-medium">{record.name}</span>
-                        {record.isActive === false && (
-                            <CustomTooltip title="Nền tảng phát hành này đã bị khoá, không thể phát hành">
-                                <Lock size={16} className="text-gray-400" />
-                            </CustomTooltip>
-                        )}
+                <div className="flex items-center gap-3">
+                    <ImageFallback
+                        fallbackSrc={FALLBACK_IMAGE}
+                        src={record?.picture ?? FALLBACK_IMAGE}
+                        alt={record?.name}
+                        width={28}
+                        height={28}
+                        className="aspect-square flex-shrink-0 rounded object-cover"
+                    />
+                    <div className="flex min-w-0 flex-col">
+                        <div className="flex items-center gap-2">
+                            <span className="truncate font-medium">
+                                {record.name}
+                            </span>
+                            {record.isActive === false && (
+                                <CustomTooltip
+                                    title={messages('distribution.inactiveDsp')}
+                                >
+                                    <Lock
+                                        size={14}
+                                        className="flex-shrink-0 text-gray-400"
+                                    />
+                                </CustomTooltip>
+                            )}
+                        </div>
+                        <span className="truncate text-xs text-gray-500">
+                            {record.code}
+                        </span>
                     </div>
-                    <span className="text-xs text-gray-500">{record.code}</span>
                 </div>
             ),
         },
         {
             title: (
                 <div className="flex flex-col gap-1">
-                    <span>Include</span>
+                    <span>{messages('common.include')}</span>
                     <Select
                         mode="multiple"
                         allowClear
                         options={dspDeliveryStatusOptions}
-                        placeholder="Chọn nhanh"
+                        placeholder={messages('common.quickSelect')}
                         onChange={(value) =>
                             updateAppliedDspDeliveryStatuses(
                                 'includeStatuses',
@@ -641,12 +682,12 @@ export default function ReleasesHeaderV2({
         {
             title: (
                 <div className="flex flex-col gap-1">
-                    <span>Exclude</span>
+                    <span>{messages('common.exclude')}</span>
                     <Select
                         mode="multiple"
                         allowClear
                         options={dspDeliveryStatusOptions}
-                        placeholder="Chọn nhanh"
+                        placeholder={messages('common.quickSelect')}
                         onChange={(value) =>
                             updateAppliedDspDeliveryStatuses(
                                 'excludeStatuses',
@@ -680,9 +721,20 @@ export default function ReleasesHeaderV2({
     ];
 
     const dspDeliveryFilterContent = (
-        <div className="w-[640px] max-w-[calc(90vw-48px)] overflow-hidden">
+        <div className="max-w-[50vw] space-y-2 overflow-hidden">
+            <Typography.Text strong className="!text-lg">
+                {messages('releaseDsp.dspStatus')}
+            </Typography.Text>
             <div className="mb-2 flex flex-wrap gap-2">
                 <Button
+                    shape="round"
+                    size="small"
+                    onClick={applyAllDspDeliveryFilter}
+                >
+                    {messages('common.selectAll')}
+                </Button>
+                <Button
+                    shape="round"
                     size="small"
                     onClick={() =>
                         applyQuickDspDeliveryFilter(
@@ -696,9 +748,10 @@ export default function ReleasesHeaderV2({
                         )
                     }
                 >
-                    DSP direct
+                    {messages('releaseDsp.dspDirect')}
                 </Button>
                 <Button
+                    shape="round"
                     size="small"
                     onClick={() =>
                         applyQuickDspDeliveryFilter(
@@ -712,9 +765,10 @@ export default function ReleasesHeaderV2({
                         )
                     }
                 >
-                    DSP CI
+                    {messages('releaseDsp.dspCi')}
                 </Button>
                 <Button
+                    shape="round"
                     size="small"
                     onClick={() =>
                         applyQuickDspDeliveryFilter(
@@ -728,36 +782,26 @@ export default function ReleasesHeaderV2({
                         )
                     }
                 >
-                    DSP State51
+                    {messages('releaseDsp.dspState51')}
                 </Button>
+                <Button
+                    shape="round"
+                    size="small"
+                    onClick={excludeInactiveDspDeliveryFilter}
+                >
+                    {messages('releaseDsp.excludeLockedDsp')}
+                </Button>
+
                 <Checkbox
                     checked={showAppliedDspOnly}
                     onChange={(event) =>
                         setShowAppliedDspOnly(event.target.checked)
                     }
-                    className="ml-auto"
                 >
-                    Chỉ hiện DSP đang apply
+                    {messages('releaseDsp.showAppliedDspOnly')}
                 </Checkbox>
             </div>
-            <div className="mb-2 flex justify-end gap-2">
-                <Button size="small" onClick={applyAllDspDeliveryFilter}>
-                    Chọn tất cả
-                </Button>
-                <Button size="small" onClick={excludeInactiveDspDeliveryFilter}>
-                    Loại trừ DSP bị khoá
-                </Button>
-                <Button size="small" onClick={handleClearDspDeliveryFilter}>
-                    Xóa DSP status
-                </Button>
-                <Button
-                    size="small"
-                    type="primary"
-                    onClick={handleApplyDspDeliveryFilter}
-                >
-                    Áp dụng
-                </Button>
-            </div>
+
             <Table
                 rowKey="code"
                 size="small"
@@ -766,8 +810,25 @@ export default function ReleasesHeaderV2({
                 columns={dspDeliveryFilterColumns}
                 dataSource={dspDeliveryFilterDataSource}
                 rowClassName={(record) => (record.enabled ? '' : 'opacity-50')}
-                scroll={{ x: 604, y: 320 }}
+                scroll={{ x: 600, y: 320 }}
             />
+            <div className="mb-2 flex justify-end gap-2 py-1">
+                <Button
+                    shape="round"
+                    size="small"
+                    onClick={handleClearDspDeliveryFilter}
+                >
+                    {messages('common.clearFilter')}
+                </Button>
+                <Button
+                    type="primary"
+                    shape="round"
+                    size="small"
+                    onClick={handleApplyDspDeliveryFilter}
+                >
+                    {messages('common.apply')}
+                </Button>
+            </div>
         </div>
     );
 
@@ -789,10 +850,9 @@ export default function ReleasesHeaderV2({
                     content={dspDeliveryFilterContent}
                     arrow={false}
                     autoAdjustOverflow
-                    overlayStyle={{ maxWidth: 'calc(90vw - 32px)' }}
                 >
                     <Button>
-                        DSP status
+                        {messages('releaseDsp.dspStatus')}
                         {!!appliedDspDeliveryFilterCount &&
                             ` (${appliedDspDeliveryFilterCount})`}
                     </Button>

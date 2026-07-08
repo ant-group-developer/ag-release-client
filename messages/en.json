@@ -132,6 +132,11 @@
         "partly": "Partly",
         "none": "None",
         "select": "Select...",
+        "apply": "Apply",
+        "include": "Include",
+        "exclude": "Exclude",
+        "quickSelect": "Quick select",
+        "selectAll": "Select all",
         "ownership": "Ownership",
         "direct": "Direct",
         "distributionMethod": "Distribution method",
@@ -339,6 +344,7 @@
         "use": "Use status",
         "source": "Source",
         "sourcePlatform": "Source",
+        "sourceType": "Source Type",
         "userUpload": "User upload",
         "imageAi": "Image AI",
         "thumbnail": "Thumbnail",
@@ -1295,7 +1301,14 @@
             "never_distributed": "Never distributed",
             "distributed": "Distributed",
             "taken_down": "Taken down"
-        }
+        },
+        "dspStatus": "DSP status",
+        "dspDirect": "DSP direct",
+        "dspCi": "DSP CI",
+        "dspState51": "DSP State51",
+        "excludeLockedDsp": "Exclude locked DSPs",
+        "clearDspStatus": "Clear DSP status",
+        "showAppliedDspOnly": "Show applied DSPs only"
     },
     "releaseArtist": {
         "label": "Release artists",

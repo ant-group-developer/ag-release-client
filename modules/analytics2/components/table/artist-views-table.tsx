@@ -2,10 +2,11 @@
 
 import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
-import { ArtistRankingItem } from '@/modules/analytics2/types';
-import { Avatar, Table } from 'antd';
+import { ArtistRankingItem, BySourceItem } from '@/modules/analytics2/types';
+import { Avatar, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 
@@ -13,6 +14,7 @@ const COLUMN_WIDTH_RANK = 120;
 const COLUMN_WIDTH_PROFILES = 180;
 const COLUMN_WIDTH_COUNTRY = 150;
 const COLUMN_WIDTH_GENRE = 150;
+const COLUMN_WIDTH_SOURCE = 280;
 const COLUMN_WIDTH_TRACKS = 150;
 const COLUMN_WIDTH_VIEWS = 180;
 const MAX_DSP_AVATARS_COUNT = 5;
@@ -23,6 +25,7 @@ interface ArtistViewsTableProps {
     loading: boolean;
     dspData?: any;
     onDetailArtist: (artistId: string, artistName: string) => void;
+    onDetailSource?: (sourceType: string, title: string) => void;
 }
 
 export default function ArtistViewsTable({
@@ -30,6 +33,7 @@ export default function ArtistViewsTable({
     loading,
     dspData,
     onDetailArtist,
+    onDetailSource,
 }: ArtistViewsTableProps) {
     const messages = useTranslations();
 
@@ -63,7 +67,9 @@ export default function ArtistViewsTable({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <span
                             className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                            onClick={() => onDetailArtist(record.artistId, text)}
+                            onClick={() =>
+                                onDetailArtist(record.artistId, text)
+                            }
                         >
                             {text}
                         </span>
@@ -138,6 +144,37 @@ export default function ArtistViewsTable({
                     {record?.genre || '-'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            width: COLUMN_WIDTH_SOURCE,
+            render: (bySource) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item: BySourceItem) => (
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        onDetailSource?.(
+                                            item.source,
+                                            item.sourceLabel
+                                        )
+                                    }
+                                >
+                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                </Tag>
+                            </CustomTooltip>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.tracks'),

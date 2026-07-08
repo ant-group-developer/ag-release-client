@@ -9,8 +9,8 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
@@ -152,6 +152,7 @@ export default function TenantsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
+            width: 280,
             render: (bySource?: BySourceItem[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -171,7 +172,7 @@ export default function TenantsRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}
+                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -251,6 +252,7 @@ export default function TenantsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
+            width: 280,
             render: (bySource?: BySourceItem[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -270,7 +272,8 @@ export default function TenantsRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -396,27 +399,34 @@ export default function TenantsRankingPage() {
                     />
                 </Card>
 
-                <DetailTenantAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    tenantId={detailModal.tenantId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailModal.open && (
+                    <DetailTenantAnalyticsModal
+                        open={detailModal.open}
+                        onClose={() =>
+                            setDetailModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailModal.title}
+                        tenantId={detailModal.tenantId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
 
-                <DetailSourceTypeAnalyticsModal
-                    open={detailSourceModal.open}
-                    onClose={() =>
-                        setDetailSourceModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailSourceModal.title}
-                    sourceType={detailSourceModal.sourceType}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailSourceModal.open && (
+                    <DetailSourceTypeAnalyticsModal
+                        open={detailSourceModal.open}
+                        onClose={() =>
+                            setDetailSourceModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={detailSourceModal.title}
+                        sourceType={detailSourceModal.sourceType}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

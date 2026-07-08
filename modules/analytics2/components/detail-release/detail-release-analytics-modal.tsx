@@ -52,29 +52,26 @@ export default function DetailReleaseAnalyticsModal({
     }, [open, fromDate, toDate]);
 
     // Gọi API lấy thông tin tổng quan của Release
-    const { overviewData, isFetching } = useGetReleaseOverview(
-        releaseId,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    const { overviewData, isFetching } = useGetReleaseOverview(releaseId, {
+        fromDate: localFromDate,
+        toDate: localToDate,
+    });
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Release
     const { revenueLineChartData, isFetching: isLineChartFetching } =
-        useGetReleaseRevenueLineChart(
-            releaseId,
-            { fromDate: localFromDate, toDate: localToDate },
-            open
-        );
+        useGetReleaseRevenueLineChart(releaseId, {
+            fromDate: localFromDate,
+            toDate: localToDate,
+        });
 
     // Gọi API lấy thông tin biểu đồ lượt nghe của Release
     const {
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
-    } = useGetReleaseTrendViewLineChart(
-        releaseId,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    } = useGetReleaseTrendViewLineChart(releaseId, {
+        fromDate: localFromDate,
+        toDate: localToDate,
+    });
 
     const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
         ANALYTIC_SORT_BY.REVENUE
@@ -86,7 +83,7 @@ export default function DetailReleaseAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: dspSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
         });
 
@@ -100,7 +97,7 @@ export default function DetailReleaseAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: terSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
         });
 
