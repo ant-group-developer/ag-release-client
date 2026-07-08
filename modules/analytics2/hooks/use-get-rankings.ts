@@ -2,7 +2,7 @@ import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
-import { RankingParams } from '../types';
+import { AnalyticsCommonParams, RankingParams } from '../types';
 
 export const useGetTrackRanking = (
     params: RankingParams,
@@ -137,4 +137,25 @@ export const useGetChannelRanking = (
         ...query,
     };
 };
+
+export const useGetSourceTypeRanking = (
+    params: AnalyticsCommonParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.sourceTypeRanking(params),
+        queryFn: () => analytics2Apis.getSourceTypeRanking(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const sourceTypeRankingData =
+        query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        sourceTypeRankingData,
+        ...query,
+    };
+};
+
 

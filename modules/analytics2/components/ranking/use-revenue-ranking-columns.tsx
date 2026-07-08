@@ -12,6 +12,7 @@ import {
     RevenueReleaseItem,
     RevenueTenantItem,
     RevenueTrackItem,
+    RevenueSourceTypeItem,
 } from '../../types';
 
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
@@ -600,6 +601,69 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
         [messages, setDetailModal]
     );
 
+    const sourceTypeColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.sourceType'),
+                dataIndex: 'sourceTypeLabel',
+                key: 'sourceTypeLabel',
+                ellipsis: true,
+                render: (text: string, record: RevenueSourceTypeItem) => (
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100 font-medium"
+                            onClick={() =>
+                                setDetailModal({
+                                    type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
+                                    title: text,
+                                    id: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                ),
+            },
+            {
+                title: messages('common.usage'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 150,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'revenueUsd',
+                key: 'revenueUsd',
+                width: 150,
+                render: (val: number) => (
+                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                        ${val ? formattedNumber(val) : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages, setDetailModal]
+    );
+
     return {
         artistColumns,
         trackColumns,
@@ -608,5 +672,6 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
         tenantColumns,
         labelColumns,
         channelColumns,
+        sourceTypeColumns,
     };
 }

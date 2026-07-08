@@ -344,6 +344,7 @@
         "use": "Use status",
         "source": "Source",
         "sourcePlatform": "Source",
+        "sourceType": "Source Type",
         "userUpload": "User upload",
         "imageAi": "Image AI",
         "thumbnail": "Thumbnail",

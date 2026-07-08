@@ -187,6 +187,12 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.REVENUE_TOP_CHANNEL,
             params,
         ] as const,
+    revenueTopSourceType: (params: RevenueQueryParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_TOP_SOURCE_TYPE,
+            params,
+        ] as const,
     releaseOverview: (releaseId: string, params: ReleaseOverviewParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -955,6 +961,12 @@ export const analytics2QueryKeys = {
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_TER_BAR_CHART,
             sourceType,
+            params,
+        ] as const,
+    sourceTypeRanking: (params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_RANKING,
             params,
         ] as const,
 };

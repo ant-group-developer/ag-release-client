@@ -1,5 +1,4 @@
 'use client';
-
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
@@ -7,19 +6,19 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import { RANK_COLUMN_WIDTH } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
-import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import { useGetSourceTypeRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopSourceType } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import {
+    RevenueSourceTypeItem,
+    SourceTypeRankingItem,
+} from '@/modules/analytics2/types';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
-import {
-    BySourceItem,
-    DspRankingItem,
-    RevenueDspItem,
-} from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, Tag, theme } from 'antd';
+import { Card, Segmented, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -31,10 +30,9 @@ interface RankingFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
-    groupBySource?: boolean;
 }
 
-export default function DspsRankingPage() {
+export default function SourceTypesRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
 
@@ -62,58 +60,61 @@ export default function DspsRankingPage() {
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
-        {
-            fromDate: dataFilter.startDate!,
-            toDate: dataFilter.endDate!,
-            page,
-            pageSize,
-            keyword: dataFilter.keyword ?? undefined,
-            groupBySource: true,
-        },
-        { enabled: !isRevenue }
-    );
+    const { sourceTypeRankingData, isFetching: isViewsFetching } =
+        useGetSourceTypeRanking(
+            {
+                fromDate: dataFilter.startDate!,
+                toDate: dataFilter.endDate!,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+            },
+            { enabled: !isRevenue }
+        );
 
     // Fetch revenue ranking data
-    const { topDspData, isFetching: isRevenueFetching } = useGetRevenueTopDsp(
-        {
-            fromDate: dataFilter.startDate!,
-            toDate: dataFilter.endDate!,
-            page,
-            pageSize,
-            keyword: dataFilter.keyword ?? undefined,
-            includeOther: false,
-            groupBySource: true,
-        },
-        { enabled: isRevenue }
-    );
+    const { topSourceTypeData, isFetching: isRevenueFetching } =
+        useGetRevenueTopSourceType(
+            {
+                fromDate: dataFilter.startDate!,
+                toDate: dataFilter.endDate!,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+            },
+            { enabled: isRevenue }
+        );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueDataWithRank = useMemo(() => {
-        if (!topDspData?.items) return [];
-        return topDspData.items.map((item: RevenueDspItem, index: number) => ({
-            ...item,
-            rank: (page - 1) * pageSize + index + 1,
-        }));
-    }, [topDspData, page, pageSize]);
-
-    const viewsDataWithRank = useMemo(() => {
-        if (!dspRankingData?.items) return [];
-        return dspRankingData.items.map(
-            (item: DspRankingItem, index: number) => ({
-                ...item,
-                rank: (page - 1) * pageSize + index + 1,
-            })
+    const viewItems = useMemo(() => {
+        return (
+            sourceTypeRankingData?.items?.map(
+                (item: SourceTypeRankingItem, index: number) => ({
+                    ...item,
+                    rank: item.rank || (page - 1) * pageSize + index + 1,
+                })
+            ) || []
         );
-    }, [dspRankingData, page, pageSize]);
+    }, [sourceTypeRankingData, page, pageSize]);
 
-    const revenueColumns: ColumnsType<RevenueDspItem & { rank: number }> = [
+    const revenueItems = useMemo(() => {
+        return (
+            topSourceTypeData?.items?.map(
+                (item: RevenueSourceTypeItem, index: number) => ({
+                    ...item,
+                    rank: item.rank || (page - 1) * pageSize + index + 1,
+                })
+            ) || []
+        );
+    }, [topSourceTypeData, page, pageSize]);
+
+    const revenueColumns: ColumnsType<RevenueSourceTypeItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: RANK_COLUMN_WIDTH,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -122,53 +123,32 @@ export default function DspsRankingPage() {
             ),
         },
         {
-            title: messages('common.dsps'),
-            dataIndex: 'dspName',
-            key: 'dspName',
+            title: messages('common.sourceType'),
+            dataIndex: 'sourceTypeLabel',
+            key: 'sourceTypeLabel',
             ellipsis: true,
-            render: (text: string) => (
-                <span className="text-gray-900 dark:text-zinc-100">
-                    {text || '—'}
-                </span>
+            render: (text: string, record: RevenueSourceTypeItem) => (
+                <CustomTooltip title={messages('common.detailedAnalysis')}>
+                    <span
+                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        onClick={() =>
+                            setDetailSourceModal({
+                                open: true,
+                                title: text,
+                                sourceType: record.sourceType,
+                            })
+                        }
+                    >
+                        {text || '—'}
+                    </span>
+                </CustomTooltip>
             ),
-        },
-        {
-            title: messages('common.sourcePlatform'),
-            dataIndex: 'bySource',
-            key: 'bySource',
-            width: 280,
-            render: (bySource?: BySourceItem[]) => {
-                if (!bySource || bySource.length === 0) return '—';
-                return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
-                            <CustomTooltip
-                                key={item.source}
-                                title={messages('common.detailedAnalysis')}
-                            >
-                                <Tag
-                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
-                                            title: item.sourceLabel,
-                                            sourceType: item.source,
-                                        })
-                                    }
-                                >
-                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
-                                </Tag>
-                            </CustomTooltip>
-                        ))}
-                    </div>
-                );
-            },
         },
         {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 150,
+            width: 250,
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -179,7 +159,7 @@ export default function DspsRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 180,
+            width: 250,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -188,12 +168,12 @@ export default function DspsRankingPage() {
         },
     ];
 
-    const viewColumns: ColumnsType<DspRankingItem & { rank: number }> = [
+    const viewColumns: ColumnsType<SourceTypeRankingItem> = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: RANK_COLUMN_WIDTH,
             align: 'center' as const,
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
@@ -202,47 +182,26 @@ export default function DspsRankingPage() {
             ),
         },
         {
-            title: messages('common.dsps'),
-            dataIndex: 'dspName',
-            key: 'dspName',
+            title: messages('common.sourceType'),
+            dataIndex: 'sourceTypeLabel',
+            key: 'sourceTypeLabel',
             ellipsis: true,
-            render: (text: string) => (
-                <span className="text-gray-900 dark:text-zinc-100">
-                    {text || '—'}
-                </span>
+            render: (text: string, record: SourceTypeRankingItem) => (
+                <CustomTooltip title={messages('common.detailedAnalysis')}>
+                    <span
+                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        onClick={() =>
+                            setDetailSourceModal({
+                                open: true,
+                                title: text,
+                                sourceType: record.sourceType,
+                            })
+                        }
+                    >
+                        {text || '—'}
+                    </span>
+                </CustomTooltip>
             ),
-        },
-        {
-            title: messages('common.sourcePlatform'),
-            dataIndex: 'bySource',
-            key: 'bySource',
-            width: 280,
-            render: (bySource?: BySourceItem[]) => {
-                if (!bySource || bySource.length === 0) return '—';
-                return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
-                            <CustomTooltip
-                                key={item.source}
-                                title={messages('common.detailedAnalysis')}
-                            >
-                                <Tag
-                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
-                                            title: item.sourceLabel,
-                                            sourceType: item.source,
-                                        })
-                                    }
-                                >
-                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
-                                </Tag>
-                            </CustomTooltip>
-                        ))}
-                    </div>
-                );
-            },
         },
         {
             title: messages('common.viewCount'),
@@ -258,8 +217,8 @@ export default function DspsRankingPage() {
     ];
 
     const pageTitle = isRevenue
-        ? `${messages('common.dsps')} - ${messages('common.revenue')}`
-        : `${messages('common.dsps')} - ${messages('common.views')}`;
+        ? `${messages('common.sourceType')} - ${messages('common.revenue')}`
+        : `${messages('common.sourceType')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {
@@ -324,23 +283,23 @@ export default function DspsRankingPage() {
                         />
                     </div>
                     {isRevenue ? (
-                        <Table
+                        <Table<RevenueSourceTypeItem>
                             sticky
-                            size="small"
                             columns={revenueColumns}
-                            dataSource={revenueDataWithRank}
+                            dataSource={revenueItems}
                             loading={isFetching}
-                            rowKey="dspName"
+                            rowKey="sourceType"
+                            size="small"
                             pagination={false}
                         />
                     ) : (
-                        <Table
+                        <Table<SourceTypeRankingItem>
                             sticky
-                            size="small"
                             columns={viewColumns}
-                            dataSource={viewsDataWithRank}
+                            dataSource={viewItems}
                             loading={isFetching}
-                            rowKey="dspName"
+                            rowKey="sourceType"
+                            size="small"
                             pagination={false}
                         />
                     )}
@@ -351,8 +310,9 @@ export default function DspsRankingPage() {
                         pageSize={pageSize}
                         total={
                             isRevenue
-                                ? topDspData?.metadata?.totalItems || 0
-                                : dspRankingData?.metadata?.totalItems || 0
+                                ? topSourceTypeData?.metadata?.totalItems || 0
+                                : sourceTypeRankingData?.metadata?.totalItems ||
+                                  0
                         }
                         onChange={onChangePage}
                         showTotalText
@@ -361,7 +321,6 @@ export default function DspsRankingPage() {
                         pageSizeOptions={PAGE_SIZE_OPTIONS}
                     />
                 </Card>
-
                 {detailSourceModal.open && (
                     <DetailSourceTypeAnalyticsModal
                         open={detailSourceModal.open}

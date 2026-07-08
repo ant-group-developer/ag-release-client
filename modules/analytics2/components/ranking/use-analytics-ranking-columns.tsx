@@ -6,12 +6,13 @@ import { useMemo } from 'react';
 import { RANK_COLUMN_WIDTH } from '../../constants/types';
 import {
     ArtistRankingItem,
+    ChannelRankingItem,
+    DspRankingItem,
     LabelRankingItem,
     ReleaseRankingItem,
     TenantRankingItem,
     TrackRankingItem,
-    ChannelRankingItem,
-    DspRankingItem,
+    SourceTypeRankingItem,
 } from '../../types';
 
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
@@ -499,7 +500,9 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             height={32}
                             src={record.thumbUrl}
                         />
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
@@ -531,6 +534,58 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
         [messages, setDetailModal]
     );
 
+    const sourceTypeColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.sourceType'),
+                dataIndex: 'sourceTypeLabel',
+                key: 'sourceTypeLabel',
+                ellipsis: true,
+                render: (text: string, record: SourceTypeRankingItem) => (
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailModal({
+                                    type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
+                                    title: text,
+                                    id: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                ),
+            },
+            {
+                title: messages('common.viewCount'),
+                dataIndex: 'totalViews',
+                key: 'totalViews',
+                width: 200,
+                render: (views: number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        {views ? views.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+        ],
+        [messages, setDetailModal]
+    );
+
     return {
         trackColumns,
         releaseColumns,
@@ -539,5 +594,6 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
         tenantColumns,
         dspColumns,
         channelColumns,
+        sourceTypeColumns,
     };
 }

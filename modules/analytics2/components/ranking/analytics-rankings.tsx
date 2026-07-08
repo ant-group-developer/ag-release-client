@@ -12,6 +12,7 @@ import {
     useGetTenantRanking,
     useGetTrackRanking,
     useGetChannelRanking,
+    useGetSourceTypeRanking,
 } from '../../hooks/use-get-rankings';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
@@ -21,6 +22,7 @@ import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
 import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
+import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
@@ -57,6 +59,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         tenantColumns,
         dspColumns,
         channelColumns,
+        sourceTypeColumns,
     } = useAnalyticsRankingColumns({ setDetailModal });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
@@ -108,6 +111,14 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
 
     const { channelRankingData, isFetching: isChannelsFetching } =
         useGetChannelRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+        });
+
+    const { sourceTypeRankingData, isFetching: isSourceTypesFetching } =
+        useGetSourceTypeRanking({
             fromDate,
             toDate,
             page: 1,
@@ -208,6 +219,19 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         viewMoreHref={`${APP_ROUTES.ANALYTICS_CHANNELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
                     />
                 </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(messages('common.sourceType'))}
+                        columns={sourceTypeColumns}
+                        dataSource={sourceTypeRankingData?.items}
+                        loading={isSourceTypesFetching}
+                        rowKey="sourceType"
+                        labelKey="sourceTypeLabel"
+                        valueKey="totalViews"
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={`${APP_ROUTES.ANALYTICS_SOURCE_TYPES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                    />
+                </Col>
             </Row>
             {detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE && (
                 <DetailReleaseAnalyticsModal
@@ -290,6 +314,18 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     title={detailModal.title}
                     pgDspId={detailModal.id}
                     dspReportId={detailModal.dspReportId || ''}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE && (
+                <DetailSourceTypeAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    sourceType={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
                 />

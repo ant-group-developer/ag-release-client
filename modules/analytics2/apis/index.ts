@@ -34,6 +34,7 @@ import {
     RevenueLineChartParams,
     RevenueQueryParams,
     RevenueReleaseItem,
+    RevenueSourceTypeItem,
     RevenueSummaryData,
     RevenueTenantBarChartItem,
     RevenueTenantItem,
@@ -53,6 +54,7 @@ import {
     TrackDspItem,
     TrackRankingItem,
     TrackTerItem,
+    SourceTypeRankingItem,
     TrendViewDspBarChartItem,
     TrendViewDspBarChartParams,
     TrendViewLineChartItem,
@@ -155,6 +157,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getSourceTypeRanking: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<SourceTypeRankingItem>>(
+            '/analytics/ranking/source-types',
+            params
+        );
+    },
 
     startSync: ({ period, force }: SyncRequest) => {
         return axiosInstance.post<SyncAllResponse>('/etl/ftp/sync', {
@@ -240,6 +248,12 @@ export const analytics2Apis = {
     getRevenueTopChannel: (params: RevenueQueryParams) => {
         return axiosInstance.post<PaginationResponse<RevenueChannelItem>>(
             '/analytics/revenue/top-channel',
+            params
+        );
+    },
+    getRevenueTopSourceType: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueSourceTypeItem>>(
+            '/analytics/revenue/top-source-type',
             params
         );
     },

@@ -343,6 +343,7 @@
         "use": "Sử dụng",
         "source": "Tài nguyên",
         "sourcePlatform": "Nguồn",
+        "sourceType": "Loại nguồn",
         "userUpload": "Người tải lên",
         "imageAi": "Hình ảnh AI",
         "thumbnail": "Thumbnail",

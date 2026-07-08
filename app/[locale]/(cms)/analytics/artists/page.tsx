@@ -11,6 +11,7 @@ import {
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import DetailArtistAnalyticsModal from '@/modules/analytics2/components/detail-artist/detail-artist-analytics-modal';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import ArtistRevenueTable from '@/modules/analytics2/components/table/artist-revenue-table';
 import ArtistViewsTable from '@/modules/analytics2/components/table/artist-views-table';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -58,6 +59,16 @@ export default function ArtistsRankingPage() {
         artistId: '',
     });
 
+    const [detailSourceModal, setDetailSourceModal] = useState<{
+        open: boolean;
+        title: string;
+        sourceType: string;
+    }>({
+        open: false,
+        title: '',
+        sourceType: '',
+    });
+
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
@@ -71,6 +82,7 @@ export default function ArtistsRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
+                groupBySource: true,
             },
             { enabled: !isRevenue }
         );
@@ -85,6 +97,7 @@ export default function ArtistsRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
+                groupBySource: true,
             },
             { enabled: isRevenue }
         );
@@ -110,6 +123,14 @@ export default function ArtistsRankingPage() {
             open: true,
             title: artistName,
             artistId,
+        });
+    };
+
+    const handleDetailSource = (sourceType: string, title: string) => {
+        setDetailSourceModal({
+            open: true,
+            title,
+            sourceType,
         });
     };
 
@@ -171,6 +192,7 @@ export default function ArtistsRankingPage() {
                             loading={isFetching}
                             dspData={dspData}
                             onDetailArtist={handleDetailArtist}
+                            onDetailSource={handleDetailSource}
                         />
                     ) : (
                         <ArtistViewsTable
@@ -178,6 +200,7 @@ export default function ArtistsRankingPage() {
                             loading={isFetching}
                             dspData={dspData}
                             onDetailArtist={handleDetailArtist}
+                            onDetailSource={handleDetailSource}
                         />
                     )}
                     <AppPagination
@@ -206,6 +229,19 @@ export default function ArtistsRankingPage() {
                         }
                         title={detailModal.title}
                         artistId={detailModal.artistId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
+
+                {detailSourceModal.open && (
+                    <DetailSourceTypeAnalyticsModal
+                        open={detailSourceModal.open}
+                        onClose={() =>
+                            setDetailSourceModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailSourceModal.title}
+                        sourceType={detailSourceModal.sourceType}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
                     />

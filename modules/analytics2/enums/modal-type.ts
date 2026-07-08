@@ -6,4 +6,5 @@ export enum ANALYTICS_MODAL_TYPE {
     TENANT = 'tenant',
     CHANNEL = 'channel',
     DSP = 'dsp',
+    SOURCE_TYPE = 'source_type',
 }
