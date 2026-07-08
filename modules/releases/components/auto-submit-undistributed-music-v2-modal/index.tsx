@@ -10,7 +10,6 @@ import { formattedDate } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
-import ReleaseDspStatusTag from '@/modules/release-dsp/components/release-dsp-status-tag';
 import { useBulkSubmitRelease } from '@/modules/releases/hooks/use-bulk-submit-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { usePreviewBulkSubmitResult } from '@/modules/releases/hooks/use-preview-bulk-submit-result';
@@ -21,16 +20,12 @@ import {
     Button,
     Form,
     message,
-    Modal,
     Popover,
-    Select,
-    Switch,
+    Space,
     TableProps,
-    Tabs,
     Tag,
 } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useMemo, useState } from 'react';
 import {
@@ -40,20 +35,15 @@ import {
     RELEASES_TABLE_KEY,
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
-import DspSelectionTable from '../bulk-submit-modal/dsp-selection-table';
 import ReleasesHeaderV2 from '../header';
 import DspStatusModal from '../table/dsp-status-modal';
 import ReleaseTitleColumn from '../table/title-column';
 import ReleaseStatusTag from '../tag/release-status-tag';
+import SubmitConfigForm, { AutoSubmitV2FormValues } from './config-form';
+import PreviewSubmitModal from './preview-modal';
 
 interface AutoSubmitUndistributedMusicV2ModalProps {
     onFinished?: () => void;
-}
-
-interface AutoSubmitV2FormValues {
-    dspCodes: string[];
-    ciImportAction?: CI_IMPORT_ACTION;
-    skipDistributed?: boolean;
 }
 
 const DEFAULT_FILTER: ReleasesDataFilter = {
@@ -64,22 +54,6 @@ const DEFAULT_FILTER: ReleasesDataFilter = {
     type: RELEASE_TYPE.AUDIO,
     isImportedFromReport: 'false',
 };
-
-const getPreviewDataSource = (data: any) => {
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data?.items)) return data.items;
-    if (Array.isArray(data?.releaseDspDeliveries))
-        return data.releaseDspDeliveries;
-    if (Array.isArray(data?.data)) return data.data;
-    return data ? [data] : [];
-};
-
-const getSubmitData = (data: any) => data?.submitData ?? data?.data?.submitData;
-
-const getPreviewRowKey = (record: any) =>
-    record?.id ?? record?.dsp?.id ?? record?.dspCode;
-
-const hasTargetStatus = (record: any) => !!record?.targetStatus;
 
 const AutoSubmitUndistributedMusicV2Modal = ({
     onFinished,
@@ -384,7 +358,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
                         handlePreview(record);
                     }}
                 >
-                    Preview data
+                    {messages('release.autoSubmitV2.previewData')}
                 </Button>
             ),
         },
@@ -398,235 +372,14 @@ const AutoSubmitUndistributedMusicV2Modal = ({
         },
     };
 
-    const configContent = (
-        <Form form={form} layout="vertical" className="w-[560px]">
-            <Tabs
-                size="small"
-                type="card"
-                items={[
-                    {
-                        key: 'dsps',
-                        label: 'DSP',
-                        children: (
-                            <Form.Item
-                                name="dspCodes"
-                                label={messages('placeholder.selectDsp')}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: messages('validation.select'),
-                                    },
-                                ]}
-                                style={{ marginBottom: 0 }}
-                            >
-                                <DspSelectionTable
-                                    dataSource={dspDataFilter}
-                                    loading={isFetchingDsp}
-                                    scroll={{
-                                        x: 'max-content',
-                                        y: 220,
-                                    }}
-                                />
-                            </Form.Item>
-                        ),
-                    },
-                    {
-                        key: 'options',
-                        label: 'Tuy chon',
-                        children: (
-                            <>
-                                <Form.Item
-                                    name="ciImportAction"
-                                    label="Hanh dong import CI"
-                                    initialValue={
-                                        CI_IMPORT_ACTION.SKIP_CI_IMPORT
-                                    }
-                                    style={{ marginBottom: 0 }}
-                                >
-                                    <Select
-                                        optionLabelProp="title"
-                                        options={[
-                                            {
-                                                value: CI_IMPORT_ACTION.KEEP_CURRENT_STATUS,
-                                                title: 'Giu trang thai hien tai',
-                                                label: (
-                                                    <div>
-                                                        <div className="font-medium">
-                                                            Giu trang thai hien
-                                                            tai
-                                                        </div>
-                                                        <div className="text-xs text-gray-500">
-                                                            Giu nguyen
-                                                            release.ciData.status,
-                                                            khong can thiep
-                                                            trang thai CI hien
-                                                            tai. Neu release
-                                                            dang EXISTS_ON_CI
-                                                            thi van la
-                                                            EXISTS_ON_CI; neu
-                                                            dang NOT_FOUND_ON_CI
-                                                            thi van la
-                                                            NOT_FOUND_ON_CI.
-                                                        </div>
-                                                    </div>
-                                                ),
-                                            },
-                                            {
-                                                value: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
-                                                title: 'Bo qua import CI',
-                                                label: (
-                                                    <div>
-                                                        <div className="font-medium">
-                                                            Bo qua import CI
-                                                        </div>
-                                                        <div className="text-xs text-gray-500">
-                                                            Chi skip import CI
-                                                            khi release hien
-                                                            tai da co tren CI,
-                                                            tuc
-                                                            release.ciData.status
-                                                            = EXISTS_ON_CI. Neu
-                                                            release dang
-                                                            NOT_FOUND_ON_CI thi
-                                                            khong ep skip, giu
-                                                            nguyen trang thai do
-                                                            de he thong van co
-                                                            the chay import khi
-                                                            can.
-                                                        </div>
-                                                    </div>
-                                                ),
-                                            },
-                                            {
-                                                value: CI_IMPORT_ACTION.FORCE_CI_IMPORT,
-                                                title: 'Bat buoc import CI',
-                                                label: (
-                                                    <div>
-                                                        <div className="font-medium">
-                                                            Bat buoc import CI
-                                                        </div>
-                                                        <div className="text-xs text-gray-500">
-                                                            Ep chay import CI
-                                                            bang cach set
-                                                            release.ciData.status
-                                                            = NOT_FOUND_ON_CI,
-                                                            du truoc do release
-                                                            co the dang
-                                                            EXISTS_ON_CI. Muc
-                                                            tieu la lam he thong
-                                                            coi release nhu chua
-                                                            co tren CI de luon
-                                                            chay import lai.
-                                                        </div>
-                                                    </div>
-                                                ),
-                                            },
-                                        ]}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    name="skipDistributed"
-                                    label="Bo qua ban da distributed"
-                                    valuePropName="checked"
-                                    initialValue
-                                >
-                                    <Switch />
-                                </Form.Item>
-                            </>
-                        ),
-                    },
-                ]}
-            />
-        </Form>
-    );
-
-    const previewColumns: ProColumns<any>[] = [
-        {
-            title: messages('common.iNo'),
-            key: 'iNo',
-            width: 60,
-            align: 'center',
-            fixed: 'left',
-            render: (_, __, index) => index + 1,
-        },
-        {
-            title: messages('distribution.digitalServiceProviders'),
-            dataIndex: 'dsp.name',
-            key: 'dsp.name',
-            fixed: 'left',
-            width: 260,
-            render: (_, record) => {
-                const isLocked =
-                    record?.isActive === false ||
-                    record?.dsp?.isActive === false;
-
-                return (
-                    <div className="flex items-center gap-2">
-                        {record?.dsp?.picture && (
-                            <img
-                                src={record.dsp.picture}
-                                alt={record?.dsp?.name}
-                                className="h-6 w-6 rounded-full object-cover"
-                            />
-                        )}
-                        <span className="font-semibold">
-                            {record?.dsp?.name ?? record?.dspCode ?? '-'}
-                        </span>
-                        {isLocked && (
-                            <CustomTooltip title="Nền tảng phát hành này đã bị khoá, không thể phát hành">
-                                <Lock size={16} className="text-gray-400" />
-                            </CustomTooltip>
-                        )}
-                    </div>
-                );
-            },
-        },
-        {
-            title: messages('distribution.hasLiveVersion'),
-            key: 'hasLiveVersion',
-            dataIndex: 'hasLiveVersion',
-            width: 150,
-            render: (_, record) => (
-                <Tag color={record?.hasLiveVersion ? 'success' : 'default'}>
-                    {record?.hasLiveVersion ? 'Live' : 'Not Live'}
-                </Tag>
-            ),
-        },
-        {
-            title: 'Current status',
-            key: 'status',
-            dataIndex: 'status',
-            width: 180,
-            render: (_, record) =>
-                record?.status ? (
-                    <ReleaseDspStatusTag status={record.status} />
-                ) : (
-                    '-'
-                ),
-        },
-        {
-            title: 'Target status',
-            key: 'targetStatus',
-            dataIndex: 'targetStatus',
-            width: 180,
-            render: (_, record) =>
-                record?.targetStatus ? (
-                    <ReleaseDspStatusTag status={record.targetStatus} />
-                ) : (
-                    '-'
-                ),
-        },
-    ];
-
     return (
         <AppModal
             open
-            title="Tự động submit2"
             onCancel={closeModal}
             width="90vw"
             styles={{
                 body: {
-                    height: '82vh',
+                    height: '85vh',
                     overflowY: 'auto',
                 },
             }}
@@ -648,26 +401,39 @@ const AutoSubmitUndistributedMusicV2Modal = ({
         >
             <div className="flex flex-col gap-4">
                 <div>
-                    <div className="mb-3 flex items-center justify-between">
+                    <div className="mb-3 flex items-center justify-between pr-6">
                         <span className="text-base font-semibold">
-                            {messages('release.list')}
+                            {messages('release.autoSubmitV2.title')}
                         </span>
-                        {selectedReleaseIds.length > 0 && (
-                            <Alert
-                                type="info"
-                                showIcon
-                                message={`Đã chọn ${selectedReleaseIds.length} phát hành`}
-                                style={{ padding: '4px 12px' }}
-                            />
-                        )}
-                        <Popover
-                            trigger="click"
-                            placement="bottomRight"
-                            title="Cau hinh submit"
-                            content={configContent}
-                        >
-                            <Button icon={<SettingOutlined />}>Cau hinh</Button>
-                        </Popover>
+                        <Space>
+                            {selectedReleaseIds.length > 0 && (
+                                <Alert
+                                    type="info"
+                                    showIcon
+                                    message={messages('release.autoSubmitV2.selectedCount', {
+                                        count: selectedReleaseIds.length,
+                                    })}
+                                    style={{ padding: '4px 12px' }}
+                                />
+                            )}
+                            <Popover
+                                trigger="click"
+                                placement="bottomRight"
+                                title={messages('release.autoSubmitV2.submitConfig')}
+                                content={
+                                    <SubmitConfigForm
+                                        form={form}
+                                        dspDataFilter={dspDataFilter}
+                                        isFetchingDsp={isFetchingDsp}
+                                        defaultDspCodes={defaultDspCodes}
+                                    />
+                                }
+                            >
+                                <Button icon={<SettingOutlined />}>
+                                    {messages('release.autoSubmitV2.config')}
+                                </Button>
+                            </Popover>
+                        </Space>
                     </div>
 
                     <div className="mb-3">
@@ -722,137 +488,16 @@ const AutoSubmitUndistributedMusicV2Modal = ({
                         showQuickJumper
                     />
                 </div>
-
-                {false && (
-                    <Form form={form} layout="vertical" className="order-1">
-                        <Tabs
-                            size="small"
-                            type="card"
-                            items={[
-                                {
-                                    key: 'dsps',
-                                    label: 'DSP',
-                                    children: (
-                                        <Form.Item
-                                            name="dspCodes"
-                                            label={messages(
-                                                'placeholder.selectDsp'
-                                            )}
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        messages(
-                                                            'validation.select'
-                                                        ),
-                                                },
-                                            ]}
-                                            style={{ marginBottom: 0 }}
-                                        >
-                                            <DspSelectionTable
-                                                dataSource={dspDataFilter}
-                                                loading={isFetchingDsp}
-                                                scroll={{
-                                                    x: 'max-content',
-                                                    y: 140,
-                                                }}
-                                            />
-                                        </Form.Item>
-                                    ),
-                                },
-                                {
-                                    key: 'options',
-                                    label: 'Tuỳ chọn',
-                                    children: (
-                                        <Form.Item
-                                            name="ciImportAction"
-                                            label="Hành động import CI"
-                                            initialValue={
-                                                CI_IMPORT_ACTION.SKIP_CI_IMPORT
-                                            }
-                                        >
-                                            <Select
-                                                options={[
-                                                    {
-                                                        value: CI_IMPORT_ACTION.KEEP_CURRENT_STATUS,
-                                                        label: 'Giữ trạng thái hiện tại',
-                                                    },
-                                                    {
-                                                        value: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
-                                                        label: 'Bỏ qua import CI',
-                                                    },
-                                                    {
-                                                        value: CI_IMPORT_ACTION.FORCE_CI_IMPORT,
-                                                        label: 'Bắt buộc import CI',
-                                                    },
-                                                ]}
-                                            />
-                                        </Form.Item>
-                                    ),
-                                },
-                            ]}
-                        />
-                    </Form>
-                )}
             </div>
 
-            <Modal
-                title={
-                    <div className="flex items-center justify-between gap-3 pr-8">
-                        <span>
-                            {previewRecord
-                                ? `Preview data - ${previewRecord.title}`
-                                : 'Preview data'}
-                        </span>
-                        {getSubmitData(previewData) && (
-                            <Popover
-                                trigger="click"
-                                placement="bottomRight"
-                                title="Data submit"
-                                content={
-                                    <pre className="max-h-[60vh] max-w-[520px] overflow-auto rounded bg-gray-50 p-3 text-xs">
-                                        {JSON.stringify(
-                                            getSubmitData(previewData),
-                                            null,
-                                            2
-                                        )}
-                                    </pre>
-                                }
-                            >
-                                <Button size="small">Data submit</Button>
-                            </Popover>
-                        )}
-                    </div>
-                }
-                open={!!previewRecord && !!previewData}
+            <PreviewSubmitModal
+                previewRecord={previewRecord}
+                previewData={previewData}
                 onCancel={() => {
                     setPreviewRecord(null);
                     setPreviewData(null);
                 }}
-                footer={null}
-                width="80vw"
-                centered
-            >
-                <AppProTable
-                    dataSource={getPreviewDataSource(previewData)}
-                    rowKey={getPreviewRowKey}
-                    columns={previewColumns}
-                    rowClassName={(record: any) =>
-                        hasTargetStatus(record)
-                            ? 'bg-blue-50/60'
-                            : 'bg-gray-50 opacity-45'
-                    }
-                    pagination={false}
-                    options={false}
-                    search={false}
-                    tableAlertRender={false}
-                    tableAlertOptionRender={false}
-                    scroll={{
-                        x: '70vw',
-                        y: '60vh',
-                    }}
-                />
-            </Modal>
+            />
 
             <DspStatusModal
                 open={isDspStatusOpen}

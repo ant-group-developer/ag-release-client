@@ -1,7 +1,6 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
-import AppSwitch from '@/components/ui/switch/status-switch';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
@@ -29,6 +28,7 @@ import {
     WarningOutlined,
 } from '@ant-design/icons';
 import {
+    Badge,
     Button,
     Checkbox,
     Popover,
@@ -66,6 +66,8 @@ type DspDeliveryFilterTableRow = {
     includeStatuses: RELEASE_DSP_DELIVERY_STATUS[];
     excludeStatuses: RELEASE_DSP_DELIVERY_STATUS[];
 };
+
+type DspDeliveryQuickFilter = 'direct' | 'ci' | 'state51';
 
 const createDspDeliveryFilterRows = (
     dsps: DspData[] = [],
@@ -144,6 +146,9 @@ export default function ReleasesHeaderV2({
         DspDeliveryFilterTableRow[]
     >(() => createDspDeliveryFilterRows([], dataFilter.dspDelivery));
     const [showAppliedDspOnly, setShowAppliedDspOnly] = useState(false);
+    const [selectedDspDeliveryGroups, setSelectedDspDeliveryGroups] = useState<
+        DspDeliveryQuickFilter[]
+    >([]);
 
     useEffect(() => {
         setDspDeliveryFilterRows(
@@ -233,6 +238,24 @@ export default function ReleasesHeaderV2({
                 label: messages(`releaseDsp.status.${status}`),
                 value: status,
             })),
+        [messages]
+    );
+
+    const dspDeliveryQuickFilterOptions = useMemo(
+        () => [
+            {
+                label: messages('releaseDsp.dspDirect'),
+                value: 'direct',
+            },
+            {
+                label: messages('releaseDsp.dspCi'),
+                value: 'ci',
+            },
+            {
+                label: messages('releaseDsp.dspState51'),
+                value: 'state51',
+            },
+        ],
         [messages]
     );
 
@@ -506,14 +529,52 @@ export default function ReleasesHeaderV2({
         setShowAppliedDspOnly(true);
     };
 
-    const applyAllDspDeliveryFilter = () => {
-        const nextRows = dspDeliveryFilterRows.map((row) => ({
-            ...row,
-            enabled: true,
-        }));
+    const getDspDeliveryCodesByGroups = (groups: DspDeliveryQuickFilter[]) => {
+        const groupSet = new Set(groups);
+        const codeSet = new Set<string>();
+
+        (dspData?.items ?? []).forEach((dsp) => {
+            if (!dsp.code) return;
+
+            const isDirect = dsp.dspRoutingConfig?.mode === DSP_DEAL.DIRECT;
+            const isCi = !isDirect && dsp.hasDeal;
+            const isState51 = !isDirect && !dsp.hasDeal;
+
+            if (
+                (groupSet.has('direct') && isDirect) ||
+                (groupSet.has('ci') && isCi) ||
+                (groupSet.has('state51') && isState51)
+            ) {
+                codeSet.add(dsp.code);
+            }
+        });
+
+        return codeSet;
+    };
+
+    const applyDspDeliveryGroupFilter = (groups: DspDeliveryQuickFilter[]) => {
+        setSelectedDspDeliveryGroups(groups);
+
+        if (!groups.length) {
+            toggleAllDspDeliveryFilter(false);
+            return;
+        }
+
+        applyQuickDspDeliveryFilter(
+            Array.from(getDspDeliveryCodesByGroups(groups))
+        );
+    };
+
+    const toggleAllDspDeliveryFilter = (checked: boolean) => {
+        const visibleCodeSet = new Set(
+            dspDeliveryFilterDataSource.map((row) => row.code)
+        );
+        const nextRows = dspDeliveryFilterRows.map((row) =>
+            visibleCodeSet.has(row.code) ? { ...row, enabled: checked } : row
+        );
 
         setDspDeliveryFilterRows(nextRows);
-        setShowAppliedDspOnly(true);
+        setShowAppliedDspOnly(checked);
     };
 
     const excludeInactiveDspDeliveryFilter = () => {
@@ -540,6 +601,7 @@ export default function ReleasesHeaderV2({
             createDspDeliveryFilterRows(dspData?.items ?? [])
         );
         setShowAppliedDspOnly(false);
+        setSelectedDspDeliveryGroups([]);
         removeFilter();
     };
 
@@ -554,6 +616,7 @@ export default function ReleasesHeaderV2({
             createDspDeliveryFilterRows(dspData?.items ?? [])
         );
         setShowAppliedDspOnly(false);
+        setSelectedDspDeliveryGroups([]);
         changeDspDeliveryFilter(undefined);
     };
 
@@ -563,12 +626,28 @@ export default function ReleasesHeaderV2({
             (row.includeStatuses.length > 0 || row.excludeStatuses.length > 0)
     ).length;
 
-    const dspDeliveryFilterDataSource = useMemo(
-        () =>
-            showAppliedDspOnly
-                ? dspDeliveryFilterRows.filter((row) => row.enabled)
-                : dspDeliveryFilterRows,
-        [dspDeliveryFilterRows, showAppliedDspOnly]
+    const dspDeliveryFilterDataSource = useMemo(() => {
+        let dataSource = dspDeliveryFilterRows;
+
+        if (selectedDspDeliveryGroups.length) {
+            const codeSet = getDspDeliveryCodesByGroups(
+                selectedDspDeliveryGroups
+            );
+            dataSource = dataSource.filter((row) => codeSet.has(row.code));
+        }
+
+        return showAppliedDspOnly
+            ? dataSource.filter((row) => row.enabled)
+            : dataSource;
+    }, [dspDeliveryFilterRows, selectedDspDeliveryGroups, showAppliedDspOnly]);
+
+    const hasVisibleDspDeliveryFilterRows =
+        dspDeliveryFilterDataSource.length > 0;
+    const isAllVisibleDspDeliverySelected =
+        hasVisibleDspDeliveryFilterRows &&
+        dspDeliveryFilterDataSource.every((row) => row.enabled);
+    const isSomeVisibleDspDeliverySelected = dspDeliveryFilterDataSource.some(
+        (row) => row.enabled
     );
 
     const dspDeliveryFilterColumns: ColumnsType<DspDeliveryFilterTableRow> = [
@@ -580,33 +659,54 @@ export default function ReleasesHeaderV2({
         //     render: (_, __, index) => index + 1,
         // },
         {
-            title: messages('common.apply'),
+            title: (
+                <div className="flex flex-col items-center gap-1">
+                    {/* <span>{messages('common.apply')}</span> */}
+                    <Checkbox
+                        checked={isAllVisibleDspDeliverySelected}
+                        disabled={!hasVisibleDspDeliveryFilterRows}
+                        indeterminate={
+                            isSomeVisibleDspDeliverySelected &&
+                            !isAllVisibleDspDeliverySelected
+                        }
+                        onChange={(event) =>
+                            toggleAllDspDeliveryFilter(event.target.checked)
+                        }
+                    />
+                </div>
+            ),
             dataIndex: 'enabled',
-            width: 64,
+            width: 80,
             align: 'center',
             render: (_, record) => (
-                // <Checkbox
-                //     checked={record.enabled}
-                //     onChange={(event) =>
-                //         updateDspDeliveryFilterRow(record.code, {
-                //             enabled: event.target.checked,
-                //         })
-                //     }
-                // />
-                <AppSwitch
+                <Checkbox
                     checked={record.enabled}
-                    onChange={(checked) =>
+                    onChange={(event) =>
                         updateDspDeliveryFilterRow(record.code, {
-                            enabled: checked,
+                            enabled: event.target.checked,
                         })
                     }
                 />
             ),
         },
         {
-            title: messages('dsp.label'),
+            title: (
+                <div className="flex flex-col gap-1">
+                    <span>{messages('dsp.label')}</span>
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        options={dspDeliveryQuickFilterOptions}
+                        value={selectedDspDeliveryGroups}
+                        placeholder={messages('common.quickSelect')}
+                        onChange={applyDspDeliveryGroupFilter}
+                        className="w-full"
+                        maxTagCount="responsive"
+                    />
+                </div>
+            ),
             dataIndex: 'name',
-            width: 180,
+            width: 260,
             render: (_, record) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -723,67 +823,9 @@ export default function ReleasesHeaderV2({
     const dspDeliveryFilterContent = (
         <div className="max-w-[50vw] space-y-2 overflow-hidden">
             <Typography.Text strong className="!text-lg">
-                {messages('releaseDsp.dspStatus')}
+                {messages('releaseDsp.dspFilter')}
             </Typography.Text>
             <div className="mb-2 flex flex-wrap gap-2">
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={applyAllDspDeliveryFilter}
-                >
-                    {messages('common.selectAll')}
-                </Button>
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={() =>
-                        applyQuickDspDeliveryFilter(
-                            (dspData?.items ?? [])
-                                .filter(
-                                    (dsp) =>
-                                        dsp.dspRoutingConfig?.mode ===
-                                        DSP_DEAL.DIRECT
-                                )
-                                .map((dsp) => dsp.code)
-                        )
-                    }
-                >
-                    {messages('releaseDsp.dspDirect')}
-                </Button>
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={() =>
-                        applyQuickDspDeliveryFilter(
-                            (dspData?.items ?? [])
-                                .filter(
-                                    (dsp) =>
-                                        dsp.dspRoutingConfig?.mode !==
-                                            DSP_DEAL.DIRECT && dsp.hasDeal
-                                )
-                                .map((dsp) => dsp.code)
-                        )
-                    }
-                >
-                    {messages('releaseDsp.dspCi')}
-                </Button>
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={() =>
-                        applyQuickDspDeliveryFilter(
-                            (dspData?.items ?? [])
-                                .filter(
-                                    (dsp) =>
-                                        dsp.dspRoutingConfig?.mode !==
-                                            DSP_DEAL.DIRECT && !dsp.hasDeal
-                                )
-                                .map((dsp) => dsp.code)
-                        )
-                    }
-                >
-                    {messages('releaseDsp.dspState51')}
-                </Button>
                 <Button
                     shape="round"
                     size="small"
@@ -810,7 +852,7 @@ export default function ReleasesHeaderV2({
                 columns={dspDeliveryFilterColumns}
                 dataSource={dspDeliveryFilterDataSource}
                 rowClassName={(record) => (record.enabled ? '' : 'opacity-50')}
-                scroll={{ x: 600, y: 320 }}
+                scroll={{ x: 740, y: 320 }}
             />
             <div className="mb-2 flex justify-end gap-2 py-1">
                 <Button
@@ -851,11 +893,16 @@ export default function ReleasesHeaderV2({
                     arrow={false}
                     autoAdjustOverflow
                 >
-                    <Button>
-                        {messages('releaseDsp.dspStatus')}
-                        {!!appliedDspDeliveryFilterCount &&
-                            ` (${appliedDspDeliveryFilterCount})`}
-                    </Button>
+                    <Badge
+                        count={appliedDspDeliveryFilterCount}
+                        size="small"
+                        offset={[-2, 2]}
+                        color="#1677ff"
+                    >
+                        <Button>
+                            {messages('releaseDsp.dspFilter')}
+                        </Button>
+                    </Badge>
                 </Popover>
                 <FilterPanel
                     configs={filterConfigs}
