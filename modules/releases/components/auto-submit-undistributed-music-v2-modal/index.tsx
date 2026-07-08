@@ -379,7 +379,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
             width="90vw"
             styles={{
                 body: {
-                    height: '85vh',
+                    maxHeight: '85vh',
                     overflowY: 'auto',
                 },
             }}
@@ -410,16 +410,21 @@ const AutoSubmitUndistributedMusicV2Modal = ({
                                 <Alert
                                     type="info"
                                     showIcon
-                                    message={messages('release.autoSubmitV2.selectedCount', {
-                                        count: selectedReleaseIds.length,
-                                    })}
+                                    message={messages(
+                                        'release.autoSubmitV2.selectedCount',
+                                        {
+                                            count: selectedReleaseIds.length,
+                                        }
+                                    )}
                                     style={{ padding: '4px 12px' }}
                                 />
                             )}
                             <Popover
                                 trigger="click"
                                 placement="bottomRight"
-                                title={messages('release.autoSubmitV2.submitConfig')}
+                                title={messages(
+                                    'release.autoSubmitV2.submitConfig'
+                                )}
                                 content={
                                     <SubmitConfigForm
                                         form={form}
@@ -456,7 +461,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
                         tableAlertRender={false}
                         tableAlertOptionRender={false}
                         size="small"
-                        scroll={{ x: 1220, y: 560 }}
+                        scroll={{ x: 1220, y: 460 }}
                         onRow={(record) => ({
                             onClick: (event) => {
                                 const target = event.target as HTMLElement;
