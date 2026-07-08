@@ -23,6 +23,13 @@ export default function ImportTab({ data, loading }: Props) {
     const importColumns: ColumnsType<ReleaseCiImportEmbeddedItem> = useMemo(
         () => [
             {
+                title: 'STT',
+                key: 'index',
+                width: 70,
+                align: 'center',
+                render: (_, __, index) => index + 1,
+            },
+            {
                 title: 'Batch external ID',
                 key: 'batchExternalId',
                 render: (_, record) => record.import_external_identifier ?? '-',

@@ -4,9 +4,9 @@ import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import {
     BarsOutlined,
     CalendarOutlined,
-    SearchOutlined,
-    ImportOutlined,
     ExportOutlined,
+    ImportOutlined,
+    SearchOutlined,
     WarningOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
@@ -14,6 +14,12 @@ import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { RELEASE_CI_DATA_STATUS } from '../../enums';
 import { ReleaseCiDataFilter } from '../../types';
+
+const normalizeBooleanFilterValue = (value: unknown) => {
+    if (value === true || value === 'true') return 'true';
+    if (value === false || value === 'false') return 'false';
+    return undefined;
+};
 
 type Props = {
     dataFilter: ReleaseCiDataFilter;
@@ -60,6 +66,20 @@ export default function ReleaseDistributionHeader({
         [messages]
     );
 
+    const booleanFilterOptions = useMemo(
+        () => [
+            {
+                label: 'Có',
+                value: 'true',
+            },
+            {
+                label: 'Không',
+                value: 'false',
+            },
+        ],
+        []
+    );
+
     const filterConfigs: FilterConfig[] = useMemo(() => {
         return [
             {
@@ -93,29 +113,41 @@ export default function ReleaseDistributionHeader({
                 key: 'neverExported',
                 label: messages('releaseCiData.neverExported'),
                 icon: <ExportOutlined />,
-                type: 'checkbox',
+                type: 'radio',
                 filterKey: 'neverExported',
-                options: [
-                    {
-                        label: messages('releaseCiData.neverExported'),
-                        value: 'true',
-                    },
-                ],
-                isCommaSeparated: true,
+                options: booleanFilterOptions,
             },
             {
                 key: 'lastImportIsFailed',
                 label: messages('releaseCiData.lastImportIsFailed'),
                 icon: <WarningOutlined />,
-                type: 'checkbox',
+                type: 'radio',
                 filterKey: 'lastImportIsFailed',
-                options: [
-                    {
-                        label: messages('releaseCiData.lastImportIsFailed'),
-                        value: 'true',
-                    },
-                ],
-                isCommaSeparated: true,
+                options: booleanFilterOptions,
+            },
+            {
+                key: 'isSkipImport',
+                label: 'Skip import CI',
+                icon: <ImportOutlined />,
+                type: 'radio',
+                filterKey: 'isSkipImport',
+                options: booleanFilterOptions,
+            },
+            {
+                key: 'hasQaFlag',
+                label: 'Có QA flag CI',
+                icon: <WarningOutlined />,
+                type: 'radio',
+                filterKey: 'hasQaFlag',
+                options: booleanFilterOptions,
+            },
+            {
+                key: 'needImportAgain',
+                label: 'Need import again',
+                icon: <ImportOutlined />,
+                type: 'radio',
+                filterKey: 'needImportAgain',
+                options: booleanFilterOptions,
             },
             {
                 key: 'dateCreated',
@@ -132,7 +164,12 @@ export default function ReleaseDistributionHeader({
                 filterKey: ['startCreatedAt', 'endCreatedAt'],
             },
         ];
-    }, [messages, isImportedFromReportOptions, releaseCiStatusOptions]);
+    }, [
+        messages,
+        isImportedFromReportOptions,
+        releaseCiStatusOptions,
+        booleanFilterOptions,
+    ]);
 
     const handleChangeFilter = (
         newValue: Partial<ReleaseCiDataFilter>,
@@ -153,16 +190,15 @@ export default function ReleaseDistributionHeader({
         if (copy.isImportedFromReport === 'all') {
             copy.isImportedFromReport = undefined;
         }
-        if (copy.neverExported === true || copy.neverExported === 'true') {
-            copy.neverExported = 'true';
-        } else {
-            copy.neverExported = undefined;
-        }
-        if (copy.lastImportIsFailed === true || copy.lastImportIsFailed === 'true') {
-            copy.lastImportIsFailed = 'true';
-        } else {
-            copy.lastImportIsFailed = undefined;
-        }
+        copy.neverExported = normalizeBooleanFilterValue(copy.neverExported);
+        copy.lastImportIsFailed = normalizeBooleanFilterValue(
+            copy.lastImportIsFailed
+        );
+        copy.isSkipImport = normalizeBooleanFilterValue(copy.isSkipImport);
+        copy.hasQaFlag = normalizeBooleanFilterValue(copy.hasQaFlag);
+        copy.needImportAgain = normalizeBooleanFilterValue(
+            copy.needImportAgain
+        );
         return copy;
     }, [dataFilter]);
 

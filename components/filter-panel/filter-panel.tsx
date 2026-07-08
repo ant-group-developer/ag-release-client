@@ -33,6 +33,12 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
      */
     const getActiveCount = useCallback(
         (config: FilterConfig): number => {
+            if (config.type === 'custom') {
+                return (
+                    config.customFilterKeys?.filter((key) => !!dataFilter[key])
+                        .length ?? 0
+                );
+            }
             if (config.type === 'dateRange') {
                 const [startKey, endKey] = config.filterKey as [string, string];
                 return dataFilter[startKey] && dataFilter[endKey] ? 1 : 0;
@@ -64,6 +70,17 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
      */
     const handleRemoveFilter = useCallback(
         (config: FilterConfig) => {
+            if (config.type === 'custom') {
+                const nextValue = config.customFilterKeys?.reduce(
+                    (result, key) => ({
+                        ...result,
+                        [key]: undefined,
+                    }),
+                    {}
+                );
+                onChangeFilter(nextValue as Partial<TFilter>);
+                return;
+            }
             if (config.type === 'dateRange') {
                 const [startKey, endKey] = config.filterKey as [string, string];
                 onChangeFilter({

@@ -94,6 +94,18 @@ export default function FilterCategoryContent({
      * Handle clear for this specific category
      */
     const handleClear = () => {
+        if (config.type === 'custom') {
+            onChangeFilter(
+                config.customFilterKeys?.reduce(
+                    (result, key) => ({
+                        ...result,
+                        [key]: undefined,
+                    }),
+                    {}
+                ) ?? {}
+            );
+            return;
+        }
         if (config.type === 'dateRange') {
             const [startKey, endKey] = config.filterKey as [string, string];
             onChangeFilter({
@@ -110,6 +122,12 @@ export default function FilterCategoryContent({
      * Check if this filter has active values
      */
     const hasActiveValues = (): boolean => {
+        if (config.type === 'custom') {
+            return (
+                config.customFilterKeys?.some((key) => !!dataFilter[key]) ??
+                false
+            );
+        }
         if (config.type === 'dateRange') {
             const [startKey, endKey] = config.filterKey as [string, string];
             return !!(dataFilter[startKey] || dataFilter[endKey]);
@@ -188,6 +206,9 @@ export default function FilterCategoryContent({
                         placeholder={config.placeholder}
                     />
                 )}
+
+                {config.type === 'custom' &&
+                    config.render?.({ dataFilter, onChangeFilter })}
             </div>
         </div>
     );
