@@ -1930,7 +1930,8 @@
             "invalidFeatFormat": "Tiêu đề có feat phải theo định dạng: feat.artist, feat.artist1, v.v.",
             "noLeadingTrailingSpace": "Không được có khoảng trắng ở đầu hoặc cuối",
             "titleCannotContainFeat": "Tiêu đề không được chứa từ \"feat\"",
-            "noLinguisticContentHasLyricist": "Không có ngôn ngữ âm thành thì không được có \"người đóng góp\" với vai trò \"người viết lời\""
+            "noLinguisticContentHasLyricist": "Không có ngôn ngữ âm thành thì không được có \"người đóng góp\" với vai trò \"người viết lời\"",
+            "noLinguisticContentHasExplicitContent": "Có nội dung nhạy cảm nhưng siêu dữ liệu không có giọng hát."
         }
     },
     "distribute": {
