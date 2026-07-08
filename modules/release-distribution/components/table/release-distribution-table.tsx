@@ -16,11 +16,12 @@ import {
 } from '@/modules/release-distribution/types';
 import { RELEASES_TABLE_KEY } from '@/modules/releases/enums';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, Tag, theme, Tooltip, Typography } from 'antd';
+import { Button, Modal, Popover, Tag, theme, Tooltip, Typography } from 'antd';
 import { RotateCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useAutoSyncCi } from '../../hooks/use-auto-sync-ci';
+import ImportTab from '../detail/import-tab';
 import DspStatusModal from './dsp-status-modal';
 
 type Props = Omit<AppProTableProps<ReleaseCiData>, 'columns'> & {
@@ -32,6 +33,8 @@ type Props = Omit<AppProTableProps<ReleaseCiData>, 'columns'> & {
     };
 };
 
+const stringifyJson = (value: unknown) => JSON.stringify(value, null, 2);
+
 export default function ReleaseDistributionTable({
     onChangeFilter,
     dataFilter,
@@ -40,6 +43,7 @@ export default function ReleaseDistributionTable({
     const messages = useTranslations();
     const { token } = theme.useToken();
     const [isDspModalOpen, setIsDspModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [selectedRecord, setSelectedRecord] = useState<ReleaseCiData | null>(
         null
     );
@@ -99,7 +103,7 @@ export default function ReleaseDistributionTable({
             },
         },
         {
-            title: 'UPC',
+            title: messages('common.upc'),
             key: 'upc',
             align: 'center',
             width: 150,
@@ -149,7 +153,7 @@ export default function ReleaseDistributionTable({
             title: messages('common.status'),
             dataIndex: RELEASE_CI_DATA_COLUMNS_DISPLAY.STATUS,
             align: 'center',
-            width: 150,
+            width: 180,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -169,7 +173,7 @@ export default function ReleaseDistributionTable({
                     },
                 }[status] || {
                     color: 'default',
-                    label: status || 'Unknown',
+                    label: status || messages('common.unknown'),
                 };
 
                 return <Tag color={config.color}>{config.label}</Tag>;
@@ -224,6 +228,84 @@ export default function ReleaseDistributionTable({
                     </div>
                 );
             },
+        },
+        {
+            title: messages(RELEASE_CI_DATA_COLUMNS_DISPLAY.IMPORT_COUNT),
+            key: RELEASE_CI_DATA_COLUMNS_DISPLAY.IMPORT_COUNT,
+            dataIndex: RELEASE_CI_DATA_COLUMNS_DISPLAY.IMPORT_COUNT,
+            align: 'center',
+            width: 130,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                RELEASE_CI_DATA_COLUMNS_DISPLAY.IMPORT_COUNT
+            ),
+            render: (_, record) => (
+                <div data-stop-row-click="true">
+                    <Button
+                        type="link"
+                        size="small"
+                        className="!px-0"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            setSelectedRecord(record);
+                            setIsImportModalOpen(true);
+                        }}
+                    >
+                        {record.importCount ?? 0}
+                    </Button>
+                </div>
+            ),
+        },
+        {
+            title: messages('releaseCiData.qaFlagsCi'),
+            key: 'qaFlagsCi',
+            dataIndex: 'qaFlagsCi',
+            align: 'center',
+            width: 130,
+            render: (_, record) => {
+                const qaFlagsCi = record.qaFlagsCi ?? [];
+                if (!qaFlagsCi.length) return '-';
+
+                const jsonText = stringifyJson(qaFlagsCi);
+
+                return (
+                    <div data-stop-row-click="true">
+                        <Popover
+                            trigger="click"
+                            placement="left"
+                            content={
+                                <div className="max-h-[420px] max-w-[640px] overflow-auto">
+                                    <Typography.Text
+                                        copyable={{ text: jsonText }}
+                                    >
+                                        <pre className="m-0 whitespace-pre-wrap text-xs">
+                                            {jsonText}
+                                        </pre>
+                                    </Typography.Text>
+                                </div>
+                            }
+                        >
+                            <Button size="small">
+                                {messages('common.data')} ({qaFlagsCi.length})
+                            </Button>
+                        </Popover>
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('releaseCiData.needImportAgain'),
+            key: 'needImportAgain',
+            dataIndex: 'needImportAgain',
+            align: 'center',
+            width: 150,
+            render: (value) => (
+                <Tag color={value ? 'warning' : 'default'}>
+                    {value ? messages('common.yes') : messages('common.no')}
+                </Tag>
+            ),
         },
         // {
         //     title: messages('common.createdAt'),
@@ -340,6 +422,11 @@ export default function ReleaseDistributionTable({
                         status: { show: true },
                         latestSyncedAt: { show: true },
                         importStatus: { show: true },
+                        [RELEASE_CI_DATA_COLUMNS_DISPLAY.IMPORT_COUNT]: {
+                            show: true,
+                        },
+                        qaFlagsCi: { show: true },
+                        needImportAgain: { show: true },
                         createdAt: { show: true },
                         updatedAt: { show: true },
                         dsp: { show: true },
@@ -354,6 +441,19 @@ export default function ReleaseDistributionTable({
                 }}
                 record={selectedRecord}
             />
+            <Modal
+                title={messages('releaseCiData.importData')}
+                open={isImportModalOpen}
+                onCancel={() => {
+                    setIsImportModalOpen(false);
+                    setSelectedRecord(null);
+                }}
+                footer={null}
+                width={1100}
+                destroyOnClose
+            >
+                <ImportTab data={selectedRecord?.importRawData} />
+            </Modal>
         </>
     );
 }

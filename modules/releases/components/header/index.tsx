@@ -32,6 +32,7 @@ import {
     Button,
     Checkbox,
     Popover,
+    Radio,
     Select,
     Space,
     Table,
@@ -120,6 +121,19 @@ const createDspDeliveryFilterRows = (
     );
 
     return Array.from(rowMap.values());
+};
+
+const normalizeBooleanFilterValue = (value: unknown) => {
+    if (value === true || value === 'true') return 'true';
+    if (value === false || value === 'false') return 'false';
+    return undefined;
+};
+
+const getBooleanFilterLabel = (value: unknown) => {
+    const normalizedValue = normalizeBooleanFilterValue(value);
+    if (normalizedValue === 'true') return 'Có';
+    if (normalizedValue === 'false') return 'Không';
+    return undefined;
 };
 
 export default function ReleasesHeaderV2({
@@ -241,6 +255,20 @@ export default function ReleasesHeaderV2({
         [messages]
     );
 
+    const booleanFilterOptions = useMemo(
+        () => [
+            {
+                label: 'Có',
+                value: 'true',
+            },
+            {
+                label: 'Không',
+                value: 'false',
+            },
+        ],
+        []
+    );
+
     const dspDeliveryQuickFilterOptions = useMemo(
         () => [
             {
@@ -350,40 +378,133 @@ export default function ReleasesHeaderV2({
                 isCommaSeparated: true,
             },
             {
-                key: 'ciDataStatus',
-                label: messages('releaseCiData.status.label'),
-                icon: <BarsOutlined />,
-                type: 'radio',
-                filterKey: 'ciDataStatus',
-                options: releaseCiStatusOptions,
-            },
-            {
-                key: 'neverExported',
-                label: messages('releaseCiData.neverExported'),
+                key: 'dataCi',
+                label: 'Data CI',
                 icon: <ExportOutlined />,
-                type: 'checkbox',
-                filterKey: 'neverExported',
-                options: [
-                    {
-                        label: messages('releaseCiData.neverExported'),
-                        value: 'true',
-                    },
+                type: 'custom',
+                filterKey: 'dataCi',
+                customFilterKeys: [
+                    'ciDataStatus',
+                    'neverExported',
+                    'lastImportIsFailed',
+                    'isSkipImport',
+                    'hasQaFlag',
                 ],
-                isCommaSeparated: true,
-            },
-            {
-                key: 'lastImportIsFailed',
-                label: messages('releaseCiData.lastImportIsFailed'),
-                icon: <WarningOutlined />,
-                type: 'checkbox',
-                filterKey: 'lastImportIsFailed',
-                options: [
-                    {
-                        label: messages('releaseCiData.lastImportIsFailed'),
-                        value: 'true',
-                    },
-                ],
-                isCommaSeparated: true,
+                render: ({ dataFilter, onChangeFilter }) => (
+                    <div className="space-y-4 py-2">
+                        <div>
+                            <div className="mb-2 text-xs font-semibold text-gray-500">
+                                {messages('releaseCiData.status.label')}
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <Radio.Group
+                                    className="flex flex-col gap-2"
+                                    value={dataFilter.ciDataStatus}
+                                    options={releaseCiStatusOptions}
+                                    onChange={(event) =>
+                                        onChangeFilter({
+                                            ciDataStatus: event.target.value,
+                                        })
+                                    }
+                                />
+                                {dataFilter.ciDataStatus && (
+                                    <Button
+                                        size="small"
+                                        type="link"
+                                        onClick={() =>
+                                            onChangeFilter({
+                                                ciDataStatus: undefined,
+                                            })
+                                        }
+                                    >
+                                        {messages('common.delete')}
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            {[
+                                {
+                                    key: 'neverExported',
+                                    label: messages(
+                                        'releaseCiData.neverExported'
+                                    ),
+                                },
+                                {
+                                    key: 'lastImportIsFailed',
+                                    label: messages(
+                                        'releaseCiData.lastImportIsFailed'
+                                    ),
+                                },
+                                {
+                                    key: 'isSkipImport',
+                                    label: 'Skip import CI',
+                                },
+                                {
+                                    key: 'hasQaFlag',
+                                    label: 'Có QA flag CI',
+                                },
+                            ].map((item) => (
+                                <div
+                                    key={item.key}
+                                    className="flex flex-col gap-1"
+                                >
+                                    <span className="text-xs font-semibold text-gray-500">
+                                        {item.label}
+                                    </span>
+                                    <Radio.Group
+                                        value={normalizeBooleanFilterValue(
+                                            dataFilter[item.key]
+                                        )}
+                                        options={booleanFilterOptions}
+                                        onChange={(event) =>
+                                            onChangeFilter({
+                                                [item.key]: event.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ),
+                getDisplayValue: (dataFilter) => {
+                    const values: string[] = [];
+                    const ciDataStatus = dataFilter.ciDataStatus;
+                    if (ciDataStatus) {
+                        values.push(
+                            releaseCiStatusOptions.find(
+                                (option) => option.value === ciDataStatus
+                            )?.label ?? String(ciDataStatus)
+                        );
+                    }
+                    [
+                        {
+                            key: 'neverExported',
+                            label: messages('releaseCiData.neverExported'),
+                        },
+                        {
+                            key: 'lastImportIsFailed',
+                            label: messages('releaseCiData.lastImportIsFailed'),
+                        },
+                        {
+                            key: 'isSkipImport',
+                            label: 'Skip import CI',
+                        },
+                        {
+                            key: 'hasQaFlag',
+                            label: 'Có QA flag CI',
+                        },
+                    ].forEach((item) => {
+                        const booleanLabel = getBooleanFilterLabel(
+                            dataFilter[item.key]
+                        );
+                        if (booleanLabel) {
+                            values.push(`${item.label}: ${booleanLabel}`);
+                        }
+                    });
+                    return values.join(' | ');
+                },
             },
             {
                 key: 'dateCreated',
@@ -427,6 +548,7 @@ export default function ReleasesHeaderV2({
         isLoadingTenants,
         isImportedFromReportOptions,
         releaseCiStatusOptions,
+        booleanFilterOptions,
     ]);
 
     const handleChangeFilter = (
@@ -458,19 +580,12 @@ export default function ReleasesHeaderV2({
         } else {
             copy.hasError = undefined;
         }
-        if (copy.neverExported === true || copy.neverExported === 'true') {
-            copy.neverExported = 'true';
-        } else {
-            copy.neverExported = undefined;
-        }
-        if (
-            copy.lastImportIsFailed === true ||
-            copy.lastImportIsFailed === 'true'
-        ) {
-            copy.lastImportIsFailed = 'true';
-        } else {
-            copy.lastImportIsFailed = undefined;
-        }
+        copy.neverExported = normalizeBooleanFilterValue(copy.neverExported);
+        copy.lastImportIsFailed = normalizeBooleanFilterValue(
+            copy.lastImportIsFailed
+        );
+        copy.isSkipImport = normalizeBooleanFilterValue(copy.isSkipImport);
+        copy.hasQaFlag = normalizeBooleanFilterValue(copy.hasQaFlag);
         return copy;
     }, [dataFilter]);
 
@@ -899,9 +1014,7 @@ export default function ReleasesHeaderV2({
                         offset={[-2, 2]}
                         color="#1677ff"
                     >
-                        <Button>
-                            {messages('releaseDsp.dspFilter')}
-                        </Button>
+                        <Button>{messages('releaseDsp.dspFilter')}</Button>
                     </Badge>
                 </Popover>
                 <FilterPanel

@@ -3,6 +3,7 @@ export enum RELEASE_CI_DATA_COLUMNS_DISPLAY {
     UPDATED_AT = 'releaseCiData.updatedAt',
     STATUS = 'releaseCiData.status',
     LATEST_SYNCED_AT = 'releaseCiData.latestSyncedAt',
+    IMPORT_COUNT = 'releaseCiData.importCount',
     IMPORT_STATUS = 'common.importStatus',
 }
 

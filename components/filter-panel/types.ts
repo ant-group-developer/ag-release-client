@@ -4,7 +4,12 @@ import { ReactNode } from 'react';
 /**
  * Filter content types supported by the FilterPanel
  */
-export type FilterType = 'checkbox' | 'dateRange' | 'input' | 'radio';
+export type FilterType =
+    | 'checkbox'
+    | 'dateRange'
+    | 'input'
+    | 'radio'
+    | 'custom';
 
 /**
  * Option item for checkbox filters
@@ -45,6 +50,15 @@ export interface FilterConfig {
     isCommaSeparated?: boolean;
     /** Callback when user searches within the filter content (for async/server-side search) */
     onSearch?: (keyword: string) => void;
+    /** Keys used by custom filter content */
+    customFilterKeys?: string[];
+    /** Custom filter content renderer */
+    render?: (props: {
+        dataFilter: Record<string, any>;
+        onChangeFilter: (newValue: Record<string, any>) => void;
+    }) => ReactNode;
+    /** Custom active tag display */
+    getDisplayValue?: (dataFilter: Record<string, any>) => string;
 }
 
 /**
@@ -58,7 +72,10 @@ export interface FilterPanelProps<TFilter extends Record<string, any>> {
     /** Default filter data from useFilter */
     defaultFilter?: Record<string, any>;
     /** Callback to change filter values */
-    onChangeFilter: (newValue: Partial<TFilter>, backToFirstPage?: boolean) => void;
+    onChangeFilter: (
+        newValue: Partial<TFilter>,
+        backToFirstPage?: boolean
+    ) => void;
     /** Callback to remove all filters */
     removeFilter: () => void;
     /** Whether filters can be cleared (any active filter) */
