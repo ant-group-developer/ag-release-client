@@ -10,7 +10,6 @@ import { useFilter } from '@/hooks/use-filter';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import AutoSubmitUndistributedMusicModal from '@/modules/releases/components/auto-submit-undistributed-music-modal';
 import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
@@ -257,12 +256,12 @@ export default function Releases({}: Props) {
                     <BulkSubmitModal onFinished={() => setSelectedRows([])} />
                 )}
 
-                {typeModal ===
+                {/* {typeModal ===
                     TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
                     <AutoSubmitUndistributedMusicModal
                         onFinished={handleRefresh}
                     />
-                )}
+                )} */}
 
                 {typeModal ===
                     TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2 && (

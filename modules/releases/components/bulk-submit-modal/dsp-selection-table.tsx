@@ -29,6 +29,7 @@ const DspSelectionTable = ({
             title: messages('dsp.name'),
             key: 'name',
             dataIndex: 'name',
+            width: 220,
             render: (_, record) => (
                 <Space>
                     <Avatar size={24} src={record?.picture || undefined}>
@@ -41,6 +42,7 @@ const DspSelectionTable = ({
         {
             title: messages('common.releaseVia'),
             key: 'releaseVia',
+            width: 140,
             render: (_, record) => {
                 const via = record?.hasDeal ? VIA_CI : VIA_STATE51;
                 return <span>{via}</span>;
@@ -49,6 +51,7 @@ const DspSelectionTable = ({
         {
             title: messages('common.distributionMethod'),
             key: 'distributionMethod',
+            width: 180,
             render: (_, record) => {
                 const mode =
                     record?.dspRoutingConfig?.mode === DSP_DEAL.DIRECT

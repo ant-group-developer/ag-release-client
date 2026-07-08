@@ -217,6 +217,9 @@ export interface ReleaseCiData {
     releaseId: string;
     latestSyncedAt: string;
     status: string;
+    importCount?: number;
+    qaFlagsCi: Record<string, any>[] | null;
+    needImportAgain: boolean;
     release: ReleasesData;
     exportRawData: ReleaseCiExportRawData;
     importRawData: ReleaseCiImportRawData;
@@ -237,4 +240,7 @@ export interface ReleaseCiData {
 export type ReleaseCiDataFilter = ReleasesDataFilter & {
     neverExported?: boolean | string;
     lastImportIsFailed?: boolean | string;
+    isSkipImport?: boolean | string;
+    hasQaFlag?: boolean | string;
+    needImportAgain?: boolean | string;
 };

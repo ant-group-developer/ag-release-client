@@ -1,7 +1,6 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
-import AppSwitch from '@/components/ui/switch/status-switch';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
@@ -29,9 +28,11 @@ import {
     WarningOutlined,
 } from '@ant-design/icons';
 import {
+    Badge,
     Button,
     Checkbox,
     Popover,
+    Radio,
     Select,
     Space,
     Table,
@@ -66,6 +67,8 @@ type DspDeliveryFilterTableRow = {
     includeStatuses: RELEASE_DSP_DELIVERY_STATUS[];
     excludeStatuses: RELEASE_DSP_DELIVERY_STATUS[];
 };
+
+type DspDeliveryQuickFilter = 'direct' | 'ci' | 'state51';
 
 const createDspDeliveryFilterRows = (
     dsps: DspData[] = [],
@@ -120,6 +123,19 @@ const createDspDeliveryFilterRows = (
     return Array.from(rowMap.values());
 };
 
+const normalizeBooleanFilterValue = (value: unknown) => {
+    if (value === true || value === 'true') return 'true';
+    if (value === false || value === 'false') return 'false';
+    return undefined;
+};
+
+const getBooleanFilterLabel = (value: unknown) => {
+    const normalizedValue = normalizeBooleanFilterValue(value);
+    if (normalizedValue === 'true') return 'Có';
+    if (normalizedValue === 'false') return 'Không';
+    return undefined;
+};
+
 export default function ReleasesHeaderV2({
     dataFilter,
     defaultFilter,
@@ -144,6 +160,9 @@ export default function ReleasesHeaderV2({
         DspDeliveryFilterTableRow[]
     >(() => createDspDeliveryFilterRows([], dataFilter.dspDelivery));
     const [showAppliedDspOnly, setShowAppliedDspOnly] = useState(false);
+    const [selectedDspDeliveryGroups, setSelectedDspDeliveryGroups] = useState<
+        DspDeliveryQuickFilter[]
+    >([]);
 
     useEffect(() => {
         setDspDeliveryFilterRows(
@@ -233,6 +252,38 @@ export default function ReleasesHeaderV2({
                 label: messages(`releaseDsp.status.${status}`),
                 value: status,
             })),
+        [messages]
+    );
+
+    const booleanFilterOptions = useMemo(
+        () => [
+            {
+                label: 'Có',
+                value: 'true',
+            },
+            {
+                label: 'Không',
+                value: 'false',
+            },
+        ],
+        []
+    );
+
+    const dspDeliveryQuickFilterOptions = useMemo(
+        () => [
+            {
+                label: messages('releaseDsp.dspDirect'),
+                value: 'direct',
+            },
+            {
+                label: messages('releaseDsp.dspCi'),
+                value: 'ci',
+            },
+            {
+                label: messages('releaseDsp.dspState51'),
+                value: 'state51',
+            },
+        ],
         [messages]
     );
 
@@ -327,40 +378,133 @@ export default function ReleasesHeaderV2({
                 isCommaSeparated: true,
             },
             {
-                key: 'ciDataStatus',
-                label: messages('releaseCiData.status.label'),
-                icon: <BarsOutlined />,
-                type: 'radio',
-                filterKey: 'ciDataStatus',
-                options: releaseCiStatusOptions,
-            },
-            {
-                key: 'neverExported',
-                label: messages('releaseCiData.neverExported'),
+                key: 'dataCi',
+                label: 'Data CI',
                 icon: <ExportOutlined />,
-                type: 'checkbox',
-                filterKey: 'neverExported',
-                options: [
-                    {
-                        label: messages('releaseCiData.neverExported'),
-                        value: 'true',
-                    },
+                type: 'custom',
+                filterKey: 'dataCi',
+                customFilterKeys: [
+                    'ciDataStatus',
+                    'neverExported',
+                    'lastImportIsFailed',
+                    'isSkipImport',
+                    'hasQaFlag',
                 ],
-                isCommaSeparated: true,
-            },
-            {
-                key: 'lastImportIsFailed',
-                label: messages('releaseCiData.lastImportIsFailed'),
-                icon: <WarningOutlined />,
-                type: 'checkbox',
-                filterKey: 'lastImportIsFailed',
-                options: [
-                    {
-                        label: messages('releaseCiData.lastImportIsFailed'),
-                        value: 'true',
-                    },
-                ],
-                isCommaSeparated: true,
+                render: ({ dataFilter, onChangeFilter }) => (
+                    <div className="space-y-4 py-2">
+                        <div>
+                            <div className="mb-2 text-xs font-semibold text-gray-500">
+                                {messages('releaseCiData.status.label')}
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <Radio.Group
+                                    className="flex flex-col gap-2"
+                                    value={dataFilter.ciDataStatus}
+                                    options={releaseCiStatusOptions}
+                                    onChange={(event) =>
+                                        onChangeFilter({
+                                            ciDataStatus: event.target.value,
+                                        })
+                                    }
+                                />
+                                {dataFilter.ciDataStatus && (
+                                    <Button
+                                        size="small"
+                                        type="link"
+                                        onClick={() =>
+                                            onChangeFilter({
+                                                ciDataStatus: undefined,
+                                            })
+                                        }
+                                    >
+                                        {messages('common.delete')}
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            {[
+                                {
+                                    key: 'neverExported',
+                                    label: messages(
+                                        'releaseCiData.neverExported'
+                                    ),
+                                },
+                                {
+                                    key: 'lastImportIsFailed',
+                                    label: messages(
+                                        'releaseCiData.lastImportIsFailed'
+                                    ),
+                                },
+                                {
+                                    key: 'isSkipImport',
+                                    label: 'Skip import CI',
+                                },
+                                {
+                                    key: 'hasQaFlag',
+                                    label: 'Có QA flag CI',
+                                },
+                            ].map((item) => (
+                                <div
+                                    key={item.key}
+                                    className="flex flex-col gap-1"
+                                >
+                                    <span className="text-xs font-semibold text-gray-500">
+                                        {item.label}
+                                    </span>
+                                    <Radio.Group
+                                        value={normalizeBooleanFilterValue(
+                                            dataFilter[item.key]
+                                        )}
+                                        options={booleanFilterOptions}
+                                        onChange={(event) =>
+                                            onChangeFilter({
+                                                [item.key]: event.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ),
+                getDisplayValue: (dataFilter) => {
+                    const values: string[] = [];
+                    const ciDataStatus = dataFilter.ciDataStatus;
+                    if (ciDataStatus) {
+                        values.push(
+                            releaseCiStatusOptions.find(
+                                (option) => option.value === ciDataStatus
+                            )?.label ?? String(ciDataStatus)
+                        );
+                    }
+                    [
+                        {
+                            key: 'neverExported',
+                            label: messages('releaseCiData.neverExported'),
+                        },
+                        {
+                            key: 'lastImportIsFailed',
+                            label: messages('releaseCiData.lastImportIsFailed'),
+                        },
+                        {
+                            key: 'isSkipImport',
+                            label: 'Skip import CI',
+                        },
+                        {
+                            key: 'hasQaFlag',
+                            label: 'Có QA flag CI',
+                        },
+                    ].forEach((item) => {
+                        const booleanLabel = getBooleanFilterLabel(
+                            dataFilter[item.key]
+                        );
+                        if (booleanLabel) {
+                            values.push(`${item.label}: ${booleanLabel}`);
+                        }
+                    });
+                    return values.join(' | ');
+                },
             },
             {
                 key: 'dateCreated',
@@ -404,6 +548,7 @@ export default function ReleasesHeaderV2({
         isLoadingTenants,
         isImportedFromReportOptions,
         releaseCiStatusOptions,
+        booleanFilterOptions,
     ]);
 
     const handleChangeFilter = (
@@ -435,19 +580,12 @@ export default function ReleasesHeaderV2({
         } else {
             copy.hasError = undefined;
         }
-        if (copy.neverExported === true || copy.neverExported === 'true') {
-            copy.neverExported = 'true';
-        } else {
-            copy.neverExported = undefined;
-        }
-        if (
-            copy.lastImportIsFailed === true ||
-            copy.lastImportIsFailed === 'true'
-        ) {
-            copy.lastImportIsFailed = 'true';
-        } else {
-            copy.lastImportIsFailed = undefined;
-        }
+        copy.neverExported = normalizeBooleanFilterValue(copy.neverExported);
+        copy.lastImportIsFailed = normalizeBooleanFilterValue(
+            copy.lastImportIsFailed
+        );
+        copy.isSkipImport = normalizeBooleanFilterValue(copy.isSkipImport);
+        copy.hasQaFlag = normalizeBooleanFilterValue(copy.hasQaFlag);
         return copy;
     }, [dataFilter]);
 
@@ -506,14 +644,52 @@ export default function ReleasesHeaderV2({
         setShowAppliedDspOnly(true);
     };
 
-    const applyAllDspDeliveryFilter = () => {
-        const nextRows = dspDeliveryFilterRows.map((row) => ({
-            ...row,
-            enabled: true,
-        }));
+    const getDspDeliveryCodesByGroups = (groups: DspDeliveryQuickFilter[]) => {
+        const groupSet = new Set(groups);
+        const codeSet = new Set<string>();
+
+        (dspData?.items ?? []).forEach((dsp) => {
+            if (!dsp.code) return;
+
+            const isDirect = dsp.dspRoutingConfig?.mode === DSP_DEAL.DIRECT;
+            const isCi = !isDirect && dsp.hasDeal;
+            const isState51 = !isDirect && !dsp.hasDeal;
+
+            if (
+                (groupSet.has('direct') && isDirect) ||
+                (groupSet.has('ci') && isCi) ||
+                (groupSet.has('state51') && isState51)
+            ) {
+                codeSet.add(dsp.code);
+            }
+        });
+
+        return codeSet;
+    };
+
+    const applyDspDeliveryGroupFilter = (groups: DspDeliveryQuickFilter[]) => {
+        setSelectedDspDeliveryGroups(groups);
+
+        if (!groups.length) {
+            toggleAllDspDeliveryFilter(false);
+            return;
+        }
+
+        applyQuickDspDeliveryFilter(
+            Array.from(getDspDeliveryCodesByGroups(groups))
+        );
+    };
+
+    const toggleAllDspDeliveryFilter = (checked: boolean) => {
+        const visibleCodeSet = new Set(
+            dspDeliveryFilterDataSource.map((row) => row.code)
+        );
+        const nextRows = dspDeliveryFilterRows.map((row) =>
+            visibleCodeSet.has(row.code) ? { ...row, enabled: checked } : row
+        );
 
         setDspDeliveryFilterRows(nextRows);
-        setShowAppliedDspOnly(true);
+        setShowAppliedDspOnly(checked);
     };
 
     const excludeInactiveDspDeliveryFilter = () => {
@@ -540,6 +716,7 @@ export default function ReleasesHeaderV2({
             createDspDeliveryFilterRows(dspData?.items ?? [])
         );
         setShowAppliedDspOnly(false);
+        setSelectedDspDeliveryGroups([]);
         removeFilter();
     };
 
@@ -554,6 +731,7 @@ export default function ReleasesHeaderV2({
             createDspDeliveryFilterRows(dspData?.items ?? [])
         );
         setShowAppliedDspOnly(false);
+        setSelectedDspDeliveryGroups([]);
         changeDspDeliveryFilter(undefined);
     };
 
@@ -563,12 +741,28 @@ export default function ReleasesHeaderV2({
             (row.includeStatuses.length > 0 || row.excludeStatuses.length > 0)
     ).length;
 
-    const dspDeliveryFilterDataSource = useMemo(
-        () =>
-            showAppliedDspOnly
-                ? dspDeliveryFilterRows.filter((row) => row.enabled)
-                : dspDeliveryFilterRows,
-        [dspDeliveryFilterRows, showAppliedDspOnly]
+    const dspDeliveryFilterDataSource = useMemo(() => {
+        let dataSource = dspDeliveryFilterRows;
+
+        if (selectedDspDeliveryGroups.length) {
+            const codeSet = getDspDeliveryCodesByGroups(
+                selectedDspDeliveryGroups
+            );
+            dataSource = dataSource.filter((row) => codeSet.has(row.code));
+        }
+
+        return showAppliedDspOnly
+            ? dataSource.filter((row) => row.enabled)
+            : dataSource;
+    }, [dspDeliveryFilterRows, selectedDspDeliveryGroups, showAppliedDspOnly]);
+
+    const hasVisibleDspDeliveryFilterRows =
+        dspDeliveryFilterDataSource.length > 0;
+    const isAllVisibleDspDeliverySelected =
+        hasVisibleDspDeliveryFilterRows &&
+        dspDeliveryFilterDataSource.every((row) => row.enabled);
+    const isSomeVisibleDspDeliverySelected = dspDeliveryFilterDataSource.some(
+        (row) => row.enabled
     );
 
     const dspDeliveryFilterColumns: ColumnsType<DspDeliveryFilterTableRow> = [
@@ -580,33 +774,54 @@ export default function ReleasesHeaderV2({
         //     render: (_, __, index) => index + 1,
         // },
         {
-            title: messages('common.apply'),
+            title: (
+                <div className="flex flex-col items-center gap-1">
+                    {/* <span>{messages('common.apply')}</span> */}
+                    <Checkbox
+                        checked={isAllVisibleDspDeliverySelected}
+                        disabled={!hasVisibleDspDeliveryFilterRows}
+                        indeterminate={
+                            isSomeVisibleDspDeliverySelected &&
+                            !isAllVisibleDspDeliverySelected
+                        }
+                        onChange={(event) =>
+                            toggleAllDspDeliveryFilter(event.target.checked)
+                        }
+                    />
+                </div>
+            ),
             dataIndex: 'enabled',
-            width: 64,
+            width: 80,
             align: 'center',
             render: (_, record) => (
-                // <Checkbox
-                //     checked={record.enabled}
-                //     onChange={(event) =>
-                //         updateDspDeliveryFilterRow(record.code, {
-                //             enabled: event.target.checked,
-                //         })
-                //     }
-                // />
-                <AppSwitch
+                <Checkbox
                     checked={record.enabled}
-                    onChange={(checked) =>
+                    onChange={(event) =>
                         updateDspDeliveryFilterRow(record.code, {
-                            enabled: checked,
+                            enabled: event.target.checked,
                         })
                     }
                 />
             ),
         },
         {
-            title: messages('dsp.label'),
+            title: (
+                <div className="flex flex-col gap-1">
+                    <span>{messages('dsp.label')}</span>
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        options={dspDeliveryQuickFilterOptions}
+                        value={selectedDspDeliveryGroups}
+                        placeholder={messages('common.quickSelect')}
+                        onChange={applyDspDeliveryGroupFilter}
+                        className="w-full"
+                        maxTagCount="responsive"
+                    />
+                </div>
+            ),
             dataIndex: 'name',
-            width: 180,
+            width: 260,
             render: (_, record) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -723,67 +938,9 @@ export default function ReleasesHeaderV2({
     const dspDeliveryFilterContent = (
         <div className="max-w-[50vw] space-y-2 overflow-hidden">
             <Typography.Text strong className="!text-lg">
-                {messages('releaseDsp.dspStatus')}
+                {messages('releaseDsp.dspFilter')}
             </Typography.Text>
             <div className="mb-2 flex flex-wrap gap-2">
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={applyAllDspDeliveryFilter}
-                >
-                    {messages('common.selectAll')}
-                </Button>
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={() =>
-                        applyQuickDspDeliveryFilter(
-                            (dspData?.items ?? [])
-                                .filter(
-                                    (dsp) =>
-                                        dsp.dspRoutingConfig?.mode ===
-                                        DSP_DEAL.DIRECT
-                                )
-                                .map((dsp) => dsp.code)
-                        )
-                    }
-                >
-                    {messages('releaseDsp.dspDirect')}
-                </Button>
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={() =>
-                        applyQuickDspDeliveryFilter(
-                            (dspData?.items ?? [])
-                                .filter(
-                                    (dsp) =>
-                                        dsp.dspRoutingConfig?.mode !==
-                                            DSP_DEAL.DIRECT && dsp.hasDeal
-                                )
-                                .map((dsp) => dsp.code)
-                        )
-                    }
-                >
-                    {messages('releaseDsp.dspCi')}
-                </Button>
-                <Button
-                    shape="round"
-                    size="small"
-                    onClick={() =>
-                        applyQuickDspDeliveryFilter(
-                            (dspData?.items ?? [])
-                                .filter(
-                                    (dsp) =>
-                                        dsp.dspRoutingConfig?.mode !==
-                                            DSP_DEAL.DIRECT && !dsp.hasDeal
-                                )
-                                .map((dsp) => dsp.code)
-                        )
-                    }
-                >
-                    {messages('releaseDsp.dspState51')}
-                </Button>
                 <Button
                     shape="round"
                     size="small"
@@ -810,7 +967,7 @@ export default function ReleasesHeaderV2({
                 columns={dspDeliveryFilterColumns}
                 dataSource={dspDeliveryFilterDataSource}
                 rowClassName={(record) => (record.enabled ? '' : 'opacity-50')}
-                scroll={{ x: 600, y: 320 }}
+                scroll={{ x: 740, y: 320 }}
             />
             <div className="mb-2 flex justify-end gap-2 py-1">
                 <Button
@@ -851,11 +1008,14 @@ export default function ReleasesHeaderV2({
                     arrow={false}
                     autoAdjustOverflow
                 >
-                    <Button>
-                        {messages('releaseDsp.dspStatus')}
-                        {!!appliedDspDeliveryFilterCount &&
-                            ` (${appliedDspDeliveryFilterCount})`}
-                    </Button>
+                    <Badge
+                        count={appliedDspDeliveryFilterCount}
+                        size="small"
+                        offset={[-2, 2]}
+                        color="#1677ff"
+                    >
+                        <Button>{messages('releaseDsp.dspFilter')}</Button>
+                    </Badge>
                 </Popover>
                 <FilterPanel
                     configs={filterConfigs}
