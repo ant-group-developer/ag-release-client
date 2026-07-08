@@ -424,16 +424,18 @@ export default function LabelsRankingPage() {
                     />
                 </Card>
 
-                <DetailLabelAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    labelId={detailModal.labelId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailModal.open && (
+                    <DetailLabelAnalyticsModal
+                        open={detailModal.open}
+                        onClose={() =>
+                            setDetailModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailModal.title}
+                        labelId={detailModal.labelId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

@@ -502,6 +502,8 @@ export interface DspDetailParams {
 export interface DspRankingParams extends DspDetailParams {
     page?: number;
     pageSize?: number;
+    topN?: number;
+    isIncludeOther?: boolean;
 }
 
 export interface TrendViewTenantBarChartItem {
@@ -522,6 +524,7 @@ export interface AnalyticsCommonParams {
     sortBy?: string;
     page?: number;
     pageSize?: number;
+    topN?: number;
     includeOther?: boolean;
 }
 
@@ -638,7 +641,3 @@ export interface ChannelTerItem {
     totalViews: number;
     totalRevenueUsd: string;
 }
-
-
-
-

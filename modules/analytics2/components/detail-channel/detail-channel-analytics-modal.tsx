@@ -78,8 +78,8 @@ export default function DetailChannelAnalyticsModal({
             {
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                includeOther: true,
             },
             { enabled: open }
         );
@@ -121,7 +121,7 @@ export default function DetailChannelAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: dspSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
         });
 
@@ -135,7 +135,7 @@ export default function DetailChannelAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: terSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
         });
 
@@ -608,16 +608,21 @@ export default function DetailChannelAnalyticsModal({
                     </Col>
                 </Row>
             </div>
-            <DetailReleaseAnalyticsModal
-                open={detailReleaseModal.open}
-                onClose={() =>
-                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailReleaseModal.title}
-                releaseId={detailReleaseModal.releaseId}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
+            {detailReleaseModal.open && (
+                <DetailReleaseAnalyticsModal
+                    open={detailReleaseModal.open}
+                    onClose={() =>
+                        setDetailReleaseModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailReleaseModal.title}
+                    releaseId={detailReleaseModal.releaseId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                />
+            )}
         </FullScreenModal>
     );
 }

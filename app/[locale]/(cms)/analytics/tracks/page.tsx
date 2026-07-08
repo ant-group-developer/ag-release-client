@@ -356,19 +356,21 @@ export default function TracksRankingPage() {
                     />
                 </Card>
 
-                <DetailTrackAnalyticsModal
-                    open={trackDetailModal.open}
-                    onClose={() =>
-                        setTrackDetailModal((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    title={trackDetailModal.title}
-                    isrc={trackDetailModal.isrc}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {trackDetailModal.open && (
+                    <DetailTrackAnalyticsModal
+                        open={trackDetailModal.open}
+                        onClose={() =>
+                            setTrackDetailModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={trackDetailModal.title}
+                        isrc={trackDetailModal.isrc}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

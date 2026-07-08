@@ -378,19 +378,21 @@ export default function ChannelsRankingPage() {
                     />
                 </Card>
 
-                <DetailChannelAnalyticsModal
-                    open={channelDetailModal.open}
-                    onClose={() =>
-                        setChannelDetailModal((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    title={channelDetailModal.title}
-                    channelId={channelDetailModal.channelId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {channelDetailModal.open && (
+                    <DetailChannelAnalyticsModal
+                        open={channelDetailModal.open}
+                        onClose={() =>
+                            setChannelDetailModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={channelDetailModal.title}
+                        channelId={channelDetailModal.channelId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

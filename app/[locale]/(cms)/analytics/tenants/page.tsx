@@ -396,27 +396,31 @@ export default function TenantsRankingPage() {
                     />
                 </Card>
 
-                <DetailTenantAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    tenantId={detailModal.tenantId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailModal.open && (
+                    <DetailTenantAnalyticsModal
+                        open={detailModal.open}
+                        onClose={() =>
+                            setDetailModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailModal.title}
+                        tenantId={detailModal.tenantId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
 
-                <DetailSourceTypeAnalyticsModal
-                    open={detailSourceModal.open}
-                    onClose={() =>
-                        setDetailSourceModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailSourceModal.title}
-                    sourceType={detailSourceModal.sourceType}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailSourceModal.open && (
+                    <DetailSourceTypeAnalyticsModal
+                        open={detailSourceModal.open}
+                        onClose={() =>
+                            setDetailSourceModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailSourceModal.title}
+                        sourceType={detailSourceModal.sourceType}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

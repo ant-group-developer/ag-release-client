@@ -21,6 +21,7 @@ import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
 import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
+import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
 interface Props {
@@ -37,15 +38,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             title,
         });
     const [detailModal, setDetailModal] = useState<{
-        type:
-            | 'release'
-            | 'track'
-            | 'label'
-            | 'artist'
-            | 'tenant'
-            | 'channel'
-            | 'dsp'
-            | null;
+        type: ANALYTICS_MODAL_TYPE | null;
         title: string;
         id: string;
         dspReportId?: string;
@@ -216,77 +209,91 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                     />
                 </Col>
             </Row>
-            <DetailReleaseAnalyticsModal
-                open={detailModal.type === 'release'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                releaseId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailModal.type === 'track'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                isrc={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailLabelAnalyticsModal
-                open={detailModal.type === 'label'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                labelId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailArtistAnalyticsModal
-                open={detailModal.type === 'artist'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                artistId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailTenantAnalyticsModal
-                open={detailModal.type === 'tenant'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                tenantId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailChannelAnalyticsModal
-                open={detailModal.type === 'channel'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                channelId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailDspAnalyticsModal
-                open={detailModal.type === 'dsp'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                pgDspId={detailModal.id}
-                dspReportId={detailModal.dspReportId || ''}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
+            {detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE && (
+                <DetailReleaseAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    releaseId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.TRACK && (
+                <DetailTrackAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.TRACK}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    isrc={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.LABEL && (
+                <DetailLabelAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.LABEL}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    labelId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST && (
+                <DetailArtistAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    artistId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.TENANT && (
+                <DetailTenantAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.TENANT}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    tenantId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL && (
+                <DetailChannelAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    channelId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.DSP && (
+                <DetailDspAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.DSP}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    pgDspId={detailModal.id}
+                    dspReportId={detailModal.dspReportId || ''}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
+            )}
         </div>
     );
 }

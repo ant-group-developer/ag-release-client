@@ -14,8 +14,10 @@ import {
     DspRankingItem,
 } from '../../types';
 
+import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+
 interface DetailModalState {
-    type: 'release' | 'track' | 'label' | 'artist' | 'tenant' | 'channel' | 'dsp' | null;
+    type: ANALYTICS_MODAL_TYPE | null;
     title: string;
     id: string;
     dspReportId?: string;
@@ -67,7 +69,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                     className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
                                         setDetailModal({
-                                            type: 'track',
+                                            type: ANALYTICS_MODAL_TYPE.TRACK,
                                             title: text,
                                             id: record.isrc,
                                         })
@@ -146,7 +148,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                     className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
                                         setDetailModal({
-                                            type: 'release',
+                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
                                             title: text,
                                             id: record.releaseId,
                                         })
@@ -231,7 +233,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'artist',
+                                        type: ANALYTICS_MODAL_TYPE.ARTIST,
                                         title: text,
                                         id: record.artistId,
                                     })
@@ -303,7 +305,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'label',
+                                        type: ANALYTICS_MODAL_TYPE.LABEL,
                                         title: text,
                                         id: record.labelId,
                                     })
@@ -386,7 +388,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'tenant',
+                                        type: ANALYTICS_MODAL_TYPE.TENANT,
                                         title: text,
                                         id: record.tenantId,
                                     })
@@ -442,7 +444,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'dsp',
+                                        type: ANALYTICS_MODAL_TYPE.DSP,
                                         title: text,
                                         id: record.pgDspId,
                                         dspReportId: record.dspReportId,
@@ -502,7 +504,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'channel',
+                                        type: ANALYTICS_MODAL_TYPE.CHANNEL,
                                         title: text,
                                         id: record.channelId,
                                     })

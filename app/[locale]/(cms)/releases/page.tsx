@@ -162,19 +162,19 @@ export default function Releases({}: Props) {
                         },
                     }}
                     toolBarRender={() => [
-                        <CreateButton
-                            canCreate={isAdmin}
-                            key="auto-submit"
-                            icon={<SendOutlined />}
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
-                                )
-                            }
-                            text={messages(
-                                'release.autoSubmitUndistributedMusic'
-                            )}
-                        />,
+                        // <CreateButton
+                        //     canCreate={isAdmin}
+                        //     key="auto-submit"
+                        //     icon={<SendOutlined />}
+                        //     onClick={() =>
+                        //         openModal(
+                        //             TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
+                        //         )
+                        //     }
+                        //     text={messages(
+                        //         'release.autoSubmitUndistributedMusic'
+                        //     )}
+                        // />,
                         <CreateButton
                             canCreate={isAdmin}
                             key="auto-submit-v2"
@@ -184,7 +184,9 @@ export default function Releases({}: Props) {
                                     TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2
                                 )
                             }
-                            text="Tự động submit2"
+                            text={messages(
+                                'release.autoSubmitUndistributedMusic'
+                            )}
                         />,
                     ]}
                     rowSelection={rowSelection}

@@ -52,11 +52,10 @@ export default function DetailTrackAnalyticsModal({
     }, [open, fromDate, toDate]);
 
     // Gọi API lấy thông tin tổng quan của Track
-    const { overviewData, isFetching } = useGetTrackOverview(
-        isrc,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    const { overviewData, isFetching } = useGetTrackOverview(isrc, {
+        fromDate: localFromDate,
+        toDate: localToDate,
+    });
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Track
     const { revenueLineChartData, isFetching: isLineChartFetching } =
@@ -70,11 +69,10 @@ export default function DetailTrackAnalyticsModal({
     const {
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
-    } = useGetTrackTrendViewLineChart(
-        isrc,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    } = useGetTrackTrendViewLineChart(isrc, {
+        fromDate: localFromDate,
+        toDate: localToDate,
+    });
 
     const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
         ANALYTIC_SORT_BY.REVENUE
@@ -87,7 +85,7 @@ export default function DetailTrackAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: dspSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
         }
     );
@@ -103,7 +101,7 @@ export default function DetailTrackAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: terSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
         }
     );

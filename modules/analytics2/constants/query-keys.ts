@@ -1,5 +1,6 @@
 import { QUERY_KEY } from '@/constants/query-key';
 import {
+    AnalyticsCommonParams,
     DspDetailParams,
     DspRankingParams,
     DspTimelineParams,
@@ -14,9 +15,6 @@ import {
     TrendViewLineChartParams,
     TrendViewSummaryParams,
     TrendViewTerBarChartParams,
-    ReleaseDspParams,
-    ReleaseTerParams,
-    AnalyticsCommonParams,
 } from '../types';
 
 export const analytics2QueryKeys = {
@@ -487,14 +485,14 @@ export const analytics2QueryKeys = {
             labelId,
             params,
         ] as const,
-    labelTopReleases: (labelId: string, params: RankingParams) =>
+    labelTopReleases: (labelId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.LABEL_TOP_RELEASES,
             labelId,
             params,
         ] as const,
-    labelTopTracks: (labelId: string, params: RankingParams) =>
+    labelTopTracks: (labelId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.LABEL_TOP_TRACKS,
@@ -522,14 +520,14 @@ export const analytics2QueryKeys = {
             artistId,
             params,
         ] as const,
-    artistTopReleases: (artistId: string, params: RankingParams) =>
+    artistTopReleases: (artistId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.ARTIST_TOP_RELEASES,
             artistId,
             params,
         ] as const,
-    artistTopTracks: (artistId: string, params: RankingParams) =>
+    artistTopTracks: (artistId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.ARTIST_TOP_TRACKS,
@@ -645,14 +643,14 @@ export const analytics2QueryKeys = {
             tenantId,
             params,
         ] as const,
-    tenantTopReleases: (tenantId: string, params: RankingParams) =>
+    tenantTopReleases: (tenantId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TENANT_TOP_RELEASES,
             tenantId,
             params,
         ] as const,
-    tenantTopTracks: (tenantId: string, params: RankingParams) =>
+    tenantTopTracks: (tenantId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TENANT_TOP_TRACKS,
@@ -740,7 +738,7 @@ export const analytics2QueryKeys = {
             channelId,
             params,
         ] as const,
-    channelTopReleases: (channelId: string, params: RankingParams) =>
+    channelTopReleases: (channelId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.CHANNEL_TOP_RELEASES,
@@ -834,7 +832,7 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.DSP_TOP_RELEASES,
             params,
         ] as const,
-    dspTopTracks: (params: DspRankingParams) =>
+    dspTopTracks: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.DSP_TOP_TRACKS,
@@ -899,42 +897,60 @@ export const analytics2QueryKeys = {
             sourceType,
             params,
         ] as const,
-    sourceTypeRevenueLineChart: (sourceType: string, params: RevenueLineChartParams) =>
+    sourceTypeRevenueLineChart: (
+        sourceType: string,
+        params: RevenueLineChartParams
+    ) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_REVENUE_LINE_CHART,
             sourceType,
             params,
         ] as const,
-    sourceTypeTrendViewLineChart: (sourceType: string, params: TrendViewLineChartParams) =>
+    sourceTypeTrendViewLineChart: (
+        sourceType: string,
+        params: TrendViewLineChartParams
+    ) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_LINE_CHART,
             sourceType,
             params,
         ] as const,
-    sourceTypeRevenueDspBarChart: (sourceType: string, params: RevenueDspBarChartParams) =>
+    sourceTypeRevenueDspBarChart: (
+        sourceType: string,
+        params: RevenueDspBarChartParams
+    ) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_REVENUE_DSP_BAR_CHART,
             sourceType,
             params,
         ] as const,
-    sourceTypeRevenueTerBarChart: (sourceType: string, params: RevenueTerBarChartParams) =>
+    sourceTypeRevenueTerBarChart: (
+        sourceType: string,
+        params: RevenueTerBarChartParams
+    ) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_REVENUE_TER_BAR_CHART,
             sourceType,
             params,
         ] as const,
-    sourceTypeTrendViewDspBarChart: (sourceType: string, params: TrendViewDspBarChartParams) =>
+    sourceTypeTrendViewDspBarChart: (
+        sourceType: string,
+        params: TrendViewDspBarChartParams
+    ) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_DSP_BAR_CHART,
             sourceType,
             params,
         ] as const,
-    sourceTypeTrendViewTerBarChart: (sourceType: string, params: TrendViewTerBarChartParams) =>
+    sourceTypeTrendViewTerBarChart: (
+        sourceType: string,
+        params: TrendViewTerBarChartParams
+    ) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_TREND_VIEW_TER_BAR_CHART,

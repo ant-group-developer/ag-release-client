@@ -198,16 +198,18 @@ export default function ArtistsRankingPage() {
                     />
                 </Card>
 
-                <DetailArtistAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    artistId={detailModal.artistId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailModal.open && (
+                    <DetailArtistAnalyticsModal
+                        open={detailModal.open}
+                        onClose={() =>
+                            setDetailModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailModal.title}
+                        artistId={detailModal.artistId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

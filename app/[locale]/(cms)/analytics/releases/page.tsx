@@ -380,16 +380,18 @@ export default function ReleasesRankingPage() {
                     />
                 </Card>
 
-                <DetailReleaseAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    releaseId={detailModal.releaseId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailModal.open && (
+                    <DetailReleaseAnalyticsModal
+                        open={detailModal.open}
+                        onClose={() =>
+                            setDetailModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailModal.title}
+                        releaseId={detailModal.releaseId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                    />
+                )}
             </PageContainer>
         </div>
     );

@@ -132,6 +132,11 @@
         "partly": "Một phần",
         "none": "Không",
         "select": "Chọn...",
+        "apply": "Áp dụng",
+        "include": "Bao gồm",
+        "exclude": "Loại trừ",
+        "quickSelect": "Chọn nhanh",
+        "selectAll": "Chọn tất cả",
         "ownership": "Quyền sở hữu",
         "direct": "Trực tiếp",
         "distributionMethod": "Phương thức phát hành",
@@ -1288,7 +1293,14 @@
             "never_distributed": "Chưa từng phân phối",
             "distributed": "Đã phân phối",
             "taken_down": "Đã gỡ xuống"
-        }
+        },
+        "dspStatus": "Trạng thái DSP",
+        "dspDirect": "DSP trực tiếp",
+        "dspCi": "DSP CI",
+        "dspState51": "DSP State51",
+        "excludeLockedDsp": "Loại trừ DSP bị khoá",
+        "clearDspStatus": "Xoá DSP status",
+        "showAppliedDspOnly": "Chỉ hiện DSP đang áp dụng"
     },
     "releaseArtist": {
         "label": "Nghệ sĩ phát hành",
