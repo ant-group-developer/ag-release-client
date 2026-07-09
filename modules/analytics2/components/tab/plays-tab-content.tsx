@@ -2,6 +2,7 @@ import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import { Col, Row, Segmented } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetTrendViewDspBarChart } from '../../hooks/use-get-trend-view-dsp-bar-chart';
 import { useGetTrendViewLineChart } from '../../hooks/use-get-trend-view-line-chart';
 import { useGetTrendViewTerBarChart } from '../../hooks/use-get-trend-view-ter-bar-chart';
@@ -12,9 +13,14 @@ import AnalyticsRankings from '../ranking/analytics-rankings';
 interface Props {
     fromDate: string;
     toDate: string;
+    releaseType: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function PlaysTabContent({ fromDate, toDate }: Props) {
+export default function PlaysTabContent({
+    fromDate,
+    toDate,
+    releaseType,
+}: Props) {
     const messages = useTranslations();
     const [viewType, setViewType] = useState<'dsp' | 'ter'>('dsp');
 
@@ -22,6 +28,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
         useGetTrendViewLineChart({
             fromDate,
             toDate,
+            releaseType,
         });
 
     const { barChartData: dspBarChartData, isFetching: isDspBarChartFetching } =
@@ -29,6 +36,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
             {
                 fromDate,
                 toDate,
+                releaseType,
             },
             { enabled: viewType === 'dsp' }
         );
@@ -38,6 +46,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
             {
                 fromDate,
                 toDate,
+                releaseType,
             },
             { enabled: viewType === 'ter' }
         );
@@ -63,7 +72,7 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
         <>
             {/* <MetricCards fromDate={fromDate} toDate={toDate} /> */}
 
-            <StatsOverview params={{ startDate: fromDate, endDate: toDate }} />
+            <StatsOverview params={{ fromDate, toDate, releaseType }} />
 
             {/* <PlaysTimelineChart fromDate={fromDate} toDate={toDate} /> */}
 
@@ -114,7 +123,11 @@ export default function PlaysTabContent({ fromDate, toDate }: Props) {
             </Row>
 
             {/* <AnalyticsDailyChart /> */}
-            <AnalyticsRankings fromDate={fromDate} toDate={toDate} />
+            <AnalyticsRankings
+                fromDate={fromDate}
+                toDate={toDate}
+                releaseType={releaseType}
+            />
             {/* <RecentReleasesTable fromDate={fromDate} toDate={toDate} /> */}
         </>
     );

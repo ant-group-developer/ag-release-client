@@ -4,35 +4,41 @@ import { APP_ROUTES } from '@/enums/routes';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import {
     useGetRevenueTopArtist,
+    useGetRevenueTopChannel,
     useGetRevenueTopDsp,
     useGetRevenueTopLabel,
     useGetRevenueTopRelease,
+    useGetRevenueTopSourceType,
     useGetRevenueTopTenant,
     useGetRevenueTopTrack,
-    useGetRevenueTopChannel,
-    useGetRevenueTopSourceType,
 } from '../../hooks/use-get-revenue-data';
 import { RevenueDspItem } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
-import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
-import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
-import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
-import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
 import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
+import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
+import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
-import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
+import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useRevenueRankingColumns } from './use-revenue-ranking-columns';
 
 interface Props {
     fromDate: string;
     toDate: string;
+    releaseType: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function RevenueRankings({ fromDate, toDate }: Props) {
+export default function RevenueRankings({
+    fromDate,
+    toDate,
+    releaseType,
+}: Props) {
     const messages = useTranslations();
     const topN = 5;
     const [detailModal, setDetailModal] = useState<{
@@ -70,6 +76,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         });
 
     const { topTrackData, isFetching: isTracksLoading } = useGetRevenueTopTrack(
@@ -78,6 +85,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         }
     );
 
@@ -87,6 +95,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         });
 
     const { topDspData, isFetching: isDspLoading } = useGetRevenueTopDsp({
@@ -94,6 +103,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
         toDate,
         topN,
         includeOther: false,
+        releaseType,
     });
 
     const { topTenantData, isFetching: isTenantsLoading } =
@@ -102,6 +112,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         });
 
     const { topLabelData, isFetching: isLabelsLoading } = useGetRevenueTopLabel(
@@ -110,6 +121,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         }
     );
 
@@ -119,6 +131,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         });
 
     const { topSourceTypeData, isFetching: isSourceTypesLoading } =
@@ -127,6 +140,7 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
             toDate,
             topN,
             includeOther: false,
+            releaseType,
         });
 
     const dspDataWithRank = useMemo(() => {
@@ -139,12 +153,10 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
     }, [topDspData]);
 
     const sourceTypeDataWithRank = useMemo(() => {
-        return topSourceTypeData?.items?.map(
-            (item: any, index: number) => ({
-                ...item,
-                rank: index + 1,
-            })
-        );
+        return topSourceTypeData?.items?.map((item: any, index: number) => ({
+            ...item,
+            rank: index + 1,
+        }));
     }, [topSourceTypeData]);
 
     return (
@@ -243,7 +255,9 @@ export default function RevenueRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.sourceType'))}
+                        title={topRankingTitle(
+                            messages('analytics2.distributors')
+                        )}
                         columns={sourceTypeColumns}
                         dataSource={sourceTypeDataWithRank}
                         loading={isSourceTypesLoading}

@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
-import { RevenueLineChartItem, RevenueLineChartParams } from '../types';
+import { AnalyticsCommonParams, RevenueLineChartItem } from '../types';
 
 export const useGetRevenueLineChart = (
-    params: RevenueLineChartParams,
+    params: AnalyticsCommonParams,
     options?: { enabled?: boolean }
 ) => {
     const { data, ...res } = useQuery({
@@ -15,7 +15,8 @@ export const useGetRevenueLineChart = (
     });
 
     return {
-        revenueLineChartData: data?.data?.data ?? ([] as RevenueLineChartItem[]),
+        revenueLineChartData:
+            data?.data?.data ?? ([] as RevenueLineChartItem[]),
         ...res,
     };
 };

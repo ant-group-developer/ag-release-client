@@ -169,7 +169,7 @@ export default function ExternalSectionV2({ releaseData }: Props) {
     return (
         <div id="externalSection" className="flex flex-col gap-4">
             <span className="text-base font-semibold">
-                {messages('release.overview.platformLinks')}
+                {messages('release.overview.onlineLinks')}
             </span>
             <Table
                 dataSource={metadataExternalItems}

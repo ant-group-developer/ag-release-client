@@ -1,9 +1,11 @@
 import { ReleasesData } from '@/modules/releases/types';
 import { CommonParams } from '@/types/api';
+import { ANALYTICS_RELEASE_TYPE } from '../enums';
 
 export interface Analytics2DataFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface DspTimelineParams {
@@ -60,6 +62,7 @@ export interface RankingParams {
     pageSize: number;
     keyword?: string;
     groupBySource?: boolean;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface TrackRankingItem {
@@ -186,6 +189,7 @@ export interface RevenueQueryParams extends CommonParams {
     topN?: number;
     includeOther?: boolean;
     groupBySource?: boolean;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 // Summary Response
@@ -665,5 +669,3 @@ export interface RevenueSourceTypeItem {
     revenueUsd: number;
     quantity: number;
 }
-
-

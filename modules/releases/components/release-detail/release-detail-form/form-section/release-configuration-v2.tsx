@@ -68,7 +68,7 @@ export default function ReleaseConfigurationSectionV2({
     return (
         <div id="release-configuration" className="flex flex-col gap-6">
             <span className="text-base font-semibold">
-                {messages('release.configuration')}
+                {messages('release.classificationInfo')}
             </span>
             <div className="grid grid-cols-1 gap-x-14 md:grid-cols-2 lg:grid-cols-2">
                 <div className="col-span-1">

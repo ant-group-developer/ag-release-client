@@ -13,7 +13,6 @@ import {
     TerTimelineParams,
     TrendViewDspBarChartParams,
     TrendViewLineChartParams,
-    TrendViewSummaryParams,
     TrendViewTerBarChartParams,
 } from '../types';
 
@@ -31,25 +30,25 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.TER_TIMELINE,
             params,
         ] as const,
-    trendViewSummary: (params: TrendViewSummaryParams) =>
+    trendViewSummary: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_SUMMARY,
             params,
         ] as const,
-    trendViewLineChart: (params: TrendViewLineChartParams) =>
+    trendViewLineChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_LINE_CHART,
             params,
         ] as const,
-    trendViewDspBarChart: (params: TrendViewDspBarChartParams) =>
+    trendViewDspBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_DSP_BAR_CHART,
             params,
         ] as const,
-    trendViewTerBarChart: (params: TrendViewTerBarChartParams) =>
+    trendViewTerBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_TER_BAR_CHART,
@@ -121,19 +120,19 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.REVENUE_SUMMARY,
             params,
         ] as const,
-    revenueLineChart: (params: RevenueLineChartParams) =>
+    revenueLineChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_LINE_CHART,
             params,
         ] as const,
-    revenueDspBarChart: (params: RevenueDspBarChartParams) =>
+    revenueDspBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_DSP_BAR_CHART,
             params,
         ] as const,
-    revenueTerBarChart: (params: RevenueTerBarChartParams) =>
+    revenueTerBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_TER_BAR_CHART,
