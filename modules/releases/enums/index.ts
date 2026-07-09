@@ -124,6 +124,7 @@ export enum RELEASES_TABLE_KEY {
     CREATED_AT = 'createdAt',
     UPDATED_AT = 'updatedAt',
     TENANT = 'tenant',
+    DSP_LIVES = 'dsps_live',
 }
 
 export enum RELEASE_TIME_MODE {
