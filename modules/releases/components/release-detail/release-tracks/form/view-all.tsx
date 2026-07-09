@@ -1,9 +1,9 @@
 import AppForm from '@/components/ui/antd-form/form';
 import { DATE_FORMAT } from '@/enums/common';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { TrackData } from '@/modules/tracks/types';
 import { Form, theme } from 'antd';
 import dayjs from 'dayjs';
@@ -14,6 +14,7 @@ import LanguageSection from '../collapse/view-all-collapse/language-section';
 import OtherSection from '../collapse/view-all-collapse/other-section';
 import TrackAndArtistSection from '../collapse/view-all-collapse/track-and-artist-section';
 import TrackContributorsSection from '../collapse/view-all-collapse/track-contributors-section';
+import TrackExternalSection from '../collapse/view-all-collapse/track-external-section';
 
 type Props = {
     trackData: TrackData;
@@ -101,6 +102,8 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
                     backgroundColor: token.colorBgContainer,
                 }}
             >
+                <TrackExternalSection trackData={trackData} />
+
                 <TrackAndArtistSection
                     trackData={trackData}
                     debouncedUpdateTrackDraft={updateTrackDraft}
@@ -136,4 +139,3 @@ export default function ViewAll({ index, trackData, updateTrackDraft }: Props) {
         </AppForm>
     );
 }
-

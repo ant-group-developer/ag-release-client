@@ -79,7 +79,7 @@ export interface ReleasesData extends CommonAttribute {
     priceTierId?: string;
     type?: RELEASE_TYPE;
     video?: VideoData;
-    metadataExternal?: ReleaseMetadataExternal;
+    metadataExternal?: MetadataExternal;
     isImportedFromReport?: boolean;
     isrc?: string;
     releaseDspDeliveries?: ReleaseDspData[];
@@ -99,7 +99,7 @@ export interface ExternalMetadata {
     lastSyncedAt: string;
 }
 
-export interface ReleaseMetadataExternal {
+export interface MetadataExternal {
     spotify?: ExternalMetadata;
     deezer?: ExternalMetadata;
     [key: string]: ExternalMetadata | undefined;
