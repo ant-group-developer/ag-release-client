@@ -77,7 +77,7 @@ export default async function NewsDetail({ params }: Props) {
                             <CopyLink />
                         </div>
                     </div> */}
-                    <div className="col-span-12 rounded-lg lg:col-span-8 lg:col-start-3">
+                    <div className="col-span-12 min-w-0 rounded-lg lg:col-span-8 lg:col-start-3">
                         <div>
                             <strong className="text-2xl font-extrabold">
                                 {post?.title}

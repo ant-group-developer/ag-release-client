@@ -171,7 +171,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                                 href={`https://www.youtube.com/watch?v=${value}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="truncate font-medium text-blue-500 hover:underline"
+                                className="truncate text-blue-500 hover:underline"
                             >
                                 {value}
                             </a>

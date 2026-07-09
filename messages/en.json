@@ -1937,7 +1937,8 @@
             "invalidFeatFormat": "Title containing \"feat\" must follow the format: feat.artist, feat.artist1, etc.",
             "noLeadingTrailingSpace": "No leading or trailing spaces allowed",
             "titleCannotContainFeat": "Title cannot contain \"feat\"",
-            "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\""
+            "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\"",
+            "noLinguisticContentHasExplicitContent": "Explicit Content indicated but no vocals in metadata."
         }
     },
     "distribute": {
