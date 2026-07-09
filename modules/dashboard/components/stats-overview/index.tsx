@@ -3,16 +3,16 @@ import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
 import { useGetTrendViewSummary } from '@/modules/analytics2/hooks/use-get-trend-view-summary';
+import { AnalyticsCommonParams } from '@/modules/analytics2/types';
 import { theme } from 'antd';
 import dayjs from 'dayjs';
 import { BarChart3, Building2, DiscAlbum, Music, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { useGetCountOverview } from '../../hooks/use-get-count';
-import { DashboardDataFilter } from '../../types';
 
 type Props = {
-    params: DashboardDataFilter;
+    params: AnalyticsCommonParams;
 };
 
 export default function StatsOverview({ params }: Props) {
@@ -22,14 +22,15 @@ export default function StatsOverview({ params }: Props) {
         useGetCountOverview(params);
     const trendViewSummaryParams = useMemo(
         () => ({
-            fromDate: params.startDate
-                ? dayjs(params.startDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
+            fromDate: params.fromDate
+                ? dayjs(params.fromDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
                 : '',
-            toDate: params.endDate
-                ? dayjs(params.endDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
+            toDate: params.toDate
+                ? dayjs(params.toDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
                 : '',
+            releaseType: params.releaseType,
         }),
-        [params.endDate, params.startDate]
+        [params.toDate, params.fromDate, params.releaseType]
     );
     const { trendViewSummaryData, isFetching: isTrendViewSummaryLoading } =
         useGetTrendViewSummary(trendViewSummaryParams);

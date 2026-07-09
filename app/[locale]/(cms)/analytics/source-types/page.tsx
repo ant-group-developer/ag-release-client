@@ -2,10 +2,12 @@
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import { RANK_COLUMN_WIDTH } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetSourceTypeRanking } from '@/modules/analytics2/hooks/use-get-rankings';
@@ -14,8 +16,6 @@ import {
     RevenueSourceTypeItem,
     SourceTypeRankingItem,
 } from '@/modules/analytics2/types';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, theme } from 'antd';
@@ -123,7 +123,7 @@ export default function SourceTypesRankingPage() {
             ),
         },
         {
-            title: messages('common.sourceType'),
+            title: messages('analytics2.distributors'),
             dataIndex: 'sourceTypeLabel',
             key: 'sourceTypeLabel',
             ellipsis: true,
@@ -182,7 +182,7 @@ export default function SourceTypesRankingPage() {
             ),
         },
         {
-            title: messages('common.sourceType'),
+            title: messages('analytics2.distributors'),
             dataIndex: 'sourceTypeLabel',
             key: 'sourceTypeLabel',
             ellipsis: true,
@@ -217,8 +217,8 @@ export default function SourceTypesRankingPage() {
     ];
 
     const pageTitle = isRevenue
-        ? `${messages('common.sourceType')} - ${messages('common.revenue')}`
-        : `${messages('common.sourceType')} - ${messages('common.views')}`;
+        ? `${messages('analytics2.distributors')} - ${messages('common.revenue')}`
+        : `${messages('analytics2.distributors')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {

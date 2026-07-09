@@ -4,34 +4,40 @@ import { APP_ROUTES } from '@/enums/routes';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import {
     useGetArtistRanking,
+    useGetChannelRanking,
     useGetDspRanking,
     useGetLabelRanking,
     useGetReleaseRanking,
+    useGetSourceTypeRanking,
     useGetTenantRanking,
     useGetTrackRanking,
-    useGetChannelRanking,
-    useGetSourceTypeRanking,
 } from '../../hooks/use-get-rankings';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
-import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
-import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
-import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
-import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
 import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
+import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
+import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
-import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
+import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
 interface Props {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function AnalyticsRankings({ fromDate, toDate }: Props) {
+export default function AnalyticsRankings({
+    fromDate,
+    toDate,
+    releaseType,
+}: Props) {
     const messages = useTranslations();
     const topN = 5;
     const topRankingTitle = (title: string) =>
@@ -68,6 +74,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { releaseRankingData, isFetching: isReleasesFetching } =
@@ -76,6 +83,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { artistRankingData, isFetching: isArtistsFetching } =
@@ -84,6 +92,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { labelRankingData, isFetching: isLabelsFetching } =
@@ -92,6 +101,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { tenantRankingData, isFetching: isTenantsFetching } =
@@ -100,6 +110,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { dspRankingData, isFetching: isDspsFetching } = useGetDspRanking({
@@ -107,6 +118,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         toDate,
         page: 1,
         pageSize: topN,
+        releaseType,
     });
 
     const { channelRankingData, isFetching: isChannelsFetching } =
@@ -115,6 +127,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { sourceTypeRankingData, isFetching: isSourceTypesFetching } =
@@ -123,6 +136,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     return (
@@ -221,7 +235,9 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                 </Col>
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
-                        title={topRankingTitle(messages('common.sourceType'))}
+                        title={topRankingTitle(
+                            messages('analytics2.distributors')
+                        )}
                         columns={sourceTypeColumns}
                         dataSource={sourceTypeRankingData?.items}
                         loading={isSourceTypesFetching}

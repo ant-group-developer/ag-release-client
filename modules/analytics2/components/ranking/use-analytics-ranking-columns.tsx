@@ -10,9 +10,9 @@ import {
     DspRankingItem,
     LabelRankingItem,
     ReleaseRankingItem,
+    SourceTypeRankingItem,
     TenantRankingItem,
     TrackRankingItem,
-    SourceTypeRankingItem,
 } from '../../types';
 
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
@@ -550,7 +550,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.sourceType'),
+                title: messages('analytics2.distributors'),
                 dataIndex: 'sourceTypeLabel',
                 key: 'sourceTypeLabel',
                 ellipsis: true,

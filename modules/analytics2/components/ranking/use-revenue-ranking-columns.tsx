@@ -10,9 +10,9 @@ import {
     RevenueDspItem,
     RevenueLabelItem,
     RevenueReleaseItem,
+    RevenueSourceTypeItem,
     RevenueTenantItem,
     RevenueTrackItem,
-    RevenueSourceTypeItem,
 } from '../../types';
 
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
@@ -617,14 +617,14 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.sourceType'),
+                title: messages('analytics2.distributors'),
                 dataIndex: 'sourceTypeLabel',
                 key: 'sourceTypeLabel',
                 ellipsis: true,
                 render: (text: string, record: RevenueSourceTypeItem) => (
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <span
-                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100 font-medium"
+                            className="cursor-pointer font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                             onClick={() =>
                                 setDetailModal({
                                     type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,

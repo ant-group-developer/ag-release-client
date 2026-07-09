@@ -42,6 +42,7 @@ import {
     RevenueTerBarChartParams,
     RevenueTimelineData,
     RevenueTrackItem,
+    SourceTypeRankingItem,
     SyncAllRequest,
     SyncAllResponse,
     SyncJobResponse,
@@ -54,13 +55,11 @@ import {
     TrackDspItem,
     TrackRankingItem,
     TrackTerItem,
-    SourceTypeRankingItem,
     TrendViewDspBarChartItem,
     TrendViewDspBarChartParams,
     TrendViewLineChartItem,
     TrendViewLineChartParams,
     TrendViewSummaryData,
-    TrendViewSummaryParams,
     TrendViewTenantBarChartItem,
     TrendViewTerBarChartItem,
     TrendViewTerBarChartParams,
@@ -91,25 +90,25 @@ export const analytics2Apis = {
             params
         );
     },
-    getTrendViewSummary: (params: TrendViewSummaryParams) => {
+    getTrendViewSummary: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewSummaryData>>(
             '/analytics/trend-view/summary',
             params
         );
     },
-    getTrendViewLineChart: (params: TrendViewLineChartParams) => {
+    getTrendViewLineChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             '/analytics/trend-view/line-chart',
             params
         );
     },
-    getTrendViewDspBarChart: (params: TrendViewDspBarChartParams) => {
+    getTrendViewDspBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
             '/analytics/trend-view/dsp/bar-chart',
             params
         );
     },
-    getTrendViewTerBarChart: (params: TrendViewTerBarChartParams) => {
+    getTrendViewTerBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
             '/analytics/trend-view/ter/bar-chart',
             params
@@ -185,19 +184,19 @@ export const analytics2Apis = {
             params
         );
     },
-    getRevenueLineChart: (params: RevenueLineChartParams) => {
+    getRevenueLineChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             '/analytics/revenue/line-chart',
             params
         );
     },
-    getRevenueDspBarChart: (params: RevenueDspBarChartParams) => {
+    getRevenueDspBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
             '/analytics/revenue/dsp/bar-chart',
             params
         );
     },
-    getRevenueTerBarChart: (params: RevenueTerBarChartParams) => {
+    getRevenueTerBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
             '/analytics/revenue/ter/bar-chart',
             params

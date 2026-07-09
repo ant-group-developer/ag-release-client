@@ -228,61 +228,82 @@ export default function ReleaseDetailFormV2() {
                             : 'outlined'
                     }
                 >
-                    {/* Single white container for all sections */}
-                    <div
-                        className="flex flex-col gap-12 rounded-lg p-6 shadow-sm"
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    >
+                    <div className="flex flex-col gap-6">
                         {isHasMetadataExternal && !isCreateReleasePage && (
-                            <ExternalSectionV2 releaseData={releaseData} />
+                            <div
+                                className="rounded-lg p-6 shadow-sm"
+                                style={{ backgroundColor: token.colorBgContainer }}
+                            >
+                                <ExternalSectionV2 releaseData={releaseData} />
+                            </div>
                         )}
 
-                        <ReleaseConfigurationSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
+                        <div
+                            className="rounded-lg p-6 shadow-sm"
+                            style={{ backgroundColor: token.colorBgContainer }}
+                        >
+                            <ReleaseConfigurationSectionV2
+                                debouncedUpdate={debouncedUpdate}
+                                isReadMode={isReadMode}
+                                isCreateReleasePage={isCreateReleasePage}
+                            />
+                        </div>
 
-                        <CodesSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
+                        <div
+                            className="rounded-lg p-6 shadow-sm"
+                            style={{ backgroundColor: token.colorBgContainer }}
+                        >
+                            <CodesSectionV2
+                                debouncedUpdate={debouncedUpdate}
+                                isReadMode={isReadMode}
+                                isCreateReleasePage={isCreateReleasePage}
+                            />
+                        </div>
 
-                        <GenreLanguageSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
+                        <div
+                            className="rounded-lg p-6 shadow-sm"
+                            style={{ backgroundColor: token.colorBgContainer }}
+                        >
+                            <GenreLanguageSectionV2
+                                debouncedUpdate={debouncedUpdate}
+                                isReadMode={isReadMode}
+                                isCreateReleasePage={isCreateReleasePage}
+                            />
+                        </div>
 
-                        <LegalNoticesSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                        />
-                    </div>
+                        <div
+                            className="rounded-lg p-6 shadow-sm"
+                            style={{ backgroundColor: token.colorBgContainer }}
+                        >
+                            <LegalNoticesSectionV2
+                                debouncedUpdate={debouncedUpdate}
+                                isReadMode={isReadMode}
+                                isCreateReleasePage={isCreateReleasePage}
+                            />
+                        </div>
 
-                    <div
-                        className="mt-6 rounded-lg p-6 shadow-sm"
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    >
-                        <ReleaseArtistSectionV2
-                            debouncedUpdate={debouncedUpdate}
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                            releaseArtist={releaseArtist}
-                        />
-                    </div>
+                        <div
+                            className="rounded-lg p-6 shadow-sm"
+                            style={{ backgroundColor: token.colorBgContainer }}
+                        >
+                            <ReleaseArtistSectionV2
+                                debouncedUpdate={debouncedUpdate}
+                                isReadMode={isReadMode}
+                                isCreateReleasePage={isCreateReleasePage}
+                                releaseArtist={releaseArtist}
+                            />
+                        </div>
 
-                    <div
-                        className="mt-6 rounded-lg p-6 shadow-sm"
-                        style={{ backgroundColor: token.colorBgContainer }}
-                    >
-                        <ReleaseContributorsSectionV2
-                            isReadMode={isReadMode}
-                            isCreateReleasePage={isCreateReleasePage}
-                            releaseContributor={releaseContributor}
-                        />
+                        <div
+                            className="rounded-lg p-6 shadow-sm"
+                            style={{ backgroundColor: token.colorBgContainer }}
+                        >
+                            <ReleaseContributorsSectionV2
+                                isReadMode={isReadMode}
+                                isCreateReleasePage={isCreateReleasePage}
+                                releaseContributor={releaseContributor}
+                            />
+                        </div>
                     </div>
                 </Form>
 
