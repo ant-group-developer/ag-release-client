@@ -498,6 +498,7 @@ export const QUERY_KEY = {
         REVENUE_TOP_RELEASE: 'revenue-top-release',
         REVENUE_TOP_LABEL: 'revenue-top-label',
         REVENUE_TOP_CHANNEL: 'revenue-top-channel',
+        REVENUE_TOP_SOURCE_TYPE: 'revenue-top-source-type',
         RELEASE_OVERVIEW: 'release-overview',
         RELEASE_DSP_TIMELINE: 'release-dsp-timeline',
         RELEASE_DSP_SALES_TIMELINE: 'release-dsp-sales-timeline',
@@ -593,6 +594,7 @@ export const QUERY_KEY = {
         SOURCE_TYPE_REVENUE_TER_BAR_CHART: 'source-type-revenue-ter-bar-chart',
         SOURCE_TYPE_TREND_VIEW_DSP_BAR_CHART: 'source-type-trend-view-dsp-bar-chart',
         SOURCE_TYPE_TREND_VIEW_TER_BAR_CHART: 'source-type-trend-view-ter-bar-chart',
+        SOURCE_TYPE_RANKING: 'source-type-ranking',
     },
     YOUTUBE_KEY: {
         KEY: 'YOUTUBE_KEY',

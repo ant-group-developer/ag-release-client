@@ -1,35 +1,34 @@
 'use client';
-
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
-import {
-    PAGE_SIZE_DEFAULT,
-    PAGE_SIZE_EXTRA_LARGE,
-    PAGE_SIZE_OPTIONS,
-} from '@/constants/page-size';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
+import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import DetailArtistAnalyticsModal from '@/modules/analytics2/components/detail-artist/detail-artist-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
-import ArtistRevenueTable from '@/modules/analytics2/components/table/artist-revenue-table';
-import ArtistViewsTable from '@/modules/analytics2/components/table/artist-views-table';
+import { RANK_COLUMN_WIDTH } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import {
     getAnalyticsReleaseType,
     getAnalyticsViewType,
 } from '@/modules/analytics2/helpers';
-import { useGetArtistRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { useGetRevenueTopArtist } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
+import { useGetSourceTypeRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopSourceType } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import {
+    RevenueSourceTypeItem,
+    SourceTypeRankingItem,
+} from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, theme } from 'antd';
+import { Card, Segmented, Table, theme } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -40,12 +39,19 @@ interface RankingFilter extends CommonParams {
     releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function ArtistsRankingPage() {
+export default function SourceTypesRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
     const searchParams = useSearchParams();
-    const { dspData } = useGetListDsp({
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
+
+    const [detailSourceModal, setDetailSourceModal] = useState<{
+        open: boolean;
+        title: string;
+        sourceType: string;
+    }>({
+        open: false,
+        title: '',
+        sourceType: '',
     });
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
@@ -72,56 +78,33 @@ export default function ArtistsRankingPage() {
         );
     }, [searchParams]);
 
-    const [detailModal, setDetailModal] = useState<{
-        open: boolean;
-        title: string;
-        artistId: string;
-    }>({
-        open: false,
-        title: '',
-        artistId: '',
-    });
-
-    const [detailSourceModal, setDetailSourceModal] = useState<{
-        open: boolean;
-        title: string;
-        sourceType: string;
-    }>({
-        open: false,
-        title: '',
-        sourceType: '',
-    });
-
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
-    const { artistRankingData, isFetching: isViewsFetching } =
-        useGetArtistRanking(
+    const { sourceTypeRankingData, isFetching: isViewsFetching } =
+        useGetSourceTypeRanking(
             {
                 fromDate: dataFilter.startDate!,
                 toDate: dataFilter.endDate!,
                 page,
                 pageSize,
-                keyword: dataFilter.keyword ?? undefined,
-                groupBySource: true,
+                keyword: dataFilter.keyword,
                 releaseType,
             },
             { enabled: !isRevenue }
         );
 
     // Fetch revenue ranking data
-    const { topArtistData, isFetching: isRevenueFetching } =
-        useGetRevenueTopArtist(
+    const { topSourceTypeData, isFetching: isRevenueFetching } =
+        useGetRevenueTopSourceType(
             {
                 fromDate: dataFilter.startDate!,
                 toDate: dataFilter.endDate!,
                 page,
                 pageSize,
-                keyword: dataFilter.keyword ?? undefined,
-                includeOther: false,
-                groupBySource: true,
+                keyword: dataFilter.keyword,
                 releaseType,
             },
             { enabled: isRevenue }
@@ -129,9 +112,138 @@ export default function ArtistsRankingPage() {
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
+    const viewItems = useMemo(() => {
+        return (
+            sourceTypeRankingData?.items?.map(
+                (item: SourceTypeRankingItem, index: number) => ({
+                    ...item,
+                    rank: item.rank || (page - 1) * pageSize + index + 1,
+                })
+            ) || []
+        );
+    }, [sourceTypeRankingData, page, pageSize]);
+
+    const revenueItems = useMemo(() => {
+        return (
+            topSourceTypeData?.items?.map(
+                (item: RevenueSourceTypeItem, index: number) => ({
+                    ...item,
+                    rank: item.rank || (page - 1) * pageSize + index + 1,
+                })
+            ) || []
+        );
+    }, [topSourceTypeData, page, pageSize]);
+
+    const revenueColumns: ColumnsType<RevenueSourceTypeItem> = [
+        {
+            title: messages('analytics2.rank'),
+            dataIndex: 'rank',
+            key: 'rank',
+            width: RANK_COLUMN_WIDTH,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
+            title: messages('analytics2.distributors'),
+            dataIndex: 'sourceTypeLabel',
+            key: 'sourceTypeLabel',
+            ellipsis: true,
+            render: (text: string, record: RevenueSourceTypeItem) => (
+                <CustomTooltip title={messages('common.detailedAnalysis')}>
+                    <span
+                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        onClick={() =>
+                            setDetailSourceModal({
+                                open: true,
+                                title: text,
+                                sourceType: record.sourceType,
+                            })
+                        }
+                    >
+                        {text || '—'}
+                    </span>
+                </CustomTooltip>
+            ),
+        },
+        {
+            title: messages('common.usage'),
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: 250,
+            render: (qty: number) => (
+                <span className="text-gray-600 dark:text-zinc-400">
+                    {qty ? qty.toLocaleString() : 0}
+                </span>
+            ),
+        },
+        {
+            title: messages('common.revenue'),
+            dataIndex: 'revenueUsd',
+            key: 'revenueUsd',
+            width: 250,
+            render: (val: number) => (
+                <span className="text-gray-900 dark:text-zinc-100">
+                    ${val ? formattedNumber(val) : '0.00'}
+                </span>
+            ),
+        },
+    ];
+
+    const viewColumns: ColumnsType<SourceTypeRankingItem> = [
+        {
+            title: messages('analytics2.rank'),
+            dataIndex: 'rank',
+            key: 'rank',
+            width: RANK_COLUMN_WIDTH,
+            align: 'center' as const,
+            render: (rank: number) => (
+                <span className="text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </span>
+            ),
+        },
+        {
+            title: messages('analytics2.distributors'),
+            dataIndex: 'sourceTypeLabel',
+            key: 'sourceTypeLabel',
+            ellipsis: true,
+            render: (text: string, record: SourceTypeRankingItem) => (
+                <CustomTooltip title={messages('common.detailedAnalysis')}>
+                    <span
+                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        onClick={() =>
+                            setDetailSourceModal({
+                                open: true,
+                                title: text,
+                                sourceType: record.sourceType,
+                            })
+                        }
+                    >
+                        {text || '—'}
+                    </span>
+                </CustomTooltip>
+            ),
+        },
+        {
+            title: messages('common.viewCount'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 180,
+            render: (views: number) => (
+                <span className="text-gray-900 dark:text-zinc-100">
+                    {views ? views.toLocaleString() : 0}
+                </span>
+            ),
+        },
+    ];
+
     const pageTitle = isRevenue
-        ? `${messages('artist.artists')} - ${messages('common.revenue')}`
-        : `${messages('artist.artists')} - ${messages('common.views')}`;
+        ? `${messages('analytics2.distributors')} - ${messages('common.revenue')}`
+        : `${messages('analytics2.distributors')} - ${messages('common.views')}`;
 
     const breadcrumbs = [
         {
@@ -142,22 +254,6 @@ export default function ArtistsRankingPage() {
             title: pageTitle,
         },
     ];
-
-    const handleDetailArtist = (artistId: string, artistName: string) => {
-        setDetailModal({
-            open: true,
-            title: artistName,
-            artistId,
-        });
-    };
-
-    const handleDetailSource = (sourceType: string, title: string) => {
-        setDetailSourceModal({
-            open: true,
-            title,
-            sourceType,
-        });
-    };
 
     return (
         <div
@@ -233,20 +329,24 @@ export default function ArtistsRankingPage() {
                         />
                     </div>
                     {isRevenue ? (
-                        <ArtistRevenueTable
-                            dataSource={topArtistData.items}
+                        <Table<RevenueSourceTypeItem>
+                            sticky
+                            columns={revenueColumns}
+                            dataSource={revenueItems}
                             loading={isFetching}
-                            dspData={dspData}
-                            onDetailArtist={handleDetailArtist}
-                            onDetailSource={handleDetailSource}
+                            rowKey="sourceType"
+                            size="small"
+                            pagination={false}
                         />
                     ) : (
-                        <ArtistViewsTable
-                            dataSource={artistRankingData.items}
+                        <Table<SourceTypeRankingItem>
+                            sticky
+                            columns={viewColumns}
+                            dataSource={viewItems}
                             loading={isFetching}
-                            dspData={dspData}
-                            onDetailArtist={handleDetailArtist}
-                            onDetailSource={handleDetailSource}
+                            rowKey="sourceType"
+                            size="small"
+                            pagination={false}
                         />
                     )}
                     <AppPagination
@@ -256,8 +356,9 @@ export default function ArtistsRankingPage() {
                         pageSize={pageSize}
                         total={
                             isRevenue
-                                ? topArtistData?.metadata?.totalItems || 0
-                                : artistRankingData?.metadata?.totalItems || 0
+                                ? topSourceTypeData?.metadata?.totalItems || 0
+                                : sourceTypeRankingData?.metadata?.totalItems ||
+                                  0
                         }
                         onChange={onChangePage}
                         showTotalText
@@ -266,26 +367,14 @@ export default function ArtistsRankingPage() {
                         pageSizeOptions={PAGE_SIZE_OPTIONS}
                     />
                 </Card>
-
-                {detailModal.open && (
-                    <DetailArtistAnalyticsModal
-                        open={detailModal.open}
-                        onClose={() =>
-                            setDetailModal((prev) => ({ ...prev, open: false }))
-                        }
-                        title={detailModal.title}
-                        artistId={detailModal.artistId}
-                        fromDate={dataFilter.startDate!}
-                        toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
-                    />
-                )}
-
                 {detailSourceModal.open && (
                     <DetailSourceTypeAnalyticsModal
                         open={detailSourceModal.open}
                         onClose={() =>
-                            setDetailSourceModal((prev) => ({ ...prev, open: false }))
+                            setDetailSourceModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
                         }
                         title={detailSourceModal.title}
                         sourceType={detailSourceModal.sourceType}

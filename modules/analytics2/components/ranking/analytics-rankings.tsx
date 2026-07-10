@@ -4,31 +4,42 @@ import { APP_ROUTES } from '@/enums/routes';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+import { ANALYTICS_VIEW_TYPE } from '../../enums/tabs';
+import { createViewMoreHref } from '../../helpers';
 import {
     useGetArtistRanking,
+    useGetChannelRanking,
     useGetDspRanking,
     useGetLabelRanking,
     useGetReleaseRanking,
+    useGetSourceTypeRanking,
     useGetTenantRanking,
     useGetTrackRanking,
-    useGetChannelRanking,
 } from '../../hooks/use-get-rankings';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
-import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
-import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
-import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
-import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
 import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
+import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
+import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
+import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
+import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
+import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
 interface Props {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function AnalyticsRankings({ fromDate, toDate }: Props) {
+export default function AnalyticsRankings({
+    fromDate,
+    toDate,
+    releaseType,
+}: Props) {
     const messages = useTranslations();
     const topN = 5;
     const topRankingTitle = (title: string) =>
@@ -37,15 +48,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             title,
         });
     const [detailModal, setDetailModal] = useState<{
-        type:
-            | 'release'
-            | 'track'
-            | 'label'
-            | 'artist'
-            | 'tenant'
-            | 'channel'
-            | 'dsp'
-            | null;
+        type: ANALYTICS_MODAL_TYPE | null;
         title: string;
         id: string;
         dspReportId?: string;
@@ -64,6 +67,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         tenantColumns,
         dspColumns,
         channelColumns,
+        sourceTypeColumns,
     } = useAnalyticsRankingColumns({ setDetailModal });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
@@ -72,6 +76,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { releaseRankingData, isFetching: isReleasesFetching } =
@@ -80,6 +85,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { artistRankingData, isFetching: isArtistsFetching } =
@@ -88,6 +94,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { labelRankingData, isFetching: isLabelsFetching } =
@@ -96,6 +103,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { tenantRankingData, isFetching: isTenantsFetching } =
@@ -104,6 +112,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
         });
 
     const { dspRankingData, isFetching: isDspsFetching } = useGetDspRanking({
@@ -111,6 +120,7 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
         toDate,
         page: 1,
         pageSize: topN,
+        releaseType,
     });
 
     const { channelRankingData, isFetching: isChannelsFetching } =
@@ -119,6 +129,16 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
             toDate,
             page: 1,
             pageSize: topN,
+            releaseType,
+        });
+
+    const { sourceTypeRankingData, isFetching: isSourceTypesFetching } =
+        useGetSourceTypeRanking({
+            fromDate,
+            toDate,
+            page: 1,
+            pageSize: topN,
+            releaseType,
         });
 
     return (
@@ -134,7 +154,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_RELEASES,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -147,7 +175,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_TRACKS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -160,7 +196,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="artistName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_ARTISTS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -173,7 +217,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="labelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_LABELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_LABELS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -186,7 +238,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="tenantName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_TENANTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_TENANTS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -199,7 +259,15 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="dspName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_DSPS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -212,81 +280,146 @@ export default function AnalyticsRankings({ fromDate, toDate }: Props) {
                         labelKey="channelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_CHANNELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_CHANNELS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
+                    />
+                </Col>
+                <Col span={12} xs={24} lg={12}>
+                    <RankingCard
+                        title={topRankingTitle(
+                            messages('analytics2.distributors')
+                        )}
+                        columns={sourceTypeColumns}
+                        dataSource={sourceTypeRankingData?.items}
+                        loading={isSourceTypesFetching}
+                        rowKey="sourceType"
+                        labelKey="sourceTypeLabel"
+                        valueKey="totalViews"
+                        defaultView={RankingCardView.LIST}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_SOURCE_TYPES,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
             </Row>
-            <DetailReleaseAnalyticsModal
-                open={detailModal.type === 'release'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                releaseId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailModal.type === 'track'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                isrc={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailLabelAnalyticsModal
-                open={detailModal.type === 'label'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                labelId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailArtistAnalyticsModal
-                open={detailModal.type === 'artist'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                artistId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailTenantAnalyticsModal
-                open={detailModal.type === 'tenant'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                tenantId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailChannelAnalyticsModal
-                open={detailModal.type === 'channel'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                channelId={detailModal.id}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
-            <DetailDspAnalyticsModal
-                open={detailModal.type === 'dsp'}
-                onClose={() =>
-                    setDetailModal((prev) => ({ ...prev, type: null }))
-                }
-                title={detailModal.title}
-                pgDspId={detailModal.id}
-                dspReportId={detailModal.dspReportId || ''}
-                fromDate={fromDate}
-                toDate={toDate}
-            />
+            {detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE && (
+                <DetailReleaseAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    releaseId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.TRACK && (
+                <DetailTrackAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.TRACK}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    isrc={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.LABEL && (
+                <DetailLabelAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.LABEL}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    labelId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST && (
+                <DetailArtistAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    artistId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.TENANT && (
+                <DetailTenantAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.TENANT}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    tenantId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL && (
+                <DetailChannelAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    channelId={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.DSP && (
+                <DetailDspAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.DSP}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    pgDspId={detailModal.id}
+                    dspReportId={detailModal.dspReportId || ''}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE && (
+                <DetailSourceTypeAnalyticsModal
+                    open={detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE}
+                    onClose={() =>
+                        setDetailModal((prev) => ({ ...prev, type: null }))
+                    }
+                    title={detailModal.title}
+                    sourceType={detailModal.id}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
         </div>
     );
 }

@@ -124,6 +124,8 @@
         }
     },
     "common": {
+        "yes": "Có",
+        "no": "Không",
         "back": "Quay lại",
         "youtubeId": "YouTube ID",
         "viewOnYoutube": "Xem trên YouTube",
@@ -132,6 +134,11 @@
         "partly": "Một phần",
         "none": "Không",
         "select": "Chọn...",
+        "apply": "Áp dụng",
+        "include": "Bao gồm",
+        "exclude": "Loại trừ",
+        "quickSelect": "Chọn nhanh",
+        "selectAll": "Chọn tất cả",
         "ownership": "Quyền sở hữu",
         "direct": "Trực tiếp",
         "distributionMethod": "Phương thức phát hành",
@@ -338,6 +345,7 @@
         "use": "Sử dụng",
         "source": "Tài nguyên",
         "sourcePlatform": "Nguồn",
+        "sourceType": "Loại nguồn",
         "userUpload": "Người tải lên",
         "imageAi": "Hình ảnh AI",
         "thumbnail": "Thumbnail",
@@ -430,6 +438,8 @@
         "expandAll": "Mở rộng tất cả",
         "collapseAll": "Thu gọn tất cả",
         "isrc": "ISRC",
+        "upc": "UPC",
+        "data": "Dữ liệu",
         "justNow": "vừa xong",
         "ago": "trước",
         "systemReview": "Duyệt hệ thống",
@@ -1017,6 +1027,23 @@
         "autoSubmitDspTab": "DSP",
         "autoSubmitOptionsTab": "Tuỳ chọn",
         "autoSubmitPreviewTotal": "Tìm thấy {count} phát hành",
+        "autoSubmitV2": {
+            "title": "Tự động phát hành",
+            "selectedCount": "Đã chọn {count} phát hành",
+            "submitConfig": "Cấu hình gửi",
+            "config": "Cấu hình",
+            "previewData": "Xem trước dữ liệu",
+            "needImportAgain": "Nhập lại dữ liệu CI hay không ?",
+            "reImportCi": "Nhập lại CI",
+            "noReImportCi": "Không nhập lại CI",
+            "skipDistributed": "Bỏ qua bản đã phân phối",
+            "dspLockedTooltip": "Nền tảng phát hành này đã bị khoá, không thể phát hành",
+            "live": "Live",
+            "notLive": "Chưa Live",
+            "currentStatus": "Trạng thái hiện tại",
+            "targetStatus": "Trạng thái mục tiêu",
+            "dataSubmit": "Dữ liệu gửi"
+        },
         "bulkSubmitConfirm": "Bạn có chắc chắn muốn gửi {count} phát hành đã chọn không?",
         "bulkDelete": "Xoá hàng loạt",
         "bulkDeleteConfirm": "Bạn có chắc chắn muốn xoá {count} phát hành đã chọn không?",
@@ -1046,6 +1073,8 @@
         "releases": "Phát hành",
         "count": "Số lượng bản phát hành",
         "configuration": "Thiết lập phát hành",
+        "classificationInfo": "Thông tin phân loại",
+        "upcCatalogCode": "Mã UPC & Catalog ID",
         "otherMetadata": "Các metadata khác",
         "label": "Phát hành",
         "creationSource": "Nguồn tạo",
@@ -1100,6 +1129,7 @@
             "cLine": "C line",
             "courtesyLine": "Courtesy line",
             "platformLinks": "Liên kết nền tảng",
+            "onlineLinks": "Link trực tuyến",
             "releaseId": "Mã phát hành",
             "version": "Phiên bản",
             "catalogId": "Mã catalog",
@@ -1288,7 +1318,15 @@
             "never_distributed": "Chưa từng phân phối",
             "distributed": "Đã phân phối",
             "taken_down": "Đã gỡ xuống"
-        }
+        },
+        "dspStatus": "Trạng thái DSP",
+        "dspFilter": "Bộ lọc DSP",
+        "dspDirect": "DSP trực tiếp",
+        "dspCi": "DSP CI",
+        "dspState51": "DSP State51",
+        "excludeLockedDsp": "Loại trừ DSP bị khoá",
+        "clearDspStatus": "Xoá DSP status",
+        "showAppliedDspOnly": "Chỉ hiện DSP đang áp dụng"
     },
     "releaseArtist": {
         "label": "Nghệ sĩ phát hành",
@@ -1893,7 +1931,8 @@
             "invalidFeatFormat": "Tiêu đề có feat phải theo định dạng: feat.artist, feat.artist1, v.v.",
             "noLeadingTrailingSpace": "Không được có khoảng trắng ở đầu hoặc cuối",
             "titleCannotContainFeat": "Tiêu đề không được chứa từ \"feat\"",
-            "noLinguisticContentHasLyricist": "Không có ngôn ngữ âm thành thì không được có \"người đóng góp\" với vai trò \"người viết lời\""
+            "noLinguisticContentHasLyricist": "Không có ngôn ngữ âm thành thì không được có \"người đóng góp\" với vai trò \"người viết lời\"",
+            "noLinguisticContentHasExplicitContent": "Có nội dung nhạy cảm nhưng siêu dữ liệu không có giọng hát."
         }
     },
     "distribute": {
@@ -3143,6 +3182,7 @@
         "topRankingTitle": "Top {count} {title}",
         "topReleases": "Top bản phát hành",
         "topTracks": "Top bài hát",
+        "distributors": "Nhà phân phối",
         "detailEntityTitle": "({entity}: {title})",
         "filters": {
             "allPlatforms": "Tất cả nền tảng",
@@ -3185,6 +3225,10 @@
         "latestSyncedAt": "Lần đồng bộ cuối",
         "neverExported": "Chưa từng export",
         "lastImportIsFailed": "Lần nhập cuối thất bại",
+        "importCount": "Số lần nhập",
+        "qaFlagsCi": "QA flags CI",
+        "needImportAgain": "Cần nhập lại",
+        "importData": "Nhập dữ liệu",
         "export": {
             "exportOrder": "Đơn hàng xuất",
             "exportTask": "Nhiệm vụ xuất",

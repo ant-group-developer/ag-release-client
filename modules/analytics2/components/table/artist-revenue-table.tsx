@@ -5,8 +5,8 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
-import { RevenueArtistItem } from '@/modules/analytics2/types';
-import { Avatar, Table } from 'antd';
+import { BySourceItem, RevenueArtistItem } from '@/modules/analytics2/types';
+import { Avatar, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 
@@ -14,6 +14,7 @@ const COLUMN_WIDTH_RANK = 120;
 const COLUMN_WIDTH_PROFILES = 180;
 const COLUMN_WIDTH_COUNTRY = 150;
 const COLUMN_WIDTH_GENRE = 150;
+const COLUMN_WIDTH_SOURCE = 280;
 const COLUMN_WIDTH_TRACKS = 150;
 const COLUMN_WIDTH_USAGE = 150;
 const COLUMN_WIDTH_REVENUE = 180;
@@ -24,6 +25,7 @@ interface ArtistRevenueTableProps {
     loading: boolean;
     dspData?: any;
     onDetailArtist: (artistId: string, artistName: string) => void;
+    onDetailSource?: (sourceType: string, title: string) => void;
 }
 
 export default function ArtistRevenueTable({
@@ -31,6 +33,7 @@ export default function ArtistRevenueTable({
     loading,
     dspData,
     onDetailArtist,
+    onDetailSource,
 }: ArtistRevenueTableProps) {
     const messages = useTranslations();
 
@@ -138,6 +141,34 @@ export default function ArtistRevenueTable({
                     {record?.genre || '-'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            width: COLUMN_WIDTH_SOURCE,
+            render: (bySource?: BySourceItem[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        onDetailSource?.(item.source, item.sourceLabel)
+                                    }
+                                >
+                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                </Tag>
+                            </CustomTooltip>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.tracks'),

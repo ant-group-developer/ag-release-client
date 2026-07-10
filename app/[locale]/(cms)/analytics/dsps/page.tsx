@@ -7,9 +7,16 @@ import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+} from '@/modules/analytics2/helpers';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import {
     BySourceItem,
     DspRankingItem,
@@ -21,7 +28,8 @@ import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -30,11 +38,23 @@ interface RankingFilter extends CommonParams {
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
     groupBySource?: boolean;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DspsRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
+    const searchParams = useSearchParams();
+
+    const [detailSourceModal, setDetailSourceModal] = useState<{
+        open: boolean;
+        title: string;
+        sourceType: string;
+    }>({
+        open: false,
+        title: '',
+        sourceType: '',
+    });
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<RankingFilter>({
@@ -43,11 +63,26 @@ export default function DspsRankingPage() {
             startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
             endDate: dayjs().format('YYYY-MM-DD'),
             type: ANALYTICS_VIEW_TYPE.VIEW,
+            releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
         });
+
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
+        ANALYTICS_VIEW_TYPE.VIEW
+    );
+    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(
+        ANALYTICS_RELEASE_TYPE.AUDIO
+    );
+
+    useEffect(() => {
+        setCurrentType(getAnalyticsViewType(searchParams.get('type')));
+        setReleaseType(
+            getAnalyticsReleaseType(searchParams.get('releaseType'))
+        );
+    }, [searchParams]);
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
     const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
@@ -58,6 +93,7 @@ export default function DspsRankingPage() {
             pageSize,
             keyword: dataFilter.keyword ?? undefined,
             groupBySource: true,
+            releaseType,
         },
         { enabled: !isRevenue }
     );
@@ -72,6 +108,7 @@ export default function DspsRankingPage() {
             keyword: dataFilter.keyword ?? undefined,
             includeOther: false,
             groupBySource: true,
+            releaseType,
         },
         { enabled: isRevenue }
     );
@@ -124,14 +161,29 @@ export default function DspsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
+            width: 280,
             render: (bySource?: BySourceItem[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
-                            <Tag key={item.source} className="m-0">
-                                {item.sourceLabel}
-                            </Tag>
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                </Tag>
+                            </CustomTooltip>
                         ))}
                     </div>
                 );
@@ -189,14 +241,29 @@ export default function DspsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
+            width: 280,
             render: (bySource?: BySourceItem[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
-                            <Tag key={item.source} className="m-0">
-                                {item.sourceLabel }
-                            </Tag>
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                </Tag>
+                            </CustomTooltip>
                         ))}
                     </div>
                 );
@@ -256,15 +323,36 @@ export default function DspsRankingPage() {
                 }
             >
                 <Card className="rounded-xl border-none shadow-sm">
-                    <div className="mb-4 flex items-center gap-4">
+                    <div className="mb-4 flex items-center gap-2">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                             style={{ width: 200 }}
                         />
                         <Segmented
-                            value={dataFilter.type ?? ANALYTICS_VIEW_TYPE.VIEW}
+                            value={releaseType}
                             onChange={(value) => {
+                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                onChangeFilter({
+                                    releaseType:
+                                        value as ANALYTICS_RELEASE_TYPE,
+                                });
+                            }}
+                            options={[
+                                {
+                                    label: messages('common.audio'),
+                                    value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                                },
+                                {
+                                    label: messages('common.video'),
+                                    value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                                },
+                            ]}
+                        />
+                        <Segmented
+                            value={currentType}
+                            onChange={(value) => {
+                                setCurrentType(value as ANALYTICS_VIEW_TYPE);
                                 onChangeFilter({
                                     type: value as ANALYTICS_VIEW_TYPE,
                                 });
@@ -319,6 +407,23 @@ export default function DspsRankingPage() {
                         pageSizeOptions={PAGE_SIZE_OPTIONS}
                     />
                 </Card>
+
+                {detailSourceModal.open && (
+                    <DetailSourceTypeAnalyticsModal
+                        open={detailSourceModal.open}
+                        onClose={() =>
+                            setDetailSourceModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={detailSourceModal.title}
+                        sourceType={detailSourceModal.sourceType}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
+                    />
+                )}
             </PageContainer>
         </div>
     );

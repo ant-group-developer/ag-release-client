@@ -26,7 +26,7 @@ import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-releas
 import { ProColumns } from '@ant-design/pro-components';
 import { Modal, Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import { CircleX, Globe } from 'lucide-react';
+import { CircleX, Filter, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import { useState } from 'react';
@@ -39,6 +39,7 @@ import {
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
+import DspDeliveryFilterDropdown from './dsp-delivery-filter-dropdown';
 import DspStatusModal from './dsp-status-modal';
 import ReleaseTitleColumn from './title-column';
 
@@ -61,6 +62,7 @@ export default function ReleasesTable({
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
     const [isDspModalOpen, setIsDspModalOpen] = useState(false);
+    const [isDspFilterOpen, setIsDspFilterOpen] = useState(false);
     const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
         null
     );
@@ -176,15 +178,32 @@ export default function ReleasesTable({
         },
         {
             title: messages('release.dspLive'),
-            key: 'dsps_live',
-            dataIndex: 'dsps_live',
+            key: RELEASES_TABLE_KEY.DSP_LIVES,
+            dataIndex: RELEASES_TABLE_KEY.DSP_LIVES,
             align: 'left',
-            width: 120,
+            width: 140,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'dsps_live'
+                RELEASES_TABLE_KEY.DSP_LIVES
+            ),
+            filterDropdownOpen: isDspFilterOpen,
+            onFilterDropdownOpenChange: setIsDspFilterOpen,
+            filterIcon: () => (
+                <Filter
+                    size={SIZE_ICON_SMALL}
+                    style={{
+                        color: dataFilter.dspDelivery ? token.colorPrimary : undefined,
+                    }}
+                />
+            ),
+            filterDropdown: () => (
+                <DspDeliveryFilterDropdown
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    onClose={() => setIsDspFilterOpen(false)}
+                />
             ),
             render: (_, record) => {
                 const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];

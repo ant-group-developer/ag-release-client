@@ -2,30 +2,34 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import {
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
+    RANK_COLUMN_WIDTH,
+} from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { useGetLabelDsp } from '../../hooks/use-get-label-dsp';
 import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
 import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
-import { useGetLabelTrendViewLineChart } from '../../hooks/use-get-label-trend-view-line-chart';
-import RankingCard, { RankingCardView } from '../card/ranking-card';
-import LineChartView from '../chart/line-chart-view';
-import DetailStatsOverview from '../detail/detail-stats-overview';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE, RANK_COLUMN_WIDTH } from '../../constants/types';
+import { useGetLabelTer } from '../../hooks/use-get-label-ter';
 import { useGetLabelTopReleases } from '../../hooks/use-get-label-top-releases';
 import { useGetLabelTopTracks } from '../../hooks/use-get-label-top-tracks';
+import { useGetLabelTrendViewLineChart } from '../../hooks/use-get-label-trend-view-line-chart';
 import { ReleaseRankingItem, TrackRankingItem } from '../../types';
+import RankingCard, { RankingCardView } from '../card/ranking-card';
+import LineChartView from '../chart/line-chart-view';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
-import { useGetLabelDsp } from '../../hooks/use-get-label-dsp';
-import { useGetLabelTer } from '../../hooks/use-get-label-ter';
+import DetailStatsOverview from '../detail/detail-stats-overview';
 
 interface DetailLabelAnalyticsModalProps {
     open: boolean;
@@ -34,6 +38,7 @@ interface DetailLabelAnalyticsModalProps {
     labelId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailLabelAnalyticsModal({
@@ -43,6 +48,7 @@ export default function DetailLabelAnalyticsModal({
     labelId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailLabelAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -87,8 +93,9 @@ export default function DetailLabelAnalyticsModal({
             {
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -100,8 +107,9 @@ export default function DetailLabelAnalyticsModal({
             {
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -109,7 +117,7 @@ export default function DetailLabelAnalyticsModal({
     // Gọi API lấy thông tin tổng quan của Label
     const { overviewData, isFetching } = useGetLabelOverview(
         labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -117,7 +125,7 @@ export default function DetailLabelAnalyticsModal({
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetLabelRevenueLineChart(
             labelId,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -127,7 +135,7 @@ export default function DetailLabelAnalyticsModal({
         isFetching: isTrendViewLineChartFetching,
     } = useGetLabelTrendViewLineChart(
         labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -136,28 +144,34 @@ export default function DetailLabelAnalyticsModal({
     );
 
     // Gọi API lấy danh sách DSP chi tiết phân trang của Label
-    const { labelDspData, isFetching: isLabelDspFetching } =
-        useGetLabelDsp(labelId, {
+    const { labelDspData, isFetching: isLabelDspFetching } = useGetLabelDsp(
+        labelId,
+        {
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: dspSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
-        });
+            releaseType,
+        }
+    );
 
     const [terSortBy, setTerSortBy] = useState<ANALYTIC_SORT_BY>(
         ANALYTIC_SORT_BY.REVENUE
     );
 
     // Gọi API lấy danh sách Territory chi tiết phân trang của Label
-    const { labelTerData, isFetching: isLabelTerFetching } =
-        useGetLabelTer(labelId, {
+    const { labelTerData, isFetching: isLabelTerFetching } = useGetLabelTer(
+        labelId,
+        {
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: terSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
-        });
+            releaseType,
+        }
+    );
 
     const labelDspColumns = useMemo(
         () => [
@@ -243,7 +257,7 @@ export default function DetailLabelAnalyticsModal({
                 key: 'territory',
                 ellipsis: true,
                 render: (text: string) => (
-                    <span className="truncate  text-gray-900 dark:text-zinc-100">
+                    <span className="truncate text-gray-900 dark:text-zinc-100">
                         {text || '—'}
                     </span>
                 ),
@@ -734,26 +748,38 @@ export default function DetailLabelAnalyticsModal({
                     </Col>
                 </Row>
             </div>
-            <DetailReleaseAnalyticsModal
-                open={detailReleaseModal.open}
-                onClose={() =>
-                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailReleaseModal.title}
-                releaseId={detailReleaseModal.releaseId}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailTrackModal.open}
-                onClose={() =>
-                    setDetailTrackModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailTrackModal.title}
-                isrc={detailTrackModal.isrc}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
+            {detailReleaseModal.open && (
+                <DetailReleaseAnalyticsModal
+                    open={detailReleaseModal.open}
+                    onClose={() =>
+                        setDetailReleaseModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailReleaseModal.title}
+                    releaseId={detailReleaseModal.releaseId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailTrackModal.open && (
+                <DetailTrackAnalyticsModal
+                    open={detailTrackModal.open}
+                    onClose={() =>
+                        setDetailTrackModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailTrackModal.title}
+                    isrc={detailTrackModal.isrc}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
         </FullScreenModal>
     );
 }

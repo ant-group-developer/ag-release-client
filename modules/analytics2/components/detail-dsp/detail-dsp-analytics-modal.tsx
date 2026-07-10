@@ -15,6 +15,7 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetDspOverview } from '../../hooks/use-get-dsp-overview';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
 import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
@@ -37,6 +38,7 @@ interface DetailDspAnalyticsModalProps {
     dspReportId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailDspAnalyticsModal({
@@ -47,6 +49,7 @@ export default function DetailDspAnalyticsModal({
     dspReportId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailDspAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -92,8 +95,9 @@ export default function DetailDspAnalyticsModal({
                 dspReportId,
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                isIncludeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -106,15 +110,22 @@ export default function DetailDspAnalyticsModal({
                 dspReportId,
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                isIncludeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
 
     // Gọi API lấy thông tin tổng quan của DSP
     const { overviewData, isFetching } = useGetDspOverview(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -123,7 +134,13 @@ export default function DetailDspAnalyticsModal({
         lineChartData: revenueLineChartData,
         isFetching: isLineChartFetching,
     } = useGetDspRevenueLineChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -132,7 +149,13 @@ export default function DetailDspAnalyticsModal({
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
     } = useGetDspTrendViewLineChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -141,7 +164,13 @@ export default function DetailDspAnalyticsModal({
         terBarChartData: trendViewTerBarChartData,
         isFetching: isTrendViewTerBarChartFetching,
     } = useGetDspTrendViewTerBarChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -159,7 +188,13 @@ export default function DetailDspAnalyticsModal({
         terBarChartData: revenueTerBarChartData,
         isFetching: isRevenueTerBarChartFetching,
     } = useGetDspRevenueTerBarChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -682,26 +717,38 @@ export default function DetailDspAnalyticsModal({
                     </Col>
                 </Row>
             </div>
-            <DetailReleaseAnalyticsModal
-                open={detailReleaseModal.open}
-                onClose={() =>
-                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailReleaseModal.title}
-                releaseId={detailReleaseModal.releaseId}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailTrackModal.open}
-                onClose={() =>
-                    setDetailTrackModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailTrackModal.title}
-                isrc={detailTrackModal.isrc}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
+            {detailReleaseModal.open && (
+                <DetailReleaseAnalyticsModal
+                    open={detailReleaseModal.open}
+                    onClose={() =>
+                        setDetailReleaseModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailReleaseModal.title}
+                    releaseId={detailReleaseModal.releaseId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailTrackModal.open && (
+                <DetailTrackAnalyticsModal
+                    open={detailTrackModal.open}
+                    onClose={() =>
+                        setDetailTrackModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailTrackModal.title}
+                    isrc={detailTrackModal.isrc}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
         </FullScreenModal>
     );
 }

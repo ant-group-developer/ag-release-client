@@ -1,70 +1,67 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
+    AnalyticsCommonParams,
+    ArtistDspItem,
     ArtistRankingItem,
+    ArtistTerItem,
+    ChannelDspItem,
+    ChannelRankingItem,
+    ChannelTerItem,
+    DspDetailParams,
     DspRankingItem,
     DspSalesTimelineData,
     DspTimelineData,
     DspTimelineParams,
+    ExportReportRequest,
+    ExportReportResponse,
+    LabelDspItem,
     LabelRankingItem,
+    LabelTerItem,
     RankingParams,
+    ReleaseDspItem,
     ReleaseOverviewData,
     ReleaseOverviewParams,
     ReleaseRankingItem,
+    ReleaseTerItem,
     RevenueArtistItem,
-    RevenueDspItem,
-    RevenueQueryParams,
-    RevenueReleaseItem,
-    RevenueLabelItem,
+    RevenueChannelItem,
     RevenueDspBarChartItem,
     RevenueDspBarChartParams,
+    RevenueDspItem,
+    RevenueLabelItem,
     RevenueLineChartItem,
     RevenueLineChartParams,
+    RevenueQueryParams,
+    RevenueReleaseItem,
+    RevenueSourceTypeItem,
     RevenueSummaryData,
+    RevenueTenantBarChartItem,
     RevenueTenantItem,
+    RevenueTerBarChartItem,
+    RevenueTerBarChartParams,
     RevenueTimelineData,
     RevenueTrackItem,
+    SourceTypeRankingItem,
     SyncAllRequest,
     SyncAllResponse,
     SyncJobResponse,
     SyncRequest,
+    TenantDspItem,
     TenantRankingItem,
+    TenantTerItem,
     TerTimelineData,
     TerTimelineParams,
+    TrackDspItem,
     TrackRankingItem,
+    TrackTerItem,
     TrendViewDspBarChartItem,
     TrendViewDspBarChartParams,
     TrendViewLineChartItem,
-    TrendViewLineChartParams,
     TrendViewSummaryData,
-    TrendViewSummaryParams,
+    TrendViewTenantBarChartItem,
     TrendViewTerBarChartItem,
     TrendViewTerBarChartParams,
-    RevenueTerBarChartItem,
-    RevenueTerBarChartParams,
-    ExportReportRequest,
-    ExportReportResponse,
-    ChannelRankingItem,
-    RevenueChannelItem,
-    DspDetailParams,
-    DspRankingParams,
-    TrendViewTenantBarChartItem,
-    RevenueTenantBarChartItem,
-    ReleaseDspParams,
-    ReleaseDspItem,
-    ReleaseTerParams,
-    ReleaseTerItem,
-    AnalyticsCommonParams,
-    TrackDspItem,
-    TrackTerItem,
-    ArtistDspItem,
-    ArtistTerItem,
-    LabelDspItem,
-    LabelTerItem,
-    TenantDspItem,
-    TenantTerItem,
-    ChannelDspItem,
-    ChannelTerItem,
 } from '../types';
 
 export const analytics2Apis = {
@@ -92,25 +89,25 @@ export const analytics2Apis = {
             params
         );
     },
-    getTrendViewSummary: (params: TrendViewSummaryParams) => {
+    getTrendViewSummary: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewSummaryData>>(
             '/analytics/trend-view/summary',
             params
         );
     },
-    getTrendViewLineChart: (params: TrendViewLineChartParams) => {
+    getTrendViewLineChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             '/analytics/trend-view/line-chart',
             params
         );
     },
-    getTrendViewDspBarChart: (params: TrendViewDspBarChartParams) => {
+    getTrendViewDspBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
             '/analytics/trend-view/dsp/bar-chart',
             params
         );
     },
-    getTrendViewTerBarChart: (params: TrendViewTerBarChartParams) => {
+    getTrendViewTerBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
             '/analytics/trend-view/ter/bar-chart',
             params
@@ -158,6 +155,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getSourceTypeRanking: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<PaginationResponse<SourceTypeRankingItem>>(
+            '/analytics/ranking/source-types',
+            params
+        );
+    },
 
     startSync: ({ period, force }: SyncRequest) => {
         return axiosInstance.post<SyncAllResponse>('/etl/ftp/sync', {
@@ -180,19 +183,19 @@ export const analytics2Apis = {
             params
         );
     },
-    getRevenueLineChart: (params: RevenueLineChartParams) => {
+    getRevenueLineChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             '/analytics/revenue/line-chart',
             params
         );
     },
-    getRevenueDspBarChart: (params: RevenueDspBarChartParams) => {
+    getRevenueDspBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
             '/analytics/revenue/dsp/bar-chart',
             params
         );
     },
-    getRevenueTerBarChart: (params: RevenueTerBarChartParams) => {
+    getRevenueTerBarChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
             '/analytics/revenue/ter/bar-chart',
             params
@@ -246,7 +249,13 @@ export const analytics2Apis = {
             params
         );
     },
-    getReleaseOverview: (releaseId: string, params: ReleaseOverviewParams) => {
+    getRevenueTopSourceType: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueSourceTypeItem>>(
+            '/analytics/revenue/top-source-type',
+            params
+        );
+    },
+    getReleaseOverview: (releaseId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/release/${releaseId}/overview`,
             params
@@ -299,7 +308,7 @@ export const analytics2Apis = {
     },
     getReleaseTrendViewLineChart: (
         releaseId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/release/${releaseId}/trend-view/line-chart`,
@@ -326,7 +335,7 @@ export const analytics2Apis = {
     },
     getReleaseRevenueLineChart: (
         releaseId: string,
-        params: RevenueLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             `/analytics/release/${releaseId}/revenue/line-chart`,
@@ -359,7 +368,7 @@ export const analytics2Apis = {
     },
     getTrackTrendViewLineChart: (
         isrc: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/track/${isrc}/trend-view/line-chart`,
@@ -408,7 +417,10 @@ export const analytics2Apis = {
             params
         );
     },
-    getTrackRevenueLineChart: (isrc: string, params: RevenueLineChartParams) => {
+    getTrackRevenueLineChart: (
+        isrc: string,
+        params: RevenueLineChartParams
+    ) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             `/analytics/track/${isrc}/revenue/line-chart`,
             params
@@ -476,7 +488,7 @@ export const analytics2Apis = {
     },
     getLabelTrendViewLineChart: (
         labelId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/label/${labelId}/trend-view/line-chart`,
@@ -540,13 +552,13 @@ export const analytics2Apis = {
             params
         );
     },
-    getLabelTopReleases: (labelId: string, params: RankingParams) => {
+    getLabelTopReleases: (labelId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/label/${labelId}/top-releases`,
             params
         );
     },
-    getLabelTopTracks: (labelId: string, params: RankingParams) => {
+    getLabelTopTracks: (labelId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             `/analytics/label/${labelId}/top-tracks`,
             params
@@ -558,13 +570,13 @@ export const analytics2Apis = {
             params
         );
     },
-    getArtistTopReleases: (artistId: string, params: RankingParams) => {
+    getArtistTopReleases: (artistId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/artist/${artistId}/top-releases`,
             params
         );
     },
-    getArtistTopTracks: (artistId: string, params: RankingParams) => {
+    getArtistTopTracks: (artistId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             `/analytics/artist/${artistId}/top-tracks`,
             params
@@ -605,7 +617,7 @@ export const analytics2Apis = {
     },
     getArtistTrendViewLineChart: (
         artistId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/artist/${artistId}/trend-view/line-chart`,
@@ -692,13 +704,13 @@ export const analytics2Apis = {
             params
         );
     },
-    getTenantTopReleases: (tenantId: string, params: RankingParams) => {
+    getTenantTopReleases: (tenantId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/tenant/${tenantId}/top-releases`,
             params
         );
     },
-    getTenantTopTracks: (tenantId: string, params: RankingParams) => {
+    getTenantTopTracks: (tenantId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             `/analytics/tenant/${tenantId}/top-tracks`,
             params
@@ -706,7 +718,7 @@ export const analytics2Apis = {
     },
     getTenantTrendViewLineChart: (
         tenantId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/tenant/${tenantId}/trend-view/line-chart`,
@@ -776,7 +788,10 @@ export const analytics2Apis = {
             params
         );
     },
-    getChannelTopReleases: (channelId: string, params: RankingParams) => {
+    getChannelTopReleases: (
+        channelId: string,
+        params: AnalyticsCommonParams
+    ) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/channel/${channelId}/top-releases`,
             params
@@ -784,7 +799,7 @@ export const analytics2Apis = {
     },
     getChannelTrendViewLineChart: (
         channelId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/channel/${channelId}/trend-view/line-chart`,
@@ -879,10 +894,9 @@ export const analytics2Apis = {
         );
     },
     getDspTrendViewTenantBarChart: (params: DspDetailParams) => {
-        return axiosInstance.post<DetailResponse<TrendViewTenantBarChartItem[]>>(
-            '/analytics/dsp/trend-view/tenant/bar-chart',
-            params
-        );
+        return axiosInstance.post<
+            DetailResponse<TrendViewTenantBarChartItem[]>
+        >('/analytics/dsp/trend-view/tenant/bar-chart', params);
     },
     getDspRevenueTenantBarChart: (params: DspDetailParams) => {
         return axiosInstance.post<DetailResponse<RevenueTenantBarChartItem[]>>(
@@ -890,19 +904,22 @@ export const analytics2Apis = {
             params
         );
     },
-    getDspTopReleases: (params: DspRankingParams) => {
+    getDspTopReleases: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             '/analytics/dsp/top-releases',
             params
         );
     },
-    getDspTopTracks: (params: DspRankingParams) => {
+    getDspTopTracks: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(
             '/analytics/dsp/top-tracks',
             params
         );
     },
-    getSourceTypeOverview: (sourceType: string, params: ReleaseOverviewParams) => {
+    getSourceTypeOverview: (
+        sourceType: string,
+        params: ReleaseOverviewParams
+    ) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/source-type/${sourceType}/overview`,
             params
@@ -920,37 +937,55 @@ export const analytics2Apis = {
             params
         );
     },
-    getSourceTypeRevenueLineChart: (sourceType: string, params: RevenueLineChartParams) => {
+    getSourceTypeRevenueLineChart: (
+        sourceType: string,
+        params: RevenueLineChartParams
+    ) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             `/analytics/source-type/${sourceType}/revenue/line-chart`,
             params
         );
     },
-    getSourceTypeTrendViewLineChart: (sourceType: string, params: TrendViewLineChartParams) => {
+    getSourceTypeTrendViewLineChart: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/source-type/${sourceType}/trend-view/line-chart`,
             params
         );
     },
-    getSourceTypeRevenueDspBarChart: (sourceType: string, params: RevenueDspBarChartParams) => {
+    getSourceTypeRevenueDspBarChart: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
         return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/revenue/dsp/bar-chart`,
             params
         );
     },
-    getSourceTypeRevenueTerBarChart: (sourceType: string, params: RevenueTerBarChartParams) => {
+    getSourceTypeRevenueTerBarChart: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
         return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/revenue/ter/bar-chart`,
             params
         );
     },
-    getSourceTypeTrendViewDspBarChart: (sourceType: string, params: TrendViewDspBarChartParams) => {
+    getSourceTypeTrendViewDspBarChart: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
         return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/trend-view/dsp/bar-chart`,
             params
         );
     },
-    getSourceTypeTrendViewTerBarChart: (sourceType: string, params: TrendViewTerBarChartParams) => {
+    getSourceTypeTrendViewTerBarChart: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
         return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/trend-view/ter/bar-chart`,
             params
@@ -961,4 +996,3 @@ export const analytics2Apis = {
 export const getExportReportEventsUrl = (jobId: string) => {
     return `/api/v1/analytics/reports/export/${jobId}/events`;
 };
-

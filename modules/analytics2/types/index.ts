@@ -1,9 +1,11 @@
 import { ReleasesData } from '@/modules/releases/types';
 import { CommonParams } from '@/types/api';
+import { ANALYTICS_RELEASE_TYPE } from '../enums';
 
 export interface Analytics2DataFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface DspTimelineParams {
@@ -60,6 +62,7 @@ export interface RankingParams {
     pageSize: number;
     keyword?: string;
     groupBySource?: boolean;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface TrackRankingItem {
@@ -72,6 +75,7 @@ export interface TrackRankingItem {
     releaseTitle: string;
     totalViews: number;
     release?: ReleasesData;
+    bySource?: BySourceItem[];
 }
 
 export interface ReleaseRankingItem {
@@ -84,6 +88,7 @@ export interface ReleaseRankingItem {
     trackCount: number;
     totalViews: number;
     release?: ReleasesData;
+    bySource?: BySourceItem[];
 }
 
 export interface ArtistRankingItem {
@@ -100,6 +105,7 @@ export interface ArtistRankingItem {
     }[];
     country?: string | null;
     genre?: string | null;
+    bySource?: BySourceItem[];
 }
 
 export interface TenantInfo {
@@ -119,6 +125,7 @@ export interface LabelRankingItem {
     trackCount: number;
     totalViews: number;
     tenant?: TenantInfo | null;
+    bySource?: BySourceItem[];
 }
 
 export interface TenantRankingItem {
@@ -137,6 +144,7 @@ export interface ChannelRankingItem {
     thumbUrl?: string | null;
     totalViews: number;
     tenant?: TenantInfo | null;
+    bySource?: BySourceItem[];
 }
 
 export interface SyncRequest {
@@ -181,6 +189,7 @@ export interface RevenueQueryParams extends CommonParams {
     topN?: number;
     includeOther?: boolean;
     groupBySource?: boolean;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 // Summary Response
@@ -237,6 +246,7 @@ export interface RevenueChannelItem {
     revenueUsd: number;
     quantity: number;
     tenant?: TenantInfo | null;
+    bySource?: BySourceItem[];
 }
 
 // Top Artist Response
@@ -255,6 +265,7 @@ export interface RevenueArtistItem {
     }[];
     country?: string | null;
     genre?: string | null;
+    bySource?: BySourceItem[];
 }
 
 // Top Track Response
@@ -269,6 +280,7 @@ export interface RevenueTrackItem {
     revenueUsd: number;
     quantity: number;
     release?: ReleasesData;
+    bySource?: BySourceItem[];
 }
 
 export interface TerTimelineParams {
@@ -296,6 +308,7 @@ export interface TerTimelineData {
 export interface ReleaseOverviewParams {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface ReleaseOverviewData {
@@ -315,6 +328,7 @@ export interface RevenueReleaseItem {
     revenueUsd: number;
     quantity: number;
     release?: ReleasesData;
+    bySource?: BySourceItem[];
 }
 
 export interface RevenueLabelItem {
@@ -328,6 +342,7 @@ export interface RevenueLabelItem {
     revenueUsd: number;
     quantity: number;
     tenant?: TenantInfo | null;
+    bySource?: BySourceItem[];
 }
 
 export interface TrendViewLineChartParams {
@@ -363,11 +378,13 @@ export interface BySourceItem {
     source: string;
     sourceLabel: string;
     quantity: number;
+    revenueUsd?: number;
 }
 
 export interface RevenueLineChartParams {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface RevenueLineChartItem {
@@ -497,11 +514,14 @@ export interface DspDetailParams {
     dspReportId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: string | ANALYTICS_RELEASE_TYPE;
 }
 
 export interface DspRankingParams extends DspDetailParams {
     page?: number;
     pageSize?: number;
+    topN?: number;
+    isIncludeOther?: boolean;
 }
 
 export interface TrendViewTenantBarChartItem {
@@ -515,13 +535,12 @@ export interface RevenueTenantBarChartItem {
     quantity: number;
 }
 
-export interface AnalyticsCommonParams {
+export interface AnalyticsCommonParams extends CommonParams {
     fromDate?: string;
     toDate?: string;
-    releaseType?: string;
+    releaseType?: string | ANALYTICS_RELEASE_TYPE;
     sortBy?: string;
-    page?: number;
-    pageSize?: number;
+    topN?: number;
     includeOther?: boolean;
 }
 
@@ -639,6 +658,17 @@ export interface ChannelTerItem {
     totalRevenueUsd: string;
 }
 
+export interface SourceTypeRankingItem {
+    rank: number;
+    sourceType: string;
+    sourceTypeLabel: string;
+    totalViews: number;
+}
 
-
-
+export interface RevenueSourceTypeItem {
+    rank?: number;
+    sourceType: string;
+    sourceTypeLabel: string;
+    revenueUsd: number;
+    quantity: number;
+}

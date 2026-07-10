@@ -6,6 +6,7 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import ExportModal from '@/modules/release-distribution/components/export-modal';
 import ReleaseDistributionHeader from '@/modules/release-distribution/components/header';
 import ReleaseDistributionTable from '@/modules/release-distribution/components/table/release-distribution-table';
 import { RELEASE_CI_DATA_COLUMNS_DISPLAY } from '@/modules/release-distribution/enums';
@@ -15,12 +16,15 @@ import { useExportReleaseCiData } from '@/modules/release-distribution/hooks/use
 import { useGetListReleaseCiData } from '@/modules/release-distribution/hooks/use-get-list-release-ci-data';
 import { ReleaseCiDataFilter } from '@/modules/release-distribution/types';
 import { RELEASE_TYPE } from '@/modules/releases/enums';
-import { DownloadOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
+import {
+    DownloadOutlined,
+    PlusOutlined,
+    SyncOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import ExportModal from '@/modules/release-distribution/components/export-modal';
 
 export default function ReleaseDistributionPage() {
     const {
@@ -90,7 +94,7 @@ export default function ReleaseDistributionPage() {
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
-        const fieldOrder = sort.field;
+        const fieldOrder = sort.columnKey ?? sort.field;
         onChangeFilter(
             {
                 orderBy,

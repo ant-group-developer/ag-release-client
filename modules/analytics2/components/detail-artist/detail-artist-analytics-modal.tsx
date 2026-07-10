@@ -16,6 +16,7 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetArtistDsp } from '../../hooks/use-get-artist-dsp';
 import { useGetArtistOverview } from '../../hooks/use-get-artist-overview';
 import { useGetArtistRevenueLineChart } from '../../hooks/use-get-artist-revenue-line-chart';
@@ -37,6 +38,7 @@ interface DetailArtistAnalyticsModalProps {
     artistId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailArtistAnalyticsModal({
@@ -46,6 +48,7 @@ export default function DetailArtistAnalyticsModal({
     artistId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailArtistAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -85,16 +88,13 @@ export default function DetailArtistAnalyticsModal({
 
     // Gọi API lấy thông tin Top Releases của Artist
     const { artistTopReleasesData, isFetching: isTopReleasesFetching } =
-        useGetArtistTopReleases(
-            artistId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                page: 1,
-                pageSize: 5,
-            },
-            { enabled: open }
-        );
+        useGetArtistTopReleases(artistId, {
+            fromDate: localFromDate,
+            toDate: localToDate,
+            topN: 5,
+            includeOther: true,
+            releaseType,
+        });
 
     // Gọi API lấy thông tin Top Tracks của Artist
     const { artistTopTracksData, isFetching: isTopTracksFetching } =
@@ -103,8 +103,9 @@ export default function DetailArtistAnalyticsModal({
             {
                 fromDate: localFromDate,
                 toDate: localToDate,
-                page: 1,
-                pageSize: 5,
+                topN: 5,
+                includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -112,7 +113,7 @@ export default function DetailArtistAnalyticsModal({
     // Gọi API lấy thông tin tổng quan của Artist
     const { overviewData, isFetching } = useGetArtistOverview(
         artistId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -120,7 +121,7 @@ export default function DetailArtistAnalyticsModal({
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetArtistRevenueLineChart(
             artistId,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -130,7 +131,7 @@ export default function DetailArtistAnalyticsModal({
         isFetching: isTrendViewLineChartFetching,
     } = useGetArtistTrendViewLineChart(
         artistId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -145,8 +146,9 @@ export default function DetailArtistAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: dspSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -161,8 +163,9 @@ export default function DetailArtistAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: terSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -742,26 +745,38 @@ export default function DetailArtistAnalyticsModal({
                 </Row>
             </div>
 
-            <DetailReleaseAnalyticsModal
-                open={detailReleaseModal.open}
-                onClose={() =>
-                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailReleaseModal.title}
-                releaseId={detailReleaseModal.releaseId}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailTrackModal.open}
-                onClose={() =>
-                    setDetailTrackModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailTrackModal.title}
-                isrc={detailTrackModal.isrc}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
+            {detailReleaseModal.open && (
+                <DetailReleaseAnalyticsModal
+                    open={detailReleaseModal.open}
+                    onClose={() =>
+                        setDetailReleaseModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailReleaseModal.title}
+                    releaseId={detailReleaseModal.releaseId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailTrackModal.open && (
+                <DetailTrackAnalyticsModal
+                    open={detailTrackModal.open}
+                    onClose={() =>
+                        setDetailTrackModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailTrackModal.title}
+                    isrc={detailTrackModal.isrc}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
         </FullScreenModal>
     );
 }

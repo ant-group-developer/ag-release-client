@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
-import { TrendViewDspBarChartItem, TrendViewDspBarChartParams } from '../types';
+import { AnalyticsCommonParams, TrendViewDspBarChartItem } from '../types';
 
 export const useGetTrendViewDspBarChart = (
-    params: TrendViewDspBarChartParams,
+    params: AnalyticsCommonParams,
     options?: { enabled?: boolean }
 ) => {
     const { data, ...res } = useQuery({

@@ -2,31 +2,35 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { formattedNumber } from '@/helpers/common';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import {
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
+    RANK_COLUMN_WIDTH,
+} from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetSourceTypeOverview } from '../../hooks/use-get-source-type-overview';
 import { useGetSourceTypeRevenueDspBarChart } from '../../hooks/use-get-source-type-revenue-dsp-bar-chart';
 import { useGetSourceTypeRevenueLineChart } from '../../hooks/use-get-source-type-revenue-line-chart';
 import { useGetSourceTypeRevenueTerBarChart } from '../../hooks/use-get-source-type-revenue-ter-bar-chart';
+import { useGetSourceTypeTopReleases } from '../../hooks/use-get-source-type-top-releases';
+import { useGetSourceTypeTopTracks } from '../../hooks/use-get-source-type-top-tracks';
 import { useGetSourceTypeTrendViewDspBarChart } from '../../hooks/use-get-source-type-trend-view-dsp-bar-chart';
 import { useGetSourceTypeTrendViewLineChart } from '../../hooks/use-get-source-type-trend-view-line-chart';
 import { useGetSourceTypeTrendViewTerBarChart } from '../../hooks/use-get-source-type-trend-view-ter-bar-chart';
+import { ReleaseRankingItem, TrackRankingItem } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 import LineChartView from '../chart/line-chart-view';
-import DetailStatsOverview from '../detail/detail-stats-overview';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { ANALYTICS_RANKING_THUMBNAIL_SIZE, RANK_COLUMN_WIDTH } from '../../constants/types';
-import { useGetSourceTypeTopReleases } from '../../hooks/use-get-source-type-top-releases';
-import { useGetSourceTypeTopTracks } from '../../hooks/use-get-source-type-top-tracks';
-import { ReleaseRankingItem, TrackRankingItem } from '../../types';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
+import DetailStatsOverview from '../detail/detail-stats-overview';
 
 enum AnalyticsViewType {
     DSP = 'dsp',
@@ -40,6 +44,7 @@ interface DetailSourceTypeAnalyticsModalProps {
     sourceType: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailSourceTypeAnalyticsModal({
@@ -49,6 +54,7 @@ export default function DetailSourceTypeAnalyticsModal({
     sourceType,
     fromDate,
     toDate,
+    releaseType,
 }: DetailSourceTypeAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -101,6 +107,7 @@ export default function DetailSourceTypeAnalyticsModal({
                 toDate: localToDate,
                 page: 1,
                 pageSize: 5,
+                releaseType,
             },
             { enabled: open }
         );
@@ -114,6 +121,7 @@ export default function DetailSourceTypeAnalyticsModal({
                 toDate: localToDate,
                 page: 1,
                 pageSize: 5,
+                releaseType,
             },
             { enabled: open }
         );
@@ -121,7 +129,7 @@ export default function DetailSourceTypeAnalyticsModal({
     // Gọi API lấy thông tin tổng quan của Source Type
     const { overviewData, isFetching } = useGetSourceTypeOverview(
         sourceType,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -129,19 +137,17 @@ export default function DetailSourceTypeAnalyticsModal({
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetSourceTypeRevenueLineChart(
             sourceType,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
     // Gọi API lấy thông tin biểu đồ lượt nghe của Source Type
-    const {
-        trendViewLineChartData,
-        isFetching: isTrendViewLineChartFetching,
-    } = useGetSourceTypeTrendViewLineChart(
-        sourceType,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    const { trendViewLineChartData, isFetching: isTrendViewLineChartFetching } =
+        useGetSourceTypeTrendViewLineChart(
+            sourceType,
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
+            open
+        );
 
     // Gọi API lấy thông tin phân bố theo DSP của Source Type
     const {
@@ -149,7 +155,7 @@ export default function DetailSourceTypeAnalyticsModal({
         isFetching: isTrendViewDspBarChartFetching,
     } = useGetSourceTypeTrendViewDspBarChart(
         sourceType,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -159,7 +165,7 @@ export default function DetailSourceTypeAnalyticsModal({
         isFetching: isTrendViewTerBarChartFetching,
     } = useGetSourceTypeTrendViewTerBarChart(
         sourceType,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -186,7 +192,7 @@ export default function DetailSourceTypeAnalyticsModal({
     const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
         useGetSourceTypeRevenueDspBarChart(
             sourceType,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -194,28 +200,9 @@ export default function DetailSourceTypeAnalyticsModal({
     const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
         useGetSourceTypeRevenueTerBarChart(
             sourceType,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
-
-    const mappedRevenuePieData = useMemo(() => {
-        if (revenueViewType === AnalyticsViewType.DSP) {
-            return revenueDspBarChartData.map((item) => ({
-                type: item.dspName,
-                value: item.revenueUsd,
-            }));
-        } else {
-            return revenueTerBarChartData.map((item) => ({
-                type: item.territory,
-                value: item.revenueUsd,
-            }));
-        }
-    }, [revenueViewType, revenueDspBarChartData, revenueTerBarChartData]);
-
-    const isRevenueBarChartFetching =
-        revenueViewType === AnalyticsViewType.DSP
-            ? isRevenueDspBarChartFetching
-            : isRevenueTerBarChartFetching;
 
     const dspColumns = useMemo(
         () => [
@@ -821,26 +808,38 @@ export default function DetailSourceTypeAnalyticsModal({
                     </Col>
                 </Row>
             </div>
-            <DetailReleaseAnalyticsModal
-                open={detailReleaseModal.open}
-                onClose={() =>
-                    setDetailReleaseModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailReleaseModal.title}
-                releaseId={detailReleaseModal.releaseId}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
-            <DetailTrackAnalyticsModal
-                open={detailTrackModal.open}
-                onClose={() =>
-                    setDetailTrackModal((prev) => ({ ...prev, open: false }))
-                }
-                title={detailTrackModal.title}
-                isrc={detailTrackModal.isrc}
-                fromDate={localFromDate}
-                toDate={localToDate}
-            />
+            {detailReleaseModal.open && (
+                <DetailReleaseAnalyticsModal
+                    open={detailReleaseModal.open}
+                    onClose={() =>
+                        setDetailReleaseModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailReleaseModal.title}
+                    releaseId={detailReleaseModal.releaseId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {detailTrackModal.open && (
+                <DetailTrackAnalyticsModal
+                    open={detailTrackModal.open}
+                    onClose={() =>
+                        setDetailTrackModal((prev) => ({
+                            ...prev,
+                            open: false,
+                        }))
+                    }
+                    title={detailTrackModal.title}
+                    isrc={detailTrackModal.isrc}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                />
+            )}
         </FullScreenModal>
     );
 }

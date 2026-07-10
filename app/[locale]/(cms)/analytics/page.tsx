@@ -6,6 +6,7 @@ import ExportReportProgressPopover from '@/modules/analytics2/components/export-
 import ExportReportModal from '@/modules/analytics2/components/modal/export-report-modal';
 import PlaysTabContent from '@/modules/analytics2/components/tab/plays-tab-content';
 import RevenueTabContent from '@/modules/analytics2/components/tab/revenue-tab-content';
+import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
 import {
     Analytics2DataFilter,
@@ -25,6 +26,7 @@ const defaultFilter: Analytics2DataFilter = {
         .startOf('month')
         .format('YYYY-MM-DD'),
     endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+    releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
 };
 
 export default function Analytics2Page() {
@@ -68,11 +70,22 @@ export default function Analytics2Page() {
         (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
     const [activeTab, setActiveTab] = useState<ANALYTICS2_TABS>(initialTab);
 
+    const initialReleaseType =
+        (searchParams.get('releaseType') as ANALYTICS_RELEASE_TYPE) ||
+        ANALYTICS_RELEASE_TYPE.AUDIO;
+    const [releaseType, setReleaseType] =
+        useState<ANALYTICS_RELEASE_TYPE>(initialReleaseType);
+
     useEffect(() => {
         const queryTab =
             (searchParams.get('tab') as ANALYTICS2_TABS) ||
             ANALYTICS2_TABS.VIEWS;
         setActiveTab(queryTab);
+
+        const queryReleaseType =
+            (searchParams.get('releaseType') as ANALYTICS_RELEASE_TYPE) ||
+            ANALYTICS_RELEASE_TYPE.AUDIO;
+        setReleaseType(queryReleaseType);
     }, [searchParams]);
 
     const handleTabChange = (tab: ANALYTICS2_TABS) => {
@@ -84,6 +97,11 @@ export default function Analytics2Page() {
 
     const { dataFilter, onChangeFilter } =
         useFilter<Analytics2DataFilter>(defaultFilter);
+
+    const handleReleaseTypeChange = (type: ANALYTICS_RELEASE_TYPE) => {
+        setReleaseType(type);
+        onChangeFilter({ releaseType: type });
+    };
 
     const fromDate = dataFilter.startDate ?? defaultFilter.startDate!;
     const toDate = dataFilter.endDate ?? defaultFilter.endDate!;
@@ -109,6 +127,26 @@ export default function Analytics2Page() {
                     >
                         {messages('common.exportReport')}
                     </Button>
+                    <Radio.Group
+                        buttonStyle="solid"
+                        optionType="button"
+                        value={releaseType}
+                        onChange={(event) =>
+                            handleReleaseTypeChange(
+                                event.target.value as ANALYTICS_RELEASE_TYPE
+                            )
+                        }
+                        options={[
+                            {
+                                label: messages('common.audio'),
+                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                            },
+                            {
+                                label: messages('common.video'),
+                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                            },
+                        ]}
+                    />
                     <Radio.Group
                         buttonStyle="solid"
                         optionType="button"
@@ -146,9 +184,17 @@ export default function Analytics2Page() {
         >
             <div className="flex flex-col gap-6">
                 {activeTab === ANALYTICS2_TABS.VIEWS ? (
-                    <PlaysTabContent fromDate={fromDate} toDate={toDate} />
+                    <PlaysTabContent
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        releaseType={releaseType}
+                    />
                 ) : (
-                    <RevenueTabContent fromDate={fromDate} toDate={toDate} />
+                    <RevenueTabContent
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        releaseType={releaseType}
+                    />
                 )}
             </div>
 

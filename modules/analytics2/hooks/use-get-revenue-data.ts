@@ -171,3 +171,22 @@ export const useGetRevenueTopChannel = (
     };
 };
 
+export const useGetRevenueTopSourceType = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopSourceType(params),
+        queryFn: () => analytics2Apis.getRevenueTopSourceType(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topSourceTypeData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topSourceTypeData,
+        ...query,
+    };
+};
+

@@ -36,6 +36,7 @@ export default function ReleaseVideos() {
         type: RELEASE_TYPE.VIDEO,
         orderBy: ORDER.DESC,
         fieldOrder: RELEASES_TABLE_KEY.UPDATED_AT,
+        isImportedFromReport: 'true',
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);

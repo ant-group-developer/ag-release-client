@@ -10,20 +10,15 @@ import {
     RevenueDspItem,
     RevenueLabelItem,
     RevenueReleaseItem,
+    RevenueSourceTypeItem,
     RevenueTenantItem,
     RevenueTrackItem,
 } from '../../types';
 
+import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+
 interface DetailModalState {
-    type:
-        | 'artist'
-        | 'track'
-        | 'release'
-        | 'label'
-        | 'tenant'
-        | 'channel'
-        | 'dsp'
-        | null;
+    type: ANALYTICS_MODAL_TYPE | null;
     title: string;
     id: string;
     dspReportId?: string;
@@ -72,7 +67,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'artist',
+                                        type: ANALYTICS_MODAL_TYPE.ARTIST,
                                         title: text,
                                         id: record.artistId,
                                     })
@@ -158,7 +153,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
                                         setDetailModal({
-                                            type: 'track',
+                                            type: ANALYTICS_MODAL_TYPE.TRACK,
                                             title: text,
                                             id: record.isrc,
                                         })
@@ -246,7 +241,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
                                         setDetailModal({
-                                            type: 'release',
+                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
                                             title: text,
                                             id: record.releaseId,
                                         })
@@ -325,7 +320,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'dsp',
+                                        type: ANALYTICS_MODAL_TYPE.DSP,
                                         title: text,
                                         id: record.pgDspId,
                                         dspReportId: record.dspReportId,
@@ -400,7 +395,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'tenant',
+                                        type: ANALYTICS_MODAL_TYPE.TENANT,
                                         title: text,
                                         id: record.tenantId,
                                     })
@@ -474,7 +469,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'label',
+                                        type: ANALYTICS_MODAL_TYPE.LABEL,
                                         title: text,
                                         id: record.labelId,
                                     })
@@ -568,7 +563,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
                                     setDetailModal({
-                                        type: 'channel',
+                                        type: ANALYTICS_MODAL_TYPE.CHANNEL,
                                         title: text,
                                         id: record.channelId,
                                     })
@@ -606,6 +601,69 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
         [messages, setDetailModal]
     );
 
+    const sourceTypeColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="font-bold text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('analytics2.distributors'),
+                dataIndex: 'sourceTypeLabel',
+                key: 'sourceTypeLabel',
+                ellipsis: true,
+                render: (text: string, record: RevenueSourceTypeItem) => (
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailModal({
+                                    type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
+                                    title: text,
+                                    id: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                ),
+            },
+            {
+                title: messages('common.usage'),
+                dataIndex: 'quantity',
+                key: 'quantity',
+                width: 150,
+                render: (qty: number) => (
+                    <span className="text-gray-600 dark:text-zinc-400">
+                        {qty ? qty.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.revenue'),
+                dataIndex: 'revenueUsd',
+                key: 'revenueUsd',
+                width: 150,
+                render: (val: number) => (
+                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                        ${val ? formattedNumber(val) : '0.00'}
+                    </span>
+                ),
+            },
+        ],
+        [messages, setDetailModal]
+    );
+
     return {
         artistColumns,
         trackColumns,
@@ -614,5 +672,6 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
         tenantColumns,
         labelColumns,
         channelColumns,
+        sourceTypeColumns,
     };
 }

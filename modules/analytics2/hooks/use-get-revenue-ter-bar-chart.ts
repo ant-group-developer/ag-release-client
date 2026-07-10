@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
-import { RevenueTerBarChartItem, RevenueTerBarChartParams } from '../types';
+import { AnalyticsCommonParams, RevenueTerBarChartItem } from '../types';
 
 export const useGetRevenueTerBarChart = (
-    params: RevenueTerBarChartParams,
+    params: AnalyticsCommonParams,
     options?: { enabled?: boolean }
 ) => {
     const { data, ...res } = useQuery({
@@ -15,7 +15,8 @@ export const useGetRevenueTerBarChart = (
     });
 
     return {
-        revenueTerBarChartData: data?.data?.data ?? ([] as RevenueTerBarChartItem[]),
+        revenueTerBarChartData:
+            data?.data?.data ?? ([] as RevenueTerBarChartItem[]),
         ...res,
     };
 };

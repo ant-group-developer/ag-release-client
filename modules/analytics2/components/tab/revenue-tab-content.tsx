@@ -3,6 +3,7 @@
 import { Col, Row, Segmented } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
 import { useGetRevenueLineChart } from '../../hooks/use-get-revenue-line-chart';
 import { useGetRevenueTerBarChart } from '../../hooks/use-get-revenue-ter-bar-chart';
@@ -14,9 +15,14 @@ import RevenueRankings from '../ranking/revenue-rankings';
 interface Props {
     fromDate: string;
     toDate: string;
+    releaseType: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function RevenueTabContent({ fromDate, toDate }: Props) {
+export default function RevenueTabContent({
+    fromDate,
+    toDate,
+    releaseType,
+}: Props) {
     const messages = useTranslations();
 
     const [viewType, setViewType] = useState<'dsp' | 'ter'>('dsp');
@@ -25,6 +31,7 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
         useGetRevenueLineChart({
             fromDate,
             toDate,
+            releaseType,
         });
 
     const { revenueDspBarChartData, isFetching: isDspBarChartFetching } =
@@ -32,6 +39,7 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
             {
                 fromDate,
                 toDate,
+                releaseType,
             },
             { enabled: viewType === 'dsp' }
         );
@@ -41,6 +49,7 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
             {
                 fromDate,
                 toDate,
+                releaseType,
             },
             { enabled: viewType === 'ter' }
         );
@@ -126,7 +135,11 @@ export default function RevenueTabContent({ fromDate, toDate }: Props) {
             {/* <RevenueTimelineChart fromDate={fromDate} toDate={toDate} /> */}
 
             {/* 3. Top Rankings */}
-            <RevenueRankings fromDate={fromDate} toDate={toDate} />
+            <RevenueRankings
+                fromDate={fromDate}
+                toDate={toDate}
+                releaseType={releaseType}
+            />
         </>
     );
 }

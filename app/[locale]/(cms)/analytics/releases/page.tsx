@@ -1,16 +1,22 @@
 'use client';
 
 import AppSearch from '@/components/ui/input/search';
+import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
-import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
+import { useFilter } from '@/hooks/use-filter';
 import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-release/detail-release-analytics-modal';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+} from '@/modules/analytics2/helpers';
 import { useGetReleaseRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopRelease } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -21,11 +27,12 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -33,11 +40,13 @@ interface RankingFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function ReleasesRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
+    const searchParams = useSearchParams();
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<RankingFilter>({
@@ -46,7 +55,22 @@ export default function ReleasesRankingPage() {
             startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
             endDate: dayjs().format('YYYY-MM-DD'),
             type: ANALYTICS_VIEW_TYPE.VIEW,
+            releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
         });
+
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
+        ANALYTICS_VIEW_TYPE.VIEW
+    );
+    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(
+        ANALYTICS_RELEASE_TYPE.AUDIO
+    );
+
+    useEffect(() => {
+        setCurrentType(getAnalyticsViewType(searchParams.get('type')));
+        setReleaseType(
+            getAnalyticsReleaseType(searchParams.get('releaseType'))
+        );
+    }, [searchParams]);
 
     const [detailModal, setDetailModal] = useState<{
         open: boolean;
@@ -58,9 +82,19 @@ export default function ReleasesRankingPage() {
         releaseId: '',
     });
 
+    const [detailSourceModal, setDetailSourceModal] = useState<{
+        open: boolean;
+        title: string;
+        sourceType: string;
+    }>({
+        open: false,
+        title: '',
+        sourceType: '',
+    });
+
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
     const { releaseRankingData, isFetching: isViewsFetching } =
@@ -71,6 +105,8 @@ export default function ReleasesRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword,
+                groupBySource: true,
+                releaseType,
             },
             { enabled: !isRevenue }
         );
@@ -85,6 +121,8 @@ export default function ReleasesRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 includeOther: false,
+                groupBySource: true,
+                releaseType,
             },
             { enabled: isRevenue }
         );
@@ -152,6 +190,39 @@ export default function ReleasesRankingPage() {
                     {text || '—'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            width: 280,
+            render: (bySource?: any[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}: $
+                                    {formattedNumber(item.revenueUsd)}
+                                </Tag>
+                            </CustomTooltip>
+                        ))}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.tracks'),
@@ -251,6 +322,39 @@ export default function ReleasesRankingPage() {
             ),
         },
         {
+            title: messages('common.sourcePlatform'),
+            dataIndex: 'bySource',
+            key: 'bySource',
+            width: 280,
+            render: (bySource?: any[]) => {
+                if (!bySource || bySource.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1.5">
+                        {bySource.map((item) => (
+                            <CustomTooltip
+                                key={item.source}
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Tag
+                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    onClick={() =>
+                                        setDetailSourceModal({
+                                            open: true,
+                                            title: item.sourceLabel,
+                                            sourceType: item.source,
+                                        })
+                                    }
+                                >
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
+                                </Tag>
+                            </CustomTooltip>
+                        ))}
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
@@ -316,15 +420,36 @@ export default function ReleasesRankingPage() {
                 }
             >
                 <Card className="rounded-xl border-none shadow-sm">
-                    <div className="mb-4 flex items-center gap-4">
+                    <div className="mb-4 flex items-center gap-2">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                             style={{ width: 200 }}
                         />
                         <Segmented
-                            value={dataFilter.type ?? ANALYTICS_VIEW_TYPE.VIEW}
+                            value={releaseType}
                             onChange={(value) => {
+                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                onChangeFilter({
+                                    releaseType:
+                                        value as ANALYTICS_RELEASE_TYPE,
+                                });
+                            }}
+                            options={[
+                                {
+                                    label: messages('common.audio'),
+                                    value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                                },
+                                {
+                                    label: messages('common.video'),
+                                    value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                                },
+                            ]}
+                        />
+                        <Segmented
+                            value={currentType}
+                            onChange={(value) => {
+                                setCurrentType(value as ANALYTICS_VIEW_TYPE);
                                 onChangeFilter({
                                     type: value as ANALYTICS_VIEW_TYPE,
                                 });
@@ -380,16 +505,36 @@ export default function ReleasesRankingPage() {
                     />
                 </Card>
 
-                <DetailReleaseAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    releaseId={detailModal.releaseId}
-                    fromDate={dataFilter.startDate!}
-                    toDate={dataFilter.endDate!}
-                />
+                {detailModal.open && (
+                    <DetailReleaseAnalyticsModal
+                        open={detailModal.open}
+                        onClose={() =>
+                            setDetailModal((prev) => ({ ...prev, open: false }))
+                        }
+                        title={detailModal.title}
+                        releaseId={detailModal.releaseId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
+                    />
+                )}
+
+                {detailSourceModal.open && (
+                    <DetailSourceTypeAnalyticsModal
+                        open={detailSourceModal.open}
+                        onClose={() =>
+                            setDetailSourceModal((prev) => ({
+                                ...prev,
+                                open: false,
+                            }))
+                        }
+                        title={detailSourceModal.title}
+                        sourceType={detailSourceModal.sourceType}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
+                    />
+                )}
             </PageContainer>
         </div>
     );

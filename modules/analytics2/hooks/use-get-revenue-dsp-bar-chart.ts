@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
-import { RevenueDspBarChartItem, RevenueDspBarChartParams } from '../types';
+import { AnalyticsCommonParams, RevenueDspBarChartItem } from '../types';
 
 export const useGetRevenueDspBarChart = (
-    params: RevenueDspBarChartParams,
+    params: AnalyticsCommonParams,
     options?: { enabled?: boolean }
 ) => {
     const { data, ...res } = useQuery({
@@ -15,7 +15,8 @@ export const useGetRevenueDspBarChart = (
     });
 
     return {
-        revenueDspBarChartData: data?.data?.data ?? ([] as RevenueDspBarChartItem[]),
+        revenueDspBarChartData:
+            data?.data?.data ?? ([] as RevenueDspBarChartItem[]),
         ...res,
     };
 };

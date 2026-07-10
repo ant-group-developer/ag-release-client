@@ -8,7 +8,7 @@ import { usePermission } from '@/hooks/use-permission';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Button } from 'antd';
+import { Button, Space, Tooltip, Typography, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
@@ -28,6 +28,7 @@ type Props = Omit<AppTableProps<ChannelsData>, 'columns'> & {
 export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const { token } = theme.useToken();
     const { isAdmin } = useAuth();
     const { hasPermission } = usePermission();
     const { updateChannel, isPending } = useUpdateChannel();
@@ -57,37 +58,79 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     index
                 ),
         },
+        // {
+        //     title: messages('common.thumbnail'),
+        //     key: 'thumbUrl',
+        //     dataIndex: 'thumbUrl',
+        //     align: 'center',
+        //     width: 90,
+        //     render: (_, record) => (
+        //         <div className="flex justify-center">
+        //             <ChannelThumbImage
+        //                 thumbUrl={record.thumbUrl}
+        //                 name={record.name}
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
-            title: messages('common.thumbnail'),
-            key: 'thumbUrl',
-            dataIndex: 'thumbUrl',
-            align: 'center',
-            width: 90,
-            render: (_, record) => (
-                <ChannelThumbImage
-                    thumbUrl={record.thumbUrl}
-                    name={record.name}
-                />
-            ),
-        },
-        {
-            title: messages('channel.name'),
+            title: messages('channel.label'),
             key: 'name',
             dataIndex: 'name',
             ellipsis: true,
             align: 'left',
-            width: 350,
+            width: 300,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
                 'name'
             ),
-            render: (value) => (
-                <CopyText tooltipProps={{ placement: 'right' }} text={value}>
-                    <p className="truncate">{value}</p>
-                </CopyText>
-            ),
+            render: (value, record) => {
+                const youtubeUrl = record.youtubeChannelId
+                    ? `https://www.youtube.com/channel/${record.youtubeChannelId}`
+                    : undefined;
+
+                return (
+                    <Space className="max-w-full">
+                        <ChannelThumbImage
+                            thumbUrl={record.thumbUrl}
+                            name={record.name}
+                        />
+                        <div className="flex items-center gap-1 max-w-full">
+                            {youtubeUrl ? (
+                                <Tooltip title={messages('common.viewOnYoutube')}>
+                                    <Typography.Link
+                                        href={youtubeUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{
+                                            color: token.colorText,
+                                            '--hover-color': token.colorLink,
+                                        } as React.CSSProperties}
+                                        className="truncate font-medium hover:!text-[var(--hover-color)] hover:underline"
+                                    >
+                                        {value}
+                                    </Typography.Link>
+                                </Tooltip>
+                            ) : (
+                                <span className="truncate">{value}</span>
+                            )}
+                            <span
+                                data-stop-row-click="true"
+                                className="inline-block align-middle"
+                            >
+                                <Typography.Text
+                                    copyable={{
+                                        text: value,
+                                        tooltips: false,
+                                    }}
+                                />
+                            </span>
+                        </div>
+                    </Space>
+                );
+            },
         },
         {
             title: 'YouTube channel ID',
@@ -95,18 +138,40 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'youtubeChannelId',
             ellipsis: true,
             align: 'left',
-            width: 240,
-            render: (value) =>
-                value ? (
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={value}
-                    >
-                        <p className="truncate">{value}</p>
-                    </CopyText>
-                ) : (
-                    '-'
-                ),
+            width: 300,
+            render: (value) => {
+                if (!value) return '-';
+                const youtubeUrl = `https://www.youtube.com/channel/${value}`;
+                return (
+                    <div className="flex items-center gap-1 max-w-full">
+                        <Tooltip title={messages('common.viewOnYoutube')}>
+                            <Typography.Link
+                                href={youtubeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: token.colorTextDescription,
+                                    '--hover-color': token.colorLink,
+                                } as React.CSSProperties}
+                                className="truncate hover:!text-[var(--hover-color)] hover:underline"
+                            >
+                                {value}
+                            </Typography.Link>
+                        </Tooltip>
+                        <span
+                            data-stop-row-click="true"
+                            className="inline-block align-middle"
+                        >
+                            <Typography.Text
+                                copyable={{
+                                    text: value,
+                                    tooltips: false,
+                                }}
+                            />
+                        </span>
+                    </div>
+                );
+            },
         },
         {
             title: messages('tenant.label'),

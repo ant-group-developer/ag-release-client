@@ -40,14 +40,37 @@ export default function ActiveFilterTags({
         const active: ActiveFilter[] = [];
 
         for (const config of configs) {
+            if (config.type === 'custom') {
+                const hasActive =
+                    config.customFilterKeys?.some((key) => !!dataFilter[key]) ??
+                    false;
+                if (!hasActive) continue;
+
+                active.push({
+                    config,
+                    displayValue:
+                        config.getDisplayValue?.(dataFilter) ??
+                        messages('filter.activeFilterCount', {
+                            count:
+                                config.customFilterKeys?.filter(
+                                    (key) => !!dataFilter[key]
+                                ).length ?? 0,
+                        }),
+                    isDefault: false,
+                });
+                continue;
+            }
             if (config.type === 'dateRange') {
                 const [startKey, endKey] = config.filterKey as [string, string];
                 const startVal = dataFilter[startKey];
                 const endVal = dataFilter[endKey];
                 if (startVal && endVal) {
-                    const isDefault = defaultFilter &&
-                        String(dataFilter[startKey]) === String(defaultFilter[startKey]) &&
-                        String(dataFilter[endKey]) === String(defaultFilter[endKey]);
+                    const isDefault =
+                        defaultFilter &&
+                        String(dataFilter[startKey]) ===
+                            String(defaultFilter[startKey]) &&
+                        String(dataFilter[endKey]) ===
+                            String(defaultFilter[endKey]);
                     active.push({
                         config,
                         displayValue: `${formattedDate(startVal, DATE_FORMAT.DATE_ONLY)} - ${formattedDate(endVal, DATE_FORMAT.DATE_ONLY)}`,
@@ -61,13 +84,16 @@ export default function ActiveFilterTags({
 
                 let displayValue: string;
 
-                if ((config.type === 'checkbox' || config.type === 'radio') && config.options) {
+                if (
+                    (config.type === 'checkbox' || config.type === 'radio') &&
+                    config.options
+                ) {
                     // Resolve checkbox labels
                     const values = config.isCommaSeparated
                         ? String(raw).split(',')
                         : Array.isArray(raw)
-                            ? raw
-                            : [raw];
+                          ? raw
+                          : [raw];
                     const labels = values
                         .map(
                             (v: string) =>
@@ -80,7 +106,8 @@ export default function ActiveFilterTags({
                     displayValue = String(raw);
                 }
 
-                const isDefault = defaultFilter && String(raw) === String(defaultFilter[key]);
+                const isDefault =
+                    defaultFilter && String(raw) === String(defaultFilter[key]);
                 active.push({
                     config,
                     displayValue,
@@ -114,7 +141,7 @@ export default function ActiveFilterTags({
                     onClick={() => onClickTag?.(config.key)}
                 >
                     <span
-                        className="inline-block max-w-[250px] align-middle truncate"
+                        className="inline-block max-w-[250px] truncate align-middle"
                         title={`${config.label}: ${displayValue}`}
                     >
                         <span className="font-medium">{config.label}</span>:{' '}

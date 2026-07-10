@@ -124,6 +124,8 @@
         }
     },
     "common": {
+        "yes": "Yes",
+        "no": "No",
         "back": "Back",
         "youtubeId": "YouTube ID",
         "viewOnYoutube": "View on YouTube",
@@ -132,6 +134,11 @@
         "partly": "Partly",
         "none": "None",
         "select": "Select...",
+        "apply": "Apply",
+        "include": "Include",
+        "exclude": "Exclude",
+        "quickSelect": "Quick select",
+        "selectAll": "Select all",
         "ownership": "Ownership",
         "direct": "Direct",
         "distributionMethod": "Distribution method",
@@ -339,6 +346,7 @@
         "use": "Use status",
         "source": "Source",
         "sourcePlatform": "Source",
+        "sourceType": "Source Type",
         "userUpload": "User upload",
         "imageAi": "Image AI",
         "thumbnail": "Thumbnail",
@@ -431,6 +439,8 @@
         "expandAll": "Expand all",
         "collapseAll": "Collapse all",
         "isrc": "ISRC",
+        "upc": "UPC",
+        "data": "Data",
         "justNow": "just now",
         "ago": "ago",
         "systemReview": "System Review",
@@ -1020,6 +1030,23 @@
         "autoSubmitDspTab": "DSPs",
         "autoSubmitOptionsTab": "Options",
         "autoSubmitPreviewTotal": "Matched {count} releases",
+        "autoSubmitV2": {
+            "title": "Auto release",
+            "selectedCount": "Selected {count} releases",
+            "submitConfig": "Submit configuration",
+            "config": "Configuration",
+            "previewData": "Preview data",
+            "needImportAgain": "Import CI data again?",
+            "reImportCi": "Re-import CI",
+            "noReImportCi": "Don't re-import CI",
+            "skipDistributed": "Skip distributed releases",
+            "dspLockedTooltip": "This distribution platform is locked and cannot receive releases",
+            "live": "Live",
+            "notLive": "Not Live",
+            "currentStatus": "Current status",
+            "targetStatus": "Target status",
+            "dataSubmit": "Data submit"
+        },
         "bulkSubmitConfirm": "Are you sure you want to submit {count} selected releases?",
         "bulkDelete": "Bulk Delete",
         "bulkDeleteConfirm": "Are you sure you want to delete {count} selected releases?",
@@ -1049,6 +1076,8 @@
         "releases": "Releases",
         "count": "Releases count",
         "configuration": "Release configuration",
+        "classificationInfo": "Release configuration",
+        "upcCatalogCode": "UPC & Catalog ID",
         "otherMetadata": "Other metadata",
         "label": "Release",
         "creationSource": "Creation Source",
@@ -1108,6 +1137,7 @@
             "cLine": "C line",
             "courtesyLine": "Courtesy line",
             "platformLinks": "Platform links",
+            "onlineLinks": "Platform links",
             "releaseId": "Release ID",
             "version": "Version",
             "catalogId": "Catalog ID",
@@ -1295,7 +1325,15 @@
             "never_distributed": "Never distributed",
             "distributed": "Distributed",
             "taken_down": "Taken down"
-        }
+        },
+        "dspStatus": "DSP status",
+        "dspFilter": "DSP filter",
+        "dspDirect": "DSP direct",
+        "dspCi": "DSP CI",
+        "dspState51": "DSP State51",
+        "excludeLockedDsp": "Exclude locked DSPs",
+        "clearDspStatus": "Clear DSP status",
+        "showAppliedDspOnly": "Show applied DSPs only"
     },
     "releaseArtist": {
         "label": "Release artists",
@@ -1900,7 +1938,8 @@
             "invalidFeatFormat": "Title containing \"feat\" must follow the format: feat.artist, feat.artist1, etc.",
             "noLeadingTrailingSpace": "No leading or trailing spaces allowed",
             "titleCannotContainFeat": "Title cannot contain \"feat\"",
-            "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\""
+            "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\"",
+            "noLinguisticContentHasExplicitContent": "Explicit Content indicated but no vocals in metadata."
         }
     },
     "distribute": {
@@ -3170,6 +3209,7 @@
         "topRankingTitle": "Top {count} {title}",
         "topReleases": "Top Releases",
         "topTracks": "Top Tracks",
+        "distributors": "Distributors",
         "detailEntityTitle": "({entity}: {title})",
         "filters": {
             "allPlatforms": "All platforms",
@@ -3212,6 +3252,10 @@
         "latestSyncedAt": "Latest sync",
         "neverExported": "Never exported",
         "lastImportIsFailed": "Last import failed",
+        "importCount": "Import count",
+        "qaFlagsCi": "QA flags CI",
+        "needImportAgain": "Need import again",
+        "importData": "Import data",
         "export": {
             "exportOrder": "Export order",
             "exportTask": "Export task",

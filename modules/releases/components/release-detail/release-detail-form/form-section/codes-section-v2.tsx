@@ -24,7 +24,7 @@ export default function CodesSectionV2({
     return (
         <div id="codes" className="flex flex-col gap-6">
             <span className="text-base font-semibold">
-                {messages('common.code')}
+                {messages('release.upcCatalogCode')}
             </span>
             <div className="grid grid-cols-1 gap-x-16 gap-y-1 md:grid-cols-2 lg:grid-cols-2">
                 <AppFormItem

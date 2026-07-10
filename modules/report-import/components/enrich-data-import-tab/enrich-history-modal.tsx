@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { ENRICH_HISTORY_STATUS, ENRICH_SCAN_STATUS } from '../../enums';
 import { useGetEnrichHistory } from '../../hooks/use-get-enrich-history';
-import { EnrichHistoryItem, EnrichHistorySession } from '../../types/payload';
+import { EnrichHistoryItem } from '../../types/payload';
 
 const getChangeTypeLabel = (value: any, t: any): string => {
     if (!value) return '-';
@@ -116,6 +116,7 @@ export default function EnrichHistoryModal({ open, onClose, scanId }: Props) {
     const summary = data?.summary;
     const session = data?.session;
     const items = data?.items || [];
+
     const totalItems = data?.metadata?.totalItems || 0;
 
     const columns: ColumnType<EnrichHistoryItem>[] = [
@@ -249,25 +250,42 @@ export default function EnrichHistoryModal({ open, onClose, scanId }: Props) {
                         {session && (
                             <>
                                 <Descriptions.Item
-                                    label={messages('reportConfigs.importResult.startTime')}
+                                    label={messages(
+                                        'reportConfigs.importResult.startTime'
+                                    )}
                                 >
-                                    {session.startedAt ? formattedDate(session.startedAt) : '-'}
+                                    {session.startedAt
+                                        ? formattedDate(session.startedAt)
+                                        : '-'}
                                 </Descriptions.Item>
                                 <Descriptions.Item
-                                    label={messages('reportConfigs.enrichDataImport.finishedAt')}
+                                    label={messages(
+                                        'reportConfigs.enrichDataImport.finishedAt'
+                                    )}
                                 >
-                                    {session.finishedAt ? formattedDate(session.finishedAt) : '-'}
+                                    {session.finishedAt
+                                        ? formattedDate(session.finishedAt)
+                                        : '-'}
                                 </Descriptions.Item>
                                 <Descriptions.Item
-                                    label={messages('reportConfigs.importResult.duration')}
+                                    label={messages(
+                                        'reportConfigs.importResult.duration'
+                                    )}
                                 >
                                     {session.duration || '-'}
                                 </Descriptions.Item>
                                 <Descriptions.Item
                                     label={messages('common.status')}
                                 >
-                                    <Tag color={getSessionStatusTagColor(session.status)}>
-                                        {getSessionStatusLabel(session.status, messages)}
+                                    <Tag
+                                        color={getSessionStatusTagColor(
+                                            session.status
+                                        )}
+                                    >
+                                        {getSessionStatusLabel(
+                                            session.status,
+                                            messages
+                                        )}
                                     </Tag>
                                 </Descriptions.Item>
                             </>
@@ -337,7 +355,9 @@ export default function EnrichHistoryModal({ open, onClose, scanId }: Props) {
 
                 <div className="flex flex-col">
                     <AppTable
-                        sticky
+                        sticky={{
+                            offsetHeader: -12,
+                        }}
                         dataSource={items}
                         columns={columns}
                         loading={isLoading}

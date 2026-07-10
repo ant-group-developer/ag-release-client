@@ -9,6 +9,7 @@ import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetTrackDsp } from '../../hooks/use-get-track-dsp';
 import { useGetTrackOverview } from '../../hooks/use-get-track-overview';
 import { useGetTrackRevenueLineChart } from '../../hooks/use-get-track-revenue-line-chart';
@@ -25,6 +26,7 @@ interface DetailTrackAnalyticsModalProps {
     isrc: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailTrackAnalyticsModal({
@@ -34,6 +36,7 @@ export default function DetailTrackAnalyticsModal({
     isrc,
     fromDate,
     toDate,
+    releaseType,
 }: DetailTrackAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -52,17 +55,17 @@ export default function DetailTrackAnalyticsModal({
     }, [open, fromDate, toDate]);
 
     // Gọi API lấy thông tin tổng quan của Track
-    const { overviewData, isFetching } = useGetTrackOverview(
-        isrc,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    const { overviewData, isFetching } = useGetTrackOverview(isrc, {
+        fromDate: localFromDate,
+        toDate: localToDate,
+        releaseType,
+    });
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Track
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetTrackRevenueLineChart(
             isrc,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -70,11 +73,11 @@ export default function DetailTrackAnalyticsModal({
     const {
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
-    } = useGetTrackTrendViewLineChart(
-        isrc,
-        { fromDate: localFromDate, toDate: localToDate },
-        open
-    );
+    } = useGetTrackTrendViewLineChart(isrc, {
+        fromDate: localFromDate,
+        toDate: localToDate,
+        releaseType,
+    });
 
     const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
         ANALYTIC_SORT_BY.REVENUE
@@ -87,8 +90,9 @@ export default function DetailTrackAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: dspSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -103,8 +107,9 @@ export default function DetailTrackAnalyticsModal({
             fromDate: localFromDate,
             toDate: localToDate,
             sortBy: terSortBy,
-            pageSize: 5,
+            topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
