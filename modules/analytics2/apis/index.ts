@@ -58,7 +58,6 @@ import {
     TrendViewDspBarChartItem,
     TrendViewDspBarChartParams,
     TrendViewLineChartItem,
-    TrendViewLineChartParams,
     TrendViewSummaryData,
     TrendViewTenantBarChartItem,
     TrendViewTerBarChartItem,
@@ -369,7 +368,7 @@ export const analytics2Apis = {
     },
     getTrackTrendViewLineChart: (
         isrc: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/track/${isrc}/trend-view/line-chart`,
@@ -618,7 +617,7 @@ export const analytics2Apis = {
     },
     getArtistTrendViewLineChart: (
         artistId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/artist/${artistId}/trend-view/line-chart`,
@@ -719,7 +718,7 @@ export const analytics2Apis = {
     },
     getTenantTrendViewLineChart: (
         tenantId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/tenant/${tenantId}/trend-view/line-chart`,
@@ -800,7 +799,7 @@ export const analytics2Apis = {
     },
     getChannelTrendViewLineChart: (
         channelId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/channel/${channelId}/trend-view/line-chart`,

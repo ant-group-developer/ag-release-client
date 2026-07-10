@@ -12,7 +12,6 @@ import {
     RevenueTerBarChartParams,
     TerTimelineParams,
     TrendViewDspBarChartParams,
-    TrendViewLineChartParams,
     TrendViewTerBarChartParams,
 } from '../types';
 
@@ -329,7 +328,7 @@ export const analytics2QueryKeys = {
             isrc,
             params,
         ] as const,
-    trackTrendViewLineChart: (isrc: string, params: TrendViewLineChartParams) =>
+    trackTrendViewLineChart: (isrc: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TRACK_TREND_VIEW_LINE_CHART,
@@ -566,7 +565,7 @@ export const analytics2QueryKeys = {
         ] as const,
     artistTrendViewLineChart: (
         artistId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -661,7 +660,7 @@ export const analytics2QueryKeys = {
         ] as const,
     tenantTrendViewLineChart: (
         tenantId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -749,7 +748,7 @@ export const analytics2QueryKeys = {
         ] as const,
     channelTrendViewLineChart: (
         channelId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
