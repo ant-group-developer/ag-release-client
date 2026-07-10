@@ -9,6 +9,7 @@ import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetReleaseDsp } from '../../hooks/use-get-release-dsp';
 import { useGetReleaseOverview } from '../../hooks/use-get-release-overview';
 import { useGetReleaseRevenueLineChart } from '../../hooks/use-get-release-revenue-line-chart';
@@ -25,6 +26,7 @@ interface DetailReleaseAnalyticsModalProps {
     releaseId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailReleaseAnalyticsModal({
@@ -34,6 +36,7 @@ export default function DetailReleaseAnalyticsModal({
     releaseId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailReleaseAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -55,6 +58,7 @@ export default function DetailReleaseAnalyticsModal({
     const { overviewData, isFetching } = useGetReleaseOverview(releaseId, {
         fromDate: localFromDate,
         toDate: localToDate,
+        releaseType,
     });
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Release
@@ -62,6 +66,7 @@ export default function DetailReleaseAnalyticsModal({
         useGetReleaseRevenueLineChart(releaseId, {
             fromDate: localFromDate,
             toDate: localToDate,
+            releaseType,
         });
 
     // Gọi API lấy thông tin biểu đồ lượt nghe của Release
@@ -71,6 +76,7 @@ export default function DetailReleaseAnalyticsModal({
     } = useGetReleaseTrendViewLineChart(releaseId, {
         fromDate: localFromDate,
         toDate: localToDate,
+        releaseType,
     });
 
     const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
@@ -85,6 +91,7 @@ export default function DetailReleaseAnalyticsModal({
             sortBy: dspSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         });
 
     const [terSortBy, setTerSortBy] = useState<ANALYTIC_SORT_BY>(
@@ -99,6 +106,7 @@ export default function DetailReleaseAnalyticsModal({
             sortBy: terSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         });
 
     const releaseDspColumns = useMemo(

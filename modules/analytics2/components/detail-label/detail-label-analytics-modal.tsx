@@ -16,6 +16,7 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetLabelDsp } from '../../hooks/use-get-label-dsp';
 import { useGetLabelOverview } from '../../hooks/use-get-label-overview';
 import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
@@ -37,6 +38,7 @@ interface DetailLabelAnalyticsModalProps {
     labelId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailLabelAnalyticsModal({
@@ -46,6 +48,7 @@ export default function DetailLabelAnalyticsModal({
     labelId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailLabelAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -92,6 +95,7 @@ export default function DetailLabelAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -105,6 +109,7 @@ export default function DetailLabelAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -112,7 +117,7 @@ export default function DetailLabelAnalyticsModal({
     // Gọi API lấy thông tin tổng quan của Label
     const { overviewData, isFetching } = useGetLabelOverview(
         labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -120,7 +125,7 @@ export default function DetailLabelAnalyticsModal({
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetLabelRevenueLineChart(
             labelId,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -130,7 +135,7 @@ export default function DetailLabelAnalyticsModal({
         isFetching: isTrendViewLineChartFetching,
     } = useGetLabelTrendViewLineChart(
         labelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -147,6 +152,7 @@ export default function DetailLabelAnalyticsModal({
             sortBy: dspSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -163,6 +169,7 @@ export default function DetailLabelAnalyticsModal({
             sortBy: terSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -754,6 +761,7 @@ export default function DetailLabelAnalyticsModal({
                     releaseId={detailReleaseModal.releaseId}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailTrackModal.open && (
@@ -769,6 +777,7 @@ export default function DetailLabelAnalyticsModal({
                     isrc={detailTrackModal.isrc}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
         </FullScreenModal>

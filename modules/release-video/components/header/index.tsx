@@ -17,6 +17,7 @@ import { ReleasesDataFilter } from '@/modules/releases/types';
 import {
     BarcodeOutlined,
     BarsOutlined,
+    ImportOutlined,
     SoundOutlined,
     TeamOutlined,
     YoutubeOutlined,
@@ -96,6 +97,20 @@ export default function ReleaseVideoHeader({
         [artistsData]
     );
 
+    const isImportedFromReportOptions = useMemo(
+        () => [
+            {
+                label: messages('release.importedFromReport'),
+                value: 'true',
+            },
+            {
+                label: messages('release.createdDirectly'),
+                value: 'false',
+            },
+        ],
+        [messages]
+    );
+
     const filterConfigs: FilterConfig[] = useMemo(() => {
         return [
             {
@@ -137,6 +152,14 @@ export default function ReleaseVideoHeader({
                 isCommaSeparated: true,
             },
             {
+                key: 'isImportedFromReport',
+                label: messages('release.creationSource'),
+                icon: <ImportOutlined />,
+                type: 'radio',
+                filterKey: 'isImportedFromReport',
+                options: isImportedFromReportOptions,
+            },
+            {
                 key: 'artistId',
                 label: messages('artist.label'),
                 icon: <TeamOutlined />,
@@ -154,6 +177,7 @@ export default function ReleaseVideoHeader({
         isLoadingChannels,
         releaseStatusOptions,
         genreOptions,
+        isImportedFromReportOptions,
         artistOptions,
         isLoadingArtists,
     ]);
@@ -179,6 +203,28 @@ export default function ReleaseVideoHeader({
         });
     };
 
+    const handleChangeFilter = (
+        newValue: Partial<ReleasesDataFilter>,
+        backToFirstPage?: boolean
+    ) => {
+        const nextValue = { ...newValue };
+        if ('isImportedFromReport' in nextValue) {
+            const val = nextValue.isImportedFromReport;
+            if (!val) {
+                nextValue.isImportedFromReport = 'true';
+            }
+        }
+        onChangeFilter(nextValue, backToFirstPage);
+    };
+
+    const mappedDataFilter = useMemo(() => {
+        const copy = { ...dataFilter };
+        if (!copy.isImportedFromReport || copy.isImportedFromReport === 'all') {
+            copy.isImportedFromReport = 'true';
+        }
+        return copy;
+    }, [dataFilter]);
+
     return (
         <AppHeader className="app-header">
             <AppHeaderGroup>
@@ -190,9 +236,9 @@ export default function ReleaseVideoHeader({
                     />
                     <FilterPanel
                         configs={filterConfigs}
-                        dataFilter={dataFilter}
+                        dataFilter={mappedDataFilter}
                         defaultFilter={defaultFilter}
-                        onChangeFilter={onChangeFilter}
+                        onChangeFilter={handleChangeFilter}
                         removeFilter={removeFilter}
                         canClearFilter={canClearFilter}
                     />

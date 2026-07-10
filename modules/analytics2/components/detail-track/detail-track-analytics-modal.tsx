@@ -9,6 +9,7 @@ import { Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetTrackDsp } from '../../hooks/use-get-track-dsp';
 import { useGetTrackOverview } from '../../hooks/use-get-track-overview';
 import { useGetTrackRevenueLineChart } from '../../hooks/use-get-track-revenue-line-chart';
@@ -25,6 +26,7 @@ interface DetailTrackAnalyticsModalProps {
     isrc: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailTrackAnalyticsModal({
@@ -34,6 +36,7 @@ export default function DetailTrackAnalyticsModal({
     isrc,
     fromDate,
     toDate,
+    releaseType,
 }: DetailTrackAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -55,13 +58,14 @@ export default function DetailTrackAnalyticsModal({
     const { overviewData, isFetching } = useGetTrackOverview(isrc, {
         fromDate: localFromDate,
         toDate: localToDate,
+        releaseType,
     });
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Track
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetTrackRevenueLineChart(
             isrc,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -72,6 +76,7 @@ export default function DetailTrackAnalyticsModal({
     } = useGetTrackTrendViewLineChart(isrc, {
         fromDate: localFromDate,
         toDate: localToDate,
+        releaseType,
     });
 
     const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
@@ -87,6 +92,7 @@ export default function DetailTrackAnalyticsModal({
             sortBy: dspSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -103,6 +109,7 @@ export default function DetailTrackAnalyticsModal({
             sortBy: terSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 

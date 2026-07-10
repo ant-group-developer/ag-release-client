@@ -1,15 +1,13 @@
 'use client';
 
 import { DspData } from '@/modules/dsp/types';
-import { Alert, Form, FormInstance, Select, Switch, Tabs } from 'antd';
+import { Form, FormInstance, Switch, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
-import { CI_IMPORT_ACTION } from '../../enums';
 import DspSelectionTable from '../bulk-submit-modal/dsp-selection-table';
 
 export interface AutoSubmitV2FormValues {
     dspCodes: string[];
-    ciImportAction?: CI_IMPORT_ACTION;
+    needImportAgain?: boolean;
     skipDistributed?: boolean;
 }
 
@@ -27,20 +25,6 @@ export default function SubmitConfigForm({
     defaultDspCodes,
 }: SubmitConfigFormProps) {
     const messages = useTranslations();
-    const ciImportAction = Form.useWatch('ciImportAction', form) || CI_IMPORT_ACTION.SKIP_CI_IMPORT;
-
-    const ciImportActionDesc = useMemo(() => {
-        switch (ciImportAction) {
-            case CI_IMPORT_ACTION.KEEP_CURRENT_STATUS:
-                return messages('release.autoSubmitV2.keepCurrentStatusDesc');
-            case CI_IMPORT_ACTION.SKIP_CI_IMPORT:
-                return messages('release.autoSubmitV2.skipCiImportDesc');
-            case CI_IMPORT_ACTION.FORCE_CI_IMPORT:
-                return messages('release.autoSubmitV2.forceCiImportDesc');
-            default:
-                return null;
-        }
-    }, [ciImportAction, messages]);
 
     return (
         <Form form={form} layout="vertical" className="w-[50vw]">
@@ -80,47 +64,14 @@ export default function SubmitConfigForm({
                         children: (
                             <>
                                 <Form.Item
-                                    name="ciImportAction"
+                                    name="needImportAgain"
                                     label={messages(
-                                        'release.autoSubmitV2.ciImportAction'
+                                        'release.autoSubmitV2.needImportAgain'
                                     )}
-                                    initialValue={
-                                        CI_IMPORT_ACTION.SKIP_CI_IMPORT
-                                    }
-                                    style={{ marginBottom: 0 }}
-                                    extra={
-                                        ciImportActionDesc && (
-                                            <Alert
-                                                type="info"
-                                                showIcon
-                                                message={ciImportActionDesc}
-                                                style={{ marginTop: 8 }}
-                                            />
-                                        )
-                                    }
+                                    valuePropName="checked"
+                                    initialValue={false}
                                 >
-                                    <Select
-                                        options={[
-                                            {
-                                                value: CI_IMPORT_ACTION.KEEP_CURRENT_STATUS,
-                                                label: messages(
-                                                    'release.autoSubmitV2.keepCurrentStatus'
-                                                ),
-                                            },
-                                            {
-                                                value: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
-                                                label: messages(
-                                                    'release.autoSubmitV2.skipCiImport'
-                                                ),
-                                            },
-                                            {
-                                                value: CI_IMPORT_ACTION.FORCE_CI_IMPORT,
-                                                label: messages(
-                                                    'release.autoSubmitV2.forceCiImport'
-                                                ),
-                                            },
-                                        ]}
-                                    />
+                                    <Switch />
                                 </Form.Item>
                                 <Form.Item
                                     name="skipDistributed"

@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+import { ANALYTICS_VIEW_TYPE } from '../../enums/tabs';
+import { createViewMoreHref } from '../../helpers';
 import {
     useGetArtistRanking,
     useGetChannelRanking,
@@ -152,7 +154,15 @@ export default function AnalyticsRankings({
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_RELEASES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_RELEASES,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -165,7 +175,15 @@ export default function AnalyticsRankings({
                         labelKey="title"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_TRACKS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_TRACKS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -178,7 +196,15 @@ export default function AnalyticsRankings({
                         labelKey="artistName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_ARTISTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_ARTISTS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -191,7 +217,15 @@ export default function AnalyticsRankings({
                         labelKey="labelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_LABELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_LABELS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -204,7 +238,15 @@ export default function AnalyticsRankings({
                         labelKey="tenantName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_TENANTS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_TENANTS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -217,7 +259,15 @@ export default function AnalyticsRankings({
                         labelKey="dspName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_DSPS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_DSPS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -230,7 +280,15 @@ export default function AnalyticsRankings({
                         labelKey="channelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_CHANNELS}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_CHANNELS,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -245,7 +303,15 @@ export default function AnalyticsRankings({
                         labelKey="sourceTypeLabel"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={`${APP_ROUTES.ANALYTICS_SOURCE_TYPES}?startDate=${fromDate}&endDate=${toDate}&type=view`}
+                        viewMoreHref={createViewMoreHref(
+                            APP_ROUTES.ANALYTICS_SOURCE_TYPES,
+                            {
+                                fromDate,
+                                toDate,
+                                type: ANALYTICS_VIEW_TYPE.VIEW,
+                                releaseType,
+                            }
+                        )}
                     />
                 </Col>
             </Row>
@@ -259,6 +325,7 @@ export default function AnalyticsRankings({
                     releaseId={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.TRACK && (
@@ -271,6 +338,7 @@ export default function AnalyticsRankings({
                     isrc={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.LABEL && (
@@ -283,6 +351,7 @@ export default function AnalyticsRankings({
                     labelId={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST && (
@@ -295,6 +364,7 @@ export default function AnalyticsRankings({
                     artistId={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.TENANT && (
@@ -307,6 +377,7 @@ export default function AnalyticsRankings({
                     tenantId={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL && (
@@ -319,6 +390,7 @@ export default function AnalyticsRankings({
                     channelId={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.DSP && (
@@ -332,6 +404,7 @@ export default function AnalyticsRankings({
                     dspReportId={detailModal.dspReportId || ''}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE && (
@@ -344,6 +417,7 @@ export default function AnalyticsRankings({
                     sourceType={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
                 />
             )}
         </div>
