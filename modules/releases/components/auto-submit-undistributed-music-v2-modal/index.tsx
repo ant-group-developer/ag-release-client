@@ -4,6 +4,7 @@ import AppModal from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
 import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON_SMALL } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT, ORDER } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
@@ -24,8 +25,10 @@ import {
     Space,
     TableProps,
     Tag,
+    theme,
 } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
+import { Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useMemo, useState } from 'react';
 import {
@@ -35,6 +38,7 @@ import {
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleasesHeaderV2 from '../header';
+import DspDeliveryFilterDropdown from '../table/dsp-delivery-filter-dropdown';
 import DspStatusModal from '../table/dsp-status-modal';
 import ReleaseTitleColumn from '../table/title-column';
 import ReleaseStatusTag from '../tag/release-status-tag';
@@ -60,6 +64,8 @@ const AutoSubmitUndistributedMusicV2Modal = ({
     const messages = useTranslations();
     const [form] = Form.useForm<AutoSubmitV2FormValues>();
     const closeModal = useModalStore((state) => state.closeModal);
+    const { token } = theme.useToken();
+    const [isDspFilterOpen, setIsDspFilterOpen] = useState(false);
     const [filterState, setFilterState] =
         useState<ReleasesDataFilter>(DEFAULT_FILTER);
     const [selectedReleaseIds, setSelectedReleaseIds] = useState<string[]>([]);
@@ -301,6 +307,23 @@ const AutoSubmitUndistributedMusicV2Modal = ({
             dataIndex: 'dsps_live',
             align: 'left',
             width: 120,
+            filterDropdownOpen: isDspFilterOpen,
+            onFilterDropdownOpenChange: setIsDspFilterOpen,
+            filterIcon: () => (
+                <Filter
+                    size={SIZE_ICON_SMALL}
+                    style={{
+                        color: filterState.dspDelivery ? token.colorPrimary : undefined,
+                    }}
+                />
+            ),
+            filterDropdown: () => (
+                <DspDeliveryFilterDropdown
+                    dataFilter={filterState}
+                    onChangeFilter={onChangeFilter}
+                    onClose={() => setIsDspFilterOpen(false)}
+                />
+            ),
             render: (_, record) => {
                 const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
                 const liveCount = releaseDspDeliveries.filter(
