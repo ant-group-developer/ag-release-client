@@ -4,7 +4,6 @@ import { CreateBucketFile } from '@/modules/upload/types/data';
 import { CommonFunction } from '@/types/api';
 import { ReleaseEnrichedError, ReleasesData, VideoData } from '.';
 import {
-    CI_IMPORT_ACTION,
     RELEASES_TYPE,
     RELEASE_ERROR_APPROVAL_STATUS,
     RELEASE_ERROR_SUBMISSION_STATUS,
@@ -57,7 +56,7 @@ export interface BulkSubmitRelease extends CommonFunction {
     codes: string[];
     idsExclude?: string[];
     status?: RELEASE_DSP_DELIVERY_STATUS;
-    ciImportAction?: CI_IMPORT_ACTION;
+    needImportAgain?: boolean;
     skipDistributed?: boolean;
 }
 

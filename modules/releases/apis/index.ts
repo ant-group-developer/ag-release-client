@@ -217,7 +217,7 @@ export const releasesApi = {
         codes,
         idsExclude,
         status,
-        ciImportAction,
+        needImportAgain,
         skipDistributed,
     }: BulkSubmitRelease) => {
         return axiosInstance.post('/releases/bulk-submit', {
@@ -225,7 +225,7 @@ export const releasesApi = {
             codes,
             idsExclude,
             status,
-            ciImportAction,
+            needImportAgain,
             skipDistributed,
         });
     },

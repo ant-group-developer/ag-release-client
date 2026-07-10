@@ -29,7 +29,6 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useMemo, useState } from 'react';
 import {
-    CI_IMPORT_ACTION,
     RELEASE_TYPE,
     RELEASES_COLUMNS_DISPLAY,
     RELEASES_TABLE_KEY,
@@ -134,7 +133,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
         if (dspDataFilter.length > 0) {
             form.setFieldsValue({
                 dspCodes: defaultDspCodes,
-                ciImportAction: CI_IMPORT_ACTION.SKIP_CI_IMPORT,
+                needImportAgain: false,
                 skipDistributed: true,
             });
         }
@@ -184,8 +183,7 @@ const AutoSubmitUndistributedMusicV2Modal = ({
             ids,
             codes,
             status: RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED,
-            ciImportAction:
-                values.ciImportAction ?? CI_IMPORT_ACTION.SKIP_CI_IMPORT,
+            needImportAgain: values.needImportAgain ?? false,
             skipDistributed: values.skipDistributed ?? true,
         };
     };
