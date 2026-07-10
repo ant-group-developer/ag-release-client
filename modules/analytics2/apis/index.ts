@@ -256,7 +256,7 @@ export const analytics2Apis = {
             params
         );
     },
-    getReleaseOverview: (releaseId: string, params: ReleaseOverviewParams) => {
+    getReleaseOverview: (releaseId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/release/${releaseId}/overview`,
             params
@@ -309,7 +309,7 @@ export const analytics2Apis = {
     },
     getReleaseTrendViewLineChart: (
         releaseId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/release/${releaseId}/trend-view/line-chart`,
@@ -336,7 +336,7 @@ export const analytics2Apis = {
     },
     getReleaseRevenueLineChart: (
         releaseId: string,
-        params: RevenueLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             `/analytics/release/${releaseId}/revenue/line-chart`,
@@ -489,7 +489,7 @@ export const analytics2Apis = {
     },
     getLabelTrendViewLineChart: (
         labelId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/label/${labelId}/trend-view/line-chart`,
@@ -949,7 +949,7 @@ export const analytics2Apis = {
     },
     getSourceTypeTrendViewLineChart: (
         sourceType: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             `/analytics/source-type/${sourceType}/trend-view/line-chart`,
@@ -958,7 +958,7 @@ export const analytics2Apis = {
     },
     getSourceTypeRevenueDspBarChart: (
         sourceType: string,
-        params: RevenueDspBarChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<RevenueDspBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/revenue/dsp/bar-chart`,
@@ -967,7 +967,7 @@ export const analytics2Apis = {
     },
     getSourceTypeRevenueTerBarChart: (
         sourceType: string,
-        params: RevenueTerBarChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<RevenueTerBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/revenue/ter/bar-chart`,
@@ -976,7 +976,7 @@ export const analytics2Apis = {
     },
     getSourceTypeTrendViewDspBarChart: (
         sourceType: string,
-        params: TrendViewDspBarChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewDspBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/trend-view/dsp/bar-chart`,
@@ -985,7 +985,7 @@ export const analytics2Apis = {
     },
     getSourceTypeTrendViewTerBarChart: (
         sourceType: string,
-        params: TrendViewTerBarChartParams
+        params: AnalyticsCommonParams
     ) => {
         return axiosInstance.post<DetailResponse<TrendViewTerBarChartItem[]>>(
             `/analytics/source-type/${sourceType}/trend-view/ter/bar-chart`,

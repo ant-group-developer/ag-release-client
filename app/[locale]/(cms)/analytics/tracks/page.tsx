@@ -13,7 +13,12 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '@/modules/analytics2/constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+} from '@/modules/analytics2/helpers';
 import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { RevenueTrackItem, TrackRankingItem } from '@/modules/analytics2/types';
@@ -25,7 +30,8 @@ import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const DEFAULT_PAGE = 1;
 
@@ -33,11 +39,13 @@ interface RankingFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function TracksRankingPage() {
     const { token } = theme.useToken();
     const messages = useTranslations();
+    const searchParams = useSearchParams();
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<RankingFilter>({
@@ -46,6 +54,7 @@ export default function TracksRankingPage() {
             startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
             endDate: dayjs().format('YYYY-MM-DD'),
             type: ANALYTICS_VIEW_TYPE.VIEW,
+            releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
         });
 
     const [trackDetailModal, setTrackDetailModal] = useState<{
@@ -68,9 +77,23 @@ export default function TracksRankingPage() {
         sourceType: '',
     });
 
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
+        ANALYTICS_VIEW_TYPE.VIEW
+    );
+    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(
+        ANALYTICS_RELEASE_TYPE.AUDIO
+    );
+
+    useEffect(() => {
+        setCurrentType(getAnalyticsViewType(searchParams.get('type')));
+        setReleaseType(
+            getAnalyticsReleaseType(searchParams.get('releaseType'))
+        );
+    }, [searchParams]);
+
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = dataFilter.type === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
     // Fetch ranking data (Views)
     const { trackRankingData, isFetching: isViewsFetching } =
@@ -82,6 +105,7 @@ export default function TracksRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 groupBySource: true,
+                releaseType,
             },
             { enabled: !isRevenue }
         );
@@ -97,6 +121,7 @@ export default function TracksRankingPage() {
                 keyword: dataFilter.keyword,
                 includeOther: false,
                 groupBySource: true,
+                releaseType,
             },
             { enabled: isRevenue }
         );
@@ -369,15 +394,36 @@ export default function TracksRankingPage() {
                 }
             >
                 <Card className="rounded-xl border-none shadow-sm">
-                    <div className="mb-4 flex items-center gap-4">
+                    <div className="mb-4 flex items-center gap-2">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                             style={{ width: 200 }}
                         />
                         <Segmented
-                            value={dataFilter.type ?? ANALYTICS_VIEW_TYPE.VIEW}
+                            value={releaseType}
                             onChange={(value) => {
+                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                onChangeFilter({
+                                    releaseType:
+                                        value as ANALYTICS_RELEASE_TYPE,
+                                });
+                            }}
+                            options={[
+                                {
+                                    label: messages('common.audio'),
+                                    value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                                },
+                                {
+                                    label: messages('common.video'),
+                                    value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                                },
+                            ]}
+                        />
+                        <Segmented
+                            value={currentType}
+                            onChange={(value) => {
+                                setCurrentType(value as ANALYTICS_VIEW_TYPE);
                                 onChangeFilter({
                                     type: value as ANALYTICS_VIEW_TYPE,
                                 });
@@ -446,6 +492,7 @@ export default function TracksRankingPage() {
                         isrc={trackDetailModal.isrc}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
                     />
                 )}
 
@@ -462,6 +509,7 @@ export default function TracksRankingPage() {
                         sourceType={detailSourceModal.sourceType}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
                     />
                 )}
             </PageContainer>

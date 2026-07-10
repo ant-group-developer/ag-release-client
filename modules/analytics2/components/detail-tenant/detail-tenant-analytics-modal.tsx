@@ -16,6 +16,7 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetTenantDsp } from '../../hooks/use-get-tenant-dsp';
 import { useGetTenantOverview } from '../../hooks/use-get-tenant-overview';
 import { useGetTenantRevenueLineChart } from '../../hooks/use-get-tenant-revenue-line-chart';
@@ -37,6 +38,7 @@ interface DetailTenantAnalyticsModalProps {
     tenantId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailTenantAnalyticsModal({
@@ -46,6 +48,7 @@ export default function DetailTenantAnalyticsModal({
     tenantId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailTenantAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -92,6 +95,7 @@ export default function DetailTenantAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -105,6 +109,7 @@ export default function DetailTenantAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -112,7 +117,7 @@ export default function DetailTenantAnalyticsModal({
     // Gọi API lấy thông tin tổng quan của Tenant
     const { overviewData, isFetching } = useGetTenantOverview(
         tenantId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -120,7 +125,7 @@ export default function DetailTenantAnalyticsModal({
     const { revenueLineChartData, isFetching: isLineChartFetching } =
         useGetTenantRevenueLineChart(
             tenantId,
-            { fromDate: localFromDate, toDate: localToDate },
+            { fromDate: localFromDate, toDate: localToDate, releaseType },
             open
         );
 
@@ -130,7 +135,7 @@ export default function DetailTenantAnalyticsModal({
         isFetching: isTrendViewLineChartFetching,
     } = useGetTenantTrendViewLineChart(
         tenantId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -147,6 +152,7 @@ export default function DetailTenantAnalyticsModal({
             sortBy: dspSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -163,6 +169,7 @@ export default function DetailTenantAnalyticsModal({
             sortBy: terSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         }
     );
 
@@ -754,6 +761,7 @@ export default function DetailTenantAnalyticsModal({
                     releaseId={detailReleaseModal.releaseId}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailTrackModal.open && (
@@ -769,6 +777,7 @@ export default function DetailTenantAnalyticsModal({
                     isrc={detailTrackModal.isrc}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
         </FullScreenModal>

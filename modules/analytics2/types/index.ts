@@ -308,6 +308,7 @@ export interface TerTimelineData {
 export interface ReleaseOverviewParams {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface ReleaseOverviewData {
@@ -383,6 +384,7 @@ export interface BySourceItem {
 export interface RevenueLineChartParams {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface RevenueLineChartItem {
@@ -512,6 +514,7 @@ export interface DspDetailParams {
     dspReportId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: string | ANALYTICS_RELEASE_TYPE;
 }
 
 export interface DspRankingParams extends DspDetailParams {
@@ -535,7 +538,7 @@ export interface RevenueTenantBarChartItem {
 export interface AnalyticsCommonParams extends CommonParams {
     fromDate?: string;
     toDate?: string;
-    releaseType?: string;
+    releaseType?: string | ANALYTICS_RELEASE_TYPE;
     sortBy?: string;
     topN?: number;
     includeOther?: boolean;

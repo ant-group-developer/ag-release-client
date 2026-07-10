@@ -48,7 +48,7 @@ export default function DetailStatsOverview({
     ];
 
     return (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {overviewCount.map((item, index) => {
                 const Icon = item.icon;
                 return (

@@ -15,6 +15,7 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetDspOverview } from '../../hooks/use-get-dsp-overview';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
 import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
@@ -37,6 +38,7 @@ interface DetailDspAnalyticsModalProps {
     dspReportId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailDspAnalyticsModal({
@@ -47,6 +49,7 @@ export default function DetailDspAnalyticsModal({
     dspReportId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailDspAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -94,6 +97,7 @@ export default function DetailDspAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 isIncludeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -108,13 +112,20 @@ export default function DetailDspAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 isIncludeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
 
     // Gọi API lấy thông tin tổng quan của DSP
     const { overviewData, isFetching } = useGetDspOverview(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -123,7 +134,13 @@ export default function DetailDspAnalyticsModal({
         lineChartData: revenueLineChartData,
         isFetching: isLineChartFetching,
     } = useGetDspRevenueLineChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -132,7 +149,13 @@ export default function DetailDspAnalyticsModal({
         lineChartData: trendViewLineChartData,
         isFetching: isTrendViewLineChartFetching,
     } = useGetDspTrendViewLineChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -141,7 +164,13 @@ export default function DetailDspAnalyticsModal({
         terBarChartData: trendViewTerBarChartData,
         isFetching: isTrendViewTerBarChartFetching,
     } = useGetDspTrendViewTerBarChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -159,7 +188,13 @@ export default function DetailDspAnalyticsModal({
         terBarChartData: revenueTerBarChartData,
         isFetching: isRevenueTerBarChartFetching,
     } = useGetDspRevenueTerBarChart(
-        { pgDspId, dspReportId, fromDate: localFromDate, toDate: localToDate },
+        {
+            pgDspId,
+            dspReportId,
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
         open
     );
 
@@ -695,6 +730,7 @@ export default function DetailDspAnalyticsModal({
                     releaseId={detailReleaseModal.releaseId}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
             {detailTrackModal.open && (
@@ -710,6 +746,7 @@ export default function DetailDspAnalyticsModal({
                     isrc={detailTrackModal.isrc}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
         </FullScreenModal>

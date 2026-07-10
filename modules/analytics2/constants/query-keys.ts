@@ -192,7 +192,7 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.REVENUE_TOP_SOURCE_TYPE,
             params,
         ] as const,
-    releaseOverview: (releaseId: string, params: ReleaseOverviewParams) =>
+    releaseOverview: (releaseId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.RELEASE_OVERVIEW,
@@ -243,7 +243,7 @@ export const analytics2QueryKeys = {
         ] as const,
     releaseTrendViewLineChart: (
         releaseId: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -273,7 +273,7 @@ export const analytics2QueryKeys = {
         ] as const,
     releaseRevenueLineChart: (
         releaseId: string,
-        params: RevenueLineChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -433,10 +433,7 @@ export const analytics2QueryKeys = {
             labelId,
             params,
         ] as const,
-    labelTrendViewLineChart: (
-        labelId: string,
-        params: TrendViewLineChartParams
-    ) =>
+    labelTrendViewLineChart: (labelId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.LABEL_TREND_VIEW_LINE_CHART,
@@ -914,7 +911,7 @@ export const analytics2QueryKeys = {
         ] as const,
     sourceTypeTrendViewLineChart: (
         sourceType: string,
-        params: TrendViewLineChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -924,7 +921,7 @@ export const analytics2QueryKeys = {
         ] as const,
     sourceTypeRevenueDspBarChart: (
         sourceType: string,
-        params: RevenueDspBarChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -934,7 +931,7 @@ export const analytics2QueryKeys = {
         ] as const,
     sourceTypeRevenueTerBarChart: (
         sourceType: string,
-        params: RevenueTerBarChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -944,7 +941,7 @@ export const analytics2QueryKeys = {
         ] as const,
     sourceTypeTrendViewDspBarChart: (
         sourceType: string,
-        params: TrendViewDspBarChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,
@@ -954,7 +951,7 @@ export const analytics2QueryKeys = {
         ] as const,
     sourceTypeTrendViewTerBarChart: (
         sourceType: string,
-        params: TrendViewTerBarChartParams
+        params: AnalyticsCommonParams
     ) =>
         [
             ...analytics2QueryKeys.all,

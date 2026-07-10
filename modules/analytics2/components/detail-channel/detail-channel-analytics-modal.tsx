@@ -16,6 +16,7 @@ import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetChannelDsp } from '../../hooks/use-get-channel-dsp';
 import { useGetChannelOverview } from '../../hooks/use-get-channel-overview';
 import { useGetChannelRevenueLineChart } from '../../hooks/use-get-channel-revenue-line-chart';
@@ -35,6 +36,7 @@ interface DetailChannelAnalyticsModalProps {
     channelId: string;
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function DetailChannelAnalyticsModal({
@@ -44,6 +46,7 @@ export default function DetailChannelAnalyticsModal({
     channelId,
     fromDate,
     toDate,
+    releaseType,
 }: DetailChannelAnalyticsModalProps) {
     const messages = useTranslations();
 
@@ -80,6 +83,7 @@ export default function DetailChannelAnalyticsModal({
                 toDate: localToDate,
                 topN: 5,
                 includeOther: true,
+                releaseType,
             },
             { enabled: open }
         );
@@ -87,7 +91,7 @@ export default function DetailChannelAnalyticsModal({
     // Gọi API lấy thông tin tổng quan của Channel
     const { overviewData, isFetching } = useGetChannelOverview(
         channelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -97,7 +101,7 @@ export default function DetailChannelAnalyticsModal({
         isFetching: isLineChartFetching,
     } = useGetChannelRevenueLineChart(
         channelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -107,7 +111,7 @@ export default function DetailChannelAnalyticsModal({
         isFetching: isTrendViewLineChartFetching,
     } = useGetChannelTrendViewLineChart(
         channelId,
-        { fromDate: localFromDate, toDate: localToDate },
+        { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
@@ -123,6 +127,7 @@ export default function DetailChannelAnalyticsModal({
             sortBy: dspSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         });
 
     const [terSortBy, setTerSortBy] = useState<ANALYTIC_SORT_BY>(
@@ -137,6 +142,7 @@ export default function DetailChannelAnalyticsModal({
             sortBy: terSortBy,
             topN: 5,
             includeOther: true,
+            releaseType,
         });
 
     const channelDspColumns = useMemo(
@@ -621,6 +627,7 @@ export default function DetailChannelAnalyticsModal({
                     releaseId={detailReleaseModal.releaseId}
                     fromDate={localFromDate}
                     toDate={localToDate}
+                    releaseType={releaseType}
                 />
             )}
         </FullScreenModal>
