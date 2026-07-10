@@ -254,7 +254,7 @@ export default function ReleasesHeaderV2({
                     'ciDataStatus',
                     'neverExported',
                     'lastImportIsFailed',
-                    'isSkipImport',
+                    'needImportAgain',
                     'hasQaFlag',
                 ],
                 render: ({ dataFilter, onChangeFilter }) => (
@@ -304,8 +304,8 @@ export default function ReleasesHeaderV2({
                                     ),
                                 },
                                 {
-                                    key: 'isSkipImport',
-                                    label: 'Skip import CI',
+                                    key: 'needImportAgain',
+                                    label: messages('release.autoSubmitV2.needImportAgain'),
                                 },
                                 {
                                     key: 'hasQaFlag',
@@ -355,8 +355,8 @@ export default function ReleasesHeaderV2({
                             label: messages('releaseCiData.lastImportIsFailed'),
                         },
                         {
-                            key: 'isSkipImport',
-                            label: 'Skip import CI',
+                            key: 'needImportAgain',
+                            label: messages('release.autoSubmitV2.needImportAgain'),
                         },
                         {
                             key: 'hasQaFlag',
@@ -451,7 +451,7 @@ export default function ReleasesHeaderV2({
         copy.lastImportIsFailed = normalizeBooleanFilterValue(
             copy.lastImportIsFailed
         );
-        copy.isSkipImport = normalizeBooleanFilterValue(copy.isSkipImport);
+        copy.needImportAgain = normalizeBooleanFilterValue(copy.needImportAgain);
         copy.hasQaFlag = normalizeBooleanFilterValue(copy.hasQaFlag);
         return copy;
     }, [dataFilter]);

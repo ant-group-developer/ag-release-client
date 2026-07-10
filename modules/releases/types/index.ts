@@ -164,7 +164,7 @@ export interface ReleasesDataFilter extends CommonParams {
     ciDataStatus?: RELEASE_CI_DATA_STATUS;
     neverExported?: boolean | string;
     lastImportIsFailed?: boolean | string;
-    isSkipImport?: boolean | string;
+    needImportAgain?: boolean | string;
     hasQaFlag?: boolean | string;
     dspDelivery?: QueryReleaseDspDelivery;
 }
