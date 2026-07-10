@@ -124,6 +124,8 @@
         }
     },
     "common": {
+        "yes": "Yes",
+        "no": "No",
         "back": "Back",
         "youtubeId": "YouTube ID",
         "viewOnYoutube": "View on YouTube",
@@ -1035,6 +1037,8 @@
             "config": "Configuration",
             "previewData": "Preview data",
             "needImportAgain": "Import CI data again?",
+            "reImportCi": "Re-import CI",
+            "noReImportCi": "Don't re-import CI",
             "skipDistributed": "Skip distributed releases",
             "dspLockedTooltip": "This distribution platform is locked and cannot receive releases",
             "live": "Live",

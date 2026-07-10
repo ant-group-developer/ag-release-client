@@ -124,6 +124,8 @@
         }
     },
     "common": {
+        "yes": "Có",
+        "no": "Không",
         "back": "Quay lại",
         "youtubeId": "YouTube ID",
         "viewOnYoutube": "Xem trên YouTube",
@@ -1032,6 +1034,8 @@
             "config": "Cấu hình",
             "previewData": "Xem trước dữ liệu",
             "needImportAgain": "Nhập lại dữ liệu CI hay không ?",
+            "reImportCi": "Nhập lại CI",
+            "noReImportCi": "Không nhập lại CI",
             "skipDistributed": "Bỏ qua bản đã phân phối",
             "dspLockedTooltip": "Nền tảng phát hành này đã bị khoá, không thể phát hành",
             "live": "Live",

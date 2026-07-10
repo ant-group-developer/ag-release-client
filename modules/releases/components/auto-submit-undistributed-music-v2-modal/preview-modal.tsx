@@ -73,7 +73,11 @@ export default function PreviewSubmitModal({
                                 {record?.dsp?.name ?? record?.dspCode ?? '-'}
                             </span>
                             {isLocked && (
-                                <CustomTooltip title={messages('release.autoSubmitV2.dspLockedTooltip')}>
+                                <CustomTooltip
+                                    title={messages(
+                                        'release.autoSubmitV2.dspLockedTooltip'
+                                    )}
+                                >
                                     <Lock size={16} className="text-gray-400" />
                                 </CustomTooltip>
                             )}
@@ -88,7 +92,9 @@ export default function PreviewSubmitModal({
                 width: 150,
                 render: (_, record) => (
                     <Tag color={record?.hasLiveVersion ? 'success' : 'default'}>
-                        {record?.hasLiveVersion ? messages('release.autoSubmitV2.live') : messages('release.autoSubmitV2.notLive')}
+                        {record?.hasLiveVersion
+                            ? messages('release.autoSubmitV2.live')
+                            : messages('release.autoSubmitV2.notLive')}
                     </Tag>
                 ),
             },
@@ -130,22 +136,42 @@ export default function PreviewSubmitModal({
                             : messages('release.autoSubmitV2.previewData')}
                     </span>
                     {getSubmitData(previewData) && (
-                        <Popover
-                            trigger="click"
-                            placement="bottomRight"
-                            title={messages('release.autoSubmitV2.dataSubmit')}
-                            content={
-                                <pre className="max-h-[60vh] max-w-[520px] overflow-auto rounded bg-gray-50 p-3 text-xs">
-                                    {JSON.stringify(
-                                        getSubmitData(previewData),
-                                        null,
-                                        2
+                        <div className="flex items-center gap-2">
+                            <Tag
+                                className="!px-2 !py-1 font-normal"
+                                color={'blue'}
+                            >
+                                {getSubmitData(previewData)?.needImportAgain
+                                    ? messages(
+                                          'release.autoSubmitV2.reImportCi'
+                                      )
+                                    : messages(
+                                          'release.autoSubmitV2.noReImportCi'
+                                      )}
+                            </Tag>
+                            <Popover
+                                trigger="click"
+                                placement="bottomRight"
+                                title={messages(
+                                    'release.autoSubmitV2.dataSubmit'
+                                )}
+                                content={
+                                    <pre className="max-h-[60vh] max-w-[520px] overflow-auto rounded bg-gray-50 p-3 text-xs">
+                                        {JSON.stringify(
+                                            getSubmitData(previewData),
+                                            null,
+                                            2
+                                        )}
+                                    </pre>
+                                }
+                            >
+                                <Button size="small">
+                                    {messages(
+                                        'release.autoSubmitV2.dataSubmit'
                                     )}
-                                </pre>
-                            }
-                        >
-                            <Button size="small">{messages('release.autoSubmitV2.dataSubmit')}</Button>
-                        </Popover>
+                                </Button>
+                            </Popover>
+                        </div>
                     )}
                 </div>
             }
