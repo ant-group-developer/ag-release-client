@@ -1,4 +1,6 @@
+import { parseAsJson, parseAsString } from 'nuqs';
 import { RELEASES_COLUMNS_DISPLAY } from '../enums';
+import { ReleasesDataFilter } from '../types';
 
 export const defaultVisibleColumnsReleases = [
     // RELEASES_COLUMNS_DISPLAY.I_NO,
@@ -26,3 +28,42 @@ export const RELEASE_COVER_ART_SIZE = {
     S900: '900x900',
     ORIGINAL: 'original',
 } as const;
+
+export const releasesFilterParsers = {
+    status: parseAsString,
+    startDateRelease: parseAsString,
+    endDateRelease: parseAsString,
+    primaryGenreId: parseAsString,
+    artistId: parseAsString,
+    labelId: parseAsString,
+    albumFormatId: parseAsString,
+    releaseId: parseAsString,
+    isVariousArtist: parseAsString,
+    idInclude: parseAsString,
+    needsReview: parseAsString,
+    hasError: parseAsString,
+    channelId: parseAsString,
+    isrc: parseAsString,
+    genres: parseAsString,
+    ciDataStatus: parseAsString,
+    neverExported: parseAsString,
+    lastImportIsFailed: parseAsString,
+    needImportAgain: parseAsString,
+    hasQaFlag: parseAsString,
+    tenantIds: parseAsString,
+    startCreatedAt: parseAsString,
+    endCreatedAt: parseAsString,
+    startUpdatedAt: parseAsString,
+    endUpdatedAt: parseAsString,
+    keyword: parseAsString,
+
+    dspDelivery: parseAsJson<NonNullable<ReleasesDataFilter['dspDelivery']>>(
+        (value) => {
+            if (value && typeof value === 'object') {
+                return value as NonNullable<ReleasesDataFilter['dspDelivery']>;
+            }
+
+            return {};
+        }
+    ),
+};

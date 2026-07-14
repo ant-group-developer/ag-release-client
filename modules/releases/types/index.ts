@@ -144,8 +144,6 @@ export interface QueryReleaseDspDelivery {
 export interface ReleasesDataFilter extends CommonParams {
     type?: RELEASE_TYPE;
     status?: RELEASES_STATUS;
-    startDateCreated?: string;
-    endDateCreated?: string;
     startDateRelease?: string;
     endDateRelease?: string;
     primaryGenreId?: string;
@@ -167,6 +165,7 @@ export interface ReleasesDataFilter extends CommonParams {
     needImportAgain?: boolean | string;
     hasQaFlag?: boolean | string;
     dspDelivery?: QueryReleaseDspDelivery;
+    tenantIds?: string;
 }
 
 export interface ReleaseTerritory extends CommonParams {

@@ -385,7 +385,7 @@ export default function ReleasesHeaderV2({
                 label: messages('common.dateUpdated'),
                 icon: <CalendarOutlined />,
                 type: 'dateRange',
-                filterKey: ['startCreatedAt', 'endCreatedAt'],
+                filterKey: ['startUpdatedAt', 'endUpdatedAt'],
             }
         );
 
