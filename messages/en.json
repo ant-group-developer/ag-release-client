@@ -1036,7 +1036,7 @@
             "submitConfig": "Submit configuration",
             "config": "Configuration",
             "previewData": "Preview data",
-            "needImportAgain": "Import CI data again?",
+            "needImportAgain": "Import CI data again",
             "reImportCi": "Re-import CI",
             "noReImportCi": "Don't re-import CI",
             "skipDistributed": "Skip distributed releases",

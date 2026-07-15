@@ -1033,7 +1033,7 @@
             "submitConfig": "Cấu hình gửi",
             "config": "Cấu hình",
             "previewData": "Xem trước dữ liệu",
-            "needImportAgain": "Nhập lại dữ liệu CI hay không ?",
+            "needImportAgain": "Nhập lại dữ liệu CI hay không",
             "reImportCi": "Nhập lại CI",
             "noReImportCi": "Không nhập lại CI",
             "skipDistributed": "Bỏ qua bản đã phân phối",

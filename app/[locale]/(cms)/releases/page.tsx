@@ -6,8 +6,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
-import { useFilter } from '@/hooks/use-filter';
-import { LoadingType, useLoading } from '@/hooks/use-loading';
+import { useFilterV2 } from '@/hooks/use-filter-v2';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
@@ -15,6 +14,7 @@ import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
+import { releasesFilterParsers } from '@/modules/releases/constants';
 
 import {
     RELEASE_TYPE,
@@ -31,32 +31,54 @@ import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
+import { parseAsInteger, parseAsString } from 'nuqs';
 import { Key, useState } from 'react';
 
 type Props = {};
 
 export default function Releases({}: Props) {
+    // const {
+    //     dataFilter,
+    //     onSearch,
+    //     onChangePage,
+    //     onChangeFilter,
+    //     canClearFilter,
+    //     removeFilter,
+    //     defaultFilter,
+    // } = useFilter<ReleasesDataFilter>({
+    //     page: 1,
+    //     pageSize: PAGE_SIZE,
+    //     orderBy: ORDER.DESC,
+    //     fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+    //     type: RELEASE_TYPE.AUDIO,
+    //     isImportedFromReport: 'false',
+    // });
+
     const {
         dataFilter,
-        onSearch,
         onChangePage,
         onChangeFilter,
+        resetFilterValues,
         canClearFilter,
-        removeFilter,
         defaultFilter,
-    } = useFilter<ReleasesDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-        orderBy: ORDER.DESC,
-        fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
-        type: RELEASE_TYPE.AUDIO,
-        isImportedFromReport: 'false',
+    } = useFilterV2<ReleasesDataFilter>({
+        // Default
+        page: parseAsInteger.withDefault(1),
+        pageSize: parseAsInteger.withDefault(PAGE_SIZE),
+        orderBy: parseAsString.withDefault(ORDER.DESC),
+        fieldOrder: parseAsString.withDefault(
+            RELEASES_COLUMNS_DISPLAY.CREATED_AT
+        ),
+        type: parseAsString.withDefault(RELEASE_TYPE.AUDIO),
+        isImportedFromReport: parseAsString.withDefault('false'),
+
+        ...releasesFilterParsers,
     });
 
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
-    const isLoading = useLoading(LoadingType.Fetching);
+    // const isLoading = useLoading(LoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const { token } = theme.useToken();
@@ -142,7 +164,7 @@ export default function Releases({}: Props) {
                             defaultFilter={defaultFilter}
                             onChangeFilter={onChangeFilter}
                             canClearFilter={canClearFilter}
-                            removeFilter={removeFilter}
+                            removeFilter={resetFilterValues}
                         />
                     }
                     sticky
