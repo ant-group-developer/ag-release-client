@@ -80,7 +80,7 @@ export default function ReleasesHeaderDropdown({
         {
             label: messages('common.createdAt'),
             value: TYPE_FILTER.DATE_CREATED,
-            visible: !dataFilter.startDateCreated && !dataFilter.endDateCreated,
+            visible: !dataFilter.startCreatedAt && !dataFilter.endCreatedAt,
             onClick: () => handleChangeTypeFilter(TYPE_FILTER.DATE_CREATED),
         },
         {

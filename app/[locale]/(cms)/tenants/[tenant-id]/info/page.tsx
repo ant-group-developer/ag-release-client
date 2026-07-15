@@ -2,6 +2,9 @@
 
 import SubmitButton from '@/components/ui/button/submit-button';
 import { useActive } from '@/hooks/use-active';
+import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import TenantFormV2 from '@/modules/tenant/components/tenant-create/tenant-form-v2';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
 import { useUpdateTenant } from '@/modules/tenant/hooks/use-update-tenant';
@@ -9,7 +12,7 @@ import { UpdateTenant, UpdateTenantPayload } from '@/modules/tenant/types/data';
 import { getTenantOwnerId } from '@/modules/tenant/utils';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
-import { Form, theme } from 'antd';
+import { Form } from 'antd';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -17,7 +20,9 @@ type Props = {};
 
 function DetailTenantPage({}: Props) {
     const { active, isActive, deActive } = useActive();
-    const { token } = theme.useToken();
+    // const { token } = theme.useToken();
+    const { hasPermission } = usePermission();
+    const canUpdateTenant = hasPermission(PERMISSION.WORKSPACE.UPDATE_INFO);
 
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
@@ -156,10 +161,13 @@ function DetailTenantPage({}: Props) {
                     lg: 17,
                     xxl: 20,
                 }}
+                disabled={!canUpdateTenant}
             />
-            <div className="mt-2 text-right">
-                <SubmitButton onClick={onFinish} loading={isActive} />
-            </div>
+            <PermissionGate permission={PERMISSION.WORKSPACE.UPDATE_INFO}>
+                <div className="mt-2 text-right">
+                    <SubmitButton onClick={onFinish} loading={isActive} />
+                </div>
+            </PermissionGate>
         </div>
     );
 }
