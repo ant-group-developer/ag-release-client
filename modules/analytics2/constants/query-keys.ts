@@ -1,4 +1,5 @@
 import { QUERY_KEY } from '@/constants/query-key';
+
 import {
     AnalyticsCommonParams,
     DspDetailParams,
@@ -113,7 +114,7 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.SYNC_JOB,
             jobId,
         ] as const,
-    revenueSummary: (params: { fromDate: string; toDate: string }) =>
+    revenueSummary: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_SUMMARY,

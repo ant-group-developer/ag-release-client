@@ -1,5 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+
 import {
     AnalyticsCommonParams,
     ArtistDspItem,
@@ -177,7 +178,7 @@ export const analytics2Apis = {
     getSyncJob: (jobId: string) => {
         return axiosInstance.get<SyncJobResponse>(`/etl/jobs/${jobId}`);
     },
-    getRevenueSummary: (params: { fromDate: string; toDate: string }) => {
+    getRevenueSummary: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueSummaryData>>(
             '/analytics/revenue/summary',
             params
