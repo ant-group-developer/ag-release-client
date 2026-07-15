@@ -747,6 +747,7 @@
         "input": "Please enter information!",
         "file": "File is required!",
         "url": "Please enter a valid link format!",
+        "youtubeIdFormat": "YouTube ID must be exactly 11 characters and contain no special characters",
         "passwordMisMatch": "Password mis match!",
         "passwordFormat": "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number.",
         "unique": "Data must not be duplicated",
@@ -1589,6 +1590,9 @@
         "routeLabel": "Video releases",
         "title": "Release video",
         "add": "Add Release video",
+        "youtubeIdOverrideConfirm": "This action will override the YouTube ID automatically sent by the partner. Are you sure you want to continue?",
+        "youtubeIdEditManual": "Edit manually",
+        "youtubeIdPreview": "Preview on YouTube",
         "fields": {
             "videoTitle": "Video title",
             "isrc": "ISRC",

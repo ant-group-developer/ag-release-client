@@ -35,6 +35,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ManageCollaboratorsModal from './manage-collaborators-modal';
+import YoutubeIdField from './youtube-id-field';
 
 interface MetadataFieldsProps {
     dataEdit?: ReleasesData;
@@ -568,6 +569,19 @@ export default function MetadataFields({
                     </AppFormItem>
                 </Col> */}
             </Row>
+
+            {isUpdateForm && (
+                <Row gutter={24} className="mb-4">
+                    <Col span={24}>
+                        <YoutubeIdField
+                            form={form}
+                            dataEdit={dataEdit}
+                            onFieldUpdate={onFieldUpdate}
+                            disabled={!canEditReleaseVideo}
+                        />
+                    </Col>
+                </Row>
+            )}
 
             {/* Keywords (Full Width) */}
             <AppFormItem
