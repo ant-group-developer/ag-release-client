@@ -9,6 +9,7 @@ import {
     RevenueSummaryData,
     RevenueTimelineData,
     RevenueLabelItem,
+    RevenueReleaseVideoItem,
 } from '../types';
 
 export const useGetRevenueSummary = (params: AnalyticsCommonParams) => {
@@ -128,6 +129,26 @@ export const useGetRevenueTopRelease = (
 
     return {
         topReleaseData,
+        ...query,
+    };
+};
+
+export const useGetRevenueTopReleaseVideo = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopReleaseVideo(params),
+        queryFn: () => analytics2Apis.getRevenueTopReleaseVideo(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topReleaseVideoData =
+        query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topReleaseVideoData,
         ...query,
     };
 };

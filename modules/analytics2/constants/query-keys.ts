@@ -78,6 +78,12 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.RELEASE_RANKING,
             params,
         ] as const,
+    releaseVideoRanking: (params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.RELEASE_VIDEO_RANKING,
+            params,
+        ] as const,
     artistRanking: (params: RankingParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -172,6 +178,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_TOP_RELEASE,
+            params,
+        ] as const,
+    revenueTopReleaseVideo: (params: RevenueQueryParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_TOP_RELEASE_VIDEO,
             params,
         ] as const,
     revenueTopLabel: (params: RevenueQueryParams) =>

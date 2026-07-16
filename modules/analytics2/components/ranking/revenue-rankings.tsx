@@ -14,6 +14,7 @@ import {
     useGetRevenueTopDsp,
     useGetRevenueTopLabel,
     useGetRevenueTopRelease,
+    useGetRevenueTopReleaseVideo,
     useGetRevenueTopSourceType,
     useGetRevenueTopTenant,
     useGetRevenueTopTrack,
@@ -60,6 +61,7 @@ export default function RevenueRankings({
         artistColumns,
         trackColumns,
         releaseColumns,
+        releaseVideoColumns,
         dspColumns,
         tenantColumns,
         labelColumns,
@@ -89,17 +91,39 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+        },
+        {
+            enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
         }
     );
 
     const { topReleaseData, isFetching: isReleasesLoading } =
-        useGetRevenueTopRelease({
-            fromDate,
-            toDate,
-            topN,
-            includeOther: false,
-            releaseType,
-        });
+        useGetRevenueTopRelease(
+            {
+                fromDate,
+                toDate,
+                topN,
+                includeOther: false,
+                releaseType,
+            },
+            {
+                enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+            }
+        );
+
+    const { topReleaseVideoData, isFetching: isReleaseVideoLoading } =
+        useGetRevenueTopReleaseVideo(
+            {
+                fromDate,
+                toDate,
+                topN,
+                includeOther: false,
+                releaseType,
+            },
+            {
+                enabled: releaseType === ANALYTICS_RELEASE_TYPE.VIDEO,
+            }
+        );
 
     const { topDspData, isFetching: isDspLoading } = useGetRevenueTopDsp({
         fromDate,
@@ -165,48 +189,57 @@ export default function RevenueRankings({
     return (
         <>
             <Row gutter={[24, 24]}>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
-                        title={topRankingTitle(messages('common.releases'))}
-                        columns={releaseColumns}
-                        dataSource={topReleaseData?.items}
-                        loading={isReleasesLoading}
-                        rowKey="releaseId"
-                        labelKey="title"
-                        valueKey="revenueUsd"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_RELEASES,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                            }
-                        )}
-                    />
-                </Col>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
-                        title={topRankingTitle(messages('common.tracks'))}
-                        columns={trackColumns}
-                        dataSource={topTrackData?.items}
-                        loading={isTracksLoading}
-                        rowKey="isrc"
-                        labelKey="title"
-                        valueKey="revenueUsd"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_TRACKS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                            }
-                        )}
-                    />
-                </Col>
+                {releaseType == ANALYTICS_RELEASE_TYPE.AUDIO && (
+                    <>
+                        <Col span={12} xs={24} lg={12}>
+                            <RankingCard
+                                title={topRankingTitle(
+                                    messages('common.releases')
+                                )}
+                                columns={releaseColumns}
+                                dataSource={topReleaseData?.items}
+                                loading={isReleasesLoading}
+                                rowKey="releaseId"
+                                labelKey="title"
+                                valueKey="revenueUsd"
+                                defaultView={RankingCardView.LIST}
+                                viewMoreHref={createViewMoreHref(
+                                    APP_ROUTES.ANALYTICS_RELEASES,
+                                    {
+                                        fromDate,
+                                        toDate,
+                                        type: ANALYTICS_VIEW_TYPE.REVENUE,
+                                        releaseType,
+                                    }
+                                )}
+                            />
+                        </Col>
+                        <Col span={12} xs={24} lg={12}>
+                            <RankingCard
+                                title={topRankingTitle(
+                                    messages('common.tracks')
+                                )}
+                                columns={trackColumns}
+                                dataSource={topTrackData?.items}
+                                loading={isTracksLoading}
+                                rowKey="isrc"
+                                labelKey="title"
+                                valueKey="revenueUsd"
+                                defaultView={RankingCardView.LIST}
+                                viewMoreHref={createViewMoreHref(
+                                    APP_ROUTES.ANALYTICS_TRACKS,
+                                    {
+                                        fromDate,
+                                        toDate,
+                                        type: ANALYTICS_VIEW_TYPE.REVENUE,
+                                        releaseType,
+                                    }
+                                )}
+                            />
+                        </Col>
+                    </>
+                )}
+
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('artist.artists'))}
@@ -335,6 +368,31 @@ export default function RevenueRankings({
                         )}
                     />
                 </Col>
+                {releaseType == ANALYTICS_RELEASE_TYPE.VIDEO && (
+                    <Col span={12} xs={24} lg={24}>
+                        <RankingCard
+                            title={topRankingTitle(
+                                messages('common.releasesVideo')
+                            )}
+                            columns={releaseVideoColumns}
+                            dataSource={topReleaseVideoData?.items}
+                            loading={isReleaseVideoLoading}
+                            rowKey="releaseId"
+                            labelKey="title"
+                            valueKey="revenueUsd"
+                            defaultView={RankingCardView.LIST}
+                            viewMoreHref={createViewMoreHref(
+                                APP_ROUTES.ANALYTICS_RELEASES,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    type: ANALYTICS_VIEW_TYPE.REVENUE,
+                                    releaseType,
+                                }
+                            )}
+                        />
+                    </Col>
+                )}
             </Row>
             {detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST && (
                 <DetailArtistAnalyticsModal

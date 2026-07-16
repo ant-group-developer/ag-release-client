@@ -150,9 +150,9 @@ export default function BackupDatabaseForm({}: Props) {
                 >
                     <Input />
                 </AppFormItem>
-                <AppFormItem label={'Shell'} name="shell">
+                {/* <AppFormItem label={'Shell'} name="shell">
                     <Input />
-                </AppFormItem>
+                </AppFormItem> */}
 
                 <AppFormItem
                     label={'Base Url R2'}

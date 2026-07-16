@@ -1,4 +1,6 @@
 import { ReleasesData } from '@/modules/releases/types';
+import { ChannelsData } from '@/modules/channels/types';
+import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
 import { ANALYTICS_RELEASE_TYPE } from '../enums';
 
@@ -89,6 +91,20 @@ export interface ReleaseRankingItem {
     totalViews: number;
     release?: ReleasesData;
     bySource?: BySourceItem[];
+}
+
+export interface ReleaseVideoRankingItem {
+    rank: number;
+    releaseId: string;
+    title: string;
+    upc: string;
+    labelId: string;
+    labelName: string;
+    trackCount: number;
+    totalViews: number;
+    channels: Pick<ChannelsData, 'id' | 'name'>[];
+    workspaces: Pick<TenantData, 'id' | 'name'>[];
+    release?: Pick<ReleasesData, 'coverArtThumbnails'>;
 }
 
 export interface ArtistRankingItem {
@@ -329,6 +345,21 @@ export interface RevenueReleaseItem {
     quantity: number;
     release?: ReleasesData;
     bySource?: BySourceItem[];
+}
+
+export interface RevenueReleaseVideoItem {
+    rank: number;
+    releaseId: string;
+    title: string;
+    upc: string;
+    labelId: string;
+    labelName: string;
+    trackCount: number;
+    revenueUsd: number;
+    quantity: number;
+    channels: Pick<ChannelsData, 'id' | 'name'>[];
+    workspaces: Pick<TenantData, 'id' | 'name'>[];
+    release?: Pick<ReleasesData, 'coverArtThumbnails'>;
 }
 
 export interface RevenueLabelItem {

@@ -24,6 +24,7 @@ import {
     ReleaseOverviewData,
     ReleaseOverviewParams,
     ReleaseRankingItem,
+    ReleaseVideoRankingItem,
     ReleaseTerItem,
     RevenueArtistItem,
     RevenueChannelItem,
@@ -33,8 +34,8 @@ import {
     RevenueLabelItem,
     RevenueLineChartItem,
     RevenueLineChartParams,
-    RevenueQueryParams,
     RevenueReleaseItem,
+    RevenueReleaseVideoItem,
     RevenueSourceTypeItem,
     RevenueSummaryData,
     RevenueTenantBarChartItem,
@@ -123,6 +124,12 @@ export const analytics2Apis = {
     getReleaseRanking: (params: RankingParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             '/analytics/ranking/releases',
+            params
+        );
+    },
+    getReleaseVideoRanking: (params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseVideoRankingItem>>(
+            '/analytics/ranking/releases-video',
             params
         );
     },
@@ -235,6 +242,12 @@ export const analytics2Apis = {
     getRevenueTopRelease: (params: RevenueQueryParams) => {
         return axiosInstance.post<PaginationResponse<RevenueReleaseItem>>(
             '/analytics/revenue/top-release',
+            params
+        );
+    },
+    getRevenueTopReleaseVideo: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueReleaseVideoItem>>(
+            '/analytics/revenue/top-release-video',
             params
         );
     },

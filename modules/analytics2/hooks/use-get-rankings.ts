@@ -43,6 +43,26 @@ export const useGetReleaseRanking = (
     };
 };
 
+export const useGetReleaseVideoRanking = (
+    params: RankingParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.releaseVideoRanking(params),
+        queryFn: () => analytics2Apis.getReleaseVideoRanking(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const releaseVideoRankingData =
+        query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        releaseVideoRankingData,
+        ...query,
+    };
+};
+
 export const useGetArtistRanking = (
     params: RankingParams,
     options?: { enabled?: boolean }

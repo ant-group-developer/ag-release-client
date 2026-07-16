@@ -102,7 +102,6 @@ export default function ReleaseSubmitTable({
                 FieldOrderReleaseExecution3.execution_releaseTitle
             ),
             width: 250,
-            ellipsis: true,
             render: (_, record) => {
                 const releaseSnapshot =
                     record?.metadata?.input?.releaseSnapshot;
@@ -113,9 +112,9 @@ export default function ReleaseSubmitTable({
                     coverArts?.find((art) => art.type === '75x75')?.fileId ??
                     coverArts?.[0]?.fileId;
                 return (
-                    <Space>
+                    <div className="flex items-center gap-2 min-w-0">
                         {coverArtFileId ? (
-                            <div style={{ flexShrink: 0 }}>
+                            <div className="flex-shrink-0">
                                 <ReleaseCoverImage
                                     fileId={coverArtFileId}
                                     width={36}
@@ -123,14 +122,14 @@ export default function ReleaseSubmitTable({
                                 />
                             </div>
                         ) : (
-                            <Avatar shape="square" size={36}>
+                            <Avatar shape="square" size={36} className="flex-shrink-0">
                                 -
                             </Avatar>
                         )}
-                        <Typography.Text copyable ellipsis>
+                        <Typography.Text copyable className="flex-1 min-w-0 break-words">
                             {releaseSnapshot?.title || '-'}
                         </Typography.Text>
-                    </Space>
+                    </div>
                 );
             },
         },
