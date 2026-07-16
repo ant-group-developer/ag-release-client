@@ -14,6 +14,7 @@ import {
     useGetDspRanking,
     useGetLabelRanking,
     useGetReleaseRanking,
+    useGetReleaseVideoRanking,
     useGetSourceTypeRanking,
     useGetTenantRanking,
     useGetTrackRanking,
@@ -62,6 +63,7 @@ export default function AnalyticsRankings({
     const {
         trackColumns,
         releaseColumns,
+        releaseVideoColumns,
         artistColumns,
         labelColumns,
         tenantColumns,
@@ -71,22 +73,46 @@ export default function AnalyticsRankings({
     } = useAnalyticsRankingColumns({ setDetailModal });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
-        useGetTrackRanking({
-            fromDate,
-            toDate,
-            page: 1,
-            pageSize: topN,
-            releaseType,
-        });
+        useGetTrackRanking(
+            {
+                fromDate,
+                toDate,
+                page: 1,
+                pageSize: topN,
+                releaseType,
+            },
+            {
+                enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+            }
+        );
 
     const { releaseRankingData, isFetching: isReleasesFetching } =
-        useGetReleaseRanking({
-            fromDate,
-            toDate,
-            page: 1,
-            pageSize: topN,
-            releaseType,
-        });
+        useGetReleaseRanking(
+            {
+                fromDate,
+                toDate,
+                page: 1,
+                pageSize: topN,
+                releaseType,
+            },
+            {
+                enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+            }
+        );
+
+    const { releaseVideoRankingData, isFetching: isReleaseVideoFetching } =
+        useGetReleaseVideoRanking(
+            {
+                fromDate,
+                toDate,
+                page: 1,
+                pageSize: topN,
+                releaseType,
+            },
+            {
+                enabled: releaseType === ANALYTICS_RELEASE_TYPE.VIDEO,
+            }
+        );
 
     const { artistRankingData, isFetching: isArtistsFetching } =
         useGetArtistRanking({
@@ -144,48 +170,57 @@ export default function AnalyticsRankings({
     return (
         <div className="flex flex-col gap-6">
             <Row gutter={[24, 24]}>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
-                        title={topRankingTitle(messages('common.releases'))}
-                        columns={releaseColumns}
-                        dataSource={releaseRankingData?.items}
-                        loading={isReleasesFetching}
-                        rowKey="releaseId"
-                        labelKey="title"
-                        valueKey="totalViews"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_RELEASES,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
-                    />
-                </Col>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
-                        title={topRankingTitle(messages('common.tracks'))}
-                        columns={trackColumns}
-                        dataSource={trackRankingData?.items}
-                        loading={isTracksFetching}
-                        rowKey="isrc"
-                        labelKey="title"
-                        valueKey="totalViews"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_TRACKS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
-                    />
-                </Col>
+                {releaseType == ANALYTICS_RELEASE_TYPE.AUDIO && (
+                    <>
+                        <Col span={12} xs={24} lg={12}>
+                            <RankingCard
+                                title={topRankingTitle(
+                                    messages('common.releases')
+                                )}
+                                columns={releaseColumns}
+                                dataSource={releaseRankingData?.items}
+                                loading={isReleasesFetching}
+                                rowKey="releaseId"
+                                labelKey="title"
+                                valueKey="totalViews"
+                                defaultView={RankingCardView.LIST}
+                                viewMoreHref={createViewMoreHref(
+                                    APP_ROUTES.ANALYTICS_RELEASES,
+                                    {
+                                        fromDate,
+                                        toDate,
+                                        type: ANALYTICS_VIEW_TYPE.VIEW,
+                                        releaseType,
+                                    }
+                                )}
+                            />
+                        </Col>
+                        <Col span={12} xs={24} lg={12}>
+                            <RankingCard
+                                title={topRankingTitle(
+                                    messages('common.tracks')
+                                )}
+                                columns={trackColumns}
+                                dataSource={trackRankingData?.items}
+                                loading={isTracksFetching}
+                                rowKey="isrc"
+                                labelKey="title"
+                                valueKey="totalViews"
+                                defaultView={RankingCardView.LIST}
+                                viewMoreHref={createViewMoreHref(
+                                    APP_ROUTES.ANALYTICS_TRACKS,
+                                    {
+                                        fromDate,
+                                        toDate,
+                                        type: ANALYTICS_VIEW_TYPE.VIEW,
+                                        releaseType,
+                                    }
+                                )}
+                            />
+                        </Col>
+                    </>
+                )}
+
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(messages('artist.artists'))}
@@ -314,6 +349,31 @@ export default function AnalyticsRankings({
                         )}
                     />
                 </Col>
+                {releaseType == ANALYTICS_RELEASE_TYPE.VIDEO && (
+                    <Col span={12} xs={24} lg={24}>
+                        <RankingCard
+                            title={topRankingTitle(
+                                messages('common.releasesVideo')
+                            )}
+                            columns={releaseVideoColumns}
+                            dataSource={releaseVideoRankingData?.items}
+                            loading={isReleaseVideoFetching}
+                            rowKey="releaseId"
+                            labelKey="title"
+                            valueKey="totalViews"
+                            defaultView={RankingCardView.LIST}
+                            viewMoreHref={createViewMoreHref(
+                                APP_ROUTES.ANALYTICS_RELEASES,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    type: ANALYTICS_VIEW_TYPE.VIEW,
+                                    releaseType,
+                                }
+                            )}
+                        />
+                    </Col>
+                )}
             </Row>
             {detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE && (
                 <DetailReleaseAnalyticsModal

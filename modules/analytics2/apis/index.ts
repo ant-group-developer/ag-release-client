@@ -1,5 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+
 import {
     AnalyticsCommonParams,
     ArtistDspItem,
@@ -24,6 +25,7 @@ import {
     ReleaseOverviewParams,
     ReleaseRankingItem,
     ReleaseTerItem,
+    ReleaseVideoRankingItem,
     RevenueArtistItem,
     RevenueChannelItem,
     RevenueDspBarChartItem,
@@ -34,6 +36,7 @@ import {
     RevenueLineChartParams,
     RevenueQueryParams,
     RevenueReleaseItem,
+    RevenueReleaseVideoItem,
     RevenueSourceTypeItem,
     RevenueSummaryData,
     RevenueTenantBarChartItem,
@@ -125,6 +128,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getReleaseVideoRanking: (params: RankingParams) => {
+        return axiosInstance.post<PaginationResponse<ReleaseVideoRankingItem>>(
+            '/analytics/ranking/releases-video',
+            params
+        );
+    },
     getArtistRanking: (params: RankingParams) => {
         return axiosInstance.post<PaginationResponse<ArtistRankingItem>>(
             '/analytics/ranking/artists',
@@ -177,7 +186,7 @@ export const analytics2Apis = {
     getSyncJob: (jobId: string) => {
         return axiosInstance.get<SyncJobResponse>(`/etl/jobs/${jobId}`);
     },
-    getRevenueSummary: (params: { fromDate: string; toDate: string }) => {
+    getRevenueSummary: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueSummaryData>>(
             '/analytics/revenue/summary',
             params
@@ -234,6 +243,12 @@ export const analytics2Apis = {
     getRevenueTopRelease: (params: RevenueQueryParams) => {
         return axiosInstance.post<PaginationResponse<RevenueReleaseItem>>(
             '/analytics/revenue/top-release',
+            params
+        );
+    },
+    getRevenueTopReleaseVideo: (params: RevenueQueryParams) => {
+        return axiosInstance.post<PaginationResponse<RevenueReleaseVideoItem>>(
+            '/analytics/revenue/top-release-video',
             params
         );
     },

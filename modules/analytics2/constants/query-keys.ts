@@ -1,4 +1,5 @@
 import { QUERY_KEY } from '@/constants/query-key';
+
 import {
     AnalyticsCommonParams,
     DspDetailParams,
@@ -77,6 +78,12 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.RELEASE_RANKING,
             params,
         ] as const,
+    releaseVideoRanking: (params: RankingParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.RELEASE_VIDEO_RANKING,
+            params,
+        ] as const,
     artistRanking: (params: RankingParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -113,7 +120,7 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.SYNC_JOB,
             jobId,
         ] as const,
-    revenueSummary: (params: { fromDate: string; toDate: string }) =>
+    revenueSummary: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_SUMMARY,
@@ -171,6 +178,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_TOP_RELEASE,
+            params,
+        ] as const,
+    revenueTopReleaseVideo: (params: RevenueQueryParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_TOP_RELEASE_VIDEO,
             params,
         ] as const,
     revenueTopLabel: (params: RevenueQueryParams) =>

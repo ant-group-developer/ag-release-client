@@ -74,7 +74,11 @@ export default function RevenueTabContent({
     return (
         <>
             {/* 1. Overview Metric Cards */}
-            <RevenueMetricCards fromDate={fromDate} toDate={toDate} />
+            <RevenueMetricCards
+                fromDate={fromDate}
+                toDate={toDate}
+                releaseType={releaseType}
+            />
 
             {/* Row with LineChart and PieChart */}
             <Row gutter={[24, 24]}>
