@@ -125,10 +125,13 @@
     },
     "common": {
         "workspace": "Workspace",
+        "label": "Label",
+        "onlineLink": "Online Link",
         "yes": "Yes",
         "no": "No",
         "back": "Back",
         "youtubeId": "YouTube ID",
+        "youtubeChannelId": "YouTube Channel ID",
         "viewOnYoutube": "View on YouTube",
         "close": "Close",
         "undetermined": "Undetermined",

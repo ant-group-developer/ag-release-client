@@ -6,8 +6,8 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
-import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
+import { useFilter } from '@/hooks/use-filter';
 import DetailChannelAnalyticsModal from '@/modules/analytics2/components/detail-channel/detail-channel-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import {
@@ -28,7 +28,7 @@ import {
 } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, Tag, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme, Tooltip, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -147,6 +147,7 @@ export default function ChannelsRankingPage() {
             title: messages('common.channel'),
             dataIndex: 'channelName',
             key: 'channelName',
+            width: 260,
             ellipsis: true,
             render: (text: string, record: RevenueChannelItem) => (
                 <div className="flex items-center gap-3">
@@ -179,10 +180,45 @@ export default function ChannelsRankingPage() {
             ),
         },
         {
+            title: messages('common.youtubeChannelId'),
+            dataIndex: 'youtubeChannelId',
+            key: 'youtubeChannelId',
+            width: 240,
+            ellipsis: true,
+            render: (value: string) => {
+                if (!value) return '—';
+                return (
+                    <div className="flex items-center gap-1">
+                        <Tooltip title={messages('common.viewOnYoutube')}>
+                            <a
+                                href={`https://www.youtube.com/channel/${value}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="truncate text-blue-500 hover:underline"
+                            >
+                                {value}
+                            </a>
+                        </Tooltip>
+                        <span
+                            className="inline-block align-middle"
+                            data-stop-row-click="true"
+                        >
+                            <Typography.Text
+                                copyable={{
+                                    text: value,
+                                    tooltips: false,
+                                }}
+                            />
+                        </span>
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             key: 'tenant',
-            width: 400,
+            width: 240,
             ellipsis: true,
             render: (tenant: any) => {
                 if (!tenant) return '-';
@@ -202,11 +238,12 @@ export default function ChannelsRankingPage() {
                 );
             },
         },
+
         {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 240,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -226,7 +263,8 @@ export default function ChannelsRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                    {item.sourceLabel}: $
+                                    {formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -238,7 +276,7 @@ export default function ChannelsRankingPage() {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 250,
+            width: 180,
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -249,7 +287,7 @@ export default function ChannelsRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 250,
+            width: 180,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -275,6 +313,7 @@ export default function ChannelsRankingPage() {
             title: messages('common.channel'),
             dataIndex: 'channelName',
             key: 'channelName',
+            width: 260,
             ellipsis: true,
             render: (text: string, record: ChannelRankingItem) => (
                 <div className="flex items-center gap-3">
@@ -307,10 +346,45 @@ export default function ChannelsRankingPage() {
             ),
         },
         {
+            title: messages('common.youtubeChannelId'),
+            dataIndex: 'youtubeChannelId',
+            key: 'youtubeChannelId',
+            width: 240,
+            ellipsis: true,
+            render: (value: string) => {
+                if (!value) return '—';
+                return (
+                    <div className="flex items-center gap-1">
+                        <Tooltip title={messages('common.viewOnYoutube')}>
+                            <a
+                                href={`https://www.youtube.com/channel/${value}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="truncate text-blue-500 hover:underline"
+                            >
+                                {value}
+                            </a>
+                        </Tooltip>
+                        <span
+                            className="inline-block align-middle"
+                            data-stop-row-click="true"
+                        >
+                            <Typography.Text
+                                copyable={{
+                                    text: value,
+                                    tooltips: false,
+                                }}
+                            />
+                        </span>
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             key: 'tenant',
-            width: 500,
+            width: 240,
             ellipsis: true,
             render: (tenant: any) => {
                 if (!tenant) return '-';
@@ -334,7 +408,7 @@ export default function ChannelsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 240,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -354,7 +428,8 @@ export default function ChannelsRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -471,6 +546,7 @@ export default function ChannelsRankingPage() {
                             rowKey="channelId"
                             size="small"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     ) : (
                         <Table<ChannelRankingItem>
@@ -481,6 +557,7 @@ export default function ChannelsRankingPage() {
                             rowKey="channelId"
                             size="small"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     )}
                     <AppPagination

@@ -125,10 +125,13 @@
     },
     "common": {
         "workspace": "Workspace",
+        "label": "Hãng phát hành",
+        "onlineLink": "Link trực tuyến",
         "yes": "Có",
         "no": "Không",
         "back": "Quay lại",
         "youtubeId": "YouTube ID",
+        "youtubeChannelId": "YouTube Channel ID",
         "viewOnYoutube": "Xem trên YouTube",
         "close": "Đóng",
         "undetermined": "Chưa xác định",

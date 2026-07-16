@@ -27,7 +27,7 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, Tag, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -183,13 +183,72 @@ export default function ReleasesRankingPage() {
             title: 'UPC',
             dataIndex: 'upc',
             key: 'upc',
-            width: 180,
+            width: 140,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
                     {text || '—'}
                 </span>
             ),
+        },
+        {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 140,
+            ellipsis: true,
+            render: (text: string) => (
+                <Typography.Text className="truncate">
+                    {text || '—'}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('common.workspace'),
+            key: 'workspace',
+            width: 150,
+            ellipsis: true,
+            render: (_, record: RevenueReleaseItem) => {
+                const workspaceName =
+                    record.workspace?.name || record.release?.tenant?.name;
+                return (
+                    <Typography.Text className="truncate">
+                        {workspaceName || '—'}
+                    </Typography.Text>
+                );
+            },
+        },
+        {
+            title: messages('common.onlineLink'),
+            key: 'onlineLink',
+            width: 140,
+            render: (_, record: RevenueReleaseItem) => {
+                const metadataExternal = record.release?.metadataExternal;
+                if (!metadataExternal) return '—';
+                const entries = Object.entries(metadataExternal).filter(
+                    ([, metadata]) => !!metadata?.albumUrl
+                );
+                if (entries.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1">
+                        {entries.map(([key, metadata]) => {
+                            const labelName =
+                                key.charAt(0).toUpperCase() + key.slice(1);
+                            return (
+                                <Tag key={key} color="blue" className="m-0">
+                                    <a
+                                        href={metadata?.albumUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {labelName}
+                                    </a>
+                                </Tag>
+                            );
+                        })}
+                    </div>
+                );
+            },
         },
         {
             title: messages('common.sourcePlatform'),
@@ -228,7 +287,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 120,
+            width: 80,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -239,7 +298,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 150,
+            width: 100,
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -250,7 +309,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 180,
+            width: 120,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -313,7 +372,7 @@ export default function ReleasesRankingPage() {
             title: 'UPC',
             dataIndex: 'upc',
             key: 'upc',
-            width: 180,
+            width: 140,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -322,10 +381,68 @@ export default function ReleasesRankingPage() {
             ),
         },
         {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 140,
+            ellipsis: true,
+            render: (text: string) => (
+                <Typography.Text className="truncate">
+                    {text || '—'}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('common.workspace'),
+            key: 'workspace',
+            width: 150,
+            ellipsis: true,
+            render: (_, record: ReleaseRankingItem) => {
+                const workspaceName = record.release?.tenant?.name;
+                return (
+                    <Typography.Text className="truncate">
+                        {workspaceName || '—'}
+                    </Typography.Text>
+                );
+            },
+        },
+        {
+            title: messages('common.onlineLink'),
+            key: 'onlineLink',
+            width: 140,
+            render: (_, record: ReleaseRankingItem) => {
+                const metadataExternal = record.release?.metadataExternal;
+                if (!metadataExternal) return '—';
+                const entries = Object.entries(metadataExternal).filter(
+                    ([, metadata]) => !!metadata?.albumUrl
+                );
+                if (entries.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1">
+                        {entries.map(([key, metadata]) => {
+                            const labelName =
+                                key.charAt(0).toUpperCase() + key.slice(1);
+                            return (
+                                <Tag key={key} color="blue" className="m-0">
+                                    <a
+                                        href={metadata?.albumUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {labelName}
+                                    </a>
+                                </Tag>
+                            );
+                        })}
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 150,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -358,7 +475,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 120,
+            width: 80,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -369,7 +486,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 150,
+            width: 120,
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -475,6 +592,7 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     ) : (
                         <Table<ReleaseRankingItem>
@@ -485,6 +603,7 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     )}
                     <AppPagination

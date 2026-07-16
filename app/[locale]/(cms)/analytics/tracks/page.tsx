@@ -5,10 +5,10 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
-import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
-import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
+import { useFilter } from '@/hooks/use-filter';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
@@ -26,7 +26,7 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, Tag, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -182,7 +182,7 @@ export default function TracksRankingPage() {
             title: 'ISRC',
             dataIndex: 'isrc',
             key: 'isrc',
-            width: 180,
+            width: 150,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -191,10 +191,65 @@ export default function TracksRankingPage() {
             ),
         },
         {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 160,
+            ellipsis: true,
+            render: (text: string, record: RevenueTrackItem) => (
+                <Typography.Text className="truncate">
+                    {record?.labelName || '—'}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('common.onlineLink'),
+            key: 'onlineLink',
+            width: 160,
+            render: (_, record: RevenueTrackItem) => {
+                const track = record.release?.tracks?.find(
+                    (t) => t.isrc === record.isrc
+                );
+                const metadataExternalObj =
+                    record.metadataExternal ||
+                    track?.metadataExternal ||
+                    record.release?.metadataExternal;
+
+                if (!metadataExternalObj) return '—';
+                const entries = Object.entries(metadataExternalObj).filter(
+                    ([, metadata]: [string, any]) =>
+                        !!metadata?.trackUrl || !!metadata?.albumUrl
+                );
+                if (entries.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1">
+                        {entries.map(([key, metadata]: [string, any]) => {
+                            const labelName =
+                                key.charAt(0).toUpperCase() + key.slice(1);
+                            return (
+                                <Tag key={key} color="blue" className="m-0">
+                                    <a
+                                        href={
+                                            metadata?.trackUrl ||
+                                            metadata?.albumUrl
+                                        }
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {labelName}
+                                    </a>
+                                </Tag>
+                            );
+                        })}
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -214,7 +269,8 @@ export default function TracksRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                    {item.sourceLabel}: $
+                                    {formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -226,7 +282,7 @@ export default function TracksRankingPage() {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 150,
+            width: 120,
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -237,7 +293,7 @@ export default function TracksRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 180,
+            width: 140,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -300,7 +356,7 @@ export default function TracksRankingPage() {
             title: 'ISRC',
             dataIndex: 'isrc',
             key: 'isrc',
-            width: 200,
+            width: 150,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -309,10 +365,65 @@ export default function TracksRankingPage() {
             ),
         },
         {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 160,
+            ellipsis: true,
+            render: (text: string, record: TrackRankingItem) => (
+                <Typography.Text className="truncate">
+                    {text || record.release?.label?.name || '—'}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('common.onlineLink'),
+            key: 'onlineLink',
+            width: 160,
+            render: (_, record: TrackRankingItem) => {
+                const track = record.release?.tracks?.find(
+                    (t) => t.isrc === record.isrc
+                );
+                const metadataExternalObj =
+                    record.metadataExternal ||
+                    track?.metadataExternal ||
+                    record.release?.metadataExternal;
+
+                if (!metadataExternalObj) return '—';
+                const entries = Object.entries(metadataExternalObj).filter(
+                    ([, metadata]: [string, any]) =>
+                        !!metadata?.trackUrl || !!metadata?.albumUrl
+                );
+                if (entries.length === 0) return '—';
+                return (
+                    <div className="flex flex-wrap gap-1">
+                        {entries.map(([key, metadata]: [string, any]) => {
+                            const labelName =
+                                key.charAt(0).toUpperCase() + key.slice(1);
+                            return (
+                                <Tag key={key} color="blue" className="m-0">
+                                    <a
+                                        href={
+                                            metadata?.trackUrl ||
+                                            metadata?.albumUrl
+                                        }
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {labelName}
+                                    </a>
+                                </Tag>
+                            );
+                        })}
+                    </div>
+                );
+            },
+        },
+        {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -332,7 +443,8 @@ export default function TracksRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -344,7 +456,7 @@ export default function TracksRankingPage() {
             title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 180,
+            width: 140,
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -449,6 +561,7 @@ export default function TracksRankingPage() {
                             rowKey="isrc"
                             size="small"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     ) : (
                         <Table<TrackRankingItem>
@@ -459,6 +572,7 @@ export default function TracksRankingPage() {
                             rowKey="isrc"
                             size="small"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     )}
                     <AppPagination

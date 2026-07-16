@@ -3,9 +3,12 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
-import { Col, Row, Segmented, Space, Tag } from 'antd';
+import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
+import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import { Avatar, Col, Row, Segmented, Space, Tag } from 'antd';
 import { DollarSign, Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
@@ -27,6 +30,20 @@ interface DetailReleaseAnalyticsModalProps {
     fromDate: string;
     toDate: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+}
+
+function normalizeMetadataKey(value?: string | null) {
+    return value?.trim().toLowerCase();
+}
+
+function getDspByMetadataKey(key: string, dspData: any[]) {
+    const normalizedKey = normalizeMetadataKey(key);
+
+    return dspData.find((item) =>
+        [item.code, item.codeCi, item.name].some(
+            (value) => normalizeMetadataKey(value) === normalizedKey
+        )
+    );
 }
 
 export default function DetailReleaseAnalyticsModal({
@@ -60,6 +77,18 @@ export default function DetailReleaseAnalyticsModal({
         toDate: localToDate,
         releaseType,
     });
+
+    // Gọi API lấy thông tin chi tiết của Release để lấy metadata external
+    const { releaseData, isFetching: isDetailFetching } =
+        useGetDetailRelease(releaseId);
+
+    const { dspData: listDspData } = useGetListDsp({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
+    const dspItems = useMemo(
+        () => listDspData?.items ?? [],
+        [listDspData?.items]
+    );
 
     // Gọi API lấy thông tin biểu đồ doanh thu của Release
     const { revenueLineChartData, isFetching: isLineChartFetching } =
@@ -256,6 +285,73 @@ export default function DetailReleaseAnalyticsModal({
             totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
         }));
     }, [releaseTerData]);
+
+    const metadataColumns = useMemo(
+        () => [
+            {
+                title: messages('track.dsp'),
+                dataIndex: 'platform',
+                key: 'platform',
+                width: 150,
+                render: (text: string) => {
+                    const dsp = getDspByMetadataKey(text, dspItems);
+                    return (
+                        <div className="flex items-center gap-2">
+                            <Avatar src={dsp?.picture} shape="square" size={32}>
+                                {text[0]?.toUpperCase()}
+                            </Avatar>
+                            <span className="capitalize text-gray-900 dark:text-zinc-100">
+                                {text}
+                            </span>
+                        </div>
+                    );
+                },
+            },
+            {
+                title: messages('track.externalId'),
+                dataIndex: 'albumId',
+                key: 'albumId',
+                ellipsis: true,
+                render: (text: string) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        {text || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('track.albumUrl'),
+                dataIndex: 'albumUrl',
+                key: 'albumUrl',
+                ellipsis: true,
+                render: (url: string) =>
+                    url ? (
+                        <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="!text-purple-500 hover:!text-purple-600 hover:underline"
+                        >
+                            {url}
+                        </a>
+                    ) : (
+                        '—'
+                    ),
+            },
+        ],
+        [messages, dspItems]
+    );
+
+    const mappedMetadataExternalData = useMemo(() => {
+        if (!releaseData?.metadataExternal) return [];
+        return Object.entries(releaseData.metadataExternal)
+            .filter(([_, value]) => !!value)
+            .map(([platform, value]) => ({
+                platform,
+                albumId: value?.albumId,
+                albumUrl: value?.albumUrl,
+                coverUrl: value?.coverImages?.[0]?.url,
+            }));
+    }, [releaseData]);
 
     return (
         <FullScreenModal
@@ -460,6 +556,19 @@ export default function DetailReleaseAnalyticsModal({
                                     setTerSortBy(ANALYTIC_SORT_BY.REVENUE);
                                 }
                             }}
+                        />
+                    </Col>
+
+                    <Col xs={24} lg={12}>
+                        <RankingCard
+                            title={messages('release.overview.onlineLinks')}
+                            columns={metadataColumns}
+                            dataSource={mappedMetadataExternalData}
+                            loading={isDetailFetching}
+                            rowKey="platform"
+                            labelKey="platform"
+                            valueKey="albumId"
+                            defaultView={RankingCardView.LIST}
                         />
                     </Col>
                 </Row>

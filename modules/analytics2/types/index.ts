@@ -1,5 +1,5 @@
-import { ReleasesData } from '@/modules/releases/types';
 import { ChannelsData } from '@/modules/channels/types';
+import { MetadataExternal, ReleasesData } from '@/modules/releases/types';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
 import { ANALYTICS_RELEASE_TYPE } from '../enums';
@@ -77,6 +77,9 @@ export interface TrackRankingItem {
     releaseTitle: string;
     totalViews: number;
     release?: ReleasesData;
+    labelId?: string;
+    labelName?: string;
+    metadataExternal?: MetadataExternal;
     bySource?: BySourceItem[];
 }
 
@@ -157,6 +160,7 @@ export interface ChannelRankingItem {
     rank: number;
     channelId: string;
     channelName: string;
+    youtubeChannelId?: string;
     thumbUrl?: string | null;
     totalViews: number;
     tenant?: TenantInfo | null;
@@ -258,6 +262,7 @@ export interface RevenueChannelItem {
     rank: number;
     channelId: string;
     channelName: string;
+    youtubeChannelId?: string;
     thumbUrl?: string | null;
     revenueUsd: number;
     quantity: number;
@@ -296,6 +301,9 @@ export interface RevenueTrackItem {
     revenueUsd: number;
     quantity: number;
     release?: ReleasesData;
+    labelId?: string;
+    labelName?: string;
+    metadataExternal?: MetadataExternal;
     bySource?: BySourceItem[];
 }
 
@@ -344,6 +352,7 @@ export interface RevenueReleaseItem {
     revenueUsd: number;
     quantity: number;
     release?: ReleasesData;
+    workspace?: TenantData;
     bySource?: BySourceItem[];
 }
 
