@@ -10,6 +10,7 @@ import {
     DspRankingItem,
     LabelRankingItem,
     ReleaseRankingItem,
+    ReleaseVideoRankingItem,
     SourceTypeRankingItem,
     TenantRankingItem,
     TrackRankingItem,
@@ -190,6 +191,109 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
+                render: (views: number) => (
+                    <span className="text-gray-900 dark:text-zinc-100">
+                        {views ? views.toLocaleString() : 0}
+                    </span>
+                ),
+            },
+        ],
+        [messages, setDetailModal]
+    );
+
+    const releaseVideoColumns = useMemo(
+        () => [
+            {
+                title: messages('analytics2.rank'),
+                dataIndex: 'rank',
+                key: 'rank',
+                width: RANK_COLUMN_WIDTH,
+                fixed: 'left' as const,
+                align: 'center' as const,
+                render: (rank: number) => (
+                    <span className="text-gray-700 dark:text-zinc-300">
+                        #{rank}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.releasesVideo'),
+                dataIndex: 'title',
+                key: 'title',
+                ellipsis: true,
+                render: (text: string, record: ReleaseVideoRankingItem) => (
+                    <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={32}
+                            height={32}
+                            fileId={
+                                record.release?.coverArtThumbnails?.[
+                                    RELEASE_COVER_ART_SIZE.S75
+                                ] as string
+                            }
+                        />
+                        <div className="flex min-w-0 flex-col">
+                            <CustomTooltip
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <span
+                                    className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    onClick={() =>
+                                        setDetailModal({
+                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
+                                            title: text,
+                                            id: record.releaseId,
+                                        })
+                                    }
+                                >
+                                    {text}
+                                </span>
+                            </CustomTooltip>
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                title: 'UPC',
+                dataIndex: 'upc',
+                key: 'upc',
+                width: 220,
+                ellipsis: true,
+                render: (text: string) => (
+                    <span className="truncate text-gray-500 dark:text-zinc-400">
+                        {text || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.channel'),
+                dataIndex: 'channels',
+                key: 'channels',
+                width: 220,
+                ellipsis: true,
+                render: (channels: { id: string; name: string }[]) => (
+                    <span className="truncate text-gray-600 dark:text-zinc-400">
+                        {channels?.map((c) => c.name).join(', ') || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.workspace'),
+                dataIndex: 'workspaces',
+                key: 'workspaces',
+                width: 220,
+                ellipsis: true,
+                render: (workspaces: { id: string; name: string }[]) => (
+                    <span className="truncate text-gray-600 dark:text-zinc-400">
+                        {workspaces?.map((w) => w.name).join(', ') || '—'}
+                    </span>
+                ),
+            },
+            {
+                title: messages('common.viewCount'),
+                dataIndex: 'totalViews',
+                key: 'totalViews',
+                width: 220,
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -589,6 +693,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     return {
         trackColumns,
         releaseColumns,
+        releaseVideoColumns,
         artistColumns,
         labelColumns,
         tenantColumns,

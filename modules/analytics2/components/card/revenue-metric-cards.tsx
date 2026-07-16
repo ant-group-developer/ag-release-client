@@ -3,21 +3,29 @@
 import { theme } from 'antd';
 import { DollarSign, Globe, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+
 import { formattedNumber } from '@/helpers/common';
 import { useGetRevenueSummary } from '../../hooks/use-get-revenue-data';
 
 interface Props {
     fromDate: string;
     toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
-export default function RevenueMetricCards({ fromDate, toDate }: Props) {
+export default function RevenueMetricCards({
+    fromDate,
+    toDate,
+    releaseType,
+}: Props) {
     const t = useTranslations();
     const { token } = theme.useToken();
 
     const { summaryData, isFetching: isLoading } = useGetRevenueSummary({
         fromDate,
         toDate,
+        releaseType,
     });
 
     const metricsData = [

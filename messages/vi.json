@@ -124,6 +124,7 @@
         }
     },
     "common": {
+        "workspace": "Workspace",
         "yes": "Có",
         "no": "Không",
         "back": "Quay lại",
@@ -301,6 +302,7 @@
         "channel": "Kênh",
         "release": "Bản phát hành",
         "releases": "Phát hành",
+        "releasesVideo": "Video phát hành",
         "plays": "Lượt phát",
         "dark": "Tối",
         "light": "Sáng",

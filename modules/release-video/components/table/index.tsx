@@ -192,6 +192,15 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             },
         },
         {
+            title: messages('common.workspace'),
+            key: 'workspace',
+            dataIndex: ['tenant', 'name'],
+            align: 'left',
+            width: 180,
+            ellipsis: true,
+            render: (value) => value || '-',
+        },
+        {
             title: messages('common.status'),
             key: 'status',
             dataIndex: 'status',

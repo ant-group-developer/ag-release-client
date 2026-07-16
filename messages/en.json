@@ -124,6 +124,7 @@
         }
     },
     "common": {
+        "workspace": "Workspace",
         "yes": "Yes",
         "no": "No",
         "back": "Back",
@@ -301,6 +302,7 @@
         "channel": "Channel",
         "release": "Release",
         "releases": "Releases",
+        "releasesVideo": "Video releases",
         "plays": "Plays",
         "dark": "Dark",
         "light": "Light",

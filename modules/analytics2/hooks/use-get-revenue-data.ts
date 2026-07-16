@@ -1,18 +1,18 @@
 import { DEFAULT_DATA_PAGINATION } from '@/constants/common';
 import { useQuery } from '@tanstack/react-query';
+
 import { analytics2Apis } from '../apis';
 import { analytics2QueryKeys } from '../constants/query-keys';
 import {
+    AnalyticsCommonParams,
     RevenueQueryParams,
     RevenueSummaryData,
     RevenueTimelineData,
     RevenueLabelItem,
+    RevenueReleaseVideoItem,
 } from '../types';
 
-export const useGetRevenueSummary = (params: {
-    fromDate: string;
-    toDate: string;
-}) => {
+export const useGetRevenueSummary = (params: AnalyticsCommonParams) => {
     const { data, ...res } = useQuery({
         queryKey: analytics2QueryKeys.revenueSummary(params),
         queryFn: () => analytics2Apis.getRevenueSummary(params),
@@ -129,6 +129,26 @@ export const useGetRevenueTopRelease = (
 
     return {
         topReleaseData,
+        ...query,
+    };
+};
+
+export const useGetRevenueTopReleaseVideo = (
+    params: RevenueQueryParams,
+    options?: { enabled?: boolean }
+) => {
+    const query = useQuery({
+        queryKey: analytics2QueryKeys.revenueTopReleaseVideo(params),
+        queryFn: () => analytics2Apis.getRevenueTopReleaseVideo(params),
+        placeholderData: (prev) => prev,
+        ...options,
+    });
+
+    const topReleaseVideoData =
+        query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+
+    return {
+        topReleaseVideoData,
         ...query,
     };
 };
