@@ -3,6 +3,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
@@ -10,14 +11,13 @@ import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DetailChannelAnalyticsModal from '@/modules/analytics2/components/detail-channel/detail-channel-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import {
-    getAnalyticsReleaseType,
     getAnalyticsViewType,
 } from '@/modules/analytics2/helpers';
 import { useGetChannelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
@@ -41,7 +41,6 @@ interface RankingFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
-    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function ChannelsRankingPage() {
@@ -56,41 +55,24 @@ export default function ChannelsRankingPage() {
             startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
             endDate: dayjs().format('YYYY-MM-DD'),
             type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
         });
 
     const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
         ANALYTICS_VIEW_TYPE.VIEW
     );
-    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(
-        ANALYTICS_RELEASE_TYPE.AUDIO
-    );
 
     useEffect(() => {
         setCurrentType(getAnalyticsViewType(searchParams.get('type')));
-        setReleaseType(
-            getAnalyticsReleaseType(searchParams.get('releaseType'))
-        );
     }, [searchParams]);
 
-    const [channelDetailModal, setChannelDetailModal] = useState<{
-        open: boolean;
+    const [activeDetail, setActiveDetail] = useState<{
+        type: 'channel' | 'source' | 'workspace' | null;
         title: string;
-        channelId: string;
+        targetId: string;
     }>({
-        open: false,
+        type: null,
         title: '',
-        channelId: '',
-    });
-
-    const [detailSourceModal, setDetailSourceModal] = useState<{
-        open: boolean;
-        title: string;
-        sourceType: string;
-    }>({
-        open: false,
-        title: '',
-        sourceType: '',
+        targetId: '',
     });
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
@@ -107,7 +89,6 @@ export default function ChannelsRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 groupBySource: true,
-                releaseType,
             },
             { enabled: !isRevenue }
         );
@@ -123,7 +104,6 @@ export default function ChannelsRankingPage() {
                 keyword: dataFilter.keyword,
                 includeOther: false,
                 groupBySource: true,
-                releaseType,
             },
             { enabled: isRevenue }
         );
@@ -162,18 +142,18 @@ export default function ChannelsRankingPage() {
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
-                            <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            <Typography.Text
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
-                                    setChannelDetailModal({
-                                        open: true,
+                                    setActiveDetail({
+                                        type: 'channel',
                                         title: text,
-                                        channelId: record.channelId,
+                                        targetId: record.channelId,
                                     })
                                 }
                             >
                                 {text || '-'}
-                            </span>
+                            </Typography.Text>
                         </CustomTooltip>
                     </div>
                 </div>
@@ -231,9 +211,20 @@ export default function ChannelsRankingPage() {
                             height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             className="aspect-square rounded-full object-cover"
                         />
-                        <span className="text-gray-900 dark:text-zinc-100">
-                            {tenant.name || '-'}
-                        </span>
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <Typography.Text
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                                onClick={() =>
+                                    setActiveDetail({
+                                        type: 'workspace',
+                                        title: tenant.name || '',
+                                        targetId: tenant.id,
+                                    })
+                                }
+                            >
+                                {tenant.name || '—'}
+                            </Typography.Text>
+                        </CustomTooltip>
                     </div>
                 );
             },
@@ -243,23 +234,26 @@ export default function ChannelsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 240,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                    <PopoverTagsV2
+                        items={bySource}
+                        maxVisibleTags={2}
+                        getKey={(item) => item.source}
+                        renderItem={(item) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <Tag
-                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                        setActiveDetail({
+                                            type: 'source',
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
+                                            targetId: item.source,
                                         })
                                     }
                                 >
@@ -267,8 +261,8 @@ export default function ChannelsRankingPage() {
                                     {formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
-                        ))}
-                    </div>
+                        )}
+                    />
                 );
             },
         },
@@ -328,18 +322,18 @@ export default function ChannelsRankingPage() {
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
-                            <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            <Typography.Text
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
-                                    setChannelDetailModal({
-                                        open: true,
+                                    setActiveDetail({
+                                        type: 'channel',
                                         title: text,
-                                        channelId: record.channelId,
+                                        targetId: record.channelId,
                                     })
                                 }
                             >
                                 {text || '-'}
-                            </span>
+                            </Typography.Text>
                         </CustomTooltip>
                     </div>
                 </div>
@@ -397,9 +391,20 @@ export default function ChannelsRankingPage() {
                             height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             className="aspect-square rounded-full object-cover"
                         />
-                        <span className="text-gray-900 dark:text-zinc-100">
-                            {tenant.name || '-'}
-                        </span>
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <Typography.Text
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                                onClick={() =>
+                                    setActiveDetail({
+                                        type: 'workspace',
+                                        title: tenant.name || '',
+                                        targetId: tenant.id,
+                                    })
+                                }
+                            >
+                                {tenant.name || '—'}
+                            </Typography.Text>
+                        </CustomTooltip>
                     </div>
                 );
             },
@@ -408,23 +413,26 @@ export default function ChannelsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 240,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                    <PopoverTagsV2
+                        items={bySource}
+                        maxVisibleTags={2}
+                        getKey={(item) => item.source}
+                        renderItem={(item) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <Tag
-                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                        setActiveDetail({
+                                            type: 'source',
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
+                                            targetId: item.source,
                                         })
                                     }
                                 >
@@ -432,8 +440,8 @@ export default function ChannelsRankingPage() {
                                     {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
-                        ))}
-                    </div>
+                        )}
+                    />
                 );
             },
         },
@@ -498,26 +506,6 @@ export default function ChannelsRankingPage() {
                             style={{ width: 200 }}
                         />
                         <Segmented
-                            value={releaseType}
-                            onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
-                                onChangeFilter({
-                                    releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
-                                });
-                            }}
-                            options={[
-                                {
-                                    label: messages('common.audio'),
-                                    value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                                },
-                                {
-                                    label: messages('common.video'),
-                                    value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                                },
-                            ]}
-                        />
-                        <Segmented
                             value={currentType}
                             onChange={(value) => {
                                 setCurrentType(value as ANALYTICS_VIEW_TYPE);
@@ -578,37 +566,51 @@ export default function ChannelsRankingPage() {
                     />
                 </Card>
 
-                {channelDetailModal.open && (
+                {activeDetail.type === 'channel' && (
                     <DetailChannelAnalyticsModal
-                        open={channelDetailModal.open}
+                        open={true}
                         onClose={() =>
-                            setChannelDetailModal((prev) => ({
+                            setActiveDetail((prev) => ({
                                 ...prev,
-                                open: false,
+                                type: null,
                             }))
                         }
-                        title={channelDetailModal.title}
-                        channelId={channelDetailModal.channelId}
+                        title={activeDetail.title}
+                        channelId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
                     />
                 )}
 
-                {detailSourceModal.open && (
+                {activeDetail.type === 'source' && (
                     <DetailSourceTypeAnalyticsModal
-                        open={detailSourceModal.open}
+                        open={true}
                         onClose={() =>
-                            setDetailSourceModal((prev) => ({
+                            setActiveDetail((prev) => ({
                                 ...prev,
-                                open: false,
+                                type: null,
                             }))
                         }
-                        title={detailSourceModal.title}
-                        sourceType={detailSourceModal.sourceType}
+                        title={activeDetail.title}
+                        sourceType={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                    />
+                )}
+
+                {activeDetail.type === 'workspace' && (
+                    <DetailTenantAnalyticsModal
+                        open={true}
+                        onClose={() =>
+                            setActiveDetail((prev) => ({
+                                ...prev,
+                                type: null,
+                            }))
+                        }
+                        title={activeDetail.title}
+                        tenantId={activeDetail.targetId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
                     />
                 )}
             </PageContainer>

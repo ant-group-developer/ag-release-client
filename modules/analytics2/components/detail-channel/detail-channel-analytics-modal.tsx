@@ -17,6 +17,8 @@ import {
     RANK_COLUMN_WIDTH,
 } from '../../constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { useGetDetailChannel } from '@/modules/channels/hooks/use-get-detail-channel';
+import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
 import { useGetChannelDsp } from '../../hooks/use-get-channel-dsp';
 import { useGetChannelOverview } from '../../hooks/use-get-channel-overview';
 import { useGetChannelRevenueLineChart } from '../../hooks/use-get-channel-revenue-line-chart';
@@ -87,6 +89,17 @@ export default function DetailChannelAnalyticsModal({
             },
             { enabled: open }
         );
+
+    // Gọi API lấy thông tin chi tiết của Channel để lấy tenantId
+    const { channelData, isFetching: isDetailFetching } =
+        useGetDetailChannel(channelId);
+
+    const tenantId = channelData?.tenantId;
+
+    // Gọi API lấy thông tin chi tiết của Tenant (Workspace)
+    const { dataTenant, isFetching: isTenantFetching } = useTenantDetail(
+        tenantId || null
+    );
 
     // Gọi API lấy thông tin tổng quan của Channel
     const { overviewData, isFetching } = useGetChannelOverview(
@@ -420,12 +433,21 @@ export default function DetailChannelAnalyticsModal({
             footer={null}
         >
             <div className="space-y-6 p-6">
-                {/* 1. Phần overview 3 card */}
+                {/* 1. Phần overview 4 card */}
                 <DetailStatsOverview
                     trendViews={overviewData?.totalTrendViews}
                     salesViews={overviewData?.totalSalesViews}
                     revenueUsd={overviewData?.totalRevenueUsd}
                     isLoading={isFetching}
+                    workspace={
+                        dataTenant?.id
+                            ? {
+                                  name: dataTenant.name,
+                                  logo: dataTenant.logo,
+                              }
+                            : undefined
+                    }
+                    isWorkspaceLoading={isDetailFetching || isTenantFetching}
                 />
 
                 <Row gutter={[24, 24]}>

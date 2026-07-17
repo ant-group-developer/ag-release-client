@@ -73,7 +73,8 @@ export interface ReleasesData extends CommonAttribute {
     timeZone: TimezoneData | null;
     tracksCount: number;
     totalDuration: number;
-    tenant?: Pick<TenantData, 'id' | 'name'>;
+    tenant?: Pick<TenantData, 'id' | 'name' | 'logo'>;
+    tenantId?: string;
     releaseTimeMode: RELEASE_TIME_MODE;
     logs: string;
     priceTierId?: string;
@@ -85,7 +86,7 @@ export interface ReleasesData extends CommonAttribute {
     releaseDspDeliveries?: ReleaseDspData[];
 }
 
-export interface SpotifyCoverImage {
+export interface CoverImage {
     url: string;
     size: string;
     width: number;
@@ -93,9 +94,11 @@ export interface SpotifyCoverImage {
 }
 
 export interface ExternalMetadata {
-    albumId: string;
-    albumUrl: string;
-    coverImages: SpotifyCoverImage[];
+    albumId?: string;
+    trackId?: string;
+    albumUrl?: string;
+    trackUrl?: string;
+    coverImages: CoverImage[];
     lastSyncedAt: string;
 }
 
@@ -126,6 +129,7 @@ export interface VideoData {
     videoFile?: FileBucket;
     label?: string;
     externalId?: string;
+    channelId?: string;
 }
 
 export interface ReleasesDataSimple

@@ -25,6 +25,8 @@ import {
     RevenueTenantItem,
     TenantRankingItem,
 } from '@/modules/analytics2/types';
+import TenantTag from '@/modules/tenant/components/tenant-tag';
+import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, Tag, theme } from 'antd';
@@ -174,6 +176,14 @@ export default function TenantsRankingPage() {
             ),
         },
         {
+            title: messages('tenant.type.title'),
+            dataIndex: 'type',
+            key: 'type',
+            width: 140,
+            render: (type?: TENANT_TYPE) =>
+                type ? <TenantTag type={type} /> : '—',
+        },
+        {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
@@ -272,6 +282,14 @@ export default function TenantsRankingPage() {
                     </CustomTooltip>
                 </div>
             ),
+        },
+        {
+            title: messages('tenant.type.title'),
+            dataIndex: 'type',
+            key: 'type',
+            width: 140,
+            render: (type?: TENANT_TYPE) =>
+                type ? <TenantTag type={type} /> : '—',
         },
         {
             title: messages('common.sourcePlatform'),
