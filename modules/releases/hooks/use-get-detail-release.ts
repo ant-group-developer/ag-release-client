@@ -78,6 +78,7 @@ export const useGetDetailRelease = (id: ReleasesData['id']) => {
         tenant: {
             id: '',
             name: '',
+            logo: null,
         },
         releaseTimeMode: RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
         releaseOriginalDate: '',
