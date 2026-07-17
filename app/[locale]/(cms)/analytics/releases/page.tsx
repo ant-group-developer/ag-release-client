@@ -3,13 +3,16 @@
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
 import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-release/detail-release-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -27,7 +30,16 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, Tag, theme } from 'antd';
+import {
+    Avatar,
+    Card,
+    Segmented,
+    Space,
+    Table,
+    Tag,
+    theme,
+    Typography,
+} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -72,24 +84,14 @@ export default function ReleasesRankingPage() {
         );
     }, [searchParams]);
 
-    const [detailModal, setDetailModal] = useState<{
-        open: boolean;
+    const [activeDetail, setActiveDetail] = useState<{
+        type: 'release' | 'source' | 'label' | 'tenant' | null;
         title: string;
-        releaseId: string;
+        targetId: string;
     }>({
-        open: false,
+        type: null,
         title: '',
-        releaseId: '',
-    });
-
-    const [detailSourceModal, setDetailSourceModal] = useState<{
-        open: boolean;
-        title: string;
-        sourceType: string;
-    }>({
-        open: false,
-        title: '',
-        sourceType: '',
+        targetId: '',
     });
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
@@ -165,10 +167,10 @@ export default function ReleasesRankingPage() {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        open: true,
+                                    setActiveDetail({
+                                        type: 'release',
                                         title: text,
-                                        releaseId: record.releaseId,
+                                        targetId: record.releaseId,
                                     })
                                 }
                             >
@@ -183,7 +185,7 @@ export default function ReleasesRankingPage() {
             title: 'UPC',
             dataIndex: 'upc',
             key: 'upc',
-            width: 180,
+            width: 140,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -192,26 +194,138 @@ export default function ReleasesRankingPage() {
             ),
         },
         {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 140,
+            ellipsis: true,
+            render: (text: string, record: RevenueReleaseItem) => {
+                if (!record.labelId) {
+                    return (
+                        <Typography.Text className="truncate">
+                            {text || '—'}
+                        </Typography.Text>
+                    );
+                }
+                return (
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <Typography.Text
+                            className="cursor-pointer transition-colors hover:text-blue-500"
+                            onClick={() =>
+                                setActiveDetail({
+                                    type: 'label',
+                                    title: text,
+                                    targetId: record.labelId,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </Typography.Text>
+                    </CustomTooltip>
+                );
+            },
+        },
+        {
+            title: messages('common.workspace'),
+            key: 'workspace',
+            width: 150,
+            ellipsis: true,
+            render: (_, record: RevenueReleaseItem) => {
+                const workspace = record?.workspaces?.[0];
+                const workspaceName = workspace?.name;
+
+                if (!workspaceName) {
+                    return (
+                        <Typography.Text className="truncate">
+                            {workspaceName || '—'}
+                        </Typography.Text>
+                    );
+                }
+                return (
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <Space>
+                            <Avatar src={workspace?.logo as string} />
+                            <Typography.Text
+                                className="cursor-pointer transition-colors hover:text-blue-500"
+                                onClick={() =>
+                                    setActiveDetail({
+                                        type: 'tenant',
+                                        title: workspaceName || '',
+                                        targetId: workspace?.id,
+                                    })
+                                }
+                            >
+                                {workspaceName || '—'}
+                            </Typography.Text>
+                        </Space>
+                    </CustomTooltip>
+                );
+            },
+        },
+        {
+            title: messages('common.onlineLink'),
+            key: 'onlineLink',
+            width: 140,
+            render: (_, record: RevenueReleaseItem) => {
+                const metadataExternal = record?.metadataExternal;
+                if (!metadataExternal) return '—';
+                const entries = Object.entries(metadataExternal).filter(
+                    ([, metadata]) => !!metadata?.albumUrl
+                );
+                if (entries.length === 0) return '—';
+                return (
+                    <PopoverTagsV2
+                        items={entries}
+                        maxVisibleTags={1}
+                        getKey={([key]) => key}
+                        renderItem={([key, metadata]) => {
+                            const labelName =
+                                key.charAt(0).toUpperCase() + key.slice(1);
+                            return (
+                                <CustomTooltip
+                                    key={key}
+                                    title={messages('common.seeMore')}
+                                >
+                                    <a
+                                        href={metadata?.albumUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Tag className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500">
+                                            {labelName}
+                                        </Tag>
+                                    </a>
+                                </CustomTooltip>
+                            );
+                        }}
+                    />
+                );
+            },
+        },
+        {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 180,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                    <PopoverTagsV2
+                        items={bySource}
+                        maxVisibleTags={1}
+                        getKey={(item) => item.source}
+                        renderItem={(item) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <Tag
-                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                        setActiveDetail({
+                                            type: 'source',
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
+                                            targetId: item.source,
                                         })
                                     }
                                 >
@@ -219,8 +333,8 @@ export default function ReleasesRankingPage() {
                                     {formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
-                        ))}
-                    </div>
+                        )}
+                    />
                 );
             },
         },
@@ -228,7 +342,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 120,
+            width: 80,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -239,7 +353,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 150,
+            width: 120,
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -250,7 +364,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 180,
+            width: 120,
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -276,6 +390,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.release'),
             dataIndex: 'title',
             key: 'title',
+            width: 300,
             ellipsis: true,
             render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
@@ -288,17 +403,17 @@ export default function ReleasesRankingPage() {
                             ] as string
                         }
                     />
-                    <div className="flex min-w-0 flex-col">
+                    <div className="flex min-w-0 max-w-[300px] flex-col">
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        open: true,
+                                    setActiveDetail({
+                                        type: 'release',
                                         title: text,
-                                        releaseId: record.releaseId,
+                                        targetId: record.releaseId,
                                     })
                                 }
                             >
@@ -313,7 +428,7 @@ export default function ReleasesRankingPage() {
             title: 'UPC',
             dataIndex: 'upc',
             key: 'upc',
-            width: 180,
+            width: 140,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -322,26 +437,134 @@ export default function ReleasesRankingPage() {
             ),
         },
         {
+            title: messages('common.label'),
+            dataIndex: 'labelName',
+            key: 'labelName',
+            width: 140,
+            ellipsis: true,
+            render: (text: string, record: ReleaseRankingItem) => {
+                if (!record.labelId) {
+                    return (
+                        <Typography.Text className="truncate">
+                            {text || '—'}
+                        </Typography.Text>
+                    );
+                }
+                return (
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <Typography.Text
+                            className="cursor-pointer transition-colors hover:text-blue-500"
+                            onClick={() =>
+                                setActiveDetail({
+                                    type: 'label',
+                                    title: text,
+                                    targetId: record.labelId,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </Typography.Text>
+                    </CustomTooltip>
+                );
+            },
+        },
+        {
+            title: messages('common.workspace'),
+            key: 'workspace',
+            width: 150,
+            ellipsis: true,
+            render: (_, record: ReleaseRankingItem) => {
+                const workspace = record?.workspaces?.[0];
+                const workspaceName = workspace?.name;
+                const tenantId = workspace?.id;
+                if (!tenantId) return '-';
+                return (
+                    <div className="flex items-center gap-2">
+                        <Avatar src={workspace?.logo} size={32} />
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
+                            <Typography.Text
+                                className="cursor-pointer transition-colors hover:text-blue-500"
+                                onClick={() =>
+                                    setActiveDetail({
+                                        type: 'tenant',
+                                        title: workspaceName || '',
+                                        targetId: tenantId,
+                                    })
+                                }
+                            >
+                                {workspaceName || '—'}
+                            </Typography.Text>
+                        </CustomTooltip>
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('common.onlineLink'),
+            key: 'onlineLink',
+            width: 140,
+            render: (_, record: ReleaseRankingItem) => {
+                const metadataExternal = record?.metadataExternal;
+                if (!metadataExternal) return '—';
+                const entries = Object.entries(metadataExternal).filter(
+                    ([, metadata]) => !!metadata?.albumUrl
+                );
+                if (entries.length === 0) return '—';
+                return (
+                    <PopoverTagsV2
+                        items={entries}
+                        maxVisibleTags={1}
+                        getKey={([key]) => key}
+                        renderItem={([key, metadata]) => {
+                            const labelName =
+                                key.charAt(0).toUpperCase() + key.slice(1);
+                            return (
+                                <CustomTooltip
+                                    key={key}
+                                    title={messages('common.seeMore')}
+                                >
+                                    <a
+                                        href={metadata?.albumUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Tag className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500">
+                                            {labelName}
+                                        </Tag>
+                                    </a>
+                                </CustomTooltip>
+                            );
+                        }}
+                    />
+                );
+            },
+        },
+        {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 150,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                    <PopoverTagsV2
+                        items={bySource}
+                        maxVisibleTags={1}
+                        getKey={(item) => item.source}
+                        renderItem={(item) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <Tag
-                                    className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                        setActiveDetail({
+                                            type: 'source',
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
+                                            targetId: item.source,
                                         })
                                     }
                                 >
@@ -349,8 +572,8 @@ export default function ReleasesRankingPage() {
                                     {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
-                        ))}
-                    </div>
+                        )}
+                    />
                 );
             },
         },
@@ -358,7 +581,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 120,
+            width: 80,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -369,7 +592,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.viewCount'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 150,
+            width: 120,
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -475,6 +698,7 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     ) : (
                         <Table<ReleaseRankingItem>
@@ -485,6 +709,7 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
+                            scroll={{ x: 'max-content' }}
                         />
                     )}
                     <AppPagination
@@ -505,31 +730,65 @@ export default function ReleasesRankingPage() {
                     />
                 </Card>
 
-                {detailModal.open && (
+                {activeDetail.type === 'release' && (
                     <DetailReleaseAnalyticsModal
-                        open={detailModal.open}
+                        open={true}
                         onClose={() =>
-                            setDetailModal((prev) => ({ ...prev, open: false }))
+                            setActiveDetail((prev) => ({ ...prev, type: null }))
                         }
-                        title={detailModal.title}
-                        releaseId={detailModal.releaseId}
+                        title={activeDetail.title}
+                        releaseId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
                         releaseType={releaseType}
                     />
                 )}
 
-                {detailSourceModal.open && (
+                {activeDetail.type === 'source' && (
                     <DetailSourceTypeAnalyticsModal
-                        open={detailSourceModal.open}
+                        open={true}
                         onClose={() =>
-                            setDetailSourceModal((prev) => ({
+                            setActiveDetail((prev) => ({
                                 ...prev,
-                                open: false,
+                                type: null,
                             }))
                         }
-                        title={detailSourceModal.title}
-                        sourceType={detailSourceModal.sourceType}
+                        title={activeDetail.title}
+                        sourceType={activeDetail.targetId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
+                    />
+                )}
+
+                {activeDetail.type === 'label' && (
+                    <DetailLabelAnalyticsModal
+                        open={true}
+                        onClose={() =>
+                            setActiveDetail((prev) => ({
+                                ...prev,
+                                type: null,
+                            }))
+                        }
+                        title={activeDetail.title}
+                        labelId={activeDetail.targetId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
+                    />
+                )}
+
+                {activeDetail.type === 'tenant' && (
+                    <DetailTenantAnalyticsModal
+                        open={true}
+                        onClose={() =>
+                            setActiveDetail((prev) => ({
+                                ...prev,
+                                type: null,
+                            }))
+                        }
+                        title={activeDetail.title}
+                        tenantId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
                         releaseType={releaseType}

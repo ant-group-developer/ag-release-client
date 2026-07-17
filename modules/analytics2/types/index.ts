@@ -1,5 +1,10 @@
-import { ReleasesData } from '@/modules/releases/types';
 import { ChannelsData } from '@/modules/channels/types';
+import {
+    MetadataExternal,
+    ReleasesData,
+    VideoData,
+} from '@/modules/releases/types';
+import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
 import { ANALYTICS_RELEASE_TYPE } from '../enums';
@@ -77,6 +82,9 @@ export interface TrackRankingItem {
     releaseTitle: string;
     totalViews: number;
     release?: ReleasesData;
+    labelId?: string;
+    labelName?: string;
+    metadataExternal?: MetadataExternal;
     bySource?: BySourceItem[];
 }
 
@@ -91,6 +99,9 @@ export interface ReleaseRankingItem {
     totalViews: number;
     release?: ReleasesData;
     bySource?: BySourceItem[];
+    workspaces?: TenantData[];
+    metadataExternal?: MetadataExternal;
+    video?: VideoData;
 }
 
 export interface ReleaseVideoRankingItem {
@@ -98,13 +109,15 @@ export interface ReleaseVideoRankingItem {
     releaseId: string;
     title: string;
     upc: string;
+    isrc?: string;
     labelId: string;
     labelName: string;
     trackCount: number;
     totalViews: number;
     channels: Pick<ChannelsData, 'id' | 'name'>[];
-    workspaces: Pick<TenantData, 'id' | 'name'>[];
+    workspaces: (Pick<TenantData, 'id' | 'name'> & { logo?: string | null })[];
     release?: Pick<ReleasesData, 'coverArtThumbnails'>;
+    video: VideoData;
 }
 
 export interface ArtistRankingItem {
@@ -151,12 +164,14 @@ export interface TenantRankingItem {
     logo: string | null;
     totalViews: number;
     bySource?: BySourceItem[];
+    type: TENANT_TYPE;
 }
 
 export interface ChannelRankingItem {
     rank: number;
     channelId: string;
     channelName: string;
+    youtubeChannelId?: string;
     thumbUrl?: string | null;
     totalViews: number;
     tenant?: TenantInfo | null;
@@ -252,12 +267,14 @@ export interface RevenueTenantItem {
     revenueUsd: number;
     quantity: number;
     bySource?: BySourceItem[];
+    type: TENANT_TYPE;
 }
 
 export interface RevenueChannelItem {
     rank: number;
     channelId: string;
     channelName: string;
+    youtubeChannelId?: string;
     thumbUrl?: string | null;
     revenueUsd: number;
     quantity: number;
@@ -296,6 +313,9 @@ export interface RevenueTrackItem {
     revenueUsd: number;
     quantity: number;
     release?: ReleasesData;
+    labelId?: string;
+    labelName?: string;
+    metadataExternal?: MetadataExternal;
     bySource?: BySourceItem[];
 }
 
@@ -344,7 +364,10 @@ export interface RevenueReleaseItem {
     revenueUsd: number;
     quantity: number;
     release?: ReleasesData;
+    workspace?: TenantData;
+    workspaces?: TenantData[];
     bySource?: BySourceItem[];
+    metadataExternal?: MetadataExternal;
 }
 
 export interface RevenueReleaseVideoItem {
@@ -352,14 +375,16 @@ export interface RevenueReleaseVideoItem {
     releaseId: string;
     title: string;
     upc: string;
+    isrc?: string;
     labelId: string;
     labelName: string;
     trackCount: number;
     revenueUsd: number;
     quantity: number;
     channels: Pick<ChannelsData, 'id' | 'name'>[];
-    workspaces: Pick<TenantData, 'id' | 'name'>[];
+    workspaces: (Pick<TenantData, 'id' | 'name'> & { logo?: string | null })[];
     release?: Pick<ReleasesData, 'coverArtThumbnails'>;
+    video: VideoData;
 }
 
 export interface RevenueLabelItem {
