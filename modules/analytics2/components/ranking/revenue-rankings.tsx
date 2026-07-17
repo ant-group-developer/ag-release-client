@@ -382,7 +382,7 @@ export default function RevenueRankings({
                             valueKey="revenueUsd"
                             defaultView={RankingCardView.LIST}
                             viewMoreHref={createViewMoreHref(
-                                APP_ROUTES.ANALYTICS_RELEASES,
+                                APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
                                 {
                                     fromDate,
                                     toDate,

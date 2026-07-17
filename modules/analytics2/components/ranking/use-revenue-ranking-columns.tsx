@@ -1,6 +1,7 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedNumber } from '@/helpers/common';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { Tooltip, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { RANK_COLUMN_WIDTH } from '../../constants/types';
@@ -344,14 +345,13 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: 'UPC',
-                dataIndex: 'upc',
-                key: 'upc',
+                title: 'ISRC',
+                key: 'isrc',
                 width: 220,
                 ellipsis: true,
-                render: (text: string) => (
+                render: (_: any, record: RevenueReleaseVideoItem) => (
                     <span className="truncate text-gray-500 dark:text-zinc-400">
-                        {text || '—'}
+                        {record.video?.isrc || record.upc || '—'}
                     </span>
                 ),
             },
@@ -361,11 +361,32 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 key: 'channels',
                 width: 220,
                 ellipsis: true,
-                render: (channels: { id: string; name: string }[]) => (
-                    <span className="truncate text-gray-600 dark:text-zinc-400">
-                        {channels?.map((c) => c.name).join(', ') || '—'}
-                    </span>
-                ),
+                render: (channels: { id: string; name: string }[]) => {
+                    if (!channels || channels.length === 0) return '—';
+                    return (
+                        <div className="flex flex-wrap gap-1.5">
+                            {channels.map((c) => (
+                                <CustomTooltip
+                                    key={c.id}
+                                    title={messages('common.detailedAnalysis')}
+                                >
+                                    <span
+                                        className="cursor-pointer transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                        onClick={() =>
+                                            setDetailModal({
+                                                type: ANALYTICS_MODAL_TYPE.CHANNEL,
+                                                title: c.name,
+                                                id: c.id,
+                                            })
+                                        }
+                                    >
+                                        {c.name}
+                                    </span>
+                                </CustomTooltip>
+                            ))}
+                        </div>
+                    );
+                },
             },
             {
                 title: messages('common.workspace'),
@@ -373,11 +394,43 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 key: 'workspaces',
                 width: 220,
                 ellipsis: true,
-                render: (workspaces: { id: string; name: string }[]) => (
-                    <span className="truncate text-gray-600 dark:text-zinc-400">
-                        {workspaces?.map((w) => w.name).join(', ') || '—'}
-                    </span>
-                ),
+                render: (workspaces: any[]) => {
+                    if (!workspaces || workspaces.length === 0) return '—';
+                    return (
+                        <div className="flex flex-col gap-2">
+                            {workspaces.map((w) => (
+                                <div
+                                    key={w.id}
+                                    className="flex items-center gap-2"
+                                >
+                                    <ReleaseCoverImage
+                                        width={32}
+                                        height={32}
+                                        src={w.logo}
+                                    />
+                                    <CustomTooltip
+                                        title={messages(
+                                            'common.detailedAnalysis'
+                                        )}
+                                    >
+                                        <span
+                                            className="cursor-pointer transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                            onClick={() =>
+                                                setDetailModal({
+                                                    type: ANALYTICS_MODAL_TYPE.TENANT,
+                                                    title: w.name,
+                                                    id: w.id,
+                                                })
+                                            }
+                                        >
+                                            {w.name}
+                                        </span>
+                                    </CustomTooltip>
+                                </div>
+                            ))}
+                        </div>
+                    );
+                },
             },
             {
                 title: messages('common.usage'),
@@ -689,10 +742,45 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
+                title: messages('common.youtubeChannelId'),
+                dataIndex: 'youtubeChannelId',
+                key: 'youtubeChannelId',
+                width: 180,
+                ellipsis: true,
+                render: (value: string) => {
+                    if (!value) return '—';
+                    return (
+                        <div className="flex items-center gap-1">
+                            <Tooltip title={messages('common.viewOnYoutube')}>
+                                <Typography.Link
+                                    href={`https://www.youtube.com/channel/${value}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="truncate hover:underline"
+                                >
+                                    {value}
+                                </Typography.Link>
+                            </Tooltip>
+                            <span
+                                className="inline-block align-middle"
+                                data-stop-row-click="true"
+                            >
+                                <Typography.Text
+                                    copyable={{
+                                        text: value,
+                                        tooltips: false,
+                                    }}
+                                />
+                            </span>
+                        </div>
+                    );
+                },
+            },
+            {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 150,
+                width: 110,
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -703,7 +791,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 150,
+                width: 110,
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}

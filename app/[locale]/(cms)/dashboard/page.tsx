@@ -173,7 +173,12 @@ function Dashboard({}: Props) {
                 /> */}
 
                 <div className="flex flex-col gap-4">
-                    <StatsOverview params={dataFilter} />
+                    <StatsOverview
+                        params={{
+                            fromDate,
+                            toDate,
+                        }}
+                    />
 
                     <ListRelease
                         data={releasesData.items.slice(0, 10)}

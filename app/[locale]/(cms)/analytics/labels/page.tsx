@@ -11,10 +11,9 @@ import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
 import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
-import {
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    RANK_COLUMN_WIDTH,
-} from '@/modules/analytics2/constants/types';
+import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
+import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
+import { ANALYTICS_RANKING_THUMBNAIL_SIZE, RANK_COLUMN_WIDTH } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import {
@@ -26,7 +25,7 @@ import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenu
 import { LabelRankingItem, RevenueLabelItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Segmented, Table, Tag, theme } from 'antd';
+import { Card, Segmented, Table, Tag, theme, Space, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -79,24 +78,14 @@ export default function LabelsRankingPage() {
         );
     }, [searchParams]);
 
-    const [detailModal, setDetailModal] = useState<{
-        open: boolean;
+    const [activeDetail, setActiveDetail] = useState<{
+        type: 'source' | 'label' | 'tenant' | null;
         title: string;
-        labelId: string;
+        targetId: string;
     }>({
-        open: false,
+        type: null,
         title: '',
-        labelId: '',
-    });
-
-    const [detailSourceModal, setDetailSourceModal] = useState<{
-        open: boolean;
-        title: string;
-        sourceType: string;
-    }>({
-        open: false,
-        title: '',
-        sourceType: '',
+        targetId: '',
     });
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
@@ -165,18 +154,18 @@ export default function LabelsRankingPage() {
                         className="aspect-square rounded-full object-cover"
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        <Typography.Text
+                            className="cursor-pointer transition-colors hover:text-blue-500"
                             onClick={() =>
-                                setDetailModal({
-                                    open: true,
+                                setActiveDetail({
+                                    type: 'label',
                                     title: text,
-                                    labelId: record.labelId,
+                                    targetId: record.labelId,
                                 })
                             }
                         >
-                            {text}
-                        </span>
+                            {text || '—'}
+                        </Typography.Text>
                     </CustomTooltip>
                 </div>
             ),
@@ -188,19 +177,37 @@ export default function LabelsRankingPage() {
             width: TENANT_COLUMN_WIDTH,
             ellipsis: true,
             render: (tenant: any) => {
-                if (!tenant) return '-';
+                const tenantName = tenant?.name;
+                if (!tenantName) {
+                    return (
+                        <Typography.Text className="truncate">
+                            {tenantName || '—'}
+                        </Typography.Text>
+                    );
+                }
                 return (
                     <div className="flex items-center gap-3">
                         <ImageFallback
                             src={tenant.logo ?? ''}
-                            alt={tenant.name ?? ''}
+                            alt={tenantName}
                             width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             className="aspect-square rounded-full object-cover"
                         />
-                        <span className="text-gray-900 dark:text-zinc-100">
-                            {tenant.name || '-'}
-                        </span>
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <Typography.Text
+                                className="cursor-pointer transition-colors hover:text-blue-500"
+                                onClick={() =>
+                                    setActiveDetail({
+                                        type: 'tenant',
+                                        title: tenantName,
+                                        targetId: tenant.id,
+                                    })
+                                }
+                            >
+                                {tenantName}
+                            </Typography.Text>
+                        </CustomTooltip>
                     </div>
                 );
             },
@@ -209,12 +216,15 @@ export default function LabelsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                    <PopoverTagsV2
+                        items={bySource}
+                        maxVisibleTags={2}
+                        getKey={(item) => item.source}
+                        renderItem={(item) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
@@ -222,18 +232,18 @@ export default function LabelsRankingPage() {
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                        setActiveDetail({
+                                            type: 'source',
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
+                                            targetId: item.source,
                                         })
                                     }
                                 >
                                     {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
-                        ))}
-                    </div>
+                        )}
+                    />
                 );
             },
         },
@@ -313,18 +323,18 @@ export default function LabelsRankingPage() {
                         className="aspect-square rounded-full object-cover"
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        <Typography.Text
+                            className="cursor-pointer transition-colors hover:text-blue-500"
                             onClick={() =>
-                                setDetailModal({
-                                    open: true,
+                                setActiveDetail({
+                                    type: 'label',
                                     title: text,
-                                    labelId: record.labelId,
+                                    targetId: record.labelId,
                                 })
                             }
                         >
-                            {text}
-                        </span>
+                            {text || '—'}
+                        </Typography.Text>
                     </CustomTooltip>
                 </div>
             ),
@@ -336,19 +346,37 @@ export default function LabelsRankingPage() {
             width: TENANT_COLUMN_WIDTH,
             ellipsis: true,
             render: (tenant: any) => {
-                if (!tenant) return '-';
+                const tenantName = tenant?.name;
+                if (!tenantName) {
+                    return (
+                        <Typography.Text className="truncate">
+                            {tenantName || '—'}
+                        </Typography.Text>
+                    );
+                }
                 return (
                     <div className="flex items-center gap-3">
                         <ImageFallback
                             src={tenant.logo ?? ''}
-                            alt={tenant.name ?? ''}
+                            alt={tenantName}
                             width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             className="aspect-square rounded-full object-cover"
                         />
-                        <span className="text-gray-900 dark:text-zinc-100">
-                            {tenant.name || '-'}
-                        </span>
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <Typography.Text
+                                className="cursor-pointer transition-colors hover:text-blue-500"
+                                onClick={() =>
+                                    setActiveDetail({
+                                        type: 'tenant',
+                                        title: tenantName,
+                                        targetId: tenant.id,
+                                    })
+                                }
+                            >
+                                {tenantName}
+                            </Typography.Text>
+                        </CustomTooltip>
                     </div>
                 );
             },
@@ -357,12 +385,15 @@ export default function LabelsRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 280,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
-                    <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                    <PopoverTagsV2
+                        items={bySource}
+                        maxVisibleTags={2}
+                        getKey={(item) => item.source}
+                        renderItem={(item) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
@@ -370,18 +401,18 @@ export default function LabelsRankingPage() {
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                        setActiveDetail({
+                                            type: 'source',
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
+                                            targetId: item.source,
                                         })
                                     }
                                 >
                                     {item.sourceLabel}: {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
-                        ))}
-                    </div>
+                        )}
+                    />
                 );
             },
         },
@@ -547,28 +578,51 @@ export default function LabelsRankingPage() {
                     />
                 </Card>
 
-                {detailModal.open && (
+                {activeDetail.type === 'label' && (
                     <DetailLabelAnalyticsModal
-                        open={detailModal.open}
+                        open={true}
                         onClose={() =>
-                            setDetailModal((prev) => ({ ...prev, open: false }))
+                            setActiveDetail((prev) => ({
+                                ...prev,
+                                type: null,
+                            }))
                         }
-                        title={detailModal.title}
-                        labelId={detailModal.labelId}
+                        title={activeDetail.title}
+                        labelId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
                         releaseType={releaseType}
                     />
                 )}
 
-                {detailSourceModal.open && (
+                {activeDetail.type === 'source' && (
                     <DetailSourceTypeAnalyticsModal
-                        open={detailSourceModal.open}
+                        open={true}
                         onClose={() =>
-                            setDetailSourceModal((prev) => ({ ...prev, open: false }))
+                            setActiveDetail((prev) => ({
+                                ...prev,
+                                type: null,
+                            }))
                         }
-                        title={detailSourceModal.title}
-                        sourceType={detailSourceModal.sourceType}
+                        title={activeDetail.title}
+                        sourceType={activeDetail.targetId}
+                        fromDate={dataFilter.startDate!}
+                        toDate={dataFilter.endDate!}
+                        releaseType={releaseType}
+                    />
+                )}
+
+                {activeDetail.type === 'tenant' && (
+                    <DetailTenantAnalyticsModal
+                        open={true}
+                        onClose={() =>
+                            setActiveDetail((prev) => ({
+                                ...prev,
+                                type: null,
+                            }))
+                        }
+                        title={activeDetail.title}
+                        tenantId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
                         releaseType={releaseType}

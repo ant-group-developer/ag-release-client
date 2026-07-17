@@ -305,27 +305,29 @@ export default function AnalyticsRankings({
                         )}
                     />
                 </Col>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
-                        title={topRankingTitle(messages('common.channel'))}
-                        columns={channelColumns}
-                        dataSource={channelRankingData?.items}
-                        loading={isChannelsFetching}
-                        rowKey="channelId"
-                        labelKey="channelName"
-                        valueKey="totalViews"
-                        defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_CHANNELS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
-                    />
-                </Col>
+                {releaseType == ANALYTICS_RELEASE_TYPE.VIDEO && (
+                    <Col span={12} xs={24} lg={12}>
+                        <RankingCard
+                            title={topRankingTitle(messages('common.channel'))}
+                            columns={channelColumns}
+                            dataSource={channelRankingData?.items}
+                            loading={isChannelsFetching}
+                            rowKey="channelId"
+                            labelKey="channelName"
+                            valueKey="totalViews"
+                            defaultView={RankingCardView.LIST}
+                            viewMoreHref={createViewMoreHref(
+                                APP_ROUTES.ANALYTICS_CHANNELS,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    type: ANALYTICS_VIEW_TYPE.VIEW,
+                                    releaseType,
+                                }
+                            )}
+                        />
+                    </Col>
+                )}
                 <Col span={12} xs={24} lg={12}>
                     <RankingCard
                         title={topRankingTitle(
@@ -363,7 +365,7 @@ export default function AnalyticsRankings({
                             valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
                             viewMoreHref={createViewMoreHref(
-                                APP_ROUTES.ANALYTICS_RELEASES,
+                                APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
                                 {
                                     fromDate,
                                     toDate,

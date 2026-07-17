@@ -1,7 +1,8 @@
 'use client';
 
-import { theme } from 'antd';
-import { DollarSign, ShoppingBag, TrendingUp } from 'lucide-react';
+import { getAvatarPlaceholder } from '@/helpers/common';
+import { Avatar, theme, Typography } from 'antd';
+import { Briefcase, DollarSign, ShoppingBag, TrendingUp } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface DetailStatsOverviewProps {
@@ -9,6 +10,11 @@ interface DetailStatsOverviewProps {
     salesViews?: number;
     revenueUsd?: number;
     isLoading: boolean;
+    workspace?: {
+        name: string;
+        logo?: string | null;
+    };
+    isWorkspaceLoading?: boolean;
 }
 
 export default function DetailStatsOverview({
@@ -16,6 +22,8 @@ export default function DetailStatsOverview({
     salesViews = 0,
     revenueUsd = 0,
     isLoading,
+    workspace,
+    isWorkspaceLoading,
 }: DetailStatsOverviewProps) {
     const messages = useTranslations();
     const { token } = theme.useToken();
@@ -47,8 +55,12 @@ export default function DetailStatsOverview({
         },
     ];
 
+    const gridColsClass = workspace
+        ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'
+        : 'grid grid-cols-1 gap-6 md:grid-cols-3';
+
     return (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className={gridColsClass}>
             {overviewCount.map((item, index) => {
                 const Icon = item.icon;
                 return (
@@ -79,6 +91,46 @@ export default function DetailStatsOverview({
                     </div>
                 );
             })}
+            {workspace && (
+                <div
+                    className="rounded-lg border border-gray-100 p-5 shadow-sm transition-all hover:shadow-md dark:border-zinc-800"
+                    style={{ backgroundColor: token.colorBgContainer }}
+                >
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-1 min-w-0 flex-1">
+                            <span className="text-xs font-medium uppercase text-gray-400 dark:text-zinc-500">
+                                {messages('tenant.label')}
+                            </span>
+                            {isWorkspaceLoading ? (
+                                <div className="mt-1 h-7 w-28 animate-pulse rounded bg-gray-200 dark:bg-zinc-700" />
+                            ) : (
+                                <div className="flex items-center gap-2 mt-1 min-w-0">
+                                    <Avatar
+                                        src={workspace.logo ?? undefined}
+                                        alt={workspace.name}
+                                        size={32}
+                                        shape="square"
+                                        className="flex-shrink-0"
+                                    >
+                                        {getAvatarPlaceholder(workspace.name)}
+                                    </Avatar>
+                                    <Typography.Text
+                                        strong
+                                        className="text-base truncate"
+                                    >
+                                        {workspace.name}
+                                    </Typography.Text>
+                                </div>
+                            )}
+                        </div>
+                        <div
+                            className="rounded-xl p-3 bg-blue-100/50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex-shrink-0"
+                        >
+                            <Briefcase size={24} />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

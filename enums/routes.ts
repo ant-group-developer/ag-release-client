@@ -58,6 +58,7 @@ export enum APP_ROUTES {
     ANALYTICS = '/analytics',
     ANALYTICS_TRACKS = '/analytics/tracks',
     ANALYTICS_RELEASES = '/analytics/releases',
+    ANALYTICS_VIDEO_RELEASES = '/analytics/video-releases',
     ANALYTICS_ARTISTS = '/analytics/artists',
     ANALYTICS_LABELS = '/analytics/labels',
     ANALYTICS_TENANTS = '/analytics/tenants',
