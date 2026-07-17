@@ -449,7 +449,7 @@ export default function ReleaseDistributionTable({
                     setSelectedRecord(null);
                 }}
                 footer={null}
-                width={1100}
+                width={'70vw'}
                 destroyOnClose
             >
                 <ImportTab data={selectedRecord?.importRawData} />
