@@ -66,7 +66,7 @@ export default function ReleasesTable({
     const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
         null
     );
-    const { isSystemTenant } = useAuth();
+    const { isSystemTenant, isAdmin } = useAuth();
     const { hasPermission } = usePermission();
     const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
     const canTakedown = hasPermission(PERMISSION.RELEASE_AUDIO.TAKE_DOWN);
@@ -194,7 +194,9 @@ export default function ReleasesTable({
                 <Filter
                     size={SIZE_ICON_SMALL}
                     style={{
-                        color: dataFilter.dspDelivery ? token.colorPrimary : undefined,
+                        color: dataFilter.dspDelivery
+                            ? token.colorPrimary
+                            : undefined,
                     }}
                 />
             ),
@@ -342,7 +344,9 @@ export default function ReleasesTable({
                             showDetail
                             showUpdate
                             showDelete={
-                                status === RELEASES_STATUS.DRAFT && canDelete
+                                (status === RELEASES_STATUS.DRAFT &&
+                                    canDelete) ||
+                                isAdmin
                             }
                             onShowDelete={() =>
                                 openModal(TYPE_MODAL_RELEASE.DELETE, record)
