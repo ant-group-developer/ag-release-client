@@ -97,7 +97,11 @@ export default function Analytics2Page() {
     };
 
     const { dataFilter, onChangeFilter } =
-        useFilter<Analytics2DataFilter>(defaultFilter);
+        useFilter<Analytics2DataFilter>({
+            ...defaultFilter,
+            startDate: searchParams.get('fromDate') || defaultFilter.startDate,
+            endDate: searchParams.get('toDate') || defaultFilter.endDate,
+        });
 
     const handleReleaseTypeChange = (type: ANALYTICS_RELEASE_TYPE) => {
         setReleaseType(type);
