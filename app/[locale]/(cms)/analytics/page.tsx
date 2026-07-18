@@ -12,6 +12,10 @@ import {
     Analytics2DataFilter,
     ExportReportJob,
 } from '@/modules/analytics2/types';
+import {
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_DEFAULT_END_DATE,
+} from '@/modules/analytics2/constants/types';
 import { DownloadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Radio, Space, theme } from 'antd';
@@ -21,11 +25,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const defaultFilter: Analytics2DataFilter = {
-    startDate: dayjs()
-        .subtract(12, 'month')
-        .startOf('month')
-        .format('YYYY-MM-DD'),
-    endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+    startDate: ANALYTICS_DEFAULT_START_DATE,
+    endDate: ANALYTICS_DEFAULT_END_DATE,
     releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
 };
 
