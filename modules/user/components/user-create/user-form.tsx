@@ -119,16 +119,7 @@ function UserForm({ isCreate, ...props }: Props) {
             </AppForm.Item>
 
             {isCreate && isSystemTenant && (
-                <AppForm.Item
-                    label={messages('tenant.label')}
-                    name="tenantId"
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.select'),
-                        },
-                    ]}
-                >
+                <AppForm.Item label={messages('tenant.label')} name="tenantId">
                     <TenantTreeSelect />
                 </AppForm.Item>
             )}
@@ -139,7 +130,7 @@ function UserForm({ isCreate, ...props }: Props) {
                     name={'tenantUserType'}
                     rules={[
                         {
-                            required: true,
+                            required: !isSystemTenant,
                             message: messages('validation.select'),
                         },
                     ]}
