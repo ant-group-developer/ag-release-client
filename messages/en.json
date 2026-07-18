@@ -3,6 +3,64 @@
         "title": "ANT Group",
         "description": "Together we will succeed"
     },
+    "landing": {
+        "heroTitle": "Global music distribution made simple and fast",
+        "heroSubtitle": "{appName} helps you release your music to Spotify, Apple Music, TikTok, and over 150 digital stores worldwide.",
+        "getStarted": "Get Started",
+        "digitalStores": "Digital Stores & DSPs",
+        "distributionUptime": "Distribution Uptime",
+        "tracksDistributed": "Tracks Distributed",
+        "automatedSupport": "Automated Support",
+        "featuresTitle": "Core Features",
+        "featuresSubtitle": "Everything you need to release and manage your music professionally",
+        "easyUpload": "Easy Upload",
+        "easyUploadDesc": "Upload releases, tracks, and manage your music assets in just a few steps.",
+        "smartDist": "Smart Distribution",
+        "smartDistDesc": "Distribute your music to the largest global DSPs automatically.",
+        "detailedAnalytics": "Detailed Analytics",
+        "detailedAnalyticsDesc": "Track streams, revenues, and artist growth trends visually.",
+        "howItWorksTitle": "Simple Workflow",
+        "howItWorksSubtitle": "Just 4 steps to deliver your music to millions of listeners worldwide",
+        "step1Title": "1. Sign Up & Upload",
+        "step1Desc": "Create your account quickly and upload your high-quality tracks to our system.",
+        "step2Title": "2. Quality & Metadata Check",
+        "step2Desc": "Our review team will inspect audio quality and ensure all copyright information is accurate.",
+        "step3Title": "3. Global Distribution",
+        "step3Desc": "Your music is automatically sent to Spotify, Apple Music, TikTok, and other major partners.",
+        "step4Title": "4. Earnings & Analytics",
+        "step4Desc": "Get detailed reports from every single store, withdraw your royalties securely.",
+        "platformsTitle": "Supported Platforms",
+        "platformsSubtitle": "Your music will be available on all leading streaming stores and social media apps",
+        "faqTitle": "Frequently Asked Questions",
+        "faqSubtitle": "Everything you need to know about distributing with {appName}",
+        "faqQ1": "How long does it take for my music to go live?",
+        "faqA1": "Our review process usually takes 1-3 business days. Once approved, your releases will typically appear on major stores within 24-48 hours.",
+        "faqQ2": "What audio and cover art formats do you accept?",
+        "faqA2": "We require high-quality WAV files (16-bit/44.1kHz or 24-bit). Cover art must be at least 3000x3000px in JPG or PNG format.",
+        "faqQ3": "How are royalties calculated and paid?",
+        "faqA3": "Royalties from streaming services are compiled monthly. You can withdraw your earnings directly to your bank account or PayPal once you meet the minimum threshold.",
+        "ctaTitle": "Ready to release your music globally?",
+        "ctaSubtitle": "Create an account today to start your professional distribution journey with {appName}.",
+        "ctaButton": "Start Distributing Now",
+        "navHome": "Home",
+        "navNews": "News",
+        "navDocs": "Documentation",
+        "newsTitle": "News",
+        "newsSubtitle": "Stay updated with the latest news, trends, and tutorials from {appName}",
+        "newsEmpty": "No posts found",
+        "newsEmptyDesc": "We will update the latest news here soon.",
+        "newsBadge": "News",
+        "newsReadMore": "Read more →",
+        "newsBackToList": "Back to list",
+        "newsNotFound": "Post not found",
+        "docsTitle": "Documentation Guides",
+        "docsSubtitle": "Find distribution guides, metadata rules, and detailed payment policies.",
+        "docsReadGuide": "Read Guide",
+        "docsLoading": "Loading documentation...",
+        "docsNoDataTitle": "No documentation available",
+        "docsNoDataDesc": "We will update the documentation guides here soon.",
+        "docsAllCategory": "All"
+    },
     "accessDenied": {
         "label": "Access denied",
         "title": "Looks like you don't have permission to access this page",
@@ -39,6 +97,8 @@
         },
         "forbiddenTitle": "You do not have access",
         "forbiddenDescription": "Please contact the Admin for more details",
+        "domain_restricted": "Account does not have permission to access this domain",
+        "domain_not_active": "This domain is not active",
         "message": {
             "error": {
                 "invalidCredentials": "Invalid email or password.",
@@ -64,6 +124,39 @@
         }
     },
     "common": {
+        "workspace": "Workspace",
+        "label": "Label",
+        "onlineLink": "Online Link",
+        "yes": "Yes",
+        "no": "No",
+        "back": "Back",
+        "youtubeId": "YouTube ID",
+        "youtubeChannelId": "YouTube Channel ID",
+        "viewOnYoutube": "View on YouTube",
+        "close": "Close",
+        "undetermined": "Undetermined",
+        "partly": "Partly",
+        "none": "None",
+        "select": "Select...",
+        "apply": "Apply",
+        "include": "Include",
+        "exclude": "Exclude",
+        "quickSelect": "Quick select",
+        "selectAll": "Select all",
+        "ownership": "Ownership",
+        "direct": "Direct",
+        "distributionMethod": "Distribution method",
+        "releaseVia": "Distributed via",
+        "others": "Others",
+        "save": "Save",
+        "viewXml": "View XML",
+        "regionCode": "Region Code",
+        "link": "Link",
+        "step": "Step",
+        "steps": "Steps",
+        "latestOnly": "Latest only",
+        "exportTemplate": "Export template",
+        "loading": "Loading",
         "incomplete": "Incomplete",
         "generate": "Generate",
         "privateKey": "Private key",
@@ -74,7 +167,9 @@
         "password": "Password",
         "users": "Users",
         "errors": "Errors",
+        "importedFromReport": "Imported from report",
         "contributors": "Contributors",
+        "listen": "Listen",
         "add": "Add",
         "information": "Information",
         "statistics": "Statistics",
@@ -82,6 +177,8 @@
         "pieChart": "Pie chart",
         "barChart": "Bar chart",
         "quantity": "Quantity",
+        "saleView": "Sale view",
+        "usage": "Usage",
         "tracks": "Tracks",
         "clearFilter": "Clear filter",
         "clearAll": "Clear all",
@@ -105,8 +202,19 @@
         "distribute": "Distribute",
         "preparingDownload": "Preparing download",
         "preparingDownloadDesc": "Process can take a few seconds, please wait",
+        "downloadReady": "Ready to download",
+        "exportReportCompressed": "{count} file compressed",
+        "exportReportFailed": "Export report failed",
+        "exportReportSuccess": "Success",
+        "cancelDownloadConfirmTitle": "Cancel download?",
+        "cancelDownloadConfirmContent": "Your download is not complete. Do you want to cancel the download?",
+        "continueDownload": "Continue downloading",
+        "cancelDownload": "Cancel download",
+        "collapse": "Collapse",
+        "expand": "Expand",
         "assets": "Assets",
         "streams": "Streams",
+        "viewCount": "Views",
         "success": "Success",
         "compare": "Compare",
         "isSongCreatedByAi": "Is a song created by AI",
@@ -127,6 +235,7 @@
         "settingNote": "Settings apply only to this browser",
         "value": "Value",
         "viewDetail": "View detail",
+        "detailedAnalysis": "Detailed analysis",
         "systemCategories": "System Categories",
         "category": "Category",
         "categories": "Categories",
@@ -169,26 +278,34 @@
         "role": "Role",
         "test": "Test",
         "platforms": "Platforms",
+        "dsps": "DSPs",
         "copyRight": "CopyRight",
         "language": "Language",
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
+        "containsLyrics": "Contains Lyrics",
+        "instrumental": "Instrumental",
         "releaseDate": "Release date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
         "processing": "Processing",
+        "progress": "Progress",
         "issues": "Issues",
         "neverDistributed": "Never distributed",
         "distributed": "Distributed",
         "takenDown": "Taken down",
         "minutes": "minutes",
         "hours": "hours",
+        "executionTime": "Execution time",
         "dateRelease": "Date release",
         "genres": "Genre",
         "track": "Track",
         "artist": "Artist",
+        "channel": "Channel",
         "release": "Release",
+        "releases": "Releases",
+        "releasesVideo": "Video releases",
         "plays": "Plays",
         "dark": "Dark",
         "light": "Light",
@@ -202,6 +319,8 @@
         "reviewer": "Reviewer",
         "lastTimeUpdated": "Last time updated",
         "refresh": "Refresh",
+        "retry": "Retry",
+        "resync": "Re-sync",
         "department": "Department",
         "icon": "Icon",
         "listLayout": "List layout",
@@ -211,6 +330,13 @@
         "color": "Color",
         "guide": "Guide",
         "exportExcel": "Export excel",
+        "exportReport": "Export report",
+        "export": "Export",
+        "import": "Import",
+        "time": "Time",
+        "modifyTime": "Modify time",
+        "importStatus": "Last import",
+        "importTime": "Import time",
         "copy": "Copy",
         "from": "from",
         "to": "to",
@@ -219,13 +345,17 @@
         "columnsDisplay": "Columns display",
         "all": "All",
         "cancel": "Cancel",
+        "confirm": "Confirm",
         "used": "Used",
         "notUsed": "Not used",
         "use": "Use status",
         "source": "Source",
+        "sourcePlatform": "Source",
+        "sourceType": "Source Type",
         "userUpload": "User upload",
         "imageAi": "Image AI",
         "thumbnail": "Thumbnail",
+        "thumbnailUrl": "Thumbnail URL",
         "historyUpload": "History upload",
         "hasNewData": "Has new data",
         "videoAndImage": "Video & Thumbnail",
@@ -252,6 +382,7 @@
         "remove": "Remove",
         "assignee": "Assignee",
         "image": "Image",
+        "audio": "Audio",
         "video": "Video",
         "type": "Type",
         "status": "Status",
@@ -261,15 +392,22 @@
         "description": "Description",
         "iNo": "No.",
         "update": "Update",
+        "bulkUpdate": "Bulk update",
+        "bulkCreate": "Bulk create",
+        "autoSyncCi": "Auto Sync CI",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
         "upload": "Upload",
+        "uploadError": "Upload Error",
         "uploadImage": "Upload image",
         "dateCreated": "Date created",
         "createdAt": "Created at",
+        "sentAt": "Sent at",
+        "startedAt": "Started at",
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
+        "completedAt": "Completed at",
         "removeFilter": "Remove filter",
         "filter": "Filters",
         "submit": "Submit",
@@ -281,10 +419,15 @@
         "next": "Next",
         "of": "of",
         "creator": "Creator",
+        "submitter": "Submitter",
         "yes": "Yes",
         "no": "No",
         "other": "Other",
         "review": "Review",
+        "needsReview": "Needs review",
+        "releaseReview": "Release review",
+        "hasError": "Pending fix",
+        "releaseError": "Release error",
         "comment": "Comment",
         "download": "Download",
         "code": "Code",
@@ -293,7 +436,30 @@
         "support": "Support",
         "email": "Email",
         "method": "Method",
-        "copied": "Copied"
+        "copied": "Copied",
+        "engagement": "Engagement",
+        "listeners": "Listeners",
+        "label": "Label",
+        "labels": "Labels",
+        "expandAll": "Expand all",
+        "collapseAll": "Collapse all",
+        "isrc": "ISRC",
+        "upc": "UPC",
+        "data": "Data",
+        "justNow": "just now",
+        "ago": "ago",
+        "systemReview": "System Review",
+        "logs": "Logs",
+        "drag": "Drag to reorder",
+        "errorList": "Error list",
+        "markAsResolved": "Mark as resolved",
+        "markAllAsResolved": "Mark all done",
+        "resolveAllErrorsConfirm": "Confirm all errors have been resolved, this action will update the error status",
+        "clickToUpdateErrorStatus": "Click here to update the status of this error",
+        "sortAsc": "Ascending",
+        "sortDesc": "Descending",
+        "sortOrder": "Sort order",
+        "sortField": "Sort by"
     },
     "country": {
         "label": "Country",
@@ -323,6 +489,8 @@
         "filterBy": "Filter by",
         "filterByValue": "Lọc theo {value}",
         "noMatchingFilter": "No matching filter",
+        "searchFilter": "Search filter...",
+        "activeFilterCount": "{count} filter(s) active",
         "hint": "Separated by commas",
         "last28Days": "Last 28 days",
         "filterComment": "Filter comment",
@@ -361,7 +529,6 @@
         "decreaseComparePercent": "Decrease {value}% compare to previous time",
         "exportStatisticOrder": "Export statistic order"
     },
-
     "product": {
         "label": "Product",
         "productManagement": "Product management",
@@ -370,7 +537,8 @@
             "createProductSuccessfully": "Create product successfully",
             "updateProductSuccessfully": "Update product successfully",
             "deleteProductSuccessfully": "Delete product successfully",
-            "areYouSureRemoveAssignee": "Are you sure you want to remove assignee ?"
+            "areYouSureRemoveAssignee": "Are you sure you want to remove assignee ?",
+            "orderProductNotFound": "Product not found"
         },
         "detailProduct": "Detail Product",
         "uploadProduct": "Upload Product",
@@ -380,7 +548,6 @@
         "groupUserAssignee": "Group user assignee",
         "statisticsByDepartment": "Product statistic by department"
     },
-
     "video": {
         "label": "Video",
         "thumbnail": "Thumbnail",
@@ -402,22 +569,34 @@
         "encoding": "Video Encoding",
         "tag": "Tags"
     },
-
     "dashboard": {
         "label": "Dashboard",
         "latestNews": "Latest news",
         "goTo": "Go to Dashboard",
-        "viewAllUpdates": "View all updates"
+        "viewAllUpdates": "View all updates",
+        "recentUpdates": "Recent Updates",
+        "stream_by_dsp": "Stream by DSP",
+        "stream_distribution_subtitle": "Streams distribution by platform in {year}",
+        "dsp_distribution_subtitle": "DSP distribution in {year}",
+        "label_distribution_subtitle": "Label distribution in {year}",
+        "artist_distribution_subtitle": "Artist distribution in {year}",
+        "recentReleases": "Recent releases",
+        "dspChartTitle": "DSP",
+        "dspChartSubtitle": "DSP distribution chart",
+        "labelChartTitle": "Label",
+        "labelChartSubtitle": "Label statistics chart",
+        "artistChartTitle": "Artist",
+        "artistChartSubtitle": "Artist statistics chart"
     },
     "review": {
         "message": {
             "createReviewSuccessfully": "Create review successfully",
             "updateReviewSuccessfully": "Update review successfully",
             "deleteReviewSuccessfully": "Delete review successfully",
+            "createReviewFailed": "Create review failed",
             "notAuthorizedToRate": "Not authorized to rate"
         }
     },
-
     "image": {
         "label": "Image",
         "dimensions": "Dimensions",
@@ -435,6 +614,7 @@
         "select": "Select asset"
     },
     "setting": {
+        "activeBackup": "Active backup",
         "settings": "Settings",
         "label": "Setting",
         "telegramSupportLink": "Telegram support link",
@@ -456,10 +636,33 @@
             "nMinutes": "Starting at minute 0 of each hour and executed every {minutes} minutes",
             "weekly": "{hours}:{minutes} of {dayOfWeek} once a week",
             "monthly": "Executed once a month on {days} of {hours}:{minutes}"
+        },
+        "ciTemplate": {
+            "currentFile": "Current CI Template file",
+            "excelDataStartRow": "Excel data start row"
         }
     },
     "log": {
-        "label": "Log"
+        "label": "Log",
+        "logs": "Logs",
+        "level": {
+            "success": "Success",
+            "log": "Log",
+            "warning": "Warning",
+            "error": "Error"
+        },
+        "type": {
+            "business": "Business",
+            "system": "System"
+        },
+        "columns": {
+            "level": "Level",
+            "type": "Type",
+            "module": "Module",
+            "releaseSubmitId": "Release Submit ID",
+            "releaseSubmitStepId": "Release Submit Step ID",
+            "dataDetail": "Data Detail"
+        }
     },
     "language": {
         "english": "English",
@@ -489,9 +692,34 @@
         }
     },
     "channel": {
-        "code": "Channel code",
+        "add": "Add channel",
         "label": "Channel",
-        "name": "Channel name"
+        "name": "Channel name",
+        "existedOnVevoBackstage": "Existed on Vevo Backstage",
+        "youtubeChannelId": "YouTube channel ID",
+        "validation": {
+            "nameFormat": "Channel name can only contain letters and numbers, and must end with VEVO."
+        },
+        "message": {
+            "success": {
+                "create": "Add new channel successfully",
+                "update": "Update channel successfully",
+                "delete": "Delete channel successfully"
+            },
+            "error": {
+                "duplicateNameChannel": "This channel name already exists",
+                "duplicateChannelOnVevo": "This channel already exists on Vevo",
+                "channelCreateRequestExistsOnVevo": "A channel creation request already exists on Vevo"
+            }
+        },
+        "status": {
+            "REQUESTED": "Requested",
+            "PROCESSING": "Processing",
+            "SUCCESS": "Success",
+            "FAILED": "Failed",
+            "PENDING": "Pending",
+            "ERROR": "Error"
+        }
     },
     "system": {
         "label": "System",
@@ -500,8 +728,23 @@
             "description": "An unexpected error has occurred. Please try again later."
         }
     },
+    "youtubeKeys": {
+        "label": "Youtube Keys",
+        "alias": "Alias",
+        "apiKey": "API Key",
+        "keyHint": "Key Hint",
+        "status": "Status",
+        "dailyQuotaLimit": "Daily Quota Limit",
+        "unitsConsumedToday": "Units Consumed Today",
+        "unitsRemaining": "Units Remaining",
+        "lastResetAt": "Last Reset At",
+        "lastUsedAt": "Last Used At",
+        "lastError": "Last Error",
+        "consecutiveErrorCount": "Consecutive Error Count"
+    },
     "validation": {
         "error": "Validation errors",
+        "missingRequiredFields": "Please fill in all required fields",
         "noError": "No validation errors",
         "emailFormat": "Please enter a valid email!",
         "select": "Please select information!",
@@ -509,6 +752,7 @@
         "input": "Please enter information!",
         "file": "File is required!",
         "url": "Please enter a valid link format!",
+        "youtubeIdFormat": "YouTube ID must be exactly 11 characters and contain no special characters",
         "passwordMisMatch": "Password mis match!",
         "passwordFormat": "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number.",
         "unique": "Data must not be duplicated",
@@ -516,6 +760,7 @@
         "min": "Must be min {number} characters",
         "minValid": "Must be min {number} valid characters",
         "max": "Must be less than {number} characters",
+        "fileNameTooLong": "File name must not exceed 80 characters",
         "image": "Please select a image file",
         "video": "Please select a video file",
         "phoneNumber": "Phone number must be 10 digits",
@@ -526,6 +771,7 @@
         "required": "Please enter your {field}.",
         "stringMin": "{field} must have at least {min} characters.",
         "stringMax": "{field} can have up to {max} characters only.",
+        "mustBeLength": "{field} Must be {number} characters",
         "numberMin": "{field} must be at least {min}.",
         "numberMax": "{field} must not exceed {max}.",
         "invalidType": "{field} must be a valid value.",
@@ -539,7 +785,7 @@
         "select": "Select {value}",
         "selectRelease": "Select release",
         "selectTrack": "Select track",
-        "selectDsp": "Select dsp",
+        "selectDsp": "Select DSP",
         "dragAndDropAudio": "Drag and drop audio file here!",
         "dragAndDropFile": "Drag and drop file here!",
         "selectArtist": "Select artist",
@@ -553,6 +799,9 @@
         "label": "Status",
         "active": "Active",
         "inActive": "Inactive",
+        "enable": "Enable",
+        "disable": "Disable",
+        "disabled": "Disabled",
         "on": "On",
         "off": "Off",
         "block": "Blocked",
@@ -604,18 +853,23 @@
             "label": "Second"
         },
         "selectDate": "Select date",
+        "lastDays": "Last {days} days",
+        "customRange": "Custom range",
         "last7Days": "Last 7 days",
         "lastMonth": "Last month",
         "lastYear": "Last year",
         "last5Year": "Last 5 years",
         "thisMonth": "This month",
-        "thisYear": "This year"
+        "thisYear": "This year",
+        "thisWeek": "This week",
+        "lifetime": "Lifetime"
     },
     "message": {
         "createSuccessfully": "Create successfully!",
         "deleteSuccessfully": "Delete successfully!",
         "somethingWentWrong": "Something went wrong!",
         "updateSuccessfully": "Update successfully!",
+        "syncSuccessfully": "Synced successfully!",
         "eachLanguageCanOnlyHaveOneFile": "Each language can only have 1 file.",
         "pleaseLoginChannelAgain": "Please login again to get new token",
         "dataAlreadyExists": "Data already exists",
@@ -629,7 +883,8 @@
         "clickToShowFilters": "Click to show filters",
         "openNewTab": "Open new tab",
         "ifVideoNotProcessed": "If the video is not processed yet, please download it for use.",
-        "exportExcelFailed": "Export excel failed"
+        "exportExcelFailed": "Export excel failed",
+        "jobIsProcessing": "Job is processing, will be completed in a few minutes"
     },
     "userProfile": {
         "logout": "Log out"
@@ -689,7 +944,13 @@
             }
         },
         "grantPermission": {
-            "label": "Grant permisson"
+            "label": "Grant permisson",
+            "systemTenantAlert": "Role assignment is not applicable within the System Tenant.",
+            "systemAdminAlert": "This user is a System Admin and automatically inherits all active capabilities.",
+            "tenantOwnerAlert": "This user is a Tenant Owner/Admin and automatically inherits all active capabilities.",
+            "disabledTooltip": "Role assignment is disabled in this context.",
+            "noTenants": "This user is not assigned to any workspace.",
+            "selectWorkspaceHint": "Please select a workspace to view or manage this user's roles and permissions."
         },
         "update": {
             "tenant": {
@@ -751,20 +1012,67 @@
             "updateSuccessfully": "Update successfully!"
         }
     },
-
     "select": {
         "date": "Select date",
         "approver": "Select approver",
         "option": "Please select options"
     },
-
     "theme": {
         "dark": "Dark",
         "light": "Light",
         "system": "System"
     },
-
     "release": {
+        "excludeTitle": "Exclude releases",
+        "excludeSearchEmptyText": "Search for releases to exclude",
+        "excludeAlertMsg": "Selected to exclude <b>{count}</b> releases",
+        "takeDown": "Take down",
+        "takeDownConfirmTitle": "Take down release?",
+        "takeDownConfirmContent": "Are you sure you want to take down the release <b>{title}</b> ?",
+        "exportCiTemplate": "Export CI template",
+        "bulkSubmit": "Bulk Submit",
+        "autoSubmitUndistributedMusic": "Auto Submit",
+        "previewAutoSubmitUndistributedMusic": "Review Auto Submit",
+        "autoSubmitDspTab": "DSPs",
+        "autoSubmitOptionsTab": "Options",
+        "autoSubmitPreviewTotal": "Matched {count} releases",
+        "autoSubmitV2": {
+            "title": "Auto release",
+            "selectedCount": "Selected {count} releases",
+            "submitConfig": "Submit configuration",
+            "config": "Configuration",
+            "previewData": "Preview data",
+            "needImportAgain": "Import CI data again",
+            "reImportCi": "Re-import CI",
+            "noReImportCi": "Don't re-import CI",
+            "skipDistributed": "Skip distributed releases",
+            "dspLockedTooltip": "This distribution platform is locked and cannot receive releases",
+            "live": "Live",
+            "notLive": "Not Live",
+            "currentStatus": "Current status",
+            "targetStatus": "Target status",
+            "dataSubmit": "Data submit"
+        },
+        "bulkSubmitConfirm": "Are you sure you want to submit {count} selected releases?",
+        "bulkDelete": "Bulk Delete",
+        "bulkDeleteConfirm": "Are you sure you want to delete {count} selected releases?",
+        "deleteReport": {
+            "button": "Delete report",
+            "title": "Delete report releases",
+            "submit": "Delete report",
+            "importSourceType": "Import source type",
+            "deleteAll": "Delete all",
+            "fromDatePlaceholder": "2026-01-01T08:30",
+            "toDatePlaceholder": "2026-01-31T23:59",
+            "fileNamePlaceholder": "wmg-sales-2026-01.csv",
+            "matchedReleases": "Matched releases",
+            "matchedTracks": "Matched tracks"
+        },
+        "onlyDraftCanBeDeleted": "Only releases in Draft status can be deleted.",
+        "dspLive": "DSPs live",
+        "audioLanguage": "Audio language",
+        "metadataLanguageCountry": "Metadata language country",
+        "metadataLanguage": "Metadata language",
         "uploadTemplateSuccess": "Upload template successfully",
         "uploadTemplateError": "Upload template failed",
         "importTemplate": "Import template",
@@ -774,31 +1082,110 @@
         "releases": "Releases",
         "count": "Releases count",
         "configuration": "Release configuration",
+        "classificationInfo": "Release configuration",
+        "upcCatalogCode": "UPC & Catalog ID",
         "otherMetadata": "Other metadata",
         "label": "Release",
+        "creationSource": "Creation Source",
+        "importedFromReport": "Imported from report",
+        "createdDirectly": "Created directly",
+        "routeLabel": "Music releases",
+        "releaseDistribution": "Release Distribution",
+        "releaseDistributionRouteLabel": "Release Distribution",
         "create": "Create release",
         "latestReleases": "Latest releases",
         "name": "Release name",
         "id": "Release ID",
         "type": "Release type",
         "releaseDate": "Release date",
+        "releaseOriginalDate": "Original release date",
+        "releaseEndDate": "Release take down date",
         "releaseTime": "Release time",
         "duration": "Duration",
         "trackCount": "Track count",
         "publisher": "Publisher release",
         "createArtist": "Create artist",
+        "createLabel": "Create label",
         "labelName": "Label name",
         "version": "Version",
         "role": "Role",
         "back": "Back to releases list",
         "isMoreThan4Artists": "Is more than 4 artists",
+        "overview": {
+            "albumLink": "Album link",
+            "releaseInfo": "Release information",
+            "releaseArtists": "Release artists",
+            "releaseContributors": "Release contributors",
+            "releaseTitle": "Release Title",
+            "titleVersion": "Title Version",
+            "mainPrimaryArtist": "Main Primary Artist",
+            "keyArtists": "Key Artists",
+            "producersEngineers": "Producers & Engineers",
+            "spotifyAlbumId": "Spotify album ID",
+            "spotifyAlbumUrl": "Spotify album URL",
+            "primaryInfo": "Primary information",
+            "primaryReleaseId": "Primary release ID",
+            "uri": "URI",
+            "originalReleaseDate": "Original release date",
+            "includedMedia": "Included media",
+            "audio": "Audio",
+            "releaseIdentifiers": "Release identifiers",
+            "upc": "UPC",
+            "mainArtistUri": "Main artist URI",
+            "url": "URL",
+            "releaseType": "Release type",
+            "single": "Single",
+            "labelInfo": "Label information",
+            "label": "Label",
+            "feedName": "Feed name",
+            "pLine": "P line",
+            "licensor": "Licensor",
+            "cLine": "C line",
+            "courtesyLine": "Courtesy line",
+            "platformLinks": "Platform links",
+            "onlineLinks": "Platform links",
+            "videoInfo": "Video info",
+            "releaseId": "Release ID",
+            "version": "Version",
+            "catalogId": "Catalog ID",
+            "primaryGenre": "Primary genre",
+            "secondaryGenre": "Secondary Genre",
+            "subGenre": "Sub genre",
+            "isVariousArtist": "Various Artists compilation",
+            "isInstrumental": "Instrumental",
+            "metadataLanguage": "Metadata language",
+            "audioLanguage": "Audio language",
+            "metadataLanguageCountry": "Metadata country language",
+            "releaseDate": "Release date",
+            "releaseTime": "Release time",
+            "timezone": "Timezone",
+            "territory": "Distribute territory"
+        },
         "select": {
             "artist": "Select artist",
             "subArtist": "Select sub artist"
         },
         "cLineYearDescription": "The first year this version was released anywhere in the world.",
         "pLineYearDescription": "The first year this recording was released worldwide.",
-
+        "countryLanguage": "Country language",
+        "syncToTracks": {
+            "button": "Sync data",
+            "title": "Sync data to tracks",
+            "description": "Selected data will be synced to all tracks.",
+            "emptyValue": "No data",
+            "dataColumn": "Data",
+            "currentValueColumn": "Current value",
+            "primaryGenre": "Primary genre",
+            "subGenre": "Sub genre",
+            "language": "Language",
+            "pCopyright": "P copyright",
+            "artists": "Artists",
+            "contributors": "Contributors",
+            "validation": {
+                "selectAtLeastOne": "Please select at least one data field to sync",
+                "releaseNotFound": "Release id not found"
+            }
+        },
         "placeholder": {
             "selectArtist": "Select artist",
             "selectSubArtist": "Select sub artist",
@@ -810,24 +1197,29 @@
             "selectRole": "Select role",
             "selectMusician": "Select musician",
             "selectLanguageMetadata": "Select language metadata",
+            "select": "Select {value}",
+            "selectDsp": "Select DSP",
+            "selectRelease": "Select release",
+            "selectTrack": "Select track",
             "enterTitleAndReleaseType": "Enter release name, label and release type to continue"
         },
-
         "validation": {
             "mustHaveMainArtist": "Release must have a main artist"
         },
-
         "scheduling": {
             "label": "Scheduling",
             "atMidnightInEveryCountry": "At midnight in every country around the world",
             "atSpecificTime": "At a specific time in a specific time zone",
             "goLiveTime": "What time would you like it to go live"
         },
-
         "coverArt": {
             "label": "Cover art",
             "required": "Required cover art",
-            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels"
+            "requirements": "Cover Art Requirements",
+            "size": "Perfectly Square image from 1400x1400 pixels to 4000x4000 pixels",
+            "resolution": "Resolution of at least 300 DPI",
+            "format": "Image Format of .jpg in RGB color mode (not CMYK)",
+            "layered": "IMPORTANT: Layered files or files with alpha color channels are NOT ACCEPTED"
         },
         "message": {
             "success": {
@@ -840,9 +1232,116 @@
             "submit": "Submit release",
             "edit": "Edit release",
             "completeTheTask": "Complete the task"
+        },
+        "status": {
+            "draft": "Draft",
+            "issues": "Issues",
+            "processing": "Processing",
+            "partially_distributed": "Partially distributed",
+            "awaiting_action": "Awaiting action",
+            "taken_down": "Taken down",
+            "distributed": "Distributed",
+            "never_distributed": "Never distributed",
+            "label": "Release status",
+            "submitted": "Submitted",
+            "partially_failed": "Partially failed",
+            "failed": "Failed"
+        },
+        "statusV2": {
+            "draft": "Editing",
+            "issues": "ALL failed",
+            "processing": "Being handled",
+            "partially_distributed": "Some DSPs live, some failed",
+            "awaiting_action": "Awaiting action",
+            "taken_down": "Removed",
+            "distributed": "Live on DSPs",
+            "never_distributed": "Never distributed",
+            "submitted": "Submitted",
+            "partially_failed": "Partially failed",
+            "partial_done": "Partial done",
+            "failed": "Failed"
+        },
+        "releaseError": "Release error",
+        "error": {
+            "description": "Error description",
+            "submissionStatusLabel": "Submission Status",
+            "approvalStatusLabel": "Approval Status",
+            "submissionStatus": {
+                "OPEN": "Open",
+                "FIXED": "Fixed"
+            },
+            "approvalStatus": {
+                "PENDING": "Pending",
+                "APPROVED": "Approved",
+                "REJECTED": "Rejected"
+            },
+            "type": {
+                "ADMIN_CREATE": "Admin Created",
+                "IMPORT_CI": "Import CI",
+                "QA_FLAG_CI": "QA Flag CI"
+            }
+        },
+        "systemReview": {
+            "title": "Approve Release",
+            "executionNote": "* Note: Upon approval, the release will be verified as eligible and sent to the processing pipeline for compression and DDEX metadata delivery to the selected DSPs.",
+            "confirmApproveWithErrors": "Warning: The release still has unresolved errors!",
+            "confirmApprove": "Confirm execution approval?",
+            "confirmApproveDescWithErrors": "The system detected unresolved quality errors. Are you sure you still want to approve this release?",
+            "confirmApproveDesc": "This action will approve the release and start the music delivery process.",
+            "stillApprove": "Still approve",
+            "approve": "Approve execution",
+            "reject": "Reject approval",
+            "approveSuccess": "Release approved and executed successfully!",
+            "rejectSuccess": "Release execution rejection status updated.",
+            "historyTitle": "Release review history",
+            "rejectModal": {
+                "title": "REJECT RELEASE EXECUTION",
+                "confirmReject": "Confirm Rejection",
+                "description": "Please enter the reason for rejecting approval. This reason will be recorded in the system history and sent as a notification to the release owner.",
+                "reasonLabel": "Rejection Reason",
+                "reasonRequired": "Please enter the rejection reason!",
+                "reasonPlaceholder": "Example: Track 1 has a serious copyright conflict with work already distributed on YouTube ContentID..."
+            },
+            "errorsCard": {
+                "title": "Release errors ({count})",
+                "addError": "Add error",
+                "qualityPassed": "No moderation errors",
+                "qualityPassedDesc": "No moderation errors from admins or distribution systems."
+            },
+            "createErrorsModal": {
+                "title": "Add release error",
+                "submit": "Create error",
+                "required": "Please enter error description",
+                "placeholder": "Enter error description",
+                "addErrorRow": "Add error row"
+            },
+            "acrCloudCard": {
+                "title": "ARC COPYRIGHT SCAN RESULTS (ACRCLOUD DATA)",
+                "loading": "Loading track list...",
+                "description": "The system automatically performs audio matching for each track in the Release with the ACRCloud global copyright database.",
+                "noTracks": "Music copyright check passed",
+                "noTracksDesc": "Excellent! No copyright issues or audio fingerprint matches detected for the tracks in this release."
+            }
         }
     },
-
+    "releaseDsp": {
+        "status": {
+            "draft": "Draft",
+            "processing": "Processing",
+            "issues": "Issues",
+            "never_distributed": "Never distributed",
+            "distributed": "Distributed",
+            "taken_down": "Taken down"
+        },
+        "dspStatus": "DSP status",
+        "dspFilter": "DSP filter",
+        "dspDirect": "DSP direct",
+        "dspCi": "DSP CI",
+        "dspState51": "DSP State51",
+        "excludeLockedDsp": "Exclude locked DSPs",
+        "clearDspStatus": "Clear DSP status",
+        "showAppliedDspOnly": "Show applied DSPs only"
+    },
     "releaseArtist": {
         "label": "Release artists",
         "message": {
@@ -856,7 +1355,6 @@
             }
         }
     },
-
     "releaseContributor": {
         "message": {
             "error": {
@@ -864,11 +1362,9 @@
             }
         }
     },
-
     "releaseType": {
         "label": "Release type"
     },
-
     "albumFormat": {
         "message": {
             "success": {
@@ -884,8 +1380,16 @@
             }
         }
     },
-
     "track": {
+        "metadataExternal": "External Metadata",
+        "dsp": "Platform",
+        "externalId": "Album ID",
+        "albumUrl": "Album URL",
+        "trackUrl": "Track URL",
+        "externalUrl": "URL",
+        "coverArt": "Cover Art",
+        "lastSyncedAt": "Last Synced At",
+        "parentalAdvisoryNotice": "Parental advisory notice",
         "list": "Track list",
         "number": "Track number",
         "add": "Add track",
@@ -933,7 +1437,9 @@
             "unknown": "Unknown"
         },
         "action": {
-            "deleteTracks": "Delete tracks"
+            "deleteTracks": "Delete tracks",
+            "bulkUpdate": "Bulk Update",
+            "bulkUpdateDescription": "Check the fields you want to update. Only checked fields will be applied to all selected tracks."
         },
         "original": {
             "label": "Original Work",
@@ -959,8 +1465,14 @@
         "validation": {
             "previewMustBeLessThanDuration": "Preview duration must be less than track duration",
             "sampleLengthMustBeLessThanDuration": "Sample length must be less than track duration",
+            "sampleExceedsDuration": "Sum of Sample length & Hook can't be longer than audio length",
             "trackUpload": "{type} can upload a maximum of {maxCount} track",
-            "trackFileName": "File name cannot over {number} characters"
+            "trackFileName": "File name cannot over {number} characters",
+            "bitDepth16": "BitDepth must be 16bit",
+            "sampleRate44100": "SampleRate must be 44100Hz",
+            "bitDepth16Or24": "BitDepth must be 16bit or 24bit",
+            "sampleRate44100Or48000": "SampleRate must be 44100Hz or 48000Hz",
+            "invalidAudioCombination": "Audio specifications must be 16bit - 44100Hz or 24bit - 48000Hz"
         },
         "acrCloud": {
             "compareResult": "Select results to compare"
@@ -976,7 +1488,6 @@
             }
         }
     },
-
     "trackArtist": {
         "message": {
             "success": {
@@ -990,7 +1501,6 @@
             }
         }
     },
-
     "trackType": {
         "label": "Track type",
         "description": "Designates the track as a musical or non-musical work.",
@@ -1007,7 +1517,6 @@
             }
         }
     },
-
     "trackOriginType": {
         "label": "Track original",
         "value": "Value",
@@ -1024,13 +1533,12 @@
             }
         }
     },
-
     "trackSensitive": {
         "label": "Sensitive Content",
-        "explicitContentEdited": "Explicit content (edited)",
-        "notExplicit": "Not explicit",
-        "noAdviceAvailable": "No advice available",
-        "parentalAdvisory": "Parental advisory",
+        "explicitContentEdited": "Explicit Content (edited)",
+        "notExplicit": "Not Explicit",
+        "noAdviceAvailable": "No Advice Available",
+        "parentalAdvisory": "Parental Advisory",
         "name": "Name sensitive content",
         "message": {
             "success": {
@@ -1046,7 +1554,6 @@
             }
         }
     },
-
     "genres": {
         "name": "Genre name",
         "pop": "Pop",
@@ -1076,11 +1583,142 @@
             "error": {
                 "duplicateNameGenre": "This genres already exist",
                 "duplicateCodeGenre": "This code genre already exist",
+                "cannotDeleteBecauseLinkedReleases": "Cannot delete this genre because it is linked to releases",
                 "cannotDeleteBecauseLinkedPrimaryReleases": "Cannot delete this genre because it is linked to primary releases",
                 "cannotDeleteBecauseLinkedSubReleases": "Cannot delete this genre because it is linked to sub releases",
                 "cannotDeleteBecauseLinkedPrimaryTracks": "Cannot delete this genre because it is linked to primary tracks",
                 "cannotDeleteBecauseLinkedSubTracks": "Cannot delete this genre because it is linked to sub tracks"
             }
+        }
+    },
+    "releaseVideo": {
+        "label": "Release videos",
+        "routeLabel": "Video releases",
+        "title": "Release video",
+        "add": "Add Release video",
+        "youtubeIdOverrideConfirm": "This action will override the YouTube ID automatically sent by the partner. Are you sure you want to continue?",
+        "youtubeIdEditManual": "Edit manually",
+        "youtubeIdPreview": "Preview on YouTube",
+        "fields": {
+            "videoTitle": "Video title",
+            "isrc": "ISRC",
+            "primaryArtists": "Primary artist(s)",
+            "primaryArtistsPlaceholder": "Type primary artists and press Enter",
+            "featuredArtists": "Featured artist(s)",
+            "featuredArtistsPlaceholder": "Type featured artists and press Enter",
+            "genre": "Genre",
+            "genres": "Genre(s)",
+            "genresPlaceholder": "Type genres and press Enter",
+            "contentProvider": "Content provider",
+            "repertoireOwner": "Repertoire owner",
+            "channel": "Channel",
+            "keywords": "Keywords",
+            "keywordsPlaceholder": "Type keywords and press Enter",
+            "isExplicit": "Explicit content",
+            "containsAiContent": "Contains AI content",
+            "isMadeForKids": "Made for kids",
+            "videoTitlePlaceholder": "Add a title",
+            "isrcPlaceholder": "Your ISRC",
+            "upc": "UPC",
+            "videoVersion": "Video version",
+            "partnerCustomId1": "Partner custom ID 1",
+            "partnerCustomId2": "Partner custom ID 2",
+            "credits": "Credits",
+            "composers": "Composer(s)",
+            "editors": "Editor(s)",
+            "producers": "Producer(s)",
+            "directors": "Director(s)",
+            "copyright": "Copyright",
+            "copyrightYear": "Copyright year",
+            "visibility": "Visibility",
+            "selectVisibility": "Select visibility...",
+            "visibilityDefault": "Default",
+            "unlistedOnYoutube": "Unlisted on YouTube",
+            "unlistedOnVevo": "Unlisted on Vevo",
+            "unlistedOnYoutubeVevo": "Unlisted on YouTube/Vevo",
+            "assets": "Assets",
+            "noVideoSelected": "No video selected",
+            "videoFile": "Video file",
+            "videoFileName": "{title} video",
+            "videoNotUploaded": "Video has not been uploaded",
+            "invalidVideoFile": "Please select a valid video file",
+            "thumbnailFile": "Thumbnail file",
+            "thumbnailFileName": "{title} thumbnail",
+            "thumbnailNotUploaded": "Thumbnail has not been uploaded",
+            "captionsAndSubtitles": "Captions and subtitles",
+            "manage": "Manage",
+            "captionFilesSummary": "{captionCount} caption files. {subtitleCount} subtitle files.",
+            "channelDefault": "Channel Default",
+            "collaboratingChannels": "Collaborating channels",
+            "manageCollaborators": "Manage collaborators",
+            "roleNotFound": "Role not found"
+        },
+        "tabs": {
+            "details": "Details",
+            "additional": "Additional",
+            "distribution": "Distribution",
+            "submits": "Submit logs"
+        },
+        "additionalTitle": "Additional Metadata",
+        "additionalDesc": "Configure advanced options, alternative titles, or supplementary tags.",
+        "distributionTitle": "Distribution Target",
+        "distributionDesc": "Select platforms, regions, and release window for the video.",
+        "requirements": {
+            "title": "Video Specifications & Requirements",
+            "format": "Format: MP4, MOV, MKV (H.264 / AAC / ProRes)",
+            "ratio": "Aspect Ratio: 16:9 (Horizontal) or 9:16 (Vertical)",
+            "resolution": "Resolution: 1080p (Full HD) up to 4K (UHD)",
+            "audio": "Audio specs: Stereo, 48kHz, 320kbps or higher",
+            "size": "Max File Size: 5 GB",
+            "tip": "Tip: Maintain the best video and audio quality to optimize distribution across all delivery channels."
+        },
+        "captions": {
+            "title": "Captions and subtitles",
+            "description": "Captions are in the video's language of performance.",
+            "descriptionSubtitle": "Subtitles are in languages other than the audio language of the video.",
+            "tabs": {
+                "captions": "Captions",
+                "subtitles": "Subtitles"
+            },
+            "uploadModal": {
+                "titleEdit": "Edit {type} file",
+                "titleUpload": "Upload {type} file",
+                "caption": "caption",
+                "subtitle": "subtitle",
+                "description": "Only one {type} file is allowed and must be in the language of the video.",
+                "selectFile": "Select file (.ttml or .srt)",
+                "fileRequired": "Please select a file",
+                "language": "Language",
+                "languageRequired": "Please select a language",
+                "select": "Select..."
+            },
+            "table": {
+                "language": "Language",
+                "file": "File",
+                "actions": "Actions",
+                "emptySubtitles": "No subtitles available",
+                "emptyCaptions": "No captions available",
+                "upload": "Upload",
+                "pendingCaption": "Your new caption file is pending publish.",
+                "pendingSubtitle": "Your new subtitle file is pending publish.",
+                "deleteCaptionTitle": "Delete caption",
+                "deleteCaptionContent": "Are you sure you want to delete this caption?",
+                "deleteSubtitleTitle": "Delete subtitle",
+                "deleteSubtitleContent": "Are you sure you want to delete this subtitle?"
+            }
+        },
+        "collaborators": {
+            "title": "Add YouTube collaborators",
+            "description": "The YouTube collaboration feature allows a maximum of 5 collaborators per video. After uploading the video, copy and share the invitation link with the person you want to collaborate with.",
+            "noteDescription": "Currently, the analytics view feature for collaborators is not available in Backstage.",
+            "addVevoCollaborator": "Add YouTube collaborator on Vevo",
+            "oacOnYouTube": "OAC on YouTube",
+            "addVevoChannel": "Add Vevo channel",
+            "addChannelButton": "Add channel",
+            "vevoChannel": "Vevo channel",
+            "officialArtistChannel": "Official artist channel",
+            "copyInvite": "Copy invitation",
+            "channelPlaceholder": "ExampleChannelVEVO"
         }
     },
     "artist": {
@@ -1101,11 +1739,19 @@
         "canLinkArtistProfile": "Can link artist profile",
         "back": "Back to artist list",
         "visitProfile": "Visit profile",
+        "syncSpotify": "Sync Spotify",
+        "syncProfileName": "Sync Profile Name",
+        "syncSpotifyConfirmTitle": "Confirm Sync Spotify",
+        "syncSpotifyConfirmParagraph": "This action will update spotify artist profile names in the profile list, are you sure?",
+        "syncProfileNameConfirmTitle": "Confirm Sync Artist Name",
+        "syncProfileNameConfirmParagraph": "This action will update artist profile names in the profile list, are you sure?",
         "message": {
             "success": {
                 "create": "Add new artist successfully",
                 "update": "Update artist successfully",
-                "delete": "Delete artist successfully"
+                "delete": "Delete artist successfully",
+                "syncSpotify": "Syncing, it will take about 2-5 minutes...",
+                "syncProfileName": "Syncing artist names, it will take about 2-5 minutes..."
             },
             "error": {
                 "duplicateNameArtist": "This artist already exist",
@@ -1114,14 +1760,12 @@
             }
         }
     },
-
     "role": {
         "roles": "Roles",
         "add": "Add role artist",
         "update": "Update role",
         "name": "Role name"
     },
-
     "label": {
         "labels": "Labels",
         "label": "Label",
@@ -1141,7 +1785,6 @@
             }
         }
     },
-
     "distribution": {
         "label": "Distribution",
         "create": "Create distribution",
@@ -1152,10 +1795,16 @@
         "platform": "Platform",
         "digitalServiceProviders": "Digital service providers",
         "lastEnqueue": "Last Enqueue",
-        "lastDelivered": "Last Delivered"
+        "lastDelivered": "Last Delivered",
+        "inactiveDsp": "This DSP is locked, cannot be distributed",
+        "hasLiveVersion": "Has live version"
     },
-
     "formFields": {
+        "contributorsMustIncludeProducer": "Contributors must include producer",
+        "contributorsMustIncludeComposer": "Contributors must include composer",
+        "contributorsMustIncludeMixer": "Contributors must include mixer",
+        "releaseNameMustMatchTrackName": "The release title must match at least one track title",
+        "releaseOriginalDate": "Original release date",
         "audioFile": {
             "preview": "Preview audio"
         },
@@ -1171,7 +1820,10 @@
             "metadataLanguageCountryId": "Metadata country language",
             "recordingCountryId": "Recording country"
         },
+        "releaseContributors": "Release contributors",
+        "trackContributors": "Track contributors",
         "upc": "UPC",
+        "isrc": "ISRC",
         "selectedCountries": "Region",
         "trackSensitiveId": "Sensitive content",
         "recordingCountryId": "Recording country",
@@ -1186,8 +1838,8 @@
         "artists": "Artists",
         "releaseDate": "Release date",
         "territoryType": "Territory type",
-        "cLineYear": "© Year",
-        "pLineYear": "℗ Year",
+        "cLineYear": "© Line Year",
+        "pLineYear": "℗ Line Year",
         "cLine": "Product copyright",
         "pLine": "Sound recording copyright",
         "nameRelease": "Release name",
@@ -1199,8 +1851,8 @@
         "metaDataLanguage": "Metadata language",
         "primaryGenreId": "Primary genre",
         "releaseArtists": "Release artist",
-        "pLineOwner": "℗ Copyright",
-        "cLineOwner": "© Copyright",
+        "pLineOwner": "℗ Line owner",
+        "cLineOwner": "© Line owner",
         "releaseTime": "Release time",
         "releaseTimezoneId": "Timezone",
         "releaseTerritory": {
@@ -1213,6 +1865,9 @@
         "tracks": {
             "maxCountTrack": "Total of tracks greater than {number}",
             "minCountTrack": "Total of tracks less than {number}",
+            "originTypeId": "Track origin",
+            "trackArtists": "Track artists",
+            "trackTypeId": "Track type",
             "trackOriginTypeId": "Track origin type",
             "audioLanguageId": "Audio language",
             "metadataLanguageId": "Metadata language",
@@ -1261,9 +1916,42 @@
         },
         "coverArtThumbnails": {
             "original": "Release image"
+        },
+        "validate": {
+            "releaseNameMustMatchTrackName": "The release title must match at least one track title",
+            "isrcMustBe12Characters": "ISRC must be 12 characters",
+            "missingRequiredContributorsRoles": "Missing required contributors roles",
+            "missingRequired": {
+                "Producer": "Contributors must have a producer",
+                "Composer": "Contributors must have a composer",
+                "Mixer": "Contributors must have a mixer",
+                "Lyricist": "Contributors must have a lyricist",
+                "ProducerComposer": "Contributors must have a producer and a composer",
+                "ProducerMixer": "Contributors must have a producer and a mixer",
+                "ProducerLyricist": "Contributors must have a producer and a lyricist",
+                "ComposerMixer": "Contributors must have a composer and a mixer",
+                "MixerComposer": "Contributors must have a mixer and a composer",
+                "ComposerLyricist": "Contributors must have a composer and a lyricist",
+                "MixerLyricist": "Contributors must have a mixer and a lyricist",
+                "ProducerComposerMixer": "Contributors must have a producer, a composer, and a mixer",
+                "ProducerMixerComposer": "Contributors must have a producer, a mixer, and a composer",
+                "ProducerComposerLyricist": "Contributors must have a producer, a composer, and a lyricist",
+                "ProducerMixerLyricist": "Contributors must have a producer, a mixer, and a lyricist",
+                "ComposerMixerLyricist": "Contributors must have a composer, a mixer, and a lyricist",
+                "MixerComposerLyricist": "Contributors must have a mixer, a composer, and a lyricist",
+                "ProducerComposerMixerLyricist": "Contributors must have a producer, a composer, a mixer, and a lyricist",
+                "ProducerMixerComposerLyricist": "Contributors must have a producer, a mixer, a composer, and a lyricist"
+            },
+            "coverArtIsRequired": "Cover art is required",
+            "atLeastOneMainArtist": "Must have at least one main artist",
+            "atLeastOneTrack": "Release must have at least one track",
+            "invalidFeatFormat": "Title containing \"feat\" must follow the format: feat.artist, feat.artist1, etc.",
+            "noLeadingTrailingSpace": "No leading or trailing spaces allowed",
+            "titleCannotContainFeat": "Title cannot contain \"feat\"",
+            "noLinguisticContentHasLyricist": "Release with no audio language cannot have a \"contributor\" with the role of \"lyricist\"",
+            "noLinguisticContentHasExplicitContent": "Explicit Content indicated but no vocals in metadata."
         }
     },
-
     "distribute": {
         "label": "Distribute",
         "create": "Create distribute",
@@ -1274,24 +1962,48 @@
         "wordWide": "Distribute worldwide",
         "confirmDistribute": "Are you sure you want to distribute on this platform?"
     },
-
     "takeDown": {
         "label": "Take down from platform",
         "confirmTakeDown": "Are you sure you want to take down from this platform?"
     },
-
     "emailSender": {
         "label": "Email sender"
     },
-
+    "dspSystem": {
+        "label": "DSP system"
+    },
+    "dspReport": {
+        "label": "DSP reports",
+        "table": {
+            "no": "No.",
+            "reportName": "Report name",
+            "source": "Source",
+            "dsp": "DSP",
+            "ciCode": "CI code",
+            "pendingReleasesCount": "Pending releases",
+            "assign": "Assign"
+        },
+        "placeholder": {
+            "selectDsp": "Select DSP"
+        },
+        "status": {
+            "assigned": "Assigned",
+            "unassigned": "Unassigned"
+        }
+    },
     "dsp": {
         "label": "DSP",
+        "type": "Type",
+        "systemTenantNoAgreement": "System administrators do not have DSP agreements.",
         "name": "Platform name",
+        "codeCi": "CI Code",
+        "hasDeal": "Has deal CI",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
         "fullNameOfDDexParty": "Full Name of DDEX Party",
         "ddexPartyId": "DDex Party ID",
+        "dealType": "Deal Type",
         "message": {
             "success": {
                 "create": "Create platform successfully",
@@ -1305,7 +2017,6 @@
             }
         }
     },
-
     "artistRole": {
         "message": {
             "success": {
@@ -1321,7 +2032,6 @@
             }
         }
     },
-
     "timezone": {
         "label": "Timezone",
         "create": "Create timezone",
@@ -1344,7 +2054,6 @@
             "selectTimezone": "Select timezone"
         }
     },
-
     "tooltipForm": {
         "releaseTitle": "Do not include version information like Remix or Uncut in the main Title field. Use the Version field instead.",
         "version": "A particular iteration of the product that will be delivered to stores and displayed alongside the title. Example: 'Live' , 'Deluxe Version'. If multiple versions of an album exist, use this field to indicate the correct version.",
@@ -1364,12 +2073,12 @@
         "countryLanguage": "The official language of the country related to this release. For example: Vietnam, United States, etc.",
         "isMoreThan4Artists": "Select 'Yes' if this release has 5 or more artists to display as 'Various artists'."
     },
-
     "tenant": {
         "label": "Workspace",
         "selectTitle": "Select Workspace",
         "workspaces": "Workspaces",
         "name": "Workspace name",
+        "code": "Code",
         "logo": "Logo",
         "icon": {
             "label": "Favicon",
@@ -1379,6 +2088,24 @@
         },
         "title": "Title",
         "domain": "Domain",
+        "customDomain": {
+            "label": "Custom domain",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "DNS records are ready",
+            "dnsDescription": "Add the CNAME and TXT records below in your DNS provider to verify this domain.",
+            "sslStatus": "SSL status",
+            "verificationToken": "Verification token",
+            "cnameRecord": "CNAME record",
+            "txtRecord": "TXT record",
+            "verify": "Verify domain",
+            "verifying": "Verifying...",
+            "delete": "Remove domain",
+            "deleting": "Removing...",
+            "deleteConfirm": "Are you sure you want to remove this domain?",
+            "validation": {
+                "required": "Please enter domain"
+            }
+        },
         "primaryColor": "Primary color",
         "owner": "Owner",
         "type": {
@@ -1429,9 +2156,47 @@
                 "notFound": "No workspace was found with the provided information",
                 "blocked": "This workspace has been blocked"
             }
+        },
+        "customDomain": {
+            "label": "Custom Domain",
+            "placeholder": "example.yourdomain.com",
+            "dnsTitle": "DNS Records Ready",
+            "dnsDescription": "Add the CNAME and TXT records below to your DNS provider to verify this domain.",
+            "sslStatus": "SSL Status",
+            "verificationToken": "Verification Token",
+            "cnameRecord": "CNAME Record",
+            "txtRecord": "TXT Record",
+            "verify": "Verify Domain",
+            "verifying": "Verifying...",
+            "delete": "Remove Domain",
+            "deleting": "Removing...",
+            "deleteConfirm": "Are you sure you want to remove this domain?",
+            "validation": {
+                "required": "Please enter domain"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "verifying": "Verifying",
+                "active": "Active",
+                "failed": "Failed",
+                "expired": "Expired"
+            },
+            "autoSetup": {
+                "title": "Auto setup via Cloudflare",
+                "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
+                "button": "Connect Cloudflare Account"
+            },
+            "orAddManually": "or add manually",
+            "autoSetupSuccess": "DNS records added automatically",
+            "errors": {
+                "access_denied": "Cloudflare account access denied. Please try again and authorize the request.",
+                "zone_not_found": "Could not find the domain zone in your Cloudflare account. Please make sure the domain is added to Cloudflare first.",
+                "dns_create_failed": "Failed to automatically create DNS records. Please check your Cloudflare account permissions or try manual setup.",
+                "invalid_scope": "The requested permissions are invalid or insufficient.",
+                "unauthorized": "Cloudflare account authentication failed."
+            }
         }
     },
-
     "integration": {
         "label": "Integrations",
         "deal": {
@@ -1451,7 +2216,6 @@
             }
         }
     },
-
     "action": {
         "create": {
             "button": "Create",
@@ -1485,7 +2249,6 @@
         },
         "quickActions": "Quick actions"
     },
-
     "permission": {
         "label": "Permission",
         "name": "Permission name",
@@ -1520,11 +2283,11 @@
             "delete": "Delete permission"
         }
     },
-
     "roles": {
         "label": "Role",
         "name": "Role name",
         "isActive": "Status",
+        "isDefault": "Default",
         "message": {
             "success": {
                 "create": "Add role successfully",
@@ -1541,7 +2304,6 @@
             "delete": "Delete role"
         }
     },
-
     "actions": {
         "label": "Actions",
         "name": "Action name",
@@ -1561,7 +2323,6 @@
             "delete": "Delete action"
         }
     },
-
     "policy": {
         "policies": "Policies",
         "label": "Policy",
@@ -1570,7 +2331,6 @@
             "delete": "Delete policy"
         }
     },
-
     "currencies": {
         "currencies": "Currencies",
         "label": "Currency",
@@ -1582,7 +2342,11 @@
                 "update": "Currency updated successfully",
                 "delete": "Currency deleted successfully"
             },
-            "error": {}
+            "error": {
+                "cannotDeleteBecauseLinkedRecord": "Cannot delete currency because it is in use",
+                "duplicateCodeCurrency": "This currency code already exists",
+                "duplicateNameCurrency": "This currency name already exists"
+            }
         },
         "action": {
             "delete": "Delete currency"
@@ -1601,17 +2365,19 @@
             }
         }
     },
-
     "price": {
         "label": "Price",
         "prices": "Prices",
         "name": "Price name",
         "code": "Price code",
+        "ciCode": "CI Code",
+        "type": "Type",
+        "album": "Album",
+        "track": "Track",
         "action": {
             "delete": "Delete price"
         }
     },
-
     "priceTier": {
         "canDeactivateOnlyWhenNotDefault": "You can only deactivate when it is not the default value",
         "message": {
@@ -1626,7 +2392,6 @@
             }
         }
     },
-
     "weekDays": {
         "monday": "Monday",
         "tuesday": "Tuesday",
@@ -1636,28 +2401,84 @@
         "saturday": "Saturday",
         "sunday": "Sunday"
     },
-
     "scanStatus": {
         "unScanned": "UnScanned",
         "finished": "No violations",
         "warning": "Warning",
         "rejected": "Rejected"
     },
-
     "backupLog": {
         "success": {
             "startedPleaseWait": "Backup has started, please wait..."
         }
     },
-
     "analytics": {
         "label": "Analytics",
         "name": "Analytics name",
         "action": {
             "delete": "Delete analytics"
+        },
+        "chart": {
+            "title": "Monthly plays by DSP",
+            "titleGeneric": "Plays by DSP",
+            "trends": "Trends",
+            "sales": "Sales",
+            "dsp": "DSP",
+            "view": "Views",
+            "monthly": "Monthly",
+            "daily": "Daily"
+        },
+        "dailyChart": {
+            "title": "Daily plays by DSP",
+            "last7Days": "Last 7 days",
+            "last15Days": "Last 15 days",
+            "last30Days": "Last 30 days"
+        },
+        "revenue": {
+            "totalRevenue": "Total Revenue",
+            "totalPlays": "Total Usage",
+            "totalUsage": "Total Usage",
+            "usage": "Usage",
+            "totalTerritories": "Territories",
+            "timelineTitle": "Revenue timeline",
+            "modeRevenue": "Revenue",
+            "modeQuantity": "Plays (Quantity)",
+            "label": "Revenue"
+        },
+        "tabs": {
+            "plays": "Plays & Trends",
+            "revenue": "Revenue"
+        },
+        "totalTrendViews": "Total views",
+        "trendViews": "Views",
+        "trendViewsByMonth": "Monthly views",
+        "totalRevenueByMonth": "Revenue by month",
+        "dspDistribution": "Views by DSP",
+        "terDistribution": "Views by Country",
+        "tenantDistribution": "Views by Workspace",
+        "revenueDspDistribution": "Revenue by DSP",
+        "revenueTerDistribution": "Revenue by Country",
+        "revenueTenantDistribution": "Revenue by Workspace",
+        "viewsDistribution": "Views Distribution",
+        "revenueDistribution": "Revenue Distribution",
+        "totalSalesViews": "Total usage",
+        "totalRevenueUsd": "Total Revenue",
+        "detailTitle": "Detailed Analytics",
+        "detailChartTitle": "Views timeline",
+        "splitMode": {
+            "label": "Export option",
+            "by_workspace": "Each workspace is a file",
+            "by_artist": "Each artist is a file",
+            "by_period": "Each month/quarter is a file",
+            "workspace_artist": "Each workspace is a folder, each artist is a file",
+            "workspace_period": "Each workspace is a folder, each month/quarter is a file",
+            "periodUnit": "Period type",
+            "month": "Month",
+            "quarter": "Quarter",
+            "none": "Summary",
+            "isExportArtist": "Export with artists"
         }
     },
-
     "issue": {
         "label": "Issue",
         "name": "Name issue",
@@ -1677,7 +2498,6 @@
             }
         }
     },
-
     "issueLevel": {
         "label": "Issue level",
         "name": "Name issue level",
@@ -1698,11 +2518,9 @@
             }
         }
     },
-
     "issueCategory": {
         "label": "Issue category"
     },
-
     "tenantIssue": {
         "label": "Workspace issue",
         "message": {
@@ -1719,7 +2537,6 @@
             }
         }
     },
-
     "tenantTier": {
         "label": "Workspace tier",
         "name": "Workspace tier name",
@@ -1737,10 +2554,11 @@
             }
         }
     },
-
     "newsCategory": {
         "label": "News category",
         "name": "Category name",
+        "parentLabel": "Parent category",
+        "parentPlaceholder": "Select parent category (optional)",
         "message": {
             "success": {
                 "create": "News category created successfully",
@@ -1756,14 +2574,12 @@
             }
         }
     },
-
     "news": {
         "label": "News",
         "name": "News title",
         "addTranslate": "Add translate",
         "updateTranslate": "Update translate"
     },
-
     "newsPost": {
         "label": "News post",
         "latest": "Latest news",
@@ -1784,7 +2600,6 @@
             }
         }
     },
-
     "newsPostTranslation": {
         "label": "News post translation",
         "message": {
@@ -1811,7 +2626,13 @@
         "aggregators": "Aggregators",
         "list": "List aggregator",
         "systemDefault": "System default",
+        "systemDefaultNote": "This option will use the system's default configuration",
+        "createsDoneFolder": "Create folder .done ",
         "ddexName": "DDex name",
+        "deliveryEmail": "Delivery email",
+        "deliveryEmailSubject": "Delivery email subject",
+        "manualUploadUrl": "Manual upload URL",
+        "ernVersion": "ERN version",
         "action": {
             "create": "Create aggregator",
             "update": "Update aggregator"
@@ -1831,7 +2652,6 @@
             }
         }
     },
-
     "tenantIntegration": {
         "message": {
             "success": {
@@ -1845,12 +2665,10 @@
             }
         }
     },
-
     "dealType": {
         "label": "Deal type",
         "requiredConnection": "Required connection"
     },
-
     "dspRoutingConfig": {
         "message": {
             "success": {
@@ -1866,15 +2684,595 @@
             }
         }
     },
-
     "connection": {
         "success": "Connection successful",
         "failure": "Connection failed",
         "test": "Test connection"
     },
-
     "sftp": {
         "requiredSftpInfo": "Please enter all required SFTP information",
         "requiredPasswordOrPrivateKey": "Please enter password or private key"
+    },
+    "batchImport": {
+        "label": "Batch import"
+    },
+    "releaseLog": {
+        "label": "Release logs",
+        "statusRelease": "Release status",
+        "statusLog": "Log status"
+    },
+    "ciJob": {
+        "error": {
+            "invalidTypeAdminExport": "Only Admin Export jobs can be confirmed as completed"
+        }
+    },
+    "distributionMonitor": {
+        "label": "Distribution monitor"
+    },
+    "distributionJobs": {
+        "label": "Distribution jobs",
+        "detail": "Distribution job detail",
+        "autoSendEmail": "Auto send email",
+        "downloadExcel": "Download excel",
+        "confirmCompleted": "Confirm completed",
+        "error": {
+            "mustHaveAdminExport": "There must be at least one record of type Admin Export"
+        },
+        "columns": {
+            "upc": "UPC",
+            "upcs": "UPCs",
+            "type": "Type",
+            "dspCiCodes": "DSP CI codes",
+            "status": "Status",
+            "deliveryEmail": "Delivery email",
+            "recipients": "Recipients",
+            "deliveryEmailSubject": "Email subject",
+            "sentAt": "Sent at",
+            "expectedSendTime": "Expected send time",
+            "stepLabel": "Step",
+            "dateGroup": "Date group"
+        },
+        "statusOptions": {
+            "PENDING": "Pending",
+            "PROCESSING": "Processing",
+            "COMPLETED": "Completed",
+            "FAILED": "Failed",
+            "SKIPPED": "Skipped",
+            "CANCEL": "Cancel"
+        },
+        "confirmCompletedModal": {
+            "title": "Confirm completed",
+            "exportIdFromCiLabel": "Export ID from CI",
+            "exportIdFromCiPlaceholder": "Enter export ID from CI",
+            "exportIdFromCiRequired": "Please enter export ID from CI"
+        },
+        "typeOptions": {
+            "EMAIL_STATE51": "Email state51",
+            "ADMIN_EXPORT": "Admin export"
+        },
+        "cancelConfirmTitle": "Cancel distribution job",
+        "cancelConfirmMessage": "Are you sure you want to cancel this distribution job?"
+    },
+    "releaseExecution": {
+        "label": "Release executions",
+        "labelOld": "Release executions (Old)",
+        "releaseSnapshot": "Release snapshot",
+        "confirm": {
+            "retryTitle": "Are you sure you want to retry?",
+            "retryDescription": "This action will restart the distribution process.",
+            "markCompletedTitle": "Are you sure you want to mark as completed?",
+            "markCompletedDescription": "This action will mark the selected records as completed.",
+            "autoRetrySyncDataDspCiTitle": "Confirm auto retry failed DSP CI steps?",
+            "autoRetrySyncDataDspCiDescription": "This action will retry failed SYNC_DATA_DSP_CI steps in the latest executions."
+        },
+        "detail": {
+            "columns": {
+                "stepType": "Step type",
+                "dsp": "DSP",
+                "dspName": "DSP Name",
+                "step": "Step",
+                "status": "Status",
+                "startedAt": "Started",
+                "completedAt": "Completed",
+                "duration": "Duration",
+                "logs": "Logs",
+                "completedIn": "Completed in",
+                "logTime": "Time",
+                "logLevel": "Level",
+                "logMessage": "Message"
+            }
+        },
+        "childExecutionMode": {
+            "title": "Child mode",
+            "sequential": "SEQUENTIAL",
+            "parallel": "PARALLEL",
+            "tooltipSequential": "Child steps will run from top to bottom",
+            "tooltipParallel": "Child steps will run concurrently, results are independent of each other"
+        },
+        "isDeliveryStep": {
+            "title": "Delivery step",
+            "tooltip": "Marks that the step will sync status with the release delivery DSP table if it encounters a syncable status",
+            "yes": "Yes",
+            "no": "No"
+        },
+        "message": {
+            "retrySuccess": "Retry execution successfully"
+        },
+        "columns": {
+            "coverArt": "Cover art",
+            "upc": "UPC",
+            "targetDspCodes": "Target DSP Codes",
+            "releaseName": "Release name",
+            "type": "Type",
+            "stepType": "Step type",
+            "status": "Status",
+            "originalDspCodes": "Target DSP Codes",
+            "triggeredBy": "Triggered By",
+            "since": "Since",
+            "startedAt": "Started At",
+            "completedAt": "Completed At",
+            "summary": "Summary"
+        },
+        "typeOptions": {
+            "INITIAL_RELEASE": "Initial release",
+            "UPDATE": "Update",
+            "TAKEDOWN": "Takedown",
+            "RETRY": "Retry"
+        },
+        "stepTypeOptions": {
+            "GENERATE_UPC": "Generate UPC",
+            "GENERATE_ISRC": "Generate ISRC",
+            "CREATE_METADATA_ERN": "Create metadata ERN",
+            "CREATE_METADATA_CI": "Create metadata CI",
+            "UPLOAD_SFTP_CI": "Upload SFTP CI",
+            "CREATE_DONE_FOLDER": "Create done folder",
+            "UPLOAD_SFTP": "Upload SFTP",
+            "POST_UPLOAD_HOOK": "Post upload hook",
+            "EXPORT_EXCEL": "Export Excel",
+            "SEND_EMAIL_EXPORT": "Send email",
+            "WAITING_EXPORT": "Waiting export",
+            "CLEANUP": "Cleanup",
+            "PROCESS_AGG": "Process AGG",
+            "PROCESS_AGG_CI": "Process AGG CI",
+            "IMPORT_CI": "Import CI",
+            "EXPORT_CI": "Export CI",
+            "CREATE_FOLDER_DONE_CI": "Create folder done CI",
+            "VALIDATE_QA_CI": "Validate QA CI",
+            "EXPORT_CI_CI": "Export CI CI",
+            "EXPORT_AGG_CI_STATE51": "Export AGG CI State51",
+            "WAITING_ADMIN_EXPORT": "Waiting admin export",
+            "SEND_EMAIL_STATE51": "Send email State51",
+            "SYNC_DATA_DSP_CI": "Sync data DSP CI",
+            "GEN_UPC": "Generate UPC",
+            "GEN_ISRCS": "Generate ISRCs",
+            "GEN_ISRC": "Generate ISRC",
+            "VALIDATE": "Validate",
+            "PROCESS_DSPS": "Process DSPs",
+            "PROCESS_DIRECT": "Process direct",
+            "PROCESS_DIRECT_CHILD": "Process direct child",
+            "SYNC_DATA_PARTNER": "Sync data partner",
+            "WAIT_PARTNER_PROCESS": "Wait partner process",
+            "CREATE_METADATA_ON_SERVER": "Create metadata on server",
+            "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
+            "SYNC_RESULT_TO_RELEASE": "Sync result to release",
+            "REVIEW_RELEASE": "Review release",
+            "GET_RESULT_IMPORT_CI": "Get result import CI"
+        },
+        "action": {
+            "markCompleted": "Mark completed",
+            "autoRetrySyncDataDspCi": "Auto retry DSP CI"
+        },
+        "statusOptions": {
+            "QUEUED": "Queued",
+            "RUNNING": "Running",
+            "AWAITING_ACTION": "Awaiting action",
+            "COMPLETED": "Completed",
+            "PARTIALLY_COMPLETED": "Partially completed",
+            "FAILED": "Failed",
+            "CANCELLED": "Cancelled"
+        },
+        "statusOptionsV2": {
+            "QUEUED": "In queue",
+            "RUNNING": "Steps in progress",
+            "AWAITING_ACTION": "Admin export pending",
+            "COMPLETED": "All steps succeeded",
+            "PARTIALLY_COMPLETED": "Some ok, some failed",
+            "FAILED": "All failed",
+            "CANCELLED": "Cancelled"
+        },
+        "submitStatusOptions": {
+            "NEW": "New",
+            "PROCESSING": "Processing",
+            "WAITING_ACTION": "Waiting action",
+            "WAITING_PARTNER": "Waiting partner",
+            "DONE": "Done",
+            "FAILED": "Failed",
+            "CANCELLED": "Cancelled",
+            "PARTIAL_DONE": "Partially done"
+        },
+        "stepStatus": {
+            "PENDING": "Not started",
+            "RUNNING": "Executing",
+            "AWAITING_ACTION": "Waiting admin",
+            "FAILED": "Failed",
+            "CANCELLED": "Cancelled",
+            "SKIPPED": "Not applicable",
+            "SUCCESS": "Done"
+        }
+    },
+    "reportConfigs": {
+        "label": "Report Management",
+        "configReport": "Config report",
+        "importReport": "Report logs",
+        "importSftp": "Config import SFTP",
+        "enrichDataImport": {
+            "label": "Enrich data import",
+            "recentSessionsTitle": "Recent enrich data import sessions",
+            "scanButton": "Scan",
+            "scanModalTitle": "Scan and enrich data",
+            "scanStarted": "Enrich data scan started",
+            "waitingForEvent": "Waiting for scan event...",
+            "scanId": "Scan ID",
+            "eventType": "Event",
+            "totalReleases": "Total releases",
+            "totalDone": "Done",
+            "totalRemaining": "Remaining",
+            "processedReleases": "Processed releases",
+            "successCount": "Success",
+            "failedCount": "Failed",
+            "notFoundCount": "Not found",
+            "pendingCount": "Pending",
+            "processingCount": "Processing",
+            "dryRun": "Dry run",
+            "force": "Force",
+            "limitCount": "Limit",
+            "limit": "Limit",
+            "requiredLimit": "Please enter limit!",
+            "errorMessage": "Error message",
+            "finishedAt": "Finished at",
+            "dryRunTooltip": "If enabled, the scan runs without applying data changes.",
+            "forceTooltip": "If enabled, existing enriched data will be processed again.",
+            "isImportedFromReport": "Sync releases",
+            "isImportedFromReportTooltip": "Select release sync type.",
+            "isImportedFromReportAll": "All",
+            "isImportedFromReportDirect": "Sync direct releases",
+            "isImportedFromReportImport": "Sync imported releases",
+            "eventConnectionError": "Cannot connect to scan events",
+            "cancelScan": "Cancel",
+            "cancelScanConfirm": "Are you sure you want to cancel this data scan?",
+            "scanCancelled": "Enrich data scan cancelled",
+            "historyModalTitle": "Enrichment History",
+            "historySummaryTitle": "Enrichment Summary",
+            "historyColumns": {
+                "entityType": "Entity Type",
+                "entityId": "Entity ID",
+                "releaseId": "Release ID",
+                "isrc": "ISRC",
+                "upc": "UPC",
+                "fieldName": "Field Name",
+                "oldValue": "Old Value",
+                "newValue": "New Value",
+                "changeType": "Change Type",
+                "enrichmentSource": "Enrichment Source",
+                "status": "Status",
+                "errorMessage": "Error Message",
+                "createdAt": "Created At"
+            },
+            "historyStatus": {
+                "applied": "Applied",
+                "dry_run": "Dry run",
+                "error": "Error"
+            },
+            "historyEntityType": {
+                "release": "Album / Release",
+                "track": "Track / Song",
+                "artist": "Artist",
+                "release_artist": "Link artist with Release",
+                "track_artist": "Link artist with Track"
+            },
+            "historyChangeType": {
+                "create": "Create",
+                "update": "Update",
+                "link": "Link",
+                "merge": "Merge",
+                "skip": "Skip",
+                "link_spotify": "Link Spotify",
+                "link_deezer": "Link Deezer"
+            },
+            "historyEnrichmentSource": {
+                "spotify": "Spotify API",
+                "deezer": "Deezer API",
+                "local": "Local PostgreSQL (Cache check)"
+            },
+            "historyAction": {
+                "viewLog": "View history"
+            }
+        },
+        "sftpExcludePatterns": {
+            "title": "SFTP Exclude Patterns",
+            "pattern": "Pattern",
+            "patternType": "Pattern Type",
+            "scope": "Scope",
+            "isActive": "Is active",
+            "description": "Description",
+            "action": {
+                "create": "Create Exclude Pattern",
+                "update": "Update Exclude Pattern"
+            },
+            "sync": {
+                "modalTitle": "Sync SFTP Reports",
+                "syncMode": "Sync mode",
+                "syncModeSingle": "Sync single month",
+                "syncModeAll": "Sync all from month",
+                "period": "Month",
+                "periodTooltip": "The month to start importing reports up to the present",
+                "startPeriod": "Start month",
+                "categories": "Report categories",
+                "categoriesTooltip": "This field is used to select categories for report import",
+                "force": "Force sync",
+                "forceTooltip": "If enabled, it will re-import even previously imported reports",
+                "categoriesPlaceholder": "Select categories",
+                "salesLabel": "Sales",
+                "trendsLabel": "Trends",
+                "requiredStartPeriod": "Please select start month!",
+                "requiredPeriod": "Please select month range!",
+                "requiredCategories": "Please select at least one category!",
+                "success": "Sync data successfully!",
+                "preset": {
+                    "thisQuarter": "This quarter",
+                    "prevQuarter": "Previous quarter"
+                }
+            },
+            "syncConfig": {
+                "title": "Sync Configuration",
+                "mode": "Active cron",
+                "cron": "Cron expression",
+                "startPeriod": "Start month",
+                "startPeriodTooltip": "The month to start importing reports up to the present",
+                "categories": "Report categories",
+                "categoriesTooltip": "This field is used to select categories for report import",
+                "force": "Force sync",
+                "forceTooltip": "If enabled, it will re-import even previously imported reports",
+                "excludeEnabled": "Exclude enabled",
+                "excludeEnabledTooltip": "If enabled, the Configure Exclude Patterns will be applied",
+                "maxRetries": "Max retries",
+                "maxRetriesTooltip": "If the import fails, it will retry this many times",
+                "save": "Save Configuration",
+                "saveSuccess": "Sync configuration updated successfully!",
+                "saveFailed": "Failed to update sync configuration!"
+            }
+        },
+        "importReportBtn": "Import report",
+        "importModalTitle": "Import Report",
+        "allowedExtensions": "Allowed extensions",
+        "uploadType": "Import type",
+        "uploadTypeFiles": "Multiple files",
+        "uploadTypeFolder": "Folder",
+        "selectFiles": "Select files",
+        "selectFolder": "Select folder",
+        "dragDropHint": "Drag & drop files or folder here or click to select",
+        "validation": {
+            "requiredExtensions": "Please select allowed extensions!",
+            "requiredFiles": "Please select at least one file or folder!"
+        },
+        "source": "Source",
+        "sourceCode": "Source code",
+        "sourceCodeTooltip": "Report source identifier (lowercase, optimized for storage).",
+        "sourceCodePlaceholder": "e.g., SPOTIFY",
+        "sourceName": "Source name",
+        "sourceNameTooltip": "User-friendly display name of the report source.",
+        "sourceNamePlaceholder": "e.g., Spotify",
+        "reportType": "Report type",
+        "reportTypeTooltip": "Report classification.",
+        "reportTypePlaceholder": "Select report type",
+        "folderPatterns": "Folder patterns",
+        "folderPatternsTooltip": "Array of regular expressions (Regex) to match the folder containing the file.",
+        "folderPatternsPlaceholder": "e.g., .*spotify.*",
+        "filePatterns": "File patterns",
+        "filePatternsTooltip": "Array of Regex to identify files by filename.",
+        "filePatternsPlaceholder": "e.g., .*\\.csv$",
+        "requiredHeaders": "Required headers",
+        "requiredHeadersTooltip": "List of required columns in the CSV file. Used to validate the file structure before import.",
+        "requiredHeadersPlaceholder": "Enter required headers",
+        "parserCode": "Parser code",
+        "parserCodeTooltip": "Parser class identifier in NestJS code to read/analyze this file.",
+        "parserCodePlaceholder": "e.g., SPOTIFY_SALES",
+        "delimiter": "Delimiter",
+        "defaultCurrency": "Default currency",
+        "defaultCurrencyTooltip": "Default currency (default is USD) if the report file has no currency column.",
+        "defaultCurrencyPlaceholder": "Select currency",
+        "defaultMember": "Default member",
+        "defaultMemberTooltip": "Default member partition if data separation is needed.",
+        "defaultMemberPlaceholder": "e.g., Admin",
+        "priority": "Priority",
+        "action": {
+            "create": "Create report config",
+            "update": "Update report config"
+        },
+        "importResult": {
+            "releaseTotal": "Total releases",
+            "releaseImported": "Imported",
+            "releaseSkipped": "Skipped",
+            "releaseErrors": "Errors",
+            "releaseInDb": "In DB",
+            "releasePending": "Pending",
+            "releaseStats": "Releases Statistics",
+            "processingStatus": "Report processing status",
+            "statusPending": "Pending",
+            "statusQueued": "Queued",
+            "statusProcessing": "Processing...",
+            "statusCompleted": "Completed",
+            "statusFailed": "Failed",
+            "statusCanceled": "Cancelled",
+            "filesUnit": "files",
+            "runningFile": "Running: {file}",
+            "totalRecords": "Total records",
+            "processedSuccess": "Processed successfully",
+            "skipped": "Skipped (Skipped)",
+            "errors": "Errors (Errors)",
+            "errorDetails": "Error details",
+            "sourceFile": "Source file",
+            "duration": "Processing time",
+            "startTime": "Start time",
+            "uploadingMatched": "Uploading {count} valid files...",
+            "uploadFailedMatched": "Failed to upload {count} valid files. Please check again.",
+            "noValidFiles": "No valid files to upload. Please check the error list below.",
+            "validFiles": "Valid files ({count})",
+            "invalidFiles": "Invalid files ({count})",
+            "uploading": "Uploading...",
+            "uploadSuccess": "Success",
+            "uploadFailed": "Failed",
+            "awaitingUpload": "Awaiting upload",
+            "uploadFailedNotification": "Some files failed to upload. Please check the list below.",
+            "startJobFailedNotification": "Failed to start the import process.",
+            "uploadSuccessNotification": "Uploaded successfully!",
+            "uploadSuccessStartJobFailed": "Uploaded successfully but failed to start the import process.",
+            "sourceType": "Source Type",
+            "sourceTypeReportUpload": "Report upload",
+            "sourceTypeFtpSyncPeriod": "FTP sync by period",
+            "sourceTypeFtpSyncAll": "FTP sync all",
+            "sourceTypeFtpRetry": "FTP retry",
+            "sourceTypeFtpAutoCron": "FTP auto cron",
+            "sourceTypeAnalyticsReportExport": "Analytics report export",
+            "sourceTypeReportReleaseDelete": "Report release delete",
+            "sourceTypeSpotifyR2Sync": "Spotify R2 sync",
+            "sourceTypeSpotifyExportTrigger": "Export report Box -> R2",
+            "totalRows": "Total Rows",
+            "processedRows": "Processed",
+            "skippedRows": "Skipped",
+            "errorRows": "Errors",
+            "recentJobsTitle": "Recent Import/Sync Jobs",
+            "uploadReportBtn": "Import Report",
+            "detailedProgress": "Detailed files progress"
+        },
+        "enrichScanSchedules": {
+            "label": "Enrich data cron",
+            "title": "Metadata scan schedules",
+            "name": "Schedule name",
+            "enabled": "Active cron",
+            "cronExpression": "Cron expression",
+            "timezone": "Timezone",
+            "isImportedFromReport": "Sync releases",
+            "isImportedFromReportTooltip": "Select release sync type.",
+            "isImportedFromReportAll": "All",
+            "isImportedFromReportDirect": "Sync direct releases",
+            "isImportedFromReportImport": "Sync imported releases",
+            "limitCount": "Limit",
+            "force": "Force run",
+            "forceTooltip": "If enabled, existing enriched data will be processed again.",
+            "lastRunAt": "Last run at",
+            "lastScanId": "Last scan ID",
+            "lastSkippedAt": "Last skipped at",
+            "lastSkipReason": "Last skip reason",
+            "lastError": "Last error",
+            "action": {
+                "create": "Create scan schedule",
+                "update": "Update scan schedule"
+            },
+            "message": {
+                "success": {
+                    "create": "Scan schedule created successfully!",
+                    "update": "Scan schedule updated successfully!",
+                    "delete": "Scan schedule deleted successfully!"
+                }
+            }
+        },
+        "spotifyR2SyncConfig": {
+            "label": "Spotify R2 Sync",
+            "title": "Spotify R2 Auto-Sync Config",
+            "enabled": "Enable Auto-Sync",
+            "cron": "Sync Schedule",
+            "prefix": "Folder Prefix",
+            "prefixTooltip": "Folder prefix on R2 containing reports",
+            "retentionDays": "Retention Period (days)",
+            "retentionDaysTooltip": "Number of days to retain reports before deletion",
+            "save": "Save Config",
+            "saveSuccess": "Spotify R2 auto-sync configuration updated successfully!",
+            "saveFailed": "Failed to update Spotify R2 auto-sync configuration!",
+            "syncNow": "Sync Now",
+            "syncProgressTitle": "Spotify R2 Sync Progress",
+            "zipsFound": "ZIP files found",
+            "zipsImported": "ZIP files imported",
+            "zipsSkipped": "ZIP files skipped",
+            "jobSpoId": "Spotify Job ID",
+            "foldersUploaded": "Folders uploaded",
+            "r2ObjectKeys": "Uploaded to R2",
+            "exportNow": "Trigger Box -> R2",
+            "exportModalTitle": "Trigger Box -> R2 Export",
+            "exportModalDesc": "Trigger report synchronization from Box.com to R2. Once successfully exported, the system will automatically import the new files.",
+            "forceLabel": "Force Overwrite"
+        },
+        "spotifyExportSchedulerConfig": {
+            "label": "Spotify Export Scheduler",
+            "title": "Spotify Export Auto-Trigger Scheduler Config",
+            "enabled": "Enable Auto-Export",
+            "cron": "Export Schedule",
+            "force": "Force Export",
+            "forceTooltip": "If enabled, reports will be re-exported even if they already exist",
+            "save": "Save Config",
+            "saveSuccess": "Spotify export scheduler configuration updated successfully!",
+            "saveFailed": "Failed to update Spotify export scheduler configuration!"
+        }
+    },
+    "analytics2": {
+        "rank": "Rank",
+        "topRankingTitle": "Top {count} {title}",
+        "topReleases": "Top Releases",
+        "topTracks": "Top Tracks",
+        "distributors": "Distributors",
+        "detailEntityTitle": "({entity}: {title})",
+        "filters": {
+            "allPlatforms": "All platforms",
+            "allRegions": "All regions",
+            "vietnam": "Vietnam",
+            "unitedStates": "United States"
+        },
+        "metrics": {
+            "stable": "Stable"
+        },
+        "syncAll": {
+            "button": "Sync data",
+            "syncing": "Sync in progress...",
+            "modalTitle": "Sync data",
+            "syncMode": "Sync mode",
+            "syncModeSingle": "Sync single month",
+            "syncModeFrom": "Sync from month",
+            "period": "Month",
+            "startPeriod": "Start month",
+            "accept": "Accept",
+            "cancel": "Cancel",
+            "force": "Force sync",
+            "forceTooltip": "Re-sync even if data already exists",
+            "started": "Sync data started",
+            "startFailed": "Failed to start sync data",
+            "completed": "Sync data completed",
+            "failed": "Sync data failed",
+            "jobNotFound": "Something went wrong while syncing data"
+        }
+    },
+    "report-import": {
+        "configExcludePattern": "Configure Exclude Pattern"
+    },
+    "releaseCiData": {
+        "status": {
+            "label": "CI status",
+            "existsOnCi": "Exists on CI",
+            "notFoundOnCi": "Not found on CI"
+        },
+        "latestSyncedAt": "Latest sync",
+        "neverExported": "Never exported",
+        "lastImportIsFailed": "Last import failed",
+        "importCount": "Import count",
+        "qaFlagsCi": "QA flags CI",
+        "needImportAgain": "Need import again",
+        "importData": "Import data",
+        "export": {
+            "exportOrder": "Export order",
+            "exportTask": "Export task",
+            "requestorOrganisation": "Requestor organisation",
+            "deliveryPoint": "Delivery point",
+            "deliveryPointStatus": "Status",
+            "transferEndDate": "Transfer end date"
+        }
     }
 }

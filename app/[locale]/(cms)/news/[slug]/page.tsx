@@ -1,19 +1,13 @@
 import { getDetailPostBySlug, getListPostPublic } from '@/app/api/newsPost';
-import IconButton from '@/components/ui/button/icon-button';
 import CKContent from '@/components/ui/text-editor/ck-content';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
-import { Link } from '@/i18n/routing';
-import CopyLink from '@/modules/news/components/copy-link';
-import LatestNews from '@/modules/news/components/latest-news';
-import RelatedNews from '@/modules/news/components/related-news';
 import { NewsData } from '@/modules/news/types';
 import { PaginationResponse } from '@/types/api';
 import { Breadcrumb } from 'antd';
-import { Facebook, Home, Newspaper } from 'lucide-react';
+import { Home, Newspaper } from 'lucide-react';
 import { getLocale, getTranslations } from 'next-intl/server';
 import 'swiper/css'; // style cơ bản
 import 'swiper/css/pagination'; // nếu dùng pagination
@@ -34,8 +28,6 @@ export default async function NewsDetail({ params }: Props) {
     });
     const content = post?.content;
     const newsData = res?.data as PaginationResponse<NewsData>['data'];
-    const currentURL =
-        typeof window === 'undefined' ? '' : window.location.href;
 
     const breadCrumbItems = [
         {
@@ -63,7 +55,7 @@ export default async function NewsDetail({ params }: Props) {
 
     if (!post || !content) {
         return (
-            <div className="mx-auto w-full max-w-screen-xl py-5">
+            <div className="mx-auto w-full max-w-screen-2xl py-5">
                 <h2 className="text-center text-xl font-semibold">
                     {t('common.notAvailable')}
                 </h2>
@@ -72,46 +64,42 @@ export default async function NewsDetail({ params }: Props) {
     }
 
     return (
-        <div className="mx-auto w-full max-w-screen-lg space-y-8 px-4 pb-5">
-            <div className="py-2">
-                <Breadcrumb items={breadCrumbItems} />
-            </div>
-            <div className="grid grid-cols-12 justify-center gap-8">
-                <div className="col-span-1">
-                    <div className="sticky top-5 flex flex-col gap-4">
-                        <CustomTooltip placement="right" title={''}>
-                            <Link
-                                href={`http://www.facebook.com/sharer.php?u=${currentURL}`}
-                                target="_blank"
-                            >
-                                <IconButton className="size-8 h-8 w-8 rounded-full border">
-                                    <Facebook size={SIZE_ICON} />
-                                </IconButton>
-                            </Link>
-                        </CustomTooltip>
+        <div className="mx-auto min-h-full w-full bg-white dark:bg-zinc-900">
+            <div className="mx-auto w-full max-w-screen-2xl space-y-8 px-4 pb-5">
+                <div className="py-2">
+                    <Breadcrumb items={breadCrumbItems} />
+                </div>
+                <div className="grid grid-cols-12 justify-center gap-8">
+                    {/* <div className="col-span-1">
+                        <div className="sticky top-5 flex flex-col gap-4">
+                            <ShareFacebook />
 
-                        <CopyLink />
-                    </div>
-                </div>
-                <div className="col-span-11 rounded-lg lg:col-span-7">
-                    <div>
-                        <strong className="text-2xl font-extrabold">
-                            {post?.title}
-                        </strong>
-                        <div className="pt-4">
-                            <span className="italic text-gray-500">
-                                {formattedDate(post?.createdAt)}
-                            </span>
+                            <CopyLink />
                         </div>
+                    </div> */}
+                    <div className="col-span-12 min-w-0 rounded-lg lg:col-span-8 lg:col-start-3">
+                        <div>
+                            <strong className="text-2xl font-extrabold">
+                                {post?.title}
+                            </strong>
+                            <div className="pt-4">
+                                <span className="italic text-gray-500">
+                                    {formattedDate(post?.createdAt)}
+                                </span>
+                            </div>
+                        </div>
+                        <CKContent
+                            value={content || ''}
+                            className="font-normal"
+                        />
                     </div>
-                    <CKContent value={content || ''} className="font-normal" />
+                    {/* <div className="col-span-4 hidden lg:block">
+                        <LatestNews />
+                    </div> */}
                 </div>
-                <div className="col-span-4 hidden lg:block">
-                    <LatestNews />
-                </div>
-            </div>
-            <div>
-                <RelatedNews data={newsData?.items} />
+                {/* <div>
+                    <RelatedNews data={newsData?.items} />
+                </div> */}
             </div>
         </div>
     );

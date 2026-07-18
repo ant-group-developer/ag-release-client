@@ -10,3 +10,8 @@ export enum DISTRIBUTION_CHANNEL_PROTOCOL {
     SFTP = 'SFTP',
     API = 'API',
 }
+
+export enum ERN_VERSION {
+    ERN_43 = '4.3',
+    ERN_382 = '3.8.2',
+}

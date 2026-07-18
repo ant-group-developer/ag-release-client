@@ -1,8 +1,7 @@
+@import './ckeditor.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './ckeditor.css';
 
 @layer components {
     .bg-background-primary {
@@ -40,6 +39,10 @@
     html {
         font-family: var(--font-family-inter);
         scroll-behavior: smooth;
+    }
+
+    html.dark {
+        color-scheme: dark;
     }
 }
 
@@ -418,7 +421,7 @@ select {
 .editor-large .ck-content {
     @apply min-h-[20rem];
     @apply h-full;
-    @apply max-h-[50rem];
+    /* @apply max-h-[50rem]; */
 }
 
 .editor-readonly .ck-content {
@@ -439,8 +442,40 @@ select {
     @apply !hidden;
 }
 
+/* CKEditor - Giao diện tối (Dark Mode) */
+html.dark .ck-editor__editable {
+    background-color: #1c1c1c !important;
+    color: #d1d5db !important; /* Màu chữ mặc định sẽ chuyển thành màu sáng */
+    border-color: #303030 !important;
+}
+html.dark .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+    border-color: #303030 !important;
+}
+html.dark .ck.ck-toolbar {
+    background-color: #2c2c2c !important;
+    border-color: #303030 !important;
+}
+html.dark .ck.ck-button {
+    color: #d1d5db !important;
+}
+html.dark .ck.ck-button:hover,
+html.dark .ck.ck-button.ck-on {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+}
+html.dark .ck.ck-dropdown__panel {
+    background-color: #2c2c2c !important;
+    border-color: #303030 !important;
+}
+html.dark .ck.ck-list {
+    background-color: #2c2c2c !important;
+}
+html.dark .ck.ck-list__item .ck-button:hover {
+    background-color: #3c3c3c !important;
+}
+
 .ant-upload-list-item {
-    @apply bg-white !important;
+    @apply !bg-white dark:!bg-[#1c1c1c];
 }
 
 /* close ckeditor css */

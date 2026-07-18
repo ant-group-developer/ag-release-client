@@ -1,20 +1,20 @@
 import FormItem from '@/components/ui/react-hook-form/form-item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
-import SensitiveContentSelect from '@/components/ui/select/isSensitiveContent-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
+import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
 import { TrackData } from '@/modules/tracks/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { UpdateVariables } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ConfigProvider, Input, Radio, Select } from 'antd';
+import { ConfigProvider, DatePicker, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
@@ -68,8 +68,8 @@ export default function OtherMetadataForm({ trackData }: Props) {
         resolver: zodResolver(otherMetadataSchema(messages)),
         mode: 'onChange',
     });
-    const { action } = useGetReleaseDetailRoute();
-    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
+    const releaseAction = useReleaseActionStore((s) => s.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
     const {
         control,
         handleSubmit,
@@ -497,47 +497,38 @@ export default function OtherMetadataForm({ trackData }: Props) {
                             name="pLineYear"
                             control={control}
                             render={({ field }) => {
-                                const currentYear = Number(dayjs().year());
-                                const copyRightYearList = () => {
-                                    const yearList = [
-                                        {
-                                            label: (currentYear - 1).toString(),
-                                            value: currentYear - 1,
-                                        },
-                                        {
-                                            label: currentYear.toString(),
-                                            value: currentYear,
-                                        },
-                                        {
-                                            label: (currentYear + 1).toString(),
-                                            value: currentYear + 1,
-                                        },
-                                    ];
-                                    return yearList;
-                                };
-
+                                const maxYear = dayjs().year() + 1;
                                 return (
-                                    <Select
+                                    <DatePicker
+                                        id="pLineYear"
+                                        picker="year"
+                                        value={
+                                            field.value
+                                                ? dayjs().year(field.value)
+                                                : null
+                                        }
                                         className="w-full"
-                                        showSearch
-                                        {...field}
-                                        value={field.value}
-                                        onChange={(newYear) => {
-                                            const yearNumber = Number(newYear);
-                                            field.onChange(yearNumber);
+                                        onChange={(date) => {
+                                            const value = date
+                                                ? date.year()
+                                                : undefined;
+                                            field.onChange(value);
                                             debouncedUpdateTrackDraft(
                                                 {
-                                                    pLineYear: yearNumber,
+                                                    pLineYear: value,
                                                 },
                                                 'pLineYear'
                                             );
                                         }}
-                                        options={copyRightYearList()}
+                                        disabledDate={(current) =>
+                                            current && current.year() > maxYear
+                                        }
                                         status={
                                             errors.pLineYear
                                                 ? 'error'
                                                 : undefined
                                         }
+                                        allowClear
                                     />
                                 );
                             }}
@@ -640,3 +631,4 @@ export default function OtherMetadataForm({ trackData }: Props) {
         </ConfigProvider>
     );
 }
+

@@ -40,6 +40,7 @@ export default function TranslationFormModal({
     const [form] = Form.useForm();
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as NewsData);
+    const closeModal = useModalStore((state) => state.closeModal);
     const { active, isActive, deActive } = useActive();
     const isUpdateModal = typeModal === TYPE_MODAL_NEWS.EDIT || !!translationId;
 
@@ -81,6 +82,7 @@ export default function TranslationFormModal({
             },
             onSuccess: () => {
                 deActive();
+                closeModal();
                 form.resetFields();
             },
             onError: () => {

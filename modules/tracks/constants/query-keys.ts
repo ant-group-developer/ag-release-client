@@ -30,7 +30,7 @@ export const trackQueryKeys = {
         QUERY_KEY.TRACK.GET_TRACKS_POLICIES,
     ],
     listTracksPolicies: (params: TrackDataFilter) => [
-        trackQueryKeys.listsTracksPolicies(),
+        ...trackQueryKeys.listsTracksPolicies(),
         params,
     ],
 };

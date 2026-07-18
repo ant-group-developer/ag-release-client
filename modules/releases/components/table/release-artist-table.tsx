@@ -1,6 +1,7 @@
 import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { ArtistProfileData } from '@/modules/artist/types';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
@@ -13,7 +14,6 @@ import { ColumnType } from 'antd/es/table';
 import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import AddArtistForm from './add-artist-form';
 
 type Props = AppTableProps<ReleaseArtist> & {
     disabled?: boolean;
@@ -71,7 +71,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('common.name'),
-            width: 250,
+            width: 400,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
@@ -84,7 +84,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 100,
+            width: 220,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -99,28 +99,9 @@ export default function ReleaseArtistTable({
                 );
             },
         },
-        // {
-        //     title: messages('common.role'),
-        //     width: 100,
-        //     render: (_, record, index) => {
-        //         return (
-        //             <div className="max-w-52">
-        //                 <RoleArtistSelect
-        //                     defaultValue={record?.artistRole?.id}
-        //                     className="w-full"
-        //                     onChange={(e) =>
-        //                         handleUpdate(record?.id, {
-        //                             artistRoleId: e,
-        //                         })
-        //                     }
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             title: messages('genre.label'),
-            width: 100,
+            width: 180,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.genre?.name}</span>;
@@ -128,7 +109,7 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('country.label'),
-            width: 100,
+            width: 180,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.country?.name}</span>;
@@ -136,26 +117,32 @@ export default function ReleaseArtistTable({
         },
         {
             title: messages('artist.profiles'),
-            width: 100,
+            width: 120,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-1">
                         {record?.artist?.artistProfiles?.map(
                             (profile: ArtistProfileData) => (
-                                <Avatar
+                                <CustomTooltip
                                     key={profile.id}
-                                    size={26}
-                                    src={profile.dsp?.picture ?? ''}
-                                    className="cursor-pointer hover:opacity-80"
-                                    onClick={(e) => {
-                                        e?.stopPropagation();
-                                        window.open(
-                                            profile.url,
-                                            '_blank',
-                                            'noopener'
-                                        );
-                                    }}
-                                />
+                                    title={profile.dsp?.name}
+                                >
+                                    <Avatar
+                                        size={'small'}
+                                        src={profile.dsp?.picture ?? ''}
+                                        className="cursor-pointer hover:opacity-80"
+                                        onClick={(e) => {
+                                            e?.stopPropagation();
+                                            window.open(
+                                                profile.url,
+                                                '_blank',
+                                                'noopener'
+                                            );
+                                        }}
+                                    >
+                                        {profile.dsp?.name?.[0]}
+                                    </Avatar>
+                                </CustomTooltip>
                             )
                         )}
                     </div>
@@ -163,7 +150,7 @@ export default function ReleaseArtistTable({
             },
         },
         {
-            width: 40,
+            width: 50,
             align: 'center',
             render: (_, record, index) => {
                 return (
@@ -173,17 +160,19 @@ export default function ReleaseArtistTable({
                             e.stopPropagation();
                         }}
                     >
-                        <IconButton
-                            disabled={disabled}
-                            onClick={() => {
-                                setReleaseArtistModal({
-                                    isOpen: true,
-                                    data: record,
-                                });
-                            }}
-                        >
-                            <Trash color="red" size={SIZE_ICON} />
-                        </IconButton>
+                        {!disabled && (
+                            <IconButton
+                                disabled={disabled}
+                                onClick={() => {
+                                    setReleaseArtistModal({
+                                        isOpen: true,
+                                        data: record,
+                                    });
+                                }}
+                            >
+                                <Trash color="red" size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                     </div>
                 );
             },
@@ -191,29 +180,30 @@ export default function ReleaseArtistTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
+            <div className="overflow-hidden rounded-lg border border-b-0 dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}
-                    scroll={{ x: 'max-content' }}
+                    // scroll={{ x: 'max-content' }}
                 />
-                <div className="px-4 py-2">
-                    <AddArtistForm disabled={disabled} />
-                    <AppConfirm
-                        open={releaseArtistModal?.isOpen}
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: releaseArtistModal?.data?.artist?.name,
-                        })}
-                        onCancel={() => {
-                            setReleaseArtistModal({
-                                isOpen: false,
-                                data: undefined,
-                            });
-                        }}
-                        onOk={() => handleRemoveArtistList()}
-                    />
-                </div>
+                {!disabled && (
+                    <div>
+                        <AppConfirm
+                            open={releaseArtistModal?.isOpen}
+                            modalTitle={messages('delete.confirmTitle')}
+                            paragraph={messages('action.delete.alert', {
+                                label: releaseArtistModal?.data?.artist?.name,
+                            })}
+                            onCancel={() => {
+                                setReleaseArtistModal({
+                                    isOpen: false,
+                                    data: undefined,
+                                });
+                            }}
+                            onOk={() => handleRemoveArtistList()}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
+import NewsCategoryTreeSelect from '@/components/ui/select/news-category-tree-select';
 import { MAX_NAME_LENGTH, MAX_NOTE_LENGTH } from '@/constants/validate';
 import { SCREEN } from '@/enums/common';
 import { useActive } from '@/hooks/use-active';
@@ -18,15 +19,25 @@ import {
     UpdateNewsCategoryPayload,
 } from '../../types/payloads';
 
-type Props = Omit<AppModalProps, 'children'> & {};
+type Props = Omit<AppModalProps, 'children'> & {
+    onCreateSuccess?: (data: NewsCategoryData) => void;
+    onUpdateSuccess?: (data: NewsCategoryData) => void;
+    dataEdit?: NewsCategoryData;
+};
 
-export default function NewsCategoryFormModal({ ...props }: Props) {
+export default function NewsCategoryFormModal({
+    onCreateSuccess,
+    onUpdateSuccess,
+    dataEdit: customDataEdit,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore(
+    const storeDataEdit = useModalStore(
         (state) => state.dataEdit as NewsCategoryData
     );
+    const dataEdit = customDataEdit ?? storeDataEdit;
     const { active, isActive, deActive } = useActive();
     const isUpdateModal = dataEdit?.id;
 
@@ -40,8 +51,9 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
         > = {
             id: dataEdit?.id,
             payload: value,
-            onSuccess: () => {
+            onSuccess: (data: NewsCategoryData) => {
                 deActive();
+                onUpdateSuccess?.(data);
             },
             onError: () => {
                 deActive();
@@ -53,9 +65,10 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
     const handleCreate = (value: any) => {
         const variables: CreateVariables<CreateNewsCategoryPayload> = {
             payload: value,
-            onSuccess: () => {
+            onSuccess: (data: NewsCategoryData) => {
                 deActive();
                 form.resetFields();
+                onCreateSuccess?.(data);
             },
             onError: () => {
                 deActive();
@@ -71,6 +84,7 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
 
         const payloadValues = {
             ...res,
+            parentId: res.parentId || null,
         };
 
         return isUpdateModal
@@ -88,11 +102,11 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
     return (
         <AppModal
             width={SCREEN.LG}
-            {...props}
             title={`${isUpdateModal ? messages('common.update') : messages('common.create')} ${messages('newsCategory.label').toLowerCase()}`}
-            open
+            open={props.open ?? true}
             onOk={form.submit}
             loading={isActive}
+            {...props}
         >
             <AppForm
                 form={form}
@@ -102,6 +116,18 @@ export default function NewsCategoryFormModal({ ...props }: Props) {
                 disabled={isActive}
                 className="grid grid-cols-2 gap-4"
             >
+                <AppFormItem
+                    className="col-span-2"
+                    name="parentId"
+                    label={messages('newsCategory.parentLabel')}
+                >
+                    <NewsCategoryTreeSelect
+                        placeholder={messages('newsCategory.parentPlaceholder')}
+                        excludeId={dataEdit?.id}
+                        showCreate={false}
+                    />
+                </AppFormItem>
+
                 <AppFormItem
                     name="nameVi"
                     label={`${messages('newsCategory.name')} Vi`}

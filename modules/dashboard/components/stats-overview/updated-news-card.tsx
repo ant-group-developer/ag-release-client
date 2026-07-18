@@ -1,73 +1,96 @@
-import { Link } from '@/i18n/routing';
-import { ArrowRightOutlined } from '@ant-design/icons';
-import { Card, Typography } from 'antd';
-import { Bell } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll/scroll-area';
+import { Card, Timeline } from 'antd';
 import { useTranslations } from 'next-intl';
 
 type UpdateItem = {
     id: string;
     title: string;
+    description: string;
     time: string;
-    href?: string;
+    isNew?: boolean;
 };
 
 const updates: UpdateItem[] = [
     {
         id: '1',
-        title: 'New analytics dashboard with DSP trends',
-        time: '2h ago',
-        href: '#',
+        title: 'Core Engine v2.4 Deployed',
+        description:
+            'Successfully patched memory leak issues in the aggregation layer. Global deployment completed in 4m 12s.',
+        time: '10:45 AM',
+        isNew: true,
     },
     {
         id: '2',
-        title: 'Content ID claim heatmap feature added',
-        time: '1d ago',
-        href: '#',
+        title: 'New Compliance Policy',
+        description:
+            'Updated data retention protocols for EU-West regions. Automatic archival schedules are now live.',
+        time: '09:12 AM',
     },
     {
         id: '3',
-        title: 'Revenue report now supports ISRC matching',
-        time: '3d ago',
-        href: '#',
+        title: 'Security Audit Passed',
+        description:
+            'Annual penetration test results received. No critical vulnerabilities identified. Score: 98/100.',
+        time: 'YESTERDAY',
+    },
+    {
+        id: '4',
+        title: 'System Maintenance Scheduled',
+        description:
+            'Routine backup verification scheduled for Saturday, 02:00 UTC. No expected downtime for users.',
+        time: 'YESTERDAY',
     },
 ];
 
 export default function NewsUpdatedCard() {
     const messages = useTranslations();
+
     return (
         <Card
-            title="Updated news"
-            styles={{ body: { padding: 0, height: '80%' } }}
-        >
-            <div className="flex h-full flex-col justify-between">
-                <ul className="divide-y divide-gray-200 dark:divide-zinc-800">
-                    {updates.map((item) => (
-                        <li key={item.id}>
-                            <a
-                                href={item.href}
-                                className="flex cursor-pointer items-start gap-3 rounded-md px-4 py-3 transition hover:bg-gray-50 dark:hover:bg-neutral-800"
-                            >
-                                <Bell className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
-                                <div className="flex flex-col">
-                                    <Typography>{item.title}</Typography>
-                                    <Typography.Text type="secondary">
-                                        {item.time}
-                                    </Typography.Text>
-                                </div>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-                <div className="mt-3 flex justify-end p-4">
-                    <Link
-                        href="#"
-                        className="space-x-1 text-xs hover:!text-blue-500"
-                    >
-                        <span>{messages('dashboard.viewAllUpdates')}</span>
-                        <ArrowRightOutlined />
-                    </Link>
+            className="h-full overflow-hidden"
+            styles={{
+                header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
+            }}
+            title={
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <h3 className="text-md m-0 font-bold">
+                            {messages('dashboard.recentUpdates')}
+                        </h3>
+                    </div>
                 </div>
-            </div>
+            }
+        >
+            <ScrollArea className="h-[350px]">
+                <div className="p-1">
+                    <Timeline
+                        items={updates.map((item) => ({
+                            dot: (
+                                <div
+                                    className={`h-4 w-4 rounded-full border-2 border-white shadow-sm ${
+                                        item.isNew
+                                            ? 'bg-blue-800'
+                                            : 'bg-gray-300'
+                                    }`}
+                                />
+                            ),
+                            children: (
+                                <div className="pb-6">
+                                    <div className="mb-1 text-[10px] font-bold text-gray-300">
+                                        {item.time}
+                                    </div>
+                                    <h4 className="mb-1 text-sm font-bold text-gray-900">
+                                        {item.title}
+                                    </h4>
+                                    <p className="m-0 text-xs leading-relaxed text-gray-400">
+                                        {item.description}
+                                    </p>
+                                </div>
+                            ),
+                        }))}
+                    />
+                </div>
+            </ScrollArea>
         </Card>
     );
 }

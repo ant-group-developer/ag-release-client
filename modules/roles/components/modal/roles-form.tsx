@@ -217,6 +217,14 @@ export default function RolesFormModal({ ...props }: Props) {
                 >
                     <Switch />
                 </AppFormItem>
+                <AppFormItem
+                    name="isDefault"
+                    label={messages('roles.isDefault')}
+                    valuePropName="checked"
+                    initialValue={false}
+                >
+                    <Switch />
+                </AppFormItem>
                 <div className="mt-8">
                     <PermissionTableItemForm
                         rowSelection={rowSelection}

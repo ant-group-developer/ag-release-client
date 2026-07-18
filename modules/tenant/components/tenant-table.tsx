@@ -4,9 +4,11 @@ import {
     getAvatarPlaceholder,
     getSortOrder,
 } from '@/helpers/common';
+import { usePermission } from '@/hooks/use-permission';
 import { Link } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Avatar, Space, Switch, theme, Tooltip } from 'antd';
+import { Avatar, Space, Switch, theme, Tooltip, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TENANT_ORDER_BY, TENANT_TABS } from '../enums';
@@ -31,6 +33,8 @@ function TenantTable({ dataFilter, ...props }: Props) {
     } = useAuth();
 
     const { updateTenant, isPending } = useUpdateTenant();
+    const { hasPermission } = usePermission();
+    const canUpdateTenant = hasPermission(PERMISSION.WORKSPACE.UPDATE_STATUS);
 
     const updateTenantStatus = (tenantId: string, status: boolean) => {
         updateTenant({
@@ -58,7 +62,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
         {
             dataIndex: '',
             title: '',
-            width: 20,
+            width: 40,
             render: () => null,
         },
         {
@@ -126,6 +130,15 @@ function TenantTable({ dataFilter, ...props }: Props) {
             ellipsis: true,
         },
         {
+            title: messages('tenant.code'),
+            dataIndex: 'code',
+            width: 120,
+            ellipsis: true,
+            render: (cell) => (
+                <Typography.Text copyable>{cell}</Typography.Text>
+            ),
+        },
+        {
             title: messages('tenant.type.titleShort'),
             dataIndex: 'type',
             align: 'center',
@@ -147,7 +160,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             render: (cell, record) => (
                 <Switch
                     checked={cell}
-                    disabled={tenantId === record.id}
+                    disabled={tenantId === record.id || !canUpdateTenant}
                     onChange={(status) => updateTenantStatus(record.id, status)}
                 />
             ),
@@ -177,7 +190,7 @@ function TenantTable({ dataFilter, ...props }: Props) {
             title: messages('tenant.labels.max.label'),
             dataIndex: 'maxLabels',
             align: 'center',
-            width: 120,
+            width: 140,
             sorter: true,
             render: (cell, record) => formattedNumber(record.maxLabels),
         },

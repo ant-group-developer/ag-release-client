@@ -10,6 +10,7 @@ import {
     CloudUploadOutlined,
     ExclamationCircleOutlined,
     FileExcelOutlined,
+    InfoCircleOutlined,
     LoadingOutlined,
     RocketOutlined,
     SyncOutlined,
@@ -28,6 +29,7 @@ import {
     Typography,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { BatchImportStatus } from '../enums/batch-import-status.enum';
 import { BatchImportLogData } from '../types/data';
 
 const { Text } = Typography;
@@ -40,45 +42,50 @@ const STATUS_CONFIG: Record<
         label: string;
     }
 > = {
-    validating: {
+    [BatchImportStatus.VALIDATING]: {
         color: 'processing',
         icon: <SyncOutlined spin />,
         label: 'Validating',
     },
-    validated: {
+    [BatchImportStatus.VALIDATED]: {
         color: 'cyan',
         icon: <CheckCircleOutlined />,
         label: 'Validated',
     },
-    validation_failed: {
+    [BatchImportStatus.VALIDATION_FAILED]: {
         color: 'error',
         icon: <CloseCircleOutlined />,
         label: 'Validation Failed',
     },
-    uploading: {
+    [BatchImportStatus.UPLOADING]: {
         color: 'warning',
         icon: <LoadingOutlined />,
         label: 'Uploading',
     },
-    uploaded: {
+    [BatchImportStatus.UPLOADED]: {
         color: 'success',
         icon: <CheckCircleOutlined />,
         label: 'Uploaded',
     },
-    creating: {
+    [BatchImportStatus.CREATING]: {
         color: 'geekblue',
         icon: <RocketOutlined />,
         label: 'Creating',
     },
-    completed: {
+    [BatchImportStatus.COMPLETED]: {
         color: 'success',
         icon: <CheckCircleOutlined />,
         label: 'Completed',
     },
-    failed: {
+    [BatchImportStatus.FAILED]: {
         color: 'error',
         icon: <ExclamationCircleOutlined />,
         label: 'Failed',
+    },
+    [BatchImportStatus.SKIPPED]: {
+        color: 'warning',
+        icon: <ExclamationCircleOutlined />,
+        label: 'Skipped',
     },
 };
 
@@ -168,7 +175,7 @@ function BatchImportTable({ ...props }: Props) {
             },
         },
         {
-            title: 'Errors',
+            title: 'Messages',
             dataIndex: 'errors',
             width: 90,
             align: 'center',
@@ -181,8 +188,27 @@ function BatchImportTable({ ...props }: Props) {
                         </Text>
                     );
                 }
+                const errorCount = errors!.filter(
+                    (e) => !e.startsWith('[INFO]')
+                ).length;
+                const infoCount = count - errorCount;
                 return (
-                    <Badge count={count} color="#ff4d4f" overflowCount={99} />
+                    <Space size={4}>
+                        {errorCount > 0 && (
+                            <Badge
+                                count={errorCount}
+                                color="#ff4d4f"
+                                overflowCount={99}
+                            />
+                        )}
+                        {infoCount > 0 && (
+                            <Badge
+                                count={infoCount}
+                                color="#1677ff"
+                                overflowCount={99}
+                            />
+                        )}
+                    </Space>
                 );
             },
         },
@@ -224,7 +250,6 @@ function BatchImportTable({ ...props }: Props) {
                     <div
                         style={{
                             padding: 16,
-                            background: '#fafafa',
                             borderRadius: 8,
                         }}
                     >
@@ -318,56 +343,100 @@ function BatchImportTable({ ...props }: Props) {
                                 </Col>
                             )}
 
-                            {/* Errors Panel */}
-                            {errors && errors.length > 0 && (
-                                <Col xs={24} md={12} lg={8}>
-                                    <Card
-                                        size="small"
-                                        title={
-                                            <Flex align="center" gap={8}>
-                                                <ExclamationCircleOutlined
-                                                    style={{
-                                                        color: '#ff4d4f',
-                                                        fontSize: 16,
-                                                    }}
-                                                />
-                                                <Text
-                                                    strong
-                                                    style={{ color: '#ff4d4f' }}
-                                                >
-                                                    Errors
-                                                </Text>
-                                                <Badge
-                                                    count={errors.length}
-                                                    color="#ff4d4f"
-                                                    size="small"
-                                                />
-                                            </Flex>
-                                        }
-                                        styles={{
-                                            body: {
-                                                maxHeight: 300,
-                                                overflow: 'auto',
-                                            },
-                                        }}
-                                    >
-                                        <Flex vertical gap={8}>
-                                            {errors.map((err, i) => (
-                                                <Alert
-                                                    key={i}
-                                                    type="error"
-                                                    showIcon
-                                                    icon={
-                                                        <CloseCircleOutlined />
-                                                    }
-                                                    message={err}
-                                                    style={{ fontSize: 12 }}
-                                                />
-                                            ))}
-                                        </Flex>
-                                    </Card>
-                                </Col>
-                            )}
+                            {/* Messages Panel */}
+                            {errors &&
+                                errors.length > 0 &&
+                                (() => {
+                                    const infoMessages = errors.filter((e) =>
+                                        e.startsWith('[INFO]')
+                                    );
+                                    const errorMessages = errors.filter(
+                                        (e) => !e.startsWith('[INFO]')
+                                    );
+                                    return (
+                                        <Col xs={24} md={12} lg={8}>
+                                            <Card
+                                                size="small"
+                                                title={
+                                                    <Flex
+                                                        align="center"
+                                                        gap={8}
+                                                    >
+                                                        <ExclamationCircleOutlined
+                                                            style={{
+                                                                color:
+                                                                    errorMessages.length >
+                                                                    0
+                                                                        ? '#ff4d4f'
+                                                                        : '#1677ff',
+                                                                fontSize: 16,
+                                                            }}
+                                                        />
+                                                        <Text strong>
+                                                            Messages
+                                                        </Text>
+                                                        <Badge
+                                                            count={
+                                                                errors.length
+                                                            }
+                                                            color={
+                                                                errorMessages.length >
+                                                                0
+                                                                    ? '#ff4d4f'
+                                                                    : '#1677ff'
+                                                            }
+                                                            size="small"
+                                                        />
+                                                    </Flex>
+                                                }
+                                                styles={{
+                                                    body: {
+                                                        maxHeight: 300,
+                                                        overflow: 'auto',
+                                                    },
+                                                }}
+                                            >
+                                                <Flex vertical gap={8}>
+                                                    {infoMessages.map(
+                                                        (msg, i) => (
+                                                            <Alert
+                                                                key={`info-${i}`}
+                                                                type="info"
+                                                                showIcon
+                                                                icon={
+                                                                    <InfoCircleOutlined />
+                                                                }
+                                                                message={msg.replace(
+                                                                    /^\[INFO]\s*/,
+                                                                    ''
+                                                                )}
+                                                                style={{
+                                                                    fontSize: 12,
+                                                                }}
+                                                            />
+                                                        )
+                                                    )}
+                                                    {errorMessages.map(
+                                                        (err, i) => (
+                                                            <Alert
+                                                                key={`err-${i}`}
+                                                                type="error"
+                                                                showIcon
+                                                                icon={
+                                                                    <CloseCircleOutlined />
+                                                                }
+                                                                message={err}
+                                                                style={{
+                                                                    fontSize: 12,
+                                                                }}
+                                                            />
+                                                        )
+                                                    )}
+                                                </Flex>
+                                            </Card>
+                                        </Col>
+                                    );
+                                })()}
                         </Row>
                     </div>
                 ),

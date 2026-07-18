@@ -40,6 +40,10 @@ export const useGetDetailAggregator = (id: AggregatorData['id']) => {
         },
         ddexId: '',
         ddexName: '',
+        createsDoneFolder: false,
+        deliveryEmail: '',
+        deliveryEmailSubject: '',
+        manualUploadUrl: '',
     };
 
     return {

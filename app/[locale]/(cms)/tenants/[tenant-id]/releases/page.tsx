@@ -133,19 +133,16 @@ export default function Releases({}: Props) {
             </div> */}
 
             <div>
-                <ReleasesHeaderV2
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                    dataUpdatedAt={dataUpdatedAt}
-                />
-
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <ReleasesTable
+                        headerTitle={
+                            <ReleasesHeaderV2
+                                dataFilter={dataFilter}
+                                onChangeFilter={onChangeFilter}
+                                canClearFilter={canClearFilter}
+                                removeFilter={removeFilter}
+                            />
+                        }
                         sticky={{ offsetHeader: 170 }}
                         dataSource={releasesData?.items}
                         loading={isReleaseDataLoading}

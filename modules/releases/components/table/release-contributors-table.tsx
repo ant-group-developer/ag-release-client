@@ -2,6 +2,7 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { ArtistProfileData } from '@/modules/artist/types';
 import { useDeleteReleaseContributor } from '@/modules/release-contributor/hooks/use-delete-release-contributor';
@@ -72,7 +73,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('common.name'),
-            width: 250,
+            width: 300,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return (
@@ -85,7 +86,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('artist.addToTracks'),
-            width: 120,
+            width: 150,
             render: (_, record, index) => {
                 return (
                     <Switch
@@ -102,7 +103,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('common.role'),
-            width: 100,
+            width: 200,
             render: (_, record, index) => {
                 return (
                     <div className="max-w-52">
@@ -115,6 +116,7 @@ export default function ReleaseContributorsTable({
                                 })
                             }
                             disabled={disabled}
+                            variant="borderless"
                         />
                     </div>
                 );
@@ -122,7 +124,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('genre.label'),
-            width: 100,
+            width: 150,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.genre?.name}</span>;
@@ -130,7 +132,7 @@ export default function ReleaseContributorsTable({
         },
         {
             title: messages('country.label'),
-            width: 100,
+            width: 150,
             render: (_, record, index) => {
                 const artist = record?.artist;
                 return <span>{artist?.country?.name}</span>;
@@ -139,26 +141,32 @@ export default function ReleaseContributorsTable({
 
         {
             title: messages('artist.profiles'),
-            width: 150,
+            width: 120,
             render: (_, record, index) => {
                 return (
                     <div className="space-x-1">
                         {record?.artist?.artistProfiles?.map(
                             (profile: ArtistProfileData) => (
-                                <Avatar
+                                <CustomTooltip
                                     key={profile.id}
-                                    size={26}
-                                    src={profile.dsp?.picture ?? ''}
-                                    className="cursor-pointer hover:opacity-80"
-                                    onClick={(e) => {
-                                        e?.stopPropagation();
-                                        window.open(
-                                            profile.url,
-                                            '_blank',
-                                            'noopener'
-                                        );
-                                    }}
-                                />
+                                    title={profile.dsp?.name}
+                                >
+                                    <Avatar
+                                        size={26}
+                                        src={profile.dsp?.picture ?? ''}
+                                        className="cursor-pointer hover:opacity-80"
+                                        onClick={(e) => {
+                                            e?.stopPropagation();
+                                            window.open(
+                                                profile.url,
+                                                '_blank',
+                                                'noopener'
+                                            );
+                                        }}
+                                    >
+                                        {profile.dsp?.name[0]}
+                                    </Avatar>
+                                </CustomTooltip>
                             )
                         )}
                     </div>
@@ -171,17 +179,19 @@ export default function ReleaseContributorsTable({
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
-                        <IconButton
-                            onClick={() => {
-                                setReleaseContributorModal({
-                                    isOpen: true,
-                                    data: record,
-                                });
-                            }}
-                            disabled={disabled}
-                        >
-                            <Trash color="red" size={SIZE_ICON} />
-                        </IconButton>
+                        {!disabled && (
+                            <IconButton
+                                onClick={() => {
+                                    setReleaseContributorModal({
+                                        isOpen: true,
+                                        data: record,
+                                    });
+                                }}
+                                disabled={disabled}
+                            >
+                                <Trash color="red" size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                     </div>
                 );
             },
@@ -189,29 +199,32 @@ export default function ReleaseContributorsTable({
     ];
     return (
         <div className="space-y-2">
-            <div className="overflow-hidden rounded-lg border dark:border-zinc-700">
+            <div className="overflow-hidden rounded-lg border border-b-0 dark:border-zinc-700">
                 <AppTable
                     {...props}
                     columns={columns}
                     scroll={{ x: 'max-content' }}
                 />
-                <div className="px-4 py-2">
-                    <AddArtistContributorForm disabled={disabled} />
-                    <AppConfirm
-                        open={releaseContributorModal?.isOpen}
-                        modalTitle={messages('delete.confirmTitle')}
-                        paragraph={messages('delete.confirmMessage', {
-                            value: releaseContributorModal?.data?.artist?.name,
-                        })}
-                        onCancel={() => {
-                            setReleaseContributorModal({
-                                isOpen: false,
-                                data: undefined,
-                            });
-                        }}
-                        onOk={() => handleRemoveArtistContributor()}
-                    />
-                </div>
+                {!disabled && (
+                    <div className="px-4">
+                        <AddArtistContributorForm disabled={disabled} />
+                        <AppConfirm
+                            open={releaseContributorModal?.isOpen}
+                            modalTitle={messages('delete.confirmTitle')}
+                            paragraph={messages('delete.confirmMessage', {
+                                value: releaseContributorModal?.data?.artist
+                                    ?.name,
+                            })}
+                            onCancel={() => {
+                                setReleaseContributorModal({
+                                    isOpen: false,
+                                    data: undefined,
+                                });
+                            }}
+                            onOk={() => handleRemoveArtistContributor()}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

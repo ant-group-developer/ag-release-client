@@ -1,5 +1,6 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { releasesQueryKeys } from '@/modules/releases/constants/query-keys';
+import { trackQueryKeys } from '@/modules/tracks/constants/query-keys';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { releaseArtistApi } from '../apis';
@@ -13,7 +14,7 @@ export const useCreateReleaseArtist = () => {
 
     const onSuccess = (
         data: any,
-        { onSuccess }: CreateVariables<CreateReleaseArtistPayload>
+        { onSuccess, payload }: CreateVariables<CreateReleaseArtistPayload>
     ) => {
         queryClient.invalidateQueries({
             queryKey: releaseArtistQueryKeys.lists(),
@@ -24,11 +25,11 @@ export const useCreateReleaseArtist = () => {
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.validations(),
         });
-
-        // const responseMessages = messages(data?.data?.messageCode);
+        queryClient.invalidateQueries({
+            queryKey: trackQueryKeys.lists(),
+        });
 
         onSuccess?.(data?.data?.data);
-        // showNotification('success', responseMessages);
     };
 
     const onError = (
@@ -51,7 +52,7 @@ export const useCreateReleaseArtist = () => {
     const createReleaseArtist = (
         variables: CreateVariables<CreateReleaseArtistPayload>
     ) => {
-        mutation.mutate(variables);
+        return mutation.mutateAsync(variables);
     };
 
     return {

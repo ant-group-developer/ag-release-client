@@ -5,10 +5,13 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { ProColumns } from '@ant-design/pro-components';
 import { Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_DSP } from '../../enums';
+import { DSP_DEAL, DSP_TABLE_KEY, TYPE_MODAL_DSP } from '../../enums';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
 import { DspData } from '../../types';
 
@@ -24,6 +27,8 @@ export const DspTable = ({ ...props }: Props) => {
     const openModal = useModalStore((state) => state.openModal);
     const { updateDsp } = useUpdateDsp();
     const { token } = theme.useToken();
+    const { hasPermission } = usePermission();
+    const canUpdate = hasPermission(PERMISSION.DSP.UPDATE);
 
     const column: ProColumns<DspData>[] = [
         {
@@ -31,6 +36,7 @@ export const DspTable = ({ ...props }: Props) => {
             key: 'iNo',
             width: 50,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -38,57 +44,36 @@ export const DspTable = ({ ...props }: Props) => {
                     index
                 ),
         },
-        // {
-        //     title: '',
-        //     key: 'picture',
-        //     dataIndex: 'picture',
-        //     align: 'center',
-        //     width: 50,
-        //     render: (value) => (
-        //         <div className="flex justify-center">
-        //             <ImageFallback
-        //                 fallbackSrc={FALLBACK_IMAGE}
-        //                 src={value ?? ''}
-        //                 alt="genre"
-        //                 width={48}
-        //                 height={48}
-        //                 className="aspect-square rounded-lg object-cover"
-        //             />
-        //         </div>
-        //     ),
-        // },
         {
             title: messages('dsp.name'),
             key: 'name',
-            dataIndex: 'name',
+            dataIndex: DSP_TABLE_KEY.NAME,
             ellipsis: true,
             align: 'left',
-            width: 300,
+            width: 250,
+            fixed: 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
                     <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
-                            src={record?.picture ?? ''}
+                            src={record?.picture ?? FALLBACK_IMAGE}
                             alt="genre"
                             width={40}
                             height={40}
                             className="aspect-square rounded-lg object-cover"
                         />
                     </div>
-                    <CopyText
-                        tooltipProps={{ placement: 'right' }}
-                        text={record?.name}
-                    >
-                        <p className="truncate">{record?.name}</p>
-                    </CopyText>
+                    <span title={record?.name} className="truncate">
+                        {record?.name}
+                    </span>
                 </div>
             ),
         },
         {
             title: messages('common.code'),
             key: 'code',
-            dataIndex: 'code',
+            dataIndex: DSP_TABLE_KEY.CODE,
             align: 'left',
             width: 150,
             render: (value, record) => (
@@ -101,11 +86,26 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
+            title: messages('dsp.codeCi'),
+            key: 'codeCi',
+            dataIndex: DSP_TABLE_KEY.CODE_CI,
+            align: 'left',
+            width: 120,
+            render: (value, record) => (
+                <CopyText
+                    tooltipProps={{ placement: 'right' }}
+                    text={record?.codeCi}
+                >
+                    <p className="truncate text-nowrap">{record?.codeCi}</p>
+                </CopyText>
+            ),
+        },
+        {
             title: messages('dsp.ddexPartyId'),
             key: 'ddexId',
-            dataIndex: 'ddexId',
+            dataIndex: DSP_TABLE_KEY.DDEX_ID,
             align: 'left',
-            width: 150,
+            width: 200,
             render: (value, record) => (
                 <CopyText
                     tooltipProps={{ placement: 'right' }}
@@ -118,7 +118,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('dsp.fullNameOfDDexParty'),
             key: 'ddexName',
-            dataIndex: 'ddexName',
+            dataIndex: DSP_TABLE_KEY.DDEX_NAME,
             align: 'left',
             width: 200,
             render: (value, record) => (
@@ -133,7 +133,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('status.active'),
             key: 'isActive',
-            dataIndex: 'isActive',
+            dataIndex: DSP_TABLE_KEY.IS_ACTIVE,
             align: 'center',
             width: 80,
             render: (value, record) => (
@@ -142,15 +142,16 @@ export const DspTable = ({ ...props }: Props) => {
                     onChange={(e) =>
                         updateDsp({ id: record?.id, payload: { isActive: e } })
                     }
+                    disabled={!canUpdate}
                 />
             ),
         },
         {
             title: `${messages('status.active')} ${messages('common.policies').toLowerCase()}`,
             key: 'enablePolicy',
-            dataIndex: 'enablePolicy',
+            dataIndex: DSP_TABLE_KEY.ENABLE_POLICY,
             align: 'center',
-            width: 150,
+            width: 130,
             render: (value, record) => (
                 <Switch
                     value={record?.enablePolicy}
@@ -160,13 +161,74 @@ export const DspTable = ({ ...props }: Props) => {
                             payload: { enablePolicy: e },
                         })
                     }
+                    disabled={!canUpdate}
                 />
             ),
         },
         {
+            title: messages('roles.isDefault'),
+            key: 'isDefault',
+            dataIndex: DSP_TABLE_KEY.IS_DEFAULT,
+            align: 'center',
+            width: 100,
+            render: (value, record) => (
+                <Switch
+                    value={record?.isDefault}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { isDefault: e },
+                        })
+                    }
+                    disabled={!canUpdate}
+                />
+            ),
+        },
+        {
+            title: messages('dsp.hasDeal'),
+            key: 'hasDeal',
+            dataIndex: DSP_TABLE_KEY.HAS_DEAL,
+            align: 'center',
+            width: 120,
+            render: (value, record) => (
+                <Switch
+                    value={record?.hasDeal}
+                    onChange={(e) =>
+                        updateDsp({
+                            id: record?.id,
+                            payload: { hasDeal: e },
+                        })
+                    }
+                    disabled={!canUpdate}
+                />
+            ),
+        },
+        {
+            title: messages('dsp.dealType'),
+            key: 'dspRoutingConfig',
+            dataIndex: DSP_TABLE_KEY.DSP_ROUTING_CONFIG,
+            align: 'center',
+            width: 100,
+            ellipsis: true,
+            render: (value, record) => {
+                const isDirect =
+                    record?.dspRoutingConfig?.mode === DSP_DEAL.DIRECT;
+                const isSystem =
+                    record?.dspRoutingConfig?.mode === DSP_DEAL.SYSTEM_DEFAULT;
+                const aggregatorName =
+                    record?.dspRoutingConfig?.aggregator?.name;
+                const display = isDirect
+                    ? messages('common.direct')
+                    : isSystem
+                      ? messages('common.system')
+                      : aggregatorName;
+                return <span>{display}</span>;
+            },
+        },
+        {
             title: messages('common.createdAt'),
             key: 'createdAt',
-            dataIndex: 'createdAt',
+            dataIndex: DSP_TABLE_KEY.CREATED_AT,
             align: 'center',
             width: 150,
             render: (value, record) => (
@@ -178,7 +240,7 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: messages('common.updatedAt'),
             key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            dataIndex: DSP_TABLE_KEY.UPDATED_AT,
             align: 'center',
             width: 150,
             render: (value, record) => (
@@ -190,19 +252,22 @@ export const DspTable = ({ ...props }: Props) => {
         {
             title: '',
             key: 'action',
-            dataIndex: '',
+            dataIndex: DSP_TABLE_KEY.ACTION,
             width: 50,
+            fixed: canUpdate ? 'right' : undefined,
             render: (_, record) => (
-                <ActionButton
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_DSP.DELETE, record)
-                    }
-                    showUpdate
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_DSP.UPDATE, record)
-                    }
-                />
+                <PermissionGate permission={PERMISSION.DSP.UPDATE}>
+                    <ActionButton
+                        showDelete={canUpdate}
+                        onShowDelete={() =>
+                            openModal(TYPE_MODAL_DSP.DELETE, record)
+                        }
+                        showUpdate={canUpdate}
+                        onShowUpdate={() =>
+                            openModal(TYPE_MODAL_DSP.UPDATE, record)
+                        }
+                    />
+                </PermissionGate>
             ),
         },
     ];

@@ -36,6 +36,7 @@ export default function News({}: Props) {
         onSearch,
         canClearFilter,
         removeFilter,
+        defaultFilter,
     } = useFilter<NewsDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
@@ -90,42 +91,18 @@ export default function News({}: Props) {
                     ),
                 }}
             >
-                {/* <NewsHeader
-                        dataFilter={dataFilter}
-                        onSearch={onSearch}
-                        canClearFilter={canClearFilter}
-                        onChangeFilter={onChangeFilter}
-                        removeFilter={removeFilter}
-                    /> */}
-
-                <NewsHeaderV2
-                    dataFilter={dataFilter}
-                    onSearch={onSearch}
-                    canClearFilter={canClearFilter}
-                    onChangeFilter={onChangeFilter}
-                    removeFilter={removeFilter}
-                />
-
-                {/* {layoutTable === LAYOUT_TABLE.LIST && (
-                        <NewsTable
-                            sticky
-                            dataSource={newsData?.items}
-                            pagination={{
-                                pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                                current: newsData.metadata.page,
-                                total: newsData.metadata.totalItems,
-                            }}
-                            loading={isFetching}
-                            dataFilter={dataFilter}
-                            onChange={onChangeSort}
-                            scroll={{ x: SCREEN.XL }}
-                        />
-                    )} */}
-
                 <NewsTablePro
+                    headerTitle={
+                        <NewsHeaderV2
+                            dataFilter={dataFilter}
+                            defaultFilter={defaultFilter}
+                            onChangeFilter={onChangeFilter}
+                            canClearFilter={canClearFilter}
+                            removeFilter={removeFilter}
+                        />
+                    }
                     dataFilter={dataFilter}
                     sticky
-                    headerTitle={messages('newsPost.list')}
                     dataSource={newsData?.items}
                     loading={isFetching}
                     pagination={{

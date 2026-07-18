@@ -5,17 +5,20 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
-import { getLabelDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { getLabelDetailRoute } from '@/modules/labels/helpers/link';
 import { ProColumns } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
-import { LABEL_DETAIL_TABS, TYPE_MODAL_LABEL } from '../../enum';
+import {
+    LABEL_DETAIL_TABS,
+    LABEL_TABLE_KEY,
+    TYPE_MODAL_LABEL,
+} from '../../enum';
 import { LabelData, LabelDataFilter } from '../../types';
 
 type Props = Omit<AppProTableProps<LabelData>, 'columns'> & {
@@ -32,8 +35,8 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
 
-    const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
+    const canDelete = hasPermission(PERMISSION.LABEL.DELETE);
 
     const column: ProColumns<LabelData>[] = [
         {
@@ -41,6 +44,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             key: 'iNo',
             width: 40,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -48,36 +52,10 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                     index
                 ),
         },
-        // {
-        //     key: 'picture',
-        //     dataIndex: 'picture',
-        //     align: 'center',
-        //     width: 30,
-        //     fixed: 'left',
-        //     render: (value, record) => {
-        //         return (
-        //             <div
-        //                 className="flex cursor-pointer justify-center"
-        //                 onClick={() => {
-        //                     router.push(`/labels/detail/${record.id}/overview`);
-        //                 }}
-        //             >
-        //                 <ImageFallback
-        //                     fallbackSrc={FALLBACK_IMAGE}
-        //                     src={value ?? ''}
-        //                     alt="genre"
-        //                     width={48}
-        //                     height={48}
-        //                     className="aspect-square rounded-full object-cover"
-        //                 />
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             title: messages('label.name'),
             key: 'name',
-            dataIndex: 'name',
+            dataIndex: LABEL_TABLE_KEY.NAME,
             ellipsis: true,
             align: 'left',
             fixed: 'left',
@@ -86,7 +64,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'name'
+                LABEL_TABLE_KEY.NAME
             ),
             render: (value, record) => (
                 <div className="flex items-center gap-4">
@@ -121,7 +99,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.code'),
             key: 'code',
-            dataIndex: 'code',
+            dataIndex: LABEL_TABLE_KEY.CODE,
             align: 'left',
             width: 150,
             render: (value, record) => (
@@ -136,7 +114,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.description'),
             key: 'description',
-            dataIndex: 'description',
+            dataIndex: LABEL_TABLE_KEY.DESCRIPTION,
             ellipsis: true,
             align: 'left',
             width: 200,
@@ -148,14 +126,14 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('release.label'),
-            key: 'releaseCount',
-            dataIndex: 'release_count',
+            key: 'release_count',
+            dataIndex: LABEL_TABLE_KEY.RELEASE_COUNT,
             width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'release_count'
+                LABEL_TABLE_KEY.RELEASE_COUNT
             ),
             render: (value, record) => (
                 <p className="truncate">{record?.releaseCount}</p>
@@ -163,14 +141,14 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('track.label'),
-            key: 'trackCount',
-            dataIndex: 'track_count',
+            key: 'track_count',
+            dataIndex: LABEL_TABLE_KEY.TRACK_COUNT,
             width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'track_count'
+                LABEL_TABLE_KEY.TRACK_COUNT
             ),
             render: (value, record) => (
                 <p className="truncate">{record?.trackCount}</p>
@@ -179,13 +157,13 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('tenant.label'),
             key: 'tenant.name',
-            dataIndex: 'tenant.name',
+            dataIndex: LABEL_TABLE_KEY.TENANT_NAME,
             width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'tenant.name'
+                LABEL_TABLE_KEY.TENANT_NAME
             ),
             render: (_, record) => {
                 return record.tenant?.name;
@@ -199,7 +177,7 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                 <ActionButton
                     showUpdate={hasPermission(PERMISSION.LABEL.UPDATE)}
                     showDetail
-                    showDelete={isSystemTenant}
+                    showDelete={canDelete}
                     onShowDetail={() => {
                         nProgress.start();
                         router.push(

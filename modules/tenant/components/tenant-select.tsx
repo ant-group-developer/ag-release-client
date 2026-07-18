@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { cn, flattenData, getAvatarPlaceholder } from '@/helpers/common';
 import { toNonAccentVietnamese } from '@/helpers/string';
@@ -31,7 +32,7 @@ function TenantSelect({
     const { data: dataTenant } = useTenantList({
         fieldOrder: TENANT_ORDER_BY.EMAIL,
         orderBy: ORDER.ASC,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const data = flatData

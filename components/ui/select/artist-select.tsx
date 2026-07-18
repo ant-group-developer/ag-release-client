@@ -2,7 +2,13 @@ import { cn } from '@/helpers/common';
 import { useQueryParams } from '@/hooks/use-query-params';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
-import { ArtistDataSimple, ArtistProfileData } from '@/modules/artist/types';
+import {
+    ArtistData,
+    ArtistDataSimple,
+    ArtistProfileData,
+} from '@/modules/artist/types';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -14,6 +20,8 @@ type Props = SelectProps & {
     disabledArtistIds?: string[];
     showCreate?: boolean;
     artistId?: string;
+    onCreateSuccess?: (data: ArtistData) => void;
+    onUpdateSuccess?: (data: ArtistData) => void;
 };
 
 export default function ArtistSelect({
@@ -21,6 +29,8 @@ export default function ArtistSelect({
     disabledArtistIds,
     showCreate = true,
     artistId,
+    onCreateSuccess,
+    onUpdateSuccess,
     ...props
 }: Props) {
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -28,7 +38,6 @@ export default function ArtistSelect({
     const messages = useTranslations();
     const queryParams = useQueryParams();
     const artistIdFromParams = queryParams['artistId'];
-    // const { token } = theme.useToken();
 
     const {
         artistsData,
@@ -42,15 +51,6 @@ export default function ArtistSelect({
         keyword: searchKeyword,
         idInclude: artistId ?? artistIdFromParams,
     });
-
-    // const spotify = artistsData?.map((item) => {
-    //     item.artistProfiles?.map((artistProfile) => {
-    //         if (artistProfile.name == 'Spotify') {
-    //             return artistProfile;
-    //         }
-    //         return;
-    //     });
-    // });
 
     const debounceSearch = useMemo(
         () =>
@@ -72,39 +72,6 @@ export default function ArtistSelect({
                             {item.name}
                         </CustomTooltip>
                     </span>
-                    {/* <div className="flex gap-1">
-                    <span>{item?.country?.name}</span>
-                    {item?.country?.name ? '|' : ''}
-                    <span>{item?.genre?.name}</span>
-                </div> */}
-                    {/* <div className="flex justify-end gap-1">
-                    <Avatar
-                        size={26}
-                        src="/icon/spotify.png"
-                        className="hover:opacity-40"
-                        onClick={(e) => {
-                            e?.stopPropagation();
-                            window.open(
-                                'https://open.spotify.com/',
-                                '_blank',
-                                'noopener'
-                            );
-                        }}
-                    />
-                    <Avatar
-                        size={26}
-                        src="/icon/apple-music.svg"
-                        className="hover:opacity-40"
-                        onClick={(e) => {
-                            e?.stopPropagation();
-                            window.open(
-                                'https://open.spotify.com/',
-                                '_blank',
-                                'noopener'
-                            );
-                        }}
-                    />
-                </div> */}
                 </div>
             ),
             disabled: disabledArtistIds?.includes(item.id) ?? false,
@@ -136,7 +103,11 @@ export default function ArtistSelect({
                     </div>
                 </div>
                 <div className="mr-2 flex justify-end gap-1">
-                    <Avatar.Group maxCount={2}>
+                    <Avatar.Group
+                        max={{
+                            count: 2,
+                        }}
+                    >
                         {item?.artistProfiles?.map(
                             (profile: ArtistProfileData) => (
                                 <Avatar
@@ -184,7 +155,7 @@ export default function ArtistSelect({
                 options={options}
                 optionRender={optionRender}
                 labelRender={labelRender}
-                dropdownRender={(menu) => {
+                popupRender={(menu) => {
                     return (
                         <div>
                             {menu}
@@ -195,15 +166,19 @@ export default function ArtistSelect({
                                 />
                             </div>
                             {showCreate && (
-                                <div className="py-1">
-                                    <Button
-                                        type="primary"
-                                        className="w-full"
-                                        onClick={() => setOpenCreate(true)}
-                                    >
-                                        {messages('release.createArtist')}
-                                    </Button>
-                                </div>
+                                <PermissionGate
+                                    permission={PERMISSION.ARTIST.CREATE}
+                                >
+                                    <div className="py-1">
+                                        <Button
+                                            type="primary"
+                                            className="w-full"
+                                            onClick={() => setOpenCreate(true)}
+                                        >
+                                            {messages('release.createArtist')}
+                                        </Button>
+                                    </div>
+                                </PermissionGate>
                             )}
                         </div>
                     );
@@ -232,6 +207,10 @@ export default function ArtistSelect({
             <ArtistFormModal
                 open={openCreate}
                 onCancel={() => setOpenCreate(false)}
+                onCreateSuccess={(data) => {
+                    setOpenCreate(false);
+                    onCreateSuccess?.(data);
+                }}
             />
         </>
     );

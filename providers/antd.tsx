@@ -3,6 +3,7 @@ import { LOCALE } from '@/enums/common';
 import { setAntdStaticInstances } from '@/helpers/antd-static';
 import { useThemeMode } from '@/hooks/use-theme-mode';
 import { getThemeConfig } from '@/theme/theme-config';
+import SyncJobMonitor from '@/modules/analytics2/components/sync-job-monitor';
 import { App, ConfigProvider, ThemeConfig } from 'antd';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
@@ -44,6 +45,7 @@ function AntdProvider({ children }: Props) {
         >
             <App>
                 <AntdStaticBridge />
+                <SyncJobMonitor />
                 {children}
             </App>
         </ConfigProvider>

@@ -1,99 +1,146 @@
 import { usePlaySongStore } from '@/hooks/use-play-song-store';
-import { useEffect, useRef } from 'react';
-// import ReactPlayer from 'react-player';
-
-import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
-const ReactPlayerNoSSR = dynamic(() => import('react-player'), {
-    ssr: false,
-});
-
 export default function AudioPlayer() {
-    const { url, isPlaying, setReactPlayerRef, songId, currentTimePlaying } =
-        usePlaySongStore();
+    const {
+        url,
+        isPlaying,
+        setReactPlayerRef,
+        songId,
+        pendingSeekTime,
+        pendingAutoPlay,
+        setPendingSeekTime,
+        setPendingAutoPlay,
+        onStop,
+    } = usePlaySongStore();
     const playerRef = useRef<ReactPlayer>(null);
 
-    // Bước 1: Cung cấp các phương thức điều khiển player cho store
     useEffect(() => {
         if (!playerRef.current) {
-            setReactPlayerRef(null); // Đảm bảo store ref là null nếu player chưa sẵn sàng
+            setReactPlayerRef(null);
             return;
         }
+
         setReactPlayerRef({
             seekTo: (second: number) => {
-                if (playerRef.current) {
-                    playerRef.current.seekTo(second, 'seconds');
-                }
+                playerRef.current?.seekTo(second, 'seconds');
             },
             getCurrentTime: () => {
                 return playerRef.current?.getCurrentTime() || 0;
             },
         });
+
         return () => {
             setReactPlayerRef(null);
         };
-    }, [setReactPlayerRef, playerRef.current]);
+    }, [setReactPlayerRef, url]);
 
-    // Bước 2: Xử lý việc thiết lập thời gian khi phát
     useEffect(() => {
-        if (playerRef.current && url && isPlaying) {
-            // Đặt thời gian hiện tại của player từ store
-            const storedTime = currentTimePlaying;
-            const currentTime = playerRef.current.getCurrentTime();
-
-            // Chỉ seek nếu thời gian khác nhau đáng kể (tránh seek liên tục)
-            if (Math.abs(currentTime - storedTime) > 0.5) {
-                playerRef.current.seekTo(storedTime, 'seconds');
-            }
+        if (!playerRef.current || pendingSeekTime === null || pendingAutoPlay) {
+            return;
         }
-    }, [isPlaying, url, songId, currentTimePlaying]);
 
-    // Bước 3: Cập nhật liên tục thời gian phát hiện tại từ player vào store
-    const onProgress = (state: { playedSeconds: number }) => {
-        // Chỉ cập nhật thời gian vào store nếu đây là bài hát đang active
-        if (usePlaySongStore.getState().songId === songId) {
+        const currentTime = playerRef.current.getCurrentTime();
+        if (Math.abs(currentTime - pendingSeekTime) <= 0.5) {
+            setPendingSeekTime(null);
+            return;
+        }
+
+        playerRef.current.seekTo(pendingSeekTime, 'seconds');
+    }, [pendingSeekTime, pendingAutoPlay, setPendingSeekTime]);
+
+    const onReady = () => {
+        if (!playerRef.current) {
+            return;
+        }
+
+        if (pendingSeekTime !== null) {
+            playerRef.current.seekTo(pendingSeekTime, 'seconds');
+            setPendingSeekTime(null);
+        }
+
+        if (pendingAutoPlay) {
             usePlaySongStore.setState((prevState) => ({
                 ...prevState,
-                currentTimePlaying: state.playedSeconds,
+                isPlaying: true,
+                pendingAutoPlay: false,
             }));
         }
     };
 
-    // Xử lý khi bài hát kết thúc
+    const onProgress = (state: { playedSeconds: number }) => {
+        if (usePlaySongStore.getState().songId !== songId) {
+            return;
+        }
+
+        usePlaySongStore.setState((prevState) => ({
+            ...prevState,
+            currentTimePlaying: state.playedSeconds,
+        }));
+    };
+
     const onEnded = () => {
-        if (usePlaySongStore.getState().songId === songId) {
-            usePlaySongStore.setState((prevState) => ({
+        const activeSongId = usePlaySongStore.getState().songId;
+        if (activeSongId !== songId) {
+            return;
+        }
+
+        usePlaySongStore.setState((prevState) => {
+            if (activeSongId) {
+                prevState.songTimeMap.set(activeSongId, 0);
+            }
+
+            return {
                 ...prevState,
                 isPlaying: false,
                 currentTimePlaying: 0,
-            }));
-        }
+                pendingSeekTime: null,
+                pendingAutoPlay: false,
+            };
+        });
     };
 
-    // Xử lý lỗi phát nhạc
-    const onError = (error: any) => {
-        console.error('Lỗi phát nhạc:', error);
-        if (usePlaySongStore.getState().songId === songId) {
-            usePlaySongStore.setState((prevState) => ({
-                ...prevState,
-                isPlaying: false,
-            }));
+    const onError = (error: unknown) => {
+        console.error('Error playing audio:', error);
+
+        if (usePlaySongStore.getState().songId !== songId) {
+            return;
         }
+
+        usePlaySongStore.setState((prevState) => ({
+            ...prevState,
+            isPlaying: false,
+            pendingAutoPlay: false,
+        }));
     };
+
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+
+        return () => {
+            onStop(false);
+        };
+    }, [onStop]);
+
+    if (!mounted) return null;
 
     return (
-        <ReactPlayerNoSSR
+        <ReactPlayer
+            key={url || 'audio-player'}
             ref={playerRef}
             url={url}
             playing={isPlaying}
             width="0"
             height="0"
             style={{ display: 'none' }}
+            onReady={onReady}
             onProgress={onProgress}
             onEnded={onEnded}
             onError={onError}
-            progressInterval={1000} // Cập nhật progress mỗi giây
+            progressInterval={500}
             config={{
                 file: {
                     forceAudio: true,

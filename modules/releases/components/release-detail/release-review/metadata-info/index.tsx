@@ -1,8 +1,10 @@
+import { DATE_FORMAT } from '@/enums/common';
 import { ReleaseArtist } from '@/modules/release-artist/types';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
 import type { ReleaseFormStoreData } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
+import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import ArtistItem from './artist-item';
 import MetadataInfoItem from './metadata-info-item';
@@ -22,7 +24,12 @@ export default function MetadataInfo({}: Props) {
             case 'version':
             case 'upc':
             case 'catalogId':
+                return value;
+
             case 'releaseDate':
+            case 'releaseOriginalDate':
+                return value ? dayjs(value).format(DATE_FORMAT.DATE_ONLY) : '';
+
             case 'releaseTime':
                 return value;
 
@@ -38,6 +45,17 @@ export default function MetadataInfo({}: Props) {
             case 'metadataLanguageId':
                 return (
                     releaseData.releaseLanguage?.metadataLanguage?.name || value
+                );
+
+            case 'audioLanguageId':
+                return (
+                    releaseData.releaseLanguage?.audioLanguage?.name || value
+                );
+
+            case 'metadataLanguageCountryId':
+                return (
+                    releaseData.releaseLanguage?.metadataLanguageCountry
+                        ?.name || value
                 );
 
             case 'type':
@@ -87,13 +105,6 @@ export default function MetadataInfo({}: Props) {
 
     return (
         <div className="m-auto grid w-full grid-cols-2 gap-4">
-            {/* <p className="font-semibold">MetaData</p> */}
-            {/* <div className="my-1 rounded-lg bg-main p-4 dark:bg-zinc-900">
-                <p className="text-base font-medium">
-                    {messages('common.coreInfo')}
-                </p>
-            </div> */}
-
             <MetadataInfoItem label={messages('release.name')}>
                 {renderField('title', true)}
             </MetadataInfoItem>
@@ -102,26 +113,19 @@ export default function MetadataInfo({}: Props) {
                 {renderField('version')}
             </MetadataInfoItem>
 
-            <MetadataInfoItem
-                className="col-span-2"
-                label={messages('artist.artists')}
-            >
+            <MetadataInfoItem label={messages('artist.artists')}>
                 {releaseData?.releaseArtists?.map(
                     (releaseArtist: ReleaseArtist, index: number) => (
                         <ArtistItem
                             key={releaseArtist.id}
                             data={{
                                 artist: releaseArtist?.artist,
-                                // role: releaseArtist?.artistRole,
                             }}
                         />
                     )
                 )}
             </MetadataInfoItem>
-            <MetadataInfoItem
-                className="col-span-2"
-                label={messages('common.contributors')}
-            >
+            <MetadataInfoItem label={messages('common.contributors')}>
                 {releaseData?.releaseContributors?.map(
                     (item: ReleaseContributor, index: number) => (
                         <ArtistItem
@@ -168,6 +172,14 @@ export default function MetadataInfo({}: Props) {
 
             <MetadataInfoItem label={`${messages('common.language')} metadata`}>
                 {renderField('metadataLanguageId', true)}
+            </MetadataInfoItem>
+
+            <MetadataInfoItem label={messages('release.audioLanguage')}>
+                {renderField('audioLanguageId')}
+            </MetadataInfoItem>
+
+            <MetadataInfoItem label={messages('country.language')}>
+                {renderField('metadataLanguageCountryId')}
             </MetadataInfoItem>
         </div>
     );

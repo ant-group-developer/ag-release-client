@@ -28,6 +28,7 @@ import {
     CreateAggregatorPayload,
     UpdateAggregatorPayload,
 } from '../../types/payloads';
+import ErnVersionSelect from '../select/ern-version-select';
 
 type Props = Omit<AppModalProps, 'children'> & {};
 
@@ -216,12 +217,12 @@ export default function AggregatorForm({ ...props }: Props) {
             onOk={form.submit}
             loading={isActive}
             width={'40vw'}
-            className="!top-12"
+            className="!top-8"
             styles={{
                 body: {
-                    maxHeight: '80vh',
                     overflowY: 'auto',
                     paddingRight: '4px',
+                    height: 'calc(100vh - 200px)',
                 },
             }}
             footer={(originNode) => (
@@ -304,6 +305,14 @@ export default function AggregatorForm({ ...props }: Props) {
                         </AppFormItem>
 
                         <AppFormItem
+                            name="createsDoneFolder"
+                            label={messages('aggregator.createsDoneFolder')}
+                            valuePropName="checked"
+                        >
+                            <Switch />
+                        </AppFormItem>
+
+                        <AppFormItem
                             name="ddexId"
                             label={messages('dsp.ddexPartyId')}
                             rules={[
@@ -328,6 +337,68 @@ export default function AggregatorForm({ ...props }: Props) {
                                     message: messages('validation.stringMax', {
                                         max: MAX_NAME_LENGTH,
                                         field: messages('aggregator.ddexName'),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="deliveryEmail"
+                            label={messages('aggregator.deliveryEmail')}
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: messages('validation.email'),
+                                },
+                                {
+                                    max: 200,
+                                    message: messages('validation.stringMax', {
+                                        max: 200,
+                                        field: messages(
+                                            'aggregator.deliveryEmail'
+                                        ),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="deliveryEmailSubject"
+                            label={messages('aggregator.deliveryEmailSubject')}
+                            rules={[
+                                {
+                                    max: 200,
+                                    message: messages('validation.stringMax', {
+                                        max: 200,
+                                        field: messages(
+                                            'aggregator.deliveryEmailSubject'
+                                        ),
+                                    }),
+                                },
+                            ]}
+                        >
+                            <Input allowClear />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="manualUploadUrl"
+                            label={messages('aggregator.manualUploadUrl')}
+                            rules={[
+                                {
+                                    type: 'url',
+                                    message: messages('validation.url'),
+                                },
+                                {
+                                    max: 500,
+                                    message: messages('validation.stringMax', {
+                                        max: 500,
+                                        field: messages(
+                                            'aggregator.manualUploadUrl'
+                                        ),
                                     }),
                                 },
                             ]}
@@ -365,6 +436,13 @@ export default function AggregatorForm({ ...props }: Props) {
                             label="Path"
                         >
                             <Input />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name={['sftpConfig', 'ernVersion']}
+                            label={messages('aggregator.ernVersion')}
+                        >
+                            <ErnVersionSelect />
                         </AppFormItem>
 
                         <AppFormItem

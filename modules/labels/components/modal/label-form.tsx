@@ -27,7 +27,7 @@ type Props = Omit<AppModalProps, 'children'> & {};
 export default function LabelFormModal({ ...props }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
-    const typeModal = useModalStore((state) => state.typeModal);
+    // const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as LabelData);
     const { active, isActive, deActive } = useActive();
     const isUpdateModal = dataEdit?.id;

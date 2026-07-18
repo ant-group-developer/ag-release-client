@@ -1,23 +1,29 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
-import { SIZE_ICON } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
+import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { ArtistData } from '@/modules/artist/types';
 import { TrackData } from '@/modules/releases/types';
 import { useCreateTrackArtist } from '@/modules/track-artist/hooks/use-create-track-artist';
 import { CreateTrackArtistPayload } from '@/modules/track-artist/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Form } from 'antd';
-import { Plus } from 'lucide-react';
+import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = {
+type Props = Omit<AppModalProps, 'children'> & {
     trackData?: TrackData;
+    disabled?: boolean;
 };
 
-export default function AddTrackArtistForm({ trackData }: Props) {
+export default function AddTrackArtistForm({
+    trackData,
+    disabled = false,
+    ...props
+}: Props) {
     // hooks
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
@@ -36,29 +42,53 @@ export default function AddTrackArtistForm({ trackData }: Props) {
         const variables: CreateVariables<CreateTrackArtistPayload> = {
             payload: {
                 artistId: values.artistId,
-                // artistRoleId: values.roleId,
                 trackId: trackData?.id as string,
             },
             onSuccess: () => {
-                deActive();
                 form.resetFields();
+                deActive();
             },
             onError: () => deActive(),
         };
-        createTrackArtist(variables);
+        props.onCancel?.({} as any);
+        toastPromise(createTrackArtist(variables), messages, {
+            success: messages('common.success'),
+        });
+    };
+    const handleCreateArtistSuccess = (data: ArtistData) => {
+        props.onCancel?.({} as any);
+        const variables: CreateVariables<CreateTrackArtistPayload> = {
+            payload: {
+                artistId: data.id,
+                trackId: trackData?.id as string,
+            },
+            onSuccess: () => {
+                form.resetFields();
+                deActive();
+            },
+            onError: () => deActive(),
+        };
+        toastPromise(createTrackArtist(variables), messages, {
+            success: messages('common.success'),
+        });
     };
     return (
-        <AppForm
-            form={form}
-            onFinish={(values) => handleSubmit(values)}
-            layout="vertical"
-            showSubmit={false}
-            disabled={isActive}
-            variant={isReadMode ? 'underlined' : 'outlined'}
+        <AppModal
+            {...props}
+            title={messages('artist.add')}
+            onOk={() => form.submit()}
+            loading={isActive}
         >
-            <div className="grid grid-cols-2 gap-4">
+            <AppForm
+                form={form}
+                onFinish={(values) => handleSubmit(values)}
+                layout="vertical"
+                showSubmit={false}
+                disabled={disabled || isActive}
+                variant={isReadMode ? 'underlined' : 'outlined'}
+            >
                 <AppFormItem
-                    className="flex-2"
+                    className="col-span-2"
                     name="artistId"
                     label={messages('artist.name')}
                     required
@@ -71,51 +101,14 @@ export default function AddTrackArtistForm({ trackData }: Props) {
                 >
                     <ArtistSelect
                         showSearch
-                        // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
-                        // disabledArtistIds={disabledArtistIds}
                         allowClear
                         disabled={isReadMode || isActive}
+                        onCreateSuccess={handleCreateArtistSuccess}
                     />
                 </AppFormItem>
-
-                {/* <AppFormItem
-                    className="flex-1"
-                    name="roleId"
-                    label={messages('common.role')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.select'),
-                        },
-                    ]}
-                >
-                    <RoleArtistSelect
-                        // fallBack={dataEdit?.artistRole?.name}
-                        placeholder={messages('common.role')}
-                        // disabledRoleIds={disabledRoleIds}
-                        placement="topLeft"
-                        allowClear
-                    />
-                </AppFormItem> */}
-
-                <div className="mt-4 flex items-center justify-end">
-                    <Button
-                        disabled={isActive || isReadMode}
-                        loading={isActive}
-                        onClick={() => form.submit()}
-                        icon={
-                            <div>
-                                <Plus size={SIZE_ICON} />
-                            </div>
-                        }
-                        type="primary"
-                    >
-                        {messages('common.add')}
-                    </Button>
-                </div>
-            </div>
-        </AppForm>
+            </AppForm>
+        </AppModal>
     );
 }
+

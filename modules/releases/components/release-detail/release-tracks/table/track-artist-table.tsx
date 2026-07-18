@@ -2,14 +2,14 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { TrackData } from '@/modules/releases/types';
 import { useDeleteTrackArtist } from '@/modules/track-artist/hooks/use-delete-track-artist';
 import { TrackArtistData } from '@/modules/track-artist/types';
-import { Avatar } from 'antd';
+import { Avatar, Button } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { Trash } from 'lucide-react';
+import { Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import AddTrackArtistForm from './add-track-artist-form';
@@ -21,10 +21,12 @@ type Props = AppTableProps<TrackArtistData> & {
 
 export default function TrackArtistTable({ trackData, ...props }: Props) {
     // hooks
-    // const { active, deActive, isActive } = useActive();
     const messages = useTranslations();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+
+    // state
+    const [isOpenArtistForm, setIsOpenArtistForm] = useState(false);
 
     // state
     const [deleteArtist, setDeleteArtist] = useState<{
@@ -138,20 +140,23 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         {
             width: 50,
             align: 'center',
+            fixed: 'right',
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
-                        <IconButton
-                            disabled={isReadMode}
-                            onClick={() => {
-                                setDeleteArtist({
-                                    isOpen: true,
-                                    trackArtistData: record,
-                                });
-                            }}
-                        >
-                            <Trash color="red" size={SIZE_ICON} />
-                        </IconButton>
+                        {!isReadMode && (
+                            <IconButton
+                                disabled={isReadMode}
+                                onClick={() => {
+                                    setDeleteArtist({
+                                        isOpen: true,
+                                        trackArtistData: record,
+                                    });
+                                }}
+                            >
+                                <Trash color="red" size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                     </div>
                 );
             },
@@ -182,9 +187,33 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
                     }}
                 /> */}
 
-                <div className="px-4 py-2">
+                {/* <div className="px-4 py-2">
                     <AddTrackArtistForm trackData={trackData} />
-                </div>
+                </div> */}
+                {!isReadMode && (
+                    <div className="p-4">
+                        <Button
+                            disabled={isReadMode}
+                            icon={
+                                <div>
+                                    <Plus size={SIZE_ICON} />
+                                </div>
+                            }
+                            type="default"
+                            shape="round"
+                            onClick={() => setIsOpenArtistForm(true)}
+                        >
+                            {messages('artist.add')}
+                        </Button>
+                    </div>
+                )}
+
+                <AddTrackArtistForm
+                    open={isOpenArtistForm}
+                    trackData={trackData}
+                    disabled={isReadMode}
+                    onCancel={() => setIsOpenArtistForm(false)}
+                />
 
                 <AppConfirm
                     open={deleteArtist.isOpen}
@@ -204,3 +233,4 @@ export default function TrackArtistTable({ trackData, ...props }: Props) {
         </div>
     );
 }
+

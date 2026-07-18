@@ -14,3 +14,5 @@ export const defaultVisibleColumnsTracks = [
     // TRACKS_COLUMNS_DISPLAY.CREATED_AT,
     TRACKS_COLUMNS_DISPLAY.ACTIONS,
 ];
+
+export const MAX_COUNT_UPLOAD_TRACK = 200;

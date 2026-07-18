@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { Select, SelectProps } from 'antd';
 import { useGetListDealType } from '../../hooks/use-get-list';
@@ -8,7 +9,7 @@ type Props = Omit<SelectProps, 'options'> & {
 
 export default function DspTypeSelect({ fallBack, ...props }: Props) {
     const { dealTypeData } = useGetListDealType({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = dealTypeData?.items.map((item) => ({

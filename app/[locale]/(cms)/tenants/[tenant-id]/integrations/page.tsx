@@ -42,7 +42,7 @@ function TenantDeals({}: Props) {
     );
 
     // const { dspData, isFetching } = useGetListDsp({
-    //     pageSize: 999,
+    //     pageSize: PAGE_SIZE_EXTRA_LARGE,
     // });
     // const { dataTenantDsp } = useTenantDsp(tenantId);
     // const { updateTenantDsp, isPending } = useUpdateTenantDsp();

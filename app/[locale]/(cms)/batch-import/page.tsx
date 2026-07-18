@@ -1,72 +1,33 @@
 'use client';
 
 import AppLoader from '@/components/app-loader';
-import AppContainer from '@/components/cms/app-container';
-import AppHeader from '@/components/cms/app-header';
-import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import BatchImportHeader from '@/modules/batch-import/components/batch-import-header';
 import BatchImportTable from '@/modules/batch-import/components/batch-import-table';
 import { useGetBatchImportLogs } from '@/modules/batch-import/hooks/use-get-batch-import-logs';
 import { BatchImportLogFilter } from '@/modules/batch-import/types/data';
-import { Select, Space } from 'antd';
-
-const STATUS_OPTIONS = [
-    { label: 'All Statuses', value: '' },
-    { label: '🔄 Validating', value: 'validating' },
-    { label: '✅ Validated', value: 'validated' },
-    { label: '❌ Validation Failed', value: 'validation_failed' },
-    { label: '⏳ Uploading', value: 'uploading' },
-    { label: '🟢 Uploaded', value: 'uploaded' },
-    { label: '🔴 Failed', value: 'failed' },
-];
+import { PageContainer } from '@ant-design/pro-components';
 
 function BatchImportPage() {
     const defaultFilter: BatchImportLogFilter = {
         page: 1,
         pageSize: PAGE_SIZE,
     };
-
     const { dataFilter, onSearch, onChangePage, onChangeFilter, isReady } =
         useFilter<BatchImportLogFilter>(defaultFilter);
 
-    const { dataLogs, totalRecord, isFetching } = useGetBatchImportLogs(
-        dataFilter,
-        isReady
-    );
+    const { dataLogs, totalRecord, isFetching, refetch } =
+        useGetBatchImportLogs(dataFilter, isReady);
 
     if (!isReady) {
         return <AppLoader className="bg-white" />;
     }
 
     return (
-        <AppContainer appTitle="Batch Import Logs">
+        <PageContainer title="Batch Import Logs">
             {/* Filter Header */}
-            <AppHeader
-                style={{
-                    paddingTop: 8,
-                    paddingBottom: 8,
-                }}
-            >
-                <Space>
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        placeholder="Search by Batch ID or UPC..."
-                    />
-                    <Select
-                        placeholder="All Statuses"
-                        allowClear
-                        style={{ width: 200 }}
-                        options={STATUS_OPTIONS}
-                        value={dataFilter.status}
-                        onChange={(value) =>
-                            onChangeFilter({ status: value || undefined })
-                        }
-                    />
-                </Space>
-            </AppHeader>
 
             {/* Table */}
             <BatchImportTable
@@ -77,6 +38,14 @@ function BatchImportPage() {
                     pageSize: dataFilter.pageSize ?? PAGE_SIZE,
                     current: dataFilter.page ?? 1,
                 }}
+                title={() => (
+                    <BatchImportHeader
+                        dataFilter={dataFilter}
+                        onChangeFilter={onChangeFilter}
+                        isFetching={isFetching}
+                        refetch={refetch}
+                    />
+                )}
             />
 
             <AppPagination
@@ -86,7 +55,7 @@ function BatchImportPage() {
                 current={dataFilter.page}
                 total={totalRecord}
             />
-        </AppContainer>
+        </PageContainer>
     );
 }
 

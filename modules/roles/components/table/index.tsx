@@ -30,7 +30,7 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 30,
+            width: 40,
             align: 'center',
             render: (_, __, index) =>
                 getIndex(
@@ -94,6 +94,26 @@ export const RolesTable = ({ dataFilter, ...props }: Props) => {
                             updateRole({
                                 id: record.id,
                                 payload: { isActive: checked },
+                            })
+                        }
+                    />
+                </div>
+            ),
+        },
+        {
+            title: messages('roles.isDefault'),
+            key: 'isDefault',
+            dataIndex: 'isDefault',
+            align: 'center',
+            width: 100,
+            render: (_, record) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <Switch
+                        checked={record.isDefault}
+                        onChange={(checked) =>
+                            updateRole({
+                                id: record.id,
+                                payload: { isDefault: checked },
                             })
                         }
                     />

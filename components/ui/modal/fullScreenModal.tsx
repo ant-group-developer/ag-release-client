@@ -29,7 +29,13 @@ function FullScreenModal({
                             block: showAction,
                         })}
                     >
-                        <Button type="primary" {...actionProps}>
+                        <Button
+                            style={{
+                                height: 34,
+                            }}
+                            type="primary"
+                            {...actionProps}
+                        >
                             {actionContent}
                         </Button>
                     </div>

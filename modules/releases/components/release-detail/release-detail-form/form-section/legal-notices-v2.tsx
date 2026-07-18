@@ -1,6 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
-import { Input, Select } from 'antd';
+import { DatePicker, Input } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -17,6 +17,7 @@ export default function LegalNoticesSectionV2({
     isCreateReleasePage,
 }: Props) {
     const {
+        getValues,
         control,
         formState: { errors },
         watch,
@@ -30,21 +31,10 @@ export default function LegalNoticesSectionV2({
     const showCLine = !!cLineYear && !!cLineOwner;
     const showPLine = !!pLineYear && !!pLineOwner;
 
-    const copyRightYearList = () => {
-        const currentYear = dayjs().year();
-        return [
-            {
-                label: (currentYear - 1).toString(),
-                value: Number(currentYear - 1),
-            },
-            { label: currentYear.toString(), value: Number(currentYear) },
-            {
-                label: (currentYear + 1).toString(),
-                value: Number(currentYear + 1),
-            },
-        ];
+    const maxYear = dayjs().year() + 1;
+    const disabledYear = (current: dayjs.Dayjs) => {
+        return current && current.year() > maxYear;
     };
-    const copyRightYears = copyRightYearList();
 
     return (
         <div id="legal-notices" className="flex flex-col gap-6">
@@ -63,23 +53,31 @@ export default function LegalNoticesSectionV2({
                         control={control}
                         name="cLineYear"
                         render={({ field }) => (
-                            <Select
+                            <DatePicker
                                 id="cLineYear"
-                                {...field}
-                                value={field.value}
+                                picker="year"
+                                value={
+                                    field.value
+                                        ? dayjs().year(field.value)
+                                        : null
+                                }
                                 className="w-full"
                                 disabled={isCreateReleasePage || isReadMode}
-                                onChange={(newYear) => {
-                                    field.onChange(Number(newYear));
+                                onChange={(date) => {
+                                    const value = date
+                                        ? date.year()
+                                        : undefined;
+                                    field.onChange(value);
                                     debouncedUpdate(
                                         {
-                                            cLineYear: Number(newYear),
+                                            cLineYear: value,
                                         },
                                         'cLineYear'
                                     );
                                 }}
-                                options={copyRightYears}
+                                disabledDate={disabledYear}
                                 status={errors.cLineYear ? 'error' : undefined}
+                                allowClear
                             />
                         )}
                     />
@@ -101,9 +99,8 @@ export default function LegalNoticesSectionV2({
                                 {...field}
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
-                                allowClear
                                 onBlur={(e) => {
-                                    const value = e.target.value;
+                                    const value = e.target.value.trim() || null;
                                     field.onChange(value);
                                     debouncedUpdate(
                                         { cLineOwner: value },
@@ -111,6 +108,7 @@ export default function LegalNoticesSectionV2({
                                     );
                                 }}
                                 status={errors.cLineOwner ? 'error' : undefined}
+                                autoComplete="on"
                             />
                         )}
                     />
@@ -118,7 +116,7 @@ export default function LegalNoticesSectionV2({
 
                 <div className="col-span-2 mb-4 flex justify-end">
                     {showCLine && (
-                        <div className="col-span-1 text-sm text-gray-600 md:col-span-2 lg:col-span-2">
+                        <div className="col-span-1 text-xs text-gray-600 md:col-span-2 lg:col-span-2">
                             © {cLineYear} {cLineOwner}.{' '}
                             {messages('legal.allRightsReserved')}
                         </div>
@@ -136,23 +134,31 @@ export default function LegalNoticesSectionV2({
                         control={control}
                         name="pLineYear"
                         render={({ field }) => (
-                            <Select
+                            <DatePicker
                                 id="pLineYear"
-                                {...field}
-                                value={field.value}
+                                picker="year"
+                                value={
+                                    field.value
+                                        ? dayjs().year(field.value)
+                                        : null
+                                }
                                 className="w-full"
                                 disabled={isCreateReleasePage || isReadMode}
-                                onChange={(newYear) => {
-                                    field.onChange(Number(newYear));
+                                onChange={(date) => {
+                                    const value = date
+                                        ? date.year()
+                                        : undefined;
+                                    field.onChange(value);
                                     debouncedUpdate(
                                         {
-                                            pLineYear: Number(newYear),
+                                            pLineYear: value,
                                         },
                                         'pLineYear'
                                     );
                                 }}
-                                options={copyRightYears}
+                                disabledDate={disabledYear}
                                 status={errors?.pLineYear ? 'error' : undefined}
+                                allowClear
                             />
                         )}
                     />
@@ -174,9 +180,9 @@ export default function LegalNoticesSectionV2({
                                 id="pLineOwner"
                                 value={field.value ?? ''}
                                 disabled={isCreateReleasePage || isReadMode}
-                                allowClear
                                 onBlur={(e) => {
-                                    const newOwner = e.target.value;
+                                    const newOwner =
+                                        e.target.value.trim() || null;
                                     field.onChange(newOwner);
                                     debouncedUpdate(
                                         { pLineOwner: newOwner },
@@ -184,6 +190,7 @@ export default function LegalNoticesSectionV2({
                                     );
                                 }}
                                 status={errors.pLineOwner ? 'error' : undefined}
+                                autoComplete="on"
                             />
                         )}
                     />
@@ -191,7 +198,7 @@ export default function LegalNoticesSectionV2({
 
                 <div className="col-span-2 mb-4 flex justify-end">
                     {showPLine && (
-                        <div className="col-span-1 text-sm text-gray-600 md:col-span-2 lg:col-span-2">
+                        <div className="col-span-1 text-xs text-gray-600 md:col-span-2 lg:col-span-2">
                             ℗ {pLineYear} {pLineOwner}.{' '}
                             {messages('legal.allRightsReserved')}
                         </div>

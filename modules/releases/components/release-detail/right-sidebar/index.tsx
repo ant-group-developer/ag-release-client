@@ -1,130 +1,78 @@
 'use client';
+
 import IconButton from '@/components/ui/button/icon-button';
 import { ScrollArea } from '@/components/ui/scroll/scroll-area';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { cn } from '@/helpers/common';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
-import useModalStore from '@/hooks/use-modal';
-import { Link } from '@/i18n/routing';
-import { RELEASES_TABS, TYPE_MODAL_RELEASE } from '@/modules/releases/enums';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import {
+    RELEASE_ERROR_SUBMISSION_STATUS,
+    RELEASE_ROUTE_ACTION,
+} from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
-import { ReleaseValidate } from '@/modules/releases/types';
-import { Alert, theme } from 'antd';
+import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
+import { Grid, theme } from 'antd';
 import {
-    AlertCircle,
     AlertTriangle,
     ChevronLeft,
     ChevronRight,
+    Loader2,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import EnrichedErrorList from './enriched-error-list';
+import ValidateErrorList from './validate-error-list';
+
 interface RightSidebarProps {}
 
 export default function RightSidebar({ ...props }: RightSidebarProps) {
     // hook - state
     const params = useParams();
-    const isCreateReleasePage = params['action'] == 'create';
+    const isCreateReleasePage = params['action'] == RELEASE_ROUTE_ACTION.CREATE;
     const messages = useTranslations();
+    const releaseAction = useReleaseActionStore((state) => state.action);
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const { releaseValidateData } = useReleaseValidate(
+    const { releaseValidateData, isFetching } = useReleaseValidate(
         formValues?.id as string
     );
+    const { releaseEnrichedErrorsData, isFetching: isFetchingEnrichedErrors } =
+        useReleaseEnrichedErrors({
+            id: formValues?.id as string,
+            submissionStatus: RELEASE_ERROR_SUBMISSION_STATUS.OPEN,
+            pageSize: PAGE_SIZE_EXTRA_LARGE,
+        });
 
-    const openModal = useModalStore((state) => state.openModal);
-    const validateLength = releaseValidateData && releaseValidateData?.length;
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const { useBreakpoint } = Grid;
+    const screens = useBreakpoint();
     const { token } = theme.useToken();
 
-    // router
-    // const router = useRouter();
-
     // variables
-    const errorCount = releaseValidateData.length;
+    const validateErrorCount = releaseValidateData.length;
+    const enrichedErrorCount = releaseEnrichedErrorsData.length;
+    const errorCount = validateErrorCount + enrichedErrorCount;
+    const isFetchingErrors = isFetching || isFetchingEnrichedErrors;
 
-    // func
-    const getFieldLabel = (field: string, page: string) => {
-        if (!field) return;
-
-        if (field === 'releaseTerritory') {
-            return messages('formFields.territoryType' as any);
-        }
-
-        const safeMessage = (key: string) => {
-            try {
-                return messages(key as any);
-            } catch {
-                return field;
-            }
-        };
-
-        switch (page) {
-            case RELEASES_TABS.CORE_DETAIL:
-                // return `${messages('common.coreInfo')}: ${messages(`formFields.${field}` as any)}`;
-                return `${safeMessage(`formFields.${field}`)}`;
-
-            case RELEASES_TABS.TRACKS:
-                const parts = field.split('.');
-                if (parts.length >= 3) {
-                    const trackIndex = Number(parts[1]) + 1;
-                    const fieldName = parts.slice(2).join('.');
-                    return `${messages('track.number')} ${trackIndex}: ${safeMessage(`formFields.${fieldName}`) || field}`;
-                } else if (
-                    field === 'maxTrackCount' ||
-                    field === 'minTrackCount'
-                ) {
-                    return messages('track.label');
-                }
-                break;
-
-            case RELEASES_TABS.SCHEDULE:
-                // return `${messages('release.scheduling.label')}: ${messages(`formFields.${field}` as any)}`;
-                return `${safeMessage(`formFields.${field}`)}`;
-
-            default:
-                return safeMessage(`formFields.${field}`);
-        }
-    };
-    const getErrorMessages = (error: ReleaseValidate) => {
-        if (error.field == 'maxTrackCount') {
-            return messages('formFields.tracks.maxCountTrack', {
-                number: error.message,
-            });
-        } else if (error.field == 'minTrackCount') {
-            return messages('formFields.tracks.minCountTrack', {
-                number: error.message,
-            });
-        }
-
-        return messages(error.messageCode as any);
-    };
     const toggleSidebar = () => {
         setIsSidebarOpen((prevState) => !prevState);
     };
-    const handleClickError = (err: ReleaseValidate) => {
-        if (!err?.trackId || !err?.field) return;
-        const parts = err.field.split('.');
-        const trackIndex = Number(parts[1]);
-
-        openModal(TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE, {
-            trackId: err.trackId,
-            index: trackIndex,
-            focusField: err.field,
-        });
-    };
 
     useEffect(() => {
-        if (isCreateReleasePage) return setIsSidebarOpen(false);
-
-        if (validateLength > 0) {
-            setIsSidebarOpen(true);
-        } else {
+        if (isCreateReleasePage || !screens.lg) {
             setIsSidebarOpen(false);
+            return;
         }
-    }, [validateLength]);
+
+        if (releaseAction === RELEASE_DETAIL_ACTION.READ) {
+            setIsSidebarOpen(false);
+        } else if (releaseAction === RELEASE_DETAIL_ACTION.EDIT) {
+            setIsSidebarOpen(true);
+        }
+    }, [isCreateReleasePage, screens.lg, releaseAction]);
 
     return (
         <div
@@ -149,22 +97,25 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                         <>
                             <h3
                                 className={cn(
-                                    'flex-1 text-nowrap font-semibold text-red-500 transition-all duration-200',
+                                    'flex flex-1 items-center gap-2 overflow-hidden text-nowrap font-semibold text-red-500 transition-all duration-200',
                                     isSidebarOpen
                                         ? 'w-auto opacity-100'
-                                        : 'w-0 overflow-hidden opacity-0'
+                                        : 'w-0 opacity-0'
                                 )}
                             >
-                                {`${messages('validation.error')} (${errorCount})`}
+                                <span className="truncate">
+                                    {`${messages('common.errorList')} (${errorCount})`}
+                                </span>
+                                {isFetchingErrors && (
+                                    <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+                                )}
                             </h3>
-                            {
-                                <IconButton
-                                    className="w-[40px] cursor-pointer"
-                                    onClick={toggleSidebar}
-                                >
-                                    <ChevronRight size={SIZE_ICON} />
-                                </IconButton>
-                            }
+                            <IconButton
+                                className="w-[40px] cursor-pointer"
+                                onClick={toggleSidebar}
+                            >
+                                <ChevronRight size={SIZE_ICON} />
+                            </IconButton>
                         </>
                     ) : (
                         <IconButton
@@ -177,15 +128,21 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                 </div>
 
                 {/* Content */}
-                {/* <div className="h-[calc(100%-8rem)] overflow-auto"> */}
                 <ScrollArea className="h-[86vh]">
                     <div className="w-full max-w-[300px] p-3">
                         {/* Errors */}
                         {!isSidebarOpen && (
                             <div>
                                 <h4 className="mb-2 flex items-center gap-2 text-red-500">
-                                    <AlertTriangle size={SIZE_ICON} />(
-                                    {errorCount})
+                                    {isFetchingErrors ? (
+                                        <Loader2
+                                            size={SIZE_ICON}
+                                            className="animate-spin"
+                                        />
+                                    ) : (
+                                        <AlertTriangle size={SIZE_ICON} />
+                                    )}
+                                    ({errorCount})
                                 </h4>
                             </div>
                         )}
@@ -199,64 +156,25 @@ export default function RightSidebar({ ...props }: RightSidebarProps) {
                                             : 'pointer-events-none opacity-0'
                                     )}
                                 >
-                                    {releaseValidateData?.length > 0 &&
-                                        releaseValidateData?.map(
-                                            (err, index) => {
-                                                const label = getFieldLabel(
-                                                    err.field,
-                                                    err.page
-                                                );
-                                                return (
-                                                    <Link
-                                                        key={index}
-                                                        href={`${getReleaseTabRoute(formValues?.id as string, err.page as RELEASES_TABS)}#${err.field}${err?.trackId ? `.${err.trackId}` : ''}`}
-                                                        onClick={() => {
-                                                            handleClickError(
-                                                                err
-                                                            );
-                                                        }}
-                                                    >
-                                                        <Alert
-                                                            className="custom-alert-sidebar cursor-pointer !px-[14px] !py-3 !text-sm hover:underline"
-                                                            message={
-                                                                <div className="max-w-full truncate text-sm dark:text-white">
-                                                                    <CustomTooltip
-                                                                        title={
-                                                                            label
-                                                                        }
-                                                                    >
-                                                                        {label}
-                                                                    </CustomTooltip>
-                                                                </div>
-                                                            }
-                                                            description={
-                                                                <p className="line-clamp-3 text-xs">
-                                                                    {getErrorMessages(
-                                                                        err
-                                                                    )}
-                                                                </p>
-                                                            }
-                                                            type="error"
-                                                            showIcon
-                                                            icon={
-                                                                <AlertCircle
-                                                                    size={
-                                                                        SIZE_ICON
-                                                                    }
-                                                                    className="mt-1 text-red-500"
-                                                                />
-                                                            }
-                                                        />
-                                                    </Link>
-                                                );
-                                            }
-                                        )}
+                                    <ValidateErrorList
+                                        errors={releaseValidateData}
+                                        isFetching={isFetching}
+                                        releaseId={formValues?.id as string}
+                                        sectionColor={token.colorError}
+                                        title={messages('validation.error')}
+                                    />
+                                    <EnrichedErrorList
+                                        errors={releaseEnrichedErrorsData}
+                                        isFetching={isFetchingEnrichedErrors}
+                                        releaseId={formValues?.id as string}
+                                        sectionColor={token.colorError}
+                                        title={messages('release.releaseError')}
+                                    />
                                 </ul>
                             )}
                         </div>
                     </div>
                 </ScrollArea>
-                {/* </div> */}
             </div>
         </div>
     );

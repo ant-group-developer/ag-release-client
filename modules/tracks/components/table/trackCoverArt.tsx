@@ -4,17 +4,20 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { TrackData } from '../../types';
 
 type Props = {
     trackData: TrackData;
+    width?: number;
+    height?: number;
 };
 
-export default function TrackCoverArt({ trackData }: Props) {
+export default function TrackCoverArt({ trackData, width = 40, height = 40 }: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const imgFileId =
-        trackData?.release?.coverArtThumbnails?.['75x75'] ??
-        trackData?.release?.coverArtThumbnails?.original;
+        trackData?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] ??
+        trackData?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
 
     const [ref, entry] = useIntersectionObserver({
         root: null,
@@ -41,7 +44,8 @@ export default function TrackCoverArt({ trackData }: Props) {
             <div ref={ref}>
                 <Skeleton.Node
                     active
-                    className="aspect-square !h-10 !w-10 !rounded-lg"
+                    style={{ width, height }}
+                    className="aspect-square !rounded-lg"
                 />
             </div>
         );
@@ -53,8 +57,8 @@ export default function TrackCoverArt({ trackData }: Props) {
                 fallbackSrc={FALLBACK_IMAGE}
                 src={linkReadFile}
                 alt="genre"
-                width={40}
-                height={40}
+                width={width}
+                height={height}
                 className="aspect-square rounded-lg object-cover"
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsLoading(false)}

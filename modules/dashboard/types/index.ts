@@ -32,7 +32,9 @@ export interface IssueCountData extends BaseCountData {
 
 export interface OverviewCountData {
     releasesCount: number;
+    releasesImportCount: number;
     tracksCount: number;
+    tracksImportCount: number;
     labelsCount: number;
     artistsCount: number;
 }
@@ -45,4 +47,18 @@ export interface CountryCountData {
 export interface DashboardDataFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
+    isImportedFromReport?: string;
+}
+
+export interface AnalyticDashboardParams {
+    fromDate: string;
+    toDate: string;
+    topN?: number;
+    includeOther?: boolean;
+    type: 'stream' | 'revenue';
+}
+
+export interface AnalyticDashboardData {
+    name: string;
+    value: number;
 }

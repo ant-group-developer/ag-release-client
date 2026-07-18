@@ -5,6 +5,9 @@ export enum SETTING_TABS {
     ACR_CLOUD = 'acrCloud',
     GENERAL = 'general',
     GENERATOR = 'generator',
+    CI_TEMPLATE = 'ciTemplate',
+    RESEND = 'resend',
+    PARTNERS = 'partners',
 }
 
 export enum STATUS_BACKUP {

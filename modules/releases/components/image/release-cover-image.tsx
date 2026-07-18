@@ -3,17 +3,32 @@ import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-fil
 import { useIntersectionObserver } from '@uidotdev/usehooks';
 import { Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
+import { RELEASE_COVER_ART_SIZE } from '../../constants';
 import { ReleasesData } from '../../types';
 
 type Props = {
-    data: ReleasesData;
+    data?: ReleasesData;
+    fileId?: string;
+    src?: string | null;
+    width?: number;
+    height?: number;
+    className?: string;
 };
 
-export default function ReleaseCoverImage({ data }: Props) {
-    const [isLoading, setIsLoading] = useState(true);
+export default function ReleaseCoverImage({
+    data,
+    fileId,
+    src,
+    width = 56,
+    height = 56,
+    className,
+}: Props) {
+    const [isLoading, setIsLoading] = useState(!src);
     const imgFileId =
-        data?.coverArtThumbnails?.['75x75'] ??
-        data?.coverArtThumbnails?.original;
+        fileId ??
+        data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] ??
+        data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
+    const imageSrc = src || undefined;
 
     const [ref, entry] = useIntersectionObserver({
         root: null,
@@ -22,39 +37,39 @@ export default function ReleaseCoverImage({ data }: Props) {
     });
 
     const { linkReadFile } = useGetLinkReadFile(imgFileId as string, {
-        enabled: !!entry?.isIntersecting,
+        enabled: !imageSrc && !!imgFileId && !!entry?.isIntersecting,
     });
+    const coverSrc = imageSrc ?? linkReadFile;
 
     useEffect(() => {
-        if (imgFileId && linkReadFile) {
+        if (coverSrc) {
             setIsLoading(false);
         }
-        if (!imgFileId) {
+        if (!imgFileId && !imageSrc) {
             const timeout = setTimeout(() => setIsLoading(false), 1000);
             return () => clearTimeout(timeout);
         }
-    }, [imgFileId, linkReadFile, isLoading]);
+    }, [coverSrc, imageSrc, imgFileId]);
 
     if (isLoading) {
         return (
-            <div ref={ref}>
+            <div ref={ref} className={`flex-shrink-0 ${className || ''}`}>
                 <Skeleton.Node
                     active
-                    className="aspect-square !h-10 !w-10 !rounded-lg"
+                    style={{ width, height }}
+                    className="aspect-square !rounded-lg"
                 />
             </div>
         );
     }
 
     return (
-        <div ref={ref}>
-            {/* Image */}
-
+        <div ref={ref} className={`flex-shrink-0 ${className || ''}`}>
             <ImageFallback
-                src={linkReadFile}
+                src={coverSrc ?? ''}
                 alt="cover"
-                width={40}
-                height={40}
+                width={width}
+                height={height}
                 className={`aspect-square rounded-lg object-cover transition-opacity duration-300`}
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsLoading(false)}

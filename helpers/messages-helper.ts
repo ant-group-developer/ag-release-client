@@ -1,54 +1,83 @@
-import { message } from '@/helpers/antd-static';
+import { message } from 'antd';
+import { NoticeType } from 'antd/es/message/interface';
+import type { Id, ToastOptions } from 'react-toastify';
 
-type TypeOptions = 'success' | 'error' | 'info' | 'warning';
+// Ant Design message không có concept "toastId" như react-toastify,
+// nhưng ta có thể dùng message.open với key để mô phỏng behavior tương tự.
+
+// Map type của react-toastify sang method của antd message
+const typeMap: Record<
+    string,
+    'success' | 'error' | 'warning' | 'info' | 'loading'
+> = {
+    success: 'success',
+    error: 'error',
+    warning: 'warning',
+    warn: 'warning',
+    info: 'info',
+    default: 'info',
+};
 
 export const showNotification = (
-    type: TypeOptions,
-    content: string,
-    options?: { duration?: number; key?: string }
+    type: NoticeType,
+    msg: string,
+    toastOptions?: ToastOptions
 ) => {
-    const duration = (options?.duration ?? 3000) / 1000;
-    const key = options?.key ?? content ?? 'Something went wrong, try again';
+    const duration = toastOptions?.autoClose
+        ? (toastOptions.autoClose as number) / 1000
+        : 4;
 
-    message[type]({
-        content,
+    // const antdType = typeMap[type] ?? 'info';
+    const key = (toastOptions?.toastId as string) ?? msg ?? 'notification';
+
+    message.open({
+        type: type,
+        content: msg,
         duration,
         key,
     });
 };
 
-export const hideNotification = (key: string) => {
-    message.destroy(key);
+export const hideNotification = (toastId: ToastOptions['toastId']) => {
+    if (toastId !== undefined) {
+        message.destroy(toastId as string);
+    }
 };
 
-export const isToastActive = (_key?: string) => {
-    // Ant Design message does not support checking active state
+export const isToastActive = (toastId: ToastOptions['toastId']): boolean => {
+    // Ant Design message không hỗ trợ check active theo key
+    // Trả về false để tránh crash — điều chỉnh logic nếu cần
+    if (toastId === undefined) return false;
     return false;
 };
 
-export const showNotificationLoading = (content?: string) => {
-    const key = content ?? 'loading';
-    message.loading({
-        content: content ?? 'Loading, please wait a few seconds',
-        duration: 0, // persist until manually closed
+// Loading notification — trả về key thay vì Id của toastify
+export const showNotificationLoading = (msg?: string): Id => {
+    const key = `loading-${Date.now()}`;
+    message.open({
+        type: 'loading',
+        content: msg ?? 'Loading, please wait a few seconds',
+        duration: 0, // không tự đóng
         key,
     });
     return key;
 };
 
-export const notificationSuccess = (key: string, content?: string) => {
-    message.success({
-        content: content ?? 'Completed',
-        duration: 2,
-        key,
+export const notificationSuccess = (id: Id, msg?: string) => {
+    message.open({
+        key: id as string,
+        type: 'success',
+        content: msg ?? 'Completed',
+        duration: 4,
     });
 };
 
-export const notificationError = (key: string, content?: string) => {
-    message.error({
-        content: content ?? 'Failure',
-        duration: 2,
-        key,
+export const notificationError = (id: Id, msg?: string) => {
+    message.open({
+        key: id as string,
+        type: 'error',
+        content: msg ?? 'Failure',
+        duration: 4,
     });
 };
 
@@ -60,12 +89,13 @@ export const toastPromise = <T>(
         success?: string;
         error?: string;
     }
-) => {
-    const key = 'promise-' + Date.now();
+): Promise<T> => {
+    const key = `promise-${Date.now()}`;
 
-    message.loading({
-        content: options?.pending ?? messages('common.processing'),
+    message.open({
         key,
+        type: 'loading',
+        content: options?.pending ?? messages('common.processing'),
         duration: 0,
     });
 
@@ -74,10 +104,11 @@ export const toastPromise = <T>(
             const code = options?.success
                 ? options.success
                 : data?.data?.messageCode;
-            message.success({
-                content: messages(code),
+            message.open({
                 key,
-                duration: 2,
+                type: 'success',
+                content: messages(code),
+                duration: 4,
             });
             return data;
         })
@@ -85,10 +116,11 @@ export const toastPromise = <T>(
             const code = options?.error
                 ? options.error
                 : error?.response?.data?.messageCode;
-            message.error({
-                content: messages(code),
+            message.open({
                 key,
-                duration: 2,
+                type: 'error',
+                content: messages(code),
+                duration: 4,
             });
             throw error;
         });

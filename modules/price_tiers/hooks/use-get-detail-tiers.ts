@@ -29,6 +29,7 @@ export const useGetDetailPriceTier = (id: PriceTiersData['id']) => {
             updatedAt: null,
         },
         code: '',
+        ciCode: '',
     };
 
     return {

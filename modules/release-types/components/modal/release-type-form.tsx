@@ -100,7 +100,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
             >
                 <AppFormItem
                     name="name"
-                    label={messages('trackType.label')}
+                    label={messages('releaseType.label')}
                     required
                     rules={[
                         {
@@ -111,7 +111,7 @@ export default function ReleaseTypeFormModal({ ...props }: Props) {
                             max: MAX_NAME_LENGTH,
                             message: messages('validation.stringMax', {
                                 max: MAX_NAME_LENGTH,
-                                field: messages('trackType.label'),
+                                field: messages('releaseType.label'),
                             }),
                         },
                     ]}

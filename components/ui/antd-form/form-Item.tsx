@@ -16,18 +16,24 @@ function AppFormItem({
     tooltipInfo,
     ...props
 }: AppFormItemProps) {
+    const isRequired =
+        required ||
+        (Array.isArray(props.rules) &&
+            props.rules.some((rule: any) => rule && rule.required));
+
     const customLabel = label ? (
         <div className="flex items-center gap-1">
-            <span className="flex gap-1">
+            <span className="flex gap-1 font-normal">
                 <Typography.Text
                     style={{
                         color: '#65696e',
                     }}
                     type="secondary"
+                    className="dark:!text-white"
                 >
                     {label}
                 </Typography.Text>
-                {required && <span style={{ color: 'red' }}> *</span>}
+                {isRequired && <span style={{ color: 'red' }}> *</span>}
             </span>
             {tooltipInfo && <IconInfoTooltip title={tooltipInfo} />}
         </div>

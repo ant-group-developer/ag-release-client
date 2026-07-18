@@ -4,9 +4,11 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { ArtistDataFilter } from '@/modules/artist/types';
+import { Switch } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ARTIST_ROLE } from '../../enums';
+import { useUpdateArtistRole } from '../../hooks/use-update-artist-role';
 import { ArtistRoleData } from '../../types';
 
 type Props = Omit<AppTableProps<ArtistRoleData>, 'columns'> & {
@@ -20,6 +22,12 @@ type Props = Omit<AppTableProps<ArtistRoleData>, 'columns'> & {
 export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const {
+        updateArtistRole,
+        isPending: isUpdateArtistRole,
+        variables,
+    } = useUpdateArtistRole();
+
     const column: ColumnType<ArtistRoleData>[] = [
         {
             title: messages('common.iNo'),
@@ -105,6 +113,27 @@ export const ArtistRoleTable = ({ dataFilter, ...props }: Props) => {
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
                 </span>
+            ),
+        },
+        {
+            title: messages('common.required'),
+            key: 'isRequired',
+            dataIndex: 'isRequired',
+            align: 'center',
+            width: 120,
+            render: (value, record) => (
+                <Switch
+                    loading={isUpdateArtistRole && variables?.id === record.id}
+                    onChange={(e) =>
+                        updateArtistRole({
+                            id: record.id,
+                            payload: {
+                                isRequired: e,
+                            },
+                        })
+                    }
+                    checked={value}
+                />
             ),
         },
         {

@@ -12,7 +12,11 @@ export enum APP_ROUTES {
     HOME = '/',
     DASHBOARD = '/dashboard',
     RELEASES = '/releases',
+    RELEASES_CREATE = '/releases/create',
     RELEASES_DETAIL = '/releases/*',
+    RELEASES_DISTRIBUTION = '/releases/distribution',
+    RELEASE_DISTRIBUTION = '/release-distribution',
+    RELEASE_DISTRIBUTION_DETAIL = '/release-distribution/*',
     RELEASE_TYPE = '/release-type',
     TRACKS = '/tracks',
     TRACK_DETAIL = '/tracks/*',
@@ -22,10 +26,16 @@ export enum APP_ROUTES {
     ARTISTS = '/artists',
     ARTIST_DETAIL = '/artists/*',
     DISTRIBUTION = '/distribution',
+    CHANNELS = '/channels',
     LANGUAGES = '/languages',
     COUNTRIES = '/countries',
     GENRES = '/genres',
     DSP = '/dsp',
+    DSP_REPORT = '/dsp-report',
+    RELEASE_VIDEOS = '/release-videos',
+    RELEASE_VIDEOS_CREATE = '/release-videos/create',
+    RELEASE_VIDEOS_DETAIL = '/release-videos/*',
+    DSP_TENANT = '/dsp-tenant',
     ARTIST_ROLE = '/artist-role',
     EMAIL_SENDER = '/email-sender',
     TIMEZONE = '/timezone',
@@ -37,6 +47,7 @@ export enum APP_ROUTES {
     TENANT_TIERS = '/tenant-tiers',
     TENANT_ISSUE = '/tenant-issue',
     SETTING = '/setting',
+    YOUTUBE_KEYS = '/youtube-keys',
     SIGN_IN = '/sign-in',
     FORGOT_PASSWORD = '/forgot-password',
     RESET_PASSWORD = '/reset-password',
@@ -45,7 +56,16 @@ export enum APP_ROUTES {
     CURRENCIES = '/currencies',
     PRICE_TIERS = '/price-tiers',
     ANALYTICS = '/analytics',
-    ANALYTIC_DETAIL = '/analytics/*',
+    ANALYTICS_TRACKS = '/analytics/tracks',
+    ANALYTICS_RELEASES = '/analytics/releases',
+    ANALYTICS_VIDEO_RELEASES = '/analytics/video-releases',
+    ANALYTICS_ARTISTS = '/analytics/artists',
+    ANALYTICS_LABELS = '/analytics/labels',
+    ANALYTICS_TENANTS = '/analytics/tenants',
+    ANALYTICS_DSPS = '/analytics/dsps',
+    ANALYTICS_CHANNELS = '/analytics/channels',
+    ANALYTICS_SOURCE_TYPES = '/analytics/source-types',
+    ANALYTICS_DETAIL = '/analytics/*',
     ISSUE_LEVEL = '/issue-level',
     ISSUES = '/issues',
     REVENUE = '/revenue',
@@ -53,14 +73,32 @@ export enum APP_ROUTES {
     NEWS = '/news',
     NEWS_DETAIL = '/news/*',
     AGGREGATOR = '/aggregator',
+    REPORT_IMPORT = '/report-import',
     DEAL_TYPE = '/deal-type',
     PING = '/ping',
+    RELEASE_LOG = '/release-log',
+    RELEASE_EXECUTIONS = '/release-executions',
+    RELEASE_SUBMITS = '/release-submits',
+    DISTRIBUTION_JOBS = '/distribution-jobs',
+    LANDING_NEWS_DETAIL = '/landing/news/*',
+    LANDING = '/landing',
 }
 
 export const AUTH_ROUTES: string[] = [APP_ROUTES.SIGN_IN];
 
-export const DEFAULT_ROUTE = APP_ROUTES.DASHBOARD;
+export const DEFAULT_ROUTE = APP_ROUTES.RELEASES;
 
 export const HOME_ROUTE = APP_ROUTES.DASHBOARD;
 
-export const PUBLIC_ROUTES = [APP_ROUTES.NOT_FOUND, APP_ROUTES.SERVER_ERROR];
+export const PUBLIC_ROUTES = [
+    APP_ROUTES.NOT_FOUND,
+    APP_ROUTES.SERVER_ERROR,
+    APP_ROUTES.LANDING,
+    APP_ROUTES.LANDING_NEWS_DETAIL,
+    APP_ROUTES.HOME,
+];
+
+export enum PATH_PARAMS {
+    ACTION = 'action',
+    RELEASE_ID = 'release-id',
+}

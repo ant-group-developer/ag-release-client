@@ -65,6 +65,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
             createdAt: '',
             updatedAt: null,
             code: '',
+            ciCode: '',
         },
         trackPolicies: [],
         scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.UN_SCANNED,
@@ -72,6 +73,7 @@ export const useGetDetailTrack = (id: TrackData['id']) => {
         sampleLength: '',
         trackSensitiveId: '',
         trackSensitive: {} as TrackSensitiveData,
+        isInstrumental: false,
     };
 
     return {

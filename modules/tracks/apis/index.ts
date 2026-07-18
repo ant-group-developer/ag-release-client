@@ -3,8 +3,8 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import { Key } from 'react';
 import { TrackData, TrackDataFilter } from '../types';
 import {
+    BulkUpdateTrackPayload,
     TrackPayload,
-    UpdateTrackOrderPayload,
     UpdateTrackPayload,
 } from '../types/payload';
 
@@ -36,7 +36,7 @@ export const trackApi = {
         );
     },
 
-    updateTrackOrder: (payload: UpdateTrackOrderPayload) => {
+    bulkUpdateTrack: (payload: BulkUpdateTrackPayload) => {
         return axiosInstance.put(`/tracks/draft/bulk`, payload);
     },
 

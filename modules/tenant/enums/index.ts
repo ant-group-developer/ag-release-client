@@ -21,6 +21,9 @@ export enum TENANT_TABS {
     INTEGRATION = 'integrations',
     TRACK = 'tracks',
     RELEASE = 'releases',
+    ROLES = 'roles',
+    DSP = 'dsps',
+    CUSTOM_DOMAIN = 'custom-domain',
 }
 
 export enum TENANT_USER_TYPE {

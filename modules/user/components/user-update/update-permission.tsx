@@ -1,14 +1,19 @@
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { useGetListRoles } from '@/modules/roles/hooks/use-get-list-roles';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { RolePermission, RolesData } from '@/modules/roles/types';
-import { Badge, Button } from 'antd';
+import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
+import { Alert, Badge, Button, Select, Tooltip } from 'antd';
 import { ColumnsType, ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { Key, useEffect, useState } from 'react';
-import { useUserRole } from '../../hooks/use-get-user';
+import { Key, useEffect, useMemo, useState } from 'react';
+import { useAssignableRoles, useUserRole } from '../../hooks/use-get-user';
 import { useUpdateUserRole } from '../../hooks/use-update-user';
 import { UserData } from '../../types/data';
-import { checkCanAccessTenantAll } from '../../utils/role';
+import {
+    checkIsSystemAdmin,
+} from '../../utils/role';
 
 type Props = {
     dataEdit: UserData;
@@ -63,20 +68,48 @@ function UpdatePermission({ dataEdit }: Props) {
     const messages = useTranslations();
 
     const userId = dataEdit.id;
-    const canAccessTenantAll = checkCanAccessTenantAll(
-        dataEdit.type,
-        dataEdit.tenantUser[0]?.type
+    const { isSystemTenant } = useAuth();
+    const { hasPermission } = usePermission();
+    const canUpdateRole = hasPermission(PERMISSION.USER.UPDATE_ROLE);
+    const { data: tenantActive } = useTenantActive();
+    const tenantId = tenantActive?.items?.[0]?.id || '';
+
+    const [selectedTenantId, setSelectedTenantId] = useState<
+        string | undefined
+    >(undefined);
+
+    const activeTenantId = isSystemTenant
+        ? selectedTenantId
+        : tenantActive?.items?.[0]?.id || '';
+
+    const isSystemAdmin = checkIsSystemAdmin(dataEdit.type);
+
+    const { data: assignableRoles } = useAssignableRoles(
+        isSystemTenant ? selectedTenantId : undefined
     );
 
-    const { rolesData } = useGetListRoles({
-        pageSize: 999,
-    });
     const { updateUserRole, isPending } = useUpdateUserRole();
 
-    const { data } = useUserRole(userId);
+    const { data } = useUserRole(
+        userId,
+        isSystemTenant ? selectedTenantId : undefined
+    );
+
+    const assignableRoleIds = useMemo(
+        () => assignableRoles.map((item) => item.id),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [JSON.stringify(assignableRoles.map((item) => item.id))]
+    );
+
+    const userRoleIds = useMemo(
+        () => data.map((item) => item.id),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [JSON.stringify(data.map((item) => item.id))]
+    );
+
     useEffect(() => {
-        setSelectedKeys(data.map((item) => item.id));
-    }, [data]);
+        setSelectedKeys(userRoleIds);
+    }, [userRoleIds]);
 
     const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
@@ -111,39 +144,125 @@ function UpdatePermission({ dataEdit }: Props) {
 
     const onSubmit = () => {
         updateUserRole({
+            userId,
             payload: {
-                userId: userId,
                 roleIds: selectedKeys as string[],
+                ...(isSystemTenant && { tenantId: selectedTenantId }),
             },
         });
     };
 
+    const isTableDisabled =
+        (isSystemTenant && !selectedTenantId) || !canUpdateRole;
+
     return (
-        <div>
-            <AppTable
-                className="rounded-lg border"
-                scroll={{
-                    x: 0,
-                }}
-                columns={column}
-                expandable={{
-                    expandedRowRender: (record) => (
-                        <NestedPermissionTable
-                            dataSource={record.rolePermissions}
+        <div className="flex flex-col gap-4">
+            {isSystemTenant && (
+                <div className="flex flex-col gap-2 rounded-lg border bg-gray-50/50 p-4">
+                    <span className="text-sm font-medium">
+                        {messages('tenant.selectTitle', {
+                            defaultMessage: 'Select Workspace',
+                        })}
+                    </span>
+                    <Select
+                        placeholder={messages('tenant.selectTitle', {
+                            defaultMessage: 'Select Workspace',
+                        })}
+                        allowClear
+                        value={selectedTenantId}
+                        onChange={setSelectedTenantId}
+                        options={dataEdit.tenantUser?.map((tu) => ({
+                            label: tu.tenant.name,
+                            value: tu.tenant.id,
+                        }))}
+                        className="w-full"
+                    />
+                    {dataEdit.tenantUser?.length === 0 && (
+                        <Alert
+                            type="info"
+                            showIcon
+                            className="mt-2"
+                            message={messages(
+                                'user.grantPermission.noTenants',
+                                {
+                                    defaultMessage:
+                                        'This user is not assigned to any tenant.',
+                                }
+                            )}
                         />
-                    ),
-                }}
-                dataSource={rolesData.items}
-                pagination={{
-                    pageSize: 15,
-                    total: rolesData.metadata.totalItems,
-                }}
-                rowSelection={{
-                    selectedRowKeys: selectedKeys,
-                    onChange: (value) => setSelectedKeys(value),
-                }}
-            />
-            {!canAccessTenantAll && (
+                    )}
+                    {(dataEdit.tenantUser?.length ?? 0) > 0 &&
+                        !selectedTenantId && (
+                            <Alert
+                                type="warning"
+                                showIcon
+                                className="mt-2"
+                                message={messages(
+                                    'user.grantPermission.selectWorkspaceHint',
+                                    {
+                                        defaultMessage:
+                                            "Please select a workspace to view or manage this user's roles and permissions.",
+                                    }
+                                )}
+                            />
+                        )}
+                </div>
+            )}
+            {!isSystemTenant && isSystemAdmin && (
+                <Alert
+                    type="success"
+                    showIcon
+                    message={messages('user.grantPermission.systemAdminAlert', {
+                        defaultMessage:
+                            'This user is a System Admin and automatically inherits all active capabilities.',
+                    })}
+                />
+            )}
+
+
+            <Tooltip
+                title={
+                    isTableDisabled
+                        ? messages('user.grantPermission.disabledTooltip', {
+                              defaultMessage:
+                                  'Role assignment is disabled in this context.',
+                          })
+                        : ''
+                }
+            >
+                <AppTable
+                    className="rounded-lg border"
+                    scroll={{
+                        x: 0,
+                        y: 'calc(100vh - 400px)',
+                    }}
+                    columns={column}
+                    expandable={{
+                        expandedRowRender: (record) => (
+                            <NestedPermissionTable
+                                dataSource={record.rolePermissions}
+                            />
+                        ),
+                    }}
+                    dataSource={assignableRoles as any}
+                    // pagination={{
+                    //     pageSize: 15,
+                    //     total: assignableRoles?.length || 0,
+                    //     style: {
+                    //         padding: '0 20px',
+                    //     },
+                    // }}
+                    rowSelection={{
+                        selectedRowKeys: selectedKeys,
+                        onChange: (value) => setSelectedKeys(value),
+                        getCheckboxProps: () => ({
+                            disabled: isTableDisabled,
+                        }),
+                    }}
+                />
+            </Tooltip>
+
+            {!isTableDisabled && (
                 <div className="mt-2 text-right">
                     <Button
                         type="primary"

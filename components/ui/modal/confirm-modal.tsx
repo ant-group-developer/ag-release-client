@@ -1,4 +1,6 @@
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { LoadingType, useLoading } from '@/hooks/use-loading';
+import { CircleAlert } from 'lucide-react';
 import { ReactNode } from 'react';
 import AppModal, { AppModalProps } from './normal-modal';
 
@@ -25,16 +27,22 @@ const AppConfirm = ({
             open={open}
             onOk={onOk}
             onCancel={onCancel}
-            title={modalTitle}
+            title={
+                <div className="flex items-center gap-2">
+                    {typeDelete && <CircleAlert size={SIZE_ICON_BIG} />}
+                    {modalTitle}
+                </div>
+            }
             okButtonProps={{
                 danger: typeDelete,
                 ghost: typeDelete,
                 disabled: loading,
+                ...props.okButtonProps,
             }}
             cancelButtonProps={{
-                type: !typeDelete ? 'default' : 'primary',
-                ghost: true,
+                type: 'default',
                 disabled: loading,
+                ...props.cancelButtonProps,
             }}
         >
             {paragraph}

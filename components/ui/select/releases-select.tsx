@@ -1,3 +1,4 @@
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData } from '@/modules/releases/types';
@@ -9,7 +10,7 @@ type Props = Omit<SelectProps, 'options'> & {
 
 export default function ReleasesSelect({ fallBack, ...props }: Props) {
     const { releasesData } = useGetListReleases({
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const options = releasesData.items.map((item: ReleasesData) => ({

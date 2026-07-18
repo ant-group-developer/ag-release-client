@@ -61,6 +61,7 @@ type ActionType = {
     label: ReactNode;
     danger?: boolean;
     dividerBefore?: boolean;
+    onClick?: () => void;
 };
 
 export default function ActionButton({
@@ -195,16 +196,23 @@ export default function ActionButton({
     ];
 
     const allItems = [...extraItems, ...actions];
+    const nonDangerItems = allItems.filter((item) => !item.danger);
+    const dangerItems = allItems.filter((item) => item.danger);
+    const sortedItems = [...nonDangerItems, ...dangerItems];
 
     const items: MenuProps['items'] = [];
 
-    allItems?.forEach((item) => {
+    sortedItems?.forEach((item, index) => {
         if (item?.show) {
-            if (item.dividerBefore && items.length > 0) {
-                items.push({ type: 'divider' });
+            const isFirstDanger = item.danger && !sortedItems[index - 1]?.danger;
+            if ((item.dividerBefore || isFirstDanger) && items.length > 0) {
+                if (items[items.length - 1]?.type !== 'divider') {
+                    items.push({ type: 'divider' });
+                }
             }
+            const { onClick, show, dividerBefore, ...rest } = item;
             items.push({
-                ...item,
+                ...rest,
             });
         }
     });
@@ -226,6 +234,12 @@ export default function ActionButton({
             [ACTION_BUTTON.SHOW_ADD_TRANSLATE]: onShowAddTranslate,
             [ACTION_BUTTON.SHOW_TRANSLATIONS]: onShowTranslation,
         };
+
+        const extraItem = extraItems?.find((item) => item.key === key);
+        if (extraItem && extraItem.onClick) {
+            extraItem.onClick();
+            return;
+        }
 
         const callback = callbacks[key];
         if (callback) {

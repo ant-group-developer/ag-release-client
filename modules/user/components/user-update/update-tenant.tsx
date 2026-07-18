@@ -1,4 +1,5 @@
 import AppForm from '@/components/ui/antd-form/form';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { flattenData } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
@@ -31,7 +32,7 @@ function UpdateTenant({ dataEdit }: Props) {
     const { data: dataTenant } = useTenantList({
         fieldOrder: TENANT_ORDER_BY.EMAIL,
         orderBy: ORDER.ASC,
-        pageSize: 999,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
 
     const { bulkUpdateTenantUser } = useBulkUpdateTenantUser();

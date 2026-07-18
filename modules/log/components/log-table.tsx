@@ -1,206 +1,203 @@
 import JsonViewer from '@/components/ui/json-viewer';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
-import { formattedDate } from '@/helpers/common';
-import { isValidJSON } from '@/helpers/string';
-import { Tag, Tooltip } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import copy from 'copy-to-clipboard';
+import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
+import { formattedDate, getSortOrder } from '@/helpers/common';
+import { OnChangeFilter } from '@/hooks/use-filter';
+import { ProColumns } from '@ant-design/pro-components';
+import { Popover, Tag, Tooltip, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { METHOD } from '../enums';
-import { LogData } from '../types/data';
+import { LOG_LEVEL_MSG_KEY, LOG_TYPE_MSG_KEY } from '../constants';
+import { LOG_LEVEL, LOG_SORT_FIELD, LOG_TYPE } from '../enums';
+import { DataFilterLogs, LogsData } from '../types/data';
 
-// const ReactJson = dynamic(import('react-json-view'), { ssr: false });
-
-type Props = {
+type Props = Omit<AppProTableProps<LogsData>, 'columns'> & {
+    dataFilter: DataFilterLogs;
+    onChangeFilter: OnChangeFilter<DataFilterLogs>;
     pagination: {
         pageSize: number;
         current: number;
     };
-} & Omit<AppTableProps<LogData>, 'columns'>;
+};
 
-function LogTable({ ...props }: Props) {
+function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
 
-    const columns: ColumnsType<LogData> = [
-        // {
-        //     dataIndex: '',
-        //     title: messages('common.no.'),
-        //     align: 'center',
-        //     width: 60,
-        //     render: (text, record, index) =>
-        //         getIndex(
-        //             props.pagination.pageSize,
-        //             props.pagination.current,
-        //             index
-        //         ),
-        // },
+    const columns: ProColumns<LogsData>[] = [
         {
-            title: messages('common.method'),
-            dataIndex: 'action',
-            width: 100,
+            title: messages('log.columns.level'),
+            dataIndex: LOG_SORT_FIELD.LOG_LEVEL,
+            width: 120,
             align: 'center',
             ellipsis: true,
-            render: (cell) => {
-                let color;
-                if (cell === METHOD.GET) color = 'green';
-                if (cell === METHOD.POST) color = 'orange';
-                if (cell === METHOD.PUT) color = 'blue';
-                if (cell === METHOD.PATCH) color = 'purple';
-                if (cell === METHOD.DELETE) color = 'red';
-
-                if (color) {
-                    return (
-                        <Tag color={color} className="text-sm">
-                            {cell}
-                        </Tag>
-                    );
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                LOG_SORT_FIELD.LOG_LEVEL
+            ),
+            render: (_, record) => {
+                let color = '';
+                switch (record.level) {
+                    case LOG_LEVEL.SUCCESS:
+                        color = 'green';
+                        break;
+                    case LOG_LEVEL.LOG:
+                        color = 'blue';
+                        break;
+                    case LOG_LEVEL.WARNING:
+                        color = 'orange';
+                        break;
+                    case LOG_LEVEL.ERROR:
+                        color = 'red';
+                        break;
                 }
 
-                return cell;
-            },
-        },
-        {
-            title: messages('common.email'),
-            dataIndex: 'email',
-            width: 180,
-            ellipsis: true,
-            onCell: (data) => ({
-                onClick: () => copy(data.email ?? ''),
-                className: 'cursor-copy',
-            }),
-            render: (cell) => (
-                <Tooltip title={messages('common.copied')} trigger={'click'}>
-                    {cell}
-                </Tooltip>
-            ),
-        },
-        {
-            title: 'User ID',
-            dataIndex: 'creatorId',
-            width: 130,
-            ellipsis: true,
-            onCell: (data) => ({
-                onClick: () => copy(data.creatorId ?? ''),
-                className: 'cursor-copy',
-            }),
-            render: (cell) => (
-                <Tooltip title={messages('common.copied')} trigger={'click'}>
-                    {cell}
-                </Tooltip>
-            ),
-        },
-        {
-            title: 'IP',
-            dataIndex: 'ip',
-            width: 120,
-            ellipsis: true,
-            onCell: (data) => ({
-                onClick: () => copy(data.ip ?? ''),
-                className: 'cursor-copy',
-            }),
-            render: (cell) => (
-                <Tooltip title={messages('common.copied')} trigger={'click'}>
-                    {cell}
-                </Tooltip>
-            ),
-        },
-        {
-            title: messages('country.label'),
-            dataIndex: 'country',
-            width: 100,
-            ellipsis: true,
-        },
-        {
-            title: messages('country.city'),
-            dataIndex: 'city',
-            width: 100,
-            ellipsis: true,
-        },
-        {
-            title: 'API',
-            dataIndex: 'originalUrl',
-            width: 180,
-            ellipsis: true,
-            onCell: (data) => ({
-                onClick: () => copy(data.originalUrl ?? ''),
-                className: 'cursor-copy',
-            }),
-            render: (cell) => (
-                <Tooltip title={messages('common.copied')} trigger={'click'}>
-                    {cell}
-                </Tooltip>
-            ),
-        },
-        {
-            title: 'Code',
-            dataIndex: 'statusCode',
-            width: 60,
-            align: 'center',
-            ellipsis: true,
-            render: (cell, record) => {
-                if (!cell) return;
                 return (
-                    <Tag
-                        className="text-sm"
-                        color={record.success ? 'green' : 'red'}
-                        // bordered={false}
-                    >
-                        {cell}
+                    <Tag color={color}>
+                        {messages(LOG_LEVEL_MSG_KEY[record.level] as any)}
                     </Tag>
                 );
             },
         },
         {
-            title: messages('common.createdAt'),
-            dataIndex: 'dateCreated',
+            title: messages('log.columns.type'),
+            dataIndex: LOG_SORT_FIELD.LOG_TYPE,
+            width: 120,
             align: 'center',
-            width: 150,
-            render: (cell) => formattedDate(cell),
+            ellipsis: true,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                LOG_SORT_FIELD.LOG_TYPE
+            ),
+            render: (_, record) => {
+                const color =
+                    record.type === LOG_TYPE.BUSINESS ? 'cyan' : 'purple';
+                return (
+                    <Tag color={color} className="text-xs">
+                        {messages(LOG_TYPE_MSG_KEY[record.type] as any)}
+                    </Tag>
+                );
+            },
+        },
+        {
+            title: messages('log.columns.module'),
+            dataIndex: LOG_SORT_FIELD.LOG_MODULE,
+            width: 200,
+            ellipsis: true,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                LOG_SORT_FIELD.LOG_MODULE
+            ),
+            render: (_, record) => {
+                if (!record.modules) return '-';
+
+                const modules = record.modules
+                    .split(',')
+                    .map((m) => m.trim())
+                    .filter(Boolean);
+
+                if (modules.length === 0) return '-';
+
+                const formatModuleName = (name: string) => {
+                    const lower = name.toLowerCase();
+                    return lower.charAt(0).toUpperCase() + lower.slice(1);
+                };
+
+                const maxVisible = 2;
+                const visibleTags = modules.slice(0, maxVisible);
+                const hiddenTags = modules.slice(maxVisible);
+
+                const renderTag = (name: string) => (
+                    <Tag key={name} className="!mr-0">
+                        {formatModuleName(name)}
+                    </Tag>
+                );
+
+                const renderHiddenTagsPopover = () => (
+                    <div className="flex max-w-[250px] flex-wrap gap-1">
+                        {hiddenTags.map((name) => renderTag(name))}
+                    </div>
+                );
+
+                return (
+                    <div className="flex flex-wrap gap-1">
+                        {visibleTags.map((name) => renderTag(name))}
+                        {hiddenTags.length > 0 && (
+                            <Popover
+                                content={renderHiddenTagsPopover()}
+                                trigger="hover"
+                            >
+                                <Tag className="!mr-0 cursor-pointer">
+                                    +{hiddenTags.length}
+                                </Tag>
+                            </Popover>
+                        )}
+                    </div>
+                );
+            },
+        },
+        {
+            title: messages('common.content'),
+            dataIndex: 'message',
+            width: 700,
+            ellipsis: true,
+            render: (_, record) => {
+                return (
+                    <Tooltip title={record.message} placement="topLeft">
+                        {record.message}
+                    </Tooltip>
+                );
+            },
+        },
+        {
+            title: messages('common.createdAt'),
+            dataIndex: LOG_SORT_FIELD.LOG_CREATED_AT,
+            align: 'center',
+            width: 180,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                LOG_SORT_FIELD.LOG_CREATED_AT
+            ),
+            render: (_, record) => formattedDate(record.createdAt),
         },
     ];
 
     return (
-        <AppTable
+        <AppProTable
             {...props}
             pagination={false}
             columns={columns}
+            scroll={{ x: 1400 }}
+            style={{
+                backgroundColor: token.colorBgContainer,
+                ...props?.style,
+            }}
             expandable={{
-                expandedRowRender: ({ content, response, userAgent, note }) => (
-                    <div className="grid grid-cols-1 gap-5 px-4 py-2 md:grid-cols-2 lg:grid-cols-8">
-                        {content && (
-                            <div className="lg:col-span-3">
-                                <h3 className="mb-1 font-semibold">Content</h3>
-                                <JsonViewer src={JSON.parse(content)} />
-                            </div>
-                        )}
-
-                        {response && isValidJSON(response) && (
-                            <div className="lg:col-span-3">
-                                <h3 className="mb-1 font-semibold">Response</h3>
-                                <JsonViewer src={JSON.parse(response)} />
-                            </div>
-                        )}
-
-                        {(userAgent || note) && (
-                            <div className="lg:col-span-2">
-                                <div className="mb-2">
-                                    <h3 className="mb-1 font-semibold">
-                                        User agent
-                                    </h3>
-                                    <p className="text-wrap">{userAgent}</p>
-                                </div>
-                                <div>
-                                    <h3 className="mb-1 font-semibold">
-                                        {messages('common.note')}
-                                    </h3>
-                                    <p className="text-wrap">{note}</p>
-                                </div>
+                expandedRowRender: ({ data }) => (
+                    <div className="px-4 py-2">
+                        {data && (
+                            <div>
+                                <h3 className="mb-1 font-semibold">
+                                    {messages('log.columns.dataDetail')}
+                                </h3>
+                                <JsonViewer
+                                    src={
+                                        typeof data === 'string'
+                                            ? JSON.parse(data)
+                                            : data
+                                    }
+                                />
                             </div>
                         )}
                     </div>
                 ),
-                rowExpandable: ({ content, response }) =>
-                    !!content || !!response,
+                rowExpandable: ({ data }) => !!data,
             }}
         />
     );

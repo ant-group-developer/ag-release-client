@@ -2,15 +2,14 @@
 
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
-import SensitiveContentSelect from '@/components/ui/select/isSensitiveContent-select';
+import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
+import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { TrackData } from '@/modules/tracks/types';
-import { ConfigProvider, Form, Input, Radio, Select } from 'antd';
+import { ConfigProvider, DatePicker, Form, Input, Radio } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
@@ -27,10 +26,13 @@ export default function OtherSection({
     trackData,
 }: Props) {
     const messages = useTranslations();
-    const { action } = useGetReleaseDetailRoute();
     const form = Form.useFormInstance();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+    const isInstrumental =
+        Form.useWatch('isInstrumental', form) ??
+        trackData?.isInstrumental ??
+        false;
 
     const updateTrackDraft = async (data: any, fieldName?: string) => {
         if (fieldName) {
@@ -43,291 +45,347 @@ export default function OtherSection({
         debouncedUpdateTrackDraft(data);
     };
 
-    const currentYear = dayjs().year();
-    const copyRightYearOptions = [
-        { label: (currentYear - 1).toString(), value: currentYear - 1 },
-        { label: currentYear.toString(), value: currentYear },
-        { label: (currentYear + 1).toString(), value: currentYear + 1 },
-    ];
+    const maxYear = dayjs().year() + 1;
+    const disabledYear = (current: dayjs.Dayjs) => {
+        return current && current.year() > maxYear;
+    };
 
     return (
         <ConfigProvider
             componentDisabled={isReadMode}
             form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
         >
-            <CollapseItem
-                defaultActiveKey={['other']}
-                items={[
-                    {
-                        key: 'other',
-                        label: (
-                            <span className="text-base font-semibold">
-                                {messages('common.other')}
-                            </span>
-                        ),
-                        children: (
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Sensitive Content */}
-                                <AppFormItem
-                                    label={messages(
-                                        'formFields.tracks.sensitiveContent'
-                                    )}
-                                    name="trackSensitiveId"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <SensitiveContentSelect
-                                        id={`tracks.${index}.trackSensitiveId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        onChange={(value) => {
-                                            updateTrackDraft(
-                                                { trackSensitiveId: value },
-                                                'trackSensitiveId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
+            <div className="space-y-4">
+                <p className="text-base font-semibold">
+                    {messages('common.others')}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Sensitive Content */}
+                    <AppFormItem
+                        label={messages('formFields.tracks.sensitiveContent')}
+                        name="trackSensitiveId"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <SensitiveContentSelect
+                            id={`tracks.${index}.trackSensitiveId`}
+                            className="w-full"
+                            showSearch
+                            disabled={isReadMode}
+                            onChange={(value) => {
+                                updateTrackDraft(
+                                    { trackSensitiveId: value },
+                                    'trackSensitiveId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
 
-                                {/* Is Created by AI */}
-                                <AppFormItem
-                                    label={messages('common.isSongCreatedByAi')}
-                                    name="isByAi"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <Radio.Group
-                                        id={`tracks.${index}.isByAi`}
-                                        disabled={isReadMode}
-                                        onChange={(e) => {
-                                            const value = e.target.value;
-                                            updateTrackDraft(
-                                                { isByAi: value },
-                                                'isByAi'
-                                            );
-                                        }}
-                                    >
-                                        <Radio value={true}>
-                                            {messages('common.yes')}
-                                        </Radio>
-                                        <Radio value={false}>
-                                            {messages('common.no')}
-                                        </Radio>
-                                    </Radio.Group>
-                                </AppFormItem>
+                    {/* Is Created by AI */}
+                    <AppFormItem
+                        label={messages('common.isSongCreatedByAi')}
+                        name="isByAi"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Radio.Group
+                            id={`tracks.${index}.isByAi`}
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                updateTrackDraft({ isByAi: value }, 'isByAi');
+                            }}
+                        >
+                            <Radio value={true}>{messages('common.yes')}</Radio>
+                            <Radio value={false}>{messages('common.no')}</Radio>
+                        </Radio.Group>
+                    </AppFormItem>
 
-                                {/* Track Origin Type */}
-                                <AppFormItem
-                                    label={messages('trackOriginType.label')}
-                                    name="trackOriginTypeId"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <OriginalTypeSelect
-                                        id={`tracks.${index}.trackOriginTypeId`}
-                                        className="w-full"
-                                        allowClear
-                                        disabled={isReadMode}
-                                        // fallback={trackData?.trackOriginType?.name}
-                                        onChange={(value) => {
-                                            updateTrackDraft(
-                                                { trackOriginTypeId: value },
-                                                'trackOriginTypeId'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
+                    {/* Track Origin Type */}
+                    <AppFormItem
+                        label={messages('trackOriginType.label')}
+                        name="trackOriginTypeId"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <OriginalTypeSelect
+                            id={`tracks.${index}.trackOriginTypeId`}
+                            className="w-full"
+                            disabled={isReadMode}
+                            // fallback={trackData?.trackOriginType?.name}
+                            onChange={(value) => {
+                                updateTrackDraft(
+                                    { trackOriginTypeId: value },
+                                    'trackOriginTypeId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
 
-                                {/* Recording Country */}
-                                <AppFormItem
-                                    label={messages('track.recordingCountry')}
-                                    name={[
+                    {/* Recording Country */}
+                    <AppFormItem
+                        label={messages('track.recordingCountry')}
+                        name={['trackLanguage', 'recordingCountryId']}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <CountrySelect
+                            id={`tracks.${index}.trackLanguage.recordingCountryId`}
+                            className="w-full"
+                            showSearch
+                            disabled={isReadMode}
+                            // fallback={
+                            //     trackData?.trackLanguage
+                            //         ?.recordingCountry?.name
+                            // }
+                            onChange={(value) => {
+                                updateTrackDraft({
+                                    trackLanguage: {
+                                        ...trackData.trackLanguage,
+                                        recordingCountryId: value,
+                                    },
+                                });
+                            }}
+                        />
+                    </AppFormItem>
+
+                    {/* Track Type */}
+                    <AppFormItem
+                        label={messages('trackType.label')}
+                        name="trackTypeId"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <TrackTypesSelect
+                            id={`tracks.${index}.trackTypeId`}
+                            className="w-full"
+                            showSearch
+                            disabled={isReadMode}
+                            // fallback={trackData?.trackType?.name}
+
+                            onChange={(value) => {
+                                form.setFieldValue(
+                                    ['tracks', index, 'trackTypeId'],
+                                    value
+                                );
+                                updateTrackDraft({
+                                    trackTypeId: value,
+                                });
+                            }}
+                        />
+                    </AppFormItem>
+
+                    {/* ISRC */}
+                    <AppFormItem
+                        label="ISRC"
+                        name="isrc"
+                        required
+                        rules={[
+                            {
+                                min: 12,
+                                max: 12,
+                                message: messages('validation.mustBeLength', {
+                                    number: 12,
+                                    field: 'ISRC',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input
+                            id={`tracks.${index}.isrc`}
+                            allowClear
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value.trim();
+                                updateTrackDraft({ isrc: value }, 'isrc');
+                            }}
+                        />
+                    </AppFormItem>
+
+                    {/* P-Line Year */}
+                    <AppFormItem
+                        label={messages('formFields.pLineYear')}
+                        name="pLineYear"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                        getValueFromEvent={(date: dayjs.Dayjs | null) =>
+                            date ? date.year() : undefined
+                        }
+                        getValueProps={(value: number | undefined) => ({
+                            value: value ? dayjs().year(value) : null,
+                        })}
+                    >
+                        <DatePicker
+                            id={`tracks.${index}.pLineYear`}
+                            picker="year"
+                            className="w-full"
+                            disabled={isReadMode}
+                            disabledDate={disabledYear}
+                            onChange={(date) => {
+                                const value = date ? date.year() : undefined;
+                                updateTrackDraft(
+                                    { pLineYear: value },
+                                    'pLineYear'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
+
+                    {/* P-Line Owner */}
+                    <AppFormItem
+                        label={messages('formFields.pLineOwner')}
+                        name="pLineOwner"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Input
+                            id={`tracks.${index}.pLineOwner`}
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value.trim();
+                                updateTrackDraft({
+                                    pLineOwner: value,
+                                });
+                            }}
+                        />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        className="col-span-2"
+                        label="Lyrics"
+                        name="isInstrumental"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Radio.Group
+                            id={`tracks.${index}.isInstrumental`}
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                form.setFieldValue('isInstrumental', value);
+
+                                if (value) {
+                                    form.setFieldValue('lyric', '');
+                                    form.setFieldValue(
+                                        ['trackLanguage', 'audioLanguageId'],
+                                        null
+                                    );
+                                    updateTrackDraft({
+                                        isInstrumental: value,
+                                    });
+                                    return;
+                                }
+
+                                updateTrackDraft({
+                                    isInstrumental: value,
+                                });
+                            }}
+                        >
+                            <Radio value={false}>{messages('common.containsLyrics')}</Radio>
+                            <Radio value={true}>{messages('common.instrumental')}</Radio>
+                        </Radio.Group>
+                    </AppFormItem>
+
+                    <AppFormItem
+                        className="col-span-2"
+                        label={messages('release.audioLanguage')}
+                        name={['trackLanguage', 'audioLanguageId']}
+                        required
+                        hidden={isInstrumental}
+                        rules={[
+                            {
+                                required: !isInstrumental,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <LanguageSelect
+                            id={`tracks.${index}.trackLanguage.audioLanguageId`}
+                            className="w-full"
+                            showSearch
+                            disabled={isReadMode}
+                            onChange={(value) => {
+                                form.setFieldValue(
+                                    [
+                                        'tracks',
+                                        index,
                                         'trackLanguage',
-                                        'recordingCountryId',
-                                    ]}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
+                                        'audioLanguageId',
+                                    ],
+                                    value
+                                );
+                                updateTrackDraft(
+                                    {
+                                        trackLanguage: {
+                                            ...trackData.trackLanguage,
+                                            audioLanguageId: value,
                                         },
-                                    ]}
-                                >
-                                    <CountrySelect
-                                        id={`tracks.${index}.trackLanguage.recordingCountryId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        // fallback={
-                                        //     trackData?.trackLanguage
-                                        //         ?.recordingCountry?.name
-                                        // }
-                                        onChange={(value) => {
-                                            updateTrackDraft({
-                                                trackLanguage: {
-                                                    ...trackData.trackLanguage,
-                                                    recordingCountryId: value,
-                                                },
-                                            });
-                                        }}
-                                    />
-                                </AppFormItem>
+                                    },
+                                    'trackLanguage.audioLanguageId'
+                                );
+                            }}
+                        />
+                    </AppFormItem>
 
-                                {/* Track Type */}
-                                <AppFormItem
-                                    label={messages('trackType.label')}
-                                    name="trackTypeId"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <TrackTypesSelect
-                                        id={`tracks.${index}.trackTypeId`}
-                                        className="w-full"
-                                        showSearch
-                                        allowClear
-                                        disabled={isReadMode}
-                                        // fallback={trackData?.trackType?.name}
-
-                                        onChange={(value) => {
-                                            form.setFieldValue(
-                                                [
-                                                    'tracks',
-                                                    index,
-                                                    'trackTypeId',
-                                                ],
-                                                value
-                                            );
-                                            updateTrackDraft({
-                                                trackTypeId: value,
-                                            });
-                                        }}
-                                    />
-                                </AppFormItem>
-
-                                {/* ISRC */}
-                                <AppFormItem label="ISRC" name="isrc">
-                                    <Input
-                                        id={`tracks.${index}.isrc`}
-                                        allowClear
-                                        disabled={isReadMode}
-                                        onChange={(e) => {
-                                            const value = e.target.value;
-                                            updateTrackDraft(
-                                                { isrc: value },
-                                                'isrc'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
-
-                                {/* P-Line Year */}
-                                <AppFormItem
-                                    label={messages('formFields.pLineYear')}
-                                    name="pLineYear"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        id={`tracks.${index}.pLineYear`}
-                                        className="w-full"
-                                        options={copyRightYearOptions}
-                                        disabled={isReadMode}
-                                        showSearch
-                                        allowClear
-                                        onChange={(value) => {
-                                            updateTrackDraft(
-                                                { pLineYear: value },
-                                                'pLineYear'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
-
-                                {/* P-Line Owner */}
-                                <AppFormItem
-                                    label={messages('formFields.pLineOwner')}
-                                    name="pLineOwner"
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        id={`tracks.${index}.pLineOwner`}
-                                        allowClear
-                                        disabled={isReadMode}
-                                        onChange={(e) => {
-                                            const value = e.target.value;
-                                            updateTrackDraft({
-                                                pLineOwner: value,
-                                            });
-                                        }}
-                                    />
-                                </AppFormItem>
-
-                                {/* Lyrics */}
-                                <AppFormItem
-                                    className="col-span-2"
-                                    label={messages('formFields.tracks.lyrics')}
-                                    name="lyric"
-                                >
-                                    <TextArea
-                                        id={`tracks.${index}.lyric`}
-                                        rows={2}
-                                        autoSize={{ minRows: 2, maxRows: 20 }}
-                                        disabled={isReadMode}
-                                        onChange={(e) => {
-                                            const value = e.target.value;
-                                            updateTrackDraft(
-                                                { lyric: value },
-                                                'lyric'
-                                            );
-                                        }}
-                                    />
-                                </AppFormItem>
-                            </div>
-                        ),
-                    },
-                ]}
-            />
+                    <AppFormItem
+                        className="col-span-2"
+                        label={messages('formFields.tracks.lyrics')}
+                        name="lyric"
+                        hidden={isInstrumental}
+                    >
+                        <TextArea
+                            id={`tracks.${index}.lyric`}
+                            rows={2}
+                            autoSize={{ minRows: 2, maxRows: 20 }}
+                            disabled={isReadMode}
+                            onChange={(e) => {
+                                const value = e.target.value.trim();
+                                updateTrackDraft({ lyric: value }, 'lyric');
+                            }}
+                        />
+                    </AppFormItem>
+                </div>
+            </div>
         </ConfigProvider>
     );
 }

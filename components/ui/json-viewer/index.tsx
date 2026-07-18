@@ -5,11 +5,17 @@ import type { ReactJsonViewProps } from 'react-json-view';
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
 function JsonViewer({ ...props }: ReactJsonViewProps) {
+    const isDarkTheme = props.theme === 'ocean';
+
     return (
-        <div className="text-wrap rounded-xl bg-white px-2 py-1">
+        <div
+            className={`text-wrap rounded-xl px-2 py-1 ${
+                isDarkTheme ? 'bg-[#2b2b2b]' : 'bg-white'
+            }`}
+        >
             <ReactJson
                 name={false}
-                collapsed={3}
+                collapsed={2}
                 theme={'ocean'}
                 displayDataTypes={false}
                 style={{

@@ -8,8 +8,10 @@ import { MouseEventHandler } from 'react';
 interface Props {
     showDistribute?: boolean;
     showDelete?: boolean;
+    showViewXml?: boolean;
     onShowDistribute?: MouseEventHandler<HTMLElement>;
     onShowDelete?: MouseEventHandler<HTMLElement>;
+    onShowViewXml?: MouseEventHandler<HTMLElement>;
 }
 
 enum ACTION_BUTTON {
@@ -31,7 +33,7 @@ export default function DistributionActionButton({
             label: (
                 <div className="flex items-center gap-2">
                     <Box size={SIZE_ICON_SMALL} />{' '}
-                    {messages('distribution.label')}
+                    {messages('distribute.label')}
                 </div>
             ),
         });

@@ -1,5 +1,9 @@
+'use client';
+
 import { formattedNumber } from '@/helpers/common';
-import { Card, theme } from 'antd';
+import { Card, Select, theme } from 'antd';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import {
     Bar,
     BarChart,
@@ -16,71 +20,100 @@ type Props = {
     className?: string;
 };
 
-export default function StreamChart({ color = '#90D5FF', className }: Props) {
-    // const messages = useTranslations();
+export default function StreamChart({ color, className }: Props) {
+    const messages = useTranslations();
     const { token } = theme.useToken();
+    const [year, setYear] = useState('2026');
 
     // 🔹 Fake data: các DSP phổ biến
     const data = [
-        { name: 'Spotify', value: 52000 },
-        { name: 'Apple Music', value: 31000 },
-        { name: 'YouTube Music', value: 46000 },
-        { name: 'Amazon Music', value: 22000 },
-        { name: 'Deezer', value: 15000 },
-        { name: 'Tidal', value: 12000 },
-        { name: 'SoundCloud', value: 8000 },
-        { name: 'Tencent Music', value: 27000 },
-        { name: 'NetEase', value: 19000 },
-        { name: 'Anghami', value: 6000 },
+        { name: 'Spotify', value: 520 },
+        { name: 'Apple Music', value: 310 },
+        { name: 'YouTube Music', value: 460 },
+        { name: 'Amazon Music', value: 220 },
+        { name: 'Deezer', value: 150 },
+        { name: 'Tidal', value: 120 },
+        { name: 'SoundCloud', value: 80 },
+        { name: 'Tencent Music', value: 270 },
+        { name: 'NetEase', value: 190 },
+        { name: 'Anghami', value: 60 },
     ];
 
     return (
-        <Card
-            className="flex h-full flex-col justify-between"
-            title={'Stream by DSP'}
-            styles={{ body: { padding: 0, height: '100%' } }}
-        >
-            <div className={`h-full px-4 pb-4 ${className}`}>
+        <Card className="h-full" styles={{ body: { padding: '24px' } }}>
+            <div className="mb-8 flex items-start justify-between">
+                <div>
+                    <h3 className="mb-1 text-lg font-bold text-blue-500">
+                        {messages('dashboard.stream_by_dsp')}
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                        {messages('dashboard.stream_distribution_subtitle', {
+                            year,
+                        })}
+                    </p>
+                </div>
+                <Select
+                    defaultValue={year}
+                    onChange={(val) => setYear(val)}
+                    options={[
+                        { value: '2026', label: '2026' },
+                        { value: '2025', label: '2025' },
+                        { value: '2024', label: '2024' },
+                    ]}
+                    className="w-[100px]"
+                />
+            </div>
+
+            <div className={`h-[350px] ${className}`}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         data={data}
-                        margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+                        margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
                         barSize={40}
                     >
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <CartesianGrid
+                            strokeDasharray="3 3"
+                            vertical={false}
+                            stroke={token.colorBorderSecondary}
+                        />
                         <XAxis
                             dataKey="name"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fontSize: 12 }}
-                            interval={0}
+                            tick={{
+                                fontSize: 12,
+                                fill: token.colorTextSecondary,
+                            }}
+                            dy={10}
                         />
                         <YAxis
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fontSize: 12 }}
+                            tick={{
+                                fontSize: 12,
+                                fill: token.colorTextSecondary,
+                            }}
+                            tickFormatter={(val) => formattedNumber(val)}
                         />
                         <Tooltip
-                            cursor={{ fill: token.colorFillSecondary }}
+                            cursor={{ fill: 'transparent' }}
                             content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                     const { name, value } = payload[0].payload;
                                     return (
                                         <div
-                                            className="rounded border px-3 py-2 shadow-md"
+                                            className="rounded-lg border-none px-3 py-2 shadow-xl"
                                             style={{
                                                 backgroundColor:
-                                                    token.colorBgContainer,
+                                                    'rgba(255, 255, 255, 0.95)',
                                             }}
                                         >
-                                            <p className="text-sm font-semibold">
+                                            <p className="text-sm font-bold text-gray-800">
                                                 {name}
                                             </p>
-                                            <p className="text-sm">
+                                            <p className="text-xs font-semibold text-blue-600">
                                                 Streams:{' '}
-                                                <span className="font-semibold">
-                                                    {formattedNumber(value)}
-                                                </span>
+                                                {formattedNumber(value)}
                                             </p>
                                         </div>
                                     );
@@ -90,10 +123,20 @@ export default function StreamChart({ color = '#90D5FF', className }: Props) {
                         />
                         <Bar
                             dataKey="value"
-                            fill={'#2e95e4'}
-                            radius={[6, 6, 0, 0]}
+                            fill={color || '#4F73F5'}
+                            radius={[8, 8, 0, 0]}
                         >
-                            <LabelList dataKey="value" position="top" />
+                            <LabelList
+                                dataKey="value"
+                                position="top"
+                                offset={10}
+                                style={{
+                                    fontSize: 12,
+                                    fontWeight: 500,
+                                    fill: token.colorTextSecondary,
+                                }}
+                                formatter={(val: any) => formattedNumber(val)}
+                            />
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>

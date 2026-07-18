@@ -15,11 +15,15 @@ import { ArtistsTable } from '@/modules/artist/components/table';
 import { TYPE_MODAL_ARTIST } from '@/modules/artist/enum';
 import { useDeleteArtist } from '@/modules/artist/hooks/use-delete-artist';
 import { useGetListArtist } from '@/modules/artist/hooks/use-get-list-artists';
+import { useSyncSpotify } from '@/modules/artist/hooks/use-sync-spotify';
+import { useSyncArtistProfileName } from '@/modules/artist/hooks/use-sync-artist-profile-name';
 import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Button, Space, theme } from 'antd';
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
@@ -28,7 +32,7 @@ type Props = {};
 export default function Artists({}: Props) {
     // hooks - state
     const openModal = useModalStore((state) => state.openModal);
-    const { hasPermission } = usePermission();
+    const { isAdmin } = usePermission();
     const messages = useTranslations();
     const { token } = theme.useToken();
     const {
@@ -50,6 +54,14 @@ export default function Artists({}: Props) {
     const { deleteArtist } = useDeleteArtist();
     const { artistsData, isFetching, lastUpdatedAt, refetch } =
         useGetListArtist(dataFilter);
+    const { syncSpotify, isPending: isSyncingSpotify } = useSyncSpotify();
+    const {
+        syncArtistProfileName,
+        isPending: isSyncingArtistProfileName,
+    } = useSyncArtistProfileName();
+    const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+    const [isSyncProfileNameModalOpen, setIsSyncProfileNameModalOpen] =
+        useState(false);
 
     // func
     const handleRefresh = () => {
@@ -81,17 +93,36 @@ export default function Artists({}: Props) {
             <PageContainer
                 title={messages('artist.artists')}
                 extra={
-                    <>
-                        {hasPermission(PERMISSION.ARTIST.CREATE) && (
+                    <Space>
+                        {isAdmin && (
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    onClick={() => setIsSyncModalOpen(true)}
+                                    loading={isSyncingSpotify}
+                                >
+                                    {messages('artist.syncSpotify')}
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    onClick={() =>
+                                        setIsSyncProfileNameModalOpen(true)
+                                    }
+                                    loading={isSyncingArtistProfileName}
+                                >
+                                    {messages('artist.syncProfileName')}
+                                </Button>
+                            </Space>
+                        )}
+                        <PermissionGate permission={PERMISSION.ARTIST.CREATE}>
                             <CreateButton
-                                canCreate={true}
                                 text={messages('artist.create')}
                                 onClick={() =>
                                     openModal(TYPE_MODAL_ARTIST.CREATE)
                                 }
                             />
-                        )}
-                    </>
+                        </PermissionGate>
+                    </Space>
                 }
             >
                 {/* <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
@@ -138,7 +169,13 @@ export default function Artists({}: Props) {
 
                 {(typeModal === TYPE_MODAL_ARTIST.CREATE ||
                     typeModal === TYPE_MODAL_ARTIST.UPDATE) && (
-                    <ArtistFormModal open onCancel={closeModal} />
+                    <ArtistFormModal
+                        open
+                        onCancel={closeModal}
+                        onCreateSuccess={() => {
+                            closeModal();
+                        }}
+                    />
                 )}
 
                 {typeModal === TYPE_MODAL_ARTIST.DELETE && (
@@ -150,6 +187,42 @@ export default function Artists({}: Props) {
                         paragraph={messages('delete.confirmMessage', {
                             value: dataEdit?.name,
                         })}
+                    />
+                )}
+
+                {isSyncModalOpen && (
+                    <AppConfirm
+                        open
+                        onOk={() => {
+                            syncSpotify({
+                                onSuccess: () => {
+                                    setIsSyncModalOpen(false);
+                                },
+                            });
+                        }}
+                        onCancel={() => setIsSyncModalOpen(false)}
+                        modalTitle={messages('artist.syncSpotifyConfirmTitle')}
+                        paragraph={messages('artist.syncSpotifyConfirmParagraph')}
+                    />
+                )}
+
+                {isSyncProfileNameModalOpen && (
+                    <AppConfirm
+                        open
+                        onOk={() => {
+                            syncArtistProfileName({
+                                onSuccess: () => {
+                                    setIsSyncProfileNameModalOpen(false);
+                                },
+                            });
+                        }}
+                        onCancel={() => setIsSyncProfileNameModalOpen(false)}
+                        modalTitle={messages(
+                            'artist.syncProfileNameConfirmTitle'
+                        )}
+                        paragraph={messages(
+                            'artist.syncProfileNameConfirmParagraph'
+                        )}
                     />
                 )}
             </PageContainer>

@@ -3,7 +3,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { ReleaseContributor } from '@/modules/release-contributor/types';
@@ -13,9 +13,9 @@ import { useUpdateTrackContributor } from '@/modules/track-contributor/hooks/use
 import { TrackContributorData } from '@/modules/track-contributor/types';
 import { UpdateTrackContributorPayload } from '@/modules/track-contributor/types/payload';
 import { UpdateVariables } from '@/types/api';
-import { Avatar } from 'antd';
+import { Avatar, Button } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { Trash } from 'lucide-react';
+import { Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import AddTrackContributorForm from './add-track-contributor-form';
@@ -31,6 +31,9 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
     const messages = useTranslations();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+
+    // state
+    const [isOpenContributorForm, setIsOpenContributorForm] = useState(false);
 
     // state
     const [deleteContributor, setDeleteContributor] = useState<{
@@ -164,20 +167,23 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
         {
             width: 50,
             align: 'center',
+            fixed: 'right',
             render: (_, record, index) => {
                 return (
                     <div onClick={(e) => e.preventDefault()}>
-                        <IconButton
-                            disabled={isReadMode || isActive}
-                            onClick={() => {
-                                setDeleteContributor({
-                                    isOpen: true,
-                                    trackContributorData: record,
-                                });
-                            }}
-                        >
-                            <Trash color="red" size={SIZE_ICON} />
-                        </IconButton>
+                        {!isReadMode && (
+                            <IconButton
+                                disabled={isReadMode || isActive}
+                                onClick={() => {
+                                    setDeleteContributor({
+                                        isOpen: true,
+                                        trackContributorData: record,
+                                    });
+                                }}
+                            >
+                                <Trash color="red" size={SIZE_ICON} />
+                            </IconButton>
+                        )}
                     </div>
                 );
             },
@@ -208,9 +214,33 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
                     }}
                 /> */}
 
-                <div className="px-4 py-2">
+                {/* <div className="px-4 py-2">
                     <AddTrackContributorForm trackData={trackData} />
-                </div>
+                </div> */}
+                {!isReadMode && (
+                    <div className="p-4">
+                        <Button
+                            disabled={isReadMode}
+                            icon={
+                                <div>
+                                    <Plus size={SIZE_ICON} />
+                                </div>
+                            }
+                            type="default"
+                            shape="round"
+                            onClick={() => setIsOpenContributorForm(true)}
+                        >
+                            {messages('release.contributors')}
+                        </Button>
+                    </div>
+                )}
+
+                <AddTrackContributorForm
+                    open={isOpenContributorForm}
+                    trackData={trackData}
+                    disabled={isReadMode}
+                    onCancel={() => setIsOpenContributorForm(false)}
+                />
 
                 <AppConfirm
                     open={deleteContributor.isOpen}
@@ -231,3 +261,4 @@ export default function TrackContributorsTable({ trackData, ...props }: Props) {
         </div>
     );
 }
+

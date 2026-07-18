@@ -1,8 +1,12 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { getReleaseDetailTabRoute } from '@/helpers/link';
 import { OnChangeFilter } from '@/hooks/use-filter';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import { ReleaseArtist } from '@/modules/release-artist/types';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/modules/releases/helpers/link';
 import { useTranslations } from 'next-intl';
 import { RELEASES_TABS } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
@@ -15,6 +19,7 @@ type Props = {
 
 export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
     const messages = useTranslations();
+    const setAction = useReleaseActionStore((state) => state.setAction);
     const releaseArtists = record?.releaseArtists || [];
     const isVariousArtist = record?.isVariousArtist;
 
@@ -25,22 +30,35 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
     const displayName = isVariousArtist
         ? messages('common.variousArtists')
         : artistName;
+
+    const title =
+        record?.title + (record?.version ? ` [${record?.version}]` : '');
+
     return (
         <div className="flex items-center gap-4">
-            <div className="h-10 min-w-10">
-                <ReleaseCoverImage data={record} />
-            </div>
+            <Link
+                href={getReleaseDetailTabRoute(
+                    record?.id,
+                    RELEASES_TABS.CORE_DETAIL
+                )}
+                onClick={() => setAction(RELEASE_DETAIL_ACTION.READ)}
+            >
+                <div className="h-14 min-w-14">
+                    <ReleaseCoverImage data={record} />
+                </div>
+            </Link>
             <div>
                 <Link
                     href={getReleaseDetailTabRoute(
                         record?.id,
                         RELEASES_TABS.CORE_DETAIL
                     )}
+                    onClick={() => setAction(RELEASE_DETAIL_ACTION.READ)}
                 >
                     <div className="!max-w-80 truncate">
-                        <CustomTooltip title={record?.title}>
+                        <CustomTooltip title={title}>
                             <span className="cursor-pointer hover:underline">
-                                {record?.title}
+                                {title}
                             </span>
                         </CustomTooltip>
                     </div>

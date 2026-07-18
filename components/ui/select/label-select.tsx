@@ -1,4 +1,6 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { useGetListLabelsSimple } from '@/modules/labels/hooks/use-get-list-simple-labels';
 import { Button, Select, SelectProps } from 'antd';
@@ -46,20 +48,24 @@ export default function LabelSelect({
                 }
                 options={option}
                 labelRender={labelRender}
-                dropdownRender={(menu) => {
+                popupRender={(menu) => {
                     return (
                         <div>
                             {menu}
                             {showCreate && (
-                                <div className="flex w-full pt-2">
-                                    <Button
-                                        type="primary"
-                                        className="w-full"
-                                        onClick={() => setOpenCreate(true)}
-                                    >
-                                        {messages('common.create')} label
-                                    </Button>
-                                </div>
+                                <PermissionGate
+                                    permission={PERMISSION.LABEL.CREATE}
+                                >
+                                    <div className="flex w-full pt-2">
+                                        <Button
+                                            type="primary"
+                                            className="w-full"
+                                            onClick={() => setOpenCreate(true)}
+                                        >
+                                            {messages('common.create')} label
+                                        </Button>
+                                    </div>
+                                </PermissionGate>
                             )}
                         </div>
                     );

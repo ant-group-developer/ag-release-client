@@ -11,7 +11,7 @@ import {
 import useModalStore from '@/hooks/use-modal';
 import { useGetAcrCloudHistory } from '@/modules/acr-cloud/hooks/use-get-acr-cloud-history';
 import { TrackData } from '@/modules/tracks/types';
-import { Button, Spin, Tabs } from 'antd';
+import { Button, Empty, Spin, Tabs } from 'antd';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -59,6 +59,9 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
                         onClick={() => setOpenCompareModal(true)}
                         size="small"
                         type="primary"
+                        disabled={
+                            !acrCloudResult || acrCloudResult.length === 0
+                        }
                     >
                         <span>{messages('common.compare')}</span>
                     </Button>
@@ -384,74 +387,30 @@ export default function AcrCloudScanResultModal({ ...props }: Props) {
             {...props}
         >
             <>
-                {/* <Spin spinning={isPending}>
-                    <div className="max-h-[700px] min-h-[200px] space-y-2 overflow-auto">
-                        {acrCloudResult?.map((item: TrackScanHistoryData) => (
-                            <Collapse
-                                key={item.id}
-                                items={[
-                                    {
-                                        label: (
-                                            <span className="font-semibold">
-                                                {formattedDate(item?.createdAt)}
-                                            </span>
-                                        ),
-                                        children: (
-                                            <div>
-                                                <Collapse
-                                                    defaultActiveKey={item?.result?.map(
-                                                        (
-                                                            _: ResultScan,
-                                                            idx: number
-                                                        ) => idx
-                                                    )}
-                                                    items={item?.result?.map(
-                                                        (item2: ResultScan) => {
-                                                            const value =
-                                                                item2?.content
-                                                                    ?.music ??
-                                                                item2?.content
-                                                                    ?.humming;
-                                                            return {
-                                                                label: `${convertSecondsToTime(item2?.key?.startSecond)} - ${convertSecondsToTime(item2?.key?.endSecond)} (${messages('track.count')}: ${value?.length ?? 0})`,
-                                                                children: (
-                                                                    <div>
-                                                                        <ScanResultPanel
-                                                                            data={
-                                                                                item2
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                ),
-                                                            };
-                                                        }
-                                                    )}
-                                                />
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        ))}
-                    </div>
-                </Spin> */}
-
                 <Spin spinning={isPending}>
                     <div className="max-h-[800px] min-h-[200px] space-y-2 overflow-hidden pt-4">
-                        <Tabs
-                            tabPosition="left"
-                            items={tabItems}
-                            className="h-full"
-                            style={{ height: '700px' }}
-                            tabBarExtraContent={{
-                                left: (
-                                    <p className="!mb-2 font-semibold">
-                                        {messages('common.scanHistory')}
-                                    </p>
-                                ),
-                            }}
-                            onChange={() => setSelectedRow([])}
-                        />
+                        {acrCloudResult && acrCloudResult.length > 0 ? (
+                            <Tabs
+                                tabPosition="left"
+                                items={tabItems}
+                                className="h-full"
+                                style={{ height: '700px' }}
+                                tabBarExtraContent={{
+                                    left: (
+                                        <p className="!mb-2 !mr-2 font-semibold">
+                                            {messages('common.scanHistory')}
+                                        </p>
+                                    ),
+                                }}
+                                onChange={() => setSelectedRow([])}
+                            />
+                        ) : (
+                            !isPending && (
+                                <div className="flex grow items-center justify-center">
+                                    <Empty />
+                                </div>
+                            )
+                        )}
                     </div>
                 </Spin>
 

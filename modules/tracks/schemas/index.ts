@@ -17,8 +17,13 @@ export const releaseTrackSchema = (messages: any) =>
             .optional()
             .nullable(),
         isrc: z
-            .string()
-            .max(20, messages('validation.max', { number: 20 }))
+            .union([
+                z.literal(''),
+                z
+                    .string()
+                    .min(12, messages('validation.min', { number: 12 }))
+                    .max(12, messages('validation.max', { number: 12 })),
+            ])
             .optional()
             .nullable(),
         iswc: z.string().optional().nullable(),
@@ -85,6 +90,7 @@ export const releaseTrackSchema = (messages: any) =>
         copyArtistsFromRelease: z.boolean().optional(),
         trackSensitiveId: z.string().optional(),
         isByAi: z.boolean().optional(),
+        isInstrumental: z.boolean().optional(),
         lyric: z
             .string()
             .max(1000, messages('validation.max', { number: 1000 }))

@@ -5,34 +5,34 @@ import SortableTable, {
     SortableTableProps,
 } from '@/components/ui/table/sortable-table';
 import { SIZE_ICON } from '@/constants/common';
-import { getIndex } from '@/helpers/common';
-import { getTrackDetailRoute, RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { getIndex, getSortOrder } from '@/helpers/common';
+import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
+
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
-import { TrackArtistData } from '@/modules/track-artist/types';
-import { TRACK_TABS, TYPE_MODAL_TRACK_ARTIST } from '@/modules/tracks/enums';
+import { TRACK_SORT_FIELD, TRACK_TABS } from '@/modules/tracks/enums';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
-import { useUpdateTrackOrder } from '@/modules/tracks/hooks/use-update-track-order';
-import { TrackData } from '@/modules/tracks/types';
 
-import {
-    UpdateTrackOrderPayload,
-    UpdateTrackPayload,
-} from '@/modules/tracks/types/payload';
+import { TrackData, TrackDataFilter } from '@/modules/tracks/types';
+
+import { useBulkUpdateTrack } from '@/modules/tracks/hooks/use-bulk-update-track';
+import { BulkUpdateTrackPayload } from '@/modules/tracks/types/payload';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
-import { UpdateVariables } from '@/types/api';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { debounce } from 'lodash';
-import { Barcode, Music, SquarePen, Users } from 'lucide-react';
+import { Barcode, Disc3, Music, SquarePen, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
 import TrackActionButton from '../button/track-action';
-import { TrackWaveform } from '../track-wave-form';
+import { TrackSliderPlayer } from '../track-slider-player';
+import { TrackArtists } from './track-artists';
 import { EditableIsrc } from './track-edit-isrc';
 import { EditableTitle } from './track-edit-title';
 
@@ -41,9 +41,10 @@ type Props = {
         pageSize: number;
         current: number;
     };
+    dataFilter?: TrackDataFilter;
 } & Omit<SortableTableProps<TrackData>, 'columns'>;
 
-export default function ReleaseTracksTable({ ...props }: Props) {
+export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     // hooks - state
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
@@ -53,14 +54,18 @@ export default function ReleaseTracksTable({ ...props }: Props) {
     const router = useRouter();
 
     // apis
-    const { updateTrackDraft } = useUpdateTrackDraft();
-    const { updateTrackOrder } = useUpdateTrackOrder();
+    const { mutate: updateTrackDraft } = useUpdateTrackDraft();
+
+    const { bulkUpdateTrack } = useBulkUpdateTrack();
     const { releaseValidateData } = useReleaseValidate(
         formValues?.id as string
     );
 
     // const
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
+    const { hasPermission } = usePermission();
+    const canUpdate = hasPermission(PERMISSION.RELEASE_AUDIO.UPDATE);
+    const tracksLength = props.dataSource?.length || 0;
 
     const handleDragEnd: OnDragEnd<TrackData[]> = (newData) => {
         const payload = newData.map((item, index) => ({
@@ -68,41 +73,30 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             order: index + 1,
         }));
 
-        const variables: UpdateTrackOrderPayload = {
+        const variables: BulkUpdateTrackPayload = {
             trackDrafts: payload,
         };
 
-        updateTrackOrder(variables);
+        bulkUpdateTrack(variables);
     };
 
-    const debouncedUpdate = useMemo(() => {
-        return debounce((id: TrackData['id'], data: UpdateTrackPayload) => {
-            if (!formValues?.id) return;
-
-            const variables: UpdateVariables<
-                TrackData['id'],
-                UpdateTrackPayload
-            > = {
-                id,
-                payload: data,
-            };
-
+    const handleUpdateTrack = useCallback(
+        (variables: any) => {
             updateTrackDraft(variables);
-        }, 800);
-    }, [formValues?.id, updateTrackDraft]);
-
-    useEffect(() => {
-        return () => {
-            debouncedUpdate.cancel();
-        };
-    }, [debouncedUpdate]);
+        },
+        [updateTrackDraft]
+    );
 
     const columns: ColumnType<TrackData>[] = [
-        {
-            key: 'sort',
-            width: 30,
-            align: 'center',
-        },
+        ...(canUpdate && !isReadMode
+            ? [
+                  {
+                      key: 'sort',
+                      width: 30,
+                      align: 'center' as const,
+                  },
+              ]
+            : []),
         {
             title: messages('common.iNo'),
             dataIndex: 'index',
@@ -117,7 +111,12 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                 ),
         },
         {
-            title: '',
+            title: (
+                <div className="flex items-center gap-1 pl-2">
+                    <Disc3 size={SIZE_ICON} />
+                    {messages('common.total')}: {tracksLength}
+                </div>
+            ),
             dataIndex: 'waveform',
             key: 'waveform',
             align: 'center',
@@ -125,7 +124,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record, index) => {
                 return (
                     <div className="min-h-10">
-                        <TrackWaveform
+                        <TrackSliderPlayer
                             key={`${record.id}-${index}`}
                             data={record}
                         />
@@ -140,17 +139,23 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     {messages('track.label')}
                 </span>
             ),
-            dataIndex: 'title',
+            dataIndex: TRACK_SORT_FIELD.TITLE,
             key: 'title',
             align: 'left',
             width: 300,
             ellipsis: true,
-            render: (value, record) => {
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter?.orderBy,
+                dataFilter?.fieldOrder,
+                TRACK_SORT_FIELD.TITLE
+            ),
+            render: (_, record) => {
                 return (
                     <EditableTitle
                         record={record}
                         isReadMode={isReadMode}
-                        onUpdate={debouncedUpdate}
+                        onUpdate={handleUpdateTrack}
                         messages={messages}
                     />
                 );
@@ -166,47 +171,13 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             align: 'left',
             dataIndex: 'artist',
             width: 250,
-            render: (value, record) => {
+            render: (_, record) => {
                 return (
-                    <div>
-                        <div className="flex flex-wrap gap-y-2">
-                            {record?.trackArtists?.map(
-                                (trackArtist: TrackArtistData) => (
-                                    <Tag
-                                        key={`${record.id}-${trackArtist.id}`}
-                                        closeIcon
-                                        onClick={() => {}}
-                                        onClose={(e) => {
-                                            e.preventDefault();
-                                            openModal(
-                                                TYPE_MODAL_TRACK_ARTIST.DELETE,
-                                                trackArtist
-                                            );
-                                        }}
-                                        closable={!isReadMode}
-                                        className="max-w-full whitespace-normal break-words"
-                                    >
-                                        {trackArtist?.artist?.name}
-                                    </Tag>
-                                )
-                            )}
-                            {!isReadMode && (
-                                <Tag
-                                    key={`${record.id}-add-artist`}
-                                    className="border-dashed hover:border-blue-500"
-                                    onClick={() => {
-                                        if (isReadMode) return;
-                                        openModal(
-                                            TYPE_MODAL_TRACK_ARTIST.ADD,
-                                            record
-                                        );
-                                    }}
-                                >
-                                    + {messages('artist.add')}
-                                </Tag>
-                            )}
-                        </div>
-                    </div>
+                    <TrackArtists
+                        record={record}
+                        isReadMode={isReadMode}
+                        openModal={openModal}
+                    />
                 );
             },
         },
@@ -227,7 +198,7 @@ export default function ReleaseTracksTable({ ...props }: Props) {
                     <EditableIsrc
                         record={record}
                         isReadMode={isReadMode}
-                        onUpdate={debouncedUpdate}
+                        onUpdate={handleUpdateTrack}
                     />
                 );
             },
@@ -265,21 +236,19 @@ export default function ReleaseTracksTable({ ...props }: Props) {
             render: (value, record, index) => {
                 return (
                     <div className="flex items-center justify-center">
-                        {!isReadMode && (
-                            <IconButton
-                                onClick={() =>
-                                    openModal(
-                                        TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
-                                        {
-                                            trackId: record?.id,
-                                            index,
-                                        }
-                                    )
-                                }
-                            >
-                                <SquarePen size={SIZE_ICON} />
-                            </IconButton>
-                        )}
+                        <IconButton
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.DETAIL_TRACK_RELEASE,
+                                    {
+                                        trackId: record?.id,
+                                        index,
+                                    }
+                                )
+                            }
+                        >
+                            <SquarePen size={SIZE_ICON} />
+                        </IconButton>
                         <TrackActionButton
                             // disabled={isReadMode}
                             showDelete={!isReadMode}

@@ -21,6 +21,9 @@ export const useDeleteReleaseContributor = () => {
         queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.details(),
         });
+        queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.validations(),
+        });
 
         // const responseMessages = messages(data?.data?.messageCode);
 

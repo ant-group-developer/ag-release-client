@@ -8,7 +8,8 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import DspFormModal from '@/modules/dsp/components/modal/dsp-form';
 import { DspTable } from '@/modules/dsp/components/table';
 import { dspQueryKeys } from '@/modules/dsp/constants/query-keys';
@@ -29,6 +30,7 @@ export default function Dsp() {
         page: 1,
         pageSize: PAGE_SIZE,
     });
+    // const { hasPermission, permission } = usePermission();
     const typeModal = useModalStore((state) => state.typeModal);
     const dataEdit = useModalStore<DspData>((state) => state.dataEdit);
     const closeModal = useModalStore((state) => state.closeModal);
@@ -37,7 +39,7 @@ export default function Dsp() {
         mutationKeys: [dspQueryKeys.all],
     });
     const openModal = useModalStore((state) => state.openModal);
-    const { isSystemTenant } = useAuth();
+    // const { isSystemTenant } = useAuth();
 
     // apis
     const { dspData, isFetching, refetch } = useGetListDsp(dataFilter);
@@ -58,20 +60,17 @@ export default function Dsp() {
     return (
         <AppPageWrapper>
             <PageContainer
-                title={messages('dsp.label')}
+                title={'DSPs'}
                 style={{
                     backgroundColor: token.colorBgLayout,
                 }}
                 extra={
-                    <div className="">
-                        {isSystemTenant && (
-                            <CreateButton
-                                canCreate={true}
-                                text={messages('dsp.add')}
-                                onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}
-                            />
-                        )}
-                    </div>
+                    <PermissionGate permission={PERMISSION.DSP.CREATE}>
+                        <CreateButton
+                            text={messages('dsp.add')}
+                            onClick={() => openModal(TYPE_MODAL_DSP.CREATE)}
+                        />
+                    </PermissionGate>
                 }
             >
                 {/* <DspHeader dataFilter={dataFilter} onSearch={onSearch} /> */}

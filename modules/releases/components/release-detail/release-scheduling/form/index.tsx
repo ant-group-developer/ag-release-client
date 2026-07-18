@@ -1,9 +1,11 @@
-import FormItem from '@/components/ui/react-hook-form/form-item';
+import AppForm from '@/components/ui/antd-form/form';
+import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
 import TimezoneSelect from '@/components/ui/select/timezone-select';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
+import { useHash } from '@/hooks/use-hash';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { RELEASE_TIME_MODE } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
@@ -20,10 +22,13 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
+import InputRegionCode from './input-region-code';
 
 const releaseSchedulingSchema = (messages: any) =>
     releaseSchema(messages).pick({
         releaseDate: true,
+        releaseOriginalDate: true,
+        releaseEndDate: true,
         releaseTime: true,
         releaseTimezoneId: true,
         releaseTerritory: true,
@@ -43,6 +48,7 @@ export default function ReleaseSchedulingForm({}: Props) {
     const setFormValues = useReleaseFormStore((state) => state.setFormValues);
     const { updateReleaseDraft } = useUpdateReleaseDraft();
     const action = useReleaseActionStore((s) => s.action);
+    const hash = useHash();
 
     const isReadMode = useMemo(
         () => action !== RELEASE_DETAIL_ACTION.EDIT,
@@ -52,11 +58,13 @@ export default function ReleaseSchedulingForm({}: Props) {
     const formMethods = useForm<ReleaseSchedulingSchema>({
         defaultValues: {
             releaseDate: formValues?.releaseDate,
+            releaseOriginalDate: formValues?.releaseOriginalDate,
+            releaseEndDate: formValues?.releaseEndDate,
             releaseTime: formValues?.releaseTime,
             releaseTimezoneId: formValues?.releaseTimezoneId,
             releaseTerritory: {
                 distributeWorldwide:
-                    formValues?.releaseTerritory?.distributeWorldwide ?? true,
+                    formValues?.releaseTerritory?.distributeWorldwide,
                 distributionType:
                     formValues?.releaseTerritory?.distributionType,
                 selectedCountries:
@@ -75,6 +83,9 @@ export default function ReleaseSchedulingForm({}: Props) {
         watch,
         trigger,
         setValue,
+        reset,
+        clearErrors,
+        setError,
     } = formMethods;
 
     const releaseTimeMode = useWatch({ control, name: 'releaseTimeMode' });
@@ -100,11 +111,41 @@ export default function ReleaseSchedulingForm({}: Props) {
     );
 
     useEffect(() => {
-        const handleTriggerField = () => {
-            const hash = window.location.hash;
-            if (hash) {
-                const field = hash.replace('#', '');
-                trigger(field as any);
+        if (!formValues.id) return;
+        const initialFormValue: ReleaseSchedulingSchema = {
+            releaseDate: formValues?.releaseDate || '',
+            releaseOriginalDate: formValues?.releaseOriginalDate || '',
+            releaseEndDate: formValues?.releaseEndDate || null,
+            releaseTime: formValues?.releaseTime || '',
+            releaseTimezoneId: formValues?.releaseTimezoneId || null,
+            releaseTerritory: {
+                distributeWorldwide:
+                    formValues?.releaseTerritory?.distributeWorldwide ?? true,
+                distributionType:
+                    formValues?.releaseTerritory?.distributionType || '',
+                selectedCountries:
+                    formValues?.releaseTerritory?.selectedCountries || [],
+            },
+            releaseTimeMode:
+                formValues?.releaseTimeMode ||
+                RELEASE_TIME_MODE.GLOBAL_MIDNIGHT,
+        };
+        reset(initialFormValue, {
+            keepErrors: true,
+        });
+    }, [formValues, reset]);
+
+    useEffect(() => {
+        const handleTriggerField = async () => {
+            const hashValue = window.location.hash;
+            if (hashValue) {
+                const field = hashValue.replace('#', '');
+                const el = document.getElementById(field);
+                if (el) {
+                    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+                clearErrors();
+                await trigger(field as any);
             }
         };
         window.addEventListener('hashchange', handleTriggerField);
@@ -114,7 +155,7 @@ export default function ReleaseSchedulingForm({}: Props) {
         return () => {
             window.removeEventListener('hashchange', handleTriggerField);
         };
-    }, []);
+    }, [trigger, hash, clearErrors]);
 
     return (
         <div
@@ -122,30 +163,113 @@ export default function ReleaseSchedulingForm({}: Props) {
             style={{ backgroundColor: token.colorBgContainer }}
         >
             <FormProvider {...formMethods}>
-                <form className="flex flex-col gap-4">
+                <AppForm
+                    className="flex flex-col gap-4"
+                    layout="vertical"
+                    showSubmit={false}
+                >
                     <div className="grid grid-cols-2 gap-6 gap-x-12">
-                        <div className="col-span-2">
-                            <FormItem
-                                className="w-2/6"
+                        <AppFormItem
+                            name="releaseDate"
+                            label={messages('release.releaseDate')}
+                            required
+                            help={errors.releaseDate?.message}
+                            validateStatus={errors.releaseDate ? 'error' : ''}
+                        >
+                            <Controller
+                                control={control}
                                 name="releaseDate"
-                                label={messages('release.releaseDate')}
-                                required
-                                ErrorMessage={errors.releaseDate?.message}
+                                render={({ field }) => {
+                                    return (
+                                        <DatePicker
+                                            id="releaseDate"
+                                            className="w-full"
+                                            format={DATE_FORMAT.DATE_ONLY}
+                                            value={
+                                                field.value
+                                                    ? dayjs(field.value)
+                                                    : null
+                                            }
+                                            onChange={(date) => {
+                                                field.onChange(
+                                                    date
+                                                        ? date.toISOString()
+                                                        : null
+                                                );
+                                                debouncedUpdate({
+                                                    releaseDate: date
+                                                        ? date.toISOString()
+                                                        : null,
+                                                });
+                                            }}
+                                            disabled={isReadMode}
+                                        />
+                                    );
+                                }}
+                            />
+                        </AppFormItem>
+
+                        <AppFormItem
+                            name="releaseOriginalDate"
+                            label={messages('release.releaseOriginalDate')}
+                            required
+                            help={errors.releaseOriginalDate?.message}
+                            validateStatus={
+                                errors.releaseOriginalDate ? 'error' : ''
+                            }
+                        >
+                            <Controller
+                                control={control}
+                                name="releaseOriginalDate"
+                                render={({ field }) => {
+                                    return (
+                                        <DatePicker
+                                            id="releaseOriginalDate"
+                                            className="w-full"
+                                            format={DATE_FORMAT.DATE_ONLY}
+                                            value={
+                                                field.value
+                                                    ? dayjs(field.value)
+                                                    : null
+                                            }
+                                            onChange={(date) => {
+                                                field.onChange(
+                                                    date
+                                                        ? date.toISOString()
+                                                        : null
+                                                );
+                                                debouncedUpdate({
+                                                    releaseOriginalDate: date
+                                                        ? date.toISOString()
+                                                        : null,
+                                                });
+                                            }}
+                                            disabled={isReadMode}
+                                        />
+                                    );
+                                }}
+                            />
+                        </AppFormItem>
+
+                        {/* <div className="col-span-2">
+                            <AppFormItem
+                                name="releaseEndDate"
+                                label={messages('release.releaseEndDate')}
+                                help={errors.releaseEndDate?.message}
+                                validateStatus={
+                                    errors.releaseEndDate ? 'error' : ''
+                                }
+                                className="!w-3/6 !pr-6"
                             >
                                 <Controller
                                     control={control}
-                                    name="releaseDate"
+                                    name="releaseEndDate"
                                     render={({ field }) => {
                                         return (
                                             <DatePicker
-                                                id="releaseDate"
+                                                id="releaseEndDate"
                                                 className="w-full"
                                                 format={DATE_FORMAT.DATE_ONLY}
-                                                disabledDate={(date) =>
-                                                    date &&
-                                                    date <
-                                                        dayjs().startOf('day')
-                                                }
                                                 value={
                                                     field.value
                                                         ? dayjs(field.value)
@@ -153,32 +277,35 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                 }
                                                 onChange={(date) => {
                                                     field.onChange(
-                                                        date.toISOString()
+                                                        date
+                                                            ? date.toISOString()
+                                                            : null
                                                     );
                                                     debouncedUpdate({
-                                                        releaseDate: date,
+                                                        releaseEndDate: date
+                                                            ? date.toISOString()
+                                                            : null,
                                                     });
                                                 }}
-                                                status={
-                                                    errors.releaseDate
-                                                        ? 'error'
-                                                        : undefined
-                                                }
                                                 disabled={isReadMode}
                                             />
                                         );
                                     }}
                                 />
-                            </FormItem>
-                        </div>
+                            </AppFormItem>
+                        </div> */}
+
                         <div className="space-y-2">
-                            <FormItem
+                            <AppFormItem
                                 name="releaseTimeMode"
                                 label={messages(
                                     'release.scheduling.goLiveTime'
                                 )}
                                 required
-                                ErrorMessage={errors.releaseTimezoneId?.message}
+                                help={errors.releaseTimeMode?.message}
+                                validateStatus={
+                                    errors.releaseTimeMode ? 'error' : ''
+                                }
                             >
                                 <Controller
                                     control={control}
@@ -217,17 +344,20 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         </Radio.Group>
                                     )}
                                 />
-                            </FormItem>
+                            </AppFormItem>
 
                             {releaseTimeMode ===
                                 RELEASE_TIME_MODE.SPECIFIC_TIMEZONE && (
                                 <div className="space-y-2">
-                                    <FormItem
+                                    <AppFormItem
                                         name="releaseTimezoneId"
                                         label={messages('timezone.zone')}
                                         required
-                                        ErrorMessage={
-                                            errors.releaseTimezoneId?.message
+                                        help={errors.releaseTimezoneId?.message}
+                                        validateStatus={
+                                            errors.releaseTimezoneId
+                                                ? 'error'
+                                                : ''
                                         }
                                     >
                                         <Controller
@@ -252,23 +382,19 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                                 e,
                                                         });
                                                     }}
-                                                    status={
-                                                        errors.releaseTimezoneId
-                                                            ? 'error'
-                                                            : undefined
-                                                    }
                                                     disabled={isReadMode}
                                                 />
                                             )}
                                         />
-                                    </FormItem>
+                                    </AppFormItem>
 
-                                    <FormItem
+                                    <AppFormItem
                                         name="releaseTime"
                                         label={messages('common.releaseTime')}
                                         required
-                                        ErrorMessage={
-                                            errors.releaseTime?.message
+                                        help={errors.releaseTime?.message}
+                                        validateStatus={
+                                            errors.releaseTime ? 'error' : ''
                                         }
                                     >
                                         <Controller
@@ -312,19 +438,24 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                 />
                                             )}
                                         />
-                                    </FormItem>
+                                    </AppFormItem>
                                 </div>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <FormItem
+                            <AppFormItem
                                 required
                                 name="releaseTerritory.distributeWorldwide"
                                 label={messages('distribute.wordWide')}
-                                ErrorMessage={
+                                help={
                                     errors.releaseTerritory?.distributeWorldwide
                                         ?.message
+                                }
+                                validateStatus={
+                                    errors.releaseTerritory?.distributeWorldwide
+                                        ? 'error'
+                                        : ''
                                 }
                             >
                                 <Controller
@@ -358,23 +489,31 @@ export default function ReleaseSchedulingForm({}: Props) {
                                         );
                                     }}
                                 />
-                            </FormItem>
+                            </AppFormItem>
 
                             {!distributeWorldwide && (
                                 <>
-                                    <FormItem
+                                    <AppFormItem
                                         name="releaseTerritory.distributionType"
                                         label={' '}
-                                        ErrorMessage={
+                                        help={
                                             errors.releaseTerritory
                                                 ?.distributionType?.message
                                         }
+                                        validateStatus={
+                                            errors.releaseTerritory
+                                                ?.distributionType
+                                                ? 'error'
+                                                : ''
+                                        }
+                                        labelCol={{ span: 0 }}
                                     >
                                         <Controller
                                             control={control}
                                             name="releaseTerritory.distributionType"
                                             render={({ field }) => (
                                                 <Radio.Group
+                                                    id="distributionType"
                                                     {...field}
                                                     onChange={(e) => {
                                                         field.onChange(
@@ -411,63 +550,114 @@ export default function ReleaseSchedulingForm({}: Props) {
                                                 </Radio.Group>
                                             )}
                                         />
-                                    </FormItem>
-                                    <FormItem
+                                    </AppFormItem>
+                                    <AppFormItem
                                         name="releaseTerritory.selectedCountries"
                                         label={messages('common.region')}
                                         required
-                                        ErrorMessage={
+                                        help={
                                             errors.releaseTerritory
                                                 ?.selectedCountries?.message
+                                        }
+                                        validateStatus={
+                                            errors.releaseTerritory
+                                                ?.selectedCountries
+                                                ? 'error'
+                                                : ''
+                                        }
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="releaseTerritory.selectedCountries"
+                                            render={({ field }) => {
+                                                return (
+                                                    <CountrySelect
+                                                        className="w-full"
+                                                        id="releaseTerritory.selectedCountries"
+                                                        mode="multiple"
+                                                        allowClear
+                                                        maxTagCount="responsive"
+                                                        disabled={isReadMode}
+                                                        maxTagPlaceholder={(
+                                                            value
+                                                        ) => {
+                                                            return (
+                                                                <CustomTooltip
+                                                                    title={value.map(
+                                                                        (
+                                                                            item: any
+                                                                        ) =>
+                                                                            item.label
+                                                                    )}
+                                                                    styles={{
+                                                                        body: {
+                                                                            width: '300px',
+                                                                            maxHeight:
+                                                                                '400px',
+                                                                            overflowY:
+                                                                                'auto',
+                                                                        },
+                                                                    }}
+                                                                >
+                                                                    +{' '}
+                                                                    {
+                                                                        value.length
+                                                                    }
+                                                                </CustomTooltip>
+                                                            );
+                                                        }}
+                                                        {...field}
+                                                        onChange={(value) => {
+                                                            field.onChange(
+                                                                value
+                                                            );
+                                                            debouncedUpdate({
+                                                                releaseTerritory:
+                                                                    {
+                                                                        selectedCountries:
+                                                                            value,
+                                                                    },
+                                                            });
+                                                        }}
+                                                    />
+                                                );
+                                            }}
+                                        />
+                                    </AppFormItem>
+
+                                    <AppFormItem
+                                        name="releaseTerritory.selectedCountries"
+                                        label={messages('common.regionCode')}
+                                        help={
+                                            errors.releaseTerritory
+                                                ?.selectedCountries?.message
+                                        }
+                                        validateStatus={
+                                            errors.releaseTerritory
+                                                ?.selectedCountries
+                                                ? 'error'
+                                                : ''
                                         }
                                     >
                                         <Controller
                                             control={control}
                                             name="releaseTerritory.selectedCountries"
                                             render={({ field }) => (
-                                                <CountrySelect
-                                                    className="w-full"
-                                                    id="releaseTerritory.selectedCountries"
-                                                    mode="multiple"
-                                                    allowClear
-                                                    maxTagCount="responsive"
+                                                <InputRegionCode
                                                     disabled={isReadMode}
-                                                    maxTagPlaceholder={(
-                                                        value
-                                                    ) => (
-                                                        <CustomTooltip
-                                                            title={value
-                                                                .map(
-                                                                    (
-                                                                        item: any
-                                                                    ) =>
-                                                                        item.label
-                                                                )
-                                                                .join(', ')}
-                                                        >
-                                                            +{value.length}
-                                                        </CustomTooltip>
-                                                    )}
-                                                    {...field}
-                                                    onChange={(value) => {
-                                                        field.onChange(value);
-                                                        debouncedUpdate({
-                                                            releaseTerritory: {
-                                                                selectedCountries:
-                                                                    value,
-                                                            },
-                                                        });
-                                                    }}
+                                                    onChange={field.onChange}
+                                                    value={field?.value ?? []}
                                                 />
                                             )}
                                         />
-                                    </FormItem>
+                                    </AppFormItem>
                                 </>
                             )}
                         </div>
                     </div>
-                </form>
+                </AppForm>
             </FormProvider>
         </div>
     );
 }
+

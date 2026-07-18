@@ -84,12 +84,13 @@ export interface InviteUser extends CommonFunction {
     payload: InviteUserPayload;
 }
 export interface UpdateUserRolePayload {
-    userId: string;
     roleIds: string[];
+    tenantId?: string;
 }
 
 export interface UpdateUserRole extends CommonFunction {
     payload: UpdateUserRolePayload;
+    userId: string;
 }
 
 export interface SyncUserData extends CommonFunction {}

@@ -1,11 +1,13 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { convertSecondsToHoursMinutes } from '@/helpers/common';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
 import type { TrackData } from '@/modules/releases/types';
 import { TrackArtistData } from '@/modules/track-artist/types';
 import { TrackContributorData } from '@/modules/track-contributor/types';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { Collapse, Skeleton } from 'antd';
 import { CircleCheck, OctagonAlert } from 'lucide-react';
@@ -22,7 +24,9 @@ export default function TracksInfo({}: Props) {
     const formValue = useReleaseFormStore((state) => state.formValues);
     const { tracksData, isFetching: isTracksFetching } = useGetListTracks({
         releaseId: formValue?.id,
-        fieldOrder: 'order',
+        fieldOrder: TRACK_SORT_FIELD.ORDER,
+        page: 1,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
     const { releaseValidateData } = useReleaseValidate(releaseId as string);
 
@@ -116,7 +120,7 @@ export default function TracksInfo({}: Props) {
         const track = tracksData?.items[trackIndex];
         const value = getFieldValue(track, field);
         return (
-            <div className="rounded-lg border px-4 py-2">
+            <div className="rounded-lg border px-4 py-2 dark:border-zinc-700">
                 <div>
                     <p className="font-medium">
                         {label}{' '}
@@ -227,7 +231,7 @@ export default function TracksInfo({}: Props) {
                                         'version'
                                     )}
 
-                                    <div className="rounded-lg border px-4 py-2">
+                                    <div className="rounded-lg border px-4 py-2 dark:border-zinc-700">
                                         <p className="font-medium">
                                             {messages('artist.artists')}{' '}
                                             <span className="text-red-500">
@@ -256,7 +260,7 @@ export default function TracksInfo({}: Props) {
                                         )}
                                     </div>
 
-                                    <div className="rounded-lg border px-4 py-2">
+                                    <div className="rounded-lg border px-4 py-2 dark:border-zinc-700">
                                         <p className="font-medium">
                                             {messages('common.contributors')}{' '}
                                             <span className="text-red-500">

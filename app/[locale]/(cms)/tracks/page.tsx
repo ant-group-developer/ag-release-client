@@ -7,13 +7,16 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import { useTableLayoutToggle } from '@/hooks/use-layout-table';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
 import AcrCloudScanHistoryModal from '@/modules/acr-cloud/components/modal/acr-scan-history-modal';
 import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-modal';
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
 import { ReleasesDataFilter } from '@/modules/releases/types';
-import TrackHeaderV2 from '@/modules/tracks/components/header/index-v2';
+import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
 
+import TrackHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
@@ -31,6 +34,9 @@ export default function Tracks({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
 
+    const { hasPermission } = usePermission();
+    const canScan = hasPermission(PERMISSION.TRACK.SCAN);
+
     const { layoutTable } = useTableLayoutToggle();
     const {
         dataFilter,
@@ -43,7 +49,7 @@ export default function Tracks({}: Props) {
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
-        fieldOrder: 'createdAt',
+        fieldOrder: TRACK_SORT_FIELD.CREATED_AT,
     });
     const {
         tracksData,
@@ -74,37 +80,17 @@ export default function Tracks({}: Props) {
     };
 
     // const
-    const rowSelection = {
-        selectedRowKeys: selectedRow,
-        onChange: handleSelectedRow,
-        columnWidth: 30,
-    };
+    const rowSelection = canScan
+        ? {
+              selectedRowKeys: selectedRow,
+              onChange: handleSelectedRow,
+              columnWidth: 30,
+          }
+        : false;
 
     return (
         <AppPageWrapper>
             <PageContainer title={messages('common.tracks')}>
-                {/* <div className="app-header">
-                    <TracksHeader
-                        dataFilter={dataFilter}
-                        onChangeFilter={onChangeFilter}
-                        canClearFilter={canClearFilter}
-                        removeFilter={removeFilter}
-                        handleRefresh={handleRefresh}
-                        dataUpdatedAt={dataUpdatedAt}
-                        handleChangeVisibleColumns={handleChangeVisibleColumns}
-                        visibleColumn={visibleColumns}
-                    />
-                </div> */}
-
-                <TrackHeaderV2
-                    dataFilter={dataFilter}
-                    onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    dataUpdatedAt={dataUpdatedAt}
-                />
-
                 {/* <div
                     className="sticky top-0 z-50 mb-4 rounded-lg"
                     style={{ backgroundColor: token.colorBgContainer }}
@@ -116,6 +102,14 @@ export default function Tracks({}: Props) {
                 </div> */}
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
+                        headerTitle={
+                            <TrackHeader
+                                dataFilter={dataFilter}
+                                onChangeFilter={onChangeFilter}
+                                canClearFilter={canClearFilter}
+                                removeFilter={removeFilter}
+                            />
+                        }
                         sticky
                         dataSource={tracksData.items}
                         pagination={{

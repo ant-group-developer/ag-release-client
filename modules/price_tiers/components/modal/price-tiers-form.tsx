@@ -9,17 +9,27 @@ import { Form, Input, InputNumber, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { TYPE_MODAL_PRICE_TIERS } from '../../enums';
+import { useBulkUpdatePriceTiers } from '../../hooks/use-bulk-update-tiers';
 import { useCreatePriceTiers } from '../../hooks/use-create-price-tiers';
 import { useUpdatePriceTiers } from '../../hooks/use-update-tiers';
 import { PriceTiersData } from '../../types';
 import {
     CreatePriceTiersPayload,
+    UpdatePriceTiersOrderPayload,
     UpdatePriceTiersPayload,
 } from '../../types/payload';
+import PriceTierTypeSelect from '../select/price-tier-type-select';
 
-type Props = Omit<AppModalProps, 'children'> & {};
+type Props = Omit<AppModalProps, 'children'> & {
+    selectedRowKeys?: React.Key[];
+    onSuccess?: () => void;
+};
 
-export default function PriceTiersFormModal({ ...props }: Props) {
+export default function PriceTiersFormModal({
+    selectedRowKeys = [],
+    onSuccess,
+    ...props
+}: Props) {
     // hooks
     const messages = useTranslations();
     const [form] = Form.useForm();
@@ -29,11 +39,13 @@ export default function PriceTiersFormModal({ ...props }: Props) {
     const dataEdit = useModalStore<PriceTiersData>((state) => state.dataEdit);
 
     // const
-    const isUpdateForm = typeModal == TYPE_MODAL_PRICE_TIERS.UPDATE;
+    const isUpdateForm = typeModal === TYPE_MODAL_PRICE_TIERS.UPDATE;
+    const isBulkUpdate = typeModal === TYPE_MODAL_PRICE_TIERS.BULK_UPDATE;
 
     // apis
     const { createPriceTiers } = useCreatePriceTiers();
     const { updatePriceTiers } = useUpdatePriceTiers();
+    const { updatePriceTiersOrder } = useBulkUpdatePriceTiers();
 
     // func
     const handleCreatePriceTiers = (values: any) => {
@@ -76,6 +88,42 @@ export default function PriceTiersFormModal({ ...props }: Props) {
 
         updatePriceTiers(variables);
     };
+
+    const handleBulkUpdatePriceTiers = (values: any) => {
+        if (selectedRowKeys.length === 0) return;
+
+        const filteredValues = Object.keys(values).reduce((acc: any, key) => {
+            const value = values[key];
+            if (value !== undefined && value !== null && value !== '') {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
+
+        if (Object.keys(filteredValues).length === 0) {
+            closeModal();
+            return;
+        }
+
+        const payload = selectedRowKeys.map((item) => ({
+            id: item,
+            ...filteredValues,
+        }));
+        const variables: UpdatePriceTiersOrderPayload = {
+            priceTiers: payload,
+            onSuccess: () => {
+                deActive();
+                onSuccess?.();
+                closeModal();
+            },
+            onError: () => {
+                deActive();
+            },
+        };
+
+        updatePriceTiersOrder(variables);
+    };
+
     const onFinish = (values: any) => {
         const { ...rest } = values;
 
@@ -86,9 +134,19 @@ export default function PriceTiersFormModal({ ...props }: Props) {
         };
 
         active();
-        return isUpdateForm
-            ? handleUpdatePriceTiers(payload)
-            : handleCreatePriceTiers(payload);
+        switch (typeModal) {
+            case TYPE_MODAL_PRICE_TIERS.UPDATE:
+                handleUpdatePriceTiers(payload);
+                break;
+            case TYPE_MODAL_PRICE_TIERS.CREATE:
+                handleCreatePriceTiers(payload);
+                break;
+            case TYPE_MODAL_PRICE_TIERS.BULK_UPDATE:
+                handleBulkUpdatePriceTiers(rest);
+                break;
+            default:
+                break;
+        }
     };
 
     useEffect(() => {
@@ -102,7 +160,11 @@ export default function PriceTiersFormModal({ ...props }: Props) {
         <AppModal
             open
             {...props}
-            title={`${dataEdit?.id ? messages('common.update') : messages('common.create')} ${messages('price.label').toLowerCase()} `}
+            title={
+                isBulkUpdate
+                    ? messages('common.bulkUpdate')
+                    : `${dataEdit?.id ? messages('common.update') : messages('common.create')} ${messages('price.label').toLowerCase()} `
+            }
             onCancel={closeModal}
             onOk={form.submit}
             loading={isActive}
@@ -119,10 +181,9 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                     <AppFormItem
                         name="amount"
                         label={messages('price.label')}
-                        required
                         rules={[
                             {
-                                required: true,
+                                required: !isBulkUpdate ? true : false,
                                 message: messages('validation.input'),
                             },
                         ]}
@@ -133,10 +194,9 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                     <AppFormItem
                         name="code"
                         label={messages('common.code')}
-                        required
                         rules={[
                             {
-                                required: true,
+                                required: !isBulkUpdate ? true : false,
                                 message: messages('validation.input'),
                             },
                         ]}
@@ -145,12 +205,37 @@ export default function PriceTiersFormModal({ ...props }: Props) {
                     </AppFormItem>
 
                     <AppFormItem
-                        name="currencyId"
-                        label={messages('currencies.label')}
-                        required
+                        name="ciCode"
+                        label={messages('price.ciCode')}
                         rules={[
                             {
-                                required: true,
+                                required: !isBulkUpdate ? true : false,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        name="type"
+                        label={messages('price.type')}
+                        rules={[
+                            {
+                                required: !isBulkUpdate ? true : false,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <PriceTierTypeSelect className="w-full" />
+                    </AppFormItem>
+
+                    <AppFormItem
+                        name="currencyId"
+                        label={messages('currencies.label')}
+                        rules={[
+                            {
+                                required: !isBulkUpdate ? true : false,
                                 message: messages('validation.input'),
                             },
                         ]}

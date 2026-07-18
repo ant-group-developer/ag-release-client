@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { dspApi } from '../apis';
 import { dspQueryKeys } from '../constants/query-keys';
+import { DSP_TYPE } from '../enums';
 import { DspData } from '../types';
 
 export const useGetDetailDsp = (id: DspData['id']) => {
@@ -14,6 +15,7 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         creatorId: '',
         name: '',
         isActive: false,
+        hasDeal: false,
         id: '',
         createdAt: '',
         updatedAt: null,
@@ -21,6 +23,8 @@ export const useGetDetailDsp = (id: DspData['id']) => {
         dspActions: [],
         enablePolicy: false,
         code: '',
+        isDefault: false,
+        type: DSP_TYPE.AUDIO,
     };
 
     return {

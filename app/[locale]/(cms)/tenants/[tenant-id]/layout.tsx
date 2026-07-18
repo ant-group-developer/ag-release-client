@@ -5,6 +5,7 @@ import { getAvatarPlaceholder } from '@/helpers/common';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import { Link, usePathname } from '@/i18n/routing';
 import AppError from '@/modules/auth/components/error';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { tenantQueryKeys } from '@/modules/tenant/constants';
 import { TENANT_TABS } from '@/modules/tenant/enums';
 import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
@@ -33,6 +34,8 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
 
     const pathname = usePathname();
     const tabKey = pathname.split('/').pop();
+
+    const { isAdmin } = useAuth();
 
     const value = useParams();
     const tenantId = value['tenant-id'] as string;
@@ -66,41 +69,75 @@ function TenantDetailLayout({ children }: PropsWithChildren) {
             ),
         },
         {
-            key: TENANT_TABS.USER,
-            label: (
-                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
-                    {messages('common.users')}
-                </Link>
-            ),
-        },
-        {
-            key: TENANT_TABS.RELEASE,
+            key: TENANT_TABS.ROLES,
+            disabled: !isAdmin,
             label: (
                 <Link
-                    href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
+                    href={getTenantDetailRoute(tenantId, TENANT_TABS.ROLES)}
+                    className=""
                 >
-                    {messages('release.releases')}
+                    {messages('roles.label')}
                 </Link>
             ),
         },
+        // {
+        //     key: TENANT_TABS.USER,
+        //     label: (
+        //         <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.USER)}>
+        //             {messages('common.users')}
+        //         </Link>
+        //     ),
+        // },
+        // {
+        //     key: TENANT_TABS.RELEASE,
+        //     label: (
+        //         <Link
+        //             href={getTenantDetailRoute(tenantId, TENANT_TABS.RELEASE)}
+        //         >
+        //             {messages('release.releases')}
+        //         </Link>
+        //     ),
+        // },
+        // {
+        //     key: TENANT_TABS.TRACK,
+        //     label: (
+        //         <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
+        //             {messages('common.tracks')}
+        //         </Link>
+        //     ),
+        // },
+        // {
+        //     key: TENANT_TABS.INTEGRATION,
+        //     label: (
+        //         <Link
+        //             href={getTenantDetailRoute(
+        //                 tenantId,
+        //                 TENANT_TABS.INTEGRATION
+        //             )}
+        //         >
+        //             {messages('integration.label')}
+        //         </Link>
+        //     ),
+        // },
         {
-            key: TENANT_TABS.TRACK,
+            key: TENANT_TABS.DSP,
             label: (
-                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.TRACK)}>
-                    {messages('common.tracks')}
+                <Link href={getTenantDetailRoute(tenantId, TENANT_TABS.DSP)}>
+                    {'DSPs'}
                 </Link>
             ),
         },
         {
-            key: TENANT_TABS.INTEGRATION,
+            key: TENANT_TABS.CUSTOM_DOMAIN,
+            disabled: !isAdmin,
             label: (
                 <Link
                     href={getTenantDetailRoute(
                         tenantId,
-                        TENANT_TABS.INTEGRATION
+                        TENANT_TABS.CUSTOM_DOMAIN
                     )}
                 >
-                    {messages('integration.label')}
+                    {messages('tenant.customDomain.label')}
                 </Link>
             ),
         },

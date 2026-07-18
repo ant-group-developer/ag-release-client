@@ -1,3 +1,4 @@
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { TrackData } from '../../types';
 
 import ImageFallback from '@/components/ui/image/image-fallback';
@@ -12,8 +13,8 @@ type Props = CardProps & {
 
 export default function GridCardTracks({ data, ...props }: Props) {
     const imgFileId =
-        data?.release?.coverArtThumbnails?.['300x300'] ??
-        data?.release?.coverArtThumbnails?.original;
+        data?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
+        data?.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.ORIGINAL];
     const [ref, entry] = useIntersectionObserver({
         root: null,
         rootMargin: '0px',

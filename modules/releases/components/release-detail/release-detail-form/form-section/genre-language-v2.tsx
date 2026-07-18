@@ -3,6 +3,7 @@ import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
+import { Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -19,9 +20,12 @@ export default function GenreLanguageSectionV2({
 }: Props) {
     const {
         control,
+        setValue,
+        watch,
         formState: { errors },
     } = useFormContext<ReleaseDetailSchema>();
     const messages = useTranslations();
+    const isInstrumental = watch('isInstrumental') ?? false;
 
     return (
         <div id="genre-language" className="flex flex-col gap-6">
@@ -90,7 +94,7 @@ export default function GenreLanguageSectionV2({
                 </AppFormItem>
 
                 <AppFormItem
-                    label={`${messages('common.language')} metadata`}
+                    label={`${messages('release.metadataLanguage')}`}
                     required
                     validateStatus={
                         errors.releaseLanguage?.metadataLanguageId
@@ -131,50 +135,53 @@ export default function GenreLanguageSectionV2({
                 </AppFormItem>
 
                 <AppFormItem
-                    label={`${messages('track.language')}`}
+                    label={messages('formFields.tracks.lyrics')}
                     required
-                    validateStatus={
-                        errors.releaseLanguage?.audioLanguageId ? 'error' : ''
-                    }
-                    help={
-                        errors.releaseLanguage?.audioLanguageId
-                            ?.message as string
-                    }
-                    tooltip={messages('tooltipForm.languageTrack')}
+                    validateStatus={errors.isInstrumental ? 'error' : ''}
+                    help={errors.isInstrumental?.message as string}
                 >
                     <Controller
                         control={control}
-                        name="releaseLanguage.audioLanguageId"
+                        name="isInstrumental"
                         render={({ field }) => (
-                            <LanguageSelect
-                                className="w-full"
-                                id="releaseLanguage.audioLanguageId"
-                                showSearch
+                            <Radio.Group
                                 {...field}
+                                value={field.value ?? false}
                                 onChange={(e) => {
-                                    field.onChange(e);
+                                    const value = e.target.value;
+                                    field.onChange(value);
+
+                                    if (value) {
+                                        setValue(
+                                            'releaseLanguage.audioLanguageId',
+                                            null
+                                        );
+                                        debouncedUpdate({
+                                            isInstrumental: value,
+                                            releaseLanguage: {
+                                                audioLanguageId: null,
+                                            },
+                                        });
+                                        return;
+                                    }
+
                                     debouncedUpdate({
-                                        releaseLanguage: {
-                                            audioLanguageId: e,
-                                        },
+                                        isInstrumental: value,
                                     });
                                 }}
-                                status={
-                                    errors.releaseLanguage?.audioLanguageId
-                                        ? 'error'
-                                        : undefined
-                                }
                                 disabled={isCreateReleasePage || isReadMode}
-                            />
+                            >
+                                <Radio value={false}>{messages('common.containsLyrics')}</Radio>
+                                <Radio value={true}>{messages('common.instrumental')}</Radio>
+                            </Radio.Group>
                         )}
                     />
                 </AppFormItem>
 
                 <AppFormItem
                     label={
-                        <span className="inline-block whitespace-normal leading-normal">
-                            Metadata{' '}
-                            {messages('country.language').toLowerCase()}
+                        <span className="block whitespace-normal leading-normal">
+                            {messages('release.countryLanguage')}
                         </span>
                     }
                     required
@@ -217,6 +224,50 @@ export default function GenreLanguageSectionV2({
                         )}
                     />
                 </AppFormItem>
+
+                {!isInstrumental && (
+                    <AppFormItem
+                        label={`${messages('release.audioLanguage')}`}
+                        required
+                        validateStatus={
+                            errors.releaseLanguage?.audioLanguageId
+                                ? 'error'
+                                : ''
+                        }
+                        help={
+                            errors.releaseLanguage?.audioLanguageId
+                                ?.message as string
+                        }
+                        tooltip={messages('tooltipForm.languageTrack')}
+                    >
+                        <Controller
+                            control={control}
+                            name="releaseLanguage.audioLanguageId"
+                            render={({ field }) => (
+                                <LanguageSelect
+                                    className="w-full"
+                                    id="releaseLanguage.audioLanguageId"
+                                    showSearch
+                                    {...field}
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        debouncedUpdate({
+                                            releaseLanguage: {
+                                                audioLanguageId: e,
+                                            },
+                                        });
+                                    }}
+                                    status={
+                                        errors.releaseLanguage?.audioLanguageId
+                                            ? 'error'
+                                            : undefined
+                                    }
+                                    disabled={isCreateReleasePage || isReadMode}
+                                />
+                            )}
+                        />
+                    </AppFormItem>
+                )}
             </div>
         </div>
     );

@@ -3,6 +3,8 @@ import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
 import InputNumber from '@/components/ui/input/input-number';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { usePermission } from '@/hooks/use-permission';
 import UserSelect from '@/modules/user/components/user-select';
 import { Form, Input, Switch, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -24,8 +26,8 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
     const {
         isAdmin,
         profile: { tenantId },
-        isTenantOwner,
     } = useAuth();
+    const { hasPermission } = usePermission();
 
     return (
         <AppForm {...props}>
@@ -43,7 +45,33 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                     ]}
                     name="name"
                 >
-                    <Input placeholder={messages('tenant.name')} />
+                    <Input
+                        placeholder={messages('tenant.name')}
+                        onChange={(e) => {
+                            const slug = e.target.value
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]+/g, '-')
+                                .replace(/-+/g, '-')
+                                .replace(/^-|-$/g, '');
+                            props.form?.setFieldValue('code', slug);
+                        }}
+                    />
+                </AppForm.Item>
+
+                <AppForm.Item
+                    label={messages('tenant.code')}
+                    rules={[
+                        {
+                            max: 50,
+                            pattern: /^[a-z0-9-]+$/,
+                            message:
+                                'Only lowercase letters, numbers, and hyphens',
+                        },
+                    ]}
+                    name="code"
+                    tooltip="Slug code used as SFTP watch folder name (e.g. ant-music)"
+                >
+                    <Input placeholder="ant-music" />
                 </AppForm.Item>
 
                 <AppForm.Item
@@ -97,7 +125,7 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                     ]}
                 >
                     <UserSelect
-                        disabled={tenantId === props.tenantId && isTenantOwner}
+                        disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_OWNER)}
                         externalOnChange={(value, option) => {
                             if (
                                 props.form &&
@@ -135,6 +163,12 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                             max: 2000,
                             min: 0,
                             type: 'number',
+                            transform: (value) =>
+                                value !== null &&
+                                value !== undefined &&
+                                value !== ''
+                                    ? Number(value)
+                                    : value,
                         },
                         {
                             required: true,
@@ -146,7 +180,7 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
                     <InputNumber
                         placeholder={messages('tenant.labels.max.label')}
                         allowClear={false}
-                        disabled={!isAdmin}
+                        disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_CONFIG)}
                     />
                 </AppForm.Item>
 
@@ -182,7 +216,7 @@ function TenantForm({ excludeIds, wrapperClassName, ...props }: Props) {
             <div className={wrapperClassName}>
                 <AppForm.Item label={messages('status.label')} name="isActive">
                     <Switch
-                        disabled={tenantId === props.tenantId && isTenantOwner}
+                        disabled={!hasPermission(PERMISSION.WORKSPACE.UPDATE_STATUS)}
                     />
                 </AppForm.Item>
 

@@ -49,10 +49,10 @@ function SecondSidebar({
                 trigger={null}
                 {...props}
             >
-                <div className="h-[calc(100vh-5rem)]">
+                <div className="h-[calc(100vh-4rem)]">
                     {/* @ts-ignore */}
                     <Scrollbars autoHide>
-                        <div className="flex items-center justify-between border-b p-2">
+                        <div className="flex items-center justify-between border-b p-2 dark:border-zinc-800">
                             <Typography
                                 style={{
                                     color: token?.colorTextDescription,

@@ -27,8 +27,13 @@ export const releaseSchema = (messages: any) =>
                 }
             ),
         upc: z
-            .string()
-            .max(20, messages('validation.max', { number: 20 }))
+            .union([
+                z.literal(''),
+                z
+                    .string()
+                    .min(10, messages('validation.min', { number: 10 }))
+                    .max(14, messages('validation.max', { number: 14 })),
+            ])
             .optional()
             .nullable(),
         primaryGenreId: z
@@ -38,6 +43,7 @@ export const releaseSchema = (messages: any) =>
                 message: messages('validation.input'),
             }),
         subGenreId: z.string().optional().nullable(),
+        isInstrumental: z.boolean(),
         releaseLanguage: z
             .object({
                 metadataLanguageId: z
@@ -52,12 +58,7 @@ export const releaseSchema = (messages: any) =>
                     .refine((val) => val !== null && val !== '', {
                         message: messages('validation.input'),
                     }),
-                audioLanguageId: z
-                    .string()
-                    .nullable()
-                    .refine((val) => val !== null && val !== '', {
-                        message: messages('validation.input'),
-                    }),
+                audioLanguageId: z.string().nullable(),
             })
             .refine((val) => val !== null, {
                 message: messages('validation.input'),
@@ -110,31 +111,21 @@ export const releaseSchema = (messages: any) =>
             .string()
             .max(200, messages('validation.max', { number: 200 }))
             .nullable()
-            .refine((val) => val !== null && val !== '', {
+            .refine((val) => val !== '' && val !== null, {
                 message: messages('validation.input'),
             }),
         cLineOwner: z
             .string()
             .max(200, messages('validation.max', { number: 200 }))
             .nullable()
-            .refine((val) => val !== null && val !== '', {
+            .refine((val) => val !== '' && val !== null, {
                 message: messages('validation.input'),
             }),
-        pLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
-            if (val === null) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: messages('validation.input'),
-                });
-            }
+        pLineYear: z.any().refine((val) => val !== null, {
+            message: messages('validation.input'),
         }),
-        cLineYear: z.union([z.number(), z.null()]).superRefine((val, ctx) => {
-            if (val === null) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: messages('validation.input'),
-                });
-            }
+        cLineYear: z.any().refine((val) => val !== null, {
+            message: messages('validation.input'),
         }),
         isVariousArtist: z.boolean(),
         releaseTimeMode: z
@@ -149,6 +140,13 @@ export const releaseSchema = (messages: any) =>
             .refine((val) => val !== null && val !== '', {
                 message: messages('validation.input'),
             }),
+        releaseOriginalDate: z
+            .string()
+            .nullable()
+            .refine((val) => val !== null && val !== '', {
+                message: messages('validation.input'),
+            }),
+        releaseEndDate: z.string().optional().nullable(),
 
         releaseTime: z
             .string()
@@ -202,24 +200,39 @@ export const releaseSchema = (messages: any) =>
 export type ReleaseSchema = z.infer<ReturnType<typeof releaseSchema>>;
 
 export const releaseDetailSchema = (messages: any) =>
-    releaseSchema(messages).pick({
-        upc: true,
-        primaryGenreId: true,
-        subGenreId: true,
-        releaseLanguage: true,
-        labelId: true,
-        catalogId: true,
-        title: true,
-        version: true,
-        releaseArtists: true,
-        albumFormatId: true,
-        // coverArtThumbnails: true,
-        pLineOwner: true,
-        pLineYear: true,
-        cLineYear: true,
-        cLineOwner: true,
-        isVariousArtist: true,
-    });
+    releaseSchema(messages)
+        .pick({
+            upc: true,
+            primaryGenreId: true,
+            subGenreId: true,
+            releaseLanguage: true,
+            isInstrumental: true,
+            labelId: true,
+            catalogId: true,
+            title: true,
+            version: true,
+            releaseArtists: true,
+            albumFormatId: true,
+            // coverArtThumbnails: true,
+            pLineOwner: true,
+            pLineYear: true,
+            cLineYear: true,
+            cLineOwner: true,
+            isVariousArtist: true,
+        })
+        .superRefine((val, ctx) => {
+            if (
+                !val.isInstrumental &&
+                (!val.releaseLanguage?.audioLanguageId ||
+                    val.releaseLanguage.audioLanguageId === '')
+            ) {
+                ctx.addIssue({
+                    path: ['releaseLanguage', 'audioLanguageId'],
+                    code: z.ZodIssueCode.custom,
+                    message: messages('validation.input'),
+                });
+            }
+        });
 // .superRefine((data, ctx) => {
 // Validate releaseArtists chỉ khi isVariousArtist là false
 //     if (!data.isVariousArtist) {

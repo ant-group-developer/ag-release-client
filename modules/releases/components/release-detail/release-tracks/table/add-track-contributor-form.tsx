@@ -1,61 +1,94 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import RoleArtistSelect from '@/components/ui/select/role-artist-select';
-import { SIZE_ICON } from '@/constants/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
+import { toastPromise } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { ArtistData } from '@/modules/artist/types';
 import { TrackData } from '@/modules/releases/types';
-import { useCreateTrackContributor } from '@/modules/track-contributor/hooks/use-create-track-contributor';
-import { CreateTrackContributorPayload } from '@/modules/track-contributor/types/payload';
+import { useBulkCreateTrackContributor } from '@/modules/track-contributor/hooks/use-bulk-create-track-contributor';
+import {
+    BulkCreateTrackContributorPayload,
+    CreateTrackContributorPayload,
+} from '@/modules/track-contributor/types/payload';
 import { CreateVariables } from '@/types/api';
-import { Button, Form } from 'antd';
-import { Plus } from 'lucide-react';
+import { Form } from 'antd';
 import { useTranslations } from 'next-intl';
 
-type Props = {
+type Props = Omit<AppModalProps, 'children'> & {
     trackData?: TrackData;
+    disabled?: boolean;
 };
 
-export default function AddTrackContributorForm({ trackData }: Props) {
+export default function AddTrackContributorForm({
+    trackData,
+    disabled = false,
+    ...props
+}: Props) {
     // hooks
     const messages = useTranslations();
     const { active, deActive, isActive } = useActive();
     const [form] = Form.useForm();
     const releaseAction = useReleaseActionStore((s) => s.action);
-    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // apis
-    const { createTrackContributor } = useCreateTrackContributor();
+    const { bulkCreateTrackContributor } = useBulkCreateTrackContributor();
+
+    // const
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
     // func
-    const handleSubmit = async (values: any) => {
+    const handleSubmit = async (values: {
+        artistId: string;
+        roleId: string[];
+    }) => {
         active();
-        const variables: CreateVariables<CreateTrackContributorPayload> = {
-            payload: {
-                artistId: values.artistId,
-                artistRoleId: values.roleId,
-                trackId: trackData?.id as string,
-            },
+        const roleIds = values.roleId;
+        const items: CreateTrackContributorPayload[] =
+            roleIds?.map((id) => {
+                return {
+                    artistId: values.artistId,
+                    artistRoleId: id,
+                    trackId: trackData?.id as string,
+                };
+            }) ?? [];
+            
+        const variables: CreateVariables<BulkCreateTrackContributorPayload> = {
+            payload: { items },
             onSuccess: () => {
-                deActive();
                 form.resetFields();
+                deActive();
             },
             onError: () => deActive(),
         };
-        createTrackContributor(variables);
+        props.onCancel?.({} as any);
+        toastPromise(bulkCreateTrackContributor(variables), messages, {
+            success: messages('common.success'),
+        });
     };
+
+    const handleCreateArtistSuccess = (data: ArtistData) => {
+        form.setFieldValue('artistId', data.id);
+    };
+
     return (
-        <AppForm
-            form={form}
-            onFinish={(values) => handleSubmit(values)}
-            layout="vertical"
-            showSubmit={false}
-            disabled={isActive}
-            variant={isReadMode ? 'underlined' : 'outlined'}
+        <AppModal
+            {...props}
+            title={messages('release.contributors')}
+            onOk={() => form.submit()}
+            loading={isActive}
         >
-            <div className="grid grid-cols-4 gap-4">
+            <AppForm
+                form={form}
+                onFinish={(values) => handleSubmit(values)}
+                layout="vertical"
+                showSubmit={false}
+                disabled={disabled || isActive}
+                variant={isReadMode ? 'underlined' : 'outlined'}
+            >
                 <AppFormItem
                     className="col-span-2"
                     name="artistId"
@@ -70,11 +103,10 @@ export default function AddTrackContributorForm({ trackData }: Props) {
                 >
                     <ArtistSelect
                         showSearch
-                        // fallBack={dataEdit?.artist?.name}
                         placeholder={messages('artist.select')}
-                        // disabledArtistIds={disabledArtistIds}
                         allowClear
                         disabled={isReadMode || isActive}
+                        onCreateSuccess={handleCreateArtistSuccess}
                     />
                 </AppFormItem>
 
@@ -91,31 +123,15 @@ export default function AddTrackContributorForm({ trackData }: Props) {
                     ]}
                 >
                     <RoleArtistSelect
-                        // fallBack={dataEdit?.artistRole?.name}
                         placeholder={messages('common.role')}
-                        // disabledRoleIds={disabledRoleIds}
                         placement="topLeft"
                         allowClear
                         disabled={isReadMode || isActive}
+                        mode="multiple"
                     />
                 </AppFormItem>
-
-                <div className="mt-4 flex items-center justify-end">
-                    <Button
-                        disabled={isActive || isReadMode}
-                        loading={isActive}
-                        onClick={() => form.submit()}
-                        icon={
-                            <div>
-                                <Plus size={SIZE_ICON} />
-                            </div>
-                        }
-                        type="primary"
-                    >
-                        {messages('common.add')}
-                    </Button>
-                </div>
-            </div>
-        </AppForm>
+            </AppForm>
+        </AppModal>
     );
 }
+

@@ -6,10 +6,8 @@ import {
     convertSecondsToHoursMinutes,
     timeStringToSeconds,
 } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
-import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Input, TimePicker } from 'antd';
 import { NamePath } from 'antd/es/form/interface';
@@ -29,7 +27,6 @@ export default function AudioSpecSection({
 }: Props) {
     const messages = useTranslations();
     const form = Form.useFormInstance();
-    const { action } = useGetReleaseDetailRoute();
     const releaseAction = useReleaseActionStore((s) => s.action);
     const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
 
@@ -118,10 +115,32 @@ export default function AudioSpecSection({
                     ? timeStringToSeconds(durationRaw)
                     : durationRaw;
 
-            if (durationSeconds != null && previewSeconds >= durationSeconds) {
-                return Promise.reject(
-                    messages('track.validation.previewMustBeLessThanDuration')
-                );
+            if (durationSeconds != null) {
+                if (previewSeconds >= durationSeconds) {
+                    return Promise.reject(
+                        messages(
+                            'track.validation.previewMustBeLessThanDuration'
+                        )
+                    );
+                }
+
+                const sampleLengthValue = form.getFieldValue([
+                    'audioFile',
+                    'sampleLength',
+                ]);
+                const sampleLengthSeconds = dayjs.isDayjs(sampleLengthValue)
+                    ? timeStringToSeconds(
+                          sampleLengthValue.format(
+                              DATE_FORMAT.HOUR_MINUTE_SECOND
+                          )
+                      )
+                    : 0;
+
+                if (previewSeconds + sampleLengthSeconds > durationSeconds) {
+                    return Promise.reject(
+                        messages('track.validation.sampleExceedsDuration')
+                    );
+                }
             }
 
             return Promise.resolve();
@@ -151,15 +170,20 @@ export default function AudioSpecSection({
                   )
                 : 0;
 
-            if (
-                durationSeconds != null &&
-                sampleSeconds > durationSeconds - previewSeconds
-            ) {
-                return Promise.reject(
-                    messages(
-                        'track.validation.sampleLengthMustBeLessThanDuration'
-                    )
-                );
+            if (durationSeconds != null) {
+                if (sampleSeconds > durationSeconds) {
+                    return Promise.reject(
+                        messages(
+                            'track.validation.sampleLengthMustBeLessThanDuration'
+                        )
+                    );
+                }
+
+                if (sampleSeconds + previewSeconds > durationSeconds) {
+                    return Promise.reject(
+                        messages('track.validation.sampleExceedsDuration')
+                    );
+                }
             }
 
             return Promise.resolve();
@@ -171,156 +195,118 @@ export default function AudioSpecSection({
             componentDisabled={isReadMode}
             form={{ variant: isReadMode ? 'underlined' : 'outlined' }}
         >
-            <CollapseItem
-                defaultActiveKey={['audio-specs']}
-                items={[
-                    {
-                        key: 'audio-specs',
-                        label: (
-                            <span className="text-base font-semibold">
-                                {messages('track.audioSpecification')}
-                            </span>
-                        ),
-                        children: (
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* File name */}
-                                <AppFormItem
-                                    name={['audioFile', 'file', 'fileName']}
-                                    label={messages('common.fileName')}
-                                    required
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message:
-                                                messages('validation.input'),
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        id={`tracks.${index}.fileName`}
-                                        readOnly
-                                        value={
-                                            trackData.audioFile?.file
-                                                ?.fileName ?? ''
-                                        }
-                                        disabled={isReadMode}
-                                    />
-                                </AppFormItem>
+            <div className="space-y-4">
+                <p className="text-base font-semibold">
+                    {messages('track.audioSpecification')}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* File name */}
+                    <AppFormItem
+                        name={['audioFile', 'file', 'fileName']}
+                        label={messages('common.fileName')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <Input
+                            id={`tracks.${index}.fileName`}
+                            readOnly
+                            value={trackData.audioFile?.file?.fileName ?? ''}
+                            disabled={isReadMode}
+                        />
+                    </AppFormItem>
 
-                                <AppFormItem
-                                    name={['audioFile', 'duration']}
-                                    label={messages('common.duration')}
-                                    required
-                                >
-                                    <Input
-                                        readOnly
-                                        value={convertSecondsToHoursMinutes(
-                                            trackData.audioFile?.duration ?? 0
-                                        )}
-                                        disabled
-                                    />
-                                </AppFormItem>
+                    <AppFormItem
+                        name={['audioFile', 'duration']}
+                        label={messages('common.duration')}
+                        required
+                    >
+                        <Input
+                            readOnly
+                            value={convertSecondsToHoursMinutes(
+                                trackData.audioFile?.duration ?? 0
+                            )}
+                            disabled
+                        />
+                    </AppFormItem>
 
-                                {/* Sample Length */}
-                                <AppFormItem
-                                    name={['audioFile', 'sampleLength']}
-                                    label={messages(
-                                        'formFields.tracks.sampleLength'
-                                    )}
-                                    required
-                                    rules={[
-                                        {
-                                            validator: validatePreview(
-                                                messages,
-                                                form
-                                            ),
-                                        },
-                                    ]}
-                                >
-                                    <TimePicker
-                                        id={`tracks.${index}.audioFile.sampleLength`}
-                                        className="w-full"
-                                        disabled={isReadMode}
-                                        showNow={false}
-                                        format={DATE_FORMAT.HOUR_MINUTE_SECOND}
-                                        onChange={handleOnChangeSampleLength}
-                                    />
-                                </AppFormItem>
+                    {/* Sample Length */}
+                    <AppFormItem
+                        name={['audioFile', 'sampleLength']}
+                        label={messages('formFields.tracks.sampleLength')}
+                        required
+                        rules={[
+                            {
+                                validator: validateSampleLength(messages, form),
+                            },
+                        ]}
+                    >
+                        <TimePicker
+                            id={`tracks.${index}.audioFile.sampleLength`}
+                            className="w-full"
+                            disabled={isReadMode}
+                            showNow={false}
+                            format={DATE_FORMAT.HOUR_MINUTE_SECOND}
+                            onChange={handleOnChangeSampleLength}
+                        />
+                    </AppFormItem>
 
-                                {/* Preview */}
-                                <AppFormItem
-                                    name={['audioFile', 'preview']}
-                                    label={messages(
-                                        'formFields.tracks.preview'
-                                    )}
-                                    required
-                                    rules={[
-                                        {
-                                            validator: validateSampleLength(
-                                                messages,
-                                                form
-                                            ),
-                                        },
-                                    ]}
-                                >
-                                    <TimePicker
-                                        id={`tracks.${index}.audioFile.preview`}
-                                        className="w-full"
-                                        disabled={isReadMode}
-                                        showNow={false}
-                                        format={DATE_FORMAT.HOUR_MINUTE_SECOND}
-                                        onChange={handleOnChangePreview}
-                                    />
-                                </AppFormItem>
+                    {/* Preview */}
+                    <AppFormItem
+                        name={['audioFile', 'preview']}
+                        label={messages('formFields.tracks.preview')}
+                        required
+                        rules={[
+                            {
+                                validator: validatePreview(messages, form),
+                            },
+                        ]}
+                    >
+                        <TimePicker
+                            id={`tracks.${index}.audioFile.preview`}
+                            className="w-full"
+                            disabled={isReadMode}
+                            showNow={false}
+                            format={DATE_FORMAT.HOUR_MINUTE_SECOND}
+                            onChange={handleOnChangePreview}
+                        />
+                    </AppFormItem>
 
-                                {/* Audio file info table */}
-                                {trackData.audioFile && (
-                                    <div className="col-span-2 mt-6 overflow-hidden rounded-md border">
-                                        <div className="grid grid-cols-4 gap-4 p-4 text-sm">
-                                            <div>
-                                                <p className="font-bold">
-                                                    Bit Depth
-                                                </p>
-                                                <p>
-                                                    {trackData.audioFile
-                                                        .bitDepth ?? '-'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="font-bold">
-                                                    Bitrate
-                                                </p>
-                                                <p>
-                                                    {trackData.audioFile
-                                                        .bitrate ?? '-'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="font-bold">
-                                                    Format
-                                                </p>
-                                                <p>
-                                                    {trackData.audioFile.file?.extension?.toUpperCase() ??
-                                                        'WAVE'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="font-bold">
-                                                    Sample Rate
-                                                </p>
-                                                <p>
-                                                    {trackData.audioFile
-                                                        .sampleRate ?? '-'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                    {/* Audio file info table */}
+                    {trackData.audioFile && (
+                        <div className="col-span-2 mt-6 overflow-hidden rounded-md border">
+                            <div className="grid grid-cols-4 gap-4 p-4 text-sm">
+                                <div>
+                                    <p className="font-bold">Bit Depth</p>
+                                    <p>{trackData.audioFile.bitDepth ?? '-'}</p>
+                                </div>
+                                <div>
+                                    <p className="font-bold">Bitrate</p>
+                                    <p>{trackData.audioFile.bitrate ?? '-'}</p>
+                                </div>
+                                <div>
+                                    <p className="font-bold">Format</p>
+                                    <p>
+                                        {trackData.audioFile.file?.extension?.toUpperCase() ??
+                                            'WAVE'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="font-bold">Sample Rate</p>
+                                    <p>
+                                        {trackData.audioFile.sampleRate ?? '-'}
+                                    </p>
+                                </div>
                             </div>
-                        ),
-                    },
-                ]}
-            />
+                        </div>
+                    )}
+                </div>
+            </div>
         </ConfigProvider>
     );
 }
+

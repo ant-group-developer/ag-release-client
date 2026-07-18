@@ -1,7 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import CurrenciesSelect from '@/components/ui/select/currencies-select';
-import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import SortableTable, { OnDragEnd } from '@/components/ui/table/sortable-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import {
     formatCurrency,
@@ -10,33 +10,40 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Switch } from 'antd';
+import { Switch, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import { TYPE_MODAL_PRICE_TIERS } from '../../enums';
+import { PRICE_TIER_TYPE, TYPE_MODAL_PRICE_TIERS } from '../../enums';
 import { useUpdatePriceTiers } from '../../hooks/use-update-tiers';
 import { PriceTiersData, PriceTiersDataFilter } from '../../types';
 
-type Props = Omit<AppTableProps<PriceTiersData>, 'columns'> & {
+type Props = any & {
     pagination: {
         pageSize: number;
         current: number;
     };
     dataFilter: PriceTiersDataFilter;
+    onDragEnd?: OnDragEnd<PriceTiersData[]>;
 };
 
-export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
+export default function PriceTiersTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const { updatePriceTiers } = useUpdatePriceTiers();
+    const { updatePriceTiers, isPending, variables } = useUpdatePriceTiers();
 
     const column: ColumnType<PriceTiersData>[] = [
+        {
+            key: 'sort',
+            width: 50,
+            align: 'center',
+            render: () => null,
+        },
         {
             title: messages('common.iNo'),
             key: 'iNo',
             width: 50,
             align: 'center',
-            render: (_, __, index) =>
+            render: (_: any, __: any, index: number) =>
                 getIndex(
                     props.pagination.pageSize,
                     props.pagination.current,
@@ -48,9 +55,9 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             key: 'amount',
             dataIndex: 'amount',
             align: 'left',
-            width: 150,
+            width: 100,
             ellipsis: true,
-            render: (value, record) => (
+            render: (value: any, record: PriceTiersData) => (
                 <span className="flex items-center gap-1">
                     <span className="truncate">
                         {' '}
@@ -66,11 +73,38 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 150,
             ellipsis: true,
-            render: (value, record) => (
+            render: (value: any, record: PriceTiersData) => (
                 <CopyText text={record?.code}>
                     <span className="truncate">{record?.code}</span>
                 </CopyText>
             ),
+        },
+        {
+            title: 'CI Code',
+            key: 'ciCode',
+            dataIndex: 'ciCode',
+            align: 'left',
+            width: 100,
+            ellipsis: true,
+            render: (value: any, record: PriceTiersData) => (
+                <CopyText text={record?.ciCode}>
+                    <span className="truncate">{record?.ciCode}</span>
+                </CopyText>
+            ),
+        },
+        {
+            title: messages('price.type'),
+            key: 'type',
+            dataIndex: 'type',
+            align: 'center',
+            width: 80,
+            render: (value: PRICE_TIER_TYPE) => {
+                const label =
+                    value === PRICE_TIER_TYPE.ALBUM
+                        ? messages('price.album')
+                        : messages('price.track');
+                return <Tag>{label}</Tag>;
+            },
         },
         {
             title: messages('currencies.label'),
@@ -79,7 +113,7 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 130,
             ellipsis: true,
-            render: (value, record) => (
+            render: (value: any, record: PriceTiersData) => (
                 <div>
                     <CurrenciesSelect
                         fallBack={`${record?.currency.code} - ${record?.currency.name}`}
@@ -102,18 +136,26 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 100,
             ellipsis: true,
-            render: (value, record) => (
-                <Switch
-                    disabled={!record?.isActive}
-                    value={record?.isDefault}
-                    onChange={(value) =>
-                        updatePriceTiers({
-                            id: record?.id,
-                            payload: { isDefault: value },
-                        })
-                    }
-                />
-            ),
+            render: (value: any, record: PriceTiersData) => {
+                const isLoading =
+                    isPending &&
+                    variables?.id === record?.id &&
+                    variables?.payload &&
+                    'isDefault' in variables.payload;
+                return (
+                    <Switch
+                        disabled={!record?.isActive}
+                        value={record?.isDefault}
+                        loading={isLoading}
+                        onChange={(value) =>
+                            updatePriceTiers({
+                                id: record?.id,
+                                payload: { isDefault: value },
+                            })
+                        }
+                    />
+                );
+            },
         },
         {
             title: messages('status.active'),
@@ -122,7 +164,12 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 100,
             ellipsis: true,
-            render: (value, record) => {
+            render: (value: any, record: PriceTiersData) => {
+                const isLoading =
+                    isPending &&
+                    variables?.id === record?.id &&
+                    variables?.payload &&
+                    'isActive' in variables.payload;
                 return (
                     <CustomTooltip
                         title={
@@ -135,9 +182,9 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
                     >
                         <Switch
                             disabled={record?.isDefault}
-                            // defaultChecked={record?.isActive}
                             checked={record?.isActive}
                             value={record?.isActive}
+                            loading={isLoading}
                             onChange={(value) =>
                                 updatePriceTiers({
                                     id: record?.id,
@@ -161,7 +208,7 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'createdAt'
             ),
-            render: (value) => (
+            render: (value: any) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
                 </span>
@@ -179,7 +226,7 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
                 dataFilter.fieldOrder,
                 'updatedAt'
             ),
-            render: (value) => (
+            render: (value: any) => (
                 <span className="truncate text-wrap">
                     {formattedDate(value)}
                 </span>
@@ -189,15 +236,15 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
             key: 'actions',
             align: 'center',
             width: 50,
-            render: (_, record) => (
+            render: (_: any, record: PriceTiersData) => (
                 <ActionButton
+                    showUpdate
                     showDelete
+                    onShowUpdate={() => {
+                        openModal(TYPE_MODAL_PRICE_TIERS.UPDATE, record);
+                    }}
                     onShowDelete={() =>
                         openModal(TYPE_MODAL_PRICE_TIERS.DELETE, record)
-                    }
-                    showUpdate
-                    onShowUpdate={() =>
-                        openModal(TYPE_MODAL_PRICE_TIERS.UPDATE, record)
                     }
                 />
             ),
@@ -205,12 +252,13 @@ export const PriceTiersTable = ({ dataFilter, ...props }: Props) => {
     ];
 
     return (
-        <AppTable
+        <SortableTable
             key="main"
             {...props}
             pagination={false}
             columns={column}
             rowClassName={'group'}
+            onDragEnd={props.onDragEnd}
         />
     );
-};
+}

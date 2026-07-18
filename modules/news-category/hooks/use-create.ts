@@ -17,12 +17,12 @@ export const useCreateNewsCategory = () => {
         { onSuccess }: CreateVariables<CreateNewsCategoryPayload>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: newsCategoryQueryKeys.lists(),
+            queryKey: newsCategoryQueryKeys.all,
         });
 
         const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
         showNotification('success', responseMessages);
     };
 

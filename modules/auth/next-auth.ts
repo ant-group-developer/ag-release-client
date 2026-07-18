@@ -42,6 +42,46 @@ async function maybeRefresh(token: any) {
     return token;
 }
 
+const LOCAL_REDIRECT_HOSTNAMES = ['localhost', '127.0.0.1'] as const;
+
+function isLocalRedirectHost(hostname: string) {
+    return LOCAL_REDIRECT_HOSTNAMES.includes(
+        hostname as (typeof LOCAL_REDIRECT_HOSTNAMES)[number]
+    );
+}
+
+async function isResolvedTenantDomain(hostname: string) {
+    if (!process.env.API_URL) return false;
+
+    try {
+        const response = await fetch(
+            `${process.env.API_URL}/public/domain-resolve?domain=${encodeURIComponent(
+                hostname
+            )}`,
+            { cache: 'no-store' }
+        );
+
+        if (!response.ok) return false;
+
+        const json = await response.json();
+        const tenant = json?.data?.tenant ?? json?.data?.data?.tenant;
+
+        return Boolean(tenant);
+    } catch (error) {
+        console.log('redirect domain resolve error:', error);
+        return false;
+    }
+}
+
+async function isAllowedRedirectUrl(url: string, baseUrl: string) {
+    const redirectUrl = new URL(url);
+
+    if (!['http:', 'https:'].includes(redirectUrl.protocol)) return false;
+    if (redirectUrl.origin === baseUrl) return true;
+    if (isLocalRedirectHost(redirectUrl.hostname)) return true;
+
+    return isResolvedTenantDomain(redirectUrl.hostname);
+}
 async function switchTenantServerSide(accessToken: string, tenantId: string) {
     const res = await authApi.switchTenant(accessToken, {
         tenantId,
@@ -58,14 +98,18 @@ export const authOptions: NextAuthOptions = {
             credentials: {
                 email: { label: 'Email', type: 'text' },
                 password: { label: 'Password', type: 'password' },
+                customDomain: { label: 'Custom Domain', type: 'text' },
             },
             // @ts-ignore
             async authorize(credentials) {
                 try {
-                    const res = await authApi.signin({
-                        email: credentials!.email,
-                        password: credentials!.password,
-                    });
+                    const res = await authApi.signin(
+                        {
+                            email: credentials!.email,
+                            password: credentials!.password,
+                        },
+                        credentials?.customDomain
+                    );
                     const data = res.data.data;
                     // Khi login thành công, trả về đối tượng user chứa token
                     return {
@@ -91,6 +135,17 @@ export const authOptions: NextAuthOptions = {
 
     // 3) Callback để lưu token vào JWT và session
     callbacks: {
+        async redirect({ url, baseUrl }) {
+            if (url.startsWith('/')) {
+                return `${baseUrl}${url}`;
+            }
+
+            if (await isAllowedRedirectUrl(url, baseUrl)) {
+                return url;
+            }
+
+            return baseUrl;
+        },
         // Mỗi lần jwt được tạo/refresh
         async jwt({ token, user, trigger, session }) {
             // Lần đầu login

@@ -10,6 +10,8 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, Popover, Switch, Tag, theme } from 'antd';
 import { ColumnsType } from 'antd/es/table';
@@ -17,7 +19,7 @@ import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_USER, USER_ORDER_BY } from '../enums';
 import { useUpdateUser } from '../hooks/use-update-user';
 import { DataFilterUser, UserData } from '../types/data';
-import { checkIsSystemAdmin, checkIsTenantOwner } from '../utils/role';
+
 
 type Props = {
     dataFilter: DataFilterUser;
@@ -32,9 +34,17 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
     const { token } = theme.useToken();
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
-    const canUpdate = true;
+    const { hasPermission, hasAnyPermission } = usePermission();
+    const canUpdateStatus = hasPermission(PERMISSION.USER.UPDATE_STATUS);
+    const canUpdate = hasAnyPermission([
+        PERMISSION.USER.UPDATE_INFO,
+        PERMISSION.USER.UPDATE_STATUS,
+        PERMISSION.USER.UPDATE_ROLE,
+        PERMISSION.USER.UPDATE_TENANT_TYPE,
+    ]);
+    const canDelete = hasPermission(PERMISSION.USER.DELETE);
 
-    const { isAdmin, isNotSystemTenant } = useAuth();
+    const { isAdmin } = useAuth();
 
     const { updateUser } = useUpdateUser();
 
@@ -171,7 +181,7 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
             render: (cell, record) => (
                 <Switch
                     checked={cell}
-                    disabled={!canUpdate}
+                    disabled={!canUpdateStatus}
                     onChange={(status) => updateUserStatus(record.id, status)}
                 />
             ),
@@ -245,22 +255,13 @@ function UserTable({ dataFilter, actionProps, ...props }: Props) {
             width: 50,
             // fixed: 'right',
             render: (cell, record) => {
-                const isSystemAdmin = checkIsSystemAdmin(record.type);
-                const isTenantOwner = checkIsTenantOwner(
-                    record.tenantUser[0]?.type
-                );
                 return (
                     <ActionButton
                         showUpdate={canUpdate}
                         onShowUpdate={() =>
                             openModal(TYPE_MODAL_USER.UPDATE, record)
                         }
-                        showDelete={
-                            (isNotSystemTenant &&
-                                !isSystemAdmin &&
-                                !isTenantOwner) ||
-                            false
-                        }
+                        showDelete={canDelete}
                         onShowDelete={() =>
                             openModal(TYPE_MODAL_USER.REMOVE, record)
                         }

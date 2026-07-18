@@ -179,6 +179,7 @@ export default function NewsTablePro({ dataFilter, ...props }: Props) {
                 placeholder: '',
             },
             search: false,
+            ellipsis: true,
             render: (value, record) => (
                 <CustomTooltip title={record?.creator?.email}>
                     <span className="truncate">{record?.creator?.email}</span>

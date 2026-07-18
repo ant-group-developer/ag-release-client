@@ -1,6 +1,7 @@
-import ActionButton from '@/components/ui/button/action-button';
+import IconButton from '@/components/ui/button/icon-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import {
     convertSecondsToTime,
     formatFileSize,
@@ -15,9 +16,9 @@ import {
     BackupDatabaseLogData,
     BackupDatabaseLogDataFilter,
 } from '@/modules/backup-dabatase/types';
-import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { STATUS_BACKUP } from '../../enums';
 type Props = Omit<AppTableProps<BackupDatabaseLogData>, 'columns'> & {
@@ -58,9 +59,9 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                 <CustomTooltip title={value}>
                     <span
                         onClick={() => {
-                            if (!record.urlFolderGcs) return;
+                            if (!record.urlFolderR2) return;
                             window.open(
-                                record?.urlFolderGcs,
+                                record?.urlFolderR2,
                                 '_blank',
                                 'noopener,noreferrer'
                             );
@@ -78,13 +79,21 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'status',
             align: 'center',
             width: 100,
-            render: (value) => {
-                const color =
-                    value === STATUS_BACKUP.SUCCESS
-                        ? 'green'
-                        : STATUS_BACKUP.FAILED
-                          ? 'red'
-                          : 'blue';
+            render: (value, record) => {
+                let color = '';
+                switch (record?.status) {
+                    case STATUS_BACKUP.SUCCESS:
+                        color = 'green';
+                        break;
+                    case STATUS_BACKUP.FAILED:
+                        color = 'red';
+                        break;
+                    case STATUS_BACKUP.RUNNING:
+                        color = 'blue';
+                        break;
+                    default:
+                        break;
+                }
                 return (
                     <span className="truncate">
                         <Tag color={color}>
@@ -132,41 +141,28 @@ export const BackupDatabaseLogTable = ({ dataFilter, ...props }: Props) => {
                 </span>
             ),
         },
-
         {
             key: 'actions',
             align: 'center',
             width: 50,
-            render: (_, record) => (
-                <ActionButton
-                    showDownload={
-                        record?.status === STATUS_BACKUP.SUCCESS &&
-                        (!!record?.urlGcs || !!record?.urlDrive)
-                    }
-                    onShowDownload={async () => {
-                        try {
-                            const linkDownload =
-                                await bucketApi.downloadNonFile({
-                                    fileName: record?.fileName,
-                                    isPublic: false,
-                                    url: record?.urlGcs,
-                                });
-                            if (
-                                linkDownload?.status === 201 ||
-                                linkDownload.status === 200
-                            ) {
-                                window.open(
-                                    linkDownload?.data?.data,
-                                    '_blank',
-                                    'noopener,noreferrer'
-                                );
-                            }
-                        } catch (error) {
-                            handleError(error);
+            render: (_, record) => {
+                if (record?.status !== STATUS_BACKUP.SUCCESS || !record?.urlR2)
+                    return;
+
+                return (
+                    <IconButton
+                        onClick={() =>
+                            window.open(
+                                record?.urlR2,
+                                '_blank',
+                                'noopener,noreferrer'
+                            )
                         }
-                    }}
-                />
-            ),
+                    >
+                        <Download size={SIZE_ICON} />
+                    </IconButton>
+                );
+            },
         },
     ];
 

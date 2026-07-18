@@ -1,7 +1,7 @@
 'use client';
 import { formatFileSize } from '@/helpers/common';
 import MetadataInfoItem from '@/modules/releases/components/release-detail/release-review/metadata-info/metadata-info-item';
-import { TrackWaveform } from '@/modules/releases/components/release-detail/release-tracks/track-wave-form';
+import { TrackSliderPlayer } from '@/modules/releases/components/release-detail/release-tracks/track-slider-player';
 import { useGetDetailTrack } from '@/modules/tracks/hooks/use-get-detail-tracks';
 import { theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -23,7 +23,7 @@ export default function AudioFile({}: Props) {
     return (
         <div className="m-auto space-y-2 overflow-y-auto">
             <div className="rounded-lg border p-4" style={styleCard}>
-                <TrackWaveform key={`${trackData.id}`} data={trackData} />
+                <TrackSliderPlayer key={`${trackData.id}`} data={trackData} />
             </div>
             <div className="grid grid-cols-2 gap-2">
                 <MetadataInfoItem

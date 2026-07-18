@@ -6,7 +6,7 @@ import { getCodeFormatted } from '@/helpers/string';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useCreateArtistRole } from '../../hooks/use-create-artist-role';
@@ -33,22 +33,34 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
         useUpdateArtistRole();
 
     const handleCreateArtistRole = (values: any) => {
+        active();
         const variables: CreateVariables<CreateArtistRolePayload> = {
             payload: values,
             onSuccess: () => {
                 form.resetFields();
+                deActive();
+            },
+            onError: () => {
+                deActive();
             },
         };
         createArtistRole(variables);
     };
 
     const handleUpdateArtistRole = (values: any) => {
+        active();
         const variables: UpdateVariables<
             ArtistRoleData['id'],
             UpdateArtistRolePayload
         > = {
             id: dataEdit?.id,
             payload: values,
+            onSuccess: () => {
+                deActive();
+            },
+            onError: () => {
+                deActive();
+            },
         };
 
         updateArtistRole(variables);
@@ -65,7 +77,7 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
             ...dataEdit,
         };
         form.setFieldsValue(initialData);
-    }, [dataEdit]);
+    }, [dataEdit, form]);
 
     function renderTitle() {
         return dataEdit?.id ? messages('role.update') : messages('role.add');
@@ -89,6 +101,9 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                 showSubmit={false}
                 layout="vertical"
                 disabled={isActive}
+                initialValues={{
+                    isRequired: false,
+                }}
             >
                 <AppFormItem
                     name="name"
@@ -136,6 +151,13 @@ export default function ArtistRoleFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input placeholder={messages('common.code')} allowClear />
+                </AppFormItem>
+                <AppFormItem
+                    valuePropName="checked"
+                    name="isRequired"
+                    label={messages('common.required')}
+                >
+                    <Switch />
                 </AppFormItem>
             </AppForm>
         </AppModal>

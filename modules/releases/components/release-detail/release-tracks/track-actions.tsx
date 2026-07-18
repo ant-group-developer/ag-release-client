@@ -29,7 +29,13 @@ export default function TrackActions({ selectedRowKeys }: Props) {
             <span className="inline-block min-w-20 text-sm font-bold">
                 {selectedRowKeys.length} {messages('common.selected')}
             </span>
-            <div>
+            <div className="flex gap-2">
+                {/* <Button
+                    type="primary"
+                    onClick={() => openModal(TYPE_MODAL_TRACK.BULK_UPDATE)}
+                >
+                    {messages('track.action.bulkUpdate')}
+                </Button> */}
                 <Button
                     danger
                     type="primary"

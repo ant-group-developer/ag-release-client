@@ -15,12 +15,16 @@ const isAnyOf = (x: Requirement): x is { anyOf: string[] } =>
 
 export const usePermission = () => {
     const data = usePermissionStore((state) => state.permission);
-    const { isAdmin, isTenantOwnerOrAdmin } = useAuth();
+    const { isAdmin, permission } = useAuth();
 
     const check = (req: string): boolean => data.has(req);
 
     const hasPermission = (requirement: Requirement): boolean => {
-        if (isAdmin || isTenantOwnerOrAdmin) {
+        // if (isAdmin || isTenantOwnerOrAdmin) {
+        //     return true;
+        // }
+
+        if (isAdmin) {
             return true;
         }
 
@@ -42,5 +46,21 @@ export const usePermission = () => {
         return true;
     };
 
-    return { hasPermission };
+    const hasAnyPermission = (requirements: Requirement[]): boolean => {
+        if (isAdmin) return true;
+        return requirements.some(hasPermission);
+    };
+
+    const hasAllPermissions = (requirements: Requirement[]): boolean => {
+        if (isAdmin) return true;
+        return requirements.every(hasPermission);
+    };
+
+    return {
+        hasPermission,
+        hasAnyPermission,
+        hasAllPermissions,
+        isAdmin,
+        permission,
+    };
 };

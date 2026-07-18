@@ -4,13 +4,14 @@ import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { TYPE_MODAL_DSP } from '../../enums';
+import { TYPE_MODAL_DSP, DSP_TYPE } from '../../enums';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
 import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
@@ -40,6 +41,7 @@ export default function DspFormModal({ ...props }: Props) {
     const { dspData, isLoading: isLoadingDsp } = useGetDetailDsp(dataEdit?.id);
     const isOnLoadingData = isLoadingDsp && !!dataEdit?.id;
     const [activeTab, setActiveTab] = useState<string>('');
+    const { isAdmin } = useAuth();
 
     const handleCreateDsp = (values: DspFormValues) => {
         const variables: CreateVariables<CreateDspPayload> = {
@@ -125,17 +127,21 @@ export default function DspFormModal({ ...props }: Props) {
             label: messages('common.general'),
             children: <DspGeneral form={form} isActive={isActive} />,
         },
-        {
-            key: 'Policies',
-            label: messages('policy.policies'),
-            children: <DspPolicies form={form} isActive={isActive} />,
-        },
-        {
-            key: 'Deals',
-            label: messages('common.deals'),
-            children: <DspDeals dspId={dspData?.id} />,
-            disabled: isCreateForm,
-        },
+        ...(isAdmin
+            ? [
+                  {
+                      key: 'Policies',
+                      label: messages('policy.policies'),
+                      children: <DspPolicies form={form} isActive={isActive} />,
+                  },
+                  {
+                      key: 'Deals',
+                      label: messages('common.deals'),
+                      children: <DspDeals dspId={dspData?.id} />,
+                      disabled: isCreateForm,
+                  },
+              ]
+            : []),
     ];
 
     useEffect(() => {
@@ -182,8 +188,11 @@ export default function DspFormModal({ ...props }: Props) {
                     layout="horizontal"
                     disabled={isActive}
                     initialValues={{
-                        isActive: false,
-                        enablePolicy: true,
+                        isActive: true,
+                        hasDeal: false,
+                        enablePolicy: false,
+                        isDefault: false,
+                        type: DSP_TYPE.AUDIO,
                     }}
                     submitProps={{
                         loading: isActive,

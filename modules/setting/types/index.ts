@@ -17,6 +17,35 @@ export interface SettingConfig {
     telegram: TelegramConfig;
     generator: GeneratorConfig;
     backupDatabase: BackupDatabaseConfig;
+    other?: OtherConfig;
+    resend?: ResendConfig;
+    partners?: PartnersConfig;
+}
+
+export interface PartnersConfig {
+    spotify?: {
+        token: string;
+        clientId?: string;
+        clientSecret?: string;
+    };
+    vevo?: PartnerVevoConfig;
+    ci?: {
+        baseUrl: string;
+        token: string;
+        dailySendCron?: string;
+    };
+}
+
+export interface PartnerVevoConfig {
+    token: string;
+    baseUrl: string;
+    callbackUrl: string;
+}
+
+export interface OtherConfig {
+    fileCiTemplateId?: string;
+
+    excelDataStartRow?: number | null;
 }
 
 export interface Auth0Config {
@@ -38,8 +67,8 @@ export interface SettingDataFilter extends CommonParams {}
 export interface GeneratorConfig {
     prefixUpcDefaultId: string;
     prefixIsrcDefaultId: string;
-    DDEX_PARTY_ID_SENDER: string;
-    DDEX_PARTY_NAME_SENDER: string;
+    DDEX_PARTY_ID_AMG: string;
+    DDEX_PARTY_NAME_AMG: string;
 }
 
 // Website config
@@ -101,4 +130,9 @@ export interface ACRCloudConfig {
     autoScan: boolean;
     autoScanTime: string;
     releaseStatusAutoScans: RELEASES_STATUS[];
+}
+
+export interface ResendConfig {
+    email: string;
+    apiKey: string;
 }

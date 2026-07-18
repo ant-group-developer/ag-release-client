@@ -3,12 +3,16 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { SIZE_ICON, SIZE_ICON_BIG } from '@/constants/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
+import ErnVersionSelect from '@/modules/aggregator/components/select/ern-version-select';
 import { useGetListAggregator } from '@/modules/aggregator/hooks/use-get-list';
 import {
     useTestConnection,
     useTestConnectionById,
 } from '@/modules/sftp-config/hooks/use-test-connection';
-import { TestSftpConnectionPayload } from '@/modules/sftp-config/types/payload';
+import {
+    TestSftpConnectionByIdPayload,
+    TestSftpConnectionPayload,
+} from '@/modules/sftp-config/types/payload';
 import { CreateVariables } from '@/types/api';
 import { CheckCard } from '@ant-design/pro-components';
 import {
@@ -18,6 +22,7 @@ import {
     Form,
     Input,
     InputNumber,
+    Radio,
     Select,
     SelectProps,
     Spin,
@@ -27,7 +32,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { LayoutList, Play, UserCog } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
-import { DSP_DEAL } from '../../enums';
+import { DSP_DEAL, STORAGE_TYPE } from '../../enums';
 import { useGetDspRoutingConfig } from '../../hooks/use-get-dsp-routing-config';
 import { useUpdateDspRoutingConfig } from '../../hooks/use-update-dsp-routing-config';
 import { UpdateDspRoutingConfig } from '../../types/payload';
@@ -40,6 +45,7 @@ export default function DspDeals({ dspId }: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const watchDeal = useWatch('mode', form);
+    const watchStorageType = useWatch(['sftpConfig', 'metadata', 'type'], form);
     const { isActive, deActive, active } = useActive();
     const {
         active: connectionActive,
@@ -80,6 +86,12 @@ export default function DspDeals({ dspId }: Props) {
                 if (!metadata?.privateKey) {
                     delete metadata.privateKey;
                 }
+                if (
+                    !metadata?.secretAccessKey ||
+                    metadata.secretAccessKey === ''
+                ) {
+                    delete metadata.secretAccessKey;
+                }
 
                 payload.sftpConfig = {
                     ...sftpConfig,
@@ -95,6 +107,7 @@ export default function DspDeals({ dspId }: Props) {
                     deActive();
                 },
             };
+
             updateDspRoutingConfig(variables);
         } catch (error) {
             console.log('Update DSP error:', error);
@@ -114,51 +127,58 @@ export default function DspDeals({ dspId }: Props) {
         connectionActive();
         try {
             const { sftpConfig } = form.getFieldsValue();
-            const { host, port, username, password, privateKey } =
-                sftpConfig.metadata;
+            const metadata = sftpConfig.metadata;
+            const storageType = metadata?.type || STORAGE_TYPE.SFTP;
 
-            if (password || privateKey) {
-                form.setFields([
-                    {
-                        name: ['sftpConfig', 'metadata', 'password'],
-                        errors: [],
-                    },
-                    {
-                        name: ['sftpConfig', 'metadata', 'privateKey'],
-                        errors: [],
-                    },
-                ]);
-            }
+            if (storageType === STORAGE_TYPE.SFTP) {
+                const { password, privateKey } = metadata;
 
-            if (!password && !privateKey) {
-                form.setFields([
-                    {
-                        name: ['sftpConfig', 'metadata', 'password'],
-                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
-                    },
-                ]);
+                if (password || privateKey) {
+                    form.setFields([
+                        {
+                            name: ['sftpConfig', 'metadata', 'password'],
+                            errors: [],
+                        },
+                        {
+                            name: ['sftpConfig', 'metadata', 'privateKey'],
+                            errors: [],
+                        },
+                    ]);
+                }
 
-                form.setFields([
-                    {
-                        name: ['sftpConfig', 'metadata', 'privateKey'],
-                        errors: [messages('sftp.requiredPasswordOrPrivateKey')],
-                    },
-                ]);
-
-                deActiveConnection();
-                return;
+                if (
+                    !password &&
+                    !privateKey &&
+                    !dspRoutingConfig?.sftpConfig?.id
+                ) {
+                    form.setFields([
+                        {
+                            name: ['sftpConfig', 'metadata', 'password'],
+                            errors: [
+                                messages('sftp.requiredPasswordOrPrivateKey'),
+                            ],
+                        },
+                        {
+                            name: ['sftpConfig', 'metadata', 'privateKey'],
+                            errors: [
+                                messages('sftp.requiredPasswordOrPrivateKey'),
+                            ],
+                        },
+                    ]);
+                    deActiveConnection();
+                    return;
+                }
             }
 
             const payload = {
-                ...sftpConfig.metadata,
+                ...metadata,
             };
 
-            if (!payload?.password) {
-                delete payload.password;
-            }
-            if (!payload?.privateKey) {
-                delete payload.privateKey;
-            }
+            // Clean empty optional fields
+            if (!payload?.password) delete payload.password;
+            if (!payload?.privateKey) delete payload.privateKey;
+            if (!payload?.secretAccessKey || payload.secretAccessKey === '')
+                delete payload.secretAccessKey;
 
             const variables: CreateVariables<TestSftpConnectionPayload> = {
                 payload,
@@ -167,11 +187,42 @@ export default function DspDeals({ dspId }: Props) {
                     handleShowNotiTestConnection(e.status);
                 },
                 onError(e) {
-                    console.log('Test connection sftp', e);
+                    console.log('Test connection', e);
                     deActiveConnection();
                 },
             };
-            testConnection(variables);
+
+            const isExistingSftp =
+                storageType === STORAGE_TYPE.SFTP &&
+                dspRoutingConfig?.sftpConfig?.id &&
+                !metadata?.password &&
+                !metadata?.privateKey;
+
+            const isExistingS3 =
+                storageType === STORAGE_TYPE.S3 &&
+                dspRoutingConfig?.sftpConfig?.id &&
+                (!metadata?.secretAccessKey || metadata?.secretAccessKey === '');
+
+            if (isExistingSftp || isExistingS3) {
+                const variablesById: CreateVariables<TestSftpConnectionByIdPayload> =
+                    {
+                        payload: {
+                            id: dspRoutingConfig?.sftpConfig?.id,
+                            ...payload,
+                        },
+                        onSuccess(e) {
+                            deActiveConnection();
+                            handleShowNotiTestConnection(e.status);
+                        },
+                        onError(e) {
+                            console.log('Test connection', e);
+                            deActiveConnection();
+                        },
+                    };
+                return testConnectionById(variablesById);
+            } else {
+                testConnection(variables);
+            }
         } catch (error) {
             console.log('Test connection: ', error);
             deActiveConnection();
@@ -275,72 +326,201 @@ export default function DspDeals({ dspId }: Props) {
                 {watchDeal === DSP_DEAL.DIRECT && (
                     <>
                         <AppFormItem
-                            label="Host/Server address"
-                            name={['sftpConfig', 'metadata', 'host']}
+                            label="Storage Type"
+                            name={['sftpConfig', 'metadata', 'type']}
+                            initialValue={STORAGE_TYPE.SFTP}
                             required
                             rules={[
                                 {
                                     required: true,
-                                    message: messages('validation.input'),
+                                    message: messages('validation.select'),
                                 },
                             ]}
                         >
-                            <Input placeholder="For ex: example.service.com or 216.81.210.36" />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Port"
-                            name={['sftpConfig', 'metadata', 'port']}
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <InputNumber
-                                placeholder="Enter 21 unless you received other instructions"
-                                style={{ width: '100%' }}
-                            />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="path"
-                            name={['sftpConfig', 'metadata', 'path']}
-                        >
-                            <Input />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Username"
-                            name={['sftpConfig', 'metadata', 'username']}
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.input'),
-                                },
-                            ]}
-                        >
-                            <Input
-                                autoComplete="off"
-                                placeholder="Enter name"
-                            />
-                        </AppFormItem>
-                        <AppFormItem
-                            label="Password"
-                            name={['sftpConfig', 'metadata', 'password']}
-                        >
-                            <Input.Password
-                                autoComplete="off"
-                                placeholder="Enter password"
-                            />
+                            <Radio.Group>
+                                <Radio value={STORAGE_TYPE.SFTP}>SFTP</Radio>
+                                <Radio value={STORAGE_TYPE.S3}>S3</Radio>
+                            </Radio.Group>
                         </AppFormItem>
 
-                        <AppFormItem
-                            label={messages('common.privateKey')}
-                            name={['sftpConfig', 'metadata', 'privateKey']}
-                        >
-                            <TextArea />
-                        </AppFormItem>
+                        {watchStorageType === STORAGE_TYPE.S3 ? (
+                            <>
+                                <AppFormItem
+                                    label="Bucket"
+                                    name={['sftpConfig', 'metadata', 'bucket']}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="e.g. my-bucket-name" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Region"
+                                    name={['sftpConfig', 'metadata', 'region']}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="e.g. us-east-1" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Access Key ID"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'accessKeyId',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="Enter access key ID"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Secret Access Key"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'secretAccessKey',
+                                    ]}
+                                >
+                                    <Input.Password
+                                        autoComplete="off"
+                                        placeholder="Enter secret access key"
+                                    />
+                                </AppFormItem>
+                                {/* <AppFormItem
+                                    label="Endpoint"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'endpoint',
+                                    ]}
+                                >
+                                    <Input placeholder="Custom endpoint (MinIO, DigitalOcean Spaces...)" />
+                                </AppFormItem> */}
+                                <AppFormItem
+                                    label="Path"
+                                    name={['sftpConfig', 'metadata', 'path']}
+                                >
+                                    <Input placeholder="e.g. /uploads/releases" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    name={['sftpConfig', 'ernVersion']}
+                                    label={messages('aggregator.ernVersion')}
+                                >
+                                    <ErnVersionSelect />
+                                </AppFormItem>
+                            </>
+                        ) : (
+                            <>
+                                <AppFormItem
+                                    label="Host/Server address"
+                                    name={['sftpConfig', 'metadata', 'host']}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input placeholder="For ex: example.service.com or 216.81.210.36" />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Port"
+                                    name={['sftpConfig', 'metadata', 'port']}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <InputNumber
+                                        placeholder="Enter 21 unless you received other instructions"
+                                        style={{ width: '100%' }}
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Path"
+                                    name={['sftpConfig', 'metadata', 'path']}
+                                >
+                                    <Input />
+                                </AppFormItem>
+                                <AppFormItem
+                                    name={['sftpConfig', 'ernVersion']}
+                                    label={messages('aggregator.ernVersion')}
+                                >
+                                    <ErnVersionSelect />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Username"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'username',
+                                    ]}
+                                    required
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message:
+                                                messages('validation.input'),
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="Enter name"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label="Password"
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'password',
+                                    ]}
+                                >
+                                    <Input.Password
+                                        autoComplete="off"
+                                        placeholder="Enter password"
+                                    />
+                                </AppFormItem>
+                                <AppFormItem
+                                    label={messages('common.privateKey')}
+                                    name={[
+                                        'sftpConfig',
+                                        'metadata',
+                                        'privateKey',
+                                    ]}
+                                >
+                                    <TextArea />
+                                </AppFormItem>
+                            </>
+                        )}
                     </>
                 )}
             </AppForm>

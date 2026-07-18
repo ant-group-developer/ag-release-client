@@ -31,19 +31,36 @@ export async function middleware(req: NextRequest) {
         return nextIntl(req);
     }
 
+    if (pathname.startsWith('/api/v1/public')) {
+        return NextResponse.next();
+    }
+
     // 2. Do your session check + redirects
     const token = await getToken(req);
-    // console.log('🚀 ~ middleware ~ token:', token?.accessToken);
-    const locale = cookies().get('NEXT_LOCALE')?.value || defaultLocale;
+    const pathnameParts = pathname.split('/');
+    const urlLocale = pathnameParts[1];
+    const locale = routing.locales.includes(urlLocale as any)
+        ? urlLocale
+        : cookies().get('NEXT_LOCALE')?.value || defaultLocale;
 
     const normalizePath = (path: string) => path.replace(/\/+$/, '');
     const normalizedPathname = normalizePath(pathname);
 
-    const isPublicRoutes = PUBLIC_ROUTES.some(
-        (item) =>
+    const isPublicRoutes = PUBLIC_ROUTES.some((item) => {
+        const pathToCheck = normalizePath(item);
+        if (pathToCheck.endsWith('/*')) {
+            const base = pathToCheck.slice(0, -2);
+            return (
+                normalizedPathname.startsWith(
+                    normalizePath(`/${locale}${base}`)
+                ) || normalizedPathname.startsWith(normalizePath(base))
+            );
+        }
+        return (
             normalizedPathname === normalizePath(`/${locale}${item}`) ||
             normalizedPathname === normalizePath(`${item}`)
-    );
+        );
+    });
     const isAuthRoutes = AUTH_ROUTES.some(
         (item) =>
             normalizedPathname === normalizePath(`/${locale}${item}`) ||
@@ -54,7 +71,14 @@ export async function middleware(req: NextRequest) {
         return nextIntl(req);
     }
 
-    // console.log(formatTime((token as any)?.accessTokenExp));
+    if (pathname === '/settings/domain' || pathname.endsWith('/settings/domain')) {
+        const tenantId = (token as any)?.tenantId;
+        if (tenantId) {
+            const url = req.nextUrl.clone();
+            url.pathname = `/${locale}/tenants/${tenantId}/custom-domain`;
+            return NextResponse.redirect(url);
+        }
+    }
 
     if (!token && !isAuthRoutes) {
         const url = req.nextUrl.clone();

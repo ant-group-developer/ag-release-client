@@ -5,16 +5,20 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
-import { getArtistDetailRoute } from '@/helpers/link';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
+import { getArtistDetailRoute } from '@/modules/artist/helpers/link';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { ARTIST_DETAIL_TABS, TYPE_MODAL_ARTIST } from '../../enum';
+import nProgress from 'nprogress';
+import {
+    ARTIST_DETAIL_TABS,
+    ARTIST_TABLE_KEY,
+    TYPE_MODAL_ARTIST,
+} from '../../enum';
 import { ArtistData, ArtistDataFilter } from '../../types';
 
 type Props = Omit<AppProTableProps<ArtistData>, 'columns'> & {
@@ -31,8 +35,8 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
 
-    const { isSystemTenant } = useAuth();
     const { hasPermission } = usePermission();
+    const canDelete = hasPermission(PERMISSION.ARTIST.DELETE);
 
     const column: ProColumns<ArtistData>[] = [
         {
@@ -51,7 +55,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.name'),
             key: 'name',
-            dataIndex: 'name',
+            dataIndex: ARTIST_TABLE_KEY.NAME,
             ellipsis: true,
             align: 'left',
             fixed: 'left',
@@ -60,7 +64,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'name'
+                ARTIST_TABLE_KEY.NAME
             ),
             render: (value, record) => (
                 <div className="flex items-center gap-4">
@@ -93,7 +97,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.code'),
             key: 'code',
-            dataIndex: 'code',
+            dataIndex: ARTIST_TABLE_KEY.CODE,
             align: 'left',
             width: 150,
             render: (value, record) => (
@@ -108,7 +112,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('artist.profiles'),
             key: 'artistProfiles',
-            dataIndex: 'artistProfiles',
+            dataIndex: ARTIST_TABLE_KEY.ARTIST_PROFILES,
             width: 180,
             render: (_, record) => (
                 <div>
@@ -130,7 +134,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('country.label'),
             key: 'country',
-            dataIndex: 'country',
+            dataIndex: ARTIST_TABLE_KEY.COUNTRY,
             align: 'left',
             width: 180,
             ellipsis: true,
@@ -147,7 +151,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('genre.label'),
             key: 'genre',
-            dataIndex: 'genre',
+            dataIndex: ARTIST_TABLE_KEY.GENRE,
             align: 'left',
             width: 180,
             ellipsis: true,
@@ -164,14 +168,14 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('release.label'),
             key: 'releaseCount',
-            dataIndex: 'release_count',
+            dataIndex: ARTIST_TABLE_KEY.RELEASE_COUNT,
             align: 'center',
             width: 120,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'release_count'
+                ARTIST_TABLE_KEY.RELEASE_COUNT
             ),
             render: (value, record) => (
                 <p className="truncate">{record?.releaseCount}</p>
@@ -180,14 +184,14 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('track.label'),
             key: 'trackCount',
-            dataIndex: 'track_count',
+            dataIndex: ARTIST_TABLE_KEY.TRACK_COUNT,
             align: 'center',
             width: 100,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'track_count'
+                ARTIST_TABLE_KEY.TRACK_COUNT
             ),
             render: (value, record) => (
                 <p className="truncate">{record?.trackCount}</p>
@@ -196,7 +200,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.biography'),
             key: 'biography',
-            dataIndex: 'biography',
+            dataIndex: ARTIST_TABLE_KEY.BIOGRAPHY,
             align: 'left',
             width: 210,
             render: (value, record) => {
@@ -216,11 +220,12 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 <ActionButton
                     showUpdate={hasPermission(PERMISSION.ARTIST.UPDATE)}
                     showDetail
-                    showDelete={isSystemTenant}
+                    showDelete={canDelete}
                     onShowUpdate={() => {
                         openModal(TYPE_MODAL_ARTIST.UPDATE, record);
                     }}
                     onShowDetail={() => {
+                        nProgress.start();
                         router.push(
                             getArtistDetailRoute(
                                 record?.id,

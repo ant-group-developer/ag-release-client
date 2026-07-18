@@ -1,8 +1,13 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { SIZE_ICON } from '@/constants/common';
+import useModalStore from '@/hooks/use-modal';
+import { TYPE_MODAL_RELEASE_ARTIST_LIST } from '@/modules/releases/enums';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
-import { Radio } from 'antd';
+import { Button, Radio } from 'antd';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
+import AddArtistForm from '../../../table/add-artist-form';
 import ReleaseArtistTable from '../../../table/release-artist-table';
 
 type Props = {
@@ -18,6 +23,10 @@ export default function ReleaseArtistSectionV2({
     isCreateReleasePage,
     releaseArtist,
 }: Props) {
+    // hooks
+    const openModal = useModalStore((state) => state.openModal);
+    const closeModal = useModalStore((state) => state.closeModal);
+    const typeModal = useModalStore((state) => state.typeModal);
     const { control, watch } = useFormContext<ReleaseDetailSchema>();
     const messages = useTranslations();
     const isVariousArtist = watch('isVariousArtist');
@@ -63,11 +72,40 @@ export default function ReleaseArtistSectionV2({
                 </AppFormItem>
 
                 {!isVariousArtist && (
-                    <div className="mt-4">
+                    <div className="mt-4 space-y-4">
                         <ReleaseArtistTable
                             dataSource={releaseArtist}
                             disabled={isReadMode}
                         />
+                        {!isCreateReleasePage && !isReadMode && (
+                            <Button
+                                id="releaseArtists"
+                                disabled={isCreateReleasePage || isReadMode}
+                                className="focus:!border-blue-500"
+                                icon={
+                                    <div>
+                                        <Plus size={SIZE_ICON} />
+                                    </div>
+                                }
+                                type="default"
+                                shape="round"
+                                onClick={() =>
+                                    openModal(
+                                        TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST
+                                    )
+                                }
+                            >
+                                {messages('releaseArtist.label')}
+                            </Button>
+                        )}
+                        {TYPE_MODAL_RELEASE_ARTIST_LIST.ADD_ARTIST ===
+                            typeModal && (
+                            <AddArtistForm
+                                open
+                                disabled={isReadMode}
+                                onCancel={() => closeModal()}
+                            />
+                        )}
                     </div>
                 )}
             </div>

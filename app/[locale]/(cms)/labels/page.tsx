@@ -9,9 +9,8 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { usePermission } from '@/hooks/use-permission';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
@@ -39,8 +38,8 @@ export default function Labels({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
     const openModal = useModalStore((state) => state.openModal);
-    const { isNotSystemTenant } = useAuth();
-    const { hasPermission } = usePermission();
+    // const { isSystemTenant } = useAuth();
+    // const { hasPermission } = usePermission();
 
     // apis
     const { labelsData, isFetching, lastUpdatedAt, refetch } =
@@ -80,18 +79,12 @@ export default function Labels({}: Props) {
                     backgroundColor: token.colorBgLayout,
                 }}
                 extra={
-                    <div className="flex items-center gap-2">
-                        {isNotSystemTenant &&
-                            hasPermission(PERMISSION.LABEL.CREATE) && (
-                                <CreateButton
-                                    canCreate={true}
-                                    text={messages('label.create')}
-                                    onClick={() =>
-                                        openModal(TYPE_MODAL_LABEL.CREATE)
-                                    }
-                                />
-                            )}
-                    </div>
+                    <PermissionGate permission={PERMISSION.LABEL.CREATE}>
+                        <CreateButton
+                            text={messages('label.create')}
+                            onClick={() => openModal(TYPE_MODAL_LABEL.CREATE)}
+                        />
+                    </PermissionGate>
                 }
             >
                 {/* <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}

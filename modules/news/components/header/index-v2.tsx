@@ -1,221 +1,144 @@
-import IconButton from '@/components/ui/button/icon-button';
-import DateRangePicker from '@/components/ui/input/date-range-picker';
-import NewsCategorySelect from '@/components/ui/select/news-category-select';
-import { SIZE_ICON } from '@/constants/common';
-import { UseFilterProps } from '@/hooks/use-filter';
-import { ProForm, ProFormText, QueryFilter } from '@ant-design/pro-components';
-import { Select, theme } from 'antd';
-import { ChevronsDown, ChevronsUp } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { FilterConfig, FilterPanel } from '@/components/filter-panel';
+import AppSearch from '@/components/ui/input/search';
+import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { getNameByLocale } from '@/helpers/string';
+import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { useGetListNewsCategory } from '@/modules/news-category/hooks/use-get-list';
+import {
+    BarsOutlined,
+    CalendarOutlined,
+    FolderOpenOutlined,
+    TagOutlined,
+} from '@ant-design/icons';
+import { Space } from 'antd';
+import { useLocale, useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 import { NEWS_STATUS } from '../../enums';
 import { useGetListKeywords } from '../../hooks/use-get-keywords';
 import { NewsDataFilter } from '../../types';
 
-type Props = Pick<
-    UseFilterProps<NewsDataFilter>,
-    | 'dataFilter'
-    | 'onSearch'
-    | 'canClearFilter'
-    | 'onChangeFilter'
-    | 'removeFilter'
->;
+type Props = {
+    dataFilter: NewsDataFilter;
+    defaultFilter?: NewsDataFilter;
+    onChangeFilter: OnChangeFilter<NewsDataFilter>;
+    canClearFilter: boolean;
+    removeFilter: RemoveFilter;
+};
 
 export const NewsHeaderV2 = ({
     dataFilter,
+    defaultFilter,
     onChangeFilter,
     canClearFilter,
-    onSearch,
     removeFilter,
 }: Props) => {
-    // hook
     const messages = useTranslations();
-    // const openModal = useModalStore((state) => state.openModal);
-    // const { layoutTable, toggleLayoutTable } = useTableLayoutToggle();
-    const { token } = theme.useToken();
+    const locale = useLocale();
 
+    const { newsCategoryData } = useGetListNewsCategory({
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+    });
     const { keywordsData } = useGetListKeywords();
-    const [form] = ProForm.useForm();
-    const statusOptions = [
-        {
-            label: messages('common.public'),
-            value: NEWS_STATUS.PUBLIC,
-        },
-        {
-            label: messages('common.private'),
-            value: NEWS_STATUS.PRIVATE,
-        },
-    ];
 
-    const option =
-        keywordsData?.map((item) => ({ label: item, value: item })) || [];
+    const categoryOptions = useMemo(
+        () =>
+            newsCategoryData?.items?.map((item) => ({
+                label: getNameByLocale(item?.nameEn, item?.nameVi, locale),
+                value: item.id,
+            })) || [],
+        [newsCategoryData, locale]
+    );
 
-    const initialValue = {
-        ...dataFilter,
-    };
+    const statusOptions = useMemo(
+        () => [
+            {
+                label: messages('common.public'),
+                value: NEWS_STATUS.PUBLIC,
+            },
+            {
+                label: messages('common.private'),
+                value: NEWS_STATUS.PRIVATE,
+            },
+        ],
+        [messages]
+    );
 
-    const handleSubmit = (values: any) => {
-        const { dateCreated, dateUpdated, ...res } = values;
-        const params = {
-            ...res,
-        };
-        if (dateCreated && dateCreated.length) {
-            params.startCreatedAt = dateCreated[0];
-            params.endCreatedAt = dateCreated[1];
-        }
+    const keywordOptions = useMemo(
+        () =>
+            keywordsData?.map((item) => ({
+                label: item,
+                value: item,
+            })) || [],
+        [keywordsData]
+    );
 
-        if (dateUpdated && dateUpdated.length) {
-            params.startUpdatedAt = dateUpdated[0];
-            params.endUpdatedAt = dateUpdated[1];
-        }
-
-        onChangeFilter(params);
-    };
-
-    const handleReset = (values: any) => {
-        removeFilter();
-        form.setFieldsValue({});
-    };
-
-    useEffect(() => {
-        form.setFieldsValue(initialValue);
-    }, []);
+    const filterConfigs: FilterConfig[] = useMemo(() => {
+        return [
+            {
+                key: 'newsCategoryId',
+                label: messages('newsCategory.label'),
+                icon: <FolderOpenOutlined />,
+                type: 'checkbox',
+                filterKey: 'newsCategoryId',
+                options: categoryOptions,
+                isCommaSeparated: true,
+            },
+            {
+                key: 'status',
+                label: messages('common.status'),
+                icon: <BarsOutlined />,
+                type: 'checkbox',
+                filterKey: 'status',
+                options: statusOptions,
+                isCommaSeparated: true,
+            },
+            {
+                key: 'keywords',
+                label: messages('common.keyword'),
+                icon: <TagOutlined />,
+                type: 'checkbox',
+                filterKey: 'keywords',
+                options: keywordOptions,
+                isCommaSeparated: true,
+            },
+            {
+                key: 'dateCreated',
+                label: messages('common.dateCreated'),
+                icon: <CalendarOutlined />,
+                type: 'dateRange',
+                filterKey: ['startCreatedAt', 'endCreatedAt'],
+            },
+            {
+                key: 'dateUpdated',
+                label: messages('common.dateUpdated'),
+                icon: <CalendarOutlined />,
+                type: 'dateRange',
+                filterKey: ['startCreatedAt', 'endCreatedAt'],
+            },
+        ];
+    }, [messages, categoryOptions, statusOptions, keywordOptions]);
 
     return (
-        <div className="app-header mb-4">
-            <QueryFilter
-                className="rounded-md bg-white"
-                form={form}
-                onFinish={handleSubmit}
-                onReset={handleReset}
-                layout="vertical"
-                defaultColsNumber={5}
-                span={4}
-                submitter={{
-                    searchConfig: {
-                        submitText: messages('common.search'),
-                        resetText: messages('common.clearFilter'),
-                    },
-                }}
-                collapseRender={(collapsed) =>
-                    collapsed ? (
-                        <IconButton>
-                            <ChevronsDown size={SIZE_ICON} />
-                        </IconButton>
-                    ) : (
-                        <IconButton>
-                            <ChevronsUp size={SIZE_ICON} />
-                        </IconButton>
-                    )
-                }
-                style={{
-                    backgroundColor: token.colorBgContainer,
-                }}
-            >
-                <ProFormText
-                    name="title"
-                    label={messages('common.search')}
-                    placeholder={messages('placeholder.searchBy', {
-                        value: messages('common.keyword').toLowerCase(),
-                    })}
+        <div className="app-header">
+            <Space>
+                <AppSearch
+                    defaultValue={dataFilter?.keyword}
+                    style={{
+                        width: 200,
+                    }}
+                    onChange={(e) =>
+                        onChangeFilter({ keyword: e.target.value })
+                    }
                 />
-                <ProForm.Item
-                    name="newsCategoryId"
-                    label={messages('newsCategory.label')}
-                >
-                    <NewsCategorySelect
-                        mode="multiple"
-                        allowClear
-                        placeholder={messages('placeholder.filterBy', {
-                            value: messages('newsCategory.label').toLowerCase(),
-                        })}
-                    />
-                </ProForm.Item>
-
-                <ProForm.Item name="status" label={messages('common.status')}>
-                    <Select
-                        mode="multiple"
-                        allowClear
-                        options={statusOptions}
-                        placeholder={messages('placeholder.filterBy', {
-                            value: messages('status.label').toLowerCase(),
-                        })}
-                    />
-                </ProForm.Item>
-                <ProForm.Item
-                    name="keywords"
-                    label={messages('common.keyword')}
-                >
-                    <Select
-                        // defaultValue={value}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        // onChange={(e) => setValue(e)}
-                        allowClear
-                        mode="tags"
-                        placeholder={messages('placeholder.filterBy', {
-                            value: messages('common.keyword').toLowerCase(),
-                        })}
-                        options={option}
-                        popupMatchSelectWidth={false}
-                        dropdownStyle={{ zIndex: 9999 }}
-                        getPopupContainer={(triggerNode) =>
-                            (triggerNode.closest(
-                                '.ant-popover'
-                            ) as HTMLElement) || document.body
-                        }
-                    />
-                </ProForm.Item>
-                <ProForm.Item
-                    name="dateCreated"
-                    label={messages('common.dateCreated')}
-                >
-                    <DateRangePicker
-                        className="w-full"
-                        allowClear
-                        // value={
-                        //     tempStartDate && tempEndDate
-                        //         ? [dayjs(tempStartDate), dayjs(tempEndDate)]
-                        //         : undefined
-                        // }
-                        // externalOnChange={handleDateChange}
-                        placement="topLeft"
-                        // disabledDate={(current) =>
-                        //     current && current > dayjs().endOf('day')
-                        // }
-                    />
-                </ProForm.Item>
-                <ProForm.Item
-                    name="dateUpdated"
-                    label={messages('common.dateUpdated')}
-                >
-                    <DateRangePicker
-                        allowClear
-                        className="w-full"
-                        // value={
-                        //     tempStartDate && tempEndDate
-                        //         ? [dayjs(tempStartDate), dayjs(tempEndDate)]
-                        //         : undefined
-                        // }
-                        // externalOnChange={handleDateChange}
-                        placement="topLeft"
-                        // disabledDate={(current) =>
-                        //     current && current > dayjs().endOf('day')
-                        // }
-                    />
-                </ProForm.Item>
-            </QueryFilter>
-            {/* <div className="flex justify-end gap-2 border-b py-2"> */}
-            {/* <TableLayoutSegmented
-                    className="!mr-2"
-                    value={layoutTable}
-                    onChange={toggleLayoutTable}
-                /> */}
-            {/* <CreateButton
-                    canCreate={true}
-                    text={messages('action.create.button')}
-                    onClick={() => openModal(TYPE_MODAL_NEWS.CREATE)}
+                <FilterPanel
+                    configs={filterConfigs}
+                    dataFilter={dataFilter}
+                    defaultFilter={defaultFilter}
+                    onChangeFilter={onChangeFilter}
+                    removeFilter={removeFilter}
+                    canClearFilter={canClearFilter}
                 />
-            </div> */}
+            </Space>
         </div>
     );
 };

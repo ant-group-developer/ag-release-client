@@ -8,7 +8,7 @@ import { useActive } from '@/hooks/use-active';
 import { useFilter } from '@/hooks/use-filter';
 import { useListBackupDatabaseLogs } from '@/modules/backup-dabatase/hooks/use-get-backup-database-logs';
 import { BackupDatabaseLogDataFilter } from '@/modules/backup-dabatase/types';
-import { Checkbox, Divider, Form, Input } from 'antd';
+import { Checkbox, Divider, Form, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Cron } from 'react-js-cron';
@@ -42,11 +42,11 @@ export default function BackupDatabaseForm({}: Props) {
     const onFinish = (values: any) => {
         try {
             active();
-            const { nMinutes, nHours, nDays, dayOfWeek, ...rest } = values;
+
             const payload: UpdateSettingPayload = {
                 backupDatabase: {
-                    ...rest,
-                    cronValue,
+                    ...values,
+                    cronValue: cronValue,
                 },
             };
             updateSetting({
@@ -81,6 +81,12 @@ export default function BackupDatabaseForm({}: Props) {
         });
     }, [form, backupDatabase]);
 
+    useEffect(() => {
+        if (backupDatabase?.cronValue) {
+            setCronValue(backupDatabase.cronValue);
+        }
+    }, [backupDatabase?.cronValue]);
+
     return (
         <div className="space-y-4">
             <AppForm
@@ -90,6 +96,13 @@ export default function BackupDatabaseForm({}: Props) {
                 submitProps={{ loading: isActive }}
                 submitText={messages('action.update.button')}
             >
+                <AppFormItem
+                    name="enable"
+                    valuePropName="checked"
+                    label={messages('setting.activeBackup')}
+                >
+                    <Switch />
+                </AppFormItem>
                 <AppFormItem label={messages('setting.executeCycle')}>
                     <Cron
                         value={cronValue}
@@ -126,6 +139,9 @@ export default function BackupDatabaseForm({}: Props) {
                         <AppFormItem name="toGcs" valuePropName="checked">
                             <Checkbox>Google Cloud Storage</Checkbox>
                         </AppFormItem>
+                        <AppFormItem name="toR2" valuePropName="checked">
+                            <Checkbox>R2</Checkbox>
+                        </AppFormItem>
                     </div>
                 </AppFormItem>
                 <AppFormItem
@@ -134,7 +150,33 @@ export default function BackupDatabaseForm({}: Props) {
                 >
                     <Input />
                 </AppFormItem>
-                <AppFormItem label={'Shell'} name="shell">
+                {/* <AppFormItem label={'Shell'} name="shell">
+                    <Input />
+                </AppFormItem> */}
+
+                <AppFormItem
+                    label={'Base Url R2'}
+                    name="baseUrlR2"
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
+                    <Input />
+                </AppFormItem>
+
+                <AppFormItem
+                    label={'Base Url Console R2'}
+                    name="baseUrlConsoleR2"
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.input'),
+                        },
+                    ]}
+                >
                     <Input />
                 </AppFormItem>
             </AppForm>
@@ -147,6 +189,7 @@ export default function BackupDatabaseForm({}: Props) {
                     <BackupDatabaseHeader
                         dataFilter={dataFilter}
                         onSearch={onSearch}
+                        handleRefresh={refetch}
                     />
                     <BackupDatabaseLogTable
                         pagination={{

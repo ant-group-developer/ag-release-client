@@ -69,7 +69,7 @@ export default function PermissionTableItemForm({ ...props }: Props) {
             columns={column}
             scroll={{
                 x: 'max-content',
-                y: 'calc(100vh - 500px)',
+                y: 'calc(100vh - 550px)',
             }}
             pagination={{
                 pageSize: pagination?.pageSize,

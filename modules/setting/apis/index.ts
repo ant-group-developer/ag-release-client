@@ -20,12 +20,24 @@ export const settingApis = {
             payload
         );
     },
+
+    refreshCiToolToken: () => {
+        return axiosInstance.post<DetailResponse<any>>(
+            '/app-config/v2/refresh-ci-tool-token'
+        );
+    },
+
+    testCiToken: () => {
+        return axiosInstance.post<DetailResponse<any>>(
+            '/app-config/v2/test-ci-token'
+        );
+    },
 };
 
 export async function getSettingPublicServer() {
     try {
         const API_BASE = (process.env.API_URL ?? '').replace(/\/+$/, '');
-        const url = `${API_BASE}/app-config/public`;
+        const url = `${API_BASE}/app-config/v2/public`;
 
         const res = await fetch(url, {
             method: 'GET',

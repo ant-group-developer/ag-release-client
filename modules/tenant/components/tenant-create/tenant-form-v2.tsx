@@ -1,11 +1,20 @@
 import AppForm, { AppFormProps } from '@/components/ui/antd-form/form';
 import AppColorPicker from '@/components/ui/colorPicker/app-color-picker';
 import ImageListUpload from '@/components/ui/input/image-list-upload';
-import InputNumber from '@/components/ui/input/input-number';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { CollapseItem } from '@/modules/releases/components/collapse/collapse-item';
 import UserSelect from '@/modules/user/components/user-select';
-import { Form, Input, Space, Switch, theme, Typography } from 'antd';
+import {
+    Form,
+    Input,
+    InputNumber,
+    Space,
+    Switch,
+    theme,
+    Typography,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { TENANT_TYPE } from '../../enums';
 import { TenantData } from '../../types/data';
@@ -25,8 +34,8 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
     const {
         isAdmin,
         profile: { tenantId },
-        isTenantOwner,
     } = useAuth();
+    const { hasPermission } = usePermission();
 
     return (
         <AppForm {...props}>
@@ -60,7 +69,34 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                             placeholder={messages(
                                                 'tenant.name'
                                             )}
+                                            onChange={(e) => {
+                                                const slug = e.target.value
+                                                    .toLowerCase()
+                                                    .replace(/[^a-z0-9]+/g, '-')
+                                                    .replace(/-+/g, '-')
+                                                    .replace(/^-|-$/g, '');
+                                                props.form?.setFieldValue(
+                                                    'code',
+                                                    slug
+                                                );
+                                            }}
                                         />
+                                    </AppForm.Item>
+
+                                    <AppForm.Item
+                                        label={messages('tenant.code')}
+                                        rules={[
+                                            {
+                                                max: 50,
+                                                pattern: /^[a-z0-9-]+$/,
+                                                message:
+                                                    'Only lowercase letters, numbers, and hyphens',
+                                            },
+                                        ]}
+                                        name="code"
+                                        tooltip="Slug code used as SFTP watch folder name (e.g. ant-music)"
+                                    >
+                                        <Input placeholder="ant-music" />
                                     </AppForm.Item>
 
                                     <AppForm.Item
@@ -106,6 +142,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                                             TENANT_TYPE.WHITE_LABEL,
                                                         ]}
                                                         disabled={!isAdmin}
+                                                        allowClear
                                                     />
                                                 </AppForm.Item>
                                             );
@@ -124,8 +161,10 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                     >
                                         <UserSelect
                                             disabled={
-                                                tenantId === props.tenantId &&
-                                                isTenantOwner
+                                                !hasPermission(
+                                                    PERMISSION.WORKSPACE
+                                                        .UPDATE_OWNER
+                                                )
                                             }
                                             externalOnChange={(
                                                 value,
@@ -182,6 +221,12 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                                 max: 2000,
                                                 min: 0,
                                                 type: 'number',
+                                                transform: (value) =>
+                                                    value !== null &&
+                                                    value !== undefined &&
+                                                    value !== ''
+                                                        ? Number(value)
+                                                        : value,
                                             },
                                             {
                                                 required: true,
@@ -197,8 +242,13 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                             placeholder={messages(
                                                 'tenant.labels.max.label'
                                             )}
-                                            allowClear={false}
-                                            disabled={!isAdmin}
+                                            disabled={
+                                                !hasPermission(
+                                                    PERMISSION.WORKSPACE
+                                                        .UPDATE_CONFIG
+                                                )
+                                            }
+                                            style={{ width: '100%' }}
                                         />
                                     </AppForm.Item>
 
@@ -208,8 +258,10 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                     >
                                         <Switch
                                             disabled={
-                                                tenantId === props.tenantId &&
-                                                isTenantOwner
+                                                !hasPermission(
+                                                    PERMISSION.WORKSPACE
+                                                        .UPDATE_STATUS
+                                                )
                                             }
                                         />
                                     </AppForm.Item>
@@ -248,7 +300,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                         />
                                     </AppForm.Item>
 
-                                    <AppForm.Item
+                                    {/* <AppForm.Item
                                         label={messages('tenant.domain')}
                                         rules={[
                                             {
@@ -264,7 +316,7 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                                 'tenant.domain'
                                             )}
                                         />
-                                    </AppForm.Item>
+                                    </AppForm.Item> */}
 
                                     <AppForm.Item
                                         label={messages('tenant.primaryColor')}

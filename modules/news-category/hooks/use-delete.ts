@@ -16,7 +16,7 @@ export const useDeleteNewsCategory = () => {
         { onSuccess }: DeleteVariables<NewsCategoryData['id']>
     ) => {
         queryClient.invalidateQueries({
-            queryKey: newsCategoryQueryKeys.lists(),
+            queryKey: newsCategoryQueryKeys.all,
         });
 
         handleSuccess(data?.data);

@@ -4,8 +4,8 @@ import {
     convertSecondsToHoursMinutes,
     timeStringToSeconds,
 } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/helpers/link';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
 import { releaseTrackSchema } from '@/modules/tracks/schemas';
@@ -40,7 +40,7 @@ export default function AudioSpecifications({ trackData }: Props) {
     // hooks - state
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
-    const { action } = useGetReleaseDetailRoute();
+    const releaseAction = useReleaseActionStore((s) => s.action);
     const getAudioFileDefault = () => ({
         file: {
             fileName: trackData?.audioFile?.file?.fileName ?? '',
@@ -58,7 +58,7 @@ export default function AudioSpecifications({ trackData }: Props) {
         mode: 'onChange',
         resolver: zodResolver(audioSpecificationsSchema(messages)),
     });
-    const isReadMode = action === RELEASE_DETAIL_ACTION.READ;
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
     const {
         control,
         handleSubmit,
@@ -269,3 +269,4 @@ export default function AudioSpecifications({ trackData }: Props) {
         </ConfigProvider>
     );
 }
+

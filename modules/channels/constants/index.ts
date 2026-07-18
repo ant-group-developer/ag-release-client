@@ -1,0 +1,1 @@
+export const CHANNEL_THUMB_URL_MAX_LENGTH = 500;

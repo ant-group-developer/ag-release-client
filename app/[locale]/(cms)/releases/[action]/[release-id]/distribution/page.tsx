@@ -1,17 +1,27 @@
 'use client';
+import JsonViewer from '@/components/ui/json-viewer';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
+import AppModal from '@/components/ui/modal/normal-modal';
 import AppPagination from '@/components/ui/pagination';
-import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import {
+    PAGE_SIZE_EXTRA_LARGE,
+    PAGE_SIZE_OPTIONS,
+} from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { toastPromise } from '@/helpers/messages-helper';
+import { useElementHeightById } from '@/hooks/use-element-height-by-id';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { DISTRIBUTION_STATUS } from '@/modules/distribution/enum';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { useThemeMode } from '@/hooks/use-theme-mode';
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribute';
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
+import { RELEASE_DSP_TABLE_KEY } from '@/modules/release-dsp/enums';
+import { useBulkUpdateReleaseDsp } from '@/modules/release-dsp/hooks/use-bulk-update';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
 import {
     ReleaseDspData,
@@ -20,11 +30,13 @@ import {
 import DistributionStatus from '@/modules/releases/components/release-detail/release-distribution/components/header-action/distribution-status';
 import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useQueryClient } from '@tanstack/react-query';
 import { theme } from 'antd';
+import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 type Props = {};
 
 export default function Distribution({}: Props) {
@@ -35,25 +47,17 @@ export default function Distribution({}: Props) {
     );
     const formValues = useReleaseFormStore((state) => state.formValues);
     const [releaseDspStatus, setReleaseDspStatus] = useState<
-        DISTRIBUTION_STATUS | undefined
+        RELEASE_DSP_DELIVERY_STATUS | undefined
     >();
+    const { bulkUpdate } = useBulkUpdateReleaseDsp();
+    const releaseAction = useReleaseActionStore((state) => state.action);
+    const isReadMode = releaseAction === RELEASE_DETAIL_ACTION.READ;
+    const headerHeight = useElementHeightById('release-header');
 
     const openModal = useModalStore((state) => state.openModal);
     const dataEdit = useModalStore((state) => state.dataEdit);
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-
-    const handleSelectedRow = (
-        _selectedRowKeys: React.Key[],
-        selectedRows: ReleaseDspData[]
-    ) => {
-        setSelectedRow(selectedRows);
-    };
-
-    const rowSelection = {
-        selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
-        onChange: handleSelectedRow,
-    };
 
     const {
         dataFilter,
@@ -63,22 +67,23 @@ export default function Distribution({}: Props) {
         onChangePage,
     } = useFilter<ReleaseDspDataFilter>({
         page: 1,
-        pageSize: 999,
-        status:
-            releaseDspStatus === DISTRIBUTION_STATUS.ALL
-                ? undefined
-                : releaseDspStatus,
+        pageSize: PAGE_SIZE_EXTRA_LARGE,
+        status: releaseDspStatus,
+        orderBy: ORDER.ASC,
+        fieldOrder: RELEASE_DSP_TABLE_KEY.DSP_NAME,
     });
 
     const {
         releaseDsp,
-        isFetching: isLoadingReleaseDsp,
+        isLoading: isLoadingReleaseDsp,
         refetch: refetchReleaseDsp,
     } = useGetListReleaseDsp(formValues?.id ?? '', dataFilter);
+
     const { distributeRelease } = useDistributeRelease();
 
     const { token } = theme.useToken();
 
+    const { isDark } = useThemeMode();
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
@@ -104,7 +109,9 @@ export default function Distribution({}: Props) {
             },
         };
         const promise = distributeRelease(variables);
-        toastPromise(promise, messages);
+        toastPromise(promise, messages, {
+            pending: messages('common.loading'),
+        });
     };
 
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
@@ -119,6 +126,59 @@ export default function Distribution({}: Props) {
         );
     };
 
+    const debouncedBulkUpdate = useRef(
+        debounce((selectedDsp: Partial<ReleaseDspData>[]) => {
+            bulkUpdate({
+                items: selectedDsp,
+                onSuccess() {
+                    refetchReleaseDsp();
+                },
+            });
+        }, 2000)
+    ).current;
+
+    const handleSelectedRow = (
+        _selectedRowKeys: React.Key[],
+        selectedRows: ReleaseDspData[]
+    ) => {
+        setSelectedRow(selectedRows);
+        const selectedDsp =
+            releaseDsp?.items?.map((row) => {
+                const isSelected = selectedRows.some(
+                    (selected) => selected.id === row.id
+                );
+                return {
+                    id: row.id,
+                    isSelected,
+                };
+            }) ?? [];
+        debouncedBulkUpdate(selectedDsp);
+    };
+
+    const rowSelection = {
+        selectedRowKeys: selectedRow.map((row) => row.dsp?.id),
+        onChange: handleSelectedRow,
+        getCheckboxProps: (record: ReleaseDspData) => ({
+            disabled: isReadMode || record.isActive === false,
+        }),
+    };
+
+    useEffect(() => {
+        setSelectedRow(
+            releaseDsp?.items?.filter((item) => item.isSelected) ?? []
+        );
+    }, [releaseDsp, setSelectedRow]);
+
+    useEffect(() => {
+        return () => {
+            debouncedBulkUpdate.cancel();
+        };
+    }, [debouncedBulkUpdate]);
+
+    useEffect(() => {
+        setReleaseDspStatus(dataFilter.status as RELEASE_DSP_DELIVERY_STATUS);
+    }, [dataFilter.status]);
+
     return (
         <div className="flex h-full flex-col justify-between pb-4">
             <div className="space-y-4">
@@ -129,6 +189,7 @@ export default function Distribution({}: Props) {
                     <DistributionStatus
                         onChangeStatus={(status) => {
                             setReleaseDspStatus(status);
+                            onChangeFilter({ status });
                         }}
                         value={releaseDspStatus}
                     />
@@ -141,15 +202,20 @@ export default function Distribution({}: Props) {
                     }}
                 >
                     <DistributionTable
+                        sticky={{
+                            offsetHeader: headerHeight,
+                        }}
                         options={false}
                         dataSource={releaseDsp?.items}
-                        scroll={{ x: 'max-content' }}
+                        // scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}
+                        tableAlertOptionRender={isReadMode ? false : undefined}
                         size="large"
                         rowKey={(record) => record.dsp?.id}
                         pagination={{
-                            pageSize: dataFilter?.pageSize,
+                            pageSize: dataFilter?.pageSize || 999,
                             total: releaseDsp?.metadata?.totalItems,
+                            current: dataFilter.page || 1,
                         }}
                         loading={isLoadingReleaseDsp}
                         onChange={onChangeSort}
@@ -191,6 +257,34 @@ export default function Distribution({}: Props) {
                     modalTitle={messages('takeDown.label')}
                     paragraph={messages('takeDown.confirmTakeDown')}
                 />
+            )}
+
+            {typeModal === TYPE_MODAL_RELEASE_DISTRIBUTION.ISSUES && (
+                <AppModal
+                    open={true}
+                    onCancel={closeModal}
+                    title={messages('common.issues')}
+                    footer={null}
+                    width={800}
+                    className="!top-10 !w-[60vw]"
+                    styles={{
+                        body: {
+                            height: 'calc(100vh - 140px)',
+                            overflowY: 'auto',
+                        },
+                    }}
+                >
+                    {dataEdit && (
+                        <JsonViewer
+                            src={dataEdit}
+                            theme={isDark ? 'ocean' : 'rjv-default'}
+                            style={{
+                                height: 'calc(100vh - 150px)',
+                                overflowY: 'auto',
+                            }}
+                        />
+                    )}
+                </AppModal>
             )}
         </div>
     );

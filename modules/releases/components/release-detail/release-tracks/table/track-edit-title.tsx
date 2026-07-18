@@ -1,6 +1,7 @@
 import { showNotification } from '@/helpers/messages-helper';
 import { TrackData } from '@/modules/releases/types';
 import { UpdateTrackPayload } from '@/modules/tracks/types/payload';
+import { UpdateVariables } from '@/types/api';
 import { Input } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -12,7 +13,7 @@ export const EditableTitle = ({
 }: {
     record: TrackData;
     isReadMode: boolean;
-    onUpdate: (id: string, data: UpdateTrackPayload) => void;
+    onUpdate: (variables: UpdateVariables<string, UpdateTrackPayload>) => void;
     messages: any;
 }) => {
     const [localTitle, setLocalTitle] = useState(record.title);
@@ -25,13 +26,13 @@ export const EditableTitle = ({
         <div className="space-y-2">
             <Input
                 className="font-medium"
-                // size="small"
+                size="small"
                 value={localTitle}
                 disabled={isReadMode}
                 allowClear
-                onChange={(e) => {
-                    const value = e.target.value;
-                    setLocalTitle(value);
+                onChange={(e) => setLocalTitle(e.target.value)}
+                onBlur={(e) => {
+                    const value = e.target.value.trim();
 
                     if (value.length < 1) {
                         return showNotification(
@@ -42,8 +43,9 @@ export const EditableTitle = ({
                         );
                     }
                     if (value !== record.title) {
-                        onUpdate(record.id, {
-                            title: value,
+                        onUpdate({
+                            id: record.id,
+                            payload: { title: value },
                         });
                     }
                 }}

@@ -1,4 +1,4 @@
-import { message } from '@/helpers/antd-static';
+import { showNotification } from '@/helpers/messages-helper';
 import { AxiosError } from 'axios';
 import { useTranslations } from 'next-intl';
 
@@ -35,28 +35,25 @@ export function useApiNotify() {
             messageList.push('An unknown error occurred');
         }
 
-        messageList.forEach((msg) => {
-            message.error({
-                content: messages(msg as any),
-                key: msg,
+        messageList.forEach((message) => {
+            showNotification('error', messages(message as any), {
+                toastId: message,
             });
         });
     };
 
     const handleSuccess = (res: any) => {
-        const msg = res.messageCode || res.message;
+        const message = res.messageCode || res.message;
 
-        if (!msg) return;
+        if (!message) return;
 
-        if (messages.has(msg as any)) {
-            message.success({
-                content: messages(msg as any),
-                key: msg,
+        if (messages.has(message as any)) {
+            showNotification('success', messages(message as any), {
+                toastId: message,
             });
         } else {
-            message.success({
-                content: msg,
-                key: msg,
+            showNotification('success', message, {
+                toastId: message,
             });
         }
     };

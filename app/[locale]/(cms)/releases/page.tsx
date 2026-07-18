@@ -1,80 +1,89 @@
 'use client';
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
-import { LAYOUT_TABLE, ORDER, SESSION_STORAGE_KEY } from '@/enums/common';
+import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
-import { useFilter } from '@/hooks/use-filter';
-import { useTableLayoutToggle } from '@/hooks/use-layout-table';
-import { LoadingType, useLoading } from '@/hooks/use-loading';
+import { useFilterV2 } from '@/hooks/use-filter-v2';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
+import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
+
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
 import ReleasesTable from '@/modules/releases/components/table';
-import ReleasesGridTable from '@/modules/releases/components/table/grid-table';
-import { defaultVisibleColumnsReleases } from '@/modules/releases/constants';
+import { releasesFilterParsers } from '@/modules/releases/constants';
+
 import {
+    RELEASE_TYPE,
     RELEASES_COLUMNS_DISPLAY,
+    RELEASES_STATUS,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useBulkDeleteRelease } from '@/modules/releases/hooks/use-bulk-delete-release';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
+import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
-import dayjs from 'dayjs';
+import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { parseAsInteger, parseAsString } from 'nuqs';
+import { Key, useState } from 'react';
 
 type Props = {};
 
 export default function Releases({}: Props) {
-    // hooks - state
-    const [visibleColumns, setVisibleColumns] = useState<
-        RELEASES_COLUMNS_DISPLAY[]
-    >(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_RELEASES
-            );
-            if (!stored) return defaultVisibleColumnsReleases;
-            const { value, timestamp } = JSON.parse(stored) as {
-                value: RELEASES_COLUMNS_DISPLAY[];
-                timestamp: string;
-            };
+    // const {
+    //     dataFilter,
+    //     onSearch,
+    //     onChangePage,
+    //     onChangeFilter,
+    //     canClearFilter,
+    //     removeFilter,
+    //     defaultFilter,
+    // } = useFilter<ReleasesDataFilter>({
+    //     page: 1,
+    //     pageSize: PAGE_SIZE,
+    //     orderBy: ORDER.DESC,
+    //     fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+    //     type: RELEASE_TYPE.AUDIO,
+    //     isImportedFromReport: 'false',
+    // });
 
-            if (dayjs().diff(dayjs(timestamp), 'day') >= 10) {
-                sessionStorage.removeItem(
-                    SESSION_STORAGE_KEY.VISIBLE_COLUMNS_RELEASES
-                );
-                return defaultVisibleColumnsReleases;
-            }
-
-            return value;
-        }
-        return defaultVisibleColumnsReleases;
-    });
     const {
         dataFilter,
-        onSearch,
         onChangePage,
         onChangeFilter,
+        resetFilterValues,
         canClearFilter,
-        removeFilter,
-    } = useFilter<ReleasesDataFilter>({
-        page: 1,
-        pageSize: PAGE_SIZE,
-        orderBy: ORDER.DESC,
-        fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
+        defaultFilter,
+    } = useFilterV2<ReleasesDataFilter>({
+        // Default
+        page: parseAsInteger.withDefault(1),
+        pageSize: parseAsInteger.withDefault(PAGE_SIZE),
+        orderBy: parseAsString.withDefault(ORDER.DESC),
+        fieldOrder: parseAsString.withDefault(
+            RELEASES_COLUMNS_DISPLAY.CREATED_AT
+        ),
+        type: parseAsString.withDefault(RELEASE_TYPE.AUDIO),
+        isImportedFromReport: parseAsString.withDefault('false'),
+
+        ...releasesFilterParsers,
     });
-    const { layoutTable } = useTableLayoutToggle();
+
     const messages = useTranslations();
     const closeModal = useModalStore((state) => state.closeModal);
-    const isLoading = useLoading(LoadingType.Fetching);
+    const openModal = useModalStore((state) => state.openModal);
+    // const isLoading = useLoading(LoadingType.Fetching);
     const typeModal = useModalStore((state) => state.typeModal);
-    const dataEdit = useModalStore((state) => state.dataEdit as ReleasesData);
+    const dataEdit = useModalStore((state) => state.dataEdit);
     const { token } = theme.useToken();
+    const [selectedRows, setSelectedRows] = useState<Key[]>([]);
+    const { isAdmin } = useAuth();
 
     // apis
     const {
@@ -84,25 +93,43 @@ export default function Releases({}: Props) {
         dataUpdatedAt,
     } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
+    const { bulkDeleteRelease, isPending: isBulkDeleteLoading } =
+        useBulkDeleteRelease();
+    // const { isPending: isExportTemplateCiLoading } = useExportTemplateCi();
 
     // func
-    const handleChangeVisibleColumns = (
-        columns: RELEASES_COLUMNS_DISPLAY[]
-    ) => {
-        setVisibleColumns(columns);
-    };
     const handleRefresh = () => {
         refetch();
     };
     const handleDeleteRelease = () => {
+        const release = dataEdit as ReleasesData;
         const variables: DeleteVariables<ReleasesData['id']> = {
-            id: dataEdit?.id,
+            id: release?.id,
             onSuccess: () => {
                 closeModal();
             },
         };
         deleteRelease(variables);
     };
+
+    const handleBulkDelete = (selectedRowKeys: Key[]) => {
+        const drafts = releasesData?.items?.filter(
+            (item) =>
+                selectedRowKeys.includes(item.id) &&
+                item.status === RELEASES_STATUS.DRAFT
+        );
+
+        if (drafts.length === 0) {
+            openModal(TYPE_MODAL_RELEASE.BULK_DELETE, []);
+            return;
+        }
+
+        openModal(
+            TYPE_MODAL_RELEASE.BULK_DELETE,
+            drafts.map((d) => d.id)
+        );
+    };
+
     const onChangeSort = (pagination: any, filters: any, sort: any) => {
         const orderBy = setSortOrder(sort, ORDER.ASC);
         const fieldOrder = sort.field;
@@ -115,58 +142,104 @@ export default function Releases({}: Props) {
         );
     };
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem(
-                SESSION_STORAGE_KEY.VISIBLE_COLUMNS_RELEASES,
-                JSON.stringify({
-                    value: visibleColumns,
-                    timestamp: dayjs().toISOString(),
-                })
-            );
-        }
-    }, [visibleColumns]);
+    const rowSelection: TableProps<ReleasesData>['rowSelection'] = {
+        selectedRowKeys: selectedRows,
+        onChange: (selectedRowKeys: Key[]) => {
+            setSelectedRows(selectedRowKeys);
+        },
+        getCheckboxProps: (record: ReleasesData) => {
+            return {
+                disabled: !isAdmin && record.status !== RELEASES_STATUS.DRAFT,
+            };
+        },
+    };
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('release.releases')}>
-                <ReleasesHeaderV2
-                    dataFilter={dataFilter}
+            <PageContainer title={messages('release.routeLabel')}>
+                <ReleasesTable
+                    headerTitle={
+                        <ReleasesHeaderV2
+                            dataFilter={dataFilter}
+                            defaultFilter={defaultFilter}
+                            onChangeFilter={onChangeFilter}
+                            canClearFilter={canClearFilter}
+                            removeFilter={resetFilterValues}
+                        />
+                    }
+                    sticky
+                    dataSource={releasesData?.items}
+                    loading={isReleaseDataLoading}
                     onChangeFilter={onChangeFilter}
-                    canClearFilter={canClearFilter}
-                    removeFilter={removeFilter}
-                    handleRefresh={handleRefresh}
-                    handleChangeVisibleColumns={handleChangeVisibleColumns}
-                    visibleColumn={visibleColumns}
-                    dataUpdatedAt={dataUpdatedAt}
+                    pagination={{
+                        pageSize: dataFilter.pageSize ?? PAGE_SIZE,
+                        current: releasesData.metadata.page,
+                    }}
+                    onChange={onChangeSort}
+                    dataFilter={dataFilter}
+                    options={{
+                        reload: () => {
+                            handleRefresh();
+                        },
+                    }}
+                    toolBarRender={() => [
+                        // <CreateButton
+                        //     canCreate={isAdmin}
+                        //     key="auto-submit"
+                        //     icon={<SendOutlined />}
+                        //     onClick={() =>
+                        //         openModal(
+                        //             TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
+                        //         )
+                        //     }
+                        //     text={messages(
+                        //         'release.autoSubmitUndistributedMusic'
+                        //     )}
+                        // />,
+                        <CreateButton
+                            canCreate={isAdmin}
+                            key="auto-submit-v2"
+                            icon={<SendOutlined />}
+                            onClick={() =>
+                                openModal(
+                                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2
+                                )
+                            }
+                            text={messages(
+                                'release.autoSubmitUndistributedMusic'
+                            )}
+                        />,
+                    ]}
+                    rowSelection={rowSelection}
+                    tableAlertRender={({ selectedRowKeys }) => {
+                        return (
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    icon={<SendOutlined />}
+                                    onClick={() =>
+                                        openModal(
+                                            TYPE_MODAL_RELEASE.BULK_SUBMIT,
+                                            selectedRowKeys
+                                        )
+                                    }
+                                >
+                                    {messages('release.bulkSubmit')}
+                                </Button>
+                                <Button
+                                    danger
+                                    type="primary"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() =>
+                                        handleBulkDelete(selectedRowKeys)
+                                    }
+                                >
+                                    {messages('release.bulkDelete')}
+                                </Button>
+                            </Space>
+                        );
+                    }}
                 />
-
-                {layoutTable === LAYOUT_TABLE.LIST && (
-                    <ReleasesTable
-                        sticky
-                        dataSource={releasesData?.items}
-                        loading={isReleaseDataLoading}
-                        onChangeFilter={onChangeFilter}
-                        pagination={{
-                            pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: releasesData.metadata.page,
-                        }}
-                        onChange={onChangeSort}
-                        dataFilter={dataFilter}
-                        options={{
-                            reload: () => {
-                                handleRefresh();
-                            },
-                        }}
-                    />
-                )}
-
-                {layoutTable === LAYOUT_TABLE.GRID && (
-                    <ReleasesGridTable
-                        data={releasesData?.items}
-                        loading={isReleaseDataLoading}
-                    />
-                )}
 
                 <AppPagination
                     className="rounded-b-md"
@@ -189,8 +262,67 @@ export default function Releases({}: Props) {
                         onCancel={closeModal}
                         modalTitle={`${messages('common.delete')} ${messages('release.label').toLowerCase()}`}
                         paragraph={messages('delete.confirmMessage', {
-                            value: dataEdit?.title,
+                            value: (dataEdit as ReleasesData)?.title,
                         })}
+                    />
+                )}
+
+                {/* 
+                {typeModal === TYPE_MODAL_RELEASE.EXPORT_TEMPLATE && (
+                    <ExportTemplateModal
+                        onFinished={() => setSelectedRows([])}
+                    />
+                )} */}
+
+                {typeModal === TYPE_MODAL_RELEASE.BULK_SUBMIT && (
+                    <BulkSubmitModal onFinished={() => setSelectedRows([])} />
+                )}
+
+                {/* {typeModal ===
+                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC && (
+                    <AutoSubmitUndistributedMusicModal
+                        onFinished={handleRefresh}
+                    />
+                )} */}
+
+                {typeModal ===
+                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2 && (
+                    <AutoSubmitUndistributedMusicV2Modal
+                        onFinished={handleRefresh}
+                    />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.BULK_DELETE && (
+                    <AppConfirm
+                        open
+                        onOk={() => {
+                            if ((dataEdit as Key[])?.length === 0) {
+                                closeModal();
+                                return;
+                            }
+                            bulkDeleteRelease({
+                                payload: {
+                                    ids: dataEdit as string[],
+                                },
+                                onSuccess: () => {
+                                    closeModal();
+                                    setSelectedRows([]);
+                                },
+                            });
+                        }}
+                        onCancel={closeModal}
+                        modalTitle={messages('release.bulkDelete')}
+                        loading={isBulkDeleteLoading}
+                        paragraph={
+                            (dataEdit as Key[])?.length === 0
+                                ? messages('release.onlyDraftCanBeDeleted')
+                                : messages('release.bulkDeleteConfirm', {
+                                      count: (dataEdit as string[])?.length,
+                                  })
+                        }
+                        okButtonProps={{
+                            disabled: (dataEdit as Key[])?.length === 0,
+                        }}
                     />
                 )}
             </PageContainer>

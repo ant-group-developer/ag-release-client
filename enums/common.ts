@@ -179,7 +179,11 @@ export enum TYPE_UPLOAD_BUCKET {
     JSON = 'peak_audio',
     TRACK = 'track_audio',
     RELEASE_COVER_ART = 'release_cover_art',
+    CHANNEL_THUMB = 'channel_thumb',
     RELEASE_TEMPLATE = 'release_template_file',
+    CI_TEMPLATE = 'template_export_ci',
+    VIDEO_FILE = 'video_file',
+    VIDEO_CAPTION = 'video_caption',
 }
 
 export enum DISTRIBUTE_TYPES {
@@ -195,4 +199,9 @@ export enum WEEK_DAY {
     FRIDAY = 'FRIDAY',
     SATURDAY = 'SATURDAY',
     SUNDAY = 'SUNDAY',
+}
+
+export enum ANALYTIC_SORT_BY {
+    VIEWS = 'views',
+    REVENUE = 'revenue',
 }

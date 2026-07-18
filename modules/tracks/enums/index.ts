@@ -15,6 +15,17 @@ export enum TRACKS_COLUMNS_DISPLAY {
     LABEL_NAME = 'labelName',
 }
 
+export enum TRACKS_TABLE_KEY {
+    TITLE = 'track.title',
+    VERSION = 'version',
+    ID = 'id',
+    RELEASE_TITLE = 'releaseTitle',
+    LABEL_NAME = 'labelName',
+    ISRC = 'isrc',
+    ACR_CLOUD = 'acrCloud',
+    CREATED_AT = 'track.createdAt',
+}
+
 export enum TYPE_MODAL_TRACK_ARTIST {
     ADD = 'add',
     UPDATE = 'update',
@@ -45,4 +56,10 @@ export enum SCAN_COPYRIGHT_STATUS {
     FINISHED = 'finished',
     WARNING = 'warning',
     REJECTED = 'rejected',
+}
+
+export enum TRACK_SORT_FIELD {
+    TITLE = 'track.title',
+    ORDER = 'track.order',
+    CREATED_AT = 'track.createdAt',
 }
