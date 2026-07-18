@@ -17,6 +17,10 @@ import ArtistViewsTable from '@/modules/analytics2/components/table/artist-views
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import {
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_DEFAULT_END_DATE,
+} from '@/modules/analytics2/constants/types';
+import {
     getAnalyticsReleaseType,
     getAnalyticsViewType,
 } from '@/modules/analytics2/helpers';
@@ -52,17 +56,21 @@ export default function ArtistsRankingPage() {
         useFilter<RankingFilter>({
             page: DEFAULT_PAGE,
             pageSize: PAGE_SIZE_DEFAULT,
-            startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
-            endDate: dayjs().format('YYYY-MM-DD'),
-            type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
+            startDate:
+                searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
+            endDate:
+                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            type: getAnalyticsViewType(searchParams.get('type')),
+            releaseType: getAnalyticsReleaseType(
+                searchParams.get('releaseType')
+            ),
         });
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(searchParams.get('type'))
     );
-    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(
-        ANALYTICS_RELEASE_TYPE.AUDIO
+    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(() =>
+        getAnalyticsReleaseType(searchParams.get('releaseType'))
     );
 
     useEffect(() => {

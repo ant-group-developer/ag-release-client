@@ -14,6 +14,8 @@ import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-tr
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_DEFAULT_END_DATE,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -53,10 +55,14 @@ export default function TracksRankingPage() {
         useFilter<RankingFilter>({
             page: DEFAULT_PAGE,
             pageSize: PAGE_SIZE_DEFAULT,
-            startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
-            endDate: dayjs().format('YYYY-MM-DD'),
-            type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
+            startDate:
+                searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
+            endDate:
+                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            type: getAnalyticsViewType(searchParams.get('type')),
+            releaseType: getAnalyticsReleaseType(
+                searchParams.get('releaseType')
+            ),
         });
 
     const [activeDetail, setActiveDetail] = useState<{
@@ -69,11 +75,11 @@ export default function TracksRankingPage() {
         targetId: '',
     });
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(searchParams.get('type'))
     );
-    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(
-        ANALYTICS_RELEASE_TYPE.AUDIO
+    const [releaseType, setReleaseType] = useState<ANALYTICS_RELEASE_TYPE>(() =>
+        getAnalyticsReleaseType(searchParams.get('releaseType'))
     );
 
     useEffect(() => {

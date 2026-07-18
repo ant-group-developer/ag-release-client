@@ -1,8 +1,11 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { DatePicker, GetProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+
+dayjs.extend(quarterOfYear);
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -105,8 +108,22 @@ export default function DateSelect2({
             return;
         }
 
-        const startDate = values[0].format(valueFormat);
-        const endDate = values[1].format(valueFormat);
+        let start = values[0];
+        let end = values[1];
+
+        if (picker === 'month') {
+            start = start.startOf('month');
+            end = end.endOf('month');
+        } else if (picker === 'year') {
+            start = start.startOf('year');
+            end = end.endOf('year');
+        } else if (picker === 'quarter') {
+            start = start.startOf('quarter');
+            end = end.endOf('quarter');
+        }
+
+        const startDate = start.format(valueFormat);
+        const endDate = end.format(valueFormat);
 
         onChange?.(`${startDate},${endDate}`);
         externalOnChange?.(startDate, endDate);
