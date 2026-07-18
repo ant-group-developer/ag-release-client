@@ -12,6 +12,34 @@ import { Eye } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
+const getWarningsFromDescription = (description: any): string[] => {
+    if (!description) return [];
+
+    if (Array.isArray(description)) {
+        return description.flatMap((desc) => desc?.warnings || []);
+    }
+
+    if (typeof description === 'string') {
+        const trimmed = description.trim();
+        if (!trimmed) return [];
+
+        try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) {
+                return parsed.flatMap((desc) => desc?.warnings || []);
+            }
+            if (parsed && typeof parsed === 'object') {
+                return parsed.warnings || [];
+            }
+        } catch (e) {
+            // Không parse được JSON, coi như string bình thường
+        }
+        return [trimmed];
+    }
+
+    return [];
+};
+
 type Props = {
     data?: ReleaseCiImportRawData;
     loading?: boolean;
@@ -82,11 +110,7 @@ export default function ImportTab({ data, loading }: Props) {
 
                     const warnings =
                         record?.import_file?.flatMap((file) =>
-                            Array.isArray(file?.description)
-                                ? file.description.flatMap(
-                                      (desc) => desc?.warnings || []
-                                  )
-                                : []
+                            getWarningsFromDescription(file?.description)
                         ) || [];
 
                     const hasWarnings =
@@ -101,7 +125,7 @@ export default function ImportTab({ data, loading }: Props) {
 
                     if (hasWarnings) {
                         const content = (
-                            <ul className="max-w-xs list-disc break-words pl-4">
+                            <ul className="max-h-[50vh] max-w-xs list-disc overflow-y-auto break-words pl-4">
                                 {warnings.map((warning, idx) => (
                                     <li
                                         key={idx}

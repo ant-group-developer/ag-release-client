@@ -180,7 +180,7 @@ export interface ReleaseCiImportFile {
     file_id: string;
     asset_controller_id: string;
     creator_id: string | null;
-    description: ReleaseCiImportFileDescription[];
+    description: ReleaseCiImportFileDescription[] | string;
     name: string;
     id: number;
     create_time: string;

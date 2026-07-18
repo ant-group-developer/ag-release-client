@@ -120,6 +120,7 @@ export interface VideoData {
     keywords?: string[];
     madeForKids: string;
     isUnlisted: boolean;
+    visibility?: string;
     subtitles?: string[];
     contentProvider?: string;
     copyrightOwner?: string;

@@ -16,6 +16,26 @@ export default function EditReleaseVideo() {
 
     const { releaseData, isLoading } = useGetDetailRelease(id);
 
+    const releaseArtists = releaseData?.releaseArtists || [];
+    const isVariousArtist = releaseData?.isVariousArtist;
+
+    const artistName = releaseArtists
+        .map((item) => item?.artist?.name)
+        .filter(Boolean)
+        .join(', ');
+
+    const displayName = isVariousArtist
+        ? messages('common.variousArtists')
+        : artistName;
+
+    const title =
+        releaseData?.title +
+        (releaseData?.version ? ` [${releaseData.version}]` : '');
+
+    const displayBreadcrumbTitle = releaseData
+        ? (displayName ? `${displayName} - ${title}` : title)
+        : messages('common.detail');
+
     const breadcrumbItems = [
         {
             title: (
@@ -25,7 +45,7 @@ export default function EditReleaseVideo() {
             ),
         },
         {
-            title: releaseData?.title || messages('common.detail'),
+            title: displayBreadcrumbTitle,
         },
     ];
 

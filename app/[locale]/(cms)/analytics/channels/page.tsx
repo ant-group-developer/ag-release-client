@@ -15,6 +15,8 @@ import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-t
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
     RANK_COLUMN_WIDTH,
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_DEFAULT_END_DATE,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import {
@@ -52,13 +54,15 @@ export default function ChannelsRankingPage() {
         useFilter<RankingFilter>({
             page: DEFAULT_PAGE,
             pageSize: PAGE_SIZE_DEFAULT,
-            startDate: dayjs().subtract(29, 'day').format('YYYY-MM-DD'),
-            endDate: dayjs().format('YYYY-MM-DD'),
-            type: ANALYTICS_VIEW_TYPE.VIEW,
+            startDate:
+                searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
+            endDate:
+                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            type: getAnalyticsViewType(searchParams.get('type')),
         });
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(searchParams.get('type'))
     );
 
     useEffect(() => {
