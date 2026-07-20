@@ -149,6 +149,9 @@
         "releaseVia": "Distributed via",
         "others": "Others",
         "save": "Save",
+        "cancel": "Cancel",
+        "confirmCancel": "Are you sure you want to cancel?",
+        "confirmSave": "Are you sure you want to save these changes?",
         "viewXml": "View XML",
         "regionCode": "Region Code",
         "link": "Link",
@@ -1990,6 +1993,35 @@
         "status": {
             "assigned": "Assigned",
             "unassigned": "Unassigned"
+        },
+        "source": {
+            "ftp_folder": "FTP folder",
+            "wmg_report": "WMG report",
+            "spotify_report": "Spotify report"
+        },
+        "ftpParserConfig": {
+            "title": "Edit FTP Parser Configuration: {category}",
+            "success": "FTP Parser Configuration updated successfully!",
+            "failed": "Failed to update FTP Parser Configuration!",
+            "noData": "No FTP Parser Configurations found.",
+            "sourceCategory": "Source category",
+            "description": "Description",
+            "includePatterns": "Include patterns",
+            "excludePatterns": "Exclude patterns",
+            "status": "Active status"
+        },
+        "ftpParserDetail": {
+            "title": "Parser Details: {name}",
+            "parserCode": "Parser code",
+            "sourceCategory": "Source category",
+            "sourceFile": "Source file",
+            "targetTable": "Target table",
+            "isSelectable": "Selectable",
+            "syncedAt": "Synced date",
+            "fieldMappings": "Field Mappings",
+            "parserSource": "Parser source code",
+            "yes": "Yes",
+            "no": "No"
         }
     },
     "dsp": {

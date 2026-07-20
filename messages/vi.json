@@ -149,6 +149,9 @@
         "releaseVia": "Phát hành thông qua",
         "others": "Khác",
         "save": "Lưu",
+        "cancel": "Hủy",
+        "confirmCancel": "Bạn có chắc chắn muốn hủy?",
+        "confirmSave": "Bạn có chắc chắn muốn lưu thay đổi?",
         "viewXml": "Xem XML",
         "regionCode": "Mã vùng",
         "link": "Đường dẫn",
@@ -1983,6 +1986,35 @@
         "status": {
             "assigned": "Đã gán",
             "unassigned": "Chưa gán"
+        },
+        "source": {
+            "ftp_folder": "Thư mục FTP",
+            "wmg_report": "Báo cáo WMG",
+            "spotify_report": "Báo cáo Spotify"
+        },
+        "ftpParserConfig": {
+            "title": "Chỉnh sửa cấu hình FTP Parser: {category}",
+            "success": "Cập nhật cấu hình FTP Parser thành công!",
+            "failed": "Cập nhật cấu hình FTP Parser thất bại!",
+            "noData": "Không tìm thấy cấu hình FTP Parser nào.",
+            "sourceCategory": "Danh mục nguồn",
+            "description": "Mô tả",
+            "includePatterns": "Regex bao gồm",
+            "excludePatterns": "Regex loại trừ",
+            "status": "Trạng thái hoạt động"
+        },
+        "ftpParserDetail": {
+            "title": "Chi tiết Parser: {name}",
+            "parserCode": "Mã Parser",
+            "sourceCategory": "Danh mục nguồn",
+            "sourceFile": "File nguồn",
+            "targetTable": "Bảng đích",
+            "isSelectable": "Có thể chọn",
+            "syncedAt": "Ngày đồng bộ",
+            "fieldMappings": "Ánh xạ trường dữ liệu",
+            "parserSource": "Mã nguồn Parser",
+            "yes": "Có",
+            "no": "Không"
         }
     },
     "dsp": {

@@ -13,6 +13,11 @@ export const dspReportQueryKeys = {
     details: () =>
         [...dspReportQueryKeys.all, QUERY_KEY.DSP_REPORT.GET_DETAIL] as const,
     detail: (id: string) => [...dspReportQueryKeys.details(), id] as const,
+
+    ftpParserConfigsDetails: () =>
+        [...dspReportQueryKeys.all, QUERY_KEY.DSP_REPORT.GET_FTP_PARSER_CONFIGS] as const,
+    ftpParserConfigs: (id: string | number) =>
+        [...dspReportQueryKeys.ftpParserConfigsDetails(), id] as const,
 };
 
 export const pgDspsSyncQueryKeys = {
