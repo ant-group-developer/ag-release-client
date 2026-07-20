@@ -16,7 +16,7 @@ export const dspReportQueryKeys = {
 
     ftpParserConfigsDetails: () =>
         [...dspReportQueryKeys.all, QUERY_KEY.DSP_REPORT.GET_FTP_PARSER_CONFIGS] as const,
-    ftpParserConfigs: (id: string | number) =>
+    ftpParserConfigs: (id: string) =>
         [...dspReportQueryKeys.ftpParserConfigsDetails(), id] as const,
 };
 

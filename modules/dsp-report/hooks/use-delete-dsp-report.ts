@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { dspReportApi } from '../apis';
 
-type DeleteDspReportVariables = DeleteVariables<number | string>;
+type DeleteDspReportVariables = DeleteVariables<string>;
 
 export const useDeleteDspReport = () => {
     const messages = useTranslations();

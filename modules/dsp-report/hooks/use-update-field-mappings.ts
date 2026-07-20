@@ -6,7 +6,7 @@ import { FieldMapping } from '../types';
 
 interface UpdateFieldMappingsVariables extends CommonFunction {
     parserCode: string;
-    dspReportId: string | number;
+    dspReportId: string;
     payload: { fieldMappings: FieldMapping[] };
 }
 

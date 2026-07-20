@@ -10,7 +10,7 @@ import { EditableCell } from './editable-cell';
 interface FieldMappingsTableProps {
     parserCode: string;
     fieldMappings: FieldMapping[];
-    dspReportId: string | number;
+    dspReportId: string;
 }
 
 export const FieldMappingsTable = ({

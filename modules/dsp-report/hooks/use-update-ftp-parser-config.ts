@@ -5,7 +5,7 @@ import { CommonFunction } from '@/types/api';
 import { FtpParserConfig } from '../types';
 
 interface UpdateVariables extends CommonFunction {
-    id: string | number;
+    id: string;
     category: string;
     payload: Partial<FtpParserConfig>;
 }

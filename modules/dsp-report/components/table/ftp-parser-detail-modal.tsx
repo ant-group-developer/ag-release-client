@@ -7,7 +7,7 @@ interface FtpParserDetailModalProps {
     open: boolean;
     onCancel: () => void;
     parser?: FtpParser;
-    dspReportId: string | number;
+    dspReportId: string;
 }
 
 export const FtpParserDetailModal = ({

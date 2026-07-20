@@ -9,7 +9,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 interface FtpParserConfigModalProps {
     open: boolean;
     onCancel: () => void;
-    dspReportId: string | number;
+    dspReportId: string;
     category: string;
 }
 
