@@ -1632,6 +1632,7 @@
             "copyrightYear": "Copyright year",
             "visibility": "Visibility",
             "selectVisibility": "Select visibility...",
+            "visibilityWarning": "The default visibility mode applies to both YouTube and Vevo. Custom visibility features are under development and will be updated soon.",
             "visibilityDefault": "Default",
             "unlistedOnYoutube": "Unlisted on YouTube",
             "unlistedOnVevo": "Unlisted on Vevo",

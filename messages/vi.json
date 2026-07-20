@@ -1625,6 +1625,7 @@
             "copyrightYear": "Năm bản quyền",
             "visibility": "Chế độ hiển thị",
             "selectVisibility": "Chọn chế độ hiển thị...",
+            "visibilityWarning": "Chế độ hiển thị mặc định áp dụng hiển thị lên cả YouTube và Vevo. Tính năng tùy chỉnh chế độ hiển thị đang được hoàn thiện và sẽ sớm cập nhật.",
             "visibilityDefault": "Mặc định",
             "unlistedOnYoutube": "Không công khai trên YouTube",
             "unlistedOnVevo": "Không công khai trên Vevo",
