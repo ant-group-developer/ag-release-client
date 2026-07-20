@@ -49,7 +49,6 @@ export default function DistributionTab({
             <AppFormItem
                 name={['video', 'visibility']}
                 label={messages('releaseVideo.fields.visibility')}
-                initialValue={RELEASE_VIDEO_VISIBILITY.DEFAULT}
             >
                 <Select
                     disabled
