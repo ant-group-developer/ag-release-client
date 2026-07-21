@@ -11,10 +11,14 @@ import ReleaseDistributionHeader from '@/modules/release-distribution/components
 import ReleaseDistributionTable from '@/modules/release-distribution/components/table/release-distribution-table';
 import { RELEASE_CI_DATA_COLUMNS_DISPLAY } from '@/modules/release-distribution/enums';
 import { useAutoSyncCi } from '@/modules/release-distribution/hooks/use-auto-sync-ci';
+import { useBulkSyncTrackOrder } from '@/modules/release-distribution/hooks/use-bulk-sync-track-order';
 import { useCreateMissingReleaseCiData } from '@/modules/release-distribution/hooks/use-create-missing-release-ci-data';
 import { useExportReleaseCiData } from '@/modules/release-distribution/hooks/use-export-release-ci-data';
 import { useGetListReleaseCiData } from '@/modules/release-distribution/hooks/use-get-list-release-ci-data';
-import { ReleaseCiDataFilter } from '@/modules/release-distribution/types';
+import {
+    ReleaseCiData,
+    ReleaseCiDataFilter,
+} from '@/modules/release-distribution/types';
 import { RELEASE_TYPE } from '@/modules/releases/enums';
 import {
     DownloadOutlined,
@@ -22,9 +26,9 @@ import {
     SyncOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, theme } from 'antd';
+import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { Key, useState } from 'react';
 
 export default function ReleaseDistributionPage() {
     const {
@@ -46,6 +50,7 @@ export default function ReleaseDistributionPage() {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [selectedRows, setSelectedRows] = useState<Key[]>([]);
 
     // apis
     const {
@@ -56,6 +61,8 @@ export default function ReleaseDistributionPage() {
     const { createMissingReleaseCiData, isPending: isBulkCreating } =
         useCreateMissingReleaseCiData();
     const { autoSyncCi, isPending: isAutoSyncing } = useAutoSyncCi();
+    const { bulkSyncTrackOrder, isPending: isSyncingTrackOrder } =
+        useBulkSyncTrackOrder();
     const { exportReleaseCiData, isPending: isExporting } =
         useExportReleaseCiData();
 
@@ -74,6 +81,24 @@ export default function ReleaseDistributionPage() {
     const handleAutoSync = () => {
         autoSyncCi({
             onSuccess: () => {
+                // refetch();
+            },
+        });
+    };
+
+    const handleSyncTrackOrder = () => {
+        bulkSyncTrackOrder({
+            onSuccess: () => {
+                // refetch();
+            },
+        });
+    };
+
+    const handleSyncSelectedTrackOrder = (selectedRowKeys: string[]) => {
+        bulkSyncTrackOrder({
+            payload: { ids: selectedRowKeys },
+            onSuccess: () => {
+                setSelectedRows([]);
                 // refetch();
             },
         });
@@ -104,6 +129,13 @@ export default function ReleaseDistributionPage() {
         );
     };
 
+    const rowSelection: TableProps<ReleaseCiData>['rowSelection'] = {
+        selectedRowKeys: selectedRows,
+        onChange: (selectedRowKeys: Key[]) => {
+            setSelectedRows(selectedRowKeys);
+        },
+    };
+
     return (
         <AppPageWrapper>
             <PageContainer
@@ -124,6 +156,14 @@ export default function ReleaseDistributionPage() {
                         onClick={handleAutoSync}
                     >
                         {messages('common.autoSyncCi')}
+                    </Button>,
+                    <Button
+                        key="sync-track-order"
+                        icon={<SyncOutlined />}
+                        loading={isSyncingTrackOrder}
+                        onClick={handleSyncTrackOrder}
+                    >
+                        {messages('common.syncTrackOrder')}
                     </Button>,
                     <Button
                         key="bulk-create"
@@ -160,6 +200,26 @@ export default function ReleaseDistributionPage() {
                         reload: () => {
                             handleRefresh();
                         },
+                    }}
+                    rowSelection={rowSelection}
+                    tableAlertRender={({ selectedRowKeys }) => {
+                        return (
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    key="sync-selected-track-order"
+                                    icon={<SyncOutlined />}
+                                    loading={isSyncingTrackOrder}
+                                    onClick={() =>
+                                        handleSyncSelectedTrackOrder(
+                                            selectedRowKeys as string[]
+                                        )
+                                    }
+                                >
+                                    {messages('common.syncTrackOrder')}
+                                </Button>
+                            </Space>
+                        );
                     }}
                 />
 

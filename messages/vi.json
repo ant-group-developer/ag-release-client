@@ -397,6 +397,7 @@
         "bulkUpdate": "Cập nhật hàng loạt",
         "bulkCreate": "Tạo hàng loạt",
         "autoSyncCi": "Tự động đồng bộ CI",
+        "syncTrackOrder": "Đồng bộ Track Order",
         "create": "Thêm mới",
         "detail": "Chi tiết ",
         "delete": "Xoá",
