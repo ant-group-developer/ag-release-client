@@ -248,6 +248,7 @@
         "partners": "Partners",
         "views": "Views",
         "fileName": "File name",
+        "filePath": "File path",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
         "notAvailable": "Not available",
@@ -3101,6 +3102,8 @@
         "reportType": "Report type",
         "reportTypeTooltip": "Report classification.",
         "reportTypePlaceholder": "Select report type",
+        "reportTypeSales": "Sales",
+        "reportTypeTrends": "Trends",
         "folderPatterns": "Folder patterns",
         "folderPatternsTooltip": "Array of regular expressions (Regex) to match the folder containing the file.",
         "folderPatternsPlaceholder": "e.g., .*spotify.*",
@@ -3182,7 +3185,10 @@
             "errorRows": "Errors",
             "recentJobsTitle": "Recent Import/Sync Jobs",
             "uploadReportBtn": "Import Report",
-            "detailedProgress": "Detailed files progress"
+            "detailedProgress": "Detailed files progress",
+            "filesCount": "Number of Files",
+            "totalSize": "Total Size",
+            "filesDetail": "Detailed Files Information"
         },
         "enrichScanSchedules": {
             "label": "Enrich data cron",

@@ -99,7 +99,7 @@ export default function ImportTab() {
                 }}
                 onChange={() => undefined}
                 scroll={{
-                    y: 500,
+                    x: 'max-content',
                 }}
             />
             <AppPagination
