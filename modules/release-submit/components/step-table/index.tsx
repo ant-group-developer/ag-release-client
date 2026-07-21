@@ -6,7 +6,7 @@ import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
 import { Avatar, Popconfirm, Table, Tag, theme, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Check, Eye, RotateCcw } from 'lucide-react';
+import { Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CHILD_EXECUTION_MODE, RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
@@ -37,6 +37,22 @@ export default function ReleaseSubmitStepTable({
     const [selectedLogs, setSelectedLogs] = useState<ReleaseSubmitLogsData[]>(
         []
     );
+
+    const formatTreeData = (data: ReleaseSubmitStepData[]): any[] => {
+        if (!data) return [];
+        return data.map((item) => {
+            if (item.childSteps && item.childSteps.length > 0) {
+                return {
+                    ...item,
+                    childSteps: formatTreeData(item.childSteps),
+                };
+            }
+            const { childSteps, ...rest } = item;
+            return rest;
+        });
+    };
+
+    const formattedDataSource = formatTreeData(dataSource);
 
     const columns: ColumnsType<ReleaseSubmitStepData> = [
         {
@@ -106,17 +122,6 @@ export default function ReleaseSubmitStepTable({
             },
         },
 
-        {
-            title: messages('releaseExecution.detail.columns.status'),
-            dataIndex: 'status',
-            key: 'status',
-            width: 140,
-            render: (value) => (
-                <Tag color={getReleaseSubmitStepStatusColor(value)}>
-                    {formatEnumLabel(value)}
-                </Tag>
-            ),
-        },
         {
             title: messages('releaseExecution.detail.columns.startedAt'),
             dataIndex: 'startedAt',
@@ -194,31 +199,43 @@ export default function ReleaseSubmitStepTable({
                 );
             },
         },
+        // {
+        //     title: messages('releaseExecution.isDeliveryStep.title'),
+        //     dataIndex: 'isDeliveryStep',
+        //     key: 'isDeliveryStep',
+        //     width: 150,
+        //     align: 'center',
+        //     render: (value) => {
+        //         if (typeof value !== 'boolean') return '-';
+
+        //         if (!value) {
+        //             return '-';
+        //         }
+
+        //         return (
+        //             <CustomTooltip
+        //                 title={messages(
+        //                     'releaseExecution.isDeliveryStep.tooltip'
+        //                 )}
+        //             >
+        //                 <span className="flex items-center justify-center">
+        //                     <Check size={SIZE_ICON} color="green" />
+        //                 </span>
+        //             </CustomTooltip>
+        //         );
+        //     },
+        // },
         {
-            title: messages('releaseExecution.isDeliveryStep.title'),
-            dataIndex: 'isDeliveryStep',
-            key: 'isDeliveryStep',
-            width: 150,
+            title: messages('releaseExecution.detail.columns.status'),
+            dataIndex: 'status',
+            key: 'status',
+            width: 140,
             align: 'center',
-            render: (value) => {
-                if (typeof value !== 'boolean') return '-';
-
-                if (!value) {
-                    return '-';
-                }
-
-                return (
-                    <CustomTooltip
-                        title={messages(
-                            'releaseExecution.isDeliveryStep.tooltip'
-                        )}
-                    >
-                        <span className="flex items-center justify-center">
-                            <Check size={SIZE_ICON} color="green" />
-                        </span>
-                    </CustomTooltip>
-                );
-            },
+            render: (value) => (
+                <Tag color={getReleaseSubmitStepStatusColor(value)}>
+                    {formatEnumLabel(value)}
+                </Tag>
+            ),
         },
         {
             title: '',
@@ -235,8 +252,12 @@ export default function ReleaseSubmitStepTable({
                     </CustomTooltip>
                     {record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED && (
                         <Popconfirm
-                            title={messages('releaseExecution.confirm.retryTitle')}
-                            description={messages('releaseExecution.confirm.retryDescription')}
+                            title={messages(
+                                'releaseExecution.confirm.retryTitle'
+                            )}
+                            description={messages(
+                                'releaseExecution.confirm.retryDescription'
+                            )}
                             onConfirm={() => {
                                 retryStep({
                                     stepId: record.id,
@@ -263,23 +284,16 @@ export default function ReleaseSubmitStepTable({
                 rowKey="id"
                 size="small"
                 pagination={false}
-                dataSource={dataSource}
+                dataSource={formattedDataSource}
                 columns={columns}
                 loading={isPending}
                 showHeader={showHeader}
                 expandable={{
-                    rowExpandable: (record) => !!record.childSteps?.length,
-                    expandedRowRender: (record) => (
-                        <div className="rounded-md">
-                            <ReleaseSubmitStepTable
-                                dataSource={record.childSteps}
-                                onViewDetail={onViewDetail}
-                                showHeader={false}
-                            />
-                        </div>
-                    ),
+                    childrenColumnName: 'childSteps',
+                    indentSize: 16,
                 }}
                 rowClassName={'group'}
+                className="table-tree-with-lines"
             />
             <StepLogsModal
                 open={logsModalVisible}

@@ -541,3 +541,56 @@ html.dark .ck.ck-list__item .ck-button:hover {
 }
 
 /* end custom scrollbar */
+
+/* Tree Line Connector CSS for Ant Design Table */
+.table-tree-with-lines .ant-table-row-indent {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    position: relative;
+}
+
+/* Cấp độ con Level 1 */
+.table-tree-with-lines .ant-table-row-level-1 .ant-table-row-indent::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 8px; /* Giữa khoảng thụt lề 16px */
+    width: 8px; /* Độ dài nhánh ngang */
+    height: 34px; /* Chiều đứng vươn từ dòng cha xuống */
+    border-left: 1.5px solid rgba(140, 140, 140, 0.35);
+    border-bottom: 1.5px solid rgba(140, 140, 140, 0.35);
+    border-bottom-left-radius: 4px;
+    pointer-events: none;
+}
+
+/* Cấp độ con Level 2 */
+/* Thẻ indent 1: vẽ đường đứng đi suốt dọc dòng */
+.table-tree-with-lines
+    .ant-table-row-level-2
+    .ant-table-row-indent:nth-child(1) {
+    background-image: linear-gradient(
+        to bottom,
+        rgba(140, 140, 140, 0.35) 100%,
+        transparent 0%
+    );
+    background-position: 8px 0;
+    background-size: 1.5px 100%;
+    background-repeat: no-repeat;
+}
+
+/* Thẻ indent 2: vẽ đường cong chữ L rẽ ngang vào icon */
+.table-tree-with-lines
+    .ant-table-row-level-2
+    .ant-table-row-indent:nth-child(2)::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 8px; /* Giữa khoảng thụt lề thứ 2 */
+    width: 8px;
+    height: 34px;
+    border-left: 1.5px solid rgba(140, 140, 140, 0.35);
+    border-bottom: 1.5px solid rgba(140, 140, 140, 0.35);
+    border-bottom-left-radius: 4px;
+    pointer-events: none;
+}
