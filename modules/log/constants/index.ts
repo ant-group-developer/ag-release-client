@@ -5,13 +5,16 @@ import { DataFilterLogs } from '../types/data';
 export const logQueryKeys = {
     all: QUERY_KEY.LOG.KEY,
     getListLogs: () => [QUERY_KEY.LOG.KEY, QUERY_KEY.LOG.GET_LOGS_LIST],
-    getLogsList: (params: DataFilterLogs) => [...logQueryKeys.getListLogs(), params],
+    getLogsList: (params: DataFilterLogs) => [
+        ...logQueryKeys.getListLogs(),
+        params,
+    ],
     getListModules: () => [QUERY_KEY.LOG.KEY, QUERY_KEY.LOG.GET_LOGS_MODULES],
 };
 
 export const LOG_LEVEL_MSG_KEY: Record<LOG_LEVEL, string> = {
     [LOG_LEVEL.SUCCESS]: 'log.level.success',
-    [LOG_LEVEL.LOG]: 'log.level.log',
+    [LOG_LEVEL.INFO]: 'log.level.info',
     [LOG_LEVEL.WARNING]: 'log.level.warning',
     [LOG_LEVEL.ERROR]: 'log.level.error',
 };

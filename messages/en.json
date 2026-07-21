@@ -651,7 +651,7 @@
         "logs": "Logs",
         "level": {
             "success": "Success",
-            "log": "Log",
+            "info": "Info",
             "warning": "Warning",
             "error": "Error"
         },
