@@ -90,8 +90,7 @@ export default function ImportTab({ data, loading }: Props) {
                 align: 'left',
                 width: 150,
                 render: (_, record) => {
-                    const status = record.status;
-
+                    const status = record?.import_file[0]?.import_status;
                     if (!status) return '-';
 
                     const config = {
