@@ -29,6 +29,10 @@ export const etlJobQueryKeys = {
         params
             ? ([...etlJobQueryKeys.lists(), params] as const)
             : etlJobQueryKeys.lists(),
+    statusDetails: () =>
+        [...etlJobQueryKeys.all, QUERY_KEY.ETL_JOBS.GET_STATUS_DETAIL] as const,
+    statusDetail: (id: string) =>
+        [...etlJobQueryKeys.statusDetails(), id] as const,
 };
 
 export const enrichScanSessionQueryKeys = {

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useGetListEtlJobs } from '../../hooks/use-get-list-etl-jobs';
 import { EtlJobData } from '../../types/payload';
 import EtlJobsTable from './etl-jobs-table';
+import { EtlJobStatusDetailModal } from './etl-job-status-detail-modal';
 import { ImportModal } from './import-form-modal';
 
 export default function ImportTab() {
@@ -16,6 +17,9 @@ export default function ImportTab() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewJobId, setViewJobId] = useState<string | null>(null);
+
+    const [isStatusDetailOpen, setIsStatusDetailOpen] = useState(false);
+    const [statusDetailJobId, setStatusDetailJobId] = useState<string | null>(null);
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -89,6 +93,10 @@ export default function ImportTab() {
                     current: etlJobsData.metadata.page,
                 }}
                 onViewDetail={handleViewDetail}
+                onViewStatusDetail={(record) => {
+                    setStatusDetailJobId(record.id);
+                    setIsStatusDetailOpen(true);
+                }}
                 onChange={() => undefined}
                 scroll={{
                     y: 500,
@@ -112,6 +120,14 @@ export default function ImportTab() {
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 viewJobId={viewJobId}
+            />
+            <EtlJobStatusDetailModal
+                open={isStatusDetailOpen}
+                onClose={() => {
+                    setIsStatusDetailOpen(false);
+                    setStatusDetailJobId(null);
+                }}
+                jobId={statusDetailJobId}
             />
         </div>
     );
