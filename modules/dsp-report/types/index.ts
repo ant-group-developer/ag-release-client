@@ -28,3 +28,36 @@ export interface DspReportDataFilter extends CommonParams {
     pgUuid?: string;
     status?: string;
 }
+
+export interface FieldMapping {
+    reportColumn: string;
+    parserColumn: string;
+    targetColumn: string;
+    transform: string;
+}
+
+export interface FtpParser {
+    parserCode: string;
+    sourceCategory: string;
+    parserName: string;
+    sourceFile: string;
+    targetTable: string;
+    fieldMappings: FieldMapping[];
+    sourceHash: string;
+    isSelectable: boolean;
+    syncedAt: string;
+}
+
+export interface FtpParserConfig {
+    dspReportId: string;
+    sourceCategory: string;
+    parserCode: string;
+    includePatterns: string[];
+    excludePatterns: string[];
+    isActive: boolean;
+    description: string;
+    configVersion: number;
+    createdAt: string;
+    updatedAt: string;
+    parser: FtpParser;
+}

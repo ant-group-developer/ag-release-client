@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { dspReportApi } from '../apis';
 
-type AssignVariables = UpdateVariables<number | string, { pgUuid: string }>;
+type AssignVariables = UpdateVariables<string, { pgUuid: string }>;
 
 export const useAssignDspReport = () => {
     const messages = useTranslations();

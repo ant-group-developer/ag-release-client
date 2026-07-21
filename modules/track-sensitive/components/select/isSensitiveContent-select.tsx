@@ -12,7 +12,7 @@ enum SENSITIVE_CONTENT_CODE {
     EXPLICIT_CONTENT_EDITED = 'ExplicitContentEdited',
     NO_ADVICE_AVAILABLE = 'NoAdviceAvailable',
     NOT_EXPLICIT = 'NotExplicit',
-    PARENTAL_ADVISORY = 'ParentalAdvisory',
+    PARENTAL_ADVISORY = 'Explicit',
 }
 
 export const getIntlSensitiveContent = (value: string, fallBack: string) => {
