@@ -12,6 +12,7 @@ import { useDeleteDspReport } from '../../hooks/use-delete-dsp-report';
 import { useUnassignDspReport } from '../../hooks/use-unassign-dsp-report';
 import { DspReportData } from '../../types';
 import PgDspsSyncSelect from '../select/pg-dsps-sync-select';
+import { FtpParserConfigList } from './ftp-parser-config-list';
 
 type Props = Omit<AppProTableProps<DspReportData>, 'columns'> & {
     pagination: {
@@ -157,6 +158,11 @@ export const DspReportTable = ({ ...props }: Props) => {
             style={{
                 backgroundColor: token.colorBgContainer,
                 ...props?.style,
+            }}
+            expandable={{
+                expandedRowRender: (record) => (
+                    <FtpParserConfigList dspReportId={record.idDspsReport} />
+                ),
             }}
         />
     );

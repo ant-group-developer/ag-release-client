@@ -12,13 +12,18 @@ import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
 const DEFAULT_SYNC_OPTIONS: SyncReleaseDraftToTracksPayload = {
-    syncPrimaryGenre: true,
-    syncSubGenre: true,
-    syncLanguage: true,
-    syncCopyright: true,
-    syncArtists: true,
-    syncContributors: true,
+    syncPrimaryGenre: false,
+    syncSubGenre: false,
+    syncLanguage: false,
+    syncCopyright: false,
+    syncArtists: false,
+    syncContributors: false,
+    syncIsInstrumental: false,
 };
+
+const INITIAL_SELECTED_FIELDS = Object.keys(DEFAULT_SYNC_OPTIONS).filter(
+    (key) => DEFAULT_SYNC_OPTIONS[key as keyof SyncReleaseDraftToTracksPayload]
+);
 
 type Props = {
     releaseId?: string;
@@ -37,7 +42,7 @@ export default function SyncToTracksModal({ releaseId }: Props) {
     const { syncReleaseDraftToTracks, isPending } =
         useSyncReleaseDraftToTracks();
     const [selectedSyncFields, setSelectedSyncFields] = useState<Key[]>(
-        Object.keys(DEFAULT_SYNC_OPTIONS)
+        INITIAL_SELECTED_FIELDS
     );
 
     const emptyText = messages('release.syncToTracks.emptyValue');
@@ -99,6 +104,17 @@ export default function SyncToTracksModal({ releaseId }: Props) {
             label: messages('release.syncToTracks.pCopyright'),
             value: formatPCopyright(),
         },
+        {
+            key: 'syncIsInstrumental',
+            label: messages('release.syncToTracks.isInstrumental'),
+            value:
+                formValues.isInstrumental !== undefined &&
+                formValues.isInstrumental !== null
+                    ? formValues.isInstrumental
+                        ? messages('common.no')
+                        : messages('common.yes')
+                    : emptyText,
+        },
     ];
 
     const columns: ColumnsType<SyncFieldRow> = [
@@ -137,7 +153,7 @@ export default function SyncToTracksModal({ releaseId }: Props) {
     ];
 
     const resetSelection = () => {
-        setSelectedSyncFields(Object.keys(DEFAULT_SYNC_OPTIONS));
+        setSelectedSyncFields(INITIAL_SELECTED_FIELDS);
     };
 
     const handleSubmit = () => {

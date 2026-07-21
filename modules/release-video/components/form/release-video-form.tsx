@@ -11,7 +11,10 @@ import AdditionalTab from '@/modules/release-video/components/modal/additional-t
 import DetailsTab from '@/modules/release-video/components/modal/details-tab';
 import DistributionTab from '@/modules/release-video/components/modal/distribution-tab';
 import SubmitsTab from '@/modules/release-video/components/modal/submits-tab';
-import { RELEASE_VIDEO_TABS } from '@/modules/release-video/enums';
+import {
+    RELEASE_VIDEO_TABS,
+    RELEASE_VIDEO_VISIBILITY,
+} from '@/modules/release-video/enums';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
 import { Card, Form, Tabs, TabsProps } from 'antd';
@@ -123,6 +126,12 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                 cLineYear: dataEdit.cLineYear
                     ? dayjs().year(dataEdit.cLineYear)
                     : undefined,
+                video: {
+                    ...dataEdit.video,
+                    visibility:
+                        dataEdit.video?.visibility ||
+                        RELEASE_VIDEO_VISIBILITY.DEFAULT,
+                },
                 artistIds:
                     dataEdit.releaseArtists?.map((a) => a.artistId) || [],
                 featuredArtistIds:

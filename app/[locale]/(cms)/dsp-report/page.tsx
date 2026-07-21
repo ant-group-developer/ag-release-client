@@ -54,6 +54,31 @@ export default function DspReport() {
                             />
                             <Select
                                 className="w-52"
+                                placeholder={messages('dspReport.table.source')}
+                                value={dataFilter.source || undefined}
+                                allowClear
+                                onChange={(value) =>
+                                    onChangeFilter({
+                                        source: value || undefined,
+                                    })
+                                }
+                                options={[
+                                    {
+                                        value: 'ftp_folder',
+                                        label: messages('dspReport.source.ftp_folder'),
+                                    },
+                                    {
+                                        value: 'wmg_report',
+                                        label: messages('dspReport.source.wmg_report'),
+                                    },
+                                    {
+                                        value: 'spotify_report',
+                                        label: messages('dspReport.source.spotify_report'),
+                                    },
+                                ]}
+                            />
+                            <Select
+                                className="w-52"
                                 placeholder={messages('common.status')}
                                 value={dataFilter.status || undefined}
                                 allowClear

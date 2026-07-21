@@ -5,6 +5,7 @@ import { DATE_FORMAT, DISTRIBUTE_TYPES } from '@/enums/common';
 import { RELEASE_VIDEO_VISIBILITY } from '@/modules/release-video/enums';
 import { RELEASE_TIME_MODE } from '@/modules/releases/enums';
 import {
+    Alert,
     Col,
     DatePicker,
     Form,
@@ -39,12 +40,18 @@ export default function DistributionTab({
 
     return (
         <div className="mx-auto w-full pb-8 pt-4">
+            <Alert
+                message={messages('releaseVideo.fields.visibilityWarning')}
+                type="info"
+                showIcon
+                className="!mb-4"
+            />
             <AppFormItem
                 name={['video', 'visibility']}
                 label={messages('releaseVideo.fields.visibility')}
-                initialValue={RELEASE_VIDEO_VISIBILITY.DEFAULT}
             >
                 <Select
+                    // disabled
                     className="w-full"
                     placeholder={messages(
                         'releaseVideo.fields.selectVisibility'
