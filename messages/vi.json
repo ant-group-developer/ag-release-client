@@ -648,7 +648,7 @@
         "logs": "Nhật ký",
         "level": {
             "success": "Thành công",
-            "info": "Thông tin",
+            "log": "Nhật ký",
             "warning": "Cảnh báo",
             "error": "Lỗi"
         },

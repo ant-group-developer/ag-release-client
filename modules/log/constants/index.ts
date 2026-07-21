@@ -14,7 +14,7 @@ export const logQueryKeys = {
 
 export const LOG_LEVEL_MSG_KEY: Record<LOG_LEVEL, string> = {
     [LOG_LEVEL.SUCCESS]: 'log.level.success',
-    [LOG_LEVEL.INFO]: 'log.level.info',
+    [LOG_LEVEL.LOG]: 'log.level.log',
     [LOG_LEVEL.WARNING]: 'log.level.warning',
     [LOG_LEVEL.ERROR]: 'log.level.error',
 };

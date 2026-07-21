@@ -41,7 +41,7 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
                     case LOG_LEVEL.SUCCESS:
                         color = 'green';
                         break;
-                    case LOG_LEVEL.INFO:
+                    case LOG_LEVEL.LOG:
                         color = 'blue';
                         break;
                     case LOG_LEVEL.WARNING:

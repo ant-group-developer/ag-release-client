@@ -1,6 +1,6 @@
 export enum LOG_LEVEL {
     SUCCESS = 'SUCCESS',
-    INFO = 'INFO',
+    LOG = 'LOG',
     ERROR = 'ERROR',
     WARNING = 'WARNING',
 }
