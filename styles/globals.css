@@ -550,43 +550,29 @@ html.dark .ck.ck-list__item .ck-button:hover {
     position: relative;
 }
 
-/* Cấp độ con Level 1 */
-.table-tree-with-lines .ant-table-row-level-1 .ant-table-row-indent::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: 8px; /* Giữa khoảng thụt lề 16px */
-    width: 8px; /* Độ dài nhánh ngang */
-    height: 34px; /* Chiều đứng vươn từ dòng cha xuống */
-    border-left: 1.5px solid rgba(140, 140, 140, 0.35);
-    border-bottom: 1.5px solid rgba(140, 140, 140, 0.35);
-    border-bottom-left-radius: 4px;
-    pointer-events: none;
-}
-
-/* Cấp độ con Level 2 */
-/* Thẻ indent 1: vẽ đường đứng đi suốt dọc dòng */
-.table-tree-with-lines
-    .ant-table-row-level-2
-    .ant-table-row-indent:nth-child(1) {
+/*
+ * Ant Design renders one indent element whose padding is the total tree depth,
+ * rather than one indent element for each ancestor. Repeat the vertical stroke
+ * across that padding so every ancestor level has its own connector.
+ */
+.table-tree-with-lines .ant-table-row-indent {
     background-image: linear-gradient(
-        to bottom,
-        rgba(140, 140, 140, 0.35) 100%,
-        transparent 0%
+        to right,
+        transparent 8px,
+        rgba(140, 140, 140, 0.35) 8px,
+        rgba(140, 140, 140, 0.35) 9.5px,
+        transparent 9.5px
     );
-    background-position: 8px 0;
-    background-size: 1.5px 100%;
-    background-repeat: no-repeat;
+    background-size: 24px 100%;
+    background-repeat: repeat-x;
 }
 
-/* Thẻ indent 2: vẽ đường cong chữ L rẽ ngang vào icon */
-.table-tree-with-lines
-    .ant-table-row-level-2
-    .ant-table-row-indent:nth-child(2)::before {
+/* Connect the current row at the last indent level, immediately before its icon. */
+.table-tree-with-lines .ant-table-row:not(.ant-table-row-level-0) .ant-table-row-indent::before {
     content: '';
     position: absolute;
     top: -20px;
-    left: 8px; /* Giữa khoảng thụt lề thứ 2 */
+    left: calc(100% - 16px);
     width: 8px;
     height: 34px;
     border-left: 1.5px solid rgba(140, 140, 140, 0.35);
