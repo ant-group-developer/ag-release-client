@@ -9,7 +9,9 @@ import {
 } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Space, Tag, Tooltip } from 'antd';
+import { Space, Tag, Tooltip } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Eye, FileText } from 'lucide-react';
 import { Eye, FileText } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ETL_JOB_SOURCE_TYPE } from '../../enums';
@@ -55,8 +57,14 @@ type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {
     };
     onViewDetail: (record: EtlJobData) => void;
     onViewStatusDetail?: (record: EtlJobData) => void;
+    onViewStatusDetail?: (record: EtlJobData) => void;
 };
 
+export default function EtlJobsTable({
+    onViewDetail,
+    onViewStatusDetail,
+    ...props
+}: Props) {
 export default function EtlJobsTable({
     onViewDetail,
     onViewStatusDetail,
@@ -240,37 +248,34 @@ export default function EtlJobsTable({
             title: messages('common.action'),
             key: 'actions',
             width: 110,
+            width: 110,
             align: 'center',
             fixed: 'right',
             render: (_, record) => (
                 <Space>
                     <Tooltip
                         title={
-                            messages(
-                                'reportConfigs.importResult.viewLog' as any
-                            ) || 'View Logs'
+                            messages('reportConfigs.importResult.viewLog' as any) ||
+                            'View Logs'
                         }
                     >
                         <IconButton onClick={() => onViewDetail(record)}>
                             <Eye size={SIZE_ICON} />
                         </IconButton>
                     </Tooltip>
-                    {record.rows?.total !== undefined &&
-                        record.rows.total > 0 && (
-                            <Tooltip
-                                title={
-                                    messages(
-                                        'reportConfigs.importResult.viewStatusDetail' as any
-                                    ) || 'View Status Detail'
-                                }
-                            >
-                                <IconButton
-                                    onClick={() => onViewStatusDetail?.(record)}
-                                >
-                                    <FileText size={SIZE_ICON} />
-                                </IconButton>
-                            </Tooltip>
-                        )}
+                    {record.rows?.total !== undefined && record.rows.total > 0 && (
+                        <Tooltip
+                            title={
+                                messages(
+                                    'reportConfigs.importResult.viewStatusDetail' as any
+                                ) || 'View Status Detail'
+                            }
+                        >
+                            <IconButton onClick={() => onViewStatusDetail?.(record)}>
+                                <FileText size={SIZE_ICON} />
+                            </IconButton>
+                        </Tooltip>
+                    )}
                 </Space>
             ),
         },
