@@ -1184,6 +1184,7 @@
             "pCopyright": "P copyright",
             "artists": "Artists",
             "contributors": "Contributors",
+            "isInstrumental": "Lyrics",
             "validation": {
                 "selectAtLeastOne": "Please select at least one data field to sync",
                 "releaseNotFound": "Release id not found"

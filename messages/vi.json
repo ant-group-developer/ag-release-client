@@ -1171,6 +1171,7 @@
             "pCopyright": "Bản quyền P",
             "artists": "Nghệ sĩ",
             "contributors": "Người đóng góp",
+            "isInstrumental": "Lời bài hát",
             "validation": {
                 "selectAtLeastOne": "Vui lòng chọn ít nhất một dữ liệu để đồng bộ",
                 "releaseNotFound": "Không tìm thấy release id"
@@ -1546,7 +1547,7 @@
                 "notFound": "Không tìm thấy nội dung nhạy cảm này",
                 "duplicateCode": "Mã nội dung nhạy cảm này đã tồn tại",
                 "duplicateName": "Tên nội dung nhạy cảm này đã tồn tại",
-                "cannotDeleteRelationWithTrack": "Cannot delete because it is already used in a track"
+                "cannotDeleteRelationWithTrack": "Không thể xóa nội dung nhạy cảm này vì đang được liên kết với bài hát."
             }
         }
     },
@@ -1817,6 +1818,7 @@
             "metadataLanguageCountryId": "Ngôn ngữ quốc gia",
             "recordingCountryId": "Quốc gia ghi âm"
         },
+        "isInstrumental": "Nhạc không lời",
         "releaseContributors": "Người đóng góp phát hành",
         "trackContributors": "Người đóng góp bài hát",
         "selectedCountries": "Khu vực",

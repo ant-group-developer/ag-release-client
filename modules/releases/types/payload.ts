@@ -109,6 +109,7 @@ export interface SyncReleaseDraftToTracksPayload {
     syncCopyright: boolean;
     syncArtists: boolean;
     syncContributors: boolean;
+    syncIsInstrumental: boolean;
 }
 
 export interface SyncReleaseDraftToTracks extends CommonFunction {
