@@ -382,6 +382,7 @@ export const QUERY_KEY = {
     ETL_JOBS: {
         KEY: 'ETL_JOBS',
         GET_LIST: 'GET_LIST_ETL_JOBS',
+        GET_STATUS_DETAIL: 'GET_STATUS_DETAIL_ETL_JOB',
     },
     ENRICH_SCAN_SESSIONS: {
         KEY: 'ENRICH_SCAN_SESSIONS',

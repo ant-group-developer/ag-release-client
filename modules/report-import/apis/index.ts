@@ -24,6 +24,7 @@ import {
     EnrichHistoryResponse,
     EnrichScanSessionData,
     EtlJobData,
+    EtlJobStatusDetailData,
     GetEnrichHistoryParams,
     ImportJobStatusResponse,
     PreValidateImportPayload,
@@ -98,6 +99,11 @@ export const reportConfigApis = {
         return axiosInstance.get<PaginationResponse<EtlJobData>>('/etl/jobs', {
             params,
         });
+    },
+    getEtlJobStatusDetail: (id: string) => {
+        return axiosInstance.get<DetailResponse<EtlJobStatusDetailData>>(
+            `/etl/jobs/${id}/status-detail`
+        );
     },
     getListEnrichScanSessions: (params: CommonParams) => {
         return axiosInstance.get<PaginationResponse<EnrichScanSessionData>>(
