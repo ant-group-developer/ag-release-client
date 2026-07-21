@@ -255,27 +255,31 @@ export default function EtlJobsTable({
                 <Space>
                     <Tooltip
                         title={
-                            messages('reportConfigs.importResult.viewLog' as any) ||
-                            'View Logs'
+                            messages(
+                                'reportConfigs.importResult.viewLog' as any
+                            ) || 'View Logs'
                         }
                     >
                         <IconButton onClick={() => onViewDetail(record)}>
                             <Eye size={SIZE_ICON} />
                         </IconButton>
                     </Tooltip>
-                    {record.rows?.total !== undefined && record.rows.total > 0 && (
-                        <Tooltip
-                            title={
-                                messages(
-                                    'reportConfigs.importResult.viewStatusDetail' as any
-                                ) || 'View Status Detail'
-                            }
-                        >
-                            <IconButton onClick={() => onViewStatusDetail?.(record)}>
-                                <FileText size={SIZE_ICON} />
-                            </IconButton>
-                        </Tooltip>
-                    )}
+                    {record.rows?.total !== undefined &&
+                        record.rows.total > 0 && (
+                            <Tooltip
+                                title={
+                                    messages(
+                                        'reportConfigs.importResult.viewStatusDetail' as any
+                                    ) || 'View Status Detail'
+                                }
+                            >
+                                <IconButton
+                                    onClick={() => onViewStatusDetail?.(record)}
+                                >
+                                    <FileText size={SIZE_ICON} />
+                                </IconButton>
+                            </Tooltip>
+                        )}
                 </Space>
             ),
         },
