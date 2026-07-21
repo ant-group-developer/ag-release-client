@@ -398,6 +398,7 @@
         "bulkUpdate": "Bulk update",
         "bulkCreate": "Bulk create",
         "autoSyncCi": "Auto Sync CI",
+        "syncTrackOrder": "Sync Track Order",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
