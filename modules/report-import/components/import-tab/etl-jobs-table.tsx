@@ -233,10 +233,11 @@ export default function EtlJobsTable({
             key: 'createdAt',
             dataIndex: 'createdAt',
             width: 160,
-            align: 'center',
+            align: 'left',
             render: (value) => formattedDate(value),
         },
         {
+            title: messages('common.action'),
             key: 'actions',
             width: 110,
             align: 'center',
@@ -245,27 +246,31 @@ export default function EtlJobsTable({
                 <Space>
                     <Tooltip
                         title={
-                            messages('reportConfigs.importResult.viewLog' as any) ||
-                            'View Logs'
+                            messages(
+                                'reportConfigs.importResult.viewLog' as any
+                            ) || 'View Logs'
                         }
                     >
                         <IconButton onClick={() => onViewDetail(record)}>
                             <Eye size={SIZE_ICON} />
                         </IconButton>
                     </Tooltip>
-                    {record.rows?.total !== undefined && record.rows.total > 0 && (
-                        <Tooltip
-                            title={
-                                messages(
-                                    'reportConfigs.importResult.viewStatusDetail' as any
-                                ) || 'View Status Detail'
-                            }
-                        >
-                            <IconButton onClick={() => onViewStatusDetail?.(record)}>
-                                <FileText size={SIZE_ICON} />
-                            </IconButton>
-                        </Tooltip>
-                    )}
+                    {record.rows?.total !== undefined &&
+                        record.rows.total > 0 && (
+                            <Tooltip
+                                title={
+                                    messages(
+                                        'reportConfigs.importResult.viewStatusDetail' as any
+                                    ) || 'View Status Detail'
+                                }
+                            >
+                                <IconButton
+                                    onClick={() => onViewStatusDetail?.(record)}
+                                >
+                                    <FileText size={SIZE_ICON} />
+                                </IconButton>
+                            </Tooltip>
+                        )}
                 </Space>
             ),
         },
