@@ -51,7 +51,7 @@ export default function DistributionTab({
                 label={messages('releaseVideo.fields.visibility')}
             >
                 <Select
-                    // disabled
+                    disabled
                     className="w-full"
                     placeholder={messages(
                         'releaseVideo.fields.selectVisibility'
