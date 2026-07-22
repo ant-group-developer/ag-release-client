@@ -171,6 +171,7 @@ export interface ReleasesDataFilter extends CommonParams {
     hasQaFlag?: boolean | string;
     dspDelivery?: QueryReleaseDspDelivery;
     tenantIds?: string;
+    hangingExecutionDays?: number;
 }
 
 export interface ReleaseTerritory extends CommonParams {

@@ -125,7 +125,7 @@
     },
     "common": {
         "workspace": "Workspace",
-        "label": "Hãng phát hành",
+        "label": "Label",
         "onlineLink": "Link trực tuyến",
         "yes": "Có",
         "no": "Không",
@@ -348,7 +348,6 @@
         "notification": "Thông báo",
         "columnsDisplay": "Cột hiển thị",
         "all": "Tất cả",
-        "cancel": "Hủy",
         "used": "Đã sử dụng",
         "notUsed": "Chưa sử dụng",
         "use": "Sử dụng",
@@ -423,8 +422,6 @@
         "of": "trong số",
         "creator": "Người tạo",
         "submitter": "Người gửi",
-        "yes": "Có",
-        "no": "Không",
         "other": "Khác",
         "review": "Đánh giá",
         "needsReview": "Đợi duyệt",
@@ -442,7 +439,6 @@
         "copied": "Đã sao chép",
         "engagement": "Mức độ tương tác",
         "listeners": "Người nghe",
-        "label": "Label",
         "labels": "Hãng phát hành",
         "expandAll": "Mở rộng tất cả",
         "collapseAll": "Thu gọn tất cả",
@@ -463,7 +459,8 @@
         "sortAsc": "Tăng dần",
         "sortDesc": "Giảm dần",
         "sortOrder": "Thứ tự sắp xếp",
-        "sortField": "Sắp xếp theo"
+        "sortField": "Sắp xếp theo",
+        "days": "ngày"
     },
     "country": {
         "label": "Quốc gia",
@@ -1340,7 +1337,9 @@
         "dspState51": "DSP State51",
         "excludeLockedDsp": "Loại trừ DSP bị khoá",
         "clearDspStatus": "Xoá DSP status",
-        "showAppliedDspOnly": "Chỉ hiện DSP đang áp dụng"
+        "showAppliedDspOnly": "Chỉ hiện DSP đang áp dụng",
+        "hangingExecutionDays": "Số ngày execution đang xử lý",
+        "hangingExecutionDaysPlaceholder": "Nhập số ngày"
     },
     "releaseArtist": {
         "label": "Nghệ sĩ phát hành",

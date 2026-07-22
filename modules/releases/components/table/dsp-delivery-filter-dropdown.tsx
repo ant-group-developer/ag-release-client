@@ -17,6 +17,7 @@ import {
     QueryReleaseDspDeliveryItem,
     ReleasesDataFilter,
 } from '../../types';
+import DspHangingExecutionDaysInput from './dsp-hanging-execution-days-input';
 
 type DspDeliveryFilterTableRow = {
     code: string;
@@ -103,6 +104,9 @@ export default function DspDeliveryFilterDropdown({
     const [dspDeliveryFilterRows, setDspDeliveryFilterRows] = useState<
         DspDeliveryFilterTableRow[]
     >(() => createDspDeliveryFilterRows([], dataFilter.dspDelivery));
+    const [hangingExecutionDays, setHangingExecutionDays] = useState<
+        number | undefined
+    >(dataFilter.hangingExecutionDays);
     const [showAppliedDspOnly, setShowAppliedDspOnly] = useState(false);
     const [selectedDspDeliveryGroups, setSelectedDspDeliveryGroups] = useState<
         DspDeliveryQuickFilter[]
@@ -115,7 +119,8 @@ export default function DspDeliveryFilterDropdown({
                 dataFilter.dspDelivery
             )
         );
-    }, [dspData?.items, dataFilter.dspDelivery]);
+        setHangingExecutionDays(dataFilter.hangingExecutionDays);
+    }, [dspData?.items, dataFilter.dspDelivery, dataFilter.hangingExecutionDays]);
 
     const dspDeliveryStatusOptions = useMemo(
         () =>
@@ -150,7 +155,9 @@ export default function DspDeliveryFilterDropdown({
         onChangeFilter({ dspDelivery });
     };
 
-    const parseDspDeliveryFilterRows = (rows: DspDeliveryFilterTableRow[]) => {
+    const parseDspDeliveryFilterRows = (
+        rows: DspDeliveryFilterTableRow[]
+    ) => {
         const include: QueryReleaseDspDeliveryItem[] = [];
         const exclude: QueryReleaseDspDeliveryItem[] = [];
 
@@ -267,9 +274,11 @@ export default function DspDeliveryFilterDropdown({
     };
 
     const handleApplyDspDeliveryFilter = () => {
-        changeDspDeliveryFilter(
-            parseDspDeliveryFilterRows(dspDeliveryFilterRows)
-        );
+        const dspDelivery = parseDspDeliveryFilterRows(dspDeliveryFilterRows);
+        onChangeFilter({
+            dspDelivery,
+            hangingExecutionDays,
+        });
         onClose?.();
     };
 
@@ -277,9 +286,13 @@ export default function DspDeliveryFilterDropdown({
         setDspDeliveryFilterRows(
             createDspDeliveryFilterRows(dspData?.items ?? [])
         );
+        setHangingExecutionDays(undefined);
         setShowAppliedDspOnly(false);
         setSelectedDspDeliveryGroups([]);
-        changeDspDeliveryFilter(undefined);
+        onChangeFilter({
+            dspDelivery: undefined,
+            hangingExecutionDays: undefined,
+        });
         onClose?.();
     };
 
@@ -480,9 +493,15 @@ export default function DspDeliveryFilterDropdown({
             className="max-w-[50vw] space-y-2 overflow-hidden p-3"
             onClick={(e) => e.stopPropagation()}
         >
-            <Typography.Text strong className="mb-2 block !text-base">
-                {messages('releaseDsp.dspFilter')}
-            </Typography.Text>
+            <div className="mb-2 flex items-center justify-between gap-2">
+                <Typography.Text strong className="!text-base">
+                    {messages('releaseDsp.dspFilter')}
+                </Typography.Text>
+                <DspHangingExecutionDaysInput
+                    value={hangingExecutionDays}
+                    onChange={setHangingExecutionDays}
+                />
+            </div>
             <div className="mb-2 flex flex-wrap items-center gap-2">
                 <Button
                     shape="round"
