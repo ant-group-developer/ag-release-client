@@ -1,5 +1,6 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { DATE_FORMAT } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
@@ -207,6 +208,33 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             width: 200,
             render: (value, record) => {
                 return <ReleaseStatusTag status={record?.status} />;
+            },
+        },
+        {
+            title: messages('common.releaseDate'),
+            key: 'releaseDate',
+            dataIndex: 'releaseDate',
+            align: 'left',
+            width: 160,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'releaseDate'
+            ),
+            render: (value, record) => {
+                if (!record?.releaseDate) return '-';
+                const dateStr = formattedDate(
+                    record.releaseDate,
+                    DATE_FORMAT.DATE_ONLY
+                );
+                return (
+                    <span className="truncate">
+                        {record?.releaseTime
+                            ? `${record.releaseTime} ${dateStr}`
+                            : dateStr}
+                    </span>
+                );
             },
         },
         {
