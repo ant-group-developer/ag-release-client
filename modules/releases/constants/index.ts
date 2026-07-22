@@ -1,4 +1,4 @@
-import { parseAsJson, parseAsString } from 'nuqs';
+import { parseAsInteger, parseAsJson, parseAsString } from 'nuqs';
 import { RELEASES_COLUMNS_DISPLAY } from '../enums';
 import { ReleasesDataFilter } from '../types';
 
@@ -56,6 +56,7 @@ export const releasesFilterParsers = {
     startUpdatedAt: parseAsString,
     endUpdatedAt: parseAsString,
     keyword: parseAsString,
+    hangingExecutionDays: parseAsInteger,
 
     dspDelivery: parseAsJson<NonNullable<ReleasesDataFilter['dspDelivery']>>(
         (value) => {
