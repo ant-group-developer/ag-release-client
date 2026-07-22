@@ -85,7 +85,7 @@ export default function DistributionTable({
                             />
                         </div>
                         <span className="font-bold">{record?.dsp?.name}</span>
-                        {record?.isActive === false && (
+                        {!record?.isActive && !record?.dsp?.isActive && (
                             <CustomTooltip
                                 title={messages('distribution.inactiveDsp')}
                             >
@@ -143,7 +143,9 @@ export default function DistributionTable({
             render: (value, record) => {
                 return (
                     <Tag color={record.hasLiveVersion ? 'success' : 'default'}>
-                        {record.hasLiveVersion ? 'Live' : 'Not Live'}
+                        {record.hasLiveVersion
+                            ? messages('release.live')
+                            : messages('release.notLive')}
                     </Tag>
                 );
             },
@@ -231,7 +233,7 @@ export default function DistributionTable({
                 pagination={false}
                 columns={column}
                 rowClassName={(record) =>
-                    record.isActive === false
+                    !record.isActive && !record.dsp?.isActive
                         ? 'bg-zinc-50 opacity-50'
                         : 'group cursor-pointer'
                 }

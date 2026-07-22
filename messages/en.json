@@ -398,6 +398,7 @@
         "bulkUpdate": "Bulk update",
         "bulkCreate": "Bulk create",
         "autoSyncCi": "Auto Sync CI",
+        "syncTrackOrder": "Sync Track Order",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
@@ -1026,6 +1027,8 @@
         "system": "System"
     },
     "release": {
+        "live": "Live",
+        "notLive": "Not Live",
         "excludeTitle": "Exclude releases",
         "excludeSearchEmptyText": "Search for releases to exclude",
         "excludeAlertMsg": "Selected to exclude <b>{count}</b> releases",

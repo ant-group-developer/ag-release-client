@@ -4,11 +4,11 @@ import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
-import { Avatar, Popconfirm, Table, Tag, theme, Typography } from 'antd';
+import { Avatar, Badge, Popconfirm, Table, Tag, theme, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Check, Eye, RotateCcw } from 'lucide-react';
+import { Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CHILD_EXECUTION_MODE, RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
 import {
     formatDurationShort,
@@ -25,6 +25,26 @@ type Props = {
     showHeader?: boolean;
 };
 
+const getKeysUpToDepth = (
+    data: any[],
+    depth: number,
+    maxDepth: number
+): React.Key[] => {
+    if (!data || depth >= maxDepth) return [];
+    let keys: React.Key[] = [];
+    data.forEach((item) => {
+        if (item.id) {
+            keys.push(item.id);
+        }
+        if (item.childSteps && item.childSteps.length > 0) {
+            keys = keys.concat(
+                getKeysUpToDepth(item.childSteps, depth + 1, maxDepth)
+            );
+        }
+    });
+    return keys;
+};
+
 export default function ReleaseSubmitStepTable({
     dataSource,
     onViewDetail,
@@ -37,13 +57,44 @@ export default function ReleaseSubmitStepTable({
     const [selectedLogs, setSelectedLogs] = useState<ReleaseSubmitLogsData[]>(
         []
     );
+    const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
+    const [lastSourceId, setLastSourceId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (dataSource && dataSource.length > 0) {
+            const currentSourceId = dataSource.map((item) => item.id).join(',');
+            if (currentSourceId !== lastSourceId) {
+                const keys = getKeysUpToDepth(dataSource, 0, 2);
+                setExpandedRowKeys(keys);
+                setLastSourceId(currentSourceId);
+            }
+        } else {
+            setLastSourceId(null);
+        }
+    }, [dataSource, lastSourceId]);
+
+    const formatTreeData = (data: ReleaseSubmitStepData[]): any[] => {
+        if (!data) return [];
+        return data.map((item) => {
+            if (item.childSteps && item.childSteps.length > 0) {
+                return {
+                    ...item,
+                    childSteps: formatTreeData(item.childSteps),
+                };
+            }
+            const { childSteps, ...rest } = item;
+            return rest;
+        });
+    };
+
+    const formattedDataSource = formatTreeData(dataSource);
 
     const columns: ColumnsType<ReleaseSubmitStepData> = [
         {
             title: messages('releaseExecution.detail.columns.stepType'),
             dataIndex: 'type',
             key: 'type',
-            width: 220,
+            width: 250,
             render: (value, record) => {
                 return messages(
                     `releaseExecution.stepTypeOptions.${record?.type}`
@@ -107,31 +158,34 @@ export default function ReleaseSubmitStepTable({
         },
 
         {
-            title: messages('releaseExecution.detail.columns.status'),
-            dataIndex: 'status',
-            key: 'status',
-            width: 140,
-            render: (value) => (
-                <Tag color={getReleaseSubmitStepStatusColor(value)}>
-                    {formatEnumLabel(value)}
-                </Tag>
-            ),
-        },
-        {
-            title: messages('releaseExecution.detail.columns.startedAt'),
-            dataIndex: 'startedAt',
-            key: 'startedAt',
-            width: 150,
-            render: (value) =>
-                value ? formattedDate(value, DATE_FORMAT.DATE_MINUTE) : '-',
-        },
-        {
-            title: messages('releaseExecution.detail.columns.completedAt'),
-            dataIndex: 'completedAt',
-            key: 'completedAt',
-            width: 150,
-            render: (value) =>
-                value ? formattedDate(value, DATE_FORMAT.DATE_MINUTE) : '-',
+            title: `${messages(
+                'releaseExecution.detail.columns.startedAt'
+            )} / ${messages('releaseExecution.detail.columns.completedAt')}`,
+            key: 'executionTime',
+            width: 300,
+            render: (_, record) => {
+                const startedAt = formattedDate(
+                    record.startedAt,
+                    DATE_FORMAT.DATE_MINUTE
+                );
+
+                if (!startedAt) return '-';
+                return (
+                    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                        <span>{startedAt}</span> -
+                        {record.completedAt ? (
+                            <span>
+                                {formattedDate(
+                                    record.completedAt,
+                                    DATE_FORMAT.DATE_MINUTE
+                                )}
+                            </span>
+                        ) : (
+                            <Badge status="processing" />
+                        )}
+                    </span>
+                );
+            },
         },
         {
             title: messages('releaseExecution.detail.columns.duration'),
@@ -194,31 +248,43 @@ export default function ReleaseSubmitStepTable({
                 );
             },
         },
+        // {
+        //     title: messages('releaseExecution.isDeliveryStep.title'),
+        //     dataIndex: 'isDeliveryStep',
+        //     key: 'isDeliveryStep',
+        //     width: 150,
+        //     align: 'center',
+        //     render: (value) => {
+        //         if (typeof value !== 'boolean') return '-';
+
+        //         if (!value) {
+        //             return '-';
+        //         }
+
+        //         return (
+        //             <CustomTooltip
+        //                 title={messages(
+        //                     'releaseExecution.isDeliveryStep.tooltip'
+        //                 )}
+        //             >
+        //                 <span className="flex items-center justify-center">
+        //                     <Check size={SIZE_ICON} color="green" />
+        //                 </span>
+        //             </CustomTooltip>
+        //         );
+        //     },
+        // },
         {
-            title: messages('releaseExecution.isDeliveryStep.title'),
-            dataIndex: 'isDeliveryStep',
-            key: 'isDeliveryStep',
-            width: 150,
+            title: messages('releaseExecution.detail.columns.status'),
+            dataIndex: 'status',
+            key: 'status',
+            width: 140,
             align: 'center',
-            render: (value) => {
-                if (typeof value !== 'boolean') return '-';
-
-                if (!value) {
-                    return '-';
-                }
-
-                return (
-                    <CustomTooltip
-                        title={messages(
-                            'releaseExecution.isDeliveryStep.tooltip'
-                        )}
-                    >
-                        <span className="flex items-center justify-center">
-                            <Check size={SIZE_ICON} color="green" />
-                        </span>
-                    </CustomTooltip>
-                );
-            },
+            render: (value) => (
+                <Tag color={getReleaseSubmitStepStatusColor(value)}>
+                    {formatEnumLabel(value)}
+                </Tag>
+            ),
         },
         {
             title: '',
@@ -235,8 +301,12 @@ export default function ReleaseSubmitStepTable({
                     </CustomTooltip>
                     {record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED && (
                         <Popconfirm
-                            title={messages('releaseExecution.confirm.retryTitle')}
-                            description={messages('releaseExecution.confirm.retryDescription')}
+                            title={messages(
+                                'releaseExecution.confirm.retryTitle'
+                            )}
+                            description={messages(
+                                'releaseExecution.confirm.retryDescription'
+                            )}
                             onConfirm={() => {
                                 retryStep({
                                     stepId: record.id,
@@ -263,23 +333,22 @@ export default function ReleaseSubmitStepTable({
                 rowKey="id"
                 size="small"
                 pagination={false}
-                dataSource={dataSource}
+                dataSource={formattedDataSource}
                 columns={columns}
                 loading={isPending}
                 showHeader={showHeader}
                 expandable={{
-                    rowExpandable: (record) => !!record.childSteps?.length,
-                    expandedRowRender: (record) => (
-                        <div className="rounded-md">
-                            <ReleaseSubmitStepTable
-                                dataSource={record.childSteps}
-                                onViewDetail={onViewDetail}
-                                showHeader={false}
-                            />
-                        </div>
-                    ),
+                    childrenColumnName: 'childSteps',
+                    indentSize: 24,
+                    expandedRowKeys,
+                    onExpandedRowsChange: (keys) =>
+                        setExpandedRowKeys(keys as React.Key[]),
                 }}
                 rowClassName={'group'}
+                className="table-tree-with-lines"
+                scroll={{
+                    y: '65vh',
+                }}
             />
             <StepLogsModal
                 open={logsModalVisible}

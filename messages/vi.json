@@ -397,6 +397,7 @@
         "bulkUpdate": "Cập nhật hàng loạt",
         "bulkCreate": "Tạo hàng loạt",
         "autoSyncCi": "Tự động đồng bộ CI",
+        "syncTrackOrder": "Đồng bộ Track Order",
         "create": "Thêm mới",
         "detail": "Chi tiết ",
         "delete": "Xoá",
@@ -1023,6 +1024,8 @@
         "system": "Hệ thống"
     },
     "release": {
+        "live": "Đã trực tuyến",
+        "notLive": "Chưa trực tuyến",
         "excludeTitle": "Loại trừ các phát hành",
         "excludeSearchEmptyText": "Tìm kiếm bản phát hành muốn loại trừ",
         "excludeAlertMsg": "Đã chọn loại trừ <b>{count}</b> bản phát hành",
@@ -1069,7 +1072,7 @@
             "matchedTracks": "Track khớp"
         },
         "onlyDraftCanBeDeleted": "Chỉ những phát hành ở trạng thái Nháp mới có thể bị xoá.",
-        "dspLive": "DSPs live",
+        "dspLive": "Phân phối",
         "audioLanguage": "Ngôn ngữ âm thanh",
         "metadataLanguageCountry": "Ngôn ngữ metadata quốc gia",
         "metadataLanguage": "Ngôn ngữ metadata",
@@ -1795,7 +1798,7 @@
         "lastEnqueue": "Lần xếp hàng cuối",
         "lastDelivered": "Lần gửi cuối",
         "inactiveDsp": "Nền tảng phát hành này đã bị khoá, không thể phát hành",
-        "hasLiveVersion": "Có phiên bản Live"
+        "hasLiveVersion": "Có phiên bản trực tuyến"
     },
     "formFields": {
         "contributorsMustIncludeProducer": "Người đóng góp phải bao gồm nhà sản xuất",

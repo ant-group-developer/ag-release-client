@@ -541,3 +541,42 @@ html.dark .ck.ck-list__item .ck-button:hover {
 }
 
 /* end custom scrollbar */
+
+/* Tree Line Connector CSS for Ant Design Table */
+.table-tree-with-lines .ant-table-row-indent {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    position: relative;
+}
+
+/*
+ * Ant Design renders one indent element whose padding is the total tree depth,
+ * rather than one indent element for each ancestor. Repeat the vertical stroke
+ * across that padding so every ancestor level has its own connector.
+ */
+.table-tree-with-lines .ant-table-row-indent {
+    background-image: linear-gradient(
+        to right,
+        transparent 8px,
+        rgba(140, 140, 140, 0.35) 8px,
+        rgba(140, 140, 140, 0.35) 9.5px,
+        transparent 9.5px
+    );
+    background-size: 24px 100%;
+    background-repeat: repeat-x;
+}
+
+/* Connect the current row at the last indent level, immediately before its icon. */
+.table-tree-with-lines .ant-table-row:not(.ant-table-row-level-0) .ant-table-row-indent::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: calc(100% - 16px);
+    width: 8px;
+    height: 34px;
+    border-left: 1.5px solid rgba(140, 140, 140, 0.35);
+    border-bottom: 1.5px solid rgba(140, 140, 140, 0.35);
+    border-bottom-left-radius: 4px;
+    pointer-events: none;
+}
