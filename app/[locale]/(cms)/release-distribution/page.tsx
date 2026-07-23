@@ -21,11 +21,10 @@ import { RELEASE_TYPE } from '@/modules/releases/enums';
 import {
     DownloadOutlined,
     PlusOutlined,
-    SendOutlined,
     SyncOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Space, theme } from 'antd';
+import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useMemo, useState } from 'react';
 
