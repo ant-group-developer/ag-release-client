@@ -275,10 +275,21 @@ export default function DspDeliveryFilterDropdown({
 
     const handleApplyDspDeliveryFilter = () => {
         const dspDelivery = parseDspDeliveryFilterRows(dspDeliveryFilterRows);
-        onChangeFilter({
+        const filterPayload: Partial<ReleasesDataFilter> = {
             dspDelivery,
-            hangingExecutionDays,
-        });
+        };
+
+        if (
+            hangingExecutionDays !== undefined &&
+            hangingExecutionDays !== null &&
+            !isNaN(hangingExecutionDays)
+        ) {
+            filterPayload.hangingExecutionDays = Number(hangingExecutionDays);
+        } else if (dataFilter.hangingExecutionDays !== undefined) {
+            filterPayload.hangingExecutionDays = undefined;
+        }
+
+        onChangeFilter(filterPayload);
         onClose?.();
     };
 

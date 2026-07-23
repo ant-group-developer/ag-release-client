@@ -6,6 +6,7 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import BulkSubmitModal from '@/modules/release-distribution/components/bulk-submit-modal';
 import ExportModal from '@/modules/release-distribution/components/export-modal';
 import ReleaseDistributionHeader from '@/modules/release-distribution/components/header';
 import ReleaseDistributionTable from '@/modules/release-distribution/components/table/release-distribution-table';
@@ -19,12 +20,13 @@ import { RELEASE_TYPE } from '@/modules/releases/enums';
 import {
     DownloadOutlined,
     PlusOutlined,
+    SendOutlined,
     SyncOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { Key, useMemo, useState } from 'react';
 
 export default function ReleaseDistributionPage() {
     const {
@@ -46,6 +48,8 @@ export default function ReleaseDistributionPage() {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [isBulkSubmitModalOpen, setIsBulkSubmitModalOpen] = useState(false);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
     // apis
     const {
@@ -58,6 +62,14 @@ export default function ReleaseDistributionPage() {
     const { autoSyncCi, isPending: isAutoSyncing } = useAutoSyncCi();
     const { exportReleaseCiData, isPending: isExporting } =
         useExportReleaseCiData();
+
+    const selectedReleaseIds = useMemo(() => {
+        if (!releaseCiDataList?.items) return [];
+        return releaseCiDataList.items
+            .filter((item) => selectedRowKeys.includes(item.id))
+            .map((item) => item.releaseId || item.release?.id)
+            .filter(Boolean) as string[];
+    }, [releaseCiDataList?.items, selectedRowKeys]);
 
     const handleRefresh = () => {
         refetch();
@@ -104,6 +116,14 @@ export default function ReleaseDistributionPage() {
         );
     };
 
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: (keys: Key[]) => {
+            setSelectedRowKeys(keys);
+        },
+        preserveSelectedRowKeys: true,
+    };
+
     return (
         <AppPageWrapper>
             <PageContainer
@@ -137,6 +157,16 @@ export default function ReleaseDistributionPage() {
                 ]}
             >
                 <ReleaseDistributionTable
+                    rowSelection={rowSelection}
+                    tableAlertOptionRender={() => (
+                        <Button
+                            type="primary"
+                            icon={<SendOutlined />}
+                            onClick={() => setIsBulkSubmitModalOpen(true)}
+                        >
+                            {messages('release.bulkSubmit')}
+                        </Button>
+                    )}
                     headerTitle={
                         <ReleaseDistributionHeader
                             dataFilter={dataFilter}
@@ -182,6 +212,16 @@ export default function ReleaseDistributionPage() {
                     onCancel={() => setIsExportModalOpen(false)}
                     onOk={handleConfirmExport}
                     confirmLoading={isExporting}
+                />
+
+                <BulkSubmitModal
+                    open={isBulkSubmitModalOpen}
+                    selectedReleaseIds={selectedReleaseIds}
+                    onCancel={() => setIsBulkSubmitModalOpen(false)}
+                    onSuccess={() => {
+                        setSelectedRowKeys([]);
+                        refetch();
+                    }}
                 />
             </PageContainer>
         </AppPageWrapper>

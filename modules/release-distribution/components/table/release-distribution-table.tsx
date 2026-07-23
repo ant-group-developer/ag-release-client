@@ -406,6 +406,7 @@ export default function ReleaseDistributionTable({
         <>
             <AppProTable
                 headerTitle={messages('release.list')}
+                rowKey="id"
                 {...props}
                 pagination={false}
                 columns={column}
