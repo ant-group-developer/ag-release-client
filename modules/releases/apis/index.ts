@@ -212,22 +212,8 @@ export const releasesApi = {
         );
     },
 
-    bulkSubmit: ({
-        ids,
-        codes,
-        idsExclude,
-        status,
-        needImportAgain,
-        skipDistributed,
-    }: BulkSubmitRelease) => {
-        return axiosInstance.post('/releases/bulk-submit', {
-            ids,
-            codes,
-            idsExclude,
-            status,
-            needImportAgain,
-            skipDistributed,
-        });
+    bulkSubmit: (payload: BulkSubmitRelease) => {
+        return axiosInstance.post('/releases/bulk-submit', payload);
     },
 
     previewBulkSubmitResult: (payload: BulkSubmitRelease) => {
