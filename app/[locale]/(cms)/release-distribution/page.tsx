@@ -2,6 +2,7 @@
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppPagination from '@/components/ui/pagination';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
@@ -18,13 +19,10 @@ import { useExportReleaseCiData } from '@/modules/release-distribution/hooks/use
 import { useGetListReleaseCiData } from '@/modules/release-distribution/hooks/use-get-list-release-ci-data';
 import { ReleaseCiDataFilter } from '@/modules/release-distribution/types';
 import { RELEASE_TYPE } from '@/modules/releases/enums';
-import {
-    DownloadOutlined,
-    PlusOutlined,
-    SyncOutlined,
-} from '@ant-design/icons';
+import { DownloadOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, theme } from 'antd';
+import { Button, Space, theme } from 'antd';
+import { RotateCw, Send } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Key, useMemo, useState } from 'react';
 
@@ -159,7 +157,7 @@ export default function ReleaseDistributionPage() {
                     </Button>,
                     <Button
                         key="auto-sync-ci"
-                        icon={<SyncOutlined />}
+                        icon={<RotateCw size={SIZE_ICON} />}
                         loading={isAutoSyncing}
                         onClick={handleAutoSync}
                     >
@@ -167,7 +165,7 @@ export default function ReleaseDistributionPage() {
                     </Button>,
                     <Button
                         key="sync-track-order"
-                        icon={<SyncOutlined />}
+                        icon={<RotateCw size={SIZE_ICON} />}
                         loading={isSyncingTrackOrder}
                         onClick={handleSyncTrackOrder}
                     >
@@ -191,7 +189,7 @@ export default function ReleaseDistributionPage() {
                             <Button
                                 type="primary"
                                 key="sync-selected-track-order"
-                                icon={<SyncOutlined />}
+                                icon={<RotateCw size={SIZE_ICON} />}
                                 loading={isSyncingTrackOrder}
                                 onClick={() =>
                                     handleSyncSelectedTrackOrder(
@@ -203,7 +201,7 @@ export default function ReleaseDistributionPage() {
                             </Button>
                             <Button
                                 type="primary"
-                                icon={<SendOutlined />}
+                                icon={<Send size={SIZE_ICON} />}
                                 onClick={() => setIsBulkSubmitModalOpen(true)}
                             >
                                 {messages('release.bulkSubmit')}
