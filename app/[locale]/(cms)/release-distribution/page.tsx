@@ -106,7 +106,7 @@ export default function ReleaseDistributionPage() {
         bulkSyncTrackOrder({
             payload: { ids: selectedRowKeys },
             onSuccess: () => {
-                setSelectedRows([]);
+                setSelectedRowKeys([]);
                 // refetch();
             },
         });
@@ -220,7 +220,6 @@ export default function ReleaseDistributionPage() {
                             handleRefresh();
                         },
                     }}
-                    rowSelection={rowSelection}
                     tableAlertRender={({ selectedRowKeys }) => {
                         return (
                             <Space>
