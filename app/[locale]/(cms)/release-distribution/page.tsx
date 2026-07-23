@@ -187,14 +187,29 @@ export default function ReleaseDistributionPage() {
             >
                 <ReleaseDistributionTable
                     rowSelection={rowSelection}
-                    tableAlertOptionRender={() => (
-                        <Button
-                            type="primary"
-                            icon={<SendOutlined />}
-                            onClick={() => setIsBulkSubmitModalOpen(true)}
-                        >
-                            {messages('release.bulkSubmit')}
-                        </Button>
+                    tableAlertOptionRender={({ selectedRowKeys }) => (
+                        <Space>
+                            <Button
+                                type="primary"
+                                key="sync-selected-track-order"
+                                icon={<SyncOutlined />}
+                                loading={isSyncingTrackOrder}
+                                onClick={() =>
+                                    handleSyncSelectedTrackOrder(
+                                        selectedRowKeys as string[]
+                                    )
+                                }
+                            >
+                                {messages('common.syncTrackOrder')}
+                            </Button>
+                            <Button
+                                type="primary"
+                                icon={<SendOutlined />}
+                                onClick={() => setIsBulkSubmitModalOpen(true)}
+                            >
+                                {messages('release.bulkSubmit')}
+                            </Button>
+                        </Space>
                     )}
                     headerTitle={
                         <ReleaseDistributionHeader
@@ -219,25 +234,6 @@ export default function ReleaseDistributionPage() {
                         reload: () => {
                             handleRefresh();
                         },
-                    }}
-                    tableAlertRender={({ selectedRowKeys }) => {
-                        return (
-                            <Space>
-                                <Button
-                                    type="primary"
-                                    key="sync-selected-track-order"
-                                    icon={<SyncOutlined />}
-                                    loading={isSyncingTrackOrder}
-                                    onClick={() =>
-                                        handleSyncSelectedTrackOrder(
-                                            selectedRowKeys as string[]
-                                        )
-                                    }
-                                >
-                                    {messages('common.syncTrackOrder')}
-                                </Button>
-                            </Space>
-                        );
                     }}
                 />
 
