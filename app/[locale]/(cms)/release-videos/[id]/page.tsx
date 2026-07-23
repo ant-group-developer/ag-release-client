@@ -32,8 +32,21 @@ export default function EditReleaseVideo() {
         releaseData?.title +
         (releaseData?.version ? ` [${releaseData.version}]` : '');
 
+    const featuredArtists =
+        releaseData?.releaseContributors
+            ?.map((c) => c.artist?.name)
+            ?.filter(Boolean) || [];
+
+    const featuredArtistsName = featuredArtists.join(', ');
+
+    const displayTitle = featuredArtistsName
+        ? `${title} ft. ${featuredArtistsName}`
+        : title;
+
     const displayBreadcrumbTitle = releaseData
-        ? (displayName ? `${displayName} - ${title}` : title)
+        ? displayName
+            ? `${displayName} - ${displayTitle}`
+            : displayTitle
         : messages('common.detail');
 
     const breadcrumbItems = [

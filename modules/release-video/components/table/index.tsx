@@ -1,12 +1,13 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
+import { DATE_FORMAT } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { Link, useRouter } from '@/i18n/routing';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import ReleaseVideoCoverImage from '@/modules/release-video/components/image/release-video-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { Tag, Tooltip, Typography } from 'antd';
@@ -77,13 +78,16 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                     : value;
 
                 return (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 pr-2">
                         <Link href={detailUrl}>
-                            <div className="h-14 min-w-14">
-                                <ReleaseCoverImage data={record} />
+                            <div className="aspect-[16/9] w-[140px]">
+                                <ReleaseVideoCoverImage
+                                    width={140}
+                                    data={record}
+                                />
                             </div>
                         </Link>
-                        <div className="flex flex-col truncate">
+                        <div className="flex flex-col gap-1 truncate">
                             <div className="flex items-center gap-1">
                                 <Tooltip title={fullTitle}>
                                     <Link href={detailUrl} className="truncate">
@@ -96,12 +100,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                                     className="inline-block align-middle"
                                     data-stop-row-click="true"
                                 >
-                                    <Typography.Text
-                                        copyable={{
-                                            text: fullTitle,
-                                            tooltips: false,
-                                        }}
-                                    />
+                                    <Typography.Text />
                                 </span>
                             </div>
                             {record.video?.channel?.name && (
@@ -149,7 +148,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'ISRC',
             dataIndex: ['video', 'isrc'],
             align: 'left',
-            width: 180,
+            width: 200,
             ellipsis: true,
             render: (value, record) => {
                 if (!value) return '-';
@@ -160,12 +159,13 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                 );
             },
         },
+
         {
             title: messages('releaseVideo.fields.visibility'),
             key: 'visibility',
             dataIndex: ['video', 'visibility'],
             align: 'left',
-            width: 250,
+            width: 200,
             render: (value: RELEASE_VIDEO_VISIBILITY) => {
                 const config = {
                     [RELEASE_VIDEO_VISIBILITY.DEFAULT]: {
@@ -191,11 +191,50 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                         color: 'purple',
                     },
                 }[value] || {
-                    label: value || '-',
+                    label: value,
                     color: 'default',
                 };
 
+                if (!value) return '-';
+
                 return <Tag color={config.color}>{config.label}</Tag>;
+            },
+        },
+        {
+            title: messages('common.status'),
+            key: 'status',
+            dataIndex: 'status',
+            align: 'left',
+            width: 200,
+            render: (value, record) => {
+                return <ReleaseStatusTag status={record?.status} />;
+            },
+        },
+        {
+            title: messages('common.releaseDate'),
+            key: 'releaseDate',
+            dataIndex: 'releaseDate',
+            align: 'left',
+            width: 160,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'releaseDate'
+            ),
+            render: (value, record) => {
+                if (!record?.releaseDate) return '-';
+                const dateStr = formattedDate(
+                    record.releaseDate,
+                    DATE_FORMAT.DATE_ONLY
+                );
+                return (
+                    <span className="truncate">
+                        {record?.releaseTime
+                            ? `${record.releaseTime} ${dateStr}`
+                            : dateStr}
+                    </span>
+                );
             },
         },
         {
@@ -203,7 +242,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'youtubeId',
             dataIndex: ['video', 'externalId'],
             align: 'left',
-            width: 180,
+            width: 200,
             ellipsis: true,
             render: (value) => {
                 if (!value) return '-';
@@ -239,21 +278,11 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'workspace',
             dataIndex: ['tenant', 'name'],
             align: 'left',
-            width: 180,
+            width: 200,
             ellipsis: true,
             render: (value) => value || '-',
         },
 
-        {
-            title: messages('common.status'),
-            key: 'status',
-            dataIndex: 'status',
-            align: 'left',
-            width: 120,
-            render: (value, record) => {
-                return <ReleaseStatusTag status={record?.status} />;
-            },
-        },
         // {
         //     title: messages('common.createdAt'),
         //     key: 'createdAt',
@@ -272,8 +301,8 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             title: messages('common.updatedAt'),
             key: 'updatedAt',
             dataIndex: 'updatedAt',
-            align: 'center',
-            width: 140,
+            align: 'left',
+            width: 200,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,

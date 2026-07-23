@@ -248,6 +248,7 @@
         "partners": "Đối tác",
         "views": "Lượt xem",
         "fileName": "Tên file",
+        "filePath": "Đường dẫn tệp",
         "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
         "notAvailable": "Chưa có thông tin",
@@ -3075,6 +3076,8 @@
         "reportType": "Loại báo cáo",
         "reportTypeTooltip": "Phân loại báo cáo.",
         "reportTypePlaceholder": "Chọn loại báo cáo",
+        "reportTypeSales": "Sales",
+        "reportTypeTrends": "Trends",
         "folderPatterns": "Mẫu thư mục",
         "folderPatternsTooltip": "Mảng các biểu thức chính quy (Regex) để khớp tên thư mục chứa file.",
         "folderPatternsPlaceholder": "VD: .*spotify.*",
@@ -3124,6 +3127,9 @@
             "sourceFile": "Tệp nguồn",
             "duration": "Thời gian xử lý",
             "startTime": "Thời gian bắt đầu",
+            "viewLog": "Xem nhật ký import",
+            "viewStatusDetail": "Xem chi tiết trạng thái",
+            "statusDetailModalTitle": "Chi tiết trạng thái ETL Job",
             "uploadingMatched": "Đang tải lên {count} tệp tin hợp lệ...",
             "uploadFailedMatched": "Tải lên thất bại {count} tệp tin hợp lệ. Vui lòng kiểm tra lại.",
             "noValidFiles": "Không có tệp tin nào hợp lệ để tải lên. Vui lòng kiểm tra lại danh sách lỗi bên dưới.",
@@ -3153,7 +3159,10 @@
             "errorRows": "Lỗi",
             "recentJobsTitle": "Lịch sử nhập/đồng bộ gần đây",
             "uploadReportBtn": "Nhập báo cáo",
-            "detailedProgress": "Tiến độ chi tiết từng file"
+            "detailedProgress": "Tiến độ chi tiết từng file",
+            "filesCount": "Số lượng tệp",
+            "totalSize": "Tổng dung lượng",
+            "filesDetail": "Chi tiết các tệp tin"
         },
         "enrichScanSchedules": {
             "label": "Cấu hình tự động chuẩn hoá",
