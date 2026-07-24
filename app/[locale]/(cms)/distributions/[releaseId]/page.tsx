@@ -4,12 +4,12 @@ import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import DistributionChannelsPanel from '@/modules/distribution-orchestration/components/channels-panel';
+import DistributionStateTag from '@/modules/distribution-orchestration/components/distribution-state-tag';
 import DistributionFlagsPanel from '@/modules/distribution-orchestration/components/flags-panel';
 import DistributionReviewActions from '@/modules/distribution-orchestration/components/review-actions';
-import DistributionStateTag from '@/modules/distribution-orchestration/components/distribution-state-tag';
 import SubmitDspModal from '@/modules/distribution-orchestration/components/submit-dsp-modal';
 import DistributionTimeline from '@/modules/distribution-orchestration/components/timeline';
-import { useGetDistributions } from '@/modules/distribution-orchestration/hooks';
+import { useGetDistributionByRelease } from '@/modules/distribution-orchestration/hooks';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Card, Col, Row, Space, Typography } from 'antd';
@@ -27,22 +27,21 @@ export default function DistributionDetailPage() {
     const canReview = hasPermission(PERMISSION.RELEASE_REVIEW.REJECT);
 
     const { releaseData } = useGetDetailRelease(releaseId);
-    const { distributionsData, refetch } = useGetDistributions({
-        ids: [releaseId],
-        page: 1,
-        pageSize: 1,
-    });
+    const { distributionInfo, refetch } =
+        useGetDistributionByRelease(releaseId);
 
-    const item = distributionsData?.items?.[0];
-    const distributionId = item?.distributionId ?? null;
-    const state = item?.distributionState ?? null;
+    const distributionId = distributionInfo?.distributionId ?? null;
+    const state = distributionInfo?.distributionState ?? null;
 
     const [submitOpen, setSubmitOpen] = useState(false);
 
     return (
         <AppPageWrapper>
             <PageContainer
-                title={releaseData?.title || messages('distributionOrchestration.label')}
+                title={
+                    releaseData?.title ||
+                    messages('distributionOrchestration.label')
+                }
                 extra={
                     <Space>
                         <DistributionStateTag state={state} />
@@ -51,7 +50,9 @@ export default function DistributionDetailPage() {
                             icon={<Send size={16} />}
                             onClick={() => setSubmitOpen(true)}
                         >
-                            {messages('distributionOrchestration.actions.submit')}
+                            {messages(
+                                'distributionOrchestration.actions.submit'
+                            )}
                         </Button>
                         {distributionId && (
                             <DistributionReviewActions
@@ -83,7 +84,11 @@ export default function DistributionDetailPage() {
                         </Card>
                     </Col>
                     <Col xs={24} lg={10}>
-                        <Space direction="vertical" size={16} className="w-full">
+                        <Space
+                            direction="vertical"
+                            size={16}
+                            className="w-full"
+                        >
                             <Card size="small">
                                 <DistributionChannelsPanel
                                     distributionId={distributionId}

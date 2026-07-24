@@ -5,6 +5,7 @@ import { DSP_DEAL_TENANT } from '../enums';
 
 export interface TenantDspDataFilter extends CommonParams {
     keyword?: string;
+    releaseId?: string;
 }
 
 export interface TenantDspData {

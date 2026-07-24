@@ -1,6 +1,7 @@
 export { useApproveReview } from './use-approve-review';
 export { useDistributionStream, getStreamUrl } from './use-distribution-stream';
 export { useGetChannels } from './use-get-channels';
+export { useGetDistributionByRelease } from './use-get-distribution-by-release';
 export { useGetDistributions } from './use-get-distributions';
 export { useGetMetrics } from './use-get-metrics';
 export { useGetTickets } from './use-get-tickets';

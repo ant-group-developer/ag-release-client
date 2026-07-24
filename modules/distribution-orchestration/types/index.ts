@@ -139,10 +139,20 @@ export interface DistributionListFilter extends CommonParams {
     type?: 'audio' | 'video';
     albumFormatId?: string;
     distributionState?: DISTRIBUTION_STATE;
-    /** Lọc theo release cụ thể (dùng cho trang detail release-centric). */
+    /** Lọc theo release cụ thể (khớp DTO1 server field `ids`). */
     ids?: string[];
     /** Ẩn release nhập từ report (mặc định 'false' — giống trang releases). */
     isImportedFromReport?: string;
+}
+
+/* ───────── By-release detail (GET /distributions/by-release/:releaseId) ─ */
+
+/** Distribution mới nhất của 1 release — null nếu chưa submit. */
+export interface LatestDistributionInfo {
+    distributionId: string;
+    distributionState: DISTRIBUTION_STATE;
+    distributionType: EXECUTION_TYPE;
+    distributionUpdatedAt: string;
 }
 
 /* ───────── Tickets / flags (GET /distributions/:id/tickets) ───────── */

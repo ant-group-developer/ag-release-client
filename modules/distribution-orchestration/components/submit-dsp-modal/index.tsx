@@ -1,6 +1,15 @@
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetTenantDsps } from '@/modules/dsp-tenant/hooks/use-get-tenant-dsps';
-import { Checkbox, Empty, Modal, Radio, Space, Spin, Tag, Typography } from 'antd';
+import {
+    Checkbox,
+    Empty,
+    Modal,
+    Radio,
+    Space,
+    Spin,
+    Tag,
+    Typography,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { EXECUTION_TYPE } from '../../enums';
@@ -33,7 +42,7 @@ export default function SubmitDspModal({
     const messages = useTranslations();
     const { isSystemTenant } = useAuth();
 
-    const { dspData, isFetching } = useGetTenantDsps({});
+    const { dspData, isFetching } = useGetTenantDsps({ releaseId });
     const { submitDistribution, isPending } = useSubmitDistribution();
 
     const [type, setType] = useState<EXECUTION_TYPE>(
@@ -54,7 +63,8 @@ export default function SubmitDspModal({
     }, [open, availableDsps]);
 
     const topologyLabel = (mode: string | null, hasDeal?: boolean) => {
-        if (mode === 'DIRECT') return messages('distributionOrchestration.submit.direct');
+        if (mode === 'DIRECT')
+            return messages('distributionOrchestration.submit.direct');
         const lane = hasDeal ? 'CI' : 'State51';
         return `${messages('distributionOrchestration.submit.aggregator')} · ${lane}`;
     };
@@ -105,9 +115,11 @@ export default function SubmitDspModal({
                 </div>
 
                 <div>
-                    <Space className="mb-1 justify-between w-full">
+                    <Space className="mb-1 w-full justify-between">
                         <Typography.Text strong>
-                            {messages('distributionOrchestration.submit.selectDsp')}
+                            {messages(
+                                'distributionOrchestration.submit.selectDsp'
+                            )}
                         </Typography.Text>
                         <Checkbox
                             checked={
@@ -154,7 +166,7 @@ export default function SubmitDspModal({
                                 {availableDsps.map((d) => (
                                     <div
                                         key={d.dsp.code}
-                                        className="flex items-center justify-between w-full"
+                                        className="flex w-full items-center justify-between"
                                     >
                                         <Checkbox value={d.dsp.code}>
                                             {d.dsp.name}

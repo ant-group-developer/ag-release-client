@@ -7,6 +7,7 @@ import {
     DistributionListItem,
     DistributionMetrics,
     DistributionTicket,
+    LatestDistributionInfo,
     OkResponse,
     RejectReviewPayload,
     ResponseSuccess,
@@ -100,5 +101,12 @@ export const distributionOrchestrationApis = {
         return axiosInstance.get<ResponseSuccess<DistributionChannel[]>>(
             `/distributions/${id}/channels`
         );
+    },
+
+    /** GET /distributions/by-release/:releaseId — distribution mới nhất của 1 release. */
+    getByRelease: (releaseId: string) => {
+        return axiosInstance.get<
+            ResponseSuccess<LatestDistributionInfo | null>
+        >(`/distributions/by-release/${releaseId}`);
     },
 };

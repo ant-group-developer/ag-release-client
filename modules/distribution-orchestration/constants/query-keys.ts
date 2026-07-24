@@ -68,4 +68,10 @@ export const distributionOrchestrationQueryKeys = {
         ...distributionOrchestrationQueryKeys.channelLists(),
         id,
     ],
+
+    byRelease: (releaseId: string) => [
+        distributionOrchestrationQueryKeys.all,
+        'by-release',
+        releaseId,
+    ],
 };
