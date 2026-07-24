@@ -1,10 +1,9 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedNumber } from '@/helpers/common';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { Tooltip, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { RANK_COLUMN_WIDTH } from '../../constants/types';
+
 import {
     RevenueArtistItem,
     RevenueChannelItem,
@@ -36,22 +35,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const artistColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.artist'),
                 dataIndex: 'artistName',
                 key: 'artistName',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueArtistItem) => (
                     <div className="flex items-center gap-3">
@@ -81,7 +68,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: messages('common.tracks'),
                 dataIndex: 'trackCount',
                 key: 'trackCount',
@@ -91,12 +78,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                         {count || 0}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 125,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -107,7 +94,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 125,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -121,22 +108,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const trackColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.track'),
                 dataIndex: 'title',
                 key: 'title',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueTrackItem) => (
                     <div className="flex items-center gap-3">
@@ -168,7 +143,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: 'ISRC',
                 dataIndex: 'isrc',
                 key: 'isrc',
@@ -179,12 +154,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                         {text || '—'}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 110,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -195,7 +170,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 100,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -209,22 +184,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const releaseColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.release'),
                 dataIndex: 'title',
                 key: 'title',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueReleaseItem) => (
                     <div className="flex items-center gap-3">
@@ -256,7 +219,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: 'UPC',
                 dataIndex: 'upc',
                 key: 'upc',
@@ -267,12 +230,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                         {text || '—'}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 110,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -283,7 +246,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 100,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -297,22 +260,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const releaseVideoColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.releasesVideo'),
                 dataIndex: 'title',
                 key: 'title',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueReleaseVideoItem) => (
                     <div className="flex items-center gap-3">
@@ -344,7 +295,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: 'ISRC',
                 key: 'isrc',
                 width: 220,
@@ -431,12 +382,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                         </div>
                     );
                 },
-            },
+            }, */
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 220,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -447,7 +398,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 220,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -460,25 +411,20 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const dspColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueDspItem) => (
                     <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
+                            <ReleaseCoverImage
+                                width={32}
+                                height={32}
+                                src={record.imageUrl}
+                            />
+                        </div>
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
@@ -503,7 +449,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 150,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -514,7 +460,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 150,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -528,22 +474,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const tenantColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('tenant.name'),
                 dataIndex: 'tenantName',
                 key: 'tenantName',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueTenantItem) => (
                     <div className="flex items-center gap-3">
@@ -577,7 +511,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 150,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -588,7 +522,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 150,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -602,22 +536,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const labelColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.label'),
                 dataIndex: 'labelName',
                 key: 'labelName',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueLabelItem) => (
                     <div className="flex items-center gap-3">
@@ -647,7 +569,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: messages('common.releases'),
                 dataIndex: 'releaseCount',
                 key: 'releaseCount',
@@ -668,12 +590,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                         {count || 0}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 120,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -684,7 +606,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 100,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -698,22 +620,10 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const channelColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.channel'),
                 dataIndex: 'channelName',
                 key: 'channelName',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueChannelItem) => (
                     <div className="flex items-center gap-3">
@@ -741,7 +651,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: messages('common.youtubeChannelId'),
                 dataIndex: 'youtubeChannelId',
                 key: 'youtubeChannelId',
@@ -775,12 +685,12 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                         </div>
                     );
                 },
-            },
+            }, */
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 110,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -791,7 +701,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 110,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -805,45 +715,42 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
     const sourceTypeColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="font-bold text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('analytics2.distributors'),
                 dataIndex: 'sourceTypeLabel',
                 key: 'sourceTypeLabel',
+                width: '60%',
                 ellipsis: true,
                 render: (text: string, record: RevenueSourceTypeItem) => (
-                    <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                            onClick={() =>
-                                setDetailModal({
-                                    type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
-                                    title: text,
-                                    id: record.sourceType,
-                                })
-                            }
-                        >
-                            {text || '—'}
-                        </span>
-                    </CustomTooltip>
+                    <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
+                            <ReleaseCoverImage
+                                width={32}
+                                height={32}
+                                src={record.imageUrl}
+                            />
+                        </div>
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <span
+                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
+                                        title: text,
+                                        id: record.sourceType,
+                                    })
+                                }
+                            >
+                                {text || '—'}
+                            </span>
+                        </CustomTooltip>
+                    </div>
                 ),
             },
             {
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: 150,
+                width: '20%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -854,7 +761,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: 150,
+                width: '20%',
                 render: (val: number) => (
                     <span className="font-semibold text-gray-900 dark:text-zinc-100">
                         ${val ? formattedNumber(val) : '0.00'}
