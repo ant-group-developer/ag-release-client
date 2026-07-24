@@ -26,5 +26,5 @@ export const getAnalyticsReleaseType = (releaseType: string | null) =>
         releaseType as ANALYTICS_RELEASE_TYPE
     )
         ? (releaseType as ANALYTICS_RELEASE_TYPE)
-        : ANALYTICS_RELEASE_TYPE.AUDIO;
+        : ANALYTICS_RELEASE_TYPE.ALL;
 

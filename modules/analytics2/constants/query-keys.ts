@@ -18,6 +18,12 @@ import {
 
 export const analytics2QueryKeys = {
     all: [QUERY_KEY.ANALYTICS2.KEY] as const,
+    analyticsSummary: (params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ANALYTICS_SUMMARY,
+            params,
+        ] as const,
     dspTimeline: (params: DspTimelineParams) =>
         [
             ...analytics2QueryKeys.all,

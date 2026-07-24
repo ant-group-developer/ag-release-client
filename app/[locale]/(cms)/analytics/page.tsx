@@ -1,33 +1,43 @@
 'use client';
 
-import DateSelect2 from '@/components/ui/select/date-select2';
+import { ANALYTIC_SORT_BY } from '@/enums/common';
+import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import AnalyticsExtraHeader from '@/modules/analytics2/components/analytics-extra-header';
+import TrendViewsCharts from '@/modules/analytics2/components/chart/trend-views-charts';
 import ExportReportProgressPopover from '@/modules/analytics2/components/export-report-progress-popover';
+import MetricHeaderTabs, {
+    MetricHeaderTabItem,
+} from '@/modules/analytics2/components/metric-header-tabs';
 import ExportReportModal from '@/modules/analytics2/components/modal/export-report-modal';
 import PlaysTabContent from '@/modules/analytics2/components/tab/plays-tab-content';
 import RevenueTabContent from '@/modules/analytics2/components/tab/revenue-tab-content';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+} from '@/modules/analytics2/constants/types';
+import {
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
+import { useGetAnalyticsSummary } from '@/modules/analytics2/hooks/use-get-analytics-summary';
 import {
     Analytics2DataFilter,
     ExportReportJob,
 } from '@/modules/analytics2/types';
-import {
-    ANALYTICS_DEFAULT_START_DATE,
-    ANALYTICS_DEFAULT_END_DATE,
-} from '@/modules/analytics2/constants/types';
-import { DownloadOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Radio, Space, theme } from 'antd';
-import dayjs from 'dayjs';
+import { theme } from 'antd';
+import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const defaultFilter: Analytics2DataFilter = {
     startDate: ANALYTICS_DEFAULT_START_DATE,
     endDate: ANALYTICS_DEFAULT_END_DATE,
-    releaseType: ANALYTICS_RELEASE_TYPE.AUDIO,
+    releaseType: ANALYTICS_RELEASE_TYPE.ALL,
+    tab: ANALYTICS2_TABS.VIEWS,
 };
 
 export default function Analytics2Page() {
@@ -35,8 +45,6 @@ export default function Analytics2Page() {
     const messages = useTranslations();
 
     const searchParams = useSearchParams();
-    const router = useRouter();
-    const pathname = usePathname();
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [isExportProgressOpen, setIsExportProgressOpen] = useState(false);
@@ -67,49 +75,142 @@ export default function Analytics2Page() {
         }
     }, [exportJobs.length]);
 
+    const getMetricKeyFromParams = (
+        tab?: string | null,
+        sort?: string | null
+    ) => {
+        if (tab === ANALYTICS2_TABS.REVENUE) {
+            if (
+                sort === ANALYTIC_SORT_BY.USAGE ||
+                sort === ANALYTIC_SORT_BY.VIEWS
+            )
+                return ANALYTICS_METRIC_KEY.TOTAL_USAGE;
+            return ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
+        }
+        return ANALYTICS_METRIC_KEY.TOTAL_VIEWS;
+    };
+
     const initialTab =
         (searchParams.get('tab') as ANALYTICS2_TABS) || ANALYTICS2_TABS.VIEWS;
+    const initialSortBy = searchParams.get('sortBy') || undefined;
+
     const [activeTab, setActiveTab] = useState<ANALYTICS2_TABS>(initialTab);
+    const [activeMetric, setActiveMetric] = useState<string>(() =>
+        getMetricKeyFromParams(initialTab, initialSortBy)
+    );
+    const [sortBy, setSortBy] = useState<string | undefined>(
+        initialTab === ANALYTICS2_TABS.REVENUE
+            ? initialSortBy || ANALYTIC_SORT_BY.REVENUE
+            : undefined
+    );
 
     const initialReleaseType =
         (searchParams.get('releaseType') as ANALYTICS_RELEASE_TYPE) ||
-        ANALYTICS_RELEASE_TYPE.AUDIO;
+        ANALYTICS_RELEASE_TYPE.ALL;
     const [releaseType, setReleaseType] =
         useState<ANALYTICS_RELEASE_TYPE>(initialReleaseType);
 
     useEffect(() => {
-        const queryTab =
-            (searchParams.get('tab') as ANALYTICS2_TABS) ||
-            ANALYTICS2_TABS.VIEWS;
-        setActiveTab(queryTab);
+        const queryTab = searchParams.get('tab') as ANALYTICS2_TABS;
+        const querySortBy = searchParams.get('sortBy');
+
+        const currentTab =
+            queryTab === ANALYTICS2_TABS.REVENUE
+                ? ANALYTICS2_TABS.REVENUE
+                : ANALYTICS2_TABS.VIEWS;
+
+        setActiveTab(currentTab);
+        setActiveMetric(getMetricKeyFromParams(queryTab, querySortBy));
+        setSortBy(
+            currentTab === ANALYTICS2_TABS.REVENUE
+                ? querySortBy || ANALYTIC_SORT_BY.REVENUE
+                : undefined
+        );
 
         const queryReleaseType =
             (searchParams.get('releaseType') as ANALYTICS_RELEASE_TYPE) ||
-            ANALYTICS_RELEASE_TYPE.AUDIO;
+            ANALYTICS_RELEASE_TYPE.ALL;
         setReleaseType(queryReleaseType);
     }, [searchParams]);
 
-    const handleTabChange = (tab: ANALYTICS2_TABS) => {
-        setActiveTab(tab);
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('tab', tab);
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    };
+    const { dataFilter, onChangeFilter } = useFilter<Analytics2DataFilter>({
+        ...defaultFilter,
+        startDate: searchParams.get('fromDate') || defaultFilter.startDate,
+        endDate: searchParams.get('toDate') || defaultFilter.endDate,
+    });
 
-    const { dataFilter, onChangeFilter } =
-        useFilter<Analytics2DataFilter>({
-            ...defaultFilter,
-            startDate: searchParams.get('fromDate') || defaultFilter.startDate,
-            endDate: searchParams.get('toDate') || defaultFilter.endDate,
-        });
+    const handleMetricChange = (key: string) => {
+        setActiveMetric(key);
+
+        if (key === ANALYTICS_METRIC_KEY.TOTAL_VIEWS) {
+            setActiveTab(ANALYTICS2_TABS.VIEWS);
+            setSortBy(undefined);
+            onChangeFilter({
+                tab: ANALYTICS2_TABS.VIEWS,
+                sortBy: undefined,
+            });
+        } else if (key === ANALYTICS_METRIC_KEY.TOTAL_USAGE) {
+            setActiveTab(ANALYTICS2_TABS.REVENUE);
+            setSortBy(ANALYTIC_SORT_BY.USAGE);
+            onChangeFilter({
+                tab: ANALYTICS2_TABS.REVENUE,
+                sortBy: ANALYTIC_SORT_BY.USAGE,
+            });
+        } else if (key === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD) {
+            setActiveTab(ANALYTICS2_TABS.REVENUE);
+            setSortBy(ANALYTIC_SORT_BY.REVENUE);
+            onChangeFilter({
+                tab: ANALYTICS2_TABS.REVENUE,
+                sortBy: ANALYTIC_SORT_BY.REVENUE,
+            });
+        }
+    };
 
     const handleReleaseTypeChange = (type: ANALYTICS_RELEASE_TYPE) => {
         setReleaseType(type);
-        onChangeFilter({ releaseType: type });
+        onChangeFilter({
+            releaseType: type === ANALYTICS_RELEASE_TYPE.ALL ? undefined : type,
+        });
     };
 
     const fromDate = dataFilter.startDate ?? defaultFilter.startDate!;
     const toDate = dataFilter.endDate ?? defaultFilter.endDate!;
+
+    const effectiveReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
+    const { analyticsSummaryData } = useGetAnalyticsSummary({
+        fromDate,
+        toDate,
+        releaseType: effectiveReleaseType,
+    });
+
+    const metricTabItems: MetricHeaderTabItem[] = [
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+            label: 'Total views',
+            value: formattedNumber(analyticsSummaryData?.totalTrendViews),
+            icon: Eye,
+            color: 'text-emerald-600 dark:text-emerald-400',
+            bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
+        },
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
+            label: 'Total Usage',
+            value: formattedNumber(analyticsSummaryData?.totalUsage),
+            icon: Music,
+            color: 'text-purple-600 dark:text-purple-400',
+            bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
+        },
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
+            label: 'Total Revenue Usd',
+            value: formattedNumber(analyticsSummaryData?.totalRevenueUsd),
+            icon: DollarSign,
+            color: 'text-cyan-600 dark:text-cyan-400',
+            bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
+        },
+    ];
 
     return (
         <PageContainer
@@ -119,86 +220,50 @@ export default function Analytics2Page() {
                 minHeight: '100vh',
             }}
             extra={
-                <Space>
-                    <Button
-                        icon={<DownloadOutlined />}
-                        onClick={() => {
-                            if (exportJobs.length) {
-                                setIsExportProgressOpen(true);
-                            }
-
-                            setIsExportModalOpen(true);
-                        }}
-                    >
-                        {messages('common.exportReport')}
-                    </Button>
-                    <Radio.Group
-                        buttonStyle="solid"
-                        optionType="button"
-                        value={releaseType}
-                        onChange={(event) =>
-                            handleReleaseTypeChange(
-                                event.target.value as ANALYTICS_RELEASE_TYPE
-                            )
+                <AnalyticsExtraHeader
+                    releaseType={releaseType}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    onExportClick={() => {
+                        if (exportJobs.length) {
+                            setIsExportProgressOpen(true);
                         }
-                        options={[
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Radio.Group
-                        buttonStyle="solid"
-                        optionType="button"
-                        value={activeTab}
-                        onChange={(event) =>
-                            handleTabChange(
-                                event.target.value as ANALYTICS2_TABS
-                            )
-                        }
-                        options={[
-                            {
-                                label: messages('analytics.trendViews'),
-                                value: ANALYTICS2_TABS.VIEWS,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS2_TABS.REVENUE,
-                            },
-                        ]}
-                    />
-                    <DateSelect2
-                        style={{ width: 240 }}
-                        value={`${fromDate},${toDate}`}
-                        onChange={(value) => {
-                            const [startDate, endDate] = value
-                                .toString()
-                                .split(',');
 
-                            onChangeFilter({ startDate, endDate });
-                        }}
-                        picker="month"
-                    />
-                </Space>
+                        setIsExportModalOpen(true);
+                    }}
+                    onReleaseTypeChange={handleReleaseTypeChange}
+                    onDateChange={(startDate, endDate) => {
+                        onChangeFilter({ startDate, endDate });
+                    }}
+                />
             }
         >
+            <div className="mb-6 flex flex-col rounded-lg border">
+                <MetricHeaderTabs
+                    items={metricTabItems}
+                    activeKey={activeMetric}
+                    onChangeKey={handleMetricChange}
+                />
+                <TrendViewsCharts
+                    fromDate={fromDate}
+                    toDate={toDate}
+                    releaseType={effectiveReleaseType as any}
+                    activeMetric={activeMetric}
+                />
+            </div>
             <div className="flex flex-col gap-6">
                 {activeTab === ANALYTICS2_TABS.VIEWS ? (
                     <PlaysTabContent
                         fromDate={fromDate}
                         toDate={toDate}
-                        releaseType={releaseType}
+                        releaseType={effectiveReleaseType as any}
                     />
                 ) : (
                     <RevenueTabContent
                         fromDate={fromDate}
                         toDate={toDate}
-                        releaseType={releaseType}
+                        releaseType={effectiveReleaseType as any}
+                        sortBy={sortBy}
                     />
                 )}
             </div>

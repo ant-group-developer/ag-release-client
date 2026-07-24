@@ -38,6 +38,67 @@ export default function DateSelect2({
     };
 
     const presets = useMemo(() => {
+        if (picker === 'date') {
+            return [
+                {
+                    label: messages('date.last7Days'),
+                    value: () =>
+                        [
+                            dayjs().subtract(6, 'day').startOf('day'),
+                            dayjs().endOf('day'),
+                        ] as [Dayjs, Dayjs],
+                },
+                {
+                    label: messages('date.lastDays', { days: 14 }),
+                    value: () =>
+                        [
+                            dayjs().subtract(13, 'day').startOf('day'),
+                            dayjs().endOf('day'),
+                        ] as [Dayjs, Dayjs],
+                },
+                {
+                    label: messages('date.lastDays', { days: 28 }),
+                    value: () =>
+                        [
+                            dayjs().subtract(27, 'day').startOf('day'),
+                            dayjs().endOf('day'),
+                        ] as [Dayjs, Dayjs],
+                },
+                {
+                    label: messages('date.thisMonth'),
+                    value: () => {
+                        const start = dayjs().startOf('month');
+                        let end = dayjs().endOf('month');
+                        if (end.isAfter(dayjs())) {
+                            end = dayjs().endOf('day');
+                        }
+                        return [start, end] as [Dayjs, Dayjs];
+                    },
+                },
+                {
+                    label: messages('date.lastMonth'),
+                    value: () => {
+                        const lastMonth = dayjs().subtract(1, 'month');
+                        return [
+                            lastMonth.startOf('month'),
+                            lastMonth.endOf('month'),
+                        ] as [Dayjs, Dayjs];
+                    },
+                },
+                ...Array.from({ length: 4 }, (_, i) => {
+                    const targetMonth = dayjs().subtract(i + 2, 'month');
+                    return {
+                        label: targetMonth.format(DATE_FORMAT.MONTH_YEAR),
+                        value: () =>
+                            [
+                                targetMonth.startOf('month'),
+                                targetMonth.endOf('month'),
+                            ] as [Dayjs, Dayjs],
+                    };
+                }),
+            ];
+        }
+
         const monthPresets = Array.from(
             { length: MONTH_PRESET_COUNT },
             (_, i) => {
@@ -86,7 +147,7 @@ export default function DateSelect2({
         };
 
         return [...monthPresets, lifetimePreset, ...pastYearsPresets];
-    }, [messages]);
+    }, [messages, picker]);
 
     const rangeValue = useMemo<RangePickerProps['value']>(() => {
         if (!value) return null;

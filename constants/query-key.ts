@@ -472,6 +472,7 @@ export const QUERY_KEY = {
     },
     ANALYTICS2: {
         KEY: 'ANALYTICS2',
+        ANALYTICS_SUMMARY: 'analytics-summary',
         DSP_TIMELINE: 'dsp-timeline',
         TER_TIMELINE: 'ter-timeline',
         TREND_VIEW_SUMMARY: 'trend-view-summary',

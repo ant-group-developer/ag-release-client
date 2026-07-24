@@ -3,6 +3,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 
 import {
     AnalyticsCommonParams,
+    AnalyticsSummaryData,
     ArtistDspItem,
     ArtistRankingItem,
     ArtistTerItem,
@@ -89,6 +90,12 @@ export const analytics2Apis = {
     getTerTimeline: (params: TerTimelineParams) => {
         return axiosInstance.post<DetailResponse<TerTimelineData>>(
             '/analytics/trend-view/ter/timeline',
+            params
+        );
+    },
+    getAnalyticsSummary: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            '/analytics/summary',
             params
         );
     },

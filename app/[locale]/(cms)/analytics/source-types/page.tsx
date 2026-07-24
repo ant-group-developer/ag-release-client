@@ -6,8 +6,8 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
-import { useFilter } from '@/hooks/use-filter';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import {
     RANK_COLUMN_WIDTH,
     ANALYTICS_DEFAULT_START_DATE,
@@ -161,20 +161,27 @@ export default function SourceTypesRankingPage() {
             key: 'sourceTypeLabel',
             ellipsis: true,
             render: (text: string, record: RevenueSourceTypeItem) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <span
-                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                        onClick={() =>
-                            setDetailSourceModal({
-                                open: true,
-                                title: text,
-                                sourceType: record.sourceType,
-                            })
-                        }
-                    >
-                        {text || '—'}
-                    </span>
-                </CustomTooltip>
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={32}
+                        height={32}
+                        src={record.imageUrl}
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailSourceModal({
+                                    open: true,
+                                    title: text,
+                                    sourceType: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
         {
@@ -220,20 +227,27 @@ export default function SourceTypesRankingPage() {
             key: 'sourceTypeLabel',
             ellipsis: true,
             render: (text: string, record: SourceTypeRankingItem) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <span
-                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                        onClick={() =>
-                            setDetailSourceModal({
-                                open: true,
-                                title: text,
-                                sourceType: record.sourceType,
-                            })
-                        }
-                    >
-                        {text || '—'}
-                    </span>
-                </CustomTooltip>
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={32}
+                        height={32}
+                        src={record.imageUrl}
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailSourceModal({
+                                    open: true,
+                                    title: text,
+                                    sourceType: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
         {
