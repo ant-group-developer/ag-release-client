@@ -531,6 +531,7 @@ export const QUERY_KEY = {
         TRACK_DSP: 'track-dsp',
         TRACK_TER: 'track-ter',
         LABEL_OVERVIEW: 'label-overview',
+        LABEL_SUMMARY: 'label-summary',
         LABEL_DSP_TIMELINE: 'label-dsp-timeline',
         LABEL_DSP_SALES_TIMELINE: 'label-dsp-sales-timeline',
         LABEL_DSP_DAILY_TIMELINE: 'label-dsp-daily-timeline',

@@ -423,6 +423,13 @@ export const analytics2QueryKeys = {
             labelId,
             params,
         ] as const,
+    labelSummary: (labelId: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.LABEL_SUMMARY,
+            labelId,
+            params,
+        ] as const,
     labelDspTimeline: (labelId: string, params: DspTimelineParams) =>
         [
             ...analytics2QueryKeys.all,

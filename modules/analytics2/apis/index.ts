@@ -484,6 +484,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getLabelSummary: (labelId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/label/${labelId}/summary`,
+            params
+        );
+    },
     getLabelDspTimeline: (labelId: string, params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             `/analytics/label/${labelId}/trend-view/dsp/timeline`,
