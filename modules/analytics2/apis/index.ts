@@ -592,6 +592,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getArtistSummary: (artistId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/artist/${artistId}/summary`,
+            params
+        );
+    },
     getArtistTopReleases: (artistId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/artist/${artistId}/top-releases`,

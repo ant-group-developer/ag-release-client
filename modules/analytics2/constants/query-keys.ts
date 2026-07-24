@@ -540,6 +540,13 @@ export const analytics2QueryKeys = {
             artistId,
             params,
         ] as const,
+    artistSummary: (artistId: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ARTIST_SUMMARY,
+            artistId,
+            params,
+        ] as const,
     artistTopReleases: (artistId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,

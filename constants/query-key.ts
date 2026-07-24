@@ -546,6 +546,7 @@ export const QUERY_KEY = {
         LABEL_DSP: 'label-dsp',
         LABEL_TER: 'label-ter',
         ARTIST_OVERVIEW: 'artist-overview',
+        ARTIST_SUMMARY: 'artist-summary',
         ARTIST_TOP_RELEASES: 'artist-top-releases',
         ARTIST_TOP_TRACKS: 'artist-top-tracks',
         ARTIST_DSP_TIMELINE: 'artist-dsp-timeline',

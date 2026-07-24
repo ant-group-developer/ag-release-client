@@ -4,7 +4,7 @@ import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import AnalyticsExtraHeader from '@/modules/analytics2/components/analytics-extra-header';
-import TrendViewsCharts from '@/modules/analytics2/components/chart/trend-views-charts';
+import RootAnalyticsOverviewChart from '@/modules/analytics2/components/chart/root-analytics-overview-chart';
 import ExportReportProgressPopover from '@/modules/analytics2/components/export-report-progress-popover';
 import MetricHeaderTabs, {
     MetricHeaderTabItem,
@@ -204,7 +204,7 @@ export default function Analytics2Page() {
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
-            label: 'Total Revenue Usd',
+            label: 'Total Revenue',
             value: formattedNumber(analyticsSummaryData?.totalRevenueUsd),
             icon: DollarSign,
             color: 'text-cyan-600 dark:text-cyan-400',
@@ -244,7 +244,7 @@ export default function Analytics2Page() {
                     activeKey={activeMetric}
                     onChangeKey={handleMetricChange}
                 />
-                <TrendViewsCharts
+                <RootAnalyticsOverviewChart
                     fromDate={fromDate}
                     toDate={toDate}
                     releaseType={effectiveReleaseType as any}
