@@ -5,7 +5,10 @@ import { DataFilterLogs } from '../types/data';
 export const logQueryKeys = {
     all: QUERY_KEY.LOG.KEY,
     getListLogs: () => [QUERY_KEY.LOG.KEY, QUERY_KEY.LOG.GET_LOGS_LIST],
-    getLogsList: (params: DataFilterLogs) => [...logQueryKeys.getListLogs(), params],
+    getLogsList: (params: DataFilterLogs) => [
+        ...logQueryKeys.getListLogs(),
+        params,
+    ],
     getListModules: () => [QUERY_KEY.LOG.KEY, QUERY_KEY.LOG.GET_LOGS_MODULES],
 };
 
