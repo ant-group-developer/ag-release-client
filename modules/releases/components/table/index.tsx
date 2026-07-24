@@ -194,9 +194,11 @@ export default function ReleasesTable({
                 <Filter
                     size={SIZE_ICON_SMALL}
                     style={{
-                        color: dataFilter.dspDelivery
-                            ? token.colorPrimary
-                            : undefined,
+                        color:
+                            dataFilter.dspDelivery ||
+                            dataFilter.hangingExecutionDays !== undefined
+                                ? token.colorPrimary
+                                : undefined,
                     }}
                 />
             ),

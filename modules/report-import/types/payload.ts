@@ -405,3 +405,26 @@ export interface GetEnrichHistoryParams {
     pageSize?: number;
     scanId?: string | null;
 }
+
+export interface EtlJobStatusDetailFile {
+    fileName: string;
+    filePath: string;
+    status: string;
+    fileSizeBytes: number;
+    totalLines: number;
+    processedRows: number;
+    skippedRows: number;
+    errorRows: number;
+    durationMs: number;
+    errorMessage: string | null;
+    startedAt: string | null;
+    completedAt: string | null;
+}
+
+export type EtlJobStatusDetailData = Record<
+    string,
+    Record<
+        string,
+        Record<string, EtlJobStatusDetailFile[]>
+    >
+>;

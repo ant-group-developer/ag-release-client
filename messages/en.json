@@ -149,6 +149,9 @@
         "releaseVia": "Distributed via",
         "others": "Others",
         "save": "Save",
+        "cancel": "Cancel",
+        "confirmCancel": "Are you sure you want to cancel?",
+        "confirmSave": "Are you sure you want to save these changes?",
         "viewXml": "View XML",
         "regionCode": "Region Code",
         "link": "Link",
@@ -245,6 +248,7 @@
         "partners": "Partners",
         "views": "Views",
         "fileName": "File name",
+        "filePath": "File path",
         "viewAll": "View all",
         "legalNotices": "Legal notices",
         "notAvailable": "Not available",
@@ -344,7 +348,6 @@
         "notification": "Notification",
         "columnsDisplay": "Columns display",
         "all": "All",
-        "cancel": "Cancel",
         "confirm": "Confirm",
         "used": "Used",
         "notUsed": "Not used",
@@ -395,6 +398,7 @@
         "bulkUpdate": "Bulk update",
         "bulkCreate": "Bulk create",
         "autoSyncCi": "Auto Sync CI",
+        "syncTrackOrder": "Sync Track Order",
         "create": "Create",
         "detail": "Detail",
         "delete": "Delete",
@@ -420,8 +424,6 @@
         "of": "of",
         "creator": "Creator",
         "submitter": "Submitter",
-        "yes": "Yes",
-        "no": "No",
         "other": "Other",
         "review": "Review",
         "needsReview": "Needs review",
@@ -439,7 +441,6 @@
         "copied": "Copied",
         "engagement": "Engagement",
         "listeners": "Listeners",
-        "label": "Label",
         "labels": "Labels",
         "expandAll": "Expand all",
         "collapseAll": "Collapse all",
@@ -459,7 +460,8 @@
         "sortAsc": "Ascending",
         "sortDesc": "Descending",
         "sortOrder": "Sort order",
-        "sortField": "Sort by"
+        "sortField": "Sort by",
+        "days": "days"
     },
     "country": {
         "label": "Country",
@@ -1023,6 +1025,8 @@
         "system": "System"
     },
     "release": {
+        "live": "Live",
+        "notLive": "Not Live",
         "excludeTitle": "Exclude releases",
         "excludeSearchEmptyText": "Search for releases to exclude",
         "excludeAlertMsg": "Selected to exclude <b>{count}</b> releases",
@@ -1181,6 +1185,7 @@
             "pCopyright": "P copyright",
             "artists": "Artists",
             "contributors": "Contributors",
+            "isInstrumental": "Lyrics",
             "validation": {
                 "selectAtLeastOne": "Please select at least one data field to sync",
                 "releaseNotFound": "Release id not found"
@@ -1340,7 +1345,9 @@
         "dspState51": "DSP State51",
         "excludeLockedDsp": "Exclude locked DSPs",
         "clearDspStatus": "Clear DSP status",
-        "showAppliedDspOnly": "Show applied DSPs only"
+        "showAppliedDspOnly": "Show applied DSPs only",
+        "hangingExecutionDays": "Execution processing days",
+        "hangingExecutionDaysPlaceholder": "Enter number of days"
     },
     "releaseArtist": {
         "label": "Release artists",
@@ -1632,6 +1639,7 @@
             "copyrightYear": "Copyright year",
             "visibility": "Visibility",
             "selectVisibility": "Select visibility...",
+            "visibilityWarning": "The default visibility mode applies to both YouTube and Vevo. Custom visibility features are under development and will be updated soon.",
             "visibilityDefault": "Default",
             "unlistedOnYoutube": "Unlisted on YouTube",
             "unlistedOnVevo": "Unlisted on Vevo",
@@ -1989,6 +1997,35 @@
         "status": {
             "assigned": "Assigned",
             "unassigned": "Unassigned"
+        },
+        "source": {
+            "ftp_folder": "FTP folder",
+            "wmg_report": "WMG report",
+            "spotify_report": "Spotify report"
+        },
+        "ftpParserConfig": {
+            "title": "Edit FTP Parser Configuration: {category}",
+            "success": "FTP Parser Configuration updated successfully!",
+            "failed": "Failed to update FTP Parser Configuration!",
+            "noData": "No FTP Parser Configurations found.",
+            "sourceCategory": "Source category",
+            "description": "Description",
+            "includePatterns": "Include patterns",
+            "excludePatterns": "Exclude patterns",
+            "status": "Active status"
+        },
+        "ftpParserDetail": {
+            "title": "Parser Details: {name}",
+            "parserCode": "Parser code",
+            "sourceCategory": "Source category",
+            "sourceFile": "Source file",
+            "targetTable": "Target table",
+            "isSelectable": "Selectable",
+            "syncedAt": "Synced date",
+            "fieldMappings": "Field Mappings",
+            "parserSource": "Parser source code",
+            "yes": "Yes",
+            "no": "No"
         }
     },
     "dsp": {
@@ -2089,21 +2126,42 @@
         "title": "Title",
         "domain": "Domain",
         "customDomain": {
-            "label": "Custom domain",
+            "label": "Custom Domain",
             "placeholder": "example.yourdomain.com",
-            "dnsTitle": "DNS records are ready",
-            "dnsDescription": "Add the CNAME and TXT records below in your DNS provider to verify this domain.",
-            "sslStatus": "SSL status",
-            "verificationToken": "Verification token",
-            "cnameRecord": "CNAME record",
-            "txtRecord": "TXT record",
-            "verify": "Verify domain",
+            "dnsTitle": "DNS Records Ready",
+            "dnsDescription": "Add the CNAME and TXT records below to your DNS provider to verify this domain.",
+            "sslStatus": "SSL Status",
+            "verificationToken": "Verification Token",
+            "cnameRecord": "CNAME Record",
+            "txtRecord": "TXT Record",
+            "verify": "Verify Domain",
             "verifying": "Verifying...",
-            "delete": "Remove domain",
+            "delete": "Remove Domain",
             "deleting": "Removing...",
             "deleteConfirm": "Are you sure you want to remove this domain?",
             "validation": {
                 "required": "Please enter domain"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "verifying": "Verifying",
+                "active": "Active",
+                "failed": "Failed",
+                "expired": "Expired"
+            },
+            "autoSetup": {
+                "title": "Auto setup via Cloudflare",
+                "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
+                "button": "Connect Cloudflare Account"
+            },
+            "orAddManually": "or add manually",
+            "autoSetupSuccess": "DNS records added automatically",
+            "errors": {
+                "access_denied": "Cloudflare account access denied. Please try again and authorize the request.",
+                "zone_not_found": "Could not find the domain zone in your Cloudflare account. Please make sure the domain is added to Cloudflare first.",
+                "dns_create_failed": "Failed to automatically create DNS records. Please check your Cloudflare account permissions or try manual setup.",
+                "invalid_scope": "The requested permissions are invalid or insufficient.",
+                "unauthorized": "Cloudflare account authentication failed."
             }
         },
         "primaryColor": "Primary color",
@@ -2155,45 +2213,6 @@
             "error": {
                 "notFound": "No workspace was found with the provided information",
                 "blocked": "This workspace has been blocked"
-            }
-        },
-        "customDomain": {
-            "label": "Custom Domain",
-            "placeholder": "example.yourdomain.com",
-            "dnsTitle": "DNS Records Ready",
-            "dnsDescription": "Add the CNAME and TXT records below to your DNS provider to verify this domain.",
-            "sslStatus": "SSL Status",
-            "verificationToken": "Verification Token",
-            "cnameRecord": "CNAME Record",
-            "txtRecord": "TXT Record",
-            "verify": "Verify Domain",
-            "verifying": "Verifying...",
-            "delete": "Remove Domain",
-            "deleting": "Removing...",
-            "deleteConfirm": "Are you sure you want to remove this domain?",
-            "validation": {
-                "required": "Please enter domain"
-            },
-            "statuses": {
-                "pending": "Pending",
-                "verifying": "Verifying",
-                "active": "Active",
-                "failed": "Failed",
-                "expired": "Expired"
-            },
-            "autoSetup": {
-                "title": "Auto setup via Cloudflare",
-                "description": "Your domain must use Cloudflare DNS. We'll add the required records automatically.",
-                "button": "Connect Cloudflare Account"
-            },
-            "orAddManually": "or add manually",
-            "autoSetupSuccess": "DNS records added automatically",
-            "errors": {
-                "access_denied": "Cloudflare account access denied. Please try again and authorize the request.",
-                "zone_not_found": "Could not find the domain zone in your Cloudflare account. Please make sure the domain is added to Cloudflare first.",
-                "dns_create_failed": "Failed to automatically create DNS records. Please check your Cloudflare account permissions or try manual setup.",
-                "invalid_scope": "The requested permissions are invalid or insufficient.",
-                "unauthorized": "Cloudflare account authentication failed."
             }
         }
     },
@@ -3134,6 +3153,8 @@
         "reportType": "Report type",
         "reportTypeTooltip": "Report classification.",
         "reportTypePlaceholder": "Select report type",
+        "reportTypeSales": "Sales",
+        "reportTypeTrends": "Trends",
         "folderPatterns": "Folder patterns",
         "folderPatternsTooltip": "Array of regular expressions (Regex) to match the folder containing the file.",
         "folderPatternsPlaceholder": "e.g., .*spotify.*",
@@ -3183,6 +3204,9 @@
             "sourceFile": "Source file",
             "duration": "Processing time",
             "startTime": "Start time",
+            "viewLog": "View import logs",
+            "viewStatusDetail": "View status details",
+            "statusDetailModalTitle": "ETL Job Status Details",
             "uploadingMatched": "Uploading {count} valid files...",
             "uploadFailedMatched": "Failed to upload {count} valid files. Please check again.",
             "noValidFiles": "No valid files to upload. Please check the error list below.",
@@ -3212,7 +3236,10 @@
             "errorRows": "Errors",
             "recentJobsTitle": "Recent Import/Sync Jobs",
             "uploadReportBtn": "Import Report",
-            "detailedProgress": "Detailed files progress"
+            "detailedProgress": "Detailed files progress",
+            "filesCount": "Number of Files",
+            "totalSize": "Total Size",
+            "filesDetail": "Detailed Files Information"
         },
         "enrichScanSchedules": {
             "label": "Enrich data cron",

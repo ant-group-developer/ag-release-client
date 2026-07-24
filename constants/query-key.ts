@@ -198,6 +198,7 @@ export const QUERY_KEY = {
         KEY: 'DSP_REPORT',
         GET_LIST: 'GET_LIST_DSP_REPORT',
         GET_DETAIL: 'GET_DETAIL_DSP_REPORT',
+        GET_FTP_PARSER_CONFIGS: 'GET_FTP_PARSER_CONFIGS_DSP_REPORT',
     },
     PG_DSPS_SYNC: {
         KEY: 'PG_DSPS_SYNC',
@@ -381,6 +382,7 @@ export const QUERY_KEY = {
     ETL_JOBS: {
         KEY: 'ETL_JOBS',
         GET_LIST: 'GET_LIST_ETL_JOBS',
+        GET_STATUS_DETAIL: 'GET_STATUS_DETAIL_ETL_JOB',
     },
     ENRICH_SCAN_SESSIONS: {
         KEY: 'ENRICH_SCAN_SESSIONS',
