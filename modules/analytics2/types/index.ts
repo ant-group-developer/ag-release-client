@@ -586,6 +586,7 @@ export interface DspDetailParams {
     fromDate: string;
     toDate: string;
     releaseType?: string | ANALYTICS_RELEASE_TYPE;
+    sortBy?: string;
 }
 
 export interface DspRankingParams extends DspDetailParams {

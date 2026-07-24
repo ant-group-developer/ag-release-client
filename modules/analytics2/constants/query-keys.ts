@@ -860,6 +860,13 @@ export const analytics2QueryKeys = {
 
             params,
         ] as const,
+    dspSummary: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_SUMMARY,
+
+            params,
+        ] as const,
     dspTopReleases: (params: DspRankingParams) =>
         [
             ...analytics2QueryKeys.all,

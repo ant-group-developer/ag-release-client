@@ -584,6 +584,7 @@ export const QUERY_KEY = {
         CHANNEL_DSP: 'channel-dsp',
         CHANNEL_TER: 'channel-ter',
         DSP_OVERVIEW: 'dsp-overview',
+        DSP_SUMMARY: 'dsp-summary',
         DSP_TOP_RELEASES: 'dsp-top-releases',
         DSP_TOP_TRACKS: 'dsp-top-tracks',
         DSP_TREND_VIEW_LINE_CHART: 'dsp-trend-view-line-chart',

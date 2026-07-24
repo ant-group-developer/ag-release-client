@@ -903,6 +903,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getDspSummary: (params: DspDetailParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            '/analytics/dsp/summary',
+            params
+        );
+    },
     getDspTrendViewLineChart: (params: DspDetailParams) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             '/analytics/dsp/trend-view/line-chart',

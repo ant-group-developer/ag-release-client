@@ -1,6 +1,6 @@
 import { Col, Row, Segmented } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     ANALYTICS_BAR_CHART_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -15,6 +15,8 @@ export interface AnalyticsOverviewChartProps {
     dspData?: any[];
     terData?: any[];
     isBarChartLoading?: boolean;
+    showSegment?: boolean;
+    defaultBarChartType?: ANALYTICS_BAR_CHART_TYPE;
 }
 
 export default function AnalyticsOverviewChart({
@@ -24,11 +26,17 @@ export default function AnalyticsOverviewChart({
     dspData = [],
     terData = [],
     isBarChartLoading = false,
+    showSegment = true,
+    defaultBarChartType = ANALYTICS_BAR_CHART_TYPE.DSP,
 }: AnalyticsOverviewChartProps) {
     const messages = useTranslations();
     const [viewType, setViewType] = useState<ANALYTICS_BAR_CHART_TYPE>(
-        ANALYTICS_BAR_CHART_TYPE.DSP
+        defaultBarChartType
     );
+
+    useEffect(() => {
+        setViewType(defaultBarChartType);
+    }, [defaultBarChartType]);
 
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -57,7 +65,7 @@ export default function AnalyticsOverviewChart({
         return sourceData.map((item: any) => {
             const type =
                 viewType === ANALYTICS_BAR_CHART_TYPE.DSP
-                    ? item.dspName || item.name || ''
+                    ? item.dspName || item.tenantName || item.name || ''
                     : item.territory || item.country || '';
             let val = 0;
             if (isRevenueUsd) {
@@ -96,25 +104,27 @@ export default function AnalyticsOverviewChart({
             <Col xs={24} lg={8}>
                 <PieChartView
                     title={
-                        <div className="flex w-full items-center justify-end">
-                            <Segmented
-                                options={[
-                                    {
-                                        label: 'DSP',
-                                        value: ANALYTICS_BAR_CHART_TYPE.DSP,
-                                    },
-                                    {
-                                        label: messages('country.label'),
-                                        value: ANALYTICS_BAR_CHART_TYPE.TERRITORY,
-                                    },
-                                ]}
-                                value={viewType}
-                                onChange={(val) =>
-                                    setViewType(val as ANALYTICS_BAR_CHART_TYPE)
-                                }
-                                className="flex-shrink-0"
-                            />
-                        </div>
+                        showSegment ? (
+                            <div className="flex w-full items-center justify-end">
+                                <Segmented
+                                    options={[
+                                        {
+                                            label: 'DSP',
+                                            value: ANALYTICS_BAR_CHART_TYPE.DSP,
+                                        },
+                                        {
+                                            label: messages('country.label'),
+                                            value: ANALYTICS_BAR_CHART_TYPE.TERRITORY,
+                                        },
+                                    ]}
+                                    value={viewType}
+                                    onChange={(val) =>
+                                        setViewType(val as ANALYTICS_BAR_CHART_TYPE)
+                                    }
+                                    className="flex-shrink-0"
+                                />
+                            </div>
+                        ) : null
                     }
                     data={pieData}
                     loading={isBarChartLoading}
