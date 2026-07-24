@@ -18,6 +18,12 @@ import {
 
 export const analytics2QueryKeys = {
     all: [QUERY_KEY.ANALYTICS2.KEY] as const,
+    analyticsSummary: (params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ANALYTICS_SUMMARY,
+            params,
+        ] as const,
     dspTimeline: (params: DspTimelineParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -417,6 +423,13 @@ export const analytics2QueryKeys = {
             labelId,
             params,
         ] as const,
+    labelSummary: (labelId: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.LABEL_SUMMARY,
+            labelId,
+            params,
+        ] as const,
     labelDspTimeline: (labelId: string, params: DspTimelineParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -531,6 +544,13 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.ARTIST_OVERVIEW,
+            artistId,
+            params,
+        ] as const,
+    artistSummary: (artistId: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ARTIST_SUMMARY,
             artistId,
             params,
         ] as const,
@@ -837,6 +857,13 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.DSP_OVERVIEW,
+
+            params,
+        ] as const,
+    dspSummary: (params: DspDetailParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.DSP_SUMMARY,
 
             params,
         ] as const,

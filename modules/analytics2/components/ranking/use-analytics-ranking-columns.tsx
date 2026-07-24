@@ -1,10 +1,9 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { Tooltip, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { RANK_COLUMN_WIDTH } from '../../constants/types';
+
 import {
     ArtistRankingItem,
     ChannelRankingItem,
@@ -36,22 +35,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const trackColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.track'),
                 dataIndex: 'title',
                 key: 'title',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: TrackRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -85,7 +72,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: 'ISRC',
                 dataIndex: 'isrc',
                 key: 'isrc',
@@ -96,12 +83,12 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                         {text || '—'}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 100,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -115,22 +102,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const releaseColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.release'),
                 dataIndex: 'title',
                 key: 'title',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: ReleaseRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -164,7 +139,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: 'UPC',
                 dataIndex: 'upc',
                 key: 'upc',
@@ -186,12 +161,12 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                         {count || 0}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 100,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -205,22 +180,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const releaseVideoColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.releasesVideo'),
                 dataIndex: 'title',
                 key: 'title',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: ReleaseVideoRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -254,7 +217,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: 'ISRC',
                 key: 'isrc',
                 width: 220,
@@ -341,12 +304,12 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                         </div>
                     );
                 },
-            },
+            }, */
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 220,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -360,22 +323,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const artistColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.artist'),
                 dataIndex: 'artistName',
                 key: 'artistName',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: ArtistRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -403,7 +354,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: messages('common.tracks'),
                 dataIndex: 'trackCount',
                 key: 'trackCount',
@@ -413,12 +364,12 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                         {count || 0}
                     </span>
                 ),
-            },
+            }, */
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 150,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -432,22 +383,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const labelColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.label'),
                 dataIndex: 'labelName',
                 key: 'labelName',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: LabelRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -475,7 +414,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: messages('common.release'),
                 dataIndex: 'releaseCount',
                 key: 'releaseCount',
@@ -485,23 +424,12 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                         {count || 0}
                     </span>
                 ),
-            },
-            {
-                title: messages('common.tracks'),
-                dataIndex: 'trackCount',
-                key: 'trackCount',
-                width: 80,
-                render: (count: number) => (
-                    <span className="text-gray-600 dark:text-zinc-400">
-                        {count || 0}
-                    </span>
-                ),
-            },
+            }, */
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 100,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -515,22 +443,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const tenantColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('tenant.name'),
                 dataIndex: 'tenantName',
                 key: 'tenantName',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: TenantRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -562,7 +478,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 200,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -576,25 +492,18 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const dspColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: DspRankingItem) => (
                     <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={32}
+                            height={32}
+                            src={record.imageUrl}
+                        />
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
@@ -619,7 +528,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 200,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -633,22 +542,10 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const channelColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('common.channel'),
                 dataIndex: 'channelName',
                 key: 'channelName',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: ChannelRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -676,7 +573,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                     </div>
                 ),
             },
-            {
+            /* {
                 title: messages('common.youtubeChannelId'),
                 dataIndex: 'youtubeChannelId',
                 key: 'youtubeChannelId',
@@ -710,12 +607,12 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                         </div>
                     );
                 },
-            },
+            }, */
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 110,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}
@@ -729,45 +626,40 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
     const sourceTypeColumns = useMemo(
         () => [
             {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                fixed: 'left' as const,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
                 title: messages('analytics2.distributors'),
                 dataIndex: 'sourceTypeLabel',
                 key: 'sourceTypeLabel',
+                width: '70%',
                 ellipsis: true,
                 render: (text: string, record: SourceTypeRankingItem) => (
-                    <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                            onClick={() =>
-                                setDetailModal({
-                                    type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
-                                    title: text,
-                                    id: record.sourceType,
-                                })
-                            }
-                        >
-                            {text || '—'}
-                        </span>
-                    </CustomTooltip>
+                    <div className="flex items-center gap-3">
+                        <ReleaseCoverImage
+                            width={32}
+                            height={32}
+                            src={record.imageUrl}
+                        />
+                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                            <span
+                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                onClick={() =>
+                                    setDetailModal({
+                                        type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
+                                        title: text,
+                                        id: record.sourceType,
+                                    })
+                                }
+                            >
+                                {text || '—'}
+                            </span>
+                        </CustomTooltip>
+                    </div>
                 ),
             },
             {
                 title: messages('common.viewCount'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: 200,
+                width: '30%',
                 render: (views: number) => (
                     <span className="text-gray-900 dark:text-zinc-100">
                         {views ? views.toLocaleString() : 0}

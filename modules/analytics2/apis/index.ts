@@ -3,6 +3,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 
 import {
     AnalyticsCommonParams,
+    AnalyticsSummaryData,
     ArtistDspItem,
     ArtistRankingItem,
     ArtistTerItem,
@@ -89,6 +90,12 @@ export const analytics2Apis = {
     getTerTimeline: (params: TerTimelineParams) => {
         return axiosInstance.post<DetailResponse<TerTimelineData>>(
             '/analytics/trend-view/ter/timeline',
+            params
+        );
+    },
+    getAnalyticsSummary: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            '/analytics/summary',
             params
         );
     },
@@ -477,6 +484,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getLabelSummary: (labelId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/label/${labelId}/summary`,
+            params
+        );
+    },
     getLabelDspTimeline: (labelId: string, params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             `/analytics/label/${labelId}/trend-view/dsp/timeline`,
@@ -582,6 +595,12 @@ export const analytics2Apis = {
     getArtistOverview: (artistId: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/artist/${artistId}/overview`,
+            params
+        );
+    },
+    getArtistSummary: (artistId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/artist/${artistId}/summary`,
             params
         );
     },
@@ -881,6 +900,12 @@ export const analytics2Apis = {
     getDspOverview: (params: DspDetailParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             '/analytics/dsp/overview',
+            params
+        );
+    },
+    getDspSummary: (params: DspDetailParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            '/analytics/dsp/summary',
             params
         );
     },

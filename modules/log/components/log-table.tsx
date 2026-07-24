@@ -3,7 +3,7 @@ import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { formattedDate, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import { ProColumns } from '@ant-design/pro-components';
-import { Popover, Tag, Tooltip, theme } from 'antd';
+import { Tag, Tooltip, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { LOG_LEVEL_MSG_KEY, LOG_TYPE_MSG_KEY } from '../constants';
 import { LOG_LEVEL, LOG_SORT_FIELD, LOG_TYPE } from '../enums';
@@ -84,7 +84,8 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
         {
             title: messages('log.columns.module'),
             dataIndex: LOG_SORT_FIELD.LOG_MODULE,
-            width: 200,
+            width: 160,
+            align: 'center',
             ellipsis: true,
             sorter: true,
             sortOrder: getSortOrder(
@@ -93,50 +94,19 @@ function LogTable({ dataFilter, onChangeFilter, ...props }: Props) {
                 LOG_SORT_FIELD.LOG_MODULE
             ),
             render: (_, record) => {
-                if (!record.modules) return '-';
-
-                const modules = record.modules
-                    .split(',')
-                    .map((m) => m.trim())
-                    .filter(Boolean);
-
-                if (modules.length === 0) return '-';
+                if (!record.module) return '-';
 
                 const formatModuleName = (name: string) => {
-                    const lower = name.toLowerCase();
-                    return lower.charAt(0).toUpperCase() + lower.slice(1);
+                    const formatted = name.toLowerCase().replace(/_/g, ' ');
+                    return (
+                        formatted.charAt(0).toUpperCase() + formatted.slice(1)
+                    );
                 };
 
-                const maxVisible = 2;
-                const visibleTags = modules.slice(0, maxVisible);
-                const hiddenTags = modules.slice(maxVisible);
-
-                const renderTag = (name: string) => (
-                    <Tag key={name} className="!mr-0">
-                        {formatModuleName(name)}
-                    </Tag>
-                );
-
-                const renderHiddenTagsPopover = () => (
-                    <div className="flex max-w-[250px] flex-wrap gap-1">
-                        {hiddenTags.map((name) => renderTag(name))}
-                    </div>
-                );
-
                 return (
-                    <div className="flex flex-wrap gap-1">
-                        {visibleTags.map((name) => renderTag(name))}
-                        {hiddenTags.length > 0 && (
-                            <Popover
-                                content={renderHiddenTagsPopover()}
-                                trigger="hover"
-                            >
-                                <Tag className="!mr-0 cursor-pointer">
-                                    +{hiddenTags.length}
-                                </Tag>
-                            </Popover>
-                        )}
-                    </div>
+                    <Tag className="text-xs">
+                        {formatModuleName(record.module)}
+                    </Tag>
                 );
             },
         },

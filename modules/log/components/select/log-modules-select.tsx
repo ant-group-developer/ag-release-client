@@ -7,8 +7,9 @@ export const LogModulesSelect = ({ ...props }: Props) => {
     const { modulesData, isLoading } = useGetLogModules();
 
     const options = modulesData.map((item) => {
-        const lower = item.toLowerCase();
-        const label = lower.charAt(0).toUpperCase() + lower.slice(1);
+        const formatted = item.toLowerCase().replace(/_/g, ' ');
+
+        const label = formatted.charAt(0).toUpperCase() + formatted.slice(1);
         return {
             label,
             value: item,
