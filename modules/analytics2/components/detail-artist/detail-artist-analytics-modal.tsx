@@ -117,7 +117,7 @@ export default function DetailArtistAnalyticsModal({
                         <Tag className="!mr-0 !px-2 !py-1" color="green">
                             {messages('common.artist')}
                         </Tag>
-                        <span className="">{`${messages('analytics.label')}: ${title}`}</span>
+                        <span className="">{`${messages('common.artist')}: ${title}`}</span>
                     </Space>
                     <DateSelect2
                         style={{ width: 240, height: 32 }}
