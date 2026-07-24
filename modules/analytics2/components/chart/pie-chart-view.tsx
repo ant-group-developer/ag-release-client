@@ -1,6 +1,7 @@
 import { CustomizedPieLabel } from '@/components/shared/chart/chart-custom-render';
 import { formattedNumber } from '@/helpers/common';
-import { Card, Empty, Grid, Skeleton, Typography } from 'antd';
+import { cn } from '@/helpers/tailwind';
+import { Card, Empty, Grid, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
@@ -10,6 +11,7 @@ const { Title, Text } = Typography;
 interface DataItem {
     type: string;
     value: number;
+    imageUrl?: string;
 }
 
 interface PieChartViewProps {
@@ -23,6 +25,7 @@ interface PieChartViewProps {
     chartHeight?: number;
     valuePrefix?: string;
     pieWidth?: number | string;
+    className?: string;
 }
 
 const DEFAULT_COLORS = [
@@ -95,6 +98,7 @@ export default function PieChartView({
     chartHeight,
     valuePrefix = '',
     pieWidth = DEFAULT_DESKTOP_PIE_WIDTH,
+    className = '',
 }: PieChartViewProps) {
     const messages = useTranslations();
     const finalPieWidth =
@@ -164,7 +168,7 @@ export default function PieChartView({
 
     return (
         <Card
-            className="h-full rounded-xl border-none shadow-sm"
+            className={cn('h-full rounded-xl border-none shadow-sm', className)}
             styles={{
                 body: {
                     padding: '24px',
@@ -189,17 +193,7 @@ export default function PieChartView({
                 )}
             </div>
 
-            {loading ? (
-                <div
-                    style={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Skeleton active paragraph={{ rows: 7 }} />
-                </div>
-            ) : data && data.length > 0 ? (
+            {data && data.length > 0 ? (
                 <div style={{ ...containerStyle, flex: 1 }}>
                     <div style={pieContainerStyle}>
                         <ResponsiveContainer width="100%" height="100%">
@@ -321,7 +315,7 @@ export default function PieChartView({
                         </div>
                     )}
                 </div>
-            ) : (
+            ) : !loading ? (
                 <div
                     style={{
                         height: 220,
@@ -335,7 +329,7 @@ export default function PieChartView({
                         description={messages('common.noDataAvailable')}
                     />
                 </div>
-            )}
+            ) : null}
         </Card>
     );
 }

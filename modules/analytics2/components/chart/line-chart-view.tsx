@@ -1,7 +1,8 @@
 'use client';
 
 import { formattedNumber } from '@/helpers/common';
-import { Card, Empty, Skeleton, Typography } from 'antd';
+import { cn } from '@/helpers/tailwind';
+import { Card, Empty } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
     Area,
@@ -33,6 +34,7 @@ interface LineChartViewProps {
     valuePrefix?: string;
     additionalTooltipKeys?: TooltipKeyConfig[];
     minTickGap?: number;
+    className?: string;
 }
 
 const CustomLineTooltip = ({
@@ -42,7 +44,6 @@ const CustomLineTooltip = ({
     lineName,
     valuePrefix = '',
     additionalTooltipKeys = [],
-    any,
 }: any) => {
     if (active && payload && payload.length) {
         const firstEntry = payload[0];
@@ -111,12 +112,13 @@ export default function LineChartView({
     valuePrefix = '',
     additionalTooltipKeys = [],
     minTickGap = DEFAULT_MIN_TICK_GAP,
+    className = '',
 }: LineChartViewProps) {
     const messages = useTranslations();
 
     return (
         <Card
-            className="h-full rounded-xl border-none shadow-sm"
+            className={cn('h-full rounded-xl border-none shadow-sm', className)}
             styles={{
                 body: {
                     padding: '24px',
@@ -126,7 +128,7 @@ export default function LineChartView({
                 },
             }}
         >
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full">
+            <div className="mb-6 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 {typeof title === 'string' ? (
                     <span className="text-base font-bold">{title}</span>
                 ) : (
@@ -134,11 +136,7 @@ export default function LineChartView({
                 )}
             </div>
 
-            {loading ? (
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-                    <Skeleton active paragraph={{ rows: 8 }} />
-                </div>
-            ) : data.length === 0 ? (
+            {data.length === 0 ? (
                 <div
                     style={{
                         flex: 1,
@@ -245,16 +243,16 @@ export default function LineChartView({
                                     strokeWidth={2}
                                     fillOpacity={1}
                                     fill="url(#colorViews)"
-                                    dot={{
-                                        r: 4,
-                                        fill: strokeColor,
-                                        stroke: strokeColor,
-                                    }}
-                                    activeDot={{
-                                        r: 6,
-                                        fill: strokeColor,
-                                        stroke: strokeColor,
-                                    }}
+                                    // dot={{
+                                    //     r: 4,
+                                    //     fill: strokeColor,
+                                    //     stroke: strokeColor,
+                                    // }}
+                                    // activeDot={{
+                                    //     r: 6,
+                                    //     fill: strokeColor,
+                                    //     stroke: strokeColor,
+                                    // }}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>

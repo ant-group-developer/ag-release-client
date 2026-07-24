@@ -35,16 +35,17 @@ interface Props {
     fromDate: string;
     toDate: string;
     releaseType: ANALYTICS_RELEASE_TYPE;
+    sortBy?: string;
 }
 
 export default function RevenueRankings({
     fromDate,
     toDate,
     releaseType,
+    sortBy,
 }: Props) {
     const messages = useTranslations();
     const topN = 5;
-    const releaseTypeParam = `&releaseType=${releaseType}`;
     const [detailModal, setDetailModal] = useState<{
         type: ANALYTICS_MODAL_TYPE | null;
         title: string;
@@ -82,6 +83,7 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+            sortBy,
         });
 
     const { topTrackData, isFetching: isTracksLoading } = useGetRevenueTopTrack(
@@ -91,9 +93,10 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+            sortBy,
         },
         {
-            enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+            enabled: releaseType !== ANALYTICS_RELEASE_TYPE.VIDEO,
         }
     );
 
@@ -105,9 +108,10 @@ export default function RevenueRankings({
                 topN,
                 includeOther: false,
                 releaseType,
+                sortBy,
             },
             {
-                enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+                enabled: releaseType !== ANALYTICS_RELEASE_TYPE.VIDEO,
             }
         );
 
@@ -119,9 +123,10 @@ export default function RevenueRankings({
                 topN,
                 includeOther: false,
                 releaseType,
+                sortBy,
             },
             {
-                enabled: releaseType === ANALYTICS_RELEASE_TYPE.VIDEO,
+                enabled: releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO,
             }
         );
 
@@ -131,6 +136,7 @@ export default function RevenueRankings({
         topN,
         includeOther: false,
         releaseType,
+        sortBy,
     });
 
     const { topTenantData, isFetching: isTenantsLoading } =
@@ -140,6 +146,7 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+            sortBy,
         });
 
     const { topLabelData, isFetching: isLabelsLoading } = useGetRevenueTopLabel(
@@ -149,6 +156,7 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+            sortBy,
         }
     );
 
@@ -159,6 +167,7 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+            sortBy,
         });
 
     const { topSourceTypeData, isFetching: isSourceTypesLoading } =
@@ -168,6 +177,7 @@ export default function RevenueRankings({
             topN,
             includeOther: false,
             releaseType,
+            sortBy,
         });
 
     const dspDataWithRank = useMemo(() => {
@@ -189,7 +199,7 @@ export default function RevenueRankings({
     return (
         <>
             <Row gutter={[24, 24]}>
-                {releaseType == ANALYTICS_RELEASE_TYPE.AUDIO && (
+                {releaseType !== ANALYTICS_RELEASE_TYPE.VIDEO && (
                     <>
                         <Col span={12} xs={24} lg={12}>
                             <RankingCard
@@ -210,6 +220,7 @@ export default function RevenueRankings({
                                         toDate,
                                         type: ANALYTICS_VIEW_TYPE.REVENUE,
                                         releaseType,
+                                        sortBy,
                                     }
                                 )}
                             />
@@ -233,6 +244,7 @@ export default function RevenueRankings({
                                         toDate,
                                         type: ANALYTICS_VIEW_TYPE.REVENUE,
                                         releaseType,
+                                        sortBy,
                                     }
                                 )}
                             />
@@ -257,6 +269,7 @@ export default function RevenueRankings({
                                 toDate,
                                 type: ANALYTICS_VIEW_TYPE.REVENUE,
                                 releaseType,
+                                sortBy,
                             }
                         )}
                     />
@@ -278,6 +291,7 @@ export default function RevenueRankings({
                                 toDate,
                                 type: ANALYTICS_VIEW_TYPE.REVENUE,
                                 releaseType,
+                                sortBy,
                             }
                         )}
                     />
@@ -299,6 +313,7 @@ export default function RevenueRankings({
                                 toDate,
                                 type: ANALYTICS_VIEW_TYPE.REVENUE,
                                 releaseType,
+                                sortBy,
                             }
                         )}
                     />
@@ -320,6 +335,7 @@ export default function RevenueRankings({
                                 toDate,
                                 type: ANALYTICS_VIEW_TYPE.REVENUE,
                                 releaseType,
+                                sortBy,
                             }
                         )}
                     />
@@ -341,6 +357,7 @@ export default function RevenueRankings({
                                 toDate,
                                 type: ANALYTICS_VIEW_TYPE.REVENUE,
                                 releaseType,
+                                sortBy,
                             }
                         )}
                     />
@@ -364,12 +381,13 @@ export default function RevenueRankings({
                                 toDate,
                                 type: ANALYTICS_VIEW_TYPE.REVENUE,
                                 releaseType,
+                                sortBy,
                             }
                         )}
                     />
                 </Col>
-                {releaseType == ANALYTICS_RELEASE_TYPE.VIDEO && (
-                    <Col span={12} xs={24} lg={24}>
+                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
+                    <Col span={12} xs={24} lg={12}>
                         <RankingCard
                             title={topRankingTitle(
                                 messages('common.releasesVideo')
@@ -388,6 +406,7 @@ export default function RevenueRankings({
                                     toDate,
                                     type: ANALYTICS_VIEW_TYPE.REVENUE,
                                     releaseType,
+                                    sortBy,
                                 }
                             )}
                         />

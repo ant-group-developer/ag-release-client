@@ -9,9 +9,9 @@ import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import {
-    RANK_COLUMN_WIDTH,
-    ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+    RANK_COLUMN_WIDTH,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -25,11 +25,11 @@ import {
     RevenueSourceTypeItem,
     SourceTypeRankingItem,
 } from '@/modules/analytics2/types';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -64,8 +64,7 @@ export default function SourceTypesRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate:
                 searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
-            endDate:
-                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            endDate: searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
             type: getAnalyticsViewType(searchParams.get('type')),
             releaseType: getAnalyticsReleaseType(
                 searchParams.get('releaseType')
@@ -161,20 +160,27 @@ export default function SourceTypesRankingPage() {
             key: 'sourceTypeLabel',
             ellipsis: true,
             render: (text: string, record: RevenueSourceTypeItem) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <span
-                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                        onClick={() =>
-                            setDetailSourceModal({
-                                open: true,
-                                title: text,
-                                sourceType: record.sourceType,
-                            })
-                        }
-                    >
-                        {text || '—'}
-                    </span>
-                </CustomTooltip>
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={32}
+                        height={32}
+                        src={record.imageUrl}
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailSourceModal({
+                                    open: true,
+                                    title: text,
+                                    sourceType: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
         {
@@ -220,20 +226,27 @@ export default function SourceTypesRankingPage() {
             key: 'sourceTypeLabel',
             ellipsis: true,
             render: (text: string, record: SourceTypeRankingItem) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <span
-                        className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                        onClick={() =>
-                            setDetailSourceModal({
-                                open: true,
-                                title: text,
-                                sourceType: record.sourceType,
-                            })
-                        }
-                    >
-                        {text || '—'}
-                    </span>
-                </CustomTooltip>
+                <div className="flex items-center gap-3">
+                    <ReleaseCoverImage
+                        width={32}
+                        height={32}
+                        src={record.imageUrl}
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <span
+                            className="cursor-pointer text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                            onClick={() =>
+                                setDetailSourceModal({
+                                    open: true,
+                                    title: text,
+                                    sourceType: record.sourceType,
+                                })
+                            }
+                        >
+                            {text || '—'}
+                        </span>
+                    </CustomTooltip>
+                </div>
             ),
         },
         {

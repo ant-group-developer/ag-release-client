@@ -8,11 +8,14 @@ import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
 import { ANALYTICS_RELEASE_TYPE } from '../enums';
+import { ANALYTICS2_TABS } from '../enums/tabs';
 
 export interface Analytics2DataFilter extends CommonParams {
     startDate?: string;
     endDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    tab?: ANALYTICS2_TABS;
+    sortBy?: string;
 }
 
 export interface DspTimelineParams {
@@ -44,6 +47,12 @@ export interface TrendViewSummaryParams {
 
 export interface TrendViewSummaryData {
     totalViews: number;
+}
+
+export interface AnalyticsSummaryData {
+    totalTrendViews: number;
+    totalUsage: number;
+    totalRevenueUsd: number;
 }
 
 export interface DspSalesSeriesItem {
@@ -221,6 +230,7 @@ export interface RevenueQueryParams extends CommonParams {
     includeOther?: boolean;
     groupBySource?: boolean;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    sortBy?: string;
 }
 
 // Summary Response
@@ -256,6 +266,7 @@ export interface RevenueDspItem {
     quantity: number;
     pgDspId: string;
     dspReportId: string;
+    imageUrl?: string | null;
     bySource?: BySourceItem[];
 }
 
@@ -419,6 +430,7 @@ export interface TrendViewDspBarChartParams {
 export interface TrendViewDspBarChartItem {
     dspName: string;
     totalViews: number;
+    imageUrl?: string;
 }
 
 export interface DspRankingItem {
@@ -427,6 +439,7 @@ export interface DspRankingItem {
     totalViews: number;
     pgDspId: string;
     dspReportId: string;
+    imageUrl?: string | null;
     bySource?: BySourceItem[];
 }
 
@@ -458,6 +471,7 @@ export interface RevenueDspBarChartItem {
     dspName: string;
     revenueUsd: number;
     quantity: number;
+    imageUrl?: string;
 }
 
 export interface TrendViewTerBarChartParams {
@@ -479,6 +493,7 @@ export interface RevenueTerBarChartItem {
     territory: string;
     revenueUsd: number;
     revenueUsdExact: string;
+    quantity?: number;
 }
 
 export interface ExportReportRequest {
@@ -571,6 +586,7 @@ export interface DspDetailParams {
     fromDate: string;
     toDate: string;
     releaseType?: string | ANALYTICS_RELEASE_TYPE;
+    sortBy?: string;
 }
 
 export interface DspRankingParams extends DspDetailParams {
@@ -719,6 +735,7 @@ export interface SourceTypeRankingItem {
     sourceType: string;
     sourceTypeLabel: string;
     totalViews: number;
+    imageUrl?: string | null;
 }
 
 export interface RevenueSourceTypeItem {
@@ -727,4 +744,5 @@ export interface RevenueSourceTypeItem {
     sourceTypeLabel: string;
     revenueUsd: number;
     quantity: number;
+    imageUrl?: string | null;
 }
