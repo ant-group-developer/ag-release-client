@@ -2709,6 +2709,75 @@
     "distributionMonitor": {
         "label": "Distribution monitor"
     },
+    "distributionOrchestration": {
+        "label": "Distribution",
+        "notSubmitted": "Not submitted",
+        "timeline": {
+            "title": "Event timeline",
+            "live": "Live",
+            "offline": "Offline",
+            "loadMore": "Load more"
+        },
+        "actions": {
+            "submit": "Distribute",
+            "approve": "Approve",
+            "reject": "Reject",
+            "retry": "Retry",
+            "rejectNotePlaceholder": "Enter rejection reason (shown to the user to fix)"
+        },
+        "flags": {
+            "title": "Error flags",
+            "empty": "No error flags yet",
+            "addFlag": "Add flag",
+            "submitFlags": "Submit flags (reject)",
+            "markFixed": "Mark fixed",
+            "note": "Note",
+            "code": "Code",
+            "message": "Message",
+            "location": "Location",
+            "addItem": "Add item"
+        },
+        "submit": {
+            "type": "Release type",
+            "selectDsp": "Select DSPs",
+            "direct": "Direct",
+            "aggregator": "Via aggregator",
+            "systemTenantNoDsp": "System account has no tenant DSP list"
+        },
+        "executionType": {
+            "INITIAL_RELEASE": "Initial release",
+            "UPDATE": "Update",
+            "TAKEDOWN": "Takedown",
+            "RETRY": "Retry"
+        },
+        "channels": {
+            "title": "DSP status",
+            "topology": "Channel",
+            "scheduledAt": "Waiting until"
+        },
+        "channelState": {
+            "PENDING": "Pending",
+            "DELIVERING": "Delivering",
+            "WAITING": "Waiting",
+            "LIVE": "Live",
+            "ISSUES": "Issues",
+            "TAKEN_DOWN": "Taken down",
+            "SKIPPED": "Skipped"
+        },
+        "state": {
+            "DRAFT": "Draft",
+            "VALIDATING": "Validating",
+            "IN_REVIEW": "In review",
+            "PROVISIONING_IDS": "Provisioning IDs",
+            "BUILDING_PACKAGE": "Building package",
+            "DELIVERING": "Delivering",
+            "DISTRIBUTED": "Distributed",
+            "PARTIALLY_DISTRIBUTED": "Partially distributed",
+            "FAILED": "Failed",
+            "ACTION_REQUIRED": "Action required",
+            "TAKEN_DOWN": "Taken down"
+        }
+    },
     "distributionJobs": {
         "label": "Distribution jobs",
         "detail": "Distribution job detail",

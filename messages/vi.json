@@ -2684,6 +2684,75 @@
     "distributionMonitor": {
         "label": "Theo dõi phân phối"
     },
+    "distributionOrchestration": {
+        "label": "Phát hành",
+        "notSubmitted": "Chưa phát hành",
+        "timeline": {
+            "title": "Dòng thời gian sự kiện",
+            "live": "Đang theo dõi trực tiếp",
+            "offline": "Ngoại tuyến",
+            "loadMore": "Tải thêm"
+        },
+        "actions": {
+            "submit": "Phát hành",
+            "approve": "Duyệt",
+            "reject": "Từ chối",
+            "retry": "Thử lại",
+            "rejectNotePlaceholder": "Nhập lý do từ chối (hiển thị cho người dùng sửa)"
+        },
+        "flags": {
+            "title": "Flag lỗi",
+            "empty": "Chưa có flag lỗi nào",
+            "addFlag": "Tạo flag lỗi",
+            "submitFlags": "Gửi flag (từ chối)",
+            "markFixed": "Đã sửa",
+            "note": "Ghi chú",
+            "code": "Mã lỗi",
+            "message": "Mô tả",
+            "location": "Vị trí",
+            "addItem": "Thêm dòng lỗi"
+        },
+        "submit": {
+            "type": "Loại phát hành",
+            "selectDsp": "Chọn DSP",
+            "direct": "Trực tiếp",
+            "aggregator": "Qua aggregator",
+            "systemTenantNoDsp": "Tài khoản hệ thống không có danh sách DSP theo tenant"
+        },
+        "executionType": {
+            "INITIAL_RELEASE": "Phát hành mới",
+            "UPDATE": "Cập nhật",
+            "TAKEDOWN": "Gỡ xuống",
+            "RETRY": "Thử lại"
+        },
+        "channels": {
+            "title": "Trạng thái DSP",
+            "topology": "Kênh",
+            "scheduledAt": "Chờ đến"
+        },
+        "channelState": {
+            "PENDING": "Chờ xử lý",
+            "DELIVERING": "Đang gửi",
+            "WAITING": "Đang chờ",
+            "LIVE": "Đã lên sóng",
+            "ISSUES": "Có lỗi",
+            "TAKEN_DOWN": "Đã gỡ",
+            "SKIPPED": "Bỏ qua"
+        },
+        "state": {
+            "DRAFT": "Nháp",
+            "VALIDATING": "Đang kiểm tra",
+            "IN_REVIEW": "Chờ duyệt",
+            "PROVISIONING_IDS": "Đang cấp mã",
+            "BUILDING_PACKAGE": "Đang đóng gói",
+            "DELIVERING": "Đang phân phối",
+            "DISTRIBUTED": "Đã phát hành",
+            "PARTIALLY_DISTRIBUTED": "Phát hành một phần",
+            "FAILED": "Thất bại",
+            "ACTION_REQUIRED": "Cần xử lý",
+            "TAKEN_DOWN": "Đã gỡ xuống"
+        }
+    },
     "distributionJobs": {
         "label": "Công việc phân phối",
         "detail": "Chi tiết công việc phân phối",
