@@ -4,12 +4,25 @@ import { SIZE_ICON } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
 import { DspData } from '@/modules/dsp/types';
-import { Avatar, Badge, Popconfirm, Table, Tag, theme, Typography } from 'antd';
+import {
+    Avatar,
+    Badge,
+    Checkbox,
+    Popconfirm,
+    Table,
+    Tag,
+    theme,
+    Typography,
+} from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { Eye, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
-import { CHILD_EXECUTION_MODE, RELEASE_SUBMIT_STEP_STATUS } from '../../enums';
+import {
+    CHILD_EXECUTION_MODE,
+    RELEASE_EXECUTION_STEP_TYPE,
+    RELEASE_SUBMIT_STEP_STATUS,
+} from '../../enums';
 import {
     formatDurationShort,
     formatEnumLabel,
@@ -59,6 +72,7 @@ export default function ReleaseSubmitStepTable({
     );
     const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
     const [lastSourceId, setLastSourceId] = useState<string | null>(null);
+    const [isOverride, setIsOverride] = useState(false);
 
     useEffect(() => {
         if (dataSource && dataSource.length > 0) {
@@ -292,38 +306,73 @@ export default function ReleaseSubmitStepTable({
             width: 100,
             fixed: 'right',
             align: 'center',
-            render: (_, record) => (
-                <div className="flex items-center justify-start gap-2">
-                    <CustomTooltip title={messages('common.viewDetail')}>
-                        <IconButton onClick={() => onViewDetail(record)}>
-                            <Eye size={SIZE_ICON} />
-                        </IconButton>
-                    </CustomTooltip>
-                    {record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED && (
-                        <Popconfirm
-                            title={messages(
-                                'releaseExecution.confirm.retryTitle'
-                            )}
-                            description={messages(
-                                'releaseExecution.confirm.retryDescription'
-                            )}
-                            onConfirm={() => {
-                                retryStep({
-                                    stepId: record.id,
-                                });
-                            }}
-                            okText={messages('common.yes')}
-                            cancelText={messages('common.no')}
-                        >
-                            <CustomTooltip title={messages('common.retry')}>
-                                <IconButton>
-                                    <RotateCcw size={SIZE_ICON} />
-                                </IconButton>
-                            </CustomTooltip>
-                        </Popconfirm>
-                    )}
-                </div>
-            ),
+            render: (_, record) => {
+                const isFailed =
+                    record.status === RELEASE_SUBMIT_STEP_STATUS.FAILED;
+
+                const isSyncDataDspCiDone =
+                    String(record.type) ===
+                        RELEASE_EXECUTION_STEP_TYPE.SYNC_DATA_DSP_CI &&
+                    record.status === RELEASE_SUBMIT_STEP_STATUS.DONE;
+
+                const showRetry = isFailed || isSyncDataDspCiDone;
+
+                return (
+                    <div className="flex items-center justify-start gap-2">
+                        <CustomTooltip title={messages('common.viewDetail')}>
+                            <IconButton onClick={() => onViewDetail(record)}>
+                                <Eye size={SIZE_ICON} />
+                            </IconButton>
+                        </CustomTooltip>
+
+                        {showRetry && (
+                            <Popconfirm
+                                title={messages(
+                                    'releaseExecution.confirm.retryTitle'
+                                )}
+                                description={
+                                    <div className="mt-1 flex max-w-xs flex-col gap-2">
+                                        <span>
+                                            {messages(
+                                                'releaseExecution.confirm.retryDescription'
+                                            )}
+                                        </span>
+                                        <Checkbox
+                                            checked={isOverride}
+                                            onChange={(e) =>
+                                                setIsOverride(e.target.checked)
+                                            }
+                                        >
+                                            <span className="text-xs">
+                                                {messages(
+                                                    'releaseExecution.confirm.overrideStatus'
+                                                )}
+                                            </span>
+                                        </Checkbox>
+                                    </div>
+                                }
+                                onConfirm={() => {
+                                    retryStep({
+                                        stepId: record.id,
+                                        isOverride: isOverride || undefined,
+                                    });
+                                }}
+                                onOpenChange={(open) =>
+                                    open && setIsOverride(false)
+                                }
+                                okText={messages('common.yes')}
+                                cancelText={messages('common.no')}
+                            >
+                                <CustomTooltip title={messages('common.retry')}>
+                                    <IconButton>
+                                        <RotateCcw size={SIZE_ICON} />
+                                    </IconButton>
+                                </CustomTooltip>
+                            </Popconfirm>
+                        )}
+                    </div>
+                );
+            },
         },
     ];
 
