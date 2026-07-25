@@ -103,6 +103,9 @@ export default function MetadataInfo({}: Props) {
         );
     };
 
+    const isInstrumental =
+        formValue?.isInstrumental ?? releaseData?.isInstrumental ?? false;
+
     return (
         <div className="m-auto grid w-full grid-cols-2 gap-4">
             <MetadataInfoItem label={messages('release.name')}>
@@ -175,7 +178,7 @@ export default function MetadataInfo({}: Props) {
             </MetadataInfoItem>
 
             <MetadataInfoItem label={messages('release.audioLanguage')}>
-                {renderField('audioLanguageId')}
+                {renderField('audioLanguageId', !isInstrumental)}
             </MetadataInfoItem>
 
             <MetadataInfoItem label={messages('country.language')}>
