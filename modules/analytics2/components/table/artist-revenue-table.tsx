@@ -2,6 +2,7 @@
 
 import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
@@ -10,7 +11,8 @@ import { Avatar, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 
-const COLUMN_WIDTH_RANK = 120;
+const COLUMN_WIDTH_RANK = 80;
+const COLUMN_WIDTH_ARTIST = 250;
 const COLUMN_WIDTH_PROFILES = 180;
 const COLUMN_WIDTH_COUNTRY = 150;
 const COLUMN_WIDTH_GENRE = 150;
@@ -19,6 +21,7 @@ const COLUMN_WIDTH_TRACKS = 150;
 const COLUMN_WIDTH_USAGE = 150;
 const COLUMN_WIDTH_REVENUE = 180;
 const MAX_DSP_AVATARS_COUNT = 5;
+const DSP_AVATAR_SIZE = 28;
 
 interface ArtistRevenueTableProps {
     dataSource: RevenueArtistItem[];
@@ -44,6 +47,7 @@ export default function ArtistRevenueTable({
             key: 'rank',
             width: COLUMN_WIDTH_RANK,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -54,7 +58,9 @@ export default function ArtistRevenueTable({
             title: messages('common.artist'),
             dataIndex: 'artistName',
             key: 'artistName',
+            width: COLUMN_WIDTH_ARTIST,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueArtistItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -103,6 +109,7 @@ export default function ArtistRevenueTable({
                                         rel="noreferrer"
                                     >
                                         <Avatar
+                                            size={DSP_AVATAR_SIZE}
                                             src={dsp?.picture}
                                             style={{ backgroundColor: '#ccc' }}
                                         >
@@ -186,6 +193,7 @@ export default function ArtistRevenueTable({
             dataIndex: 'quantity',
             key: 'quantity',
             width: COLUMN_WIDTH_USAGE,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -197,6 +205,7 @@ export default function ArtistRevenueTable({
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: COLUMN_WIDTH_REVENUE,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -214,6 +223,7 @@ export default function ArtistRevenueTable({
             loading={loading}
             rowKey="artistId"
             pagination={false}
+            scroll={{ x: SCREEN.LG }}
         />
     );
 }

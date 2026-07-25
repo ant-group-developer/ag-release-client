@@ -6,6 +6,7 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -123,8 +124,9 @@ export default function VideoReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -135,7 +137,9 @@ export default function VideoReleasesRankingPage() {
             title: messages('common.releasesVideo'),
             dataIndex: 'title',
             key: 'title',
+            width: 300,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueReleaseVideoItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -299,6 +303,7 @@ export default function VideoReleasesRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 120,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -310,6 +315,7 @@ export default function VideoReleasesRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 120,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -323,8 +329,9 @@ export default function VideoReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -337,6 +344,7 @@ export default function VideoReleasesRankingPage() {
             key: 'title',
             width: 300,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -571,6 +579,7 @@ export default function VideoReleasesRankingPage() {
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 120,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -616,6 +625,7 @@ export default function VideoReleasesRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -655,7 +665,7 @@ export default function VideoReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<ReleaseRankingItem>
@@ -666,7 +676,7 @@ export default function VideoReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination

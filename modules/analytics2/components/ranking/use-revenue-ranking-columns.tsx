@@ -22,6 +22,7 @@ interface DetailModalState {
     type: ANALYTICS_MODAL_TYPE | null;
     title: string;
     id: string;
+    upc?: string;
     dspReportId?: string;
 }
 
@@ -209,6 +210,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                             type: ANALYTICS_MODAL_TYPE.RELEASE,
                                             title: text,
                                             id: record.releaseId,
+                                            upc: record.upc,
                                         })
                                     }
                                 >
@@ -285,6 +287,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                             type: ANALYTICS_MODAL_TYPE.RELEASE,
                                             title: text,
                                             id: record.releaseId,
+                                            upc: record.upc,
                                         })
                                     }
                                 >

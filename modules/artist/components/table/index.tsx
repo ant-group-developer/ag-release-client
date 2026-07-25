@@ -67,7 +67,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                 ARTIST_TABLE_KEY.NAME
             ),
             render: (value, record) => (
-                <div className="flex items-center gap-4">
+                <div className="flex min-w-0 items-center gap-4">
                     <div className="flex-shrink-0">
                         <ImageFallback
                             fallbackSrc={FALLBACK_IMAGE}
@@ -78,18 +78,21 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                             className="aspect-square rounded-full object-cover"
                         />
                     </div>
-                    <CustomTooltip title={messages('common.viewDetail')}>
-                        <Link
-                            href={getArtistDetailRoute(
-                                record?.id,
-                                ARTIST_DETAIL_TABS.OVERVIEW
-                            )}
-                        >
-                            <Typography className="truncate hover:text-blue-500 hover:underline hover:underline-offset-2">
-                                {record?.name}
-                            </Typography>
-                        </Link>
-                    </CustomTooltip>
+                    <div className="min-w-0 flex-1">
+                        <CustomTooltip title={record?.name}>
+                            <Link
+                                href={getArtistDetailRoute(
+                                    record?.id,
+                                    ARTIST_DETAIL_TABS.OVERVIEW
+                                )}
+                                className="block min-w-0"
+                            >
+                                <Typography.Text className="block truncate hover:underline hover:underline-offset-2">
+                                    {record?.name}
+                                </Typography.Text>
+                            </Link>
+                        </CustomTooltip>
+                    </div>
                 </div>
             ),
         },
@@ -123,9 +126,17 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
                         }}
                     >
                         {record?.artistProfiles?.map((item) => (
-                            <a key={item.id} href={item?.url} target="_blank">
-                                <Avatar src={item?.dsp?.picture} />
-                            </a>
+                            <CustomTooltip
+                                key={item.id}
+                                title={item?.dsp?.name}
+                            >
+                                <a href={item?.url} target="_blank">
+                                    <Avatar
+                                        src={item?.dsp?.picture}
+                                        size={32}
+                                    />
+                                </a>
+                            </CustomTooltip>
                         ))}
                     </Avatar.Group>
                 </div>

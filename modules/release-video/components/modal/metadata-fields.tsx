@@ -577,7 +577,10 @@ export default function MetadataFields({
                             form={form}
                             dataEdit={dataEdit}
                             onFieldUpdate={onFieldUpdate}
-                            disabled={!canEditReleaseVideo}
+                            disabled={
+                                !canEditReleaseVideo ||
+                                dataEdit?.status === RELEASES_STATUS.DRAFT
+                            }
                         />
                     </Col>
                 </Row>

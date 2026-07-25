@@ -12,15 +12,13 @@ import { useMemo } from 'react';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '../../constants/types';
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { createViewMoreHref } from '../../helpers';
-import { useGetLabelDsp } from '../../hooks/use-get-label-dsp';
-import { useGetLabelTer } from '../../hooks/use-get-label-ter';
-import { useGetLabelTopReleases } from '../../hooks/use-get-label-top-releases';
-import { useGetLabelTopTracks } from '../../hooks/use-get-label-top-tracks';
+import { useGetSourceTypeTopReleases } from '../../hooks/use-get-source-type-top-releases';
+import { useGetSourceTypeTopTracks } from '../../hooks/use-get-source-type-top-tracks';
 import { ReleaseRankingItem, TrackRankingItem } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
 
-interface DetailLabelRankingsProps {
-    labelId: string;
+interface DetailSourceTypeRankingsProps {
+    sourceType: string;
     fromDate: string;
     toDate: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -31,8 +29,8 @@ interface DetailLabelRankingsProps {
     onSelectTrack: (isrc: string, title: string) => void;
 }
 
-export default function DetailLabelRankings({
-    labelId,
+export default function DetailSourceTypeRankings({
+    sourceType,
     fromDate,
     toDate,
     releaseType,
@@ -41,7 +39,7 @@ export default function DetailLabelRankings({
     enabled = true,
     onSelectRelease,
     onSelectTrack,
-}: DetailLabelRankingsProps) {
+}: DetailSourceTypeRankingsProps) {
     const messages = useTranslations();
 
     const currentSortBy = useMemo(() => {
@@ -56,9 +54,9 @@ export default function DetailLabelRankings({
     }, [activeMetric, sortBy]);
 
     // 1. Top Releases API
-    const { labelTopReleasesData, isFetching: isTopReleasesFetching } =
-        useGetLabelTopReleases(
-            labelId,
+    const { sourceTypeTopReleasesData, isFetching: isTopReleasesFetching } =
+        useGetSourceTypeTopReleases(
+            sourceType,
             {
                 fromDate,
                 toDate,
@@ -71,9 +69,9 @@ export default function DetailLabelRankings({
         );
 
     // 2. Top Tracks API
-    const { labelTopTracksData, isFetching: isTopTracksFetching } =
-        useGetLabelTopTracks(
-            labelId,
+    const { sourceTypeTopTracksData, isFetching: isTopTracksFetching } =
+        useGetSourceTypeTopTracks(
+            sourceType,
             {
                 fromDate,
                 toDate,
@@ -159,14 +157,10 @@ export default function DetailLabelRankings({
         [messages, onSelectRelease]
     );
 
-    const mappedTopReleasesRankData = useMemo(() => {
-        return labelTopReleasesData?.items ?? [];
-    }, [labelTopReleasesData]);
-
     const trackColumns = useMemo(
         () => [
             {
-                title: messages('common.track'),
+                title: messages('track.label'),
                 dataIndex: 'title',
                 key: 'title',
                 ellipsis: true,
@@ -231,10 +225,6 @@ export default function DetailLabelRankings({
         [messages, onSelectTrack]
     );
 
-    const mappedTopTracksRankData = useMemo(() => {
-        return labelTopTracksData?.items ?? [];
-    }, [labelTopTracksData]);
-
     return (
         <div className="space-y-6">
             <Row gutter={[24, 24]}>
@@ -242,7 +232,7 @@ export default function DetailLabelRankings({
                     <RankingCard
                         title={messages('analytics2.topReleases')}
                         columns={releaseColumns}
-                        dataSource={mappedTopReleasesRankData}
+                        dataSource={sourceTypeTopReleasesData?.items ?? []}
                         loading={isTopReleasesFetching}
                         rowKey="releaseId"
                         labelKey="title"
@@ -250,18 +240,16 @@ export default function DetailLabelRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_RELEASES,
-                            {
-                                fromDate,
-                                toDate,
-                            }
+                            { fromDate, toDate }
                         )}
                     />
                 </Col>
+
                 <Col xs={24} lg={12}>
                     <RankingCard
                         title={messages('analytics2.topTracks')}
                         columns={trackColumns}
-                        dataSource={mappedTopTracksRankData}
+                        dataSource={sourceTypeTopTracksData?.items ?? []}
                         loading={isTopTracksFetching}
                         rowKey="isrc"
                         labelKey="title"
@@ -269,22 +257,11 @@ export default function DetailLabelRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_TRACKS,
-                            {
-                                fromDate,
-                                toDate,
-                            }
+                            { fromDate, toDate }
                         )}
                     />
                 </Col>
             </Row>
-
-            {/* 
-            <Row gutter={[24, 24]}>
-                <Col xs={24} lg={12}>
-                    ...
-                </Col>
-            </Row>
-            */}
         </div>
     );
 }

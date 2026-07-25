@@ -50,11 +50,13 @@ export default function RevenueRankings({
         type: ANALYTICS_MODAL_TYPE | null;
         title: string;
         id: string;
+        upc?: string;
         dspReportId?: string;
     }>({
         type: null,
         title: '',
         id: '',
+        upc: '',
         dspReportId: '',
     });
 
@@ -456,6 +458,7 @@ export default function RevenueRankings({
                     }
                     title={detailModal.title}
                     releaseId={detailModal.id}
+                    upc={detailModal.upc}
                     fromDate={fromDate}
                     toDate={toDate}
                     releaseType={releaseType}
