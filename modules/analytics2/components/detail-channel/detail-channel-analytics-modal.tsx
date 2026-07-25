@@ -2,34 +2,17 @@
 
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { SIZE_ICON } from '@/constants/common';
-import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { Col, Row, Segmented, Space, Tag } from 'antd';
-import { DollarSign, Eye } from 'lucide-react';
+import { Space, Tag } from 'antd';
+import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
-import {
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    RANK_COLUMN_WIDTH,
-} from '../../constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '../../enums';
-import { useGetDetailChannel } from '@/modules/channels/hooks/use-get-detail-channel';
-import { useTenantDetail } from '@/modules/tenant/hooks/use-get-tenant';
-import { useGetChannelDsp } from '../../hooks/use-get-channel-dsp';
+import { useEffect, useState } from 'react';
+import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetChannelOverview } from '../../hooks/use-get-channel-overview';
-import { useGetChannelRevenueLineChart } from '../../hooks/use-get-channel-revenue-line-chart';
-import { useGetChannelTer } from '../../hooks/use-get-channel-ter';
-import { useGetChannelTopReleases } from '../../hooks/use-get-channel-top-releases';
-import { useGetChannelTrendViewLineChart } from '../../hooks/use-get-channel-trend-view-line-chart';
-import { ReleaseRankingItem } from '../../types';
-import RankingCard, { RankingCardView } from '../card/ranking-card';
-import LineChartView from '../chart/line-chart-view';
+import ChannelAnalyticsOverviewChart from '../chart/channel-analytics-overview-chart';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
-import DetailStatsOverview from '../detail/detail-stats-overview';
+import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
+import DetailChannelRankings from './detail-channel-rankings';
 
 interface DetailChannelAnalyticsModalProps {
     open: boolean;
@@ -54,9 +37,6 @@ export default function DetailChannelAnalyticsModal({
 
     const [localFromDate, setLocalFromDate] = useState(fromDate);
     const [localToDate, setLocalToDate] = useState(toDate);
-    const [lineChartViewType, setLineChartViewType] = useState<
-        'views' | 'revenue'
-    >('views');
 
     const [detailReleaseModal, setDetailReleaseModal] = useState<{
         open: boolean;
@@ -76,344 +56,57 @@ export default function DetailChannelAnalyticsModal({
         }
     }, [open, fromDate, toDate]);
 
-    // Gọi API lấy thông tin Top Releases của Channel
-    const { channelTopReleasesData, isFetching: isTopReleasesFetching } =
-        useGetChannelTopReleases(
-            channelId,
-            {
-                fromDate: localFromDate,
-                toDate: localToDate,
-                topN: 5,
-                includeOther: true,
-                releaseType,
-            },
-            { enabled: open }
-        );
-
-    // Gọi API lấy thông tin chi tiết của Channel để lấy tenantId
-    const { channelData, isFetching: isDetailFetching } =
-        useGetDetailChannel(channelId);
-
-    const tenantId = channelData?.tenantId;
-
-    // Gọi API lấy thông tin chi tiết của Tenant (Workspace)
-    const { dataTenant, isFetching: isTenantFetching } = useTenantDetail(
-        tenantId || null
-    );
-
-    // Gọi API lấy thông tin tổng quan của Channel
+    // Gọi API lấy thông tin tổng quan summary của Channel
     const { overviewData, isFetching } = useGetChannelOverview(
         channelId,
         { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
     );
 
-    // Gọi API lấy thông tin biểu đồ doanh thu của Channel
-    const {
-        lineChartData: revenueLineChartData,
-        isFetching: isLineChartFetching,
-    } = useGetChannelRevenueLineChart(
-        channelId,
-        { fromDate: localFromDate, toDate: localToDate, releaseType },
-        open
+    const [activeMetric, setActiveMetric] = useState<string>(
+        ANALYTICS_METRIC_KEY.TOTAL_VIEWS
     );
 
-    // Gọi API lấy thông tin biểu đồ lượt nghe của Channel
-    const {
-        lineChartData: trendViewLineChartData,
-        isFetching: isTrendViewLineChartFetching,
-    } = useGetChannelTrendViewLineChart(
-        channelId,
-        { fromDate: localFromDate, toDate: localToDate, releaseType },
-        open
-    );
+    const handleMetricChange = (key: string) => {
+        setActiveMetric(key);
+    };
 
-    const [dspSortBy, setDspSortBy] = useState<ANALYTIC_SORT_BY>(
-        ANALYTIC_SORT_BY.REVENUE
-    );
-
-    // Gọi API lấy danh sách DSP chi tiết phân trang của Channel
-    const { channelDspData, isFetching: isChannelDspFetching } =
-        useGetChannelDsp(channelId, {
-            fromDate: localFromDate,
-            toDate: localToDate,
-            sortBy: dspSortBy,
-            topN: 5,
-            includeOther: true,
-            releaseType,
-        });
-
-    const [terSortBy, setTerSortBy] = useState<ANALYTIC_SORT_BY>(
-        ANALYTIC_SORT_BY.REVENUE
-    );
-
-    // Gọi API lấy danh sách Territory chi tiết phân trang của Channel
-    const { channelTerData, isFetching: isChannelTerFetching } =
-        useGetChannelTer(channelId, {
-            fromDate: localFromDate,
-            toDate: localToDate,
-            sortBy: terSortBy,
-            topN: 5,
-            includeOther: true,
-            releaseType,
-        });
-
-    const channelDspColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: 120,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: 'DSP',
-                dataIndex: 'dspName',
-                key: 'dspName',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.viewCount'),
-                dataIndex: 'totalViews',
-                key: 'totalViews',
-                width: 180,
-                sorter: true,
-                sortOrder:
-                    dspSortBy === ANALYTIC_SORT_BY.VIEWS
-                        ? ('descend' as const)
-                        : undefined,
-                render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {views ? views.toLocaleString() : 0}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.revenue'),
-                dataIndex: 'totalRevenueUsd',
-                key: 'totalRevenueUsd',
-                width: 180,
-                sorter: true,
-                sortOrder:
-                    dspSortBy === ANALYTIC_SORT_BY.REVENUE
-                        ? ('descend' as const)
-                        : undefined,
-                render: (val: string) => {
-                    const numVal = parseFloat(val);
-                    return (
-                        <span className="text-gray-900 dark:text-zinc-100">
-                            ${isNaN(numVal) ? '0.00' : formattedNumber(numVal)}
-                        </span>
-                    );
-                },
-            },
-        ],
-        [messages, dspSortBy]
-    );
-
-    const channelTerColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: 120,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: messages('country.label'),
-                dataIndex: 'territory',
-                key: 'territory',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate font-medium text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.viewCount'),
-                dataIndex: 'totalViews',
-                key: 'totalViews',
-                width: 180,
-                sorter: true,
-                sortOrder:
-                    terSortBy === ANALYTIC_SORT_BY.VIEWS
-                        ? ('descend' as const)
-                        : undefined,
-                render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {views ? views.toLocaleString() : 0}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.revenue'),
-                dataIndex: 'totalRevenueUsd',
-                key: 'totalRevenueUsd',
-                width: 180,
-                sorter: true,
-                sortOrder:
-                    terSortBy === ANALYTIC_SORT_BY.REVENUE
-                        ? ('descend' as const)
-                        : undefined,
-                render: (val: string) => {
-                    const numVal = parseFloat(val);
-                    return (
-                        <span className="text-gray-900 dark:text-zinc-100">
-                            ${isNaN(numVal) ? '0.00' : formattedNumber(numVal)}
-                        </span>
-                    );
-                },
-            },
-        ],
-        [messages, terSortBy]
-    );
-
-    const mappedChannelDspData = useMemo(() => {
-        return (channelDspData.items || []).map((item: any) => ({
-            ...item,
-            totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
-        }));
-    }, [channelDspData.items]);
-
-    const mappedChannelTerData = useMemo(() => {
-        return (channelTerData.items || []).map((item: any) => ({
-            ...item,
-            totalRevenueUsdNum: parseFloat(item.totalRevenueUsd) || 0,
-        }));
-    }, [channelTerData.items]);
-
-    const releaseColumns = useMemo(
-        () => [
-            {
-                title: messages('analytics2.rank'),
-                dataIndex: 'rank',
-                key: 'rank',
-                width: RANK_COLUMN_WIDTH,
-                align: 'center' as const,
-                render: (rank: number) => (
-                    <span className="text-gray-700 dark:text-zinc-300">
-                        #{rank}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.release'),
-                dataIndex: 'title',
-                key: 'title',
-                ellipsis: true,
-                render: (text: string, record: ReleaseRankingItem) => (
-                    <div className="flex items-center gap-3">
-                        <ReleaseCoverImage
-                            width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                            height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                            fileId={
-                                record.release?.coverArtThumbnails?.[
-                                    RELEASE_COVER_ART_SIZE.S75
-                                ] as string
-                            }
-                        />
-                        <CustomTooltip
-                            title={messages('common.detailedAnalysis')}
-                        >
-                            <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                onClick={() =>
-                                    setDetailReleaseModal({
-                                        open: true,
-                                        title: text,
-                                        releaseId: record.releaseId,
-                                    })
-                                }
-                            >
-                                {text}
-                            </span>
-                        </CustomTooltip>
-                    </div>
-                ),
-            },
-            {
-                title: 'UPC',
-                dataIndex: 'upc',
-                key: 'upc',
-                width: 140,
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="truncate text-gray-500 dark:text-zinc-400">
-                        {text || '—'}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.tracks'),
-                dataIndex: 'trackCount',
-                key: 'trackCount',
-                width: 80,
-                render: (count: number) => (
-                    <span className="text-gray-600 dark:text-zinc-400">
-                        {count || 0}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.viewCount'),
-                dataIndex: 'totalViews',
-                key: 'totalViews',
-                width: 100,
-                render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {views ? views.toLocaleString() : 0}
-                    </span>
-                ),
-            },
-            {
-                title: messages('common.revenue'),
-                dataIndex: 'totalRevenueUsd',
-                key: 'totalRevenueUsd',
-                width: 120,
-                render: (val: string | number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        ${val ? formattedNumber(Number(val)) : '0.00'}
-                    </span>
-                ),
-            },
-        ],
-        [messages]
-    );
-
-    const mappedTopReleasesRankData = useMemo(() => {
-        return (channelTopReleasesData?.items ?? []).map((item, index) => ({
-            ...item,
-            rank: index + 1,
-        }));
-    }, [channelTopReleasesData]);
+    const metricTabItems: MetricHeaderTabItem[] = [
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+            label: 'Total views',
+            value: formattedNumber(overviewData?.totalTrendViews),
+            icon: Eye,
+            color: 'text-emerald-600 dark:text-emerald-400',
+            bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
+        },
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
+            label: 'Total Usage',
+            value: formattedNumber(overviewData?.totalSalesViews),
+            icon: Music,
+            color: 'text-purple-600 dark:text-purple-400',
+            bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
+        },
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
+            label: 'Total Revenue',
+            value: formattedNumber(overviewData?.totalRevenueUsd),
+            icon: DollarSign,
+            color: 'text-cyan-600 dark:text-cyan-400',
+            bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
+        },
+    ];
 
     return (
         <FullScreenModal
             title={
                 <div className="flex w-full items-center justify-between">
                     <Space>
-                        <Tag className="!mr-0 !px-2 !py-1" color="green">
-                            {messages('common.channel')}
+                        <Tag className="!mr-0 !px-2 !py-1" color="purple">
+                            {messages('channel.label')}
                         </Tag>
-                        <span className="">{`${messages('analytics.label')}: ${title}`}</span>
+                        <span className="">{`${messages('channel.label')}: ${title}`}</span>
                     </Space>
                     <DateSelect2
                         style={{ width: 240, height: 32 }}
@@ -433,209 +126,39 @@ export default function DetailChannelAnalyticsModal({
             footer={null}
         >
             <div className="space-y-6 p-6">
-                {/* 1. Phần overview 4 card */}
-                <DetailStatsOverview
-                    trendViews={overviewData?.totalTrendViews}
-                    salesViews={overviewData?.totalSalesViews}
-                    revenueUsd={overviewData?.totalRevenueUsd}
-                    isLoading={isFetching}
-                    workspace={
-                        dataTenant?.id
-                            ? {
-                                  name: dataTenant.name,
-                                  logo: dataTenant.logo,
-                              }
-                            : undefined
+                <div className="mb-6 flex flex-col rounded-lg border">
+                    <MetricHeaderTabs
+                        items={metricTabItems}
+                        activeKey={activeMetric}
+                        onChangeKey={handleMetricChange}
+                    />
+                    <ChannelAnalyticsOverviewChart
+                        channelId={channelId}
+                        fromDate={localFromDate}
+                        toDate={localToDate}
+                        releaseType={releaseType}
+                        activeMetric={activeMetric}
+                        enabled={open}
+                    />
+                </div>
+
+                <DetailChannelRankings
+                    channelId={channelId}
+                    fromDate={localFromDate}
+                    toDate={localToDate}
+                    releaseType={releaseType}
+                    activeMetric={activeMetric}
+                    enabled={open}
+                    onSelectRelease={(releaseId, relTitle) =>
+                        setDetailReleaseModal({
+                            open: true,
+                            title: relTitle,
+                            releaseId,
+                        })
                     }
-                    isWorkspaceLoading={isDetailFetching || isTenantFetching}
                 />
-
-                <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={24}>
-                        <LineChartView
-                            title={
-                                <div className="flex w-full items-center justify-between">
-                                    <span className="text-base font-bold text-gray-800 dark:text-zinc-100">
-                                        {lineChartViewType === 'views'
-                                            ? messages(
-                                                  'analytics.trendViewsByMonth'
-                                              )
-                                            : messages(
-                                                  'analytics.totalRevenueByMonth'
-                                              )}
-                                    </span>
-                                    <Segmented
-                                        options={[
-                                            {
-                                                label: (
-                                                    <div className="flex items-center gap-1.5">
-                                                        <Eye size={SIZE_ICON} />
-                                                        <span>
-                                                            {messages(
-                                                                'common.views'
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                ),
-                                                value: 'views',
-                                            },
-                                            {
-                                                label: (
-                                                    <div className="flex items-center gap-1.5">
-                                                        <DollarSign
-                                                            size={SIZE_ICON}
-                                                        />
-                                                        <span>
-                                                            {messages(
-                                                                'common.revenue'
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                ),
-                                                value: 'revenue',
-                                            },
-                                        ]}
-                                        value={lineChartViewType}
-                                        onChange={(val) =>
-                                            setLineChartViewType(
-                                                val as 'views' | 'revenue'
-                                            )
-                                        }
-                                        className="flex-shrink-0"
-                                    />
-                                </div>
-                            }
-                            data={
-                                lineChartViewType === 'views'
-                                    ? trendViewLineChartData
-                                    : revenueLineChartData
-                            }
-                            xAxisKey="period"
-                            lineKey={
-                                lineChartViewType === 'views'
-                                    ? 'totalViews'
-                                    : 'revenueUsd'
-                            }
-                            lineName={
-                                lineChartViewType === 'views'
-                                    ? messages('common.viewCount')
-                                    : messages('analytics.revenue.modeRevenue')
-                            }
-                            loading={
-                                lineChartViewType === 'views'
-                                    ? isTrendViewLineChartFetching
-                                    : isLineChartFetching
-                            }
-                            chartHeight={250}
-                            valuePrefix={
-                                lineChartViewType === 'revenue'
-                                    ? '$'
-                                    : undefined
-                            }
-                            additionalTooltipKeys={
-                                lineChartViewType === 'revenue'
-                                    ? [
-                                          {
-                                              key: 'quantity',
-                                              name: messages(
-                                                  'analytics.revenue.usage'
-                                              ),
-                                          },
-                                      ]
-                                    : undefined
-                            }
-                        />
-                    </Col>
-                </Row>
-
-                <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={
-                                dspSortBy === ANALYTIC_SORT_BY.VIEWS
-                                    ? messages('analytics.dspDistribution')
-                                    : messages(
-                                          'analytics.revenueDspDistribution'
-                                      )
-                            }
-                            columns={channelDspColumns}
-                            dataSource={mappedChannelDspData}
-                            loading={isChannelDspFetching}
-                            rowKey="dspName"
-                            labelKey="dspName"
-                            defaultView={RankingCardView.LIST}
-                            valueKey={
-                                dspSortBy === ANALYTIC_SORT_BY.VIEWS
-                                    ? 'totalViews'
-                                    : 'totalRevenueUsdNum'
-                            }
-                            valuePrefix={
-                                dspSortBy === ANALYTIC_SORT_BY.REVENUE
-                                    ? '$'
-                                    : undefined
-                            }
-                            onChange={(pagination, filters, sorter: any) => {
-                                const field = sorter.field;
-                                if (field === 'totalViews') {
-                                    setDspSortBy(ANALYTIC_SORT_BY.VIEWS);
-                                } else if (field === 'totalRevenueUsd') {
-                                    setDspSortBy(ANALYTIC_SORT_BY.REVENUE);
-                                }
-                            }}
-                        />
-                    </Col>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={
-                                terSortBy === ANALYTIC_SORT_BY.VIEWS
-                                    ? messages('analytics.terDistribution')
-                                    : messages(
-                                          'analytics.revenueTerDistribution'
-                                      )
-                            }
-                            columns={channelTerColumns}
-                            dataSource={mappedChannelTerData}
-                            loading={isChannelTerFetching}
-                            rowKey="territory"
-                            labelKey="territory"
-                            defaultView={RankingCardView.LIST}
-                            valueKey={
-                                terSortBy === ANALYTIC_SORT_BY.VIEWS
-                                    ? 'totalViews'
-                                    : 'totalRevenueUsdNum'
-                            }
-                            valuePrefix={
-                                terSortBy === ANALYTIC_SORT_BY.REVENUE
-                                    ? '$'
-                                    : undefined
-                            }
-                            onChange={(pagination, filters, sorter: any) => {
-                                const field = sorter.field;
-                                if (field === 'totalViews') {
-                                    setTerSortBy(ANALYTIC_SORT_BY.VIEWS);
-                                } else if (field === 'totalRevenueUsd') {
-                                    setTerSortBy(ANALYTIC_SORT_BY.REVENUE);
-                                }
-                            }}
-                        />
-                    </Col>
-                </Row>
-
-                <Row gutter={[24, 24]}>
-                    <Col xs={24} lg={12}>
-                        <RankingCard
-                            title={messages('analytics2.topReleases')}
-                            columns={releaseColumns}
-                            dataSource={mappedTopReleasesRankData}
-                            loading={isTopReleasesFetching}
-                            rowKey="releaseId"
-                            labelKey="title"
-                            valueKey="totalViews"
-                            defaultView={RankingCardView.LIST}
-                        />
-                    </Col>
-                </Row>
             </div>
+
             {detailReleaseModal.open && (
                 <DetailReleaseAnalyticsModal
                     open={detailReleaseModal.open}

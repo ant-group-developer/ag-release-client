@@ -965,6 +965,15 @@ export const analytics2Apis = {
             params
         );
     },
+    getSourceTypeSummary: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/source-type/${sourceType}/summary`,
+            params
+        );
+    },
     getSourceTypeTopReleases: (sourceType: string, params: RankingParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/source-type/${sourceType}/top-releases`,

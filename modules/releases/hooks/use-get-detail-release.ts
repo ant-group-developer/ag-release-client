@@ -5,11 +5,16 @@ import { releasesQueryKeys } from '../constants/query-keys';
 import { RELEASE_TIME_MODE, RELEASES_STATUS } from '../enums';
 import { ReleasesData } from '../types';
 
-export const useGetDetailRelease = (id: ReleasesData['id']) => {
+export const useGetDetailRelease = (
+    id: ReleasesData['id'],
+    options?: {
+        enabled?: boolean;
+    }
+) => {
     const { data, ...res } = useQuery({
         queryKey: releasesQueryKeys.detail(id),
         queryFn: () => releasesApi.getDetail(id),
-        enabled: !!id,
+        enabled: options?.enabled !== undefined ? options.enabled && !!id : !!id,
     });
 
     const defaultData: ReleasesData = {

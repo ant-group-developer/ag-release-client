@@ -924,6 +924,16 @@ export const analytics2QueryKeys = {
             sourceType,
             params,
         ] as const,
+    sourceTypeSummary: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_SUMMARY,
+            sourceType,
+            params,
+        ] as const,
     sourceTypeTopReleases: (sourceType: string, params: RankingParams) =>
         [
             ...analytics2QueryKeys.all,

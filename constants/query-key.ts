@@ -594,6 +594,7 @@ export const QUERY_KEY = {
         DSP_REVENUE_TER_BAR_CHART: 'dsp-revenue-ter-bar-chart',
         DSP_REVENUE_TENANT_BAR_CHART: 'dsp-revenue-tenant-bar-chart',
         SOURCE_TYPE_OVERVIEW: 'source-type-overview',
+        SOURCE_TYPE_SUMMARY: 'source-type-summary',
         SOURCE_TYPE_TOP_RELEASES: 'source-type-top-releases',
         SOURCE_TYPE_TOP_TRACKS: 'source-type-top-tracks',
         SOURCE_TYPE_REVENUE_LINE_CHART: 'source-type-revenue-line-chart',
