@@ -1,3 +1,5 @@
+import { ANALYTIC_SORT_BY } from '@/enums/common';
+import { useMemo } from 'react';
 import {
     ANALYTICS_BAR_CHART_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -16,6 +18,7 @@ export interface DspAnalyticsOverviewChartProps {
     toDate: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
+    sortBy?: string;
     enabled?: boolean;
 }
 
@@ -26,11 +29,23 @@ export default function DspAnalyticsOverviewChart({
     toDate,
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+    sortBy,
     enabled = true,
 }: DspAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
+
+    const currentSortBy = useMemo(() => {
+        if (sortBy) return sortBy;
+        if (activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE) {
+            return ANALYTIC_SORT_BY.USAGE;
+        }
+        if (activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD) {
+            return ANALYTIC_SORT_BY.REVENUE;
+        }
+        return ANALYTIC_SORT_BY.VIEWS;
+    }, [activeMetric, sortBy]);
 
     const chartFilterParams = {
         pgDspId,
@@ -38,6 +53,11 @@ export default function DspAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType: releaseType as any,
+    };
+
+    const barChartFilterParams = {
+        ...chartFilterParams,
+        sortBy: currentSortBy,
     };
 
     const isEnabled = enabled && !!pgDspId && !!dspReportId;
@@ -54,7 +74,7 @@ export default function DspAnalyticsOverviewChart({
         terBarChartData: terTrendViewData,
         isFetching: isTerTrendViewFetching,
     } = useGetDspTrendViewTerBarChart(
-        chartFilterParams,
+        barChartFilterParams,
         isEnabled && !isRevenueMetric
     );
 
@@ -70,7 +90,7 @@ export default function DspAnalyticsOverviewChart({
         terBarChartData: terRevenueData,
         isFetching: isTerRevenueFetching,
     } = useGetDspRevenueTerBarChart(
-        chartFilterParams,
+        barChartFilterParams,
         isEnabled && isRevenueMetric
     );
 

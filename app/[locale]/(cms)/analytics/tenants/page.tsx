@@ -6,6 +6,7 @@ import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -106,6 +107,9 @@ export default function TenantsRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { tenantRankingData, isFetching: isViewsFetching } =
         useGetTenantRanking(
@@ -116,7 +120,7 @@ export default function TenantsRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: !isRevenue }
         );
@@ -132,7 +136,7 @@ export default function TenantsRankingPage() {
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: isRevenue }
         );
@@ -144,8 +148,9 @@ export default function TenantsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -156,7 +161,9 @@ export default function TenantsRankingPage() {
             title: messages('tenant.name'),
             dataIndex: 'tenantName',
             key: 'tenantName',
+            width: 250,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueTenantItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -228,6 +235,7 @@ export default function TenantsRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -239,6 +247,7 @@ export default function TenantsRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 180,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -252,8 +261,9 @@ export default function TenantsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -264,7 +274,9 @@ export default function TenantsRankingPage() {
             title: messages('tenant.name'),
             dataIndex: 'tenantName',
             key: 'tenantName',
+            width: 250,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: TenantRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -337,6 +349,7 @@ export default function TenantsRankingPage() {
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -382,6 +395,7 @@ export default function TenantsRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -395,13 +409,22 @@ export default function TenantsRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -441,6 +464,7 @@ export default function TenantsRankingPage() {
                             loading={isFetching}
                             rowKey="tenantId"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<TenantRankingItem>
@@ -451,6 +475,7 @@ export default function TenantsRankingPage() {
                             loading={isFetching}
                             rowKey="tenantId"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination
@@ -481,7 +506,7 @@ export default function TenantsRankingPage() {
                         tenantId={detailModal.tenantId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -498,7 +523,7 @@ export default function TenantsRankingPage() {
                         sourceType={detailSourceModal.sourceType}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>

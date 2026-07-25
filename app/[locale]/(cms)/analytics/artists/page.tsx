@@ -104,6 +104,9 @@ export default function ArtistsRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { artistRankingData, isFetching: isViewsFetching } =
         useGetArtistRanking(
@@ -114,7 +117,7 @@ export default function ArtistsRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: !isRevenue }
         );
@@ -130,7 +133,7 @@ export default function ArtistsRankingPage() {
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: isRevenue }
         );
@@ -190,6 +193,7 @@ export default function ArtistsRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -203,13 +207,22 @@ export default function ArtistsRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -285,7 +298,7 @@ export default function ArtistsRankingPage() {
                         artistId={detailModal.artistId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -299,7 +312,7 @@ export default function ArtistsRankingPage() {
                         sourceType={detailSourceModal.sourceType}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>

@@ -4,6 +4,7 @@ import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -92,6 +93,9 @@ export default function DspsRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
         {
@@ -101,7 +105,7 @@ export default function DspsRankingPage() {
             pageSize,
             keyword: dataFilter.keyword ?? undefined,
             groupBySource: true,
-            releaseType,
+            releaseType: requestReleaseType,
         },
         { enabled: !isRevenue }
     );
@@ -116,7 +120,7 @@ export default function DspsRankingPage() {
             keyword: dataFilter.keyword ?? undefined,
             includeOther: false,
             groupBySource: true,
-            releaseType,
+            releaseType: requestReleaseType,
         },
         { enabled: isRevenue }
     );
@@ -146,8 +150,9 @@ export default function DspsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -158,7 +163,9 @@ export default function DspsRankingPage() {
             title: messages('common.dsps'),
             dataIndex: 'dspName',
             key: 'dspName',
+            width: 250,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {text || '—'}
@@ -202,6 +209,7 @@ export default function DspsRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -213,6 +221,7 @@ export default function DspsRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 180,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -226,8 +235,9 @@ export default function DspsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -238,7 +248,9 @@ export default function DspsRankingPage() {
             title: messages('common.dsps'),
             dataIndex: 'dspName',
             key: 'dspName',
+            width: 250,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {text || '—'}
@@ -282,6 +294,7 @@ export default function DspsRankingPage() {
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -327,6 +340,7 @@ export default function DspsRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -340,13 +354,22 @@ export default function DspsRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -386,6 +409,7 @@ export default function DspsRankingPage() {
                             loading={isFetching}
                             rowKey="dspName"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table
@@ -396,6 +420,7 @@ export default function DspsRankingPage() {
                             loading={isFetching}
                             rowKey="dspName"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination
@@ -429,7 +454,7 @@ export default function DspsRankingPage() {
                         sourceType={detailSourceModal.sourceType}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>
