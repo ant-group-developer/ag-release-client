@@ -2773,6 +2773,7 @@
         "confirm": {
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",
             "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
+            "overrideStatus": "Ghi đè trạng thái mới nhất",
             "markCompletedTitle": "Bạn có chắc chắn muốn đánh dấu hoàn thành?",
             "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành.",
             "autoRetrySyncDataDspCiTitle": "Xác nhận tự động thử lại các bước đồng bộ DSP CI?",
