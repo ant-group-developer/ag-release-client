@@ -1,13 +1,13 @@
+import { ANALYTIC_SORT_BY } from '@/enums/common';
+import { useMemo } from 'react';
 import {
     ANALYTICS_BAR_CHART_TYPE,
     ANALYTICS_METRIC_KEY,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
-import { useGetDspRevenueTenantBarChart } from '../../hooks/use-get-dsp-revenue-tenant-bar-chart';
 import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
 import { useGetDspTrendViewLineChart } from '../../hooks/use-get-dsp-trend-view-line-chart';
-import { useGetDspTrendViewTenantBarChart } from '../../hooks/use-get-dsp-trend-view-tenant-bar-chart';
 import { useGetDspTrendViewTerBarChart } from '../../hooks/use-get-dsp-trend-view-ter-bar-chart';
 import AnalyticsOverviewChart from './analytics-overview-chart';
 
@@ -18,6 +18,7 @@ export interface DspAnalyticsOverviewChartProps {
     toDate: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
+    sortBy?: string;
     enabled?: boolean;
 }
 
@@ -28,11 +29,23 @@ export default function DspAnalyticsOverviewChart({
     toDate,
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+    sortBy,
     enabled = true,
 }: DspAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
+
+    const currentSortBy = useMemo(() => {
+        if (sortBy) return sortBy;
+        if (activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE) {
+            return ANALYTIC_SORT_BY.USAGE;
+        }
+        if (activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD) {
+            return ANALYTIC_SORT_BY.REVENUE;
+        }
+        return ANALYTIC_SORT_BY.VIEWS;
+    }, [activeMetric, sortBy]);
 
     const chartFilterParams = {
         pgDspId,
@@ -40,6 +53,11 @@ export default function DspAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType: releaseType as any,
+    };
+
+    const barChartFilterParams = {
+        ...chartFilterParams,
+        sortBy: currentSortBy,
     };
 
     const isEnabled = enabled && !!pgDspId && !!dspReportId;
@@ -53,18 +71,10 @@ export default function DspAnalyticsOverviewChart({
     );
 
     const {
-        tenantBarChartData: tenantTrendViewData,
-        isFetching: isTenantTrendViewFetching,
-    } = useGetDspTrendViewTenantBarChart(
-        chartFilterParams,
-        isEnabled && !isRevenueMetric
-    );
-
-    const {
         terBarChartData: terTrendViewData,
         isFetching: isTerTrendViewFetching,
     } = useGetDspTrendViewTerBarChart(
-        chartFilterParams,
+        barChartFilterParams,
         isEnabled && !isRevenueMetric
     );
 
@@ -77,18 +87,10 @@ export default function DspAnalyticsOverviewChart({
     );
 
     const {
-        tenantBarChartData: tenantRevenueData,
-        isFetching: isTenantRevenueFetching,
-    } = useGetDspRevenueTenantBarChart(
-        chartFilterParams,
-        isEnabled && isRevenueMetric
-    );
-
-    const {
         terBarChartData: terRevenueData,
         isFetching: isTerRevenueFetching,
     } = useGetDspRevenueTerBarChart(
-        chartFilterParams,
+        barChartFilterParams,
         isEnabled && isRevenueMetric
     );
 
@@ -99,22 +101,18 @@ export default function DspAnalyticsOverviewChart({
         ? isRevenueLineFetching
         : isTrendViewLineFetching;
 
-    const dspData = isRevenueMetric
-        ? tenantRevenueData
-        : tenantTrendViewData;
     const terData = isRevenueMetric
         ? terRevenueData
         : terTrendViewData;
     const isBarChartLoading = isRevenueMetric
-        ? isTenantRevenueFetching || isTerRevenueFetching
-        : isTenantTrendViewFetching || isTerTrendViewFetching;
+        ? isTerRevenueFetching
+        : isTerTrendViewFetching;
 
     return (
         <AnalyticsOverviewChart
             activeMetric={activeMetric}
             lineChartData={lineChartData}
             isLineChartLoading={isLineChartLoading}
-            dspData={dspData}
             terData={terData}
             isBarChartLoading={isBarChartLoading}
             showSegment={false}

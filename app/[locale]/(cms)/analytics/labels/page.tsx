@@ -6,6 +6,7 @@ import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { useFilter } from '@/hooks/use-filter';
 import { formattedNumber } from '@/helpers/common';
@@ -15,7 +16,6 @@ import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-t
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    RANK_COLUMN_WIDTH,
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
 } from '@/modules/analytics2/constants/types';
@@ -101,6 +101,9 @@ export default function LabelsRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { labelRankingData, isFetching: isViewsFetching } =
         useGetLabelRanking(
@@ -111,7 +114,7 @@ export default function LabelsRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: !isRevenue }
         );
@@ -127,7 +130,7 @@ export default function LabelsRankingPage() {
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: isRevenue }
         );
@@ -139,8 +142,9 @@ export default function LabelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -153,6 +157,7 @@ export default function LabelsRankingPage() {
             key: 'labelName',
             ellipsis: true,
             width: LABEL_COLUMN_WIDTH,
+            fixed: 'left',
             render: (text: string, record: RevenueLabelItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -284,6 +289,7 @@ export default function LabelsRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: QUANTITY_COLUMN_WIDTH,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -295,6 +301,7 @@ export default function LabelsRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: REVENUE_COLUMN_WIDTH,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -308,8 +315,9 @@ export default function LabelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -322,6 +330,7 @@ export default function LabelsRankingPage() {
             key: 'labelName',
             ellipsis: true,
             width: LABEL_COLUMN_WIDTH,
+            fixed: 'left',
             render: (text: string, record: LabelRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -453,6 +462,7 @@ export default function LabelsRankingPage() {
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: VIEWS_COLUMN_WIDTH,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -498,6 +508,7 @@ export default function LabelsRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -511,13 +522,22 @@ export default function LabelsRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -557,6 +577,7 @@ export default function LabelsRankingPage() {
                             loading={isFetching}
                             rowKey="labelId"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<LabelRankingItem>
@@ -567,6 +588,7 @@ export default function LabelsRankingPage() {
                             loading={isFetching}
                             rowKey="labelId"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination
@@ -600,7 +622,7 @@ export default function LabelsRankingPage() {
                         labelId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -617,7 +639,7 @@ export default function LabelsRankingPage() {
                         sourceType={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -634,7 +656,7 @@ export default function LabelsRankingPage() {
                         tenantId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>

@@ -165,7 +165,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'visibility',
             dataIndex: ['video', 'visibility'],
             align: 'left',
-            width: 200,
+            width: 240,
             render: (value: RELEASE_VIDEO_VISIBILITY) => {
                 const config = {
                     [RELEASE_VIDEO_VISIBILITY.DEFAULT]: {

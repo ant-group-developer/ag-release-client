@@ -202,7 +202,7 @@ export const FieldMappingsTable = ({
                     pagination={{ pageSize: 10 }}
                     size="small"
                     loading={isPending}
-                    scroll={{ y: 450 }}
+                    scroll={{ y: 450, x: 'max-content' }}
                 />
             </Form>
         </div>

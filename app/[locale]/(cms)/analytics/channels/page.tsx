@@ -6,6 +6,7 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -14,7 +15,6 @@ import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/deta
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import {
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    RANK_COLUMN_WIDTH,
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
 } from '@/modules/analytics2/constants/types';
@@ -119,8 +119,9 @@ export default function ChannelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -133,6 +134,7 @@ export default function ChannelsRankingPage() {
             key: 'channelName',
             width: 260,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueChannelItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -275,6 +277,7 @@ export default function ChannelsRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 180,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -286,6 +289,7 @@ export default function ChannelsRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 180,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -299,8 +303,9 @@ export default function ChannelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 80,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -313,6 +318,7 @@ export default function ChannelsRankingPage() {
             key: 'channelName',
             width: 260,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: ChannelRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -454,6 +460,7 @@ export default function ChannelsRankingPage() {
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -499,6 +506,7 @@ export default function ChannelsRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -538,7 +546,7 @@ export default function ChannelsRankingPage() {
                             rowKey="channelId"
                             size="small"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<ChannelRankingItem>
@@ -549,7 +557,7 @@ export default function ChannelsRankingPage() {
                             rowKey="channelId"
                             size="small"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination

@@ -283,6 +283,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getReleaseSummary: (releaseId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/release/${releaseId}/summary`,
+            params
+        );
+    },
     getReleaseDspTimeline: (releaseId: string, params: DspTimelineParams) => {
         return axiosInstance.post<DetailResponse<DspTimelineData>>(
             `/analytics/release/${releaseId}/trend-view/dsp/timeline`,
@@ -385,6 +391,12 @@ export const analytics2Apis = {
     getTrackOverview: (isrc: string, params: ReleaseOverviewParams) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/track/${isrc}/overview`,
+            params
+        );
+    },
+    getTrackSummary: (isrc: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/track/${isrc}/summary`,
             params
         );
     },
@@ -738,6 +750,12 @@ export const analytics2Apis = {
             params
         );
     },
+    getTenantSummary: (tenantId: string, params: AnalyticsCommonParams) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/tenant/${tenantId}/summary`,
+            params
+        );
+    },
     getTenantTopReleases: (tenantId: string, params: AnalyticsCommonParams) => {
         return axiosInstance.post<PaginationResponse<ReleaseRankingItem>>(
             `/analytics/tenant/${tenantId}/top-releases`,
@@ -962,6 +980,15 @@ export const analytics2Apis = {
     ) => {
         return axiosInstance.post<DetailResponse<ReleaseOverviewData>>(
             `/analytics/source-type/${sourceType}/overview`,
+            params
+        );
+    },
+    getSourceTypeSummary: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            `/analytics/source-type/${sourceType}/summary`,
             params
         );
     },
