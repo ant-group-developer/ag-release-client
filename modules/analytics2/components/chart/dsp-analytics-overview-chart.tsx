@@ -4,10 +4,8 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
-import { useGetDspRevenueTenantBarChart } from '../../hooks/use-get-dsp-revenue-tenant-bar-chart';
 import { useGetDspRevenueTerBarChart } from '../../hooks/use-get-dsp-revenue-ter-bar-chart';
 import { useGetDspTrendViewLineChart } from '../../hooks/use-get-dsp-trend-view-line-chart';
-import { useGetDspTrendViewTenantBarChart } from '../../hooks/use-get-dsp-trend-view-tenant-bar-chart';
 import { useGetDspTrendViewTerBarChart } from '../../hooks/use-get-dsp-trend-view-ter-bar-chart';
 import AnalyticsOverviewChart from './analytics-overview-chart';
 
@@ -53,14 +51,6 @@ export default function DspAnalyticsOverviewChart({
     );
 
     const {
-        tenantBarChartData: tenantTrendViewData,
-        isFetching: isTenantTrendViewFetching,
-    } = useGetDspTrendViewTenantBarChart(
-        chartFilterParams,
-        isEnabled && !isRevenueMetric
-    );
-
-    const {
         terBarChartData: terTrendViewData,
         isFetching: isTerTrendViewFetching,
     } = useGetDspTrendViewTerBarChart(
@@ -72,14 +62,6 @@ export default function DspAnalyticsOverviewChart({
         lineChartData: revenueLineData,
         isFetching: isRevenueLineFetching,
     } = useGetDspRevenueLineChart(
-        chartFilterParams,
-        isEnabled && isRevenueMetric
-    );
-
-    const {
-        tenantBarChartData: tenantRevenueData,
-        isFetching: isTenantRevenueFetching,
-    } = useGetDspRevenueTenantBarChart(
         chartFilterParams,
         isEnabled && isRevenueMetric
     );
@@ -99,22 +81,18 @@ export default function DspAnalyticsOverviewChart({
         ? isRevenueLineFetching
         : isTrendViewLineFetching;
 
-    const dspData = isRevenueMetric
-        ? tenantRevenueData
-        : tenantTrendViewData;
     const terData = isRevenueMetric
         ? terRevenueData
         : terTrendViewData;
     const isBarChartLoading = isRevenueMetric
-        ? isTenantRevenueFetching || isTerRevenueFetching
-        : isTenantTrendViewFetching || isTerTrendViewFetching;
+        ? isTerRevenueFetching
+        : isTerTrendViewFetching;
 
     return (
         <AnalyticsOverviewChart
             activeMetric={activeMetric}
             lineChartData={lineChartData}
             isLineChartLoading={isLineChartLoading}
-            dspData={dspData}
             terData={terData}
             isBarChartLoading={isBarChartLoading}
             showSegment={false}

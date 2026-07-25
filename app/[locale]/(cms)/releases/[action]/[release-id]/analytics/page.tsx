@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react';
 import LineChartView from '@/modules/analytics2/components/chart/line-chart-view';
 import PieChartView from '@/modules/analytics2/components/chart/pie-chart-view';
 import DetailStatsOverview from '@/modules/analytics2/components/detail/detail-stats-overview';
-import { useGetReleaseOverview } from '@/modules/analytics2/hooks/use-get-release-overview';
+import { useGetReleaseSummary } from '@/modules/analytics2/hooks/use-get-release-summary';
 import { useGetReleaseRevenueDspBarChart } from '@/modules/analytics2/hooks/use-get-release-revenue-dsp-bar-chart';
 import { useGetReleaseRevenueLineChart } from '@/modules/analytics2/hooks/use-get-release-revenue-line-chart';
 import { useGetReleaseRevenueTerBarChart } from '@/modules/analytics2/hooks/use-get-release-revenue-ter-bar-chart';
@@ -156,9 +156,9 @@ export default function AnalyticsPage() {
             </div>
 
             <DetailStatsOverview
-                trendViews={overviewData?.totalTrendViews}
-                salesViews={overviewData?.totalSalesViews}
-                revenueUsd={overviewData?.totalRevenueUsd}
+                trendViews={releaseSummaryData?.totalTrendViews}
+                salesViews={releaseSummaryData?.totalUsage}
+                revenueUsd={releaseSummaryData?.totalRevenueUsd}
                 isLoading={isOverviewFetching}
             />
 

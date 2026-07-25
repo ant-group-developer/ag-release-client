@@ -3,12 +3,12 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { formattedNumber } from '@/helpers/common';
-import { Space, Tag } from 'antd';
+import { Space, Tag, Typography } from 'antd';
 import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
-import { useGetReleaseOverview } from '../../hooks/use-get-release-overview';
+import { useGetReleaseSummary } from '../../hooks/use-get-release-summary';
 import ReleaseAnalyticsOverviewChart from '../chart/release-analytics-overview-chart';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
 import DetailReleaseRankings from './detail-release-rankings';
@@ -16,6 +16,7 @@ import DetailReleaseRankings from './detail-release-rankings';
 interface DetailReleaseAnalyticsModalProps {
     open: boolean;
     onClose: () => void;
+    upc?: string;
     title: string;
     releaseId: string;
     fromDate: string;
@@ -26,6 +27,7 @@ interface DetailReleaseAnalyticsModalProps {
 export default function DetailReleaseAnalyticsModal({
     open,
     onClose,
+    upc,
     title,
     releaseId,
     fromDate,
@@ -46,11 +48,15 @@ export default function DetailReleaseAnalyticsModal({
     }, [open, fromDate, toDate]);
 
     // Gọi API lấy thông tin tổng quan summary của Release
-    const { overviewData, isFetching } = useGetReleaseOverview(releaseId, {
-        fromDate: localFromDate,
-        toDate: localToDate,
-        releaseType,
-    });
+    const { releaseSummaryData, isFetching } = useGetReleaseSummary(
+        releaseId,
+        {
+            fromDate: localFromDate,
+            toDate: localToDate,
+            releaseType,
+        },
+        open
+    );
 
     const [activeMetric, setActiveMetric] = useState<string>(
         ANALYTICS_METRIC_KEY.TOTAL_VIEWS
@@ -64,7 +70,7 @@ export default function DetailReleaseAnalyticsModal({
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
             label: 'Total views',
-            value: formattedNumber(overviewData?.totalTrendViews),
+            value: formattedNumber(releaseSummaryData?.totalTrendViews),
             icon: Eye,
             color: 'text-emerald-600 dark:text-emerald-400',
             bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
@@ -72,7 +78,7 @@ export default function DetailReleaseAnalyticsModal({
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
             label: 'Total Usage',
-            value: formattedNumber(overviewData?.totalSalesViews),
+            value: formattedNumber(releaseSummaryData?.totalUsage),
             icon: Music,
             color: 'text-purple-600 dark:text-purple-400',
             bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
@@ -80,7 +86,7 @@ export default function DetailReleaseAnalyticsModal({
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
             label: 'Total Revenue',
-            value: formattedNumber(overviewData?.totalRevenueUsd),
+            value: formattedNumber(releaseSummaryData?.totalRevenueUsd),
             icon: DollarSign,
             color: 'text-cyan-600 dark:text-cyan-400',
             bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
@@ -91,11 +97,24 @@ export default function DetailReleaseAnalyticsModal({
         <FullScreenModal
             title={
                 <div className="flex w-full items-center justify-between">
-                    <Space>
-                        <Tag className="!mr-0 !px-2 !py-1" color="green">
+                    <Space align="center" size="small">
+                        <Tag
+                            className="!mr-0 !px-2 !py-0.5 font-medium"
+                            color="green"
+                        >
                             {messages('common.release')}
                         </Tag>
-                        <span className="">{`${messages('common.release')}: ${title}`}</span>
+                        <Typography.Text strong className="text-base">
+                            {title}
+                        </Typography.Text>
+                        {upc && (
+                            <Typography.Text
+                                type="secondary"
+                                className="text-sm"
+                            >
+                                (UPC: {upc})
+                            </Typography.Text>
+                        )}
                     </Space>
                     <DateSelect2
                         style={{ width: 240, height: 32 }}
@@ -107,6 +126,7 @@ export default function DetailReleaseAnalyticsModal({
                             setLocalFromDate(startDate);
                             setLocalToDate(endDate);
                         }}
+                        picker="date"
                     />
                 </div>
             }

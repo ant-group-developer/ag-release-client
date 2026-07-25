@@ -26,7 +26,7 @@ interface DetailDspRankingsProps {
     activeMetric?: string;
     sortBy?: string;
     enabled?: boolean;
-    onSelectRelease: (releaseId: string, title: string) => void;
+    onSelectRelease: (releaseId: string, title: string, upc?: string) => void;
     onSelectTrack: (isrc: string, title: string) => void;
 }
 
@@ -111,7 +111,11 @@ export default function DetailDspRankings({
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    onSelectRelease(record.releaseId, text)
+                                    onSelectRelease(
+                                        record.releaseId,
+                                        text,
+                                        record.upc
+                                    )
                                 }
                             >
                                 {text}

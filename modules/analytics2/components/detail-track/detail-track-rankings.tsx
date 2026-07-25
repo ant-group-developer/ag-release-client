@@ -63,7 +63,7 @@ export default function DetailTrackRankings({
                 title: messages('track.dsp'),
                 dataIndex: 'platform',
                 key: 'platform',
-                width: 150,
+                width: '40%',
                 render: (text: string) => {
                     const dsp = getDspByMetadataKey(text, dspItems);
                     return (
@@ -79,21 +79,11 @@ export default function DetailTrackRankings({
                 },
             },
             {
-                title: 'ISRC',
-                dataIndex: 'trackId',
-                key: 'trackId',
-                ellipsis: true,
-                render: (text: string) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
-                        {text || '—'}
-                    </span>
-                ),
-            },
-            {
                 title: messages('track.trackUrl') || 'Track URL',
                 dataIndex: 'trackUrl',
                 key: 'trackUrl',
                 ellipsis: true,
+                width: '60%',
                 render: (url: string) =>
                     url ? (
                         <a

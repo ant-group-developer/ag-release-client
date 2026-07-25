@@ -3,12 +3,12 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { formattedNumber } from '@/helpers/common';
-import { Space, Tag } from 'antd';
+import { Space, Tag, Typography } from 'antd';
 import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
-import { useGetTenantOverview } from '../../hooks/use-get-tenant-overview';
+import { useGetTenantSummary } from '../../hooks/use-get-tenant-summary';
 import TenantAnalyticsOverviewChart from '../chart/tenant-analytics-overview-chart';
 import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
@@ -43,6 +43,7 @@ export default function DetailTenantAnalyticsModal({
         open: boolean;
         title: string;
         releaseId: string;
+        upc?: string;
     }>({
         open: false,
         title: '',
@@ -68,7 +69,7 @@ export default function DetailTenantAnalyticsModal({
     }, [open, fromDate, toDate]);
 
     // Gọi API lấy thông tin tổng quan summary của Tenant
-    const { overviewData, isFetching } = useGetTenantOverview(
+    const { tenantSummaryData, isFetching } = useGetTenantSummary(
         tenantId,
         { fromDate: localFromDate, toDate: localToDate, releaseType },
         open
@@ -86,7 +87,7 @@ export default function DetailTenantAnalyticsModal({
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
             label: 'Total views',
-            value: formattedNumber(overviewData?.totalTrendViews),
+            value: formattedNumber(tenantSummaryData?.totalTrendViews),
             icon: Eye,
             color: 'text-emerald-600 dark:text-emerald-400',
             bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
@@ -94,7 +95,7 @@ export default function DetailTenantAnalyticsModal({
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
             label: 'Total Usage',
-            value: formattedNumber(overviewData?.totalSalesViews),
+            value: formattedNumber(tenantSummaryData?.totalUsage),
             icon: Music,
             color: 'text-purple-600 dark:text-purple-400',
             bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
@@ -102,7 +103,7 @@ export default function DetailTenantAnalyticsModal({
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
             label: 'Total Revenue',
-            value: formattedNumber(overviewData?.totalRevenueUsd),
+            value: formattedNumber(tenantSummaryData?.totalRevenueUsd),
             icon: DollarSign,
             color: 'text-cyan-600 dark:text-cyan-400',
             bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
@@ -113,11 +114,16 @@ export default function DetailTenantAnalyticsModal({
         <FullScreenModal
             title={
                 <div className="flex w-full items-center justify-between">
-                    <Space>
-                        <Tag className="!mr-0 !px-2 !py-1" color="green">
+                    <Space align="center" size="small">
+                        <Tag
+                            className="!mr-0 !px-2 !py-0.5 font-medium"
+                            color="green"
+                        >
                             {messages('tenant.label')}
                         </Tag>
-                        <span className="">{`${messages('tenant.label')}: ${title}`}</span>
+                        <Typography.Text strong className="text-base">
+                            {title}
+                        </Typography.Text>
                     </Space>
                     <DateSelect2
                         style={{ width: 240, height: 32 }}
@@ -129,6 +135,7 @@ export default function DetailTenantAnalyticsModal({
                             setLocalFromDate(startDate);
                             setLocalToDate(endDate);
                         }}
+                        picker="date"
                     />
                 </div>
             }
@@ -160,11 +167,12 @@ export default function DetailTenantAnalyticsModal({
                     releaseType={releaseType}
                     activeMetric={activeMetric}
                     enabled={open}
-                    onSelectRelease={(releaseId, relTitle) =>
+                    onSelectRelease={(releaseId, relTitle, upc) =>
                         setDetailReleaseModal({
                             open: true,
                             title: relTitle,
                             releaseId,
+                            upc,
                         })
                     }
                     onSelectTrack={(isrc, trkTitle) =>
@@ -188,6 +196,7 @@ export default function DetailTenantAnalyticsModal({
                     }
                     title={detailReleaseModal.title}
                     releaseId={detailReleaseModal.releaseId}
+                    upc={detailReleaseModal.upc}
                     fromDate={localFromDate}
                     toDate={localToDate}
                     releaseType={releaseType}

@@ -24,7 +24,7 @@ interface DetailChannelRankingsProps {
     activeMetric?: string;
     sortBy?: string;
     enabled?: boolean;
-    onSelectRelease: (releaseId: string, title: string) => void;
+    onSelectRelease: (releaseId: string, title: string, upc?: string) => void;
 }
 
 export default function DetailChannelRankings({
@@ -89,7 +89,11 @@ export default function DetailChannelRankings({
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    onSelectRelease(record.releaseId, text)
+                                    onSelectRelease(
+                                        record.releaseId,
+                                        text,
+                                        record.upc
+                                    )
                                 }
                             >
                                 {text}
