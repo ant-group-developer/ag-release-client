@@ -4,12 +4,17 @@ import { trackApi } from '../apis';
 import { trackQueryKeys } from '../constants/query-keys';
 import { TrackDataFilter } from '../types';
 
-export const useGetListTracks = (params: TrackDataFilter) => {
+export const useGetListTracks = (
+    params: TrackDataFilter,
+    options?: { enabled?: boolean }
+) => {
     const { data, ...res } = useQuery({
         queryKey: trackQueryKeys.list(params),
         queryFn: () => trackApi.getListTrack(params),
         placeholderData: (prev) => prev,
-        enabled: params.hasOwnProperty('releaseId') ? !!params.releaseId : true,
+        enabled:
+            (options?.enabled ?? true) &&
+            (params.hasOwnProperty('releaseId') ? !!params.releaseId : true),
         refetchOnWindowFocus: true,
     });
 
