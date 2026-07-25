@@ -1,6 +1,6 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { CommonFunction } from '@/types/api';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { distributionOrchestrationApis } from '../apis';
 import { distributionOrchestrationQueryKeys } from '../constants/query-keys';
 import { SubmitDistributionPayload } from '../types';
@@ -12,6 +12,7 @@ interface Variables extends CommonFunction {
 /** POST /distributions — submit distribution. onSuccess trả `{ distributionId }`. */
 export const useSubmitDistribution = () => {
     const { handleError } = useApiNotify();
+    const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationKey: distributionOrchestrationQueryKeys.submit(),
@@ -19,6 +20,11 @@ export const useSubmitDistribution = () => {
             distributionOrchestrationApis.submit(payload),
         onSuccess: (data, { onSuccess }) => {
             onSuccess?.(data?.data);
+            // Invalidate toàn bộ namespace: byRelease, timeline, channels, tickets, list
+            // Submit tạo distribution mới → mọi query liên quan đều stale.
+            queryClient.invalidateQueries({
+                queryKey: [distributionOrchestrationQueryKeys.all],
+            });
         },
         onError: (error, { onError }) => {
             handleError(error);
