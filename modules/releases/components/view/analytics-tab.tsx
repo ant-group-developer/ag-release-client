@@ -142,9 +142,9 @@ export default function AnalyticsTab({ releaseId }: Props) {
     return (
         <div className="space-y-6 py-4">
             <DetailStatsOverview
-                trendViews={releaseSummaryData?.totalTrendViews}
-                salesViews={releaseSummaryData?.totalUsage}
-                revenueUsd={releaseSummaryData?.totalRevenueUsd}
+                trendViews={overviewData?.totalTrendViews}
+                salesViews={overviewData?.totalSalesViews}
+                revenueUsd={overviewData?.totalRevenueUsd}
                 isLoading={isOverviewFetching}
             />
 
