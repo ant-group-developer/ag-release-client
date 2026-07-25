@@ -204,4 +204,5 @@ export enum WEEK_DAY {
 export enum ANALYTIC_SORT_BY {
     VIEWS = 'views',
     REVENUE = 'revenue',
+    USAGE = 'usage',
 }

@@ -18,3 +18,14 @@ export enum ANALYTICS_VIEW_TYPE {
     REVENUE = 'revenue',
 }
 
+export enum ANALYTICS_METRIC_KEY {
+    TOTAL_VIEWS = 'totalViews',
+    TOTAL_USAGE = 'totalUsage',
+    TOTAL_REVENUE_USD = 'totalRevenueUsd',
+}
+
+export enum ANALYTICS_BAR_CHART_TYPE {
+    DSP = 'dsp',
+    TERRITORY = 'ter',
+}
+

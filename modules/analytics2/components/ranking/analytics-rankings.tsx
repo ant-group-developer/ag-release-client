@@ -82,7 +82,7 @@ export default function AnalyticsRankings({
                 releaseType,
             },
             {
-                enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+                enabled: releaseType !== ANALYTICS_RELEASE_TYPE.VIDEO,
             }
         );
 
@@ -96,7 +96,7 @@ export default function AnalyticsRankings({
                 releaseType,
             },
             {
-                enabled: releaseType === ANALYTICS_RELEASE_TYPE.AUDIO,
+                enabled: releaseType !== ANALYTICS_RELEASE_TYPE.VIDEO,
             }
         );
 
@@ -110,7 +110,7 @@ export default function AnalyticsRankings({
                 releaseType,
             },
             {
-                enabled: releaseType === ANALYTICS_RELEASE_TYPE.VIDEO,
+                enabled: releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO,
             }
         );
 
@@ -170,7 +170,7 @@ export default function AnalyticsRankings({
     return (
         <div className="flex flex-col gap-6">
             <Row gutter={[24, 24]}>
-                {releaseType == ANALYTICS_RELEASE_TYPE.AUDIO && (
+                {releaseType !== ANALYTICS_RELEASE_TYPE.VIDEO && (
                     <>
                         <Col span={12} xs={24} lg={12}>
                             <RankingCard
@@ -305,7 +305,7 @@ export default function AnalyticsRankings({
                         )}
                     />
                 </Col>
-                {releaseType == ANALYTICS_RELEASE_TYPE.VIDEO && (
+                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
                     <Col span={12} xs={24} lg={12}>
                         <RankingCard
                             title={topRankingTitle(messages('common.channel'))}
@@ -351,8 +351,8 @@ export default function AnalyticsRankings({
                         )}
                     />
                 </Col>
-                {releaseType == ANALYTICS_RELEASE_TYPE.VIDEO && (
-                    <Col span={12} xs={24} lg={24}>
+                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
+                    <Col span={12} xs={24} lg={12}>
                         <RankingCard
                             title={topRankingTitle(
                                 messages('common.releasesVideo')
