@@ -14,14 +14,12 @@ import DetailChannelAnalyticsModal from '@/modules/analytics2/components/detail-
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import {
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
-import {
-    getAnalyticsViewType,
-} from '@/modules/analytics2/helpers';
+import { getAnalyticsViewType } from '@/modules/analytics2/helpers';
 import { useGetChannelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopChannel } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -32,7 +30,6 @@ import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, Tag, theme, Tooltip, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -56,8 +53,7 @@ export default function ChannelsRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate:
                 searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
-            endDate:
-                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            endDate: searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
             type: getAnalyticsViewType(searchParams.get('type')),
         });
 
@@ -119,7 +115,7 @@ export default function ChannelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 100,
             align: 'center' as const,
             fixed: 'left',
             render: (rank: number) => (
@@ -217,7 +213,9 @@ export default function ChannelsRankingPage() {
                             height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             className="aspect-square rounded-full object-cover"
                         />
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
@@ -303,7 +301,7 @@ export default function ChannelsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 100,
             align: 'center' as const,
             fixed: 'left',
             render: (rank: number) => (
@@ -401,7 +399,9 @@ export default function ChannelsRankingPage() {
                             height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                             className="aspect-square rounded-full object-cover"
                         />
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
@@ -456,7 +456,7 @@ export default function ChannelsRankingPage() {
             },
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,

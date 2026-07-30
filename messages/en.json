@@ -2468,13 +2468,13 @@
             "plays": "Plays & Trends",
             "revenue": "Revenue"
         },
-        "totalTrendViews": "Total views",
-        "trendViews": "Views",
-        "trendViewsByMonth": "Monthly views",
+        "totalTrendViews": "Total Streams",
+        "trendViews": "Streams",
+        "trendViewsByMonth": "Monthly Streams",
         "totalRevenueByMonth": "Revenue by month",
-        "dspDistribution": "Views by DSP",
-        "terDistribution": "Views by Country",
-        "tenantDistribution": "Views by Workspace",
+        "dspDistribution": "Streams by DSP",
+        "terDistribution": "Streams by Country",
+        "tenantDistribution": "Streams by Workspace",
         "revenueDspDistribution": "Revenue by DSP",
         "revenueTerDistribution": "Revenue by Country",
         "revenueTenantDistribution": "Revenue by Workspace",
@@ -2925,6 +2925,19 @@
         "configReport": "Config report",
         "importReport": "Report logs",
         "importSftp": "Config import SFTP",
+        "sourceTypeConfigs": {
+            "label": "Source Type Configs",
+            "sourceType": "Source Type",
+            "nameLabel": "Label",
+            "image": "Image",
+            "imageFile": "Image File",
+            "imageUrl": "Image URL",
+            "isActive": "Status",
+            "configVersion": "Config Version",
+            "action": {
+                "update": "Update Source Type Config"
+            }
+        },
         "enrichDataImport": {
             "label": "Enrich data import",
             "recentSessionsTitle": "Recent enrich data import sessions",

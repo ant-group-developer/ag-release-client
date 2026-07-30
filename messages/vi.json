@@ -2919,6 +2919,19 @@
         "configReport": "Cấu hình báo cáo",
         "importReport": "Nhật ký báo cáo",
         "importSftp": "Cấu hình SFTP",
+        "sourceTypeConfigs": {
+            "label": "Cấu hình loại nguồn",
+            "sourceType": "Loại nguồn",
+            "nameLabel": "Tên nguồn",
+            "image": "Hình ảnh",
+            "imageFile": "Tệp hình ảnh",
+            "imageUrl": "Đường dẫn hình ảnh",
+            "isActive": "Trạng thái",
+            "configVersion": "Phiên bản cấu hình",
+            "action": {
+                "update": "Cập nhật loại nguồn"
+            }
+        },
         "enrichDataImport": {
             "label": "Chuẩn hoá dữ liệu",
             "recentSessionsTitle": "Lịch sử chuẩn hoá dữ liệu gần đây",

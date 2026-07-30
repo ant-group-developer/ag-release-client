@@ -12,8 +12,6 @@ import { useMemo } from 'react';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '../../constants/types';
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { createViewMoreHref } from '../../helpers';
-import { useGetLabelDsp } from '../../hooks/use-get-label-dsp';
-import { useGetLabelTer } from '../../hooks/use-get-label-ter';
 import { useGetLabelTopReleases } from '../../hooks/use-get-label-top-releases';
 import { useGetLabelTopTracks } from '../../hooks/use-get-label-top-tracks';
 import { ReleaseRankingItem, TrackRankingItem } from '../../types';
@@ -123,7 +121,7 @@ export default function DetailLabelRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -195,7 +193,7 @@ export default function DetailLabelRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -253,6 +251,7 @@ export default function DetailLabelRankings({
                             {
                                 fromDate,
                                 toDate,
+                                labelId,
                             }
                         )}
                     />
@@ -272,6 +271,7 @@ export default function DetailLabelRankings({
                             {
                                 fromDate,
                                 toDate,
+                                labelId,
                             }
                         )}
                     />

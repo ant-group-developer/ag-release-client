@@ -1,10 +1,7 @@
 import { Col, Row, Segmented } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import {
-    ANALYTICS_BAR_CHART_TYPE,
-    ANALYTICS_METRIC_KEY,
-} from '../../enums';
+import { ANALYTICS_BAR_CHART_TYPE, ANALYTICS_METRIC_KEY } from '../../enums';
 import LineChartView from './line-chart-view';
 import PieChartView from './pie-chart-view';
 
@@ -30,9 +27,8 @@ export default function AnalyticsOverviewChart({
     defaultBarChartType = ANALYTICS_BAR_CHART_TYPE.DSP,
 }: AnalyticsOverviewChartProps) {
     const messages = useTranslations();
-    const [viewType, setViewType] = useState<ANALYTICS_BAR_CHART_TYPE>(
-        defaultBarChartType
-    );
+    const [viewType, setViewType] =
+        useState<ANALYTICS_BAR_CHART_TYPE>(defaultBarChartType);
 
     useEffect(() => {
         setViewType(defaultBarChartType);
@@ -54,7 +50,7 @@ export default function AnalyticsOverviewChart({
     const lineName = useMemo(() => {
         if (isRevenueUsd) return messages('analytics.totalRevenueUsd');
         if (isUsage) return messages('analytics.totalSalesViews');
-        return messages('common.viewCount');
+        return messages('common.streams');
     }, [isRevenueUsd, isUsage, messages]);
 
     const pieData = useMemo(() => {
@@ -71,11 +67,7 @@ export default function AnalyticsOverviewChart({
             if (isRevenueUsd) {
                 val = item.revenueUsd ?? item.totalRevenueUsd ?? 0;
             } else if (isUsage) {
-                val =
-                    item.quantity ??
-                    item.totalUsage ??
-                    item.revenueUsd ??
-                    0;
+                val = item.quantity ?? item.totalUsage ?? item.revenueUsd ?? 0;
             } else {
                 val = item.totalViews ?? item.views ?? 0;
             }
@@ -119,7 +111,9 @@ export default function AnalyticsOverviewChart({
                                     ]}
                                     value={viewType}
                                     onChange={(val) =>
-                                        setViewType(val as ANALYTICS_BAR_CHART_TYPE)
+                                        setViewType(
+                                            val as ANALYTICS_BAR_CHART_TYPE
+                                        )
                                     }
                                     className="flex-shrink-0"
                                 />

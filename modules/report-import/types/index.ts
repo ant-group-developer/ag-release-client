@@ -72,4 +72,14 @@ export interface SpotifyExportSchedulerConfig {
     force: boolean;
 }
 
+export interface SourceTypeConfigData {
+    sourceType: string;
+    label: string;
+    imageUrl: string | null;
+    isActive: boolean;
+    configVersion: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 

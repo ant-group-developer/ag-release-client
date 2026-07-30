@@ -1,6 +1,7 @@
 'use client';
 
-import { formattedNumber } from '@/helpers/common';
+import { DATE_FORMAT } from '@/enums/common';
+import { formattedDate, formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { Card, Empty } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -206,7 +207,13 @@ export default function LineChartView({
                                         fill: '#999',
                                     }}
                                     dy={10}
-                                    minTickGap={minTickGap}
+                                    minTickGap={30}
+                                    tickFormatter={(value) =>
+                                        formattedDate(
+                                            value,
+                                            DATE_FORMAT.DATE_ONLY_DASH
+                                        )
+                                    }
                                 />
                                 <YAxis
                                     axisLine={false}

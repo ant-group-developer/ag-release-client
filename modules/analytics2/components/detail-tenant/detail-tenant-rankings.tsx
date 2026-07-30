@@ -121,7 +121,7 @@ export default function DetailTenantRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -189,7 +189,7 @@ export default function DetailTenantRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -240,7 +240,7 @@ export default function DetailTenantRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_RELEASES,
-                            { fromDate, toDate }
+                            { fromDate, toDate, tenantId }
                         )}
                     />
                 </Col>
@@ -257,7 +257,7 @@ export default function DetailTenantRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_TRACKS,
-                            { fromDate, toDate }
+                            { fromDate, toDate, tenantId }
                         )}
                     />
                 </Col>

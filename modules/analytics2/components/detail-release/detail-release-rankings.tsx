@@ -41,8 +41,10 @@ export default function DetailReleaseRankings({
     const messages = useTranslations();
 
     // Gọi API lấy thông tin chi tiết của Release để lấy metadata external
-    const { releaseData, isFetching: isDetailFetching } =
-        useGetDetailRelease(releaseId, { enabled });
+    const { releaseData, isFetching: isDetailFetching } = useGetDetailRelease(
+        releaseId,
+        { enabled }
+    );
 
     const { dspData: listDspData } = useGetListDsp({
         pageSize: PAGE_SIZE_EXTRA_LARGE,

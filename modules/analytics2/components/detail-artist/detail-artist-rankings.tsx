@@ -118,7 +118,7 @@ export default function DetailArtistRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -190,7 +190,7 @@ export default function DetailArtistRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -248,6 +248,7 @@ export default function DetailArtistRankings({
                             {
                                 fromDate,
                                 toDate,
+                                artistId,
                             }
                         )}
                     />
@@ -267,6 +268,7 @@ export default function DetailArtistRankings({
                             {
                                 fromDate,
                                 toDate,
+                                artistId,
                             }
                         )}
                     />

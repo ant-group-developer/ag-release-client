@@ -125,7 +125,7 @@ export default function DetailDspRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -197,7 +197,7 @@ export default function DetailDspRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -255,6 +255,7 @@ export default function DetailDspRankings({
                             {
                                 fromDate,
                                 toDate,
+                                pgDspId,
                             }
                         )}
                     />
@@ -274,6 +275,7 @@ export default function DetailDspRankings({
                             {
                                 fromDate,
                                 toDate,
+                                pgDspId,
                             }
                         )}
                     />
