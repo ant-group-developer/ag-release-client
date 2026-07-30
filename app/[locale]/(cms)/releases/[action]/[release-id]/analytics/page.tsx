@@ -5,6 +5,7 @@ import { PATH_PARAMS } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Music } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
@@ -18,6 +19,7 @@ import { useGetReleaseSummary } from '@/modules/analytics2/hooks/use-get-release
 const ANALYTICS_DEFAULT_RANGE_MONTHS = 12;
 
 export default function AnalyticsPage() {
+    const messages = useTranslations();
     const params = useParams();
     const releaseId = params[PATH_PARAMS.RELEASE_ID]
         ? `${params[PATH_PARAMS.RELEASE_ID]}`
@@ -50,7 +52,7 @@ export default function AnalyticsPage() {
     const metricTabItems: MetricHeaderTabItem[] = [
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
-            label: 'Total views',
+            label: messages('analytics.totalTrendViews'),
             value: formattedNumber(releaseSummaryData?.totalTrendViews),
             icon: Eye,
             color: 'text-emerald-600 dark:text-emerald-400',
@@ -58,7 +60,7 @@ export default function AnalyticsPage() {
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
-            label: 'Total Usage',
+            label: messages('analytics.revenue.totalUsage'),
             value: formattedNumber(releaseSummaryData?.totalUsage),
             icon: Music,
             color: 'text-purple-600 dark:text-purple-400',
@@ -66,7 +68,7 @@ export default function AnalyticsPage() {
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
-            label: 'Total Revenue',
+            label: messages('analytics.totalRevenueUsd'),
             value: formattedNumber(releaseSummaryData?.totalRevenueUsd),
             icon: DollarSign,
             color: 'text-cyan-600 dark:text-cyan-400',
@@ -89,7 +91,7 @@ export default function AnalyticsPage() {
                 />
             </div>
 
-            <div className="mb-6 flex flex-col rounded-lg border">
+            <div className="mb-6 flex flex-col overflow-hidden rounded-lg border">
                 <MetricHeaderTabs
                     items={metricTabItems}
                     activeKey={activeMetric}
@@ -106,4 +108,3 @@ export default function AnalyticsPage() {
         </div>
     );
 }
-

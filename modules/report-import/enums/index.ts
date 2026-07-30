@@ -33,6 +33,7 @@ export enum REPORT_IMPORT_TAB {
     ENRICH_DATA_CRON = 'enrich-data-cron',
     DELETE_REPORT = 'delete-report',
     SPOTIFY_R2_SYNC = 'spotify-r2-sync',
+    SOURCE_TYPE_CONFIG = 'source-type-config',
 }
 
 export enum TYPE_MODAL_ENRICH_SCAN_SCHEDULE {

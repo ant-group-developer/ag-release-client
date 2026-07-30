@@ -69,7 +69,7 @@ export default function DetailReleaseAnalyticsModal({
     const metricTabItems: MetricHeaderTabItem[] = [
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
-            label: 'Total views',
+            label: messages('analytics.totalTrendViews'),
             value: formattedNumber(releaseSummaryData?.totalTrendViews),
             icon: Eye,
             color: 'text-emerald-600 dark:text-emerald-400',
@@ -77,7 +77,7 @@ export default function DetailReleaseAnalyticsModal({
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
-            label: 'Total Usage',
+            label: messages('analytics.revenue.totalUsage'),
             value: formattedNumber(releaseSummaryData?.totalUsage),
             icon: Music,
             color: 'text-purple-600 dark:text-purple-400',
@@ -85,7 +85,7 @@ export default function DetailReleaseAnalyticsModal({
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
-            label: 'Total Revenue',
+            label: messages('analytics.totalRevenueUsd'),
             value: formattedNumber(releaseSummaryData?.totalRevenueUsd),
             icon: DollarSign,
             color: 'text-cyan-600 dark:text-cyan-400',
@@ -135,7 +135,7 @@ export default function DetailReleaseAnalyticsModal({
             footer={null}
         >
             <div className="space-y-6 p-6">
-                <div className="mb-6 flex flex-col rounded-lg border">
+                <div className="mb-6 flex flex-col overflow-hidden rounded-lg border">
                     <MetricHeaderTabs
                         items={metricTabItems}
                         activeKey={activeMetric}

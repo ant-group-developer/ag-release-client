@@ -155,7 +155,7 @@ export default function AnalyticsTab({ releaseId }: Props) {
                         data={trendViewLineChartData}
                         xAxisKey="period"
                         lineKey="totalViews"
-                        lineName={messages('common.viewCount')}
+                        lineName={messages('common.streams')}
                         loading={isTrendViewLineChartFetching}
                         chartHeight={250}
                     />
