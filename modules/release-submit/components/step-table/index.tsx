@@ -315,7 +315,12 @@ export default function ReleaseSubmitStepTable({
                         RELEASE_EXECUTION_STEP_TYPE.SYNC_DATA_DSP_CI &&
                     record.status === RELEASE_SUBMIT_STEP_STATUS.DONE;
 
-                const showRetry = isFailed || isSyncDataDspCiDone;
+                const isSyncDataPartnerDone =
+                    String(record.type) ===
+                        RELEASE_EXECUTION_STEP_TYPE.SYNC_DATA_PARTNER &&
+                    record.status === RELEASE_SUBMIT_STEP_STATUS.DONE;
+
+                const showRetry = isFailed || isSyncDataDspCiDone || isSyncDataPartnerDone;
 
                 return (
                     <div className="flex items-center justify-start gap-2">
