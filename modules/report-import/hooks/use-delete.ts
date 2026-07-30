@@ -1,8 +1,8 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys } from '../constants/query-keys';
+import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis, sourceTypeConfigApis } from '../apis';
+import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys, sourceTypeConfigQueryKeys } from '../constants/query-keys';
 import { ReportConfigData, FtpExcludePatternData, EnrichScanScheduleData } from '../types';
 
 export const useDeleteReportConfig = () => {
@@ -100,3 +100,37 @@ export const useDeleteEnrichScanSchedule = () => {
         ...mutation,
     };
 };
+
+export const useDeleteSourceTypeConfig = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            sourceType,
+            onSuccess,
+            onError,
+        }: {
+            sourceType: string;
+            onSuccess?: () => void;
+            onError?: () => void;
+        }) => sourceTypeConfigApis.delete(sourceType),
+        onSuccess: (data, { onSuccess }) => {
+            queryClient.invalidateQueries({
+                queryKey: sourceTypeConfigQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (error, { onError }) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        deleteSourceTypeConfig: mutation.mutate,
+        ...mutation,
+    };
+};
+

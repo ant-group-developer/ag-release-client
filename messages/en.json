@@ -2924,6 +2924,19 @@
         "configReport": "Config report",
         "importReport": "Report logs",
         "importSftp": "Config import SFTP",
+        "sourceTypeConfigs": {
+            "label": "Source Type Configs",
+            "sourceType": "Source Type",
+            "nameLabel": "Label",
+            "image": "Image",
+            "imageFile": "Image File",
+            "imageUrl": "Image URL",
+            "isActive": "Status",
+            "configVersion": "Config Version",
+            "action": {
+                "update": "Update Source Type Config"
+            }
+        },
         "enrichDataImport": {
             "label": "Enrich data import",
             "recentSessionsTitle": "Recent enrich data import sessions",

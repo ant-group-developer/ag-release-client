@@ -1,10 +1,10 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys } from '../constants/query-keys';
+import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis, sourceTypeConfigApis } from '../apis';
+import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys, sourceTypeConfigQueryKeys } from '../constants/query-keys';
 import { ReportConfigData, FtpExcludePatternData, EnrichScanScheduleData } from '../types';
-import { UpdateReportConfigPayload, UpdateFtpExcludePatternPayload, UpdateEnrichScanSchedulePayload } from '../types/payload';
+import { UpdateReportConfigPayload, UpdateFtpExcludePatternPayload, UpdateEnrichScanSchedulePayload, UpdateSourceTypeConfigPayload } from '../types/payload';
 
 export const useUpdateReportConfig = () => {
     const queryClient = useQueryClient();
@@ -149,3 +149,37 @@ export const useUpdateEnrichScanSchedule = () => {
         ...mutation,
     };
 };
+
+export const useUpdateSourceTypeConfig = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            sourceType,
+            payload,
+        }: {
+            sourceType: string;
+            payload: UpdateSourceTypeConfigPayload;
+            onSuccess?: () => void;
+            onError?: () => void;
+        }) => sourceTypeConfigApis.update(sourceType, payload),
+        onSuccess: (data, { onSuccess }) => {
+            queryClient.invalidateQueries({
+                queryKey: sourceTypeConfigQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (error, { onError }) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        updateSourceTypeConfig: mutation.mutate,
+        ...mutation,
+    };
+};
+
