@@ -1,207 +1,260 @@
-import IconButton from '@/components/ui/button/icon-button';
-import { SIZE_ICON } from '@/constants/common';
-import {
-    Badge,
-    Card,
-    Col,
-    Row,
-    Space,
-    Spin,
-    Tag,
-    Tooltip,
-    Typography,
-} from 'antd';
-import { Eye, Pencil } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import AppTable from '@/components/ui/table/normal-table';
+import { Button, Tag, theme, Typography } from 'antd';
+import { ColumnType } from 'antd/es/table';
 import { useState } from 'react';
-import { useGetFtpParserConfigs } from '../../hooks/use-get-ftp-parser-configs';
+import { useTranslations } from 'next-intl';
 import { FtpParser } from '../../types';
-import { FtpParserConfigModal } from './ftp-parser-config-modal';
 import { FtpParserDetailModal } from './ftp-parser-detail-modal';
 
-interface FtpParserConfigListProps {
-    dspReportId: string;
+export interface FtpParserConfigItem {
+    id: string;
+    fileName: string;
+    folder: string;
+    source: string;
+    actionStatus: 'import' | 'ignore' | 'pending';
+    actionStatusLabel: string;
+    parser?: FtpParser;
 }
+
+export const FAKE_FTP_PARSER_CONFIG_DATA: FtpParserConfigItem[] = [
+    {
+        id: '1',
+        fileName:
+            'bombshelter-digital-services-llc_vevo_merlin_user_interactions_[abcregex]',
+        folder: '/trends/vvo-vevo',
+        source: 'ftp_merlin',
+        actionStatus: 'import',
+        actionStatusLabel: 'Lấy vào báo cáo',
+        parser: {
+            parserCode: 'VEVO_USER_INTERACTIONS',
+            sourceCategory: 'vvo-vevo',
+            parserName: 'Vevo User Interactions Parser',
+            sourceFile:
+                'bombshelter-digital-services-llc_vevo_merlin_user_interactions_[abcregex]',
+            targetTable: 'dsp_report_vevo_user_interactions',
+            fieldMappings: [
+                {
+                    reportColumn: 'user_id',
+                    parserColumn: 'user_id',
+                    targetColumn: 'user_id',
+                    transform: 'TRIM(LOWER(user_id))',
+                },
+                {
+                    reportColumn: 'interaction_type',
+                    parserColumn: 'interaction_type',
+                    targetColumn: 'action_type',
+                    transform: 'COALESCE(interaction_type, "unknown")',
+                },
+                {
+                    reportColumn: 'event_timestamp',
+                    parserColumn: 'event_timestamp',
+                    targetColumn: 'created_at',
+                    transform: 'TO_TIMESTAMP(event_timestamp)',
+                },
+                {
+                    reportColumn: 'country_code',
+                    parserColumn: 'country_code',
+                    targetColumn: 'country',
+                    transform: 'UPPER(country_code)',
+                },
+            ],
+            sourceHash: 'abc123hash',
+            isSelectable: true,
+            syncedAt: '2026-07-30 12:00:00',
+        },
+    },
+    {
+        id: '2',
+        fileName:
+            'bombshelter-digital-services-llc_vevo_merlin_user_attributes_',
+        folder: '/trends/vvo-vevo',
+        source: 'ftp_merlin',
+        actionStatus: 'ignore',
+        actionStatusLabel: 'Bỏ qua',
+        parser: {
+            parserCode: 'VEVO_USER_ATTRIBUTES',
+            sourceCategory: 'vvo-vevo',
+            parserName: 'Vevo User Attributes Parser',
+            sourceFile:
+                'bombshelter-digital-services-llc_vevo_merlin_user_attributes_',
+            targetTable: 'dsp_report_vevo_user_attributes',
+            fieldMappings: [
+                {
+                    reportColumn: 'user_id',
+                    parserColumn: 'user_id',
+                    targetColumn: 'user_id',
+                    transform: 'TRIM(user_id)',
+                },
+                {
+                    reportColumn: 'age_group',
+                    parserColumn: 'age_group',
+                    targetColumn: 'age_range',
+                    transform: 'DEFAULT_AGE(age_group)',
+                },
+                {
+                    reportColumn: 'subscription_status',
+                    parserColumn: 'subscription_status',
+                    targetColumn: 'is_premium',
+                    transform:
+                        'CASE WHEN subscription_status = "active" THEN true ELSE false END',
+                },
+            ],
+            sourceHash: 'def456hash',
+            isSelectable: false,
+            syncedAt: '2026-07-30 12:00:00',
+        },
+    },
+    {
+        id: '3',
+        fileName: 'bombshelter-digital-services-llc_vevo_merlin_devices_',
+        folder: '/trends/vvo-vevo',
+        source: 'ftp_merlin',
+        actionStatus: 'pending',
+        actionStatusLabel: 'Chờ admin xác nhận',
+        parser: {
+            parserCode: 'VEVO_DEVICES',
+            sourceCategory: 'vvo-vevo',
+            parserName: 'Vevo Devices Parser',
+            sourceFile: 'bombshelter-digital-services-llc_vevo_merlin_devices_',
+            targetTable: 'dsp_report_vevo_devices',
+            fieldMappings: [
+                {
+                    reportColumn: 'device_id',
+                    parserColumn: 'device_id',
+                    targetColumn: 'device_id',
+                    transform: 'TRIM(device_id)',
+                },
+                {
+                    reportColumn: 'os_version',
+                    parserColumn: 'os_version',
+                    targetColumn: 'platform_version',
+                    transform: 'LOWER(os_version)',
+                },
+                {
+                    reportColumn: 'model_name',
+                    parserColumn: 'model_name',
+                    targetColumn: 'device_model',
+                    transform: 'COALESCE(model_name, "Generic")',
+                },
+            ],
+            sourceHash: 'ghi789hash',
+            isSelectable: false,
+            syncedAt: '2026-07-30 12:00:00',
+        },
+    },
+];
+
+interface FtpParserConfigListProps {
+    dspReportId?: string;
+    data?: FtpParserConfigItem[];
+}
+
+// Sub-component rendering status tag according to component breakdown rule
+const ActionStatusTag = ({
+    status,
+    label,
+}: {
+    status: FtpParserConfigItem['actionStatus'];
+    label: string;
+}) => {
+    const colorMap: Record<FtpParserConfigItem['actionStatus'], string> = {
+        import: 'success',
+        ignore: 'default',
+        pending: 'processing',
+    };
+
+    return <Tag color={colorMap[status] || 'default'}>{label}</Tag>;
+};
 
 export const FtpParserConfigList = ({
     dspReportId,
+    data = FAKE_FTP_PARSER_CONFIG_DATA,
 }: FtpParserConfigListProps) => {
     const messages = useTranslations();
-    const [activeCategory, setActiveCategory] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeParser, setActiveParser] = useState<FtpParser | undefined>(
         undefined
     );
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-    const { ftpParserConfigs, isLoading } = useGetFtpParserConfigs(dspReportId);
+    const { token } = theme.useToken();
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center py-6">
-                <Spin size="small" />
-            </div>
-        );
-    }
+    const handleViewConfig = (record: FtpParserConfigItem) => {
+        if (record.parser) {
+            setActiveParser(record.parser);
+            setIsDetailModalOpen(true);
+        }
+    };
 
-    if (!ftpParserConfigs || ftpParserConfigs.length === 0) {
-        return (
-            <div className="py-4 text-center">
-                <Typography.Text type="secondary">
-                    {messages('dspReport.ftpParserConfig.noData')}
+    const columns: ColumnType<FtpParserConfigItem>[] = [
+        {
+            title: messages('common.fileName'),
+            key: 'fileName',
+            dataIndex: 'fileName',
+            width: 380,
+            ellipsis: true,
+            render: (value: string) => (
+                <Typography.Text copyable strong className="font-mono">
+                    {value}
                 </Typography.Text>
-            </div>
-        );
-    }
+            ),
+        },
+        {
+            title: messages('common.folder'),
+            key: 'folder',
+            dataIndex: 'folder',
+            width: 180,
+            ellipsis: true,
+            render: (value: string) => (
+                <Typography.Text type="secondary">{value}</Typography.Text>
+            ),
+        },
+        {
+            title: messages('dspReport.table.source'),
+            key: 'source',
+            dataIndex: 'source',
+            width: 130,
+            render: (value: string) => <Tag color="blue">{value}</Tag>,
+        },
+        {
+            title: messages('common.action'),
+            key: 'actionStatus',
+            width: 180,
+            render: (_, record) => (
+                <ActionStatusTag
+                    status={record.actionStatus}
+                    label={record.actionStatusLabel}
+                />
+            ),
+        },
+        {
+            title: messages('common.action'),
+            key: 'action',
+            width: 140,
+            align: 'center',
+            render: (_, record) => (
+                <Button
+                    type="link"
+                    size="small"
+                    onClick={() => handleViewConfig(record)}
+                >
+                    {messages('common.viewConfig')}
+                </Button>
+            ),
+        },
+    ];
 
     return (
-        <Row
-            gutter={[16, 16]}
-            className="rounded-lg bg-gray-50/50 p-4 dark:bg-zinc-900/50"
+        <div
+            className="overflow-hidden rounded-lg border"
+            style={{
+                backgroundColor: token.colorBgContainer,
+            }}
         >
-            {ftpParserConfigs.map((config) => (
-                <Col key={config.parserCode} xs={24} sm={12} md={8} lg={6}>
-                    <Card
-                        title={
-                            <Space>
-                                <Typography.Text
-                                    strong
-                                    ellipsis
-                                    className="max-w-full"
-                                >
-                                    {config.parserCode}
-                                </Typography.Text>
-                                <Badge
-                                    status={
-                                        config.isActive ? 'success' : 'default'
-                                    }
-                                />
-                            </Space>
-                        }
-                        size="small"
-                        extra={
-                            <div>
-                                <Tooltip title={messages('common.viewDetail')}>
-                                    <IconButton
-                                        onClick={() => {
-                                            setActiveParser(config.parser);
-                                            setIsDetailModalOpen(true);
-                                        }}
-                                    >
-                                        <Eye size={SIZE_ICON} />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title={messages('common.edit')}>
-                                    <IconButton
-                                        onClick={() => {
-                                            setActiveCategory(
-                                                config.sourceCategory
-                                            );
-                                            setIsModalOpen(true);
-                                        }}
-                                    >
-                                        <Pencil size={SIZE_ICON} />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                        }
-                        className="shadow-sm"
-                    >
-                        <Space direction="vertical" className="w-full">
-                            <div>
-                                <Typography.Text
-                                    type="secondary"
-                                    className="mr-1"
-                                >
-                                    {messages(
-                                        'dspReport.ftpParserConfig.sourceCategory'
-                                    )}
-                                    :
-                                </Typography.Text>
-                                <Typography.Text>
-                                    {config.sourceCategory}
-                                </Typography.Text>
-                            </div>
-                            <div>
-                                <Typography.Text
-                                    type="secondary"
-                                    className="mr-1"
-                                >
-                                    {messages(
-                                        'dspReport.ftpParserConfig.description'
-                                    )}
-                                    :
-                                </Typography.Text>
-                                <Typography.Text>
-                                    {config.description || '-'}
-                                </Typography.Text>
-                            </div>
-                            {config.includePatterns &&
-                                config.includePatterns.length > 0 && (
-                                    <div>
-                                        <Typography.Text
-                                            type="secondary"
-                                            className="mb-1 block"
-                                        >
-                                            {messages(
-                                                'dspReport.ftpParserConfig.includePatterns'
-                                            )}
-                                            :
-                                        </Typography.Text>
-                                        <div className="flex flex-wrap gap-1">
-                                            {config.includePatterns.map(
-                                                (pat) => (
-                                                    <Tag
-                                                        key={pat}
-                                                        className="m-0"
-                                                    >
-                                                        {pat}
-                                                    </Tag>
-                                                )
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            {config.excludePatterns &&
-                                config.excludePatterns.length > 0 && (
-                                    <div>
-                                        <Typography.Text
-                                            type="secondary"
-                                            className="mb-1 block"
-                                        >
-                                            {messages(
-                                                'dspReport.ftpParserConfig.excludePatterns'
-                                            )}
-                                            :
-                                        </Typography.Text>
-                                        <div className="flex flex-wrap gap-1">
-                                            {config.excludePatterns.map(
-                                                (pat) => (
-                                                    <Tag
-                                                        key={pat}
-                                                        className="m-0"
-                                                    >
-                                                        {pat}
-                                                    </Tag>
-                                                )
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                        </Space>
-                    </Card>
-                </Col>
-            ))}
-            {isModalOpen && activeCategory && (
-                <FtpParserConfigModal
-                    open={isModalOpen}
-                    onCancel={() => {
-                        setIsModalOpen(false);
-                        setActiveCategory(null);
-                    }}
-                    dspReportId={dspReportId}
-                    category={activeCategory}
-                />
-            )}
+            <AppTable<FtpParserConfigItem>
+                columns={columns}
+                dataSource={data}
+                rowKey="id"
+                pagination={false}
+            />
             {isDetailModalOpen && activeParser && (
                 <FtpParserDetailModal
                     open={isDetailModalOpen}
@@ -210,9 +263,11 @@ export const FtpParserConfigList = ({
                         setActiveParser(undefined);
                     }}
                     parser={activeParser}
-                    dspReportId={dspReportId}
+                    dspReportId={dspReportId || ''}
                 />
             )}
-        </Row>
+        </div>
     );
 };
+
+export default FtpParserConfigList;
