@@ -405,6 +405,10 @@ export const QUERY_KEY = {
     SPOTIFY_EXPORT_SCHEDULER_CONFIG: {
         KEY: 'SPOTIFY_EXPORT_SCHEDULER_CONFIG',
     },
+    SOURCE_TYPE_CONFIG: {
+        KEY: 'SOURCE_TYPE_CONFIG',
+        GET_LIST: 'GET_LIST_SOURCE_TYPE_CONFIG',
+    },
     FTP_EXCLUDE_PATTERN: {
         KEY: 'FTP_EXCLUDE_PATTERNS',
         GET_LIST: 'GET_LIST_FTP_EXCLUDE_PATTERNS',
@@ -519,6 +523,7 @@ export const QUERY_KEY = {
         REVENUE_TOP_CHANNEL: 'revenue-top-channel',
         REVENUE_TOP_SOURCE_TYPE: 'revenue-top-source-type',
         RELEASE_OVERVIEW: 'release-overview',
+        RELEASE_SUMMARY: 'release-summary',
         RELEASE_DSP_TIMELINE: 'release-dsp-timeline',
         RELEASE_DSP_SALES_TIMELINE: 'release-dsp-sales-timeline',
         RELEASE_DSP_DAILY_TIMELINE: 'release-dsp-daily-timeline',
@@ -532,6 +537,7 @@ export const QUERY_KEY = {
         RELEASE_DSP: 'release-dsp',
         RELEASE_TER: 'release-ter',
         TRACK_OVERVIEW: 'track-overview',
+        TRACK_SUMMARY: 'track-summary',
         TRACK_REVENUE_LINE_CHART: 'track-revenue-line-chart',
         TRACK_REVENUE_DSP_BAR_CHART: 'track-revenue-dsp-bar-chart',
         TRACK_REVENUE_TER_BAR_CHART: 'track-revenue-ter-bar-chart',
@@ -577,6 +583,7 @@ export const QUERY_KEY = {
         ARTIST_DSP: 'artist-dsp',
         ARTIST_TER: 'artist-ter',
         TENANT_OVERVIEW: 'tenant-overview',
+        TENANT_SUMMARY: 'tenant-summary',
         TENANT_TOP_RELEASES: 'tenant-top-releases',
         TENANT_TOP_TRACKS: 'tenant-top-tracks',
         TENANT_TREND_VIEW_LINE_CHART: 'tenant-trend-view-line-chart',
@@ -608,6 +615,7 @@ export const QUERY_KEY = {
         DSP_REVENUE_TER_BAR_CHART: 'dsp-revenue-ter-bar-chart',
         DSP_REVENUE_TENANT_BAR_CHART: 'dsp-revenue-tenant-bar-chart',
         SOURCE_TYPE_OVERVIEW: 'source-type-overview',
+        SOURCE_TYPE_SUMMARY: 'source-type-summary',
         SOURCE_TYPE_TOP_RELEASES: 'source-type-top-releases',
         SOURCE_TYPE_TOP_TRACKS: 'source-type-top-tracks',
         SOURCE_TYPE_REVENUE_LINE_CHART: 'source-type-revenue-line-chart',

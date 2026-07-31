@@ -3,7 +3,7 @@
 import FullScreenModal from '@/components/ui/modal/fullScreenModal';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { formattedNumber } from '@/helpers/common';
-import { Space, Tag } from 'antd';
+import { Space, Tag, Typography } from 'antd';
 import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -43,6 +43,7 @@ export default function DetailLabelAnalyticsModal({
         open: boolean;
         title: string;
         releaseId: string;
+        upc?: string;
     }>({
         open: false,
         title: '',
@@ -85,7 +86,7 @@ export default function DetailLabelAnalyticsModal({
     const metricTabItems: MetricHeaderTabItem[] = [
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
-            label: 'Total views',
+            label: messages('analytics.totalTrendViews'),
             value: formattedNumber(labelSummaryData?.totalTrendViews),
             icon: Eye,
             color: 'text-emerald-600 dark:text-emerald-400',
@@ -93,7 +94,7 @@ export default function DetailLabelAnalyticsModal({
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
-            label: 'Total Usage',
+            label: messages('analytics.revenue.totalUsage'),
             value: formattedNumber(labelSummaryData?.totalUsage),
             icon: Music,
             color: 'text-purple-600 dark:text-purple-400',
@@ -101,7 +102,7 @@ export default function DetailLabelAnalyticsModal({
         },
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
-            label: 'Total Revenue',
+            label: messages('analytics.totalRevenueUsd'),
             value: formattedNumber(labelSummaryData?.totalRevenueUsd),
             icon: DollarSign,
             color: 'text-cyan-600 dark:text-cyan-400',
@@ -113,11 +114,16 @@ export default function DetailLabelAnalyticsModal({
         <FullScreenModal
             title={
                 <div className="flex w-full items-center justify-between">
-                    <Space>
-                        <Tag className="!mr-0 !px-2 !py-1" color="blue">
+                    <Space align="center" size="small">
+                        <Tag
+                            className="!mr-0 !px-2 !py-0.5 font-medium"
+                            color="blue"
+                        >
                             {messages('common.label')}
                         </Tag>
-                        <span className="">{`${messages('analytics.label')}: ${title}`}</span>
+                        <Typography.Text strong className="text-base">
+                            {title}
+                        </Typography.Text>
                     </Space>
                     <DateSelect2
                         style={{ width: 240, height: 32 }}
@@ -129,6 +135,7 @@ export default function DetailLabelAnalyticsModal({
                             setLocalFromDate(startDate);
                             setLocalToDate(endDate);
                         }}
+                        picker="date"
                     />
                 </div>
             }
@@ -137,7 +144,7 @@ export default function DetailLabelAnalyticsModal({
             footer={null}
         >
             <div className="space-y-6 p-6">
-                <div className="mb-6 flex flex-col rounded-lg border">
+                <div className="mb-6 flex flex-col overflow-hidden rounded-lg border">
                     <MetricHeaderTabs
                         items={metricTabItems}
                         activeKey={activeMetric}
@@ -160,11 +167,12 @@ export default function DetailLabelAnalyticsModal({
                     releaseType={releaseType}
                     activeMetric={activeMetric}
                     enabled={open}
-                    onSelectRelease={(releaseId, relTitle) =>
+                    onSelectRelease={(releaseId, relTitle, upc) =>
                         setDetailReleaseModal({
                             open: true,
                             title: relTitle,
                             releaseId,
+                            upc,
                         })
                     }
                     onSelectTrack={(isrc, trkTitle) =>
@@ -188,6 +196,7 @@ export default function DetailLabelAnalyticsModal({
                     }
                     title={detailReleaseModal.title}
                     releaseId={detailReleaseModal.releaseId}
+                    upc={detailReleaseModal.upc}
                     fromDate={localFromDate}
                     toDate={localToDate}
                     releaseType={releaseType}

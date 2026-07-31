@@ -2,6 +2,7 @@
 
 import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
@@ -10,7 +11,8 @@ import { Avatar, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 
-const COLUMN_WIDTH_RANK = 120;
+const COLUMN_WIDTH_RANK = 80;
+const COLUMN_WIDTH_ARTIST = 250;
 const COLUMN_WIDTH_PROFILES = 180;
 const COLUMN_WIDTH_COUNTRY = 150;
 const COLUMN_WIDTH_GENRE = 150;
@@ -44,6 +46,7 @@ export default function ArtistViewsTable({
             key: 'rank',
             width: COLUMN_WIDTH_RANK,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -54,7 +57,9 @@ export default function ArtistViewsTable({
             title: messages('common.artist'),
             dataIndex: 'artistName',
             key: 'artistName',
+            width: COLUMN_WIDTH_ARTIST,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: ArtistRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -168,7 +173,8 @@ export default function ArtistViewsTable({
                                         )
                                     }
                                 >
-                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -188,10 +194,11 @@ export default function ArtistViewsTable({
             ),
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: COLUMN_WIDTH_VIEWS,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -209,6 +216,7 @@ export default function ArtistViewsTable({
             loading={loading}
             rowKey="artistId"
             pagination={false}
+            scroll={{ x: SCREEN.LG }}
         />
     );
 }

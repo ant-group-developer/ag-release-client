@@ -25,7 +25,7 @@ interface DetailTenantRankingsProps {
     activeMetric?: string;
     sortBy?: string;
     enabled?: boolean;
-    onSelectRelease: (releaseId: string, title: string) => void;
+    onSelectRelease: (releaseId: string, title: string, upc?: string) => void;
     onSelectTrack: (isrc: string, title: string) => void;
 }
 
@@ -107,7 +107,11 @@ export default function DetailTenantRankings({
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    onSelectRelease(record.releaseId, text)
+                                    onSelectRelease(
+                                        record.releaseId,
+                                        text,
+                                        record.upc
+                                    )
                                 }
                             >
                                 {text}
@@ -117,7 +121,7 @@ export default function DetailTenantRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -185,7 +189,7 @@ export default function DetailTenantRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -236,7 +240,7 @@ export default function DetailTenantRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_RELEASES,
-                            { fromDate, toDate }
+                            { fromDate, toDate, tenantId }
                         )}
                     />
                 </Col>
@@ -253,7 +257,7 @@ export default function DetailTenantRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_TRACKS,
-                            { fromDate, toDate }
+                            { fromDate, toDate, tenantId }
                         )}
                     />
                 </Col>

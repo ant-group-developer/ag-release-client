@@ -93,10 +93,17 @@ export const releaseSubmitApis = {
             `/release-executions3/${id}`
         );
     },
-    retryStep: (stepId: string) => {
-        return axiosInstance.post(`/release-executions3/steps/${stepId}/retry`);
+    retryStep: (stepId: string, isOverride?: boolean) => {
+        const body = isOverride ? { isOverrideStatus: true } : undefined;
+
+        return axiosInstance.post(
+            `/release-executions3/steps/${stepId}/retry`,
+            body
+        );
     },
     autoRetrySyncDataDspCi: () => {
-        return axiosInstance.post('/release-executions3/auto-retry-sync-data-dsp-ci');
+        return axiosInstance.post(
+            '/release-executions3/auto-retry-sync-data-dsp-ci'
+        );
     },
 };

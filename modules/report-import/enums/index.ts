@@ -33,12 +33,18 @@ export enum REPORT_IMPORT_TAB {
     ENRICH_DATA_CRON = 'enrich-data-cron',
     DELETE_REPORT = 'delete-report',
     SPOTIFY_R2_SYNC = 'spotify-r2-sync',
+    SOURCE_TYPE_CONFIG = 'source-type-config',
 }
 
 export enum TYPE_MODAL_ENRICH_SCAN_SCHEDULE {
     CREATE = 'CREATE_ENRICH_SCAN_SCHEDULE',
     UPDATE = 'UPDATE_ENRICH_SCAN_SCHEDULE',
     DELETE = 'DELETE_ENRICH_SCAN_SCHEDULE',
+}
+
+export enum TYPE_MODAL_SOURCE_TYPE_CONFIG {
+    UPDATE = 'UPDATE_SOURCE_TYPE_CONFIG',
+    DELETE = 'DELETE_SOURCE_TYPE_CONFIG',
 }
 
 export enum ETL_JOB_SOURCE_TYPE {

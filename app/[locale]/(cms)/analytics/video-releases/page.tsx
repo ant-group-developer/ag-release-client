@@ -6,6 +6,7 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -15,9 +16,9 @@ import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import {
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -34,7 +35,6 @@ import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, Tag, theme, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -58,8 +58,7 @@ export default function VideoReleasesRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate:
                 searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
-            endDate:
-                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            endDate: searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
             type: getAnalyticsViewType(searchParams.get('type')),
         });
 
@@ -123,8 +122,9 @@ export default function VideoReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -135,7 +135,9 @@ export default function VideoReleasesRankingPage() {
             title: messages('common.releasesVideo'),
             dataIndex: 'title',
             key: 'title',
+            width: 300,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueReleaseVideoItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -186,7 +188,8 @@ export default function VideoReleasesRankingPage() {
             width: 140,
             ellipsis: true,
             render: (text: string, record: RevenueReleaseVideoItem) => {
-                const labelId = record.labelId || (record?.release as any)?.labelId;
+                const labelId =
+                    record.labelId || (record?.release as any)?.labelId;
                 const labelName = text || record?.video?.label || '—';
                 if (!labelId) {
                     return (
@@ -261,7 +264,7 @@ export default function VideoReleasesRankingPage() {
             render: (channels: any[]) => {
                 if (!channels || channels.length === 0) return '—';
                 return (
-                    <div className="flex flex-col gap-1 items-start">
+                    <div className="flex flex-col items-start gap-1">
                         {channels.map((c) => {
                             const youtubeChannelId = c.youtubeChannelId;
                             if (!youtubeChannelId) {
@@ -299,6 +302,7 @@ export default function VideoReleasesRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 120,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -310,6 +314,7 @@ export default function VideoReleasesRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 120,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -323,8 +328,9 @@ export default function VideoReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -337,6 +343,7 @@ export default function VideoReleasesRankingPage() {
             key: 'title',
             width: 300,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -462,7 +469,7 @@ export default function VideoReleasesRankingPage() {
             render: (channels: any[]) => {
                 if (!channels || channels.length === 0) return '—';
                 return (
-                    <div className="flex flex-col gap-1 items-start">
+                    <div className="flex flex-col items-start gap-1">
                         {channels.map((c) => {
                             const youtubeChannelId = c.youtubeChannelId;
                             if (!youtubeChannelId) {
@@ -504,7 +511,7 @@ export default function VideoReleasesRankingPage() {
                 const value = record?.video?.externalId;
                 if (!value) return '—';
                 return (
-                    <div className="flex items-center gap-1 w-fit">
+                    <div className="flex w-fit items-center gap-1">
                         <CustomTooltip title={messages('common.viewOnYoutube')}>
                             <a
                                 href={`https://www.youtube.com/watch?v=${value}`}
@@ -567,10 +574,11 @@ export default function VideoReleasesRankingPage() {
         },
 
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 120,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -616,6 +624,7 @@ export default function VideoReleasesRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -655,7 +664,7 @@ export default function VideoReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<ReleaseRankingItem>
@@ -666,7 +675,7 @@ export default function VideoReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination

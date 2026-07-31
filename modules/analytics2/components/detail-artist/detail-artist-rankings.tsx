@@ -26,7 +26,7 @@ interface DetailArtistRankingsProps {
     activeMetric?: string;
     sortBy?: string;
     enabled?: boolean;
-    onSelectRelease: (releaseId: string, title: string) => void;
+    onSelectRelease: (releaseId: string, title: string, upc?: string) => void;
     onSelectTrack: (isrc: string, title: string) => void;
 }
 
@@ -104,7 +104,11 @@ export default function DetailArtistRankings({
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    onSelectRelease(record.releaseId, text)
+                                    onSelectRelease(
+                                        record.releaseId,
+                                        text,
+                                        record.upc
+                                    )
                                 }
                             >
                                 {text}
@@ -114,7 +118,7 @@ export default function DetailArtistRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -186,7 +190,7 @@ export default function DetailArtistRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -244,6 +248,7 @@ export default function DetailArtistRankings({
                             {
                                 fromDate,
                                 toDate,
+                                artistId,
                             }
                         )}
                     />
@@ -263,6 +268,7 @@ export default function DetailArtistRankings({
                             {
                                 fromDate,
                                 toDate,
+                                artistId,
                             }
                         )}
                     />

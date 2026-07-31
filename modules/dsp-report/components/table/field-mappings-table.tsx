@@ -1,5 +1,5 @@
 import { SIZE_ICON } from '@/constants/common';
-import { Button, Form, Popconfirm, Space, Table, Tooltip, message } from 'antd';
+import { Button, Form, Popconfirm, Space, Table, message } from 'antd';
 import { Pencil } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -102,21 +102,21 @@ export const FieldMappingsTable = ({
             dataIndex: 'reportColumn',
             key: 'reportColumn',
             editable: true,
-            width: '30%',
+            width: 220,
         },
         {
             title: 'Target Column',
             dataIndex: 'targetColumn',
             key: 'targetColumn',
             editable: true,
-            width: '30%',
+            width: 220,
         },
         {
             title: 'Transform',
             dataIndex: 'transform',
             key: 'transform',
             editable: true,
-            width: '40%',
+            width: 280,
             render: (text: string, record: FieldMapping) => {
                 if (isEditing(record)) return null;
                 return (
@@ -129,11 +129,12 @@ export const FieldMappingsTable = ({
         {
             title: messages('common.action'),
             dataIndex: 'action',
-            width: 120,
+            width: 160,
+            align: 'center' as const,
             render: (_: any, record: FieldMapping) => {
                 const editable = isEditing(record);
                 return editable ? (
-                    <Space>
+                    <Space size="small">
                         <Popconfirm
                             title={messages('common.confirmSave')}
                             onConfirm={() => save(record)}
@@ -157,15 +158,15 @@ export const FieldMappingsTable = ({
                         </Button>
                     </Space>
                 ) : (
-                    <Tooltip title={messages('common.edit')}>
-                        <Button
-                            type="link"
-                            size="small"
-                            icon={<Pencil size={SIZE_ICON} />}
-                            disabled={editingKey !== '' || isPending}
-                            onClick={() => edit(record)}
-                        />
-                    </Tooltip>
+                    <Button
+                        type="link"
+                        size="small"
+                        icon={<Pencil size={SIZE_ICON} />}
+                        disabled={editingKey !== '' || isPending}
+                        onClick={() => edit(record)}
+                    >
+                        {messages('common.edit')}
+                    </Button>
                 );
             },
         },
@@ -202,7 +203,7 @@ export const FieldMappingsTable = ({
                     pagination={{ pageSize: 10 }}
                     size="small"
                     loading={isPending}
-                    scroll={{ y: 450 }}
+                    scroll={{ y: 450, x: 'max-content' }}
                 />
             </Form>
         </div>

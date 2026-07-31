@@ -29,13 +29,18 @@ export const useRetryReleaseSubmitStep = () => {
     };
 
     const mutation = useMutation({
-        mutationFn: ({ stepId }: { stepId: string } & CommonFunction) =>
-            releaseSubmitApis.retryStep(stepId),
+        mutationFn: ({
+            stepId,
+            isOverride,
+        }: { stepId: string; isOverride?: boolean } & CommonFunction) =>
+            releaseSubmitApis.retryStep(stepId, isOverride),
         onSuccess,
         onError,
     });
 
-    const retryStep = (variables: { stepId: string } & CommonFunction) => {
+    const retryStep = (
+        variables: { stepId: string; isOverride?: boolean } & CommonFunction
+    ) => {
         mutation.mutate(variables);
     };
 

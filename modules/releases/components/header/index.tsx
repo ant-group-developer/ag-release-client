@@ -305,7 +305,9 @@ export default function ReleasesHeaderV2({
                                 },
                                 {
                                     key: 'needImportAgain',
-                                    label: messages('release.autoSubmitV2.needImportAgain'),
+                                    label: messages(
+                                        'release.autoSubmitV2.needImportAgain'
+                                    ),
                                 },
                                 {
                                     key: 'hasQaFlag',
@@ -356,7 +358,9 @@ export default function ReleasesHeaderV2({
                         },
                         {
                             key: 'needImportAgain',
-                            label: messages('release.autoSubmitV2.needImportAgain'),
+                            label: messages(
+                                'release.autoSubmitV2.needImportAgain'
+                            ),
                         },
                         {
                             key: 'hasQaFlag',
@@ -451,7 +455,9 @@ export default function ReleasesHeaderV2({
         copy.lastImportIsFailed = normalizeBooleanFilterValue(
             copy.lastImportIsFailed
         );
-        copy.needImportAgain = normalizeBooleanFilterValue(copy.needImportAgain);
+        copy.needImportAgain = normalizeBooleanFilterValue(
+            copy.needImportAgain
+        );
         copy.hasQaFlag = normalizeBooleanFilterValue(copy.hasQaFlag);
         return copy;
     }, [dataFilter]);
@@ -464,6 +470,7 @@ export default function ReleasesHeaderV2({
         <div className="app-header">
             <Space>
                 <AppSearch
+                    key={dataFilter?.keyword ?? ''}
                     defaultValue={dataFilter?.keyword}
                     style={{
                         width: 200,

@@ -155,7 +155,7 @@ export default function PieChartView({
               height: isSmallDevice ? 'auto' : finalChartHeight,
               maxHeight: isSmallDevice ? 'none' : `${finalChartHeight}px`,
               overflowY: 'auto',
-              paddingLeft: isSmallDevice ? 0 : '16px',
+              paddingLeft: 0,
           }
         : {
               display: 'flex',
@@ -200,7 +200,7 @@ export default function PieChartView({
                             <PieChart>
                                 <Pie
                                     data={data}
-                                    cx={'50%'}
+                                    cx={'45%'}
                                     cy={'50%'}
                                     innerRadius={
                                         isRight
@@ -296,18 +296,20 @@ export default function PieChartView({
                                             >
                                                 {item.type}
                                             </Text>
-                                            <Text
-                                                style={{
-                                                    color: '#8c8c8c',
-                                                    fontSize: 13,
-                                                    flexShrink: 0,
-                                                    whiteSpace: 'nowrap',
-                                                }}
-                                            >
-                                                {isRightLayout
-                                                    ? formattedVal
-                                                    : `(${formattedVal})`}
-                                            </Text>
+                                            {!isSmallDevice && (
+                                                <Text
+                                                    style={{
+                                                        color: '#8c8c8c',
+                                                        fontSize: 13,
+                                                        flexShrink: 0,
+                                                        whiteSpace: 'nowrap',
+                                                    }}
+                                                >
+                                                    {isRightLayout
+                                                        ? formattedVal
+                                                        : `(${formattedVal})`}
+                                                </Text>
+                                            )}
                                         </div>
                                     </div>
                                 );

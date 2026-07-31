@@ -1,10 +1,12 @@
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
 import AppSearch from '@/components/ui/input/search';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { RELEASE_TYPE } from '@/modules/releases/enums';
 import {
     BarsOutlined,
     CalendarOutlined,
     ExportOutlined,
+    FileTextOutlined,
     ImportOutlined,
     SearchOutlined,
     WarningOutlined,
@@ -37,6 +39,20 @@ export default function ReleaseDistributionHeader({
     removeFilter,
 }: Props) {
     const messages = useTranslations();
+
+    const releaseTypeOptions = useMemo(
+        () => [
+            {
+                label: messages('common.audio'),
+                value: RELEASE_TYPE.AUDIO,
+            },
+            {
+                label: messages('common.video'),
+                value: RELEASE_TYPE.VIDEO,
+            },
+        ],
+        [messages]
+    );
 
     const isImportedFromReportOptions = useMemo(
         () => [
@@ -91,6 +107,14 @@ export default function ReleaseDistributionHeader({
                 placeholder: messages('placeholder.filterBy', {
                     value: messages('common.keyword').toLowerCase(),
                 }),
+            },
+            {
+                key: 'type',
+                label: messages('common.type'),
+                icon: <FileTextOutlined />,
+                type: 'radio',
+                filterKey: 'type',
+                options: releaseTypeOptions,
             },
             {
                 key: 'isImportedFromReport',
@@ -166,6 +190,7 @@ export default function ReleaseDistributionHeader({
         ];
     }, [
         messages,
+        releaseTypeOptions,
         isImportedFromReportOptions,
         releaseCiStatusOptions,
         booleanFilterOptions,

@@ -5,6 +5,7 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -12,10 +13,9 @@ import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-la
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
 import {
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    RANK_COLUMN_WIDTH,
-    ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -32,7 +32,6 @@ import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, Tag, theme, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -57,8 +56,7 @@ export default function TracksRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate:
                 searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
-            endDate:
-                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            endDate: searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
             type: getAnalyticsViewType(searchParams.get('type')),
             releaseType: getAnalyticsReleaseType(
                 searchParams.get('releaseType')
@@ -93,6 +91,9 @@ export default function TracksRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { trackRankingData, isFetching: isViewsFetching } =
         useGetTrackRanking(
@@ -103,7 +104,7 @@ export default function TracksRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: !isRevenue }
         );
@@ -119,7 +120,7 @@ export default function TracksRankingPage() {
                 keyword: dataFilter.keyword,
                 includeOther: false,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: isRevenue }
         );
@@ -131,8 +132,9 @@ export default function TracksRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -145,6 +147,7 @@ export default function TracksRankingPage() {
             key: 'title',
             width: 300,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueTrackItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -307,6 +310,7 @@ export default function TracksRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 120,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -318,6 +322,7 @@ export default function TracksRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 140,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -331,8 +336,9 @@ export default function TracksRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -345,6 +351,7 @@ export default function TracksRankingPage() {
             key: 'title',
             ellipsis: true,
             width: 300,
+            fixed: 'left',
             render: (text: string, record: TrackRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -504,10 +511,11 @@ export default function TracksRankingPage() {
             },
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 140,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -553,6 +561,7 @@ export default function TracksRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -566,13 +575,22 @@ export default function TracksRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -612,7 +630,7 @@ export default function TracksRankingPage() {
                             rowKey="isrc"
                             size="small"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<TrackRankingItem>
@@ -623,7 +641,7 @@ export default function TracksRankingPage() {
                             rowKey="isrc"
                             size="small"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination
@@ -657,7 +675,7 @@ export default function TracksRankingPage() {
                         isrc={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -674,7 +692,7 @@ export default function TracksRankingPage() {
                         sourceType={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -691,7 +709,7 @@ export default function TracksRankingPage() {
                         labelId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>

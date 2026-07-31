@@ -4,6 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -11,7 +12,6 @@ import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/deta
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
-    RANK_COLUMN_WIDTH,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -89,6 +89,9 @@ export default function SourceTypesRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { sourceTypeRankingData, isFetching: isViewsFetching } =
         useGetSourceTypeRanking(
@@ -98,7 +101,7 @@ export default function SourceTypesRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: !isRevenue }
         );
@@ -112,7 +115,7 @@ export default function SourceTypesRankingPage() {
                 page,
                 pageSize,
                 keyword: dataFilter.keyword,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: isRevenue }
         );
@@ -146,8 +149,9 @@ export default function SourceTypesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -158,7 +162,9 @@ export default function SourceTypesRankingPage() {
             title: messages('analytics2.distributors'),
             dataIndex: 'sourceTypeLabel',
             key: 'sourceTypeLabel',
+            width: 250,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueSourceTypeItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -188,6 +194,7 @@ export default function SourceTypesRankingPage() {
             dataIndex: 'quantity',
             key: 'quantity',
             width: 250,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -199,6 +206,7 @@ export default function SourceTypesRankingPage() {
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 250,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -212,8 +220,9 @@ export default function SourceTypesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: RANK_COLUMN_WIDTH,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -224,7 +233,9 @@ export default function SourceTypesRankingPage() {
             title: messages('analytics2.distributors'),
             dataIndex: 'sourceTypeLabel',
             key: 'sourceTypeLabel',
+            width: 250,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: SourceTypeRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -250,10 +261,11 @@ export default function SourceTypesRankingPage() {
             ),
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -299,6 +311,7 @@ export default function SourceTypesRankingPage() {
                                 endDate: end,
                             });
                         }}
+                        picker="date"
                     />
                 }
             >
@@ -312,13 +325,22 @@ export default function SourceTypesRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -358,6 +380,7 @@ export default function SourceTypesRankingPage() {
                             rowKey="sourceType"
                             size="small"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<SourceTypeRankingItem>
@@ -368,6 +391,7 @@ export default function SourceTypesRankingPage() {
                             rowKey="sourceType"
                             size="small"
                             pagination={false}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination
@@ -401,7 +425,7 @@ export default function SourceTypesRankingPage() {
                         sourceType={detailSourceModal.sourceType}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>

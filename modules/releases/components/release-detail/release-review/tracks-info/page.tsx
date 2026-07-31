@@ -186,6 +186,11 @@ export default function TracksInfo({}: Props) {
                         0
                     );
 
+                    const isInstrumental =
+                        track?.isInstrumental ??
+                        formValue?.isInstrumental ??
+                        false;
+
                     return (
                         <Collapse key={String(index + 1)}>
                             <Collapse.Panel
@@ -313,7 +318,7 @@ export default function TracksInfo({}: Props) {
                                         index,
                                         messages('formFields.audioLanguageId'),
                                         'trackLanguage.audioLanguage',
-                                        true
+                                        !isInstrumental
                                     )}
                                     {renderField(
                                         index,

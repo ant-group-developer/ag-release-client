@@ -217,6 +217,13 @@ export const analytics2QueryKeys = {
             releaseId,
             params,
         ] as const,
+    releaseSummary: (releaseId: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.RELEASE_SUMMARY,
+            releaseId,
+            params,
+        ] as const,
     releaseDspTimeline: (releaseId: string, params: DspTimelineParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -323,6 +330,13 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TRACK_OVERVIEW,
+            isrc,
+            params,
+        ] as const,
+    trackSummary: (isrc: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TRACK_SUMMARY,
             isrc,
             params,
         ] as const,
@@ -677,6 +691,13 @@ export const analytics2QueryKeys = {
             tenantId,
             params,
         ] as const,
+    tenantSummary: (tenantId: string, params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TENANT_SUMMARY,
+            tenantId,
+            params,
+        ] as const,
     tenantTopReleases: (tenantId: string, params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
@@ -921,6 +942,16 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.SOURCE_TYPE_OVERVIEW,
+            sourceType,
+            params,
+        ] as const,
+    sourceTypeSummary: (
+        sourceType: string,
+        params: AnalyticsCommonParams
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.SOURCE_TYPE_SUMMARY,
             sourceType,
             params,
         ] as const,

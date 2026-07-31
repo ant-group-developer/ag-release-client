@@ -74,11 +74,14 @@ export interface DspSalesTimelineData {
 export interface RankingParams {
     fromDate: string;
     toDate: string;
-    page: number;
-    pageSize: number;
+    page?: number;
+    pageSize?: number;
     keyword?: string;
     groupBySource?: boolean;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    topN?: number;
+    includeOther?: boolean;
+    sortBy?: string;
 }
 
 export interface TrackRankingItem {

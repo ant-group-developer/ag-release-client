@@ -12,8 +12,6 @@ import { useMemo } from 'react';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '../../constants/types';
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { createViewMoreHref } from '../../helpers';
-import { useGetLabelDsp } from '../../hooks/use-get-label-dsp';
-import { useGetLabelTer } from '../../hooks/use-get-label-ter';
 import { useGetLabelTopReleases } from '../../hooks/use-get-label-top-releases';
 import { useGetLabelTopTracks } from '../../hooks/use-get-label-top-tracks';
 import { ReleaseRankingItem, TrackRankingItem } from '../../types';
@@ -27,7 +25,7 @@ interface DetailLabelRankingsProps {
     activeMetric?: string;
     sortBy?: string;
     enabled?: boolean;
-    onSelectRelease: (releaseId: string, title: string) => void;
+    onSelectRelease: (releaseId: string, title: string, upc?: string) => void;
     onSelectTrack: (isrc: string, title: string) => void;
 }
 
@@ -109,7 +107,11 @@ export default function DetailLabelRankings({
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    onSelectRelease(record.releaseId, text)
+                                    onSelectRelease(
+                                        record.releaseId,
+                                        text,
+                                        record.upc
+                                    )
                                 }
                             >
                                 {text}
@@ -119,7 +121,7 @@ export default function DetailLabelRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -191,7 +193,7 @@ export default function DetailLabelRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -249,6 +251,7 @@ export default function DetailLabelRankings({
                             {
                                 fromDate,
                                 toDate,
+                                labelId,
                             }
                         )}
                     />
@@ -268,6 +271,7 @@ export default function DetailLabelRankings({
                             {
                                 fromDate,
                                 toDate,
+                                labelId,
                             }
                         )}
                     />

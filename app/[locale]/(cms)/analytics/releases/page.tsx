@@ -6,6 +6,7 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
@@ -14,9 +15,9 @@ import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import {
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
-    ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
@@ -45,7 +46,6 @@ import {
     Typography,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -70,8 +70,7 @@ export default function ReleasesRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate:
                 searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
-            endDate:
-                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            endDate: searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
             type: getAnalyticsViewType(searchParams.get('type')),
             releaseType: getAnalyticsReleaseType(
                 searchParams.get('releaseType')
@@ -106,6 +105,9 @@ export default function ReleasesRankingPage() {
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
 
+    const requestReleaseType =
+        releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
+
     // Fetch ranking data (Views)
     const { releaseRankingData, isFetching: isViewsFetching } =
         useGetReleaseRanking(
@@ -116,7 +118,7 @@ export default function ReleasesRankingPage() {
                 pageSize,
                 keyword: dataFilter.keyword,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: !isRevenue }
         );
@@ -132,7 +134,7 @@ export default function ReleasesRankingPage() {
                 keyword: dataFilter.keyword,
                 includeOther: false,
                 groupBySource: true,
-                releaseType,
+                releaseType: requestReleaseType,
             },
             { enabled: isRevenue }
         );
@@ -144,8 +146,9 @@ export default function ReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -156,7 +159,9 @@ export default function ReleasesRankingPage() {
             title: messages('common.release'),
             dataIndex: 'title',
             key: 'title',
+            width: 350,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: RevenueReleaseItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -168,7 +173,7 @@ export default function ReleasesRankingPage() {
                             ] as string
                         }
                     />
-                    <div className="flex min-w-0 flex-col">
+                    <div className="flex min-w-0 max-w-[350px] flex-col">
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
@@ -193,7 +198,7 @@ export default function ReleasesRankingPage() {
             title: 'UPC',
             dataIndex: 'upc',
             key: 'upc',
-            width: 140,
+            width: 160,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -205,7 +210,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.label'),
             dataIndex: 'labelName',
             key: 'labelName',
-            width: 140,
+            width: 180,
             ellipsis: true,
             render: (text: string, record: RevenueReleaseItem) => {
                 if (!record.labelId) {
@@ -236,7 +241,7 @@ export default function ReleasesRankingPage() {
         {
             title: messages('common.workspace'),
             key: 'workspace',
-            width: 150,
+            width: 240,
             ellipsis: true,
             render: (_, record: RevenueReleaseItem) => {
                 const workspace = record?.workspaces?.[0];
@@ -273,7 +278,7 @@ export default function ReleasesRankingPage() {
         {
             title: messages('common.onlineLink'),
             key: 'onlineLink',
-            width: 140,
+            width: 150,
             render: (_, record: RevenueReleaseItem) => {
                 const metadataExternal = record?.metadataExternal;
                 if (!metadataExternal) return '—';
@@ -314,7 +319,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 180,
+            width: 280,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -350,7 +355,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 80,
+            width: 120,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -361,7 +366,8 @@ export default function ReleasesRankingPage() {
             title: messages('common.usage'),
             dataIndex: 'quantity',
             key: 'quantity',
-            width: 120,
+            width: 140,
+            fixed: 'right',
             render: (qty: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {qty ? qty.toLocaleString() : 0}
@@ -372,7 +378,8 @@ export default function ReleasesRankingPage() {
             title: messages('common.revenue'),
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
-            width: 120,
+            width: 150,
+            fixed: 'right',
             render: (val: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     ${val ? formattedNumber(val) : '0.00'}
@@ -386,8 +393,9 @@ export default function ReleasesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 120,
+            width: 100,
             align: 'center' as const,
+            fixed: 'left',
             render: (rank: number) => (
                 <span className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -398,8 +406,9 @@ export default function ReleasesRankingPage() {
             title: messages('common.release'),
             dataIndex: 'title',
             key: 'title',
-            width: 300,
+            width: 350,
             ellipsis: true,
+            fixed: 'left',
             render: (text: string, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
@@ -411,7 +420,7 @@ export default function ReleasesRankingPage() {
                             ] as string
                         }
                     />
-                    <div className="flex min-w-0 max-w-[300px] flex-col">
+                    <div className="flex min-w-0 max-w-[350px] flex-col">
                         <CustomTooltip
                             title={messages('common.detailedAnalysis')}
                         >
@@ -436,7 +445,7 @@ export default function ReleasesRankingPage() {
             title: 'UPC',
             dataIndex: 'upc',
             key: 'upc',
-            width: 140,
+            width: 160,
             ellipsis: true,
             render: (text: string) => (
                 <span className="truncate text-gray-500 dark:text-zinc-400">
@@ -448,7 +457,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.label'),
             dataIndex: 'labelName',
             key: 'labelName',
-            width: 140,
+            width: 180,
             ellipsis: true,
             render: (text: string, record: ReleaseRankingItem) => {
                 if (!record.labelId) {
@@ -479,7 +488,7 @@ export default function ReleasesRankingPage() {
         {
             title: messages('common.workspace'),
             key: 'workspace',
-            width: 150,
+            width: 240,
             ellipsis: true,
             render: (_, record: ReleaseRankingItem) => {
                 const workspace = record?.workspaces?.[0];
@@ -512,7 +521,7 @@ export default function ReleasesRankingPage() {
         {
             title: messages('common.onlineLink'),
             key: 'onlineLink',
-            width: 140,
+            width: 150,
             render: (_, record: ReleaseRankingItem) => {
                 const metadataExternal = record?.metadataExternal;
                 if (!metadataExternal) return '—';
@@ -553,7 +562,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
             key: 'bySource',
-            width: 150,
+            width: 200,
             render: (bySource?: any[]) => {
                 if (!bySource || bySource.length === 0) return '—';
                 return (
@@ -589,7 +598,7 @@ export default function ReleasesRankingPage() {
             title: messages('common.tracks'),
             dataIndex: 'trackCount',
             key: 'trackCount',
-            width: 80,
+            width: 120,
             render: (count: number) => (
                 <span className="text-gray-600 dark:text-zinc-400">
                     {count || 0}
@@ -597,10 +606,11 @@ export default function ReleasesRankingPage() {
             ),
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
-            width: 120,
+            width: 150,
+            fixed: 'right',
             render: (views: number) => (
                 <span className="text-gray-900 dark:text-zinc-100">
                     {views ? views.toLocaleString() : 0}
@@ -646,7 +656,7 @@ export default function ReleasesRankingPage() {
                                 endDate: end,
                             });
                         }}
-                        picker="month"
+                        picker="date"
                     />
                 }
             >
@@ -660,13 +670,22 @@ export default function ReleasesRankingPage() {
                         <Segmented
                             value={releaseType}
                             onChange={(value) => {
-                                setReleaseType(value as ANALYTICS_RELEASE_TYPE);
+                                const selectedType =
+                                    value as ANALYTICS_RELEASE_TYPE;
+                                setReleaseType(selectedType);
                                 onChangeFilter({
                                     releaseType:
-                                        value as ANALYTICS_RELEASE_TYPE,
+                                        selectedType ===
+                                        ANALYTICS_RELEASE_TYPE.ALL
+                                            ? undefined
+                                            : selectedType,
                                 });
                             }}
                             options={[
+                                {
+                                    label: messages('common.all'),
+                                    value: ANALYTICS_RELEASE_TYPE.ALL,
+                                },
                                 {
                                     label: messages('common.audio'),
                                     value: ANALYTICS_RELEASE_TYPE.AUDIO,
@@ -706,7 +725,7 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     ) : (
                         <Table<ReleaseRankingItem>
@@ -717,7 +736,7 @@ export default function ReleasesRankingPage() {
                             loading={isFetching}
                             rowKey="releaseId"
                             pagination={false}
-                            scroll={{ x: 'max-content' }}
+                            scroll={{ x: SCREEN.LG }}
                         />
                     )}
                     <AppPagination
@@ -748,7 +767,7 @@ export default function ReleasesRankingPage() {
                         releaseId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -765,7 +784,7 @@ export default function ReleasesRankingPage() {
                         sourceType={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -782,7 +801,7 @@ export default function ReleasesRankingPage() {
                         labelId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
 
@@ -799,7 +818,7 @@ export default function ReleasesRankingPage() {
                         tenantId={activeDetail.targetId}
                         fromDate={dataFilter.startDate!}
                         toDate={dataFilter.endDate!}
-                        releaseType={releaseType}
+                        releaseType={requestReleaseType}
                     />
                 )}
             </PageContainer>

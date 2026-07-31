@@ -60,6 +60,7 @@ export enum TYPE_SELECT {
 
 export enum DATE_FORMAT {
     DATE_ONLY = 'DD/MM/YYYY',
+    DATE_ONLY_DASH = 'DD-MM-YYYY',
     FULL = 'HH:mm:ss DD/MM/YYYY',
     DATE_MINUTE = 'HH:mm DD/MM/YYYY',
     MONTH_YEAR = 'MM/YYYY',

@@ -7,11 +7,15 @@ import { dspApi } from '../apis';
 import { dspQueryKeys } from '../constants/query-keys';
 import { DspData, DspDataFilter } from '../types';
 
-export const useGetListDsp = (params: DspDataFilter) => {
+export const useGetListDsp = (
+    params: DspDataFilter,
+    options?: { enabled?: boolean }
+) => {
     const { data, ...res } = useQuery({
         queryKey: dspQueryKeys.list(params),
         queryFn: () => dspApi.getList(params),
         placeholderData: (prev) => prev,
+        enabled: options?.enabled ?? true,
     });
 
     const dspData =

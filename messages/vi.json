@@ -238,6 +238,7 @@
         "settingNote": "Tùy chọn cài đặt chỉ áp dụng cho trình duyệt này",
         "value": "Giá trị",
         "viewDetail": "Xem chi tiết",
+        "viewConfig": "Xem cấu hình",
         "detailedAnalysis": "Phân tích chi tiết",
         "systemCategories": "Danh mục hệ thống",
         "category": "Danh mục",
@@ -248,6 +249,12 @@
         "partners": "Đối tác",
         "views": "Lượt xem",
         "fileName": "Tên file",
+        "sampleFileName": "Tên file mẫu",
+        "folder": "Thư mục",
+        "size": "Kích thước",
+        "createdAt": "Ngày tạo",
+        "download": "Tải về",
+        "downloading": "Đang tải: {name}",
         "filePath": "Đường dẫn tệp",
         "viewAll": "Xem tất cả",
         "legalNotices": "Thông báo pháp lý",
@@ -2017,6 +2024,7 @@
             "isSelectable": "Có thể chọn",
             "syncedAt": "Ngày đồng bộ",
             "fieldMappings": "Ánh xạ trường dữ liệu",
+            "sampleFileList": "Danh sách file mẫu",
             "parserSource": "Mã nguồn Parser",
             "yes": "Có",
             "no": "Không"
@@ -2842,6 +2850,7 @@
         "confirm": {
             "retryTitle": "Bạn có chắc chắn muốn thử lại?",
             "retryDescription": "Hành động này sẽ thực hiện lại quá trình phát hành.",
+            "overrideStatus": "Ghi đè trạng thái mới nhất",
             "markCompletedTitle": "Bạn có chắc chắn muốn đánh dấu hoàn thành?",
             "markCompletedDescription": "Hành động này sẽ đánh dấu các bản ghi đã chọn là đã hoàn thành.",
             "autoRetrySyncDataDspCiTitle": "Xác nhận tự động thử lại các bước đồng bộ DSP CI?",
@@ -2987,6 +2996,19 @@
         "configReport": "Cấu hình báo cáo",
         "importReport": "Nhật ký báo cáo",
         "importSftp": "Cấu hình SFTP",
+        "sourceTypeConfigs": {
+            "label": "Cấu hình loại nguồn",
+            "sourceType": "Loại nguồn",
+            "nameLabel": "Tên nguồn",
+            "image": "Hình ảnh",
+            "imageFile": "Tệp hình ảnh",
+            "imageUrl": "Đường dẫn hình ảnh",
+            "isActive": "Trạng thái",
+            "configVersion": "Phiên bản cấu hình",
+            "action": {
+                "update": "Cập nhật loại nguồn"
+            }
+        },
         "enrichDataImport": {
             "label": "Chuẩn hoá dữ liệu",
             "recentSessionsTitle": "Lịch sử chuẩn hoá dữ liệu gần đây",
