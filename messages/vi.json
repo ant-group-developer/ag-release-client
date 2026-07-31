@@ -292,6 +292,7 @@
         "dsps": "DSPs",
         "copyRight": "Bản quyền",
         "language": "Ngôn ngữ",
+        "noLanguageTooltip": "Nếu không có ngôn ngữ thì không cần chọn",
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
         "containsLyrics": "Nhạc có lời",
@@ -701,6 +702,9 @@
         "add": "Thêm kênh",
         "label": "Kênh",
         "name": "Tên kênh",
+        "infoTab": "Thông tin chung",
+        "accessManagementTab": "Quản lý thành viên",
+        "createFirstToManageMembers": "Vui lòng tạo kênh trước khi quản lý thành viên",
         "existedOnVevoBackstage": "Đã tồn tại trên Vevo Backstage",
         "youtubeChannelId": "YouTube channel ID",
         "validation": {

@@ -30,6 +30,13 @@ export interface ChannelsSimpleData
         'id' | 'name' | 'youtubeChannelId' | 'thumbUrl'
     > {}
 
+export interface ChannelAccessData extends Partial<CommonAttribute> {
+    id: string;
+    name?: string;
+    email?: string;
+    avatar?: string;
+}
+
 export interface ChannelDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;

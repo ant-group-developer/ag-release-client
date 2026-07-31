@@ -292,6 +292,7 @@
         "dsps": "DSPs",
         "copyRight": "CopyRight",
         "language": "Language",
+        "noLanguageTooltip": "If there is no language, you don't need to select it",
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
         "containsLyrics": "Contains Lyrics",
@@ -704,6 +705,9 @@
         "add": "Add channel",
         "label": "Channel",
         "name": "Channel name",
+        "infoTab": "General Information",
+        "accessManagementTab": "Access Management",
+        "createFirstToManageMembers": "Please create the channel first before managing members",
         "existedOnVevoBackstage": "Existed on Vevo Backstage",
         "youtubeChannelId": "YouTube channel ID",
         "validation": {

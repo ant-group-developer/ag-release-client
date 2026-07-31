@@ -24,4 +24,5 @@ export const channelQueryKeys = {
             QUERY_KEY.CHANNEL.GET_CHANNEL_DETAIL,
         ] as const,
     detail: (id: string) => [...channelQueryKeys.details(), id] as const,
+    access: (channelId: string) => [...channelQueryKeys.all, 'access', channelId] as const,
 };
