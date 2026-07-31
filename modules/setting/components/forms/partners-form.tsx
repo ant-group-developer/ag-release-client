@@ -223,6 +223,21 @@ export default function PartnersForm({}: Props) {
                         <Input />
                     </AppFormItem>
                     <AppFormItem
+                        name={['ci', 'organisationId']}
+                        label={'Organisation ID'}
+                        rules={[
+                            {
+                                max: MAX_NAME_LENGTH,
+                                message: messages('validation.stringMax', {
+                                    max: MAX_NAME_LENGTH,
+                                    field: 'CI Organisation ID',
+                                }),
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </AppFormItem>
+                    <AppFormItem
                         name={['ci', 'token']}
                         label={'Token'}
                         rules={[
