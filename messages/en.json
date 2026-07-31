@@ -292,6 +292,7 @@
         "dsps": "DSPs",
         "copyRight": "CopyRight",
         "language": "Language",
+        "noLanguageTooltip": "If there is no language, you don't need to select it",
         "subGenres": "Sub genres",
         "subArtist": "Sub artist",
         "containsLyrics": "Contains Lyrics",
