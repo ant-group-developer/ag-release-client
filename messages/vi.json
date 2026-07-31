@@ -292,6 +292,7 @@
         "dsps": "DSPs",
         "copyRight": "Bản quyền",
         "language": "Ngôn ngữ",
+        "noLanguageTooltip": "Nếu không có ngôn ngữ thì không cần chọn",
         "subGenres": "Thể loại phụ",
         "subArtist": "Nghệ sĩ phụ",
         "containsLyrics": "Nhạc có lời",
