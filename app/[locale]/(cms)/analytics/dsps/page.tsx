@@ -3,25 +3,25 @@
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import {
+    ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+} from '@/modules/analytics2/constants/types';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
-import {
-    ANALYTICS_DEFAULT_START_DATE,
-    ANALYTICS_DEFAULT_END_DATE,
-} from '@/modules/analytics2/constants/types';
 import {
     getAnalyticsReleaseType,
     getAnalyticsViewType,
 } from '@/modules/analytics2/helpers';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import {
     BySourceItem,
     DspRankingItem,
@@ -31,7 +31,6 @@ import { CommonParams } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Segmented, Table, Tag, theme } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -67,8 +66,7 @@ export default function DspsRankingPage() {
             pageSize: PAGE_SIZE_DEFAULT,
             startDate:
                 searchParams.get('fromDate') || ANALYTICS_DEFAULT_START_DATE,
-            endDate:
-                searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
+            endDate: searchParams.get('toDate') || ANALYTICS_DEFAULT_END_DATE,
             type: getAnalyticsViewType(searchParams.get('type')),
             releaseType: getAnalyticsReleaseType(
                 searchParams.get('releaseType')
@@ -150,7 +148,7 @@ export default function DspsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 100,
             align: 'center' as const,
             fixed: 'left',
             render: (rank: number) => (
@@ -196,7 +194,8 @@ export default function DspsRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                    {item.sourceLabel}: $
+                                    {formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -235,7 +234,7 @@ export default function DspsRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 100,
             align: 'center' as const,
             fixed: 'left',
             render: (rank: number) => (
@@ -281,7 +280,8 @@ export default function DspsRankingPage() {
                                         })
                                     }
                                 >
-                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -290,7 +290,7 @@ export default function DspsRankingPage() {
             },
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,

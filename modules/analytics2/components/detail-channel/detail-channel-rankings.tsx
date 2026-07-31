@@ -103,7 +103,7 @@ export default function DetailChannelRankings({
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: 100,
@@ -154,7 +154,7 @@ export default function DetailChannelRankings({
                         defaultView={RankingCardView.LIST}
                         viewMoreHref={createViewMoreHref(
                             APP_ROUTES.ANALYTICS_RELEASES,
-                            { fromDate, toDate }
+                            { fromDate, toDate, channelId }
                         )}
                     />
                 </Col>

@@ -86,7 +86,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             }, */
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -165,7 +165,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             }, */
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -309,7 +309,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 },
             }, */
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -369,7 +369,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             }, */
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -429,7 +429,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             }, */
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -478,7 +478,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -528,7 +528,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -612,7 +612,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 },
             }, */
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',
@@ -641,7 +641,9 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             height={32}
                             src={record.imageUrl}
                         />
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
@@ -659,7 +661,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
             {
-                title: messages('common.viewCount'),
+                title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
                 width: '30%',

@@ -149,7 +149,7 @@ export default function SourceTypesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 100,
             align: 'center' as const,
             fixed: 'left',
             render: (rank: number) => (
@@ -220,7 +220,7 @@ export default function SourceTypesRankingPage() {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
             key: 'rank',
-            width: 80,
+            width: 100,
             align: 'center' as const,
             fixed: 'left',
             render: (rank: number) => (
@@ -261,7 +261,7 @@ export default function SourceTypesRankingPage() {
             ),
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,

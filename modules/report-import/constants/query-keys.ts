@@ -94,3 +94,13 @@ export const enrichHistoryQueryKeys = {
             : enrichHistoryQueryKeys.lists(),
 };
 
+export const sourceTypeConfigQueryKeys = {
+    all: [QUERY_KEY.SOURCE_TYPE_CONFIG.KEY] as const,
+    lists: () =>
+        [
+            ...sourceTypeConfigQueryKeys.all,
+            QUERY_KEY.SOURCE_TYPE_CONFIG.GET_LIST,
+        ] as const,
+};
+
+

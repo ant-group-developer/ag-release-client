@@ -428,3 +428,9 @@ export type EtlJobStatusDetailData = Record<
         Record<string, EtlJobStatusDetailFile[]>
     >
 >;
+
+export interface UpdateSourceTypeConfigPayload {
+    label?: string;
+    imageUrl?: string | null;
+}
+

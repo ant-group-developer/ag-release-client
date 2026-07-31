@@ -173,7 +173,8 @@ export default function ArtistViewsTable({
                                         )
                                     }
                                 >
-                                    {item.sourceLabel}: {formattedNumber(item.quantity)}
+                                    {item.sourceLabel}:{' '}
+                                    {formattedNumber(item.quantity)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -193,7 +194,7 @@ export default function ArtistViewsTable({
             ),
         },
         {
-            title: messages('common.viewCount'),
+            title: messages('common.streams'),
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: COLUMN_WIDTH_VIEWS,

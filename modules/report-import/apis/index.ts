@@ -14,6 +14,7 @@ import {
     SyncConfigData,
     SpotifyR2SyncConfig,
     SpotifyExportSchedulerConfig,
+    SourceTypeConfigData,
 } from '../types';
 import {
     CreateEnrichScanSchedulePayload,
@@ -34,6 +35,7 @@ import {
     UpdateEnrichScanSchedulePayload,
     UpdateFtpExcludePatternPayload,
     UpdateReportConfigPayload,
+    UpdateSourceTypeConfigPayload,
 } from '../types/payload';
 
 const REPORT_IMPORT_API_PATHS = {
@@ -256,4 +258,26 @@ export const spotifyExportSchedulerConfigApis = {
         );
     },
 };
+
+export const sourceTypeConfigApis = {
+    getList: () => {
+        return axiosInstance.get<DetailResponse<SourceTypeConfigData[]> | SourceTypeConfigData[]>(
+            '/analytics/source-type-configs'
+        );
+    },
+    update: (
+        sourceType: string,
+        payload: UpdateSourceTypeConfigPayload
+    ) => {
+        return axiosInstance.put<DetailResponse<SourceTypeConfigData>>(
+            `/analytics/source-type-configs/${sourceType}`,
+            payload
+        );
+    },
+    delete: (sourceType: string) => {
+        return axiosInstance.delete(`/analytics/source-type-configs/${sourceType}`);
+    },
+};
+
+
 
