@@ -701,6 +701,9 @@
         "add": "Thêm kênh",
         "label": "Kênh",
         "name": "Tên kênh",
+        "infoTab": "Thông tin chung",
+        "accessManagementTab": "Quản lý thành viên",
+        "createFirstToManageMembers": "Vui lòng tạo kênh trước khi quản lý thành viên",
         "existedOnVevoBackstage": "Đã tồn tại trên Vevo Backstage",
         "youtubeChannelId": "YouTube channel ID",
         "validation": {
