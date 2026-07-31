@@ -22,9 +22,16 @@ type labelFormValues = Omit<LabelData, 'id' | 'createdAt' | 'updatedAt'> & {
     pictureFile?: any;
 };
 
-type Props = Omit<AppModalProps, 'children'> & {};
+type Props = Omit<AppModalProps, 'children'> & {
+    onCreateSuccess?: (data: LabelData) => void;
+    onUpdateSuccess?: (data: LabelData) => void;
+};
 
-export default function LabelFormModal({ ...props }: Props) {
+export default function LabelFormModal({
+    onCreateSuccess,
+    onUpdateSuccess,
+    ...props
+}: Props) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     // const typeModal = useModalStore((state) => state.typeModal);
@@ -40,8 +47,10 @@ export default function LabelFormModal({ ...props }: Props) {
             {
                 id: dataEdit?.id,
                 payload: value,
-                onSuccess: () => {
+                onSuccess: (data) => {
                     deActive();
+                    onUpdateSuccess?.(data as LabelData);
+                    props.onCancel?.(data as any);
                 },
                 onError: () => {
                     deActive();
@@ -53,9 +62,11 @@ export default function LabelFormModal({ ...props }: Props) {
     const handleCreateLabel = (value: labelFormValues) => {
         const variables: CreateVariables<CreateLabelPayload> = {
             payload: value,
-            onSuccess: () => {
+            onSuccess: (data) => {
                 deActive();
                 form.resetFields();
+                onCreateSuccess?.(data as LabelData);
+                props.onCancel?.(data as any);
             },
             onError: () => {
                 deActive();

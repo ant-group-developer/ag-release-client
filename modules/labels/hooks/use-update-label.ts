@@ -20,10 +20,13 @@ export const useUpdateLabel = () => {
         queryClient.invalidateQueries({
             queryKey: labelsQueryKeys.lists(),
         });
+        queryClient.invalidateQueries({
+            queryKey: labelsQueryKeys.listsSimple(),
+        });
 
         const responseMessages = messages(data?.data?.messageCode);
 
-        onSuccess?.();
+        onSuccess?.(data?.data?.data);
         showNotification('success', responseMessages);
     };
 

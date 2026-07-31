@@ -1,6 +1,7 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
+import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { showNotification } from '@/helpers/messages-helper';
 import { usePermission } from '@/hooks/use-permission';
@@ -71,12 +72,9 @@ export default function MetadataFields({
     const canEditReleaseVideo =
         !isUpdateForm || hasPermission(PERMISSION.RELEASE_VIDEO.UPDATE);
 
-    const isCanEditChannel =
+    const isCanEditDraftOnly =
         canEditReleaseVideo &&
-        (!dataEdit?.id ||
-            dataEdit?.status === RELEASES_STATUS.DRAFT ||
-            dataEdit?.status === RELEASES_STATUS.FAILED ||
-            dataEdit?.status === RELEASES_STATUS.TAKEN_DOWN);
+        (!dataEdit?.id || dataEdit?.status === RELEASES_STATUS.DRAFT);
 
     const handleArtistsBlur = () => {
         const releaseId = dataEdit?.id;
@@ -408,6 +406,7 @@ export default function MetadataFields({
                                 'releaseVideo.fields.isrcPlaceholder'
                             )}
                             allowClear
+                            disabled={!isCanEditDraftOnly}
                             onBlur={(e) => {
                                 const val = e.target.value;
                                 if (val !== dataEdit?.video?.isrc) {
@@ -492,29 +491,40 @@ export default function MetadataFields({
             <Row gutter={24}>
                 <Col span={24}>
                     <AppFormItem
-                        name={['video', 'label']}
+                        name={['video', 'labelId']}
                         label={messages('formFields.labelId')}
                         required
                         rules={[
                             {
                                 required: true,
-                                message: messages('validation.input'),
+                                message: messages('validation.select'),
                             },
                         ]}
                     >
-                        <Input
+                        <LabelSelect
+                            showCreate
                             placeholder={messages('formFields.labelId')}
                             allowClear
-                            onBlur={(e) => {
-                                const val = e.target.value;
-                                if (val !== dataEdit?.video?.label) {
+                            onCreateSuccess={(data) => {
+                                if (data?.id) {
+                                    form.setFieldValue(
+                                        ['video', 'labelId'],
+                                        data.id
+                                    );
                                     onFieldUpdate?.({
                                         video: {
-                                            label: val,
+                                            labelId: data.id,
                                         },
                                     });
                                 }
                             }}
+                            onChange={(value) =>
+                                onFieldUpdate?.({
+                                    video: {
+                                        labelId: value,
+                                    },
+                                })
+                            }
                         />
                     </AppFormItem>
                 </Col>
@@ -551,7 +561,7 @@ export default function MetadataFields({
                                     },
                                 })
                             }
-                            disabled={!isCanEditChannel}
+                            disabled={!isCanEditDraftOnly}
                         />
                     </AppFormItem>
                 </Col>
