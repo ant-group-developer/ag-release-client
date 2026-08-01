@@ -422,6 +422,7 @@
         "dateUpdated": "Ngày cập nhật",
         "startedAt": "Ngày bắt đầu",
         "completedAt": "Ngày hoàn thành",
+        "errorMessage": "Thông báo lỗi",
         "updatedAt": "Ngày cập nhật",
         "removeFilter": "Xoá bộ lọc",
         "filter": "Bộ lọc",
@@ -2041,6 +2042,33 @@
             "parserSource": "Mã nguồn Parser",
             "yes": "Có",
             "no": "Không"
+        },
+        "ruleStatus": {
+            "import": "Lấy vào báo cáo",
+            "ignore": "Bỏ qua",
+            "pending": "Chờ admin xác nhận"
+        },
+        "sampleFilesButton": "File mẫu ({count})",
+        "fileDiscoveryRuns": {
+            "button": "Lịch sử quét file",
+            "title": "Lịch sử File Discovery Runs",
+            "resetButton": "Reset Discovery",
+            "resetConfirm": "Bạn có chắc chắn muốn reset FTP File Discovery không?",
+            "runButton": "Chạy Discovery",
+            "runTitle": "Chạy FTP File Discovery",
+            "categories": "Danh mục",
+            "force": "Ép buộc chạy",
+            "status": {
+                "running": "Đang chạy",
+                "completed": "Hoàn thành",
+                "completedWithWarnings": "Hoàn thành có cảnh báo",
+                "failed": "Thất bại"
+            },
+            "columns": {
+                "foldersScanned": "Thư mục đã quét",
+                "filesScanned": "File đã quét",
+                "patternsUpserted": "Pattern đã lưu"
+            }
         }
     },
     "dsp": {

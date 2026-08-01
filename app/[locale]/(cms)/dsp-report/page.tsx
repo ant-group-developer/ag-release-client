@@ -3,27 +3,29 @@
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import { FtpFileDiscoveryRunsModal } from '@/modules/dsp-report/components/modal/ftp-file-discovery-runs-modal';
 import { DspReportTable } from '@/modules/dsp-report/components/table';
 import { useGetListDspReport } from '@/modules/dsp-report/hooks/use-get-list-dsp-report';
 import { DspReportDataFilter } from '@/modules/dsp-report/types';
 import { PageContainer } from '@ant-design/pro-components';
-import { Select, Space, theme } from 'antd';
+import { Button, Select, Space, theme } from 'antd';
+import { History } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 export default function DspReport() {
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const [isDiscoveryRunsModalOpen, setIsDiscoveryRunsModalOpen] =
+        useState(false);
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<DspReportDataFilter>({
             page: 1,
             pageSize: PAGE_SIZE,
         });
-    // const { isLoading } = useLoadingStatus({
-    //     queryKeys: [dspReportQueryKeys.lists()],
-    //     mutationKeys: [dspReportQueryKeys.all],
-    // });
 
     const { dspReportData, refetch, isLoading } =
         useGetListDspReport(dataFilter);
@@ -97,6 +99,15 @@ export default function DspReport() {
                             />
                         </Space>
                     }
+                    toolBarRender={() => [
+                        <Button
+                            key="ftp-file-discovery-runs"
+                            icon={<History size={SIZE_ICON} />}
+                            onClick={() => setIsDiscoveryRunsModalOpen(true)}
+                        >
+                            {messages('dspReport.fileDiscoveryRuns.button')}
+                        </Button>,
+                    ]}
                     options={{
                         reload: () => refetch(),
                     }}
@@ -116,6 +127,12 @@ export default function DspReport() {
                     showQuickJumper
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
+                {isDiscoveryRunsModalOpen && (
+                    <FtpFileDiscoveryRunsModal
+                        open={isDiscoveryRunsModalOpen}
+                        onCancel={() => setIsDiscoveryRunsModalOpen(false)}
+                    />
+                )}
             </PageContainer>
         </AppPageWrapper>
     );

@@ -3,6 +3,7 @@ import { Button, Form, Popconfirm, Space, Table, message } from 'antd';
 import { Pencil } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { TARGET_COLUMN_OPTIONS, TRANSFORM_TYPE_OPTIONS } from '../../enums';
 import { useUpdateFieldMappings } from '../../hooks/use-update-field-mappings';
 import { FieldMapping } from '../../types';
 import { EditableCell } from './editable-cell';
@@ -176,11 +177,23 @@ export const FieldMappingsTable = ({
         if (!col.editable) {
             return col;
         }
+        let inputType: 'text' | 'select' = 'text';
+        let options: { label: string; value: string }[] | undefined;
+
+        if (col.dataIndex === 'targetColumn') {
+            inputType = 'select';
+            options = TARGET_COLUMN_OPTIONS;
+        } else if (col.dataIndex === 'transform') {
+            inputType = 'select';
+            options = TRANSFORM_TYPE_OPTIONS;
+        }
+
         return {
             ...col,
             onCell: (record: FieldMapping) => ({
                 record,
-                inputType: 'text',
+                inputType,
+                options,
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
