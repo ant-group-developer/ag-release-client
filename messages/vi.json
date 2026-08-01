@@ -256,6 +256,7 @@
         "createdAt": "Ngày tạo",
         "joinedAt": "Ngày tham gia",
         "isActive": "Hoạt động",
+        "isInactive": "Không hoạt động",
         "download": "Tải về",
         "downloading": "Đang tải: {name}",
         "filePath": "Đường dẫn tệp",

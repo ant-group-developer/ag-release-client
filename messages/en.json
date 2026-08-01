@@ -256,6 +256,7 @@
         "createdAt": "Created date",
         "joinedAt": "Joined date",
         "isActive": "Active",
+        "isInactive": "Inactive",
         "download": "Download",
         "downloading": "Downloading: {name}",
         "filePath": "File path",

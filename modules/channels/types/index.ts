@@ -49,4 +49,7 @@ export interface UserChannelData extends CommonAttribute {
 export interface ChannelDataFilter extends CommonParams {
     keyword?: string;
     dateCreated?: string;
+    tenantId?: string;
+    status?: string;
+    isActive?: boolean | string;
 }

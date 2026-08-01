@@ -69,6 +69,7 @@ export default function Channels({}: Props) {
                         <ChannelsHeader
                             dataFilter={dataFilter}
                             onSearch={onSearch}
+                            onChangeFilter={onChangeFilter}
                             handleRefresh={refetch}
                             isFetching={isFetching}
                         />
