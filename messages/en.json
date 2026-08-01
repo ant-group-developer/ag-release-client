@@ -148,6 +148,7 @@
         "distributionMethod": "Distribution method",
         "releaseVia": "Distributed via",
         "others": "Others",
+        "remove": "Remove",
         "save": "Save",
         "cancel": "Cancel",
         "confirmCancel": "Are you sure you want to cancel?",
@@ -253,6 +254,8 @@
         "folder": "Folder",
         "size": "Size",
         "createdAt": "Created date",
+        "joinedAt": "Joined date",
+        "isActive": "Active",
         "download": "Download",
         "downloading": "Downloading: {name}",
         "filePath": "File path",
@@ -520,6 +523,11 @@
         "confirmTitle": "Confirm delete",
         "confirmMessage": "Are you sure you want to delete {value}?",
         "confirmMessageValue": "Are you sure you want to delete <b>{value}</b> ?"
+    },
+    "remove": {
+        "confirmTitle": "Confirm remove",
+        "confirmMessage": "Are you sure you want to remove {value}?",
+        "confirmMessageValue": "Are you sure you want to remove <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Confirm cancel",

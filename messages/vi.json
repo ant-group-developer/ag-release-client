@@ -148,6 +148,7 @@
         "distributionMethod": "Phương thức phát hành",
         "releaseVia": "Phát hành thông qua",
         "others": "Khác",
+        "remove": "Gỡ",
         "save": "Lưu",
         "cancel": "Hủy",
         "confirmCancel": "Bạn có chắc chắn muốn hủy?",
@@ -253,6 +254,8 @@
         "folder": "Thư mục",
         "size": "Kích thước",
         "createdAt": "Ngày tạo",
+        "joinedAt": "Ngày tham gia",
+        "isActive": "Hoạt động",
         "download": "Tải về",
         "downloading": "Đang tải: {name}",
         "filePath": "Đường dẫn tệp",
@@ -520,6 +523,11 @@
         "confirmTitle": "Xác nhận xoá",
         "confirmMessage": "Bạn có chắc muốn xoá {value}?",
         "confirmMessageValue": "Bạn có chắc muốn xoá <b>{value}</b> ?"
+    },
+    "remove": {
+        "confirmTitle": "Xác nhận gỡ",
+        "confirmMessage": "Bạn có chắc muốn gỡ {value}?",
+        "confirmMessageValue": "Bạn có chắc muốn gỡ <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Xác nhận huỷ",

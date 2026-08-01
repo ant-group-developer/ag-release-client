@@ -58,8 +58,7 @@ export function useRemoveChannelAccess(channelId: string) {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (userId: string) =>
-            channelApi.removeAccess(channelId, { userIds: [userId] }),
+        mutationFn: (id: string) => channelApi.removeAccess(id),
         onSuccess: (res) => {
             queryClient.invalidateQueries({
                 queryKey: channelQueryKeys.access(channelId),

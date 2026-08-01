@@ -51,9 +51,10 @@ export default function ChannelAccessTab({ channelId }: Props) {
             title: messages('user.label'),
             key: 'user',
             render: (_, record) => {
-                const name = record.name;
-                const email = record.email;
-                const avatar = record.avatar;
+                const user = record.user;
+                const name = user?.name;
+                const email = user?.email;
+                const avatar = user?.avatar;
                 return (
                     <Space size="middle">
                         <Avatar src={avatar}>
@@ -86,12 +87,12 @@ export default function ChannelAccessTab({ channelId }: Props) {
             align: 'center',
             render: (_, record) => (
                 <Popconfirm
-                    title={messages('delete.confirmTitle')}
-                    description={messages('delete.confirmMessage', {
-                        value: record.name || record.email || '',
+                    title={messages('remove.confirmTitle')}
+                    description={messages('remove.confirmMessage', {
+                        value: record.user?.name || record.user?.email || '',
                     })}
                     onConfirm={() => handleRemoveUser(record)}
-                    okText={messages('common.delete')}
+                    okText={messages('common.remove')}
                     cancelText={messages('common.cancel')}
                     okButtonProps={{ danger: true, loading: isRemoving }}
                 >
@@ -133,7 +134,7 @@ export default function ChannelAccessTab({ channelId }: Props) {
             )}
 
             <Table
-                rowKey={(record) => record.id}
+                rowKey="id"
                 columns={columns}
                 dataSource={accessList}
                 loading={isFetching || isLoading}

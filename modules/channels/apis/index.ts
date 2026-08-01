@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
-import { ChannelAccessData, ChannelDataFilter, ChannelsData, ChannelsSimpleData } from '../types';
+import { ChannelAccessData, ChannelDataFilter, ChannelsData, ChannelsSimpleData, UserChannelData } from '../types';
 import { CreateChannelPayload, UpdateChannelPayload } from '../types/payload';
 
 export const channelApi = {
@@ -62,10 +62,15 @@ export const channelApi = {
         );
     },
 
-    removeAccess: (channelId: string, payload: { userIds: string[] }) => {
+    removeAccess: (id: string) => {
         return axiosInstance.delete<DetailResponse<any>>(
-            `/channels/${channelId}/users`,
-            { data: payload }
+            `/channels/member/${id}`
+        );
+    },
+
+    getChannelsByUserId: (userId: string) => {
+        return axiosInstance.get<DetailResponse<UserChannelData[]>>(
+            `/channels/users/${userId}`
         );
     },
 };

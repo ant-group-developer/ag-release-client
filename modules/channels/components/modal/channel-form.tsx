@@ -68,6 +68,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             youtubeChannelId: values.youtubeChannelId,
             thumbUrl: values.thumbUrl,
             existedOnVevoBackstage: values.existedOnVevoBackstage,
+            isActive: values.isActive,
         } as CreateChannelPayload;
 
         const variables: CreateVariables<CreateChannelPayload> = {
@@ -121,6 +122,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             youtubeChannelId: dataEdit?.youtubeChannelId ?? undefined,
             thumbUrl: dataEdit?.thumbUrl ?? undefined,
             existedOnVevoBackstage: dataEdit?.existedOnVevoBackstage ?? false,
+            isActive: dataEdit?.isActive ?? true,
         };
         form.setFieldsValue(initialData);
     }, [dataEdit, form]);
