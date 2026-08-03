@@ -1,23 +1,16 @@
-import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { DATE_FORMAT } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
-import useModalStore from '@/hooks/use-modal';
-import { Link, useRouter } from '@/i18n/routing';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
+import { Link } from '@/i18n/routing';
 import ReleaseVideoCoverImage from '@/modules/release-video/components/image/release-video-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { Tag, Tooltip, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
-import nProgress from 'nprogress';
-import {
-    RELEASE_VIDEO_VISIBILITY,
-    TYPE_MODAL_RELEASE_VIDEO,
-} from '../../enums';
+import { RELEASE_VIDEO_VISIBILITY } from '../../enums';
+import { ReleaseVideoChannelActions } from './release-video-channel-actions';
 
 type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
     pagination: {
@@ -29,8 +22,6 @@ type Props = Omit<AppTableProps<ReleasesData>, 'columns'> & {
 
 export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
-    const router = useRouter();
 
     const columns: ColumnType<ReleasesData>[] = [
         {
@@ -103,30 +94,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                                     <Typography.Text />
                                 </span>
                             </div>
-                            {record.video?.channel?.name && (
-                                <div
-                                    className="truncate text-xs"
-                                    data-stop-row-click="true"
-                                >
-                                    <Tooltip
-                                        title={messages('common.viewOnYoutube')}
-                                    >
-                                        <a
-                                            href={`https://www.youtube.com/channel/${record.video.channel.youtubeChannelId}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="hover:underline"
-                                        >
-                                            <Typography.Text
-                                                type="secondary"
-                                                className="truncate"
-                                            >
-                                                {record.video.channel.name}
-                                            </Typography.Text>
-                                        </a>
-                                    </Tooltip>
-                                </div>
-                            )}
+                            <ReleaseVideoChannelActions record={record} />
                         </div>
                     </div>
                 );
@@ -311,32 +279,39 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             ),
             render: (value) => <span>{formattedDate(value)}</span>,
         },
-        {
-            title: '',
-            key: 'action',
-            dataIndex: '',
-            width: 80,
-            align: 'center',
-            fixed: 'right',
-            render: (_, record) => (
-                <PermissionGate permission={PERMISSION.RELEASE_VIDEO.UPDATE}>
-                    <ActionButton
-                        showDelete
-                        onShowDelete={() =>
-                            openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
-                        }
-                        showUpdate
-                        onShowUpdate={() => {
-                            nProgress.start();
-                            router.push(
-                                `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`
-                            );
-                        }}
-                    />
-                </PermissionGate>
-            ),
-        },
+        // {
+        //     title: '',
+        //     key: 'action',
+        //     dataIndex: '',
+        //     width: 80,
+        //     align: 'center',
+        //     fixed: 'right',
+        //     render: (_, record) => (
+        //         <PermissionGate permission={PERMISSION.RELEASE_VIDEO.UPDATE}>
+        //             <ActionButton
+        //                 showDelete
+        //                 onShowDelete={() =>
+        //                     openModal(TYPE_MODAL_RELEASE_VIDEO.DELETE, record)
+        //                 }
+        //                 showUpdate
+        //                 onShowUpdate={() => {
+        //                     nProgress.start();
+        //                     router.push(
+        //                         `${APP_ROUTES.RELEASE_VIDEOS}/${record.id}`
+        //                     );
+        //                 }}
+        //             />
+        //         </PermissionGate>
+        //     ),
+        // },
     ];
 
-    return <AppTable {...props} pagination={false} columns={columns} />;
+    return (
+        <AppTable
+            {...props}
+            pagination={false}
+            columns={columns}
+            rowClassName={'group cursor-pointer'}
+        />
+    );
 };
