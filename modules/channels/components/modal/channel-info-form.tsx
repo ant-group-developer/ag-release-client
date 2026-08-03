@@ -127,6 +127,14 @@ export default function ChannelInfoForm({
                     <Switch disabled={isActive} />
                 </AppFormItem>
             )}
+
+            <AppFormItem
+                name="isActive"
+                label={messages('common.isActive')}
+                valuePropName="checked"
+            >
+                <Switch disabled={isActive} />
+            </AppFormItem>
         </AppForm>
     );
 }

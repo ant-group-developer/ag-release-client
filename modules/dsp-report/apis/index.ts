@@ -7,6 +7,10 @@ import {
     PgDspsSyncDataFilter,
     FtpParserConfig,
     FieldMapping,
+    FtpReportFileRule,
+    FtpReportFileRuleFilter,
+    FtpParser,
+    FtpReportFileDiscoveryRun,
 } from '../types';
 
 export const dspReportApi = {
@@ -55,6 +59,36 @@ export const dspReportApi = {
             `/dsp-report/parser-catalog/${parserCode}/field-mappings`,
             data
         );
+    },
+    getFtpReportFileRules: (params?: FtpReportFileRuleFilter) => {
+        return axiosInstance.get<PaginationResponse<FtpReportFileRule>>(
+            '/ftp-report-file-rules',
+            {
+                params,
+            }
+        );
+    },
+    getParserCatalogDetail: (parserCode: string) => {
+        return axiosInstance.get<DetailResponse<FtpParser>>(
+            `/dsp-report/parser-catalog/${parserCode}`
+        );
+    },
+    getFtpReportFileDiscoveryRuns: () => {
+        return axiosInstance.get<ListResponse<FtpReportFileDiscoveryRun>>(
+            '/ftp-report-file-discovery/runs'
+        );
+    },
+    resetFtpReportFileDiscovery: (data: {
+        confirmation: string;
+        dryRun: boolean;
+    }) => {
+        return axiosInstance.post('/ftp-report-file-discovery/reset', data);
+    },
+    runFtpReportFileDiscovery: (data: {
+        force?: boolean;
+        categories?: string[];
+    }) => {
+        return axiosInstance.post('/ftp-report-file-discovery/run', data);
     },
 };
 

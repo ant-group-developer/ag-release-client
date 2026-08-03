@@ -4,6 +4,7 @@ export interface CreateChannelPayload {
     youtubeChannelId?: string;
     thumbUrl?: string;
     existedOnVevoBackstage?: boolean;
+    isActive?: boolean;
 }
 
 export interface UpdateChannelPayload extends Partial<CreateChannelPayload> {}

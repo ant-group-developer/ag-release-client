@@ -148,6 +148,7 @@
         "distributionMethod": "Distribution method",
         "releaseVia": "Distributed via",
         "others": "Others",
+        "remove": "Remove",
         "save": "Save",
         "cancel": "Cancel",
         "confirmCancel": "Are you sure you want to cancel?",
@@ -253,6 +254,9 @@
         "folder": "Folder",
         "size": "Size",
         "createdAt": "Created date",
+        "joinedAt": "Joined date",
+        "isActive": "Active",
+        "isInactive": "Inactive",
         "download": "Download",
         "downloading": "Downloading: {name}",
         "filePath": "File path",
@@ -420,6 +424,7 @@
         "updatedAt": "Updated at",
         "dateUpdated": "Date updated",
         "completedAt": "Completed at",
+        "errorMessage": "Error message",
         "removeFilter": "Remove filter",
         "filter": "Filters",
         "submit": "Submit",
@@ -520,6 +525,11 @@
         "confirmTitle": "Confirm delete",
         "confirmMessage": "Are you sure you want to delete {value}?",
         "confirmMessageValue": "Are you sure you want to delete <b>{value}</b> ?"
+    },
+    "remove": {
+        "confirmTitle": "Confirm remove",
+        "confirmMessage": "Are you sure you want to remove {value}?",
+        "confirmMessageValue": "Are you sure you want to remove <b>{value}</b> ?"
     },
     "cancel": {
         "confirmTitle": "Confirm cancel",
@@ -2038,6 +2048,33 @@
             "parserSource": "Parser source code",
             "yes": "Yes",
             "no": "No"
+        },
+        "ruleStatus": {
+            "import": "Import to report",
+            "ignore": "Ignore",
+            "pending": "Pending admin confirmation"
+        },
+        "sampleFilesButton": "Sample file ({count})",
+        "fileDiscoveryRuns": {
+            "button": "File discovery runs",
+            "title": "File Discovery Runs History",
+            "resetButton": "Reset Discovery",
+            "resetConfirm": "Are you sure you want to reset FTP File Discovery?",
+            "runButton": "Run Discovery",
+            "runTitle": "Run FTP File Discovery",
+            "categories": "Categories",
+            "force": "Force run",
+            "status": {
+                "running": "Running",
+                "completed": "Completed",
+                "completedWithWarnings": "Completed with warnings",
+                "failed": "Failed"
+            },
+            "columns": {
+                "foldersScanned": "Folders Scanned",
+                "filesScanned": "Files Scanned",
+                "patternsUpserted": "Patterns Upserted"
+            }
         }
     },
     "dsp": {
