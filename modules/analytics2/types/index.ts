@@ -7,7 +7,7 @@ import {
 import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
-import { ANALYTICS_RELEASE_TYPE } from '../enums';
+import { ANALYTICS_MODAL_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
 import { ANALYTICS2_TABS } from '../enums/tabs';
 
 export interface Analytics2DataFilter extends CommonParams {
@@ -617,6 +617,13 @@ export interface AnalyticsCommonParams extends CommonParams {
     sortBy?: string;
     topN?: number;
     includeOther?: boolean;
+    releaseId?: string;
+    trackId?: string;
+    workspaceId?: string;
+    tenantId?: string;
+    labelId?: string;
+    dspId?: string;
+    artistId?: string;
 }
 
 export type ReleaseDspParams = AnalyticsCommonParams;
@@ -748,4 +755,10 @@ export interface RevenueSourceTypeItem {
     revenueUsd: number;
     quantity: number;
     imageUrl?: string | null;
+}
+
+export interface AnalyticModalStoreData {
+    fromDate: string;
+    toDate: string;
+    type: ANALYTICS_MODAL_TYPE;
 }

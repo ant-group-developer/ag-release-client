@@ -7,4 +7,6 @@ export enum ANALYTICS_MODAL_TYPE {
     CHANNEL = 'channel',
     DSP = 'dsp',
     SOURCE_TYPE = 'source_type',
+    ADVANCED_MODE = 'advanced_mode',
+    RELEASE_ADVANCED_MODE = 'release_advanced_mode',
 }

@@ -2,7 +2,6 @@
 
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { Link } from '@/i18n/routing';
 import { Button, Card, Empty, Segmented, Skeleton, Space, Table } from 'antd';
 import { ArrowRight, BarChart3, List, PieChart } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -27,6 +26,7 @@ interface RankingCardProps<T> {
     valueKey: keyof T;
     defaultView?: RankingCardView;
     viewMoreHref?: string;
+    onViewMore?: () => void;
     valuePrefix?: string;
     onChange?: (pagination: any, filters: any, sorter: any, extra: any) => void;
 }
@@ -42,6 +42,7 @@ export default function RankingCard({
     valueKey,
     defaultView = RankingCardView.LIST,
     viewMoreHref,
+    onViewMore,
     valuePrefix,
     onChange,
 }: RankingCardProps<any>) {
@@ -114,21 +115,24 @@ export default function RankingCard({
                         }
                         size="small"
                     />
-                    {viewMoreHref && (
-                        <Link href={viewMoreHref} className="group">
-                            <Button
-                                type="text"
-                                size="small"
-                                className="!flex !items-center !gap-1 !rounded-full !px-3 !py-1 !font-medium !text-gray-500 hover:!bg-gray-100 hover:!text-blue-600 dark:!text-zinc-400 dark:hover:!bg-zinc-800 dark:hover:!text-blue-400"
-                            >
-                                <span className="text-xs">{messages('common.seeMore')}</span>
-                                <ArrowRight
-                                    size={12}
-                                    className="transition-transform duration-200 group-hover:translate-x-0.5"
-                                />
-                            </Button>
-                        </Link>
-                    )}
+                    {/* {viewMoreHref && ( */}
+                    {/* <Link href={viewMoreHref || ''} className="group"> */}
+                    <Button
+                        onClick={() => onViewMore?.()}
+                        type="text"
+                        size="small"
+                        className="!flex !items-center !gap-1 !rounded-full !px-3 !py-1 !font-medium !text-gray-500 hover:!bg-gray-100 hover:!text-blue-600 dark:!text-zinc-400 dark:hover:!bg-zinc-800 dark:hover:!text-blue-400"
+                    >
+                        <span className="text-xs">
+                            {messages('common.seeMore')}
+                        </span>
+                        <ArrowRight
+                            size={12}
+                            className="transition-transform duration-200 group-hover:translate-x-0.5"
+                        />
+                    </Button>
+                    {/* </Link> */}
+                    {/* )} */}
                 </Space>
             }
             className="h-full rounded-xl border-none shadow-sm"
