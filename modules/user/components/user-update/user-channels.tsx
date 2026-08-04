@@ -1,10 +1,25 @@
+import IconButton from '@/components/ui/button/icon-button';
 import AppTable from '@/components/ui/table/normal-table';
+import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
+import { usePermission } from '@/hooks/use-permission';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ChannelThumbImage from '@/modules/channels/components/image/channel-thumb-image';
+import { useRemoveChannelAccess } from '@/modules/channels/hooks/use-channel-access';
 import { useGetChannelsByUser } from '@/modules/channels/hooks/use-get-channels-by-user';
 import { UserChannelData } from '@/modules/channels/types';
-import { Input, Space, Table, Tooltip, Typography, theme } from 'antd';
+import {
+    Input,
+    Popconfirm,
+    Space,
+    Table,
+    Tooltip,
+    Typography,
+    theme,
+} from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import { Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { UserData } from '../../types/data';
@@ -18,7 +33,15 @@ function UserChannels({ dataEdit }: Props) {
     const { token } = theme.useToken();
     const userId = dataEdit.id;
 
+    const { isAdmin, isTenantOwnerOrAdmin } = useAuth();
+    const { hasPermission } = usePermission();
+    const canRemoveChannel =
+        isAdmin ||
+        isTenantOwnerOrAdmin ||
+        hasPermission(PERMISSION.CHANNEL.DELETE);
+
     const { userChannelsData, isLoading } = useGetChannelsByUser(userId);
+    const { removeAccess, isPending: isRemoving } = useRemoveChannelAccess();
     const [search, setSearch] = useState('');
 
     const filteredData = useMemo(() => {
@@ -160,6 +183,38 @@ function UserChannels({ dataEdit }: Props) {
             ),
         },
     ];
+
+    if (canRemoveChannel) {
+        columns.push({
+            key: 'action',
+            fixed: 'right',
+            width: 80,
+            align: 'center',
+            render: (_, record) => {
+                return (
+                    <Space>
+                        <Popconfirm
+                            title={messages('remove.confirmTitle')}
+                            description={messages('remove.confirmMessage', {
+                                value: record.channel?.name || '',
+                            })}
+                            onConfirm={() => removeAccess(record.id)}
+                            okText={messages('common.remove')}
+                            cancelText={messages('common.cancel')}
+                            okButtonProps={{
+                                danger: true,
+                                loading: isRemoving,
+                            }}
+                        >
+                            <IconButton disabled={isRemoving}>
+                                <Trash size={SIZE_ICON} color="red" />
+                            </IconButton>
+                        </Popconfirm>
+                    </Space>
+                );
+            },
+        });
+    }
 
     return (
         <div className="flex flex-col gap-4">

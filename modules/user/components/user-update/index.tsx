@@ -75,7 +75,7 @@ function UpdateUserModal({ ...props }: Props) {
                 label: dataEdit.email,
             })}
             footer={null}
-            width={800}
+            width={'50vw'}
             loading={loading}
             className="!top-5"
         >
