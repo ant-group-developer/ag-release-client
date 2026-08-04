@@ -1,9 +1,11 @@
 import AppTable from '@/components/ui/table/normal-table';
-import { Button, Tag, theme, Typography } from 'antd';
+import { Button, Select, Tag, theme, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { FTP_REPORT_FILE_RULE_STATUS } from '../../enums';
 import { useGetListFtpReportFileRules } from '../../hooks/use-get-list-ftp-report-file-rules';
+import { useUpdateFtpReportFileRule } from '../../hooks/use-update-ftp-report-file-rule';
 import { FtpReportFileRule, FtpReportSampleFile } from '../../types';
 import { SampleFilesModal } from '../modal/sample-files-modal';
 import { FtpParserDetailModal } from './ftp-parser-detail-modal';
@@ -14,25 +16,41 @@ interface FtpParserConfigListProps {
     dspName?: string;
 }
 
-// Sub-component rendering status tag according to component breakdown rule
-const ActionStatusTag = ({ status }: { status: string }) => {
+// Sub-component rendering status select according to component breakdown rule
+const ActionStatusSelect = ({
+    status,
+    onChange,
+    disabled,
+}: {
+    status: string;
+    onChange: (value: string) => void;
+    disabled?: boolean;
+}) => {
     const messages = useTranslations();
-    const colorMap: Record<string, string> = {
-        import: 'success',
-        ignore: 'default',
-        pending: 'processing',
-    };
 
-    const labelMap: Record<string, string> = {
-        import: messages('dspReport.ruleStatus.import'),
-        ignore: messages('dspReport.ruleStatus.ignore'),
-        pending: messages('dspReport.ruleStatus.pending'),
-    };
+    const options = [
+        {
+            value: FTP_REPORT_FILE_RULE_STATUS.IMPORT,
+            label: messages('dspReport.ruleStatus.import'),
+        },
+        {
+            value: FTP_REPORT_FILE_RULE_STATUS.IGNORE,
+            label: messages('dspReport.ruleStatus.ignore'),
+        },
+        {
+            value: FTP_REPORT_FILE_RULE_STATUS.PENDING,
+            label: messages('dspReport.ruleStatus.pending'),
+        },
+    ];
 
     return (
-        <Tag color={colorMap[status] || 'default'}>
-            {labelMap[status] || status}
-        </Tag>
+        <Select
+            value={status}
+            onChange={onChange}
+            options={options}
+            disabled={disabled}
+            className="!w-full"
+        />
     );
 };
 
@@ -48,12 +66,30 @@ export const FtpParserConfigList = ({
         FtpReportSampleFile[]
     >([]);
     const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
+    const [updatingId, setUpdatingId] = useState<string | null>(null);
     const { token } = theme.useToken();
 
     const { ftpReportFileRulesData, isLoading } = useGetListFtpReportFileRules({
         sourceCategory,
         dspFolder: dspName,
     });
+
+    const { updateFtpReportFileRule, isUpdating } =
+        useUpdateFtpReportFileRule();
+
+    const handleChange = (id: string, payload: Partial<FtpReportFileRule>) => {
+        setUpdatingId(id);
+        updateFtpReportFileRule({
+            id,
+            payload,
+            onSuccess: () => {
+                setUpdatingId(null);
+            },
+            onError: () => {
+                setUpdatingId(null);
+            },
+        });
+    };
 
     const handleViewConfig = (record: FtpReportFileRule) => {
         setActiveParserCode(record.parserCode || '');
@@ -114,8 +150,18 @@ export const FtpParserConfigList = ({
             title: messages('common.action'),
             key: 'status',
             dataIndex: 'status',
-            width: 160,
-            render: (status: string) => <ActionStatusTag status={status} />,
+            width: 200,
+            render: (status: string, record: FtpReportFileRule) => (
+                <ActionStatusSelect
+                    status={status}
+                    disabled={isUpdating && updatingId === record.id}
+                    onChange={(newStatus) =>
+                        handleChange(record.id, {
+                            status: newStatus,
+                        })
+                    }
+                />
+            ),
         },
         {
             key: 'action',
