@@ -32,17 +32,19 @@ export function useAddChannelAccess(channelId: string) {
                 queryKey: channelQueryKeys.access(channelId),
             });
             const messageCode = res?.data?.messageCode;
-            const msg = messageCode && messages.has(messageCode as any)
-                ? messages(messageCode as any)
-                : messages('common.success');
+            const msg =
+                messageCode && messages.has(messageCode as any)
+                    ? messages(messageCode as any)
+                    : messages('common.success');
             showNotification('success', msg);
         },
         onError: (error: any) => {
             const response = error?.response?.data;
             const messageCode = response?.messageCode;
-            const msg = messageCode && messages.has(messageCode as any)
-                ? messages(messageCode as any)
-                : response?.message || messages('common.error');
+            const msg =
+                messageCode && messages.has(messageCode as any)
+                    ? messages(messageCode as any)
+                    : response?.message || messages('common.error');
             showNotification('error', msg);
         },
     });
@@ -53,28 +55,48 @@ export function useAddChannelAccess(channelId: string) {
     };
 }
 
-export function useRemoveChannelAccess(channelId: string) {
+export function useRemoveChannelAccess(
+    channelIdParam?: string,
+    userIdParam?: string
+) {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (id: string) => channelApi.removeAccess(id),
         onSuccess: (res) => {
+            const resData = res?.data?.data;
+            const channelId = channelIdParam || resData?.channelId;
+            const userId = userIdParam || resData?.userId;
+
+            if (channelId) {
+                queryClient.invalidateQueries({
+                    queryKey: channelQueryKeys.access(channelId),
+                });
+            }
+            if (userId) {
+                queryClient.invalidateQueries({
+                    queryKey: channelQueryKeys.userChannels(userId),
+                });
+            }
             queryClient.invalidateQueries({
-                queryKey: channelQueryKeys.access(channelId),
+                queryKey: channelQueryKeys.all,
             });
+
             const messageCode = res?.data?.messageCode;
-            const msg = messageCode && messages.has(messageCode as any)
-                ? messages(messageCode as any)
-                : messages('common.success');
+            const msg =
+                messageCode && messages.has(messageCode as any)
+                    ? messages(messageCode as any)
+                    : messages('common.success');
             showNotification('success', msg);
         },
         onError: (error: any) => {
             const response = error?.response?.data;
             const messageCode = response?.messageCode;
-            const msg = messageCode && messages.has(messageCode as any)
-                ? messages(messageCode as any)
-                : response?.message || messages('common.error');
+            const msg =
+                messageCode && messages.has(messageCode as any)
+                    ? messages(messageCode as any)
+                    : response?.message || messages('common.error');
             showNotification('error', msg);
         },
     });

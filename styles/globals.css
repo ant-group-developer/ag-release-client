@@ -125,10 +125,11 @@ body {
     @apply !border-b;
     @apply !border-gray-300;
     @apply !border-solid;
+    @apply !mb-0;
 }
 
 .full-screen-modal .ant-modal-body {
-    height: calc(100vh - 67px);
+    height: calc(100vh - 57px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -568,7 +569,9 @@ html.dark .ck.ck-list__item .ck-button:hover {
 }
 
 /* Connect the current row at the last indent level, immediately before its icon. */
-.table-tree-with-lines .ant-table-row:not(.ant-table-row-level-0) .ant-table-row-indent::before {
+.table-tree-with-lines
+    .ant-table-row:not(.ant-table-row-level-0)
+    .ant-table-row-indent::before {
     content: '';
     position: absolute;
     top: -20px;

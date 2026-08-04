@@ -14,8 +14,8 @@ import AnalyticsOverviewChart from './analytics-overview-chart';
 export interface DspAnalyticsOverviewChartProps {
     pgDspId: string;
     dspReportId: string;
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     sortBy?: string;
@@ -52,7 +52,7 @@ export default function DspAnalyticsOverviewChart({
         dspReportId,
         fromDate,
         toDate,
-        releaseType: releaseType as any,
+        releaseType,
     };
 
     const barChartFilterParams = {

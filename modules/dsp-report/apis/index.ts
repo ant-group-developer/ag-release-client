@@ -1,16 +1,16 @@
 import axiosInstance from '@/api/axios-auth';
-import { PaginationResponse, ListResponse, DetailResponse } from '@/types/api';
+import { DetailResponse, ListResponse, PaginationResponse } from '@/types/api';
 import {
     DspReportData,
     DspReportDataFilter,
-    PgDspsSyncData,
-    PgDspsSyncDataFilter,
-    FtpParserConfig,
     FieldMapping,
+    FtpParser,
+    FtpParserConfig,
+    FtpReportFileDiscoveryRun,
     FtpReportFileRule,
     FtpReportFileRuleFilter,
-    FtpParser,
-    FtpReportFileDiscoveryRun,
+    PgDspsSyncData,
+    PgDspsSyncDataFilter,
 } from '../types';
 
 export const dspReportApi = {
@@ -66,6 +66,12 @@ export const dspReportApi = {
             {
                 params,
             }
+        );
+    },
+    updateFtpReportFileRule: (id: string, data: Partial<FtpReportFileRule>) => {
+        return axiosInstance.patch<DetailResponse<FtpReportFileRule>>(
+            `/ftp-report-file-rules/${id}`,
+            data
         );
     },
     getParserCatalogDetail: (parserCode: string) => {

@@ -9,8 +9,8 @@ import AnalyticsOverviewChart from './analytics-overview-chart';
 
 export interface ChannelAnalyticsOverviewChartProps {
     channelId: string;
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
@@ -31,7 +31,7 @@ export default function ChannelAnalyticsOverviewChart({
     const chartFilterParams = {
         fromDate,
         toDate,
-        releaseType: releaseType as any,
+        releaseType,
     };
 
     const isEnabled = enabled && !!channelId;

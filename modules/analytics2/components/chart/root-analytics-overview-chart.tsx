@@ -8,8 +8,8 @@ import { useGetTrendViewTerBarChart } from '../../hooks/use-get-trend-view-ter-b
 import AnalyticsOverviewChart from './analytics-overview-chart';
 
 export interface RootAnalyticsOverviewChartProps {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
 }
@@ -27,7 +27,7 @@ export default function RootAnalyticsOverviewChart({
     const chartFilterParams = {
         fromDate,
         toDate,
-        releaseType: releaseType as any,
+        releaseType,
     };
 
     const {
