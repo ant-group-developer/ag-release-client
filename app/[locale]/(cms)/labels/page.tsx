@@ -11,6 +11,7 @@ import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { LabelsTable } from '@/modules/labels/components/table';
@@ -38,7 +39,7 @@ export default function Labels({}: Props) {
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<LabelData>((state) => state.dataEdit);
     const openModal = useModalStore((state) => state.openModal);
-    // const { isSystemTenant } = useAuth();
+    const { isSystemTenant } = useAuth();
     // const { hasPermission } = usePermission();
 
     // apis
@@ -79,12 +80,16 @@ export default function Labels({}: Props) {
                     backgroundColor: token.colorBgLayout,
                 }}
                 extra={
-                    <PermissionGate permission={PERMISSION.LABEL.CREATE}>
-                        <CreateButton
-                            text={messages('label.create')}
-                            onClick={() => openModal(TYPE_MODAL_LABEL.CREATE)}
-                        />
-                    </PermissionGate>
+                    !isSystemTenant && (
+                        <PermissionGate permission={PERMISSION.LABEL.CREATE}>
+                            <CreateButton
+                                text={messages('label.create')}
+                                onClick={() =>
+                                    openModal(TYPE_MODAL_LABEL.CREATE)
+                                }
+                            />
+                        </PermissionGate>
+                    )
                 }
             >
                 {/* <LabelsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}

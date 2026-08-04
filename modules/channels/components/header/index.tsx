@@ -7,7 +7,7 @@ import useModalStore from '@/hooks/use-modal';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { SyncOutlined } from '@ant-design/icons';
+import { HistoryOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Select, Space } from 'antd';
 import { useTranslations } from 'next-intl';
 import { CHANNEL_STATUS, TYPE_MODAL_CHANNELS } from '../../enums';
@@ -19,6 +19,7 @@ type Props = Pick<
 > & {
     handleRefresh: () => void;
     isFetching?: boolean;
+    onShowYoutubeChannelSyncRuns?: () => void;
 };
 
 export default function ChannelsHeader({
@@ -27,6 +28,7 @@ export default function ChannelsHeader({
     onChangeFilter,
     handleRefresh,
     isFetching,
+    onShowYoutubeChannelSyncRuns,
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
@@ -114,6 +116,14 @@ export default function ChannelsHeader({
                     >
                         {messages('common.refresh')}
                     </Button>
+                    {isAdmin && onShowYoutubeChannelSyncRuns && (
+                        <Button
+                            icon={<HistoryOutlined />}
+                            onClick={onShowYoutubeChannelSyncRuns}
+                        >
+                            {messages('channel.youtubeSyncRuns.button')}
+                        </Button>
+                    )}
                     <PermissionGate permission={PERMISSION.CHANNEL.CREATE}>
                         <CreateButton
                             canCreate={true}

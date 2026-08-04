@@ -736,6 +736,21 @@
         "createFirstToManageMembers": "Please create the channel first before managing members",
         "existedOnVevoBackstage": "Existed on Vevo Backstage",
         "youtubeChannelId": "YouTube channel ID",
+        "youtubeSyncRuns": {
+            "button": "YouTube channel sync runs",
+            "title": "YouTube channel sync runs",
+            "detailTitle": "YouTube channel sync log details",
+            "runButton": "Run sync",
+            "columns": {
+                "totalChannels": "Total channels",
+                "updatedChannels": "Updated channels",
+                "updatedFields": "Updated fields",
+                "failedChannels": "Failed channels",
+                "fieldName": "Changed field",
+                "previousValue": "Previous value",
+                "nextValue": "Next value"
+            }
+        },
         "validation": {
             "nameFormat": "Channel name can only contain letters and numbers, and must end with VEVO."
         },

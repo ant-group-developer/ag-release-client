@@ -24,6 +24,27 @@ export const channelQueryKeys = {
             QUERY_KEY.CHANNEL.GET_CHANNEL_DETAIL,
         ] as const,
     detail: (id: string) => [...channelQueryKeys.details(), id] as const,
-    access: (channelId: string) => [...channelQueryKeys.all, 'access', channelId] as const,
-    userChannels: (userId: string) => [...channelQueryKeys.all, 'user', userId] as const,
+    access: (channelId: string) =>
+        [...channelQueryKeys.all, 'access', channelId] as const,
+    userChannels: (userId: string) =>
+        [...channelQueryKeys.all, 'user', userId] as const,
+    youtubeChannelSyncRuns: (params?: Record<string, any>) =>
+        params
+            ? ([
+                  ...channelQueryKeys.all,
+                  'youtube-channel-sync-runs',
+                  params,
+              ] as const)
+            : ([...channelQueryKeys.all, 'youtube-channel-sync-runs'] as const),
+    youtubeChannelSyncRunLogs: (params?: Record<string, any>) =>
+        params
+            ? ([
+                  ...channelQueryKeys.all,
+                  'youtube-channel-sync-runs-logs',
+                  params,
+              ] as const)
+            : ([
+                  ...channelQueryKeys.all,
+                  'youtube-channel-sync-runs-logs',
+              ] as const),
 };

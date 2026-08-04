@@ -733,6 +733,21 @@
         "createFirstToManageMembers": "Vui lòng tạo kênh trước khi quản lý thành viên",
         "existedOnVevoBackstage": "Đã tồn tại trên Vevo Backstage",
         "youtubeChannelId": "YouTube channel ID",
+        "youtubeSyncRuns": {
+            "button": "Lịch sử đồng bộ kênh YouTube",
+            "title": "Lịch sử đồng bộ kênh YouTube",
+            "detailTitle": "Chi tiết log đồng bộ kênh YouTube",
+            "runButton": "Chạy đồng bộ",
+            "columns": {
+                "totalChannels": "Tổng số kênh",
+                "updatedChannels": "Kênh đã cập nhật",
+                "updatedFields": "Trường đã cập nhật",
+                "failedChannels": "Kênh thất bại",
+                "fieldName": "Trường thay đổi",
+                "previousValue": "Giá trị trước",
+                "nextValue": "Giá trị sau"
+            }
+        },
         "validation": {
             "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
         },

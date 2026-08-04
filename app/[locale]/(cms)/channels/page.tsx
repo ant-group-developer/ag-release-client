@@ -7,10 +7,10 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ChannelsHeader from '@/modules/channels/components/header';
 import ChannelFormModal from '@/modules/channels/components/modal/channel-form';
 import ChannelHistoryModal from '@/modules/channels/components/modal/channel-history-modal';
+import YoutubeChannelSyncRunsModal from '@/modules/channels/components/modal/youtube-channel-sync-runs-modal';
 import { ChannelsTable } from '@/modules/channels/components/table';
 import { TYPE_MODAL_CHANNELS } from '@/modules/channels/enums';
 import { useDeleteChannel } from '@/modules/channels/hooks/use-delete-channel';
@@ -19,6 +19,7 @@ import { ChannelDataFilter, ChannelsData } from '@/modules/channels/types';
 import { DeleteVariables } from '@/types/api';
 import { PageContainer } from '@ant-design/pro-components';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 type Props = {};
 
@@ -32,7 +33,10 @@ export default function Channels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<ChannelsData>((state) => state.dataEdit);
-    const { isAdmin } = useAuth();
+    const [
+        isYoutubeChannelSyncRunsModalOpen,
+        setIsYoutubeChannelSyncRunsModalOpen,
+    ] = useState(false);
 
     const { deleteChannel } = useDeleteChannel();
     const { channelsData, isFetching, refetch, lastUpdatedAt } =
@@ -72,6 +76,9 @@ export default function Channels({}: Props) {
                             onChangeFilter={onChangeFilter}
                             handleRefresh={refetch}
                             isFetching={isFetching}
+                            onShowYoutubeChannelSyncRuns={() =>
+                                setIsYoutubeChannelSyncRunsModalOpen(true)
+                            }
                         />
                     )}
                     sticky
@@ -116,6 +123,15 @@ export default function Channels({}: Props) {
 
                 {typeModal === TYPE_MODAL_CHANNELS.HISTORY && (
                     <ChannelHistoryModal />
+                )}
+
+                {isYoutubeChannelSyncRunsModalOpen && (
+                    <YoutubeChannelSyncRunsModal
+                        open={isYoutubeChannelSyncRunsModalOpen}
+                        onCancel={() =>
+                            setIsYoutubeChannelSyncRunsModalOpen(false)
+                        }
+                    />
                 )}
             </PageContainer>
         </AppPageWrapper>
