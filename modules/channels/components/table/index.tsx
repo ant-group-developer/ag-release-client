@@ -74,8 +74,8 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         // },
         {
             title: messages('channel.label'),
-            key: 'name',
-            dataIndex: 'name',
+            key: 'channel.name',
+            dataIndex: 'channel.name',
             ellipsis: true,
             align: 'left',
             width: 300,
@@ -83,9 +83,9 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'name'
+                'channel.name'
             ),
-            render: (value, record) => {
+            render: (_, record) => {
                 const youtubeUrl = record.youtubeChannelId
                     ? `https://www.youtube.com/channel/${record.youtubeChannelId}`
                     : undefined;
@@ -114,11 +114,11 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                                         }
                                         className="truncate font-medium hover:!text-[var(--hover-color)] hover:underline"
                                     >
-                                        {value}
+                                        {record.name}
                                     </Typography.Link>
                                 </Tooltip>
                             ) : (
-                                <span className="truncate">{value}</span>
+                                <span className="truncate">{record.name}</span>
                             )}
                             <span
                                 data-stop-row-click="true"
@@ -126,7 +126,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                             >
                                 <Typography.Text
                                     copyable={{
-                                        text: value,
+                                        text: record.name,
                                         tooltips: false,
                                     }}
                                 />
@@ -181,11 +181,17 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('tenant.label'),
-            key: 'tenant',
-            dataIndex: 'tenant',
+            key: 'tenant.name',
+            dataIndex: 'tenant.name',
             ellipsis: true,
             align: 'left',
             width: 240,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tenant.name'
+            ),
             render: (_, record) => (
                 <TenantSelectActive
                     className="!w-full"

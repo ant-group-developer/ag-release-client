@@ -416,8 +416,9 @@ export interface RevenueLabelItem {
 }
 
 export interface TrendViewLineChartParams {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface TrendViewLineChartItem {
@@ -426,8 +427,9 @@ export interface TrendViewLineChartItem {
 }
 
 export interface TrendViewDspBarChartParams {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface TrendViewDspBarChartItem {
@@ -454,8 +456,8 @@ export interface BySourceItem {
 }
 
 export interface RevenueLineChartParams {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
@@ -466,8 +468,9 @@ export interface RevenueLineChartItem {
 }
 
 export interface RevenueDspBarChartParams {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface RevenueDspBarChartItem {
@@ -478,8 +481,9 @@ export interface RevenueDspBarChartItem {
 }
 
 export interface TrendViewTerBarChartParams {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface TrendViewTerBarChartItem {
@@ -488,8 +492,9 @@ export interface TrendViewTerBarChartItem {
 }
 
 export interface RevenueTerBarChartParams {
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export interface RevenueTerBarChartItem {
@@ -586,8 +591,8 @@ export interface ExportReportEventData {
 export interface DspDetailParams {
     pgDspId: string;
     dspReportId: string;
-    fromDate: string;
-    toDate: string;
+    fromDate?: string;
+    toDate?: string;
     releaseType?: string | ANALYTICS_RELEASE_TYPE;
     sortBy?: string;
 }
@@ -760,5 +765,5 @@ export interface RevenueSourceTypeItem {
 export interface AnalyticModalStoreData {
     fromDate: string;
     toDate: string;
-    type: ANALYTICS_MODAL_TYPE;
+    initialType: ANALYTICS_MODAL_TYPE;
 }

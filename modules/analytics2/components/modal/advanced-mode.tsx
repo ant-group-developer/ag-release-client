@@ -15,12 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
 import { AnalyticModalStoreData } from '../../types';
-import ArtistAnalyticsOverviewChart from '../chart/artist-analytics-overview-chart';
-import DspAnalyticsOverviewChart from '../chart/dsp-analytics-overview-chart';
-import LabelAnalyticsOverviewChart from '../chart/label-analytics-overview-chart';
-import ReleaseAnalyticsOverviewChart from '../chart/release-analytics-overview-chart';
-import TenantAnalyticsOverviewChart from '../chart/tenant-analytics-overview-chart';
-import TrackAnalyticsOverviewChart from '../chart/track-analytics-overview-chart';
+import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
 import DetailArtistRankings from '../detail-artist/detail-artist-rankings';
 import DetailDspRankings from '../detail-dsp/detail-dsp-rankings';
 import DetailLabelRankings from '../detail-label/detail-label-rankings';
@@ -47,6 +42,7 @@ export default function AdvancedModeModal({
     const data = useModalStore<AnalyticModalStoreData>(
         (state) => state.dataEdit
     );
+    const initialType = data?.initialType;
 
     const [
         {
@@ -219,68 +215,7 @@ export default function AdvancedModeModal({
         },
     ];
 
-    const renderOverviewChart = () => {
-        const commonProps = {
-            fromDate: localFromDate,
-            toDate: localToDate,
-            releaseType,
-            activeMetric,
-            enabled: props.open !== false,
-        };
 
-        switch (activeEntity.type) {
-            case 'Track':
-                return (
-                    <TrackAnalyticsOverviewChart
-                        isrc={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Release':
-                return (
-                    <ReleaseAnalyticsOverviewChart
-                        releaseId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Workspace':
-                return (
-                    <TenantAnalyticsOverviewChart
-                        tenantId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Label':
-                return (
-                    <LabelAnalyticsOverviewChart
-                        labelId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'DSP':
-                return (
-                    <DspAnalyticsOverviewChart
-                        pgDspId={activeEntity.id}
-                        dspReportId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Artist':
-                return (
-                    <ArtistAnalyticsOverviewChart
-                        artistId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            default:
-                return (
-                    <ReleaseAnalyticsOverviewChart
-                        releaseId=""
-                        {...commonProps}
-                    />
-                );
-        }
-    };
 
     const renderDetailContent = () => {
         const commonProps = {
@@ -409,7 +344,14 @@ export default function AdvancedModeModal({
                                 activeKey={activeMetric}
                                 onChangeKey={setActiveMetric}
                             />
-                            {renderOverviewChart()}
+                            <OverviewChartRenderer
+                                activeEntity={activeEntity}
+                                fromDate={localFromDate}
+                                toDate={localToDate}
+                                releaseType={releaseType}
+                                activeMetric={activeMetric}
+                                enabled={props.open !== false}
+                            />
                         </div>
 
                         {/* Details / Table Section */}
