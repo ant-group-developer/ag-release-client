@@ -263,37 +263,37 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            key: 'channel.createdAt',
+            dataIndex: 'channel.createdAt',
             align: 'center',
             width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                'channel.createdAt'
             ),
-            render: (value) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record.createdAt)}
                 </span>
             ),
         },
         {
             title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            key: 'channel.updatedAt',
+            dataIndex: 'channel.updatedAt',
             align: 'center',
             width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'updatedAt'
+                'channel.updatedAt'
             ),
-            render: (value) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record.updatedAt)}
                 </span>
             ),
         },

@@ -21,7 +21,7 @@ import DetailDspRankings from '../detail-dsp/detail-dsp-rankings';
 import DetailLabelRankings from '../detail-label/detail-label-rankings';
 import DetailReleaseRankings from '../detail-release/detail-release-rankings';
 import DetailTenantRankings from '../detail-tenant/detail-tenant-rankings';
-import DetailTrackRankings from '../detail-track/detail-track-rankings';
+import ReleaseRankingTableCard from '../ranking/release-ranking-table-card';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
@@ -229,9 +229,11 @@ export default function AdvancedModeModal({
         switch (activeEntity.type) {
             case 'Track':
                 return (
-                    <DetailTrackRankings
-                        isrc={activeEntity.id}
-                        {...commonProps}
+                    <ReleaseRankingTableCard
+                        fromDate={localFromDate}
+                        toDate={localToDate}
+                        releaseType={releaseType}
+                        enabled={props.open !== false}
                     />
                 );
             case 'Release':
