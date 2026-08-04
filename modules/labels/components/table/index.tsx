@@ -4,7 +4,7 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { getIndex, getSortOrder } from '@/helpers/common';
+import { formattedNumber, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
@@ -136,7 +136,9 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                 LABEL_TABLE_KEY.RELEASE_COUNT
             ),
             render: (value, record) => (
-                <p className="truncate">{record?.releaseCount}</p>
+                <p className="truncate">
+                    {formattedNumber(record?.releaseCount)}
+                </p>
             ),
         },
         {
@@ -151,7 +153,9 @@ export const LabelsTable = ({ dataFilter, ...props }: Props) => {
                 LABEL_TABLE_KEY.TRACK_COUNT
             ),
             render: (value, record) => (
-                <p className="truncate">{record?.trackCount}</p>
+                <p className="truncate">
+                    {formattedNumber(record?.trackCount)}
+                </p>
             ),
         },
         {
