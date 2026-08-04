@@ -162,10 +162,12 @@ export interface LabelRankingItem {
     labelName: string;
     picture: string | null;
     image?: string | null;
+    logoUrl?: string | null;
     releaseCount: number;
     trackCount: number;
     totalViews: number;
     tenant?: TenantInfo | null;
+    workspaces?: TenantData[];
     bySource?: BySourceItem[];
 }
 
@@ -409,11 +411,13 @@ export interface RevenueLabelItem {
     labelName: string;
     picture: string | null;
     image?: string | null;
+    logoUrl?: string | null;
     releaseCount?: number;
     trackCount: number;
     revenueUsd: number;
     quantity: number;
     tenant?: TenantInfo | null;
+    workspaces?: TenantData[];
     bySource?: BySourceItem[];
 }
 

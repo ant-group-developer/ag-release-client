@@ -165,7 +165,7 @@ export default function LabelRankingTableCard({
             render: (text: string, record: RevenueLabelItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
-                        src={record.logoUrl ?? ''}
+                        src={record.logoUrl ?? record.picture ?? ''}
                         alt={text}
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -267,9 +267,7 @@ export default function LabelRankingTableCard({
             key: 'releaseCount',
             width: RELEASES_COLUMN_WIDTH,
             render: (count: number) => (
-                <Typography.Text type="secondary">
-                    {count || 0}
-                </Typography.Text>
+                <Typography.Text type="secondary">{count || 0}</Typography.Text>
             ),
         },
         {
@@ -278,9 +276,7 @@ export default function LabelRankingTableCard({
             key: 'trackCount',
             width: TRACKS_COLUMN_WIDTH,
             render: (count: number) => (
-                <Typography.Text type="secondary">
-                    {count || 0}
-                </Typography.Text>
+                <Typography.Text type="secondary">{count || 0}</Typography.Text>
             ),
         },
         {
@@ -431,9 +427,7 @@ export default function LabelRankingTableCard({
             key: 'releaseCount',
             width: RELEASES_COLUMN_WIDTH,
             render: (count: number) => (
-                <Typography.Text type="secondary">
-                    {count || 0}
-                </Typography.Text>
+                <Typography.Text type="secondary">{count || 0}</Typography.Text>
             ),
         },
         {
@@ -442,9 +436,7 @@ export default function LabelRankingTableCard({
             key: 'trackCount',
             width: TRACKS_COLUMN_WIDTH,
             render: (count: number) => (
-                <Typography.Text type="secondary">
-                    {count || 0}
-                </Typography.Text>
+                <Typography.Text type="secondary">{count || 0}</Typography.Text>
             ),
         },
         {
@@ -478,8 +470,7 @@ export default function LabelRankingTableCard({
                             setSelectedReleaseType(selectedType);
                             onChangeFilter({
                                 releaseType:
-                                    selectedType ===
-                                    ANALYTICS_RELEASE_TYPE.ALL
+                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
                                         ? undefined
                                         : selectedType,
                             });
