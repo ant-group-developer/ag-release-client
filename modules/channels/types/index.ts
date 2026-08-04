@@ -27,10 +27,7 @@ export interface ChannelHistoryData extends CommonAttribute {
 }
 
 export interface ChannelsSimpleData
-    extends Pick<
-        ChannelsData,
-        'id' | 'name' | 'youtubeChannelId' | 'thumbUrl'
-    > {}
+    extends Pick<ChannelsData, 'id' | 'name' | 'tenantId'> {}
 
 export interface ChannelAccessData extends Partial<CommonAttribute> {
     userId?: string;
