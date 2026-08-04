@@ -2,16 +2,22 @@ import IconButton from '@/components/ui/button/icon-button';
 import AppTable from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, getIndex } from '@/helpers/common';
+import { toNonAccentVietnamese } from '@/helpers/string';
 import { usePermission } from '@/hooks/use-permission';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ChannelThumbImage from '@/modules/channels/components/image/channel-thumb-image';
-import { useRemoveChannelAccess } from '@/modules/channels/hooks/use-channel-access';
+import {
+    useAddChannelAccess,
+    useRemoveChannelAccess,
+} from '@/modules/channels/hooks/use-channel-access';
 import { useGetChannelsByUser } from '@/modules/channels/hooks/use-get-channels-by-user';
+import { useGetListSimpleChannel } from '@/modules/channels/hooks/use-get-list-simple-channel';
 import { UserChannelData } from '@/modules/channels/types';
 import {
-    Input,
+    Button,
     Popconfirm,
+    Select,
     Space,
     Table,
     Tooltip,
@@ -19,9 +25,10 @@ import {
     theme,
 } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { Trash } from 'lucide-react';
+import { Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import { useUserDetail } from '../../hooks/use-get-user';
 import { UserData } from '../../types/data';
 
 type Props = {
@@ -32,29 +39,79 @@ function UserChannels({ dataEdit }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const userId = dataEdit.id;
+    const { dataUser } = useUserDetail(userId);
 
     const { isAdmin, isTenantOwnerOrAdmin } = useAuth();
     const { hasPermission } = usePermission();
-    const canRemoveChannel =
+    const canManageChannel =
         isAdmin ||
         isTenantOwnerOrAdmin ||
+        hasPermission(PERMISSION.CHANNEL.UPDATE) ||
         hasPermission(PERMISSION.CHANNEL.DELETE);
 
-    const { userChannelsData, isLoading } = useGetChannelsByUser(userId);
-    const { removeAccess, isPending: isRemoving } = useRemoveChannelAccess();
-    const [search, setSearch] = useState('');
+    const [selectedChannelId, setSelectedChannelId] = useState<string | null>(
+        null
+    );
 
-    const filteredData = useMemo(() => {
-        if (!search.trim()) return userChannelsData;
-        const keyword = search.toLowerCase();
-        return userChannelsData.filter((item: UserChannelData) => {
-            const channel = item.channel;
-            return (
-                channel?.name?.toLowerCase().includes(keyword) ||
-                channel?.youtubeChannelId?.toLowerCase().includes(keyword)
-            );
-        });
-    }, [userChannelsData, search]);
+    const { userChannelsData, isLoading: isLoadingUserChannels } =
+        useGetChannelsByUser(userId);
+    const { channelsData, isLoading: isLoadingSimpleChannels } =
+        useGetListSimpleChannel();
+    const { addAccess, isPending: isAdding } = useAddChannelAccess({
+        userId,
+    });
+    const { removeAccess, isPending: isRemoving } = useRemoveChannelAccess({
+        userId,
+    });
+
+    const channelOptions = useMemo(() => {
+        if (!channelsData.length) return [];
+
+        const assignedIds = new Set(
+            userChannelsData.map((item) => item.channelId)
+        );
+        const tenantMap = new Map(
+            dataUser?.tenantUser?.map((item) => [
+                item.tenant.id,
+                item.tenant.name,
+            ])
+        );
+
+        const options: {
+            label: string;
+            value: string;
+            name: string;
+            workspaceName?: string;
+        }[] = [];
+
+        for (const c of channelsData) {
+            if (assignedIds.has(c.id)) continue;
+
+            const wsName = c.tenantId ? tenantMap.get(c.tenantId) : undefined;
+            if (c.tenantId && !wsName) continue;
+
+            options.push({
+                label: wsName ? `${c.name} (${wsName})` : c.name,
+                value: c.id,
+                name: c.name,
+                workspaceName: wsName,
+            });
+        }
+
+        return options;
+    }, [channelsData, userChannelsData, dataUser]);
+
+    const handleAddChannel = () => {
+        if (!selectedChannelId) return;
+        addAccess(
+            { channelId: selectedChannelId, userIds: [userId] },
+            {
+                onSuccess: () => {
+                    setSelectedChannelId(null);
+                },
+            }
+        );
+    };
 
     const columns: ColumnsType<UserChannelData> = [
         {
@@ -184,7 +241,7 @@ function UserChannels({ dataEdit }: Props) {
         },
     ];
 
-    if (canRemoveChannel) {
+    if (canManageChannel) {
         columns.push({
             key: 'action',
             fixed: 'right',
@@ -218,18 +275,57 @@ function UserChannels({ dataEdit }: Props) {
 
     return (
         <div className="flex flex-col gap-4">
-            <Input.Search
-                placeholder={messages('common.search')}
-                allowClear
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full"
-            />
+            {canManageChannel && (
+                <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                        <Select
+                            showSearch
+                            allowClear
+                            placeholder={
+                                messages.has('placeholder.select')
+                                    ? messages('placeholder.select', {
+                                          value: messages(
+                                              'channel.label'
+                                          ).toLowerCase(),
+                                      })
+                                    : messages('common.select')
+                            }
+                            value={selectedChannelId}
+                            onChange={(val) => setSelectedChannelId(val)}
+                            filterOption={(input, option) => {
+                                const searchTarget = option?.workspaceName
+                                    ? `${option.name} ${option.workspaceName}`
+                                    : (option?.name ?? '');
+                                return toNonAccentVietnamese(searchTarget)
+                                    .toLowerCase()
+                                    .includes(
+                                        toNonAccentVietnamese(
+                                            input
+                                        ).toLowerCase()
+                                    );
+                            }}
+                            options={channelOptions}
+                            loading={isLoadingSimpleChannels}
+                            className="w-full"
+                        />
+                    </div>
+                    <Button
+                        type="primary"
+                        icon={<Plus size={SIZE_ICON} />}
+                        onClick={handleAddChannel}
+                        loading={isAdding}
+                        disabled={!selectedChannelId}
+                    >
+                        {messages('common.add')}
+                    </Button>
+                </div>
+            )}
 
             <AppTable
                 className="rounded-lg border"
                 columns={columns}
-                dataSource={filteredData}
-                loading={isLoading}
+                dataSource={userChannelsData}
+                loading={isLoadingUserChannels}
                 rowKey="id"
                 scroll={{ x: 0, y: 'calc(100vh - 420px)' }}
                 summary={() => (
@@ -241,7 +337,7 @@ function UserChannels({ dataEdit }: Props) {
                                     className="text-xs"
                                 >
                                     {messages('common.total')}:{' '}
-                                    {filteredData.length}{' '}
+                                    {userChannelsData.length}{' '}
                                     {messages('channel.label').toLowerCase()}
                                 </Typography.Text>
                             </Table.Summary.Cell>

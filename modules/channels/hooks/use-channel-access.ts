@@ -20,17 +20,46 @@ export function useGetChannelAccess(channelId?: string) {
     };
 }
 
-export function useAddChannelAccess(channelId: string) {
+type UseAddChannelAccessOptions = {
+    channelId?: string;
+    userId?: string;
+};
+
+export function useAddChannelAccess(options?: UseAddChannelAccessOptions) {
+    const channelIdParam = options?.channelId;
+    const userIdParam = options?.userId;
+
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (payload: { userIds: string[] }) =>
-            channelApi.addAccess(channelId, payload),
-        onSuccess: (res) => {
-            queryClient.invalidateQueries({
-                queryKey: channelQueryKeys.access(channelId),
+        mutationFn: (payload: {
+            channelId?: string;
+            userIds: string[];
+            userId?: string;
+        }) => {
+            const targetChannelId = payload.channelId || channelIdParam;
+            return channelApi.addAccess(targetChannelId!, {
+                userIds: payload.userIds,
             });
+        },
+        onSuccess: (res, variables) => {
+            const resData = res?.data?.data;
+            const channelId =
+                variables.channelId || channelIdParam || resData?.channelId;
+            const userId = variables.userId || userIdParam || resData?.userId;
+
+            if (channelId) {
+                queryClient.invalidateQueries({
+                    queryKey: channelQueryKeys.access(channelId),
+                });
+            }
+            if (userId) {
+                queryClient.invalidateQueries({
+                    queryKey: channelQueryKeys.userChannels(userId),
+                });
+            }
+
             const messageCode = res?.data?.messageCode;
             const msg =
                 messageCode && messages.has(messageCode as any)
@@ -55,10 +84,10 @@ export function useAddChannelAccess(channelId: string) {
     };
 }
 
-export function useRemoveChannelAccess(
-    channelIdParam?: string,
-    userIdParam?: string
-) {
+export function useRemoveChannelAccess(options?: UseAddChannelAccessOptions) {
+    const channelIdParam = options?.channelId;
+    const userIdParam = options?.userId;
+
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
@@ -73,15 +102,21 @@ export function useRemoveChannelAccess(
                 queryClient.invalidateQueries({
                     queryKey: channelQueryKeys.access(channelId),
                 });
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: [...channelQueryKeys.all, 'access'],
+                });
             }
+
             if (userId) {
                 queryClient.invalidateQueries({
                     queryKey: channelQueryKeys.userChannels(userId),
                 });
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: [...channelQueryKeys.all, 'user'],
+                });
             }
-            queryClient.invalidateQueries({
-                queryKey: channelQueryKeys.all,
-            });
 
             const messageCode = res?.data?.messageCode;
             const msg =

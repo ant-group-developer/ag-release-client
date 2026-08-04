@@ -25,9 +25,12 @@ export default function ChannelAccessTab({ channelId }: Props) {
 
     const { accessList, isFetching, isLoading } =
         useGetChannelAccess(channelId);
-    const { addAccess, isPending: isAdding } = useAddChannelAccess(channelId);
-    const { removeAccess, isPending: isRemoving } =
-        useRemoveChannelAccess(channelId);
+    const { addAccess, isPending: isAdding } = useAddChannelAccess({
+        channelId,
+    });
+    const { removeAccess, isPending: isRemoving } = useRemoveChannelAccess({
+        channelId,
+    });
 
     const handleAddUser = () => {
         if (!selectedUserId) return;
