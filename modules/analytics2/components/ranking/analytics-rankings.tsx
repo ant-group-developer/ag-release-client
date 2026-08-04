@@ -5,7 +5,10 @@ import useModalStore from '@/hooks/use-modal';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_RELEASE_TYPE,
+} from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import { ANALYTICS_VIEW_TYPE } from '../../enums/tabs';
 import { createViewMoreHref } from '../../helpers';
@@ -74,7 +77,7 @@ export default function AnalyticsRankings({
         dspColumns,
         channelColumns,
         sourceTypeColumns,
-    } = useAnalyticsRankingColumns({ setDetailModal });
+    } = useAnalyticsRankingColumns({ setDetailModal, fromDate, toDate });
     // Fetch live ranking data
     const { trackRankingData, isFetching: isTracksFetching } =
         useGetTrackRanking(
@@ -204,7 +207,7 @@ export default function AnalyticsRankings({
                                             fromDate,
                                             toDate,
                                             initialEntity: {
-                                                type: 'Release',
+                                                type: ANALYTICS_ENTITY_TYPE.RELEASE,
                                             },
                                         }
                                     )
@@ -223,15 +226,27 @@ export default function AnalyticsRankings({
                                 labelKey="title"
                                 valueKey="totalViews"
                                 defaultView={RankingCardView.LIST}
-                                viewMoreHref={createViewMoreHref(
-                                    APP_ROUTES.ANALYTICS_TRACKS,
-                                    {
-                                        fromDate,
-                                        toDate,
-                                        type: ANALYTICS_VIEW_TYPE.VIEW,
-                                        releaseType,
-                                    }
-                                )}
+                                // viewMoreHref={createViewMoreHref(
+                                //     APP_ROUTES.ANALYTICS_TRACKS,
+                                //     {
+                                //         fromDate,
+                                //         toDate,
+                                //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                                //         releaseType,
+                                //     }
+                                // )}
+                                onViewMore={() =>
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.TRACK,
+                                            },
+                                        }
+                                    )
+                                }
                             />
                         </Col>
                     </>
@@ -247,15 +262,27 @@ export default function AnalyticsRankings({
                         labelKey="artistName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_ARTISTS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_ARTISTS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                        //         releaseType,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openModal(
+                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    initialEntity: {
+                                        type: ANALYTICS_ENTITY_TYPE.ARTIST,
+                                    },
+                                }
+                            )
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -268,15 +295,27 @@ export default function AnalyticsRankings({
                         labelKey="labelName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_LABELS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_LABELS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                        //         releaseType,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openModal(
+                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    initialEntity: {
+                                        type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                    },
+                                }
+                            )
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -289,15 +328,27 @@ export default function AnalyticsRankings({
                         labelKey="tenantName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_TENANTS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_TENANTS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                        //         releaseType,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openModal(
+                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    initialEntity: {
+                                        type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                    },
+                                }
+                            )
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -310,15 +361,27 @@ export default function AnalyticsRankings({
                         labelKey="dspName"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_DSPS,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_DSPS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                        //         releaseType,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openModal(
+                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    initialEntity: {
+                                        type: ANALYTICS_ENTITY_TYPE.DSP,
+                                    },
+                                }
+                            )
+                        }
                     />
                 </Col>
                 {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
@@ -332,15 +395,27 @@ export default function AnalyticsRankings({
                             labelKey="channelName"
                             valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
-                            viewMoreHref={createViewMoreHref(
-                                APP_ROUTES.ANALYTICS_CHANNELS,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    type: ANALYTICS_VIEW_TYPE.VIEW,
-                                    releaseType,
-                                }
-                            )}
+                            // viewMoreHref={createViewMoreHref(
+                            //     APP_ROUTES.ANALYTICS_CHANNELS,
+                            //     {
+                            //         fromDate,
+                            //         toDate,
+                            //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                            //         releaseType,
+                            //     }
+                            // )}
+                            onViewMore={() =>
+                                openModal(
+                                    ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                    {
+                                        fromDate,
+                                        toDate,
+                                        initialEntity: {
+                                            type: ANALYTICS_ENTITY_TYPE.CHANNEL,
+                                        },
+                                    }
+                                )
+                            }
                         />
                     </Col>
                 )}
@@ -356,15 +431,27 @@ export default function AnalyticsRankings({
                         labelKey="sourceTypeLabel"
                         valueKey="totalViews"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_SOURCE_TYPES,
-                            {
-                                fromDate,
-                                toDate,
-                                type: ANALYTICS_VIEW_TYPE.VIEW,
-                                releaseType,
-                            }
-                        )}
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_SOURCE_TYPES,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                        //         releaseType,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openModal(
+                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                {
+                                    fromDate,
+                                    toDate,
+                                    initialEntity: {
+                                        type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                    },
+                                }
+                            )
+                        }
                     />
                 </Col>
                 {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
@@ -380,15 +467,27 @@ export default function AnalyticsRankings({
                             labelKey="title"
                             valueKey="totalViews"
                             defaultView={RankingCardView.LIST}
-                            viewMoreHref={createViewMoreHref(
-                                APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    type: ANALYTICS_VIEW_TYPE.VIEW,
-                                    releaseType,
-                                }
-                            )}
+                            // viewMoreHref={createViewMoreHref(
+                            //     APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
+                            //     {
+                            //         fromDate,
+                            //         toDate,
+                            //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                            //         releaseType,
+                            //     }
+                            // )}
+                            onViewMore={() =>
+                                openModal(
+                                    ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                    {
+                                        fromDate,
+                                        toDate,
+                                        initialEntity: {
+                                            type: ANALYTICS_ENTITY_TYPE.RELEASE,
+                                        },
+                                    }
+                                )
+                            }
                         />
                     </Col>
                 )}

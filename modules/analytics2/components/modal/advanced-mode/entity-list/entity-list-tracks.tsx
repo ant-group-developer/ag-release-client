@@ -1,6 +1,5 @@
 'use client';
 
-import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
@@ -56,12 +55,14 @@ export default function EntityListTracks({
                                 title: item.title,
                                 type: 'Track',
                                 thumbnailUrl: coverUrl,
-                                subtitle: item.isrc ? `ISRC: ${item.isrc}` : undefined,
+                                subtitle: item.isrc
+                                    ? `ISRC: ${item.isrc}`
+                                    : undefined,
                             })
                         }
-                        className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
+                        className="cursor-pointer rounded-lg py-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
                     >
-                        <div className="flex w-full items-center justify-between gap-3">
+                        <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
                                 <ReleaseCoverImage
                                     width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -79,18 +80,12 @@ export default function EntityListTracks({
                                         type="secondary"
                                         className="text-xs"
                                     >
-                                        {item.isrc ? `ISRC: ${item.isrc}` : 'Track'}
+                                        {item.isrc
+                                            ? `ISRC: ${item.isrc}`
+                                            : 'Track'}
                                     </Typography.Text>
                                 </div>
                             </div>
-                            {item.totalViews !== undefined && (
-                                <Typography.Text
-                                    type="secondary"
-                                    className="shrink-0 text-right text-xs"
-                                >
-                                    {formattedNumber(item.totalViews)} views
-                                </Typography.Text>
-                            )}
                         </div>
                     </List.Item>
                 );

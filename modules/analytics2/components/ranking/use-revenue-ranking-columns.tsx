@@ -1,5 +1,6 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedNumber } from '@/helpers/common';
+import useModalStore from '@/hooks/use-modal';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -16,6 +17,7 @@ import {
     RevenueTrackItem,
 } from '../../types';
 
+import { ANALYTICS_ENTITY_TYPE } from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 
 interface DetailModalState {
@@ -27,11 +29,18 @@ interface DetailModalState {
 }
 
 interface Props {
-    setDetailModal: React.Dispatch<React.SetStateAction<DetailModalState>>;
+    setDetailModal?: React.Dispatch<React.SetStateAction<DetailModalState>>;
+    fromDate?: string;
+    toDate?: string;
 }
 
-export function useRevenueRankingColumns({ setDetailModal }: Props) {
+export function useRevenueRankingColumns({
+    setDetailModal,
+    fromDate,
+    toDate,
+}: Props) {
     const messages = useTranslations();
+    const openModal = useModalStore((state) => state.openModal);
 
     const artistColumns = useMemo(
         () => [
@@ -56,11 +65,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.ARTIST,
-                                        title: text,
-                                        id: record.artistId,
-                                    })
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.ARTIST,
+                                                id: record.artistId,
+                                            },
+                                        }
+                                    )
                                 }
                             >
                                 {text}
@@ -103,7 +118,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const trackColumns = useMemo(
@@ -130,11 +145,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 <span
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        setDetailModal({
-                                            type: ANALYTICS_MODAL_TYPE.TRACK,
-                                            title: text,
-                                            id: record.isrc,
-                                        })
+                                        openModal(
+                                            ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                            {
+                                                fromDate,
+                                                toDate,
+                                                initialEntity: {
+                                                    type: ANALYTICS_ENTITY_TYPE.TRACK,
+                                                    id: record.isrc,
+                                                },
+                                            }
+                                        )
                                     }
                                 >
                                     {text}
@@ -179,7 +200,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const releaseColumns = useMemo(
@@ -206,12 +227,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 <span
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        setDetailModal({
-                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
-                                            title: text,
-                                            id: record.releaseId,
-                                            upc: record.upc,
-                                        })
+                                        openModal(
+                                            ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                            {
+                                                fromDate,
+                                                toDate,
+                                                initialEntity: {
+                                                    type: ANALYTICS_ENTITY_TYPE.RELEASE,
+                                                    id: record.releaseId,
+                                                },
+                                            }
+                                        )
                                     }
                                 >
                                     {text}
@@ -256,7 +282,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const releaseVideoColumns = useMemo(
@@ -283,12 +309,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                 <span
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        setDetailModal({
-                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
-                                            title: text,
-                                            id: record.releaseId,
-                                            upc: record.upc,
-                                        })
+                                        openModal(
+                                            ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                            {
+                                                fromDate,
+                                                toDate,
+                                                initialEntity: {
+                                                    type: ANALYTICS_ENTITY_TYPE.RELEASE,
+                                                    id: record.releaseId,
+                                                },
+                                            }
+                                        )
                                     }
                                 >
                                     {text}
@@ -325,14 +356,14 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                     title={messages('common.detailedAnalysis')}
                                 >
                                     <span
-                                        className="cursor-pointer transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                        onClick={() =>
-                                            setDetailModal({
-                                                type: ANALYTICS_MODAL_TYPE.CHANNEL,
-                                                title: c.name,
-                                                id: c.id,
-                                            })
-                                        }
+                                        className="cursor-pointer transition-colors dark:text-zinc-100"
+                                        onClick={() => {
+                                            // setDetailModal({
+                                            //     type: ANALYTICS_MODAL_TYPE.CHANNEL,
+                                            //     title: c.name,
+                                            //     id: c.id,
+                                            // })
+                                        }}
                                     >
                                         {c.name}
                                     </span>
@@ -368,14 +399,14 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                         )}
                                     >
                                         <span
-                                            className="cursor-pointer transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                            onClick={() =>
-                                                setDetailModal({
-                                                    type: ANALYTICS_MODAL_TYPE.TENANT,
-                                                    title: w.name,
-                                                    id: w.id,
-                                                })
-                                            }
+                                            className="cursor-pointer transition-colors dark:text-zinc-100"
+                                            onClick={() => {
+                                                // setDetailModal({
+                                                //     type: ANALYTICS_MODAL_TYPE.TENANT,
+                                                //     title: w.name,
+                                                //     id: w.id,
+                                                // })
+                                            }}
                                         >
                                             {w.name}
                                         </span>
@@ -409,7 +440,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
     const dspColumns = useMemo(
         () => [
@@ -434,12 +465,18 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.DSP,
-                                        title: text,
-                                        id: record.pgDspId ?? '',
-                                        dspReportId: record.dspReportId,
-                                    })
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.DSP,
+                                                id: record.pgDspId ?? '',
+                                                entitySubId: record.dspReportId,
+                                            },
+                                        }
+                                    )
                                 }
                             >
                                 {text || '—'}
@@ -471,7 +508,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const tenantColumns = useMemo(
@@ -497,11 +534,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.TENANT,
-                                        title: text,
-                                        id: record.tenantId,
-                                    })
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                                id: record.tenantId,
+                                            },
+                                        }
+                                    )
                                 }
                             >
                                 {text || '-'}
@@ -533,7 +576,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const labelColumns = useMemo(
@@ -559,11 +602,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.LABEL,
-                                        title: text,
-                                        id: record.labelId,
-                                    })
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                                id: record.labelId,
+                                            },
+                                        }
+                                    )
                                 }
                             >
                                 {text}
@@ -617,7 +666,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const channelColumns = useMemo(
@@ -641,11 +690,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.CHANNEL,
-                                        title: text,
-                                        id: record.channelId,
-                                    })
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.CHANNEL,
+                                                id: record.channelId,
+                                            },
+                                        }
+                                    )
                                 }
                             >
                                 {text || '-'}
@@ -712,7 +767,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openModal, fromDate, toDate]
     );
 
     const sourceTypeColumns = useMemo(
@@ -736,11 +791,17 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
-                                        title: text,
-                                        id: record.sourceType,
-                                    })
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                                id: record.sourceType,
+                                            },
+                                        }
+                                    )
                                 }
                             >
                                 {text || '—'}

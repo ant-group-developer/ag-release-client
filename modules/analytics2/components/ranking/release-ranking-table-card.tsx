@@ -12,12 +12,17 @@ import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-la
 import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-release/detail-release-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetReleaseRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopRelease } from '@/modules/analytics2/hooks/use-get-revenue-data';
@@ -28,15 +33,7 @@ import {
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
-import {
-    Avatar,
-    Card,
-    Segmented,
-    Space,
-    Table,
-    Tag,
-    Typography,
-} from 'antd';
+import { Avatar, Card, Segmented, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -44,9 +41,13 @@ import { useEffect, useState } from 'react';
 const DEFAULT_PAGE = 1;
 
 export interface ReleaseRankingTableCardProps {
+    releaseId?: string;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
 }
@@ -59,9 +60,13 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function ReleaseRankingTableCard({
+    releaseId,
     fromDate,
     toDate,
     releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
 }: ReleaseRankingTableCardProps) {
@@ -106,7 +111,15 @@ export default function ReleaseRankingTableCard({
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
     const requestReleaseType =
         selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
@@ -124,6 +137,7 @@ export default function ReleaseRankingTableCard({
                 keyword: dataFilter.keyword,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                releaseId,
             },
             { enabled: enabled && !isRevenue }
         );
@@ -138,8 +152,10 @@ export default function ReleaseRankingTableCard({
                 pageSize,
                 keyword: dataFilter.keyword,
                 includeOther: false,
+                sortBy: revenueSortBy,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                releaseId,
             },
             { enabled: enabled && isRevenue }
         );
@@ -184,13 +200,18 @@ export default function ReleaseRankingTableCard({
                         >
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'release',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'release',
+                                    //     title: text,
+                                    //     targetId: record.releaseId,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: record.releaseId,
                                         title: text,
-                                        targetId: record.releaseId,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.RELEASE,
+                                    });
+                                }}
                             >
                                 {text}
                             </Typography.Text>
@@ -207,7 +228,7 @@ export default function ReleaseRankingTableCard({
             ellipsis: true,
             render: (text: string) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '—'}
+                    {text || '-'}
                 </Typography.Text>
             ),
         },
@@ -221,7 +242,7 @@ export default function ReleaseRankingTableCard({
                 if (!record.labelId) {
                     return (
                         <Typography.Text className="truncate">
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     );
                 }
@@ -229,15 +250,20 @@ export default function ReleaseRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setActiveDetail({
-                                    type: 'label',
+                            onClick={() => {
+                                // setActiveDetail({
+                                //     type: 'label',
+                                //     title: text,
+                                //     targetId: record.labelId,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.labelId,
                                     title: text,
-                                    targetId: record.labelId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                });
+                            }}
                         >
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 );
@@ -255,7 +281,7 @@ export default function ReleaseRankingTableCard({
                 if (!workspaceName) {
                     return (
                         <Typography.Text className="truncate">
-                            {workspaceName || '—'}
+                            {workspaceName || '-'}
                         </Typography.Text>
                     );
                 }
@@ -265,15 +291,20 @@ export default function ReleaseRankingTableCard({
                             <Avatar src={workspace?.logo as string} />
                             <Typography.Text
                                 className="cursor-pointer transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'tenant',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'tenant',
+                                    //     title: workspaceName || '',
+                                    //     targetId: workspace?.id,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: workspace?.id || '',
                                         title: workspaceName || '',
-                                        targetId: workspace?.id,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                    });
+                                }}
                             >
-                                {workspaceName || '—'}
+                                {workspaceName || '-'}
                             </Typography.Text>
                         </Space>
                     </CustomTooltip>
@@ -286,11 +317,11 @@ export default function ReleaseRankingTableCard({
             width: 150,
             render: (_, record: RevenueReleaseItem) => {
                 const metadataExternal = record?.metadataExternal;
-                if (!metadataExternal) return '—';
+                if (!metadataExternal) return '-';
                 const entries = Object.entries(metadataExternal).filter(
                     ([, metadata]) => !!metadata?.albumUrl
                 );
-                if (entries.length === 0) return '—';
+                if (entries.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={entries}
@@ -326,7 +357,7 @@ export default function ReleaseRankingTableCard({
             key: 'bySource',
             width: 280,
             render: (bySource?: any[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={bySource}
@@ -339,13 +370,18 @@ export default function ReleaseRankingTableCard({
                             >
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setActiveDetail({
-                                            type: 'source',
+                                    onClick={() => {
+                                        // setActiveDetail({
+                                        //     type: 'source',
+                                        //     title: item.sourceLabel,
+                                        //     targetId: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            targetId: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}: $
                                     {formattedNumber(item.revenueUsd)}
@@ -362,9 +398,7 @@ export default function ReleaseRankingTableCard({
             key: 'trackCount',
             width: 120,
             render: (count: number) => (
-                <Typography.Text type="secondary">
-                    {count || 0}
-                </Typography.Text>
+                <Typography.Text type="secondary">{count || 0}</Typography.Text>
             ),
         },
         {
@@ -431,13 +465,18 @@ export default function ReleaseRankingTableCard({
                         >
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'release',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'release',
+                                    //     title: text,
+                                    //     targetId: record.releaseId,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: record.releaseId,
                                         title: text,
-                                        targetId: record.releaseId,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.RELEASE,
+                                    });
+                                }}
                             >
                                 {text}
                             </Typography.Text>
@@ -454,7 +493,7 @@ export default function ReleaseRankingTableCard({
             ellipsis: true,
             render: (text: string) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '—'}
+                    {text || '-'}
                 </Typography.Text>
             ),
         },
@@ -468,7 +507,7 @@ export default function ReleaseRankingTableCard({
                 if (!record.labelId) {
                     return (
                         <Typography.Text className="truncate">
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     );
                 }
@@ -476,15 +515,20 @@ export default function ReleaseRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setActiveDetail({
-                                    type: 'label',
+                            onClick={() => {
+                                // setActiveDetail({
+                                //     type: 'label',
+                                //     title: text,
+                                //     targetId: record.labelId,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.labelId,
                                     title: text,
-                                    targetId: record.labelId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                });
+                            }}
                         >
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 );
@@ -508,15 +552,20 @@ export default function ReleaseRankingTableCard({
                         >
                             <Typography.Text
                                 className="cursor-pointer transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'tenant',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'tenant',
+                                    //     title: workspaceName || '',
+                                    //     targetId: tenantId,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: tenantId,
                                         title: workspaceName || '',
-                                        targetId: tenantId,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                    });
+                                }}
                             >
-                                {workspaceName || '—'}
+                                {workspaceName || '-'}
                             </Typography.Text>
                         </CustomTooltip>
                     </div>
@@ -529,11 +578,11 @@ export default function ReleaseRankingTableCard({
             width: 150,
             render: (_, record: ReleaseRankingItem) => {
                 const metadataExternal = record?.metadataExternal;
-                if (!metadataExternal) return '—';
+                if (!metadataExternal) return '-';
                 const entries = Object.entries(metadataExternal).filter(
                     ([, metadata]) => !!metadata?.albumUrl
                 );
-                if (entries.length === 0) return '—';
+                if (entries.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={entries}
@@ -569,7 +618,7 @@ export default function ReleaseRankingTableCard({
             key: 'bySource',
             width: 200,
             render: (bySource?: any[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={bySource}
@@ -582,13 +631,18 @@ export default function ReleaseRankingTableCard({
                             >
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setActiveDetail({
-                                            type: 'source',
+                                    onClick={() => {
+                                        // setActiveDetail({
+                                        //     type: 'source',
+                                        //     title: item.sourceLabel,
+                                        //     targetId: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            targetId: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}:{' '}
                                     {formattedNumber(item.quantity)}
@@ -605,9 +659,7 @@ export default function ReleaseRankingTableCard({
             key: 'trackCount',
             width: 120,
             render: (count: number) => (
-                <Typography.Text type="secondary">
-                    {count || 0}
-                </Typography.Text>
+                <Typography.Text type="secondary">{count || 0}</Typography.Text>
             ),
         },
         {
@@ -641,8 +693,7 @@ export default function ReleaseRankingTableCard({
                             setSelectedReleaseType(selectedType);
                             onChangeFilter({
                                 releaseType:
-                                    selectedType ===
-                                    ANALYTICS_RELEASE_TYPE.ALL
+                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
                                         ? undefined
                                         : selectedType,
                             });
@@ -663,9 +714,18 @@ export default function ReleaseRankingTableCard({
                         ]}
                     />
                     <Segmented
-                        value={currentType}
+                        value={
+                            isRevenue
+                                ? ANALYTICS_VIEW_TYPE.REVENUE
+                                : ANALYTICS_VIEW_TYPE.VIEW
+                        }
                         onChange={(value) => {
                             setCurrentType(value as ANALYTICS_VIEW_TYPE);
+                            onMetricChange?.(
+                                value === ANALYTICS_VIEW_TYPE.VIEW
+                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                            );
                             onChangeFilter({
                                 type: value as ANALYTICS_VIEW_TYPE,
                             });

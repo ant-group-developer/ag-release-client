@@ -12,8 +12,9 @@ interface ControlsSidebarProps {
     onDateChange: (fromDate: string, toDate: string) => void;
     activeMetric?: string;
     onMetricChange?: (value: string) => void;
-    onContentSelect?: (item: ContentItem) => void;
+    onContentSelect?: (item?: ContentItem) => void;
     selectedItem?: ContentItem;
+    initialType?: ContentItem['type'];
 }
 
 export default function ControlsSidebar({
@@ -24,6 +25,7 @@ export default function ControlsSidebar({
     onMetricChange,
     onContentSelect,
     selectedItem,
+    initialType,
 }: ControlsSidebarProps) {
     const messages = useTranslations();
 
@@ -38,6 +40,7 @@ export default function ControlsSidebar({
                     fromDate={fromDate}
                     toDate={toDate}
                     selectedItem={selectedItem}
+                    initialType={initialType}
                     onSelect={onContentSelect}
                 />
             </div>
