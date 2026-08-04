@@ -12,19 +12,21 @@ import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { parseAsString, useQueryStates } from 'nuqs';
 import { useEffect, useMemo, useState } from 'react';
-import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '../../enums';
 import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
-import { AnalyticModalStoreData } from '../../types';
-import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
-import DetailArtistRankings from '../detail-artist/detail-artist-rankings';
-import DetailDspRankings from '../detail-dsp/detail-dsp-rankings';
-import DetailLabelRankings from '../detail-label/detail-label-rankings';
-import DetailReleaseRankings from '../detail-release/detail-release-rankings';
-import DetailTenantRankings from '../detail-tenant/detail-tenant-rankings';
-import ReleaseRankingTableCard from '../ranking/release-ranking-table-card';
+import {
+    ActiveAnalyticsEntity,
+    AnalyticModalStoreData,
+} from '../../types';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
+import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
+import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
     fromDate?: string;
@@ -42,36 +44,23 @@ export default function AdvancedModeModal({
     const data = useModalStore<AnalyticModalStoreData>(
         (state) => state.dataEdit
     );
-    const initialType = data?.initialType;
+    const initialEntity = data?.initialEntity ?? {
+        type: ANALYTICS_ENTITY_TYPE.RELEASE,
+    };
+    const effectiveFromDate = fromDate ?? data?.fromDate;
+    const effectiveToDate = toDate ?? data?.toDate;
 
-    const [
-        {
-            releaseId: urlReleaseId,
-            trackId: urlTrackId,
-            workspaceId: urlWorkspaceId,
-            tenantId: urlTenantId,
-            labelId: urlLabelId,
-            dspId: urlDspId,
-            artistId: urlArtistId,
-        },
-        setQueryParams,
-    ] = useQueryStates({
-        releaseId: parseAsString,
-        trackId: parseAsString,
-        workspaceId: parseAsString,
-        tenantId: parseAsString,
-        labelId: parseAsString,
-        dspId: parseAsString,
-        artistId: parseAsString,
+    const [{ entityType: urlEntityType }, setQueryParams] = useQueryStates({
+        entityType: parseAsString,
     });
 
     const [selectedItem, setSelectedItem] = useState<ContentItem | undefined>();
     const [showSidebar, setShowSidebar] = useState(true);
     const [localFromDate, setLocalFromDate] = useState(
-        fromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD')
+        effectiveFromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD')
     );
     const [localToDate, setLocalToDate] = useState(
-        toDate || dayjs().format('YYYY-MM-DD')
+        effectiveToDate || dayjs().format('YYYY-MM-DD')
     );
     const [activeMetric, setActiveMetric] = useState<string>(
         ANALYTICS_METRIC_KEY.TOTAL_VIEWS
@@ -79,31 +68,33 @@ export default function AdvancedModeModal({
 
     useEffect(() => {
         if (props.open) {
-            if (fromDate) setLocalFromDate(fromDate);
-            if (toDate) setLocalToDate(toDate);
+            if (effectiveFromDate) setLocalFromDate(effectiveFromDate);
+            if (effectiveToDate) setLocalToDate(effectiveToDate);
         }
-    }, [props.open, fromDate, toDate]);
+    }, [props.open, effectiveFromDate, effectiveToDate]);
 
     // Active Entity resolution
-    const activeEntity = useMemo(() => {
-        if (urlTrackId) return { type: 'Track' as const, id: urlTrackId };
-        if (urlReleaseId) return { type: 'Release' as const, id: urlReleaseId };
-        const effectiveWorkspaceId = urlWorkspaceId || urlTenantId;
-        if (effectiveWorkspaceId)
-            return { type: 'Workspace' as const, id: effectiveWorkspaceId };
-        if (urlLabelId) return { type: 'Label' as const, id: urlLabelId };
-        if (urlDspId) return { type: 'DSP' as const, id: urlDspId };
-        if (urlArtistId) return { type: 'Artist' as const, id: urlArtistId };
-        return { type: 'All' as const, id: '' };
-    }, [
-        urlTrackId,
-        urlReleaseId,
-        urlWorkspaceId,
-        urlTenantId,
-        urlLabelId,
-        urlDspId,
-        urlArtistId,
-    ]);
+    const activeEntity = useMemo<ActiveAnalyticsEntity>(() => {
+        if (urlEntityType) {
+            const normalized = urlEntityType.toLowerCase();
+            if (normalized === 'workspace' || normalized === 'workspaces')
+                return { type: ANALYTICS_ENTITY_TYPE.WORKSPACE };
+            if (normalized === 'release' || normalized === 'releases')
+                return { type: ANALYTICS_ENTITY_TYPE.RELEASE };
+            if (normalized === 'track' || normalized === 'tracks')
+                return { type: ANALYTICS_ENTITY_TYPE.TRACK };
+            if (normalized === 'label' || normalized === 'labels')
+                return { type: ANALYTICS_ENTITY_TYPE.LABEL };
+            if (normalized === 'dsp' || normalized === 'dsps')
+                return { type: ANALYTICS_ENTITY_TYPE.DSP };
+            if (normalized === 'artist' || normalized === 'artists')
+                return { type: ANALYTICS_ENTITY_TYPE.ARTIST };
+        }
+
+        return {
+            type: initialEntity.type ?? ANALYTICS_ENTITY_TYPE.RELEASE,
+        };
+    }, [urlEntityType, initialEntity.type]);
 
     // Single unified Analytics Summary hook replacing separate summary calls
     const { analyticsSummaryData } = useGetAnalyticsSummary(
@@ -111,19 +102,6 @@ export default function AdvancedModeModal({
             fromDate: localFromDate,
             toDate: localToDate,
             releaseType,
-            releaseId:
-                activeEntity.type === 'Release' ? activeEntity.id : undefined,
-            trackId:
-                activeEntity.type === 'Track' ? activeEntity.id : undefined,
-            workspaceId:
-                activeEntity.type === 'Workspace' ? activeEntity.id : undefined,
-            tenantId:
-                activeEntity.type === 'Workspace' ? activeEntity.id : undefined,
-            labelId:
-                activeEntity.type === 'Label' ? activeEntity.id : undefined,
-            dspId: activeEntity.type === 'DSP' ? activeEntity.id : undefined,
-            artistId:
-                activeEntity.type === 'Artist' ? activeEntity.id : undefined,
         },
         !!props.open
     );
@@ -134,59 +112,23 @@ export default function AdvancedModeModal({
         title?: string;
     }) => {
         setSelectedItem({
-            id: item.id,
-            title: item.title || item.id,
+            id: '',
+            title: item.title || item.type,
             type: item.type as any,
         });
 
-        const resetParams = {
-            releaseId: null,
-            trackId: null,
-            workspaceId: null,
-            tenantId: null,
-            labelId: null,
-            dspId: null,
-            artistId: null,
-        };
-
-        switch (item.type) {
-            case 'Track':
-                setQueryParams({ ...resetParams, trackId: item.id });
-                break;
-            case 'Release':
-                setQueryParams({ ...resetParams, releaseId: item.id });
-                break;
-            case 'Workspace':
-                setQueryParams({ ...resetParams, workspaceId: item.id });
-                break;
-            case 'Label':
-                setQueryParams({ ...resetParams, labelId: item.id });
-                break;
-            case 'DSP':
-                setQueryParams({ ...resetParams, dspId: item.id });
-                break;
-            case 'Artist':
-                setQueryParams({ ...resetParams, artistId: item.id });
-                break;
-            default:
-                setQueryParams({ ...resetParams, releaseId: item.id });
-                break;
-        }
+        setQueryParams({
+            entityType: item.type.toLowerCase(),
+        });
     };
 
     const currentSelectedItem = useMemo<ContentItem | undefined>(() => {
-        if (activeEntity.type !== 'All' && activeEntity.id) {
-            if (selectedItem?.id === activeEntity.id) {
-                return selectedItem;
-            }
-            return {
-                id: activeEntity.id,
-                title: selectedItem?.title || activeEntity.id,
-                type: activeEntity.type,
-            };
-        }
-        return selectedItem;
-    }, [activeEntity, selectedItem]);
+        return {
+            id: '',
+            title: selectedItem?.title || activeEntity.type,
+            type: activeEntity.type,
+        };
+    }, [activeEntity.type, selectedItem]);
 
     const metricTabItems: MetricHeaderTabItem[] = [
         {
@@ -214,73 +156,6 @@ export default function AdvancedModeModal({
             bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
         },
     ];
-
-
-
-    const renderDetailContent = () => {
-        const commonProps = {
-            fromDate: localFromDate,
-            toDate: localToDate,
-            releaseType,
-            activeMetric,
-            enabled: props.open !== false,
-        };
-
-        switch (activeEntity.type) {
-            case 'Track':
-                return (
-                    <ReleaseRankingTableCard
-                        fromDate={localFromDate}
-                        toDate={localToDate}
-                        releaseType={releaseType}
-                        enabled={props.open !== false}
-                    />
-                );
-            case 'Release':
-                return (
-                    <DetailReleaseRankings
-                        releaseId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Workspace':
-                return (
-                    <DetailTenantRankings
-                        tenantId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Label':
-                return (
-                    <DetailLabelRankings
-                        labelId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'DSP':
-                return (
-                    <DetailDspRankings
-                        pgDspId={activeEntity.id}
-                        dspReportId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            case 'Artist':
-                return (
-                    <DetailArtistRankings
-                        artistId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-            default:
-                return (
-                    <DetailReleaseRankings
-                        releaseId={activeEntity.id}
-                        {...commonProps}
-                    />
-                );
-        }
-    };
 
     return (
         <FullScreenModal
@@ -357,7 +232,13 @@ export default function AdvancedModeModal({
                         </div>
 
                         {/* Details / Table Section */}
-                        {renderDetailContent()}
+                        <DetailContentRenderer
+                            activeEntity={activeEntity}
+                            fromDate={localFromDate}
+                            toDate={localToDate}
+                            releaseType={releaseType}
+                            enabled={props.open !== false}
+                        />
                     </div>
                 </div>
             </div>

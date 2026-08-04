@@ -7,7 +7,7 @@ import {
 import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
-import { ANALYTICS_MODAL_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
+import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
 import { ANALYTICS2_TABS } from '../enums/tabs';
 
 export interface Analytics2DataFilter extends CommonParams {
@@ -264,11 +264,13 @@ export interface RevenueTimelineData {
 
 // Top DSP Response
 export interface RevenueDspItem {
-    dspName: string;
+    dspName?: string;
+    source?: string;
+    sourceLabel?: string;
     revenueUsd: number;
     quantity: number;
-    pgDspId: string;
-    dspReportId: string;
+    pgDspId?: string;
+    dspReportId?: string;
     imageUrl?: string | null;
     bySource?: BySourceItem[];
 }
@@ -440,10 +442,12 @@ export interface TrendViewDspBarChartItem {
 
 export interface DspRankingItem {
     rank: number;
-    dspName: string;
+    dspName?: string;
+    source?: string;
+    sourceLabel?: string;
     totalViews: number;
-    pgDspId: string;
-    dspReportId: string;
+    pgDspId?: string;
+    dspReportId?: string;
     imageUrl?: string | null;
     bySource?: BySourceItem[];
 }
@@ -762,8 +766,19 @@ export interface RevenueSourceTypeItem {
     imageUrl?: string | null;
 }
 
+export type AnalyticsEntityType = ANALYTICS_ENTITY_TYPE | `${ANALYTICS_ENTITY_TYPE}`;
+
+export interface AnalyticsEntity {
+    type: AnalyticsEntityType;
+    id?: string;
+}
+
+export interface ActiveAnalyticsEntity {
+    type: AnalyticsEntityType;
+}
+
 export interface AnalyticModalStoreData {
     fromDate: string;
     toDate: string;
-    initialType: ANALYTICS_MODAL_TYPE;
+    initialEntity: AnalyticsEntity;
 }

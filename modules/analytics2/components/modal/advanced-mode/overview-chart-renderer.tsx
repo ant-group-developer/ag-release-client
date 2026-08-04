@@ -1,6 +1,7 @@
 'use client';
 
-import { ANALYTICS_RELEASE_TYPE } from '../../../enums';
+import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../../../enums';
+import { ActiveAnalyticsEntity } from '../../../types';
 import ArtistAnalyticsOverviewChart from '../../chart/artist-analytics-overview-chart';
 import DspAnalyticsOverviewChart from '../../chart/dsp-analytics-overview-chart';
 import LabelAnalyticsOverviewChart from '../../chart/label-analytics-overview-chart';
@@ -8,13 +9,8 @@ import ReleaseAnalyticsOverviewChart from '../../chart/release-analytics-overvie
 import TenantAnalyticsOverviewChart from '../../chart/tenant-analytics-overview-chart';
 import TrackAnalyticsOverviewChart from '../../chart/track-analytics-overview-chart';
 
-export interface ActiveEntity {
-    type: 'Track' | 'Release' | 'Workspace' | 'Label' | 'DSP' | 'Artist' | 'All';
-    id: string;
-}
-
 export interface OverviewChartRendererProps {
-    activeEntity: ActiveEntity;
+    activeEntity: ActiveAnalyticsEntity;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -39,53 +35,46 @@ export default function OverviewChartRenderer({
     };
 
     switch (activeEntity.type) {
-        case 'Track':
+        case ANALYTICS_ENTITY_TYPE.TRACK:
             return (
                 <TrackAnalyticsOverviewChart
-                    isrc={activeEntity.id}
+                    isrc=""
                     {...commonProps}
                 />
             );
-        case 'Release':
-            return (
-                <ReleaseAnalyticsOverviewChart
-                    releaseId={activeEntity.id}
-                    {...commonProps}
-                />
-            );
-        case 'Workspace':
-            return (
-                <TenantAnalyticsOverviewChart
-                    tenantId={activeEntity.id}
-                    {...commonProps}
-                />
-            );
-        case 'Label':
-            return (
-                <LabelAnalyticsOverviewChart
-                    labelId={activeEntity.id}
-                    {...commonProps}
-                />
-            );
-        case 'DSP':
-            return (
-                <DspAnalyticsOverviewChart
-                    pgDspId={activeEntity.id}
-                    dspReportId={activeEntity.id}
-                    {...commonProps}
-                />
-            );
-        case 'Artist':
-            return (
-                <ArtistAnalyticsOverviewChart
-                    artistId={activeEntity.id}
-                    {...commonProps}
-                />
-            );
-        default:
+        case ANALYTICS_ENTITY_TYPE.RELEASE:
             return (
                 <ReleaseAnalyticsOverviewChart
                     releaseId=""
+                    {...commonProps}
+                />
+            );
+        case ANALYTICS_ENTITY_TYPE.WORKSPACE:
+            return (
+                <TenantAnalyticsOverviewChart
+                    tenantId=""
+                    {...commonProps}
+                />
+            );
+        case ANALYTICS_ENTITY_TYPE.LABEL:
+            return (
+                <LabelAnalyticsOverviewChart
+                    labelId=""
+                    {...commonProps}
+                />
+            );
+        case ANALYTICS_ENTITY_TYPE.DSP:
+            return (
+                <DspAnalyticsOverviewChart
+                    pgDspId=""
+                    dspReportId=""
+                    {...commonProps}
+                />
+            );
+        case ANALYTICS_ENTITY_TYPE.ARTIST:
+            return (
+                <ArtistAnalyticsOverviewChart
+                    artistId=""
                     {...commonProps}
                 />
             );

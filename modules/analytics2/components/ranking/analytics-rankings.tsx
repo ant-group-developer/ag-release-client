@@ -203,8 +203,9 @@ export default function AnalyticsRankings({
                                         {
                                             fromDate,
                                             toDate,
-                                            initialType:
-                                                ANALYTICS_MODAL_TYPE.RELEASE,
+                                            initialEntity: {
+                                                type: 'Release',
+                                            },
                                         }
                                     )
                                 }
