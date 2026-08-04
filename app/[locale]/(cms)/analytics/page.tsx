@@ -3,12 +3,14 @@
 import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
+import useModalStore from '@/hooks/use-modal';
 import AnalyticsExtraHeader from '@/modules/analytics2/components/analytics-extra-header';
 import RootAnalyticsOverviewChart from '@/modules/analytics2/components/chart/root-analytics-overview-chart';
 import ExportReportProgressPopover from '@/modules/analytics2/components/export-report-progress-popover';
 import MetricHeaderTabs, {
     MetricHeaderTabItem,
 } from '@/modules/analytics2/components/metric-header-tabs';
+import AdvancedModeModal from '@/modules/analytics2/components/modal/advanced-mode';
 import ExportReportModal from '@/modules/analytics2/components/modal/export-report-modal';
 import PlaysTabContent from '@/modules/analytics2/components/tab/plays-tab-content';
 import RevenueTabContent from '@/modules/analytics2/components/tab/revenue-tab-content';
@@ -18,6 +20,7 @@ import {
 } from '@/modules/analytics2/constants/types';
 import {
     ANALYTICS_METRIC_KEY,
+    ANALYTICS_MODAL_TYPE,
     ANALYTICS_RELEASE_TYPE,
 } from '@/modules/analytics2/enums';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
@@ -45,6 +48,8 @@ export default function Analytics2Page() {
     const messages = useTranslations();
 
     const searchParams = useSearchParams();
+    const typeModal = useModalStore((state) => state.typeModal);
+    const closeModal = useModalStore((state) => state.closeModal);
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [isExportProgressOpen, setIsExportProgressOpen] = useState(false);
@@ -285,6 +290,15 @@ export default function Analytics2Page() {
                     onRemoveJob={handleRemoveExportJob}
                 />
             ) : null}
+
+            {typeModal == ANALYTICS_MODAL_TYPE.ADVANCED_MODE && (
+                <AdvancedModeModal
+                    open
+                    onCancel={() => {
+                        closeModal();
+                    }}
+                />
+            )}
         </PageContainer>
     );
 }

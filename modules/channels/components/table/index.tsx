@@ -1,5 +1,4 @@
 import ActionButton from '@/components/ui/button/action-button';
-import CopyText from '@/components/ui/copy-text/copy-text';
 import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
@@ -8,7 +7,7 @@ import { usePermission } from '@/hooks/use-permission';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Button, Space, Tooltip, Typography, theme } from 'antd';
+import { Button, Space, Switch, Tooltip, Typography, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
@@ -31,7 +30,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const { token } = theme.useToken();
     const { isAdmin } = useAuth();
     const { hasPermission } = usePermission();
-    const { updateChannel, isPending } = useUpdateChannel();
+    const { updateChannel, isPending, variables } = useUpdateChannel();
 
     const canDelete = hasPermission(PERMISSION.CHANNEL.DELETE);
     const canUpdate = hasPermission(PERMISSION.CHANNEL.UPDATE);
@@ -75,8 +74,8 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         // },
         {
             title: messages('channel.label'),
-            key: 'name',
-            dataIndex: 'name',
+            key: 'channel.name',
+            dataIndex: 'channel.name',
             ellipsis: true,
             align: 'left',
             width: 300,
@@ -84,9 +83,9 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'name'
+                'channel.name'
             ),
-            render: (value, record) => {
+            render: (_, record) => {
                 const youtubeUrl = record.youtubeChannelId
                     ? `https://www.youtube.com/channel/${record.youtubeChannelId}`
                     : undefined;
@@ -97,24 +96,29 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                             thumbUrl={record.thumbUrl}
                             name={record.name}
                         />
-                        <div className="flex items-center gap-1 max-w-full">
+                        <div className="flex max-w-full items-center gap-1">
                             {youtubeUrl ? (
-                                <Tooltip title={messages('common.viewOnYoutube')}>
+                                <Tooltip
+                                    title={messages('common.viewOnYoutube')}
+                                >
                                     <Typography.Link
                                         href={youtubeUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        style={{
-                                            color: token.colorText,
-                                            '--hover-color': token.colorLink,
-                                        } as React.CSSProperties}
+                                        style={
+                                            {
+                                                color: token.colorText,
+                                                '--hover-color':
+                                                    token.colorLink,
+                                            } as React.CSSProperties
+                                        }
                                         className="truncate font-medium hover:!text-[var(--hover-color)] hover:underline"
                                     >
-                                        {value}
+                                        {record.name}
                                     </Typography.Link>
                                 </Tooltip>
                             ) : (
-                                <span className="truncate">{value}</span>
+                                <span className="truncate">{record.name}</span>
                             )}
                             <span
                                 data-stop-row-click="true"
@@ -122,7 +126,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                             >
                                 <Typography.Text
                                     copyable={{
-                                        text: value,
+                                        text: record.name,
                                         tooltips: false,
                                     }}
                                 />
@@ -143,16 +147,18 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                 if (!value) return '-';
                 const youtubeUrl = `https://www.youtube.com/channel/${value}`;
                 return (
-                    <div className="flex items-center gap-1 max-w-full">
+                    <div className="flex max-w-full items-center gap-1">
                         <Tooltip title={messages('common.viewOnYoutube')}>
                             <Typography.Link
                                 href={youtubeUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: token.colorTextDescription,
-                                    '--hover-color': token.colorLink,
-                                } as React.CSSProperties}
+                                style={
+                                    {
+                                        color: token.colorTextDescription,
+                                        '--hover-color': token.colorLink,
+                                    } as React.CSSProperties
+                                }
                                 className="truncate hover:!text-[var(--hover-color)] hover:underline"
                             >
                                 {value}
@@ -175,11 +181,17 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('tenant.label'),
-            key: 'tenant',
-            dataIndex: 'tenant',
+            key: 'tenant.name',
+            dataIndex: 'tenant.name',
             ellipsis: true,
             align: 'left',
             width: 240,
+            sorter: true,
+            sortOrder: getSortOrder(
+                dataFilter.orderBy,
+                dataFilter.fieldOrder,
+                'tenant.name'
+            ),
             render: (_, record) => (
                 <TenantSelectActive
                     className="!w-full"
@@ -187,7 +199,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     fallBack={record.tenant?.name}
                     placeholder={messages('tenant.selectTitle')}
                     disabled={!isAdmin && !canUpdate}
-                    loading={isPending}
+                    loading={isPending && variables?.id === record.id}
                     onChange={(tenantId) =>
                         handleUpdateTenant(record, tenantId)
                     }
@@ -201,6 +213,28 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
             align: 'center',
             width: 120,
             render: (value) => <ChannelStatusTag status={value} />,
+        },
+        {
+            title: messages('common.isActive'),
+            key: 'isActive',
+            dataIndex: 'isActive',
+            align: 'center',
+            width: 120,
+            render: (value, record) => (
+                <Switch
+                    checked={value ?? true}
+                    disabled={!isAdmin && !canUpdate}
+                    loading={isPending && variables?.id === record.id}
+                    onChange={(checked) =>
+                        updateChannel({
+                            id: record.id,
+                            payload: {
+                                isActive: checked,
+                            },
+                        })
+                    }
+                />
+            ),
         },
         {
             title: messages('common.history'),
@@ -229,37 +263,37 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
         },
         {
             title: messages('common.createdAt'),
-            key: 'createdAt',
-            dataIndex: 'createdAt',
+            key: 'channel.createdAt',
+            dataIndex: 'channel.createdAt',
             align: 'center',
             width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'createdAt'
+                'channel.createdAt'
             ),
-            render: (value) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record.createdAt)}
                 </span>
             ),
         },
         {
             title: messages('common.updatedAt'),
-            key: 'updatedAt',
-            dataIndex: 'updatedAt',
+            key: 'channel.updatedAt',
+            dataIndex: 'channel.updatedAt',
             align: 'center',
             width: 150,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
-                'updatedAt'
+                'channel.updatedAt'
             ),
-            render: (value) => (
+            render: (_, record) => (
                 <span className="truncate text-wrap">
-                    {formattedDate(value)}
+                    {formattedDate(record.updatedAt)}
                 </span>
             ),
         },
@@ -281,7 +315,7 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                             onShowDelete={() =>
                                 openModal(TYPE_MODAL_CHANNELS.DELETE, record)
                             }
-                            showUpdate={isAdmin}
+                            showUpdate={canUpdate}
                             onShowUpdate={() =>
                                 openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
                             }

@@ -11,3 +11,9 @@ export enum CHANNEL_STATUS {
     SUCCESS = 'success',
     FAILED = 'failed',
 }
+
+export enum CHANNEL_FORM_TAB {
+    INFO = 'info',
+    ACCESS = 'access',
+}
+

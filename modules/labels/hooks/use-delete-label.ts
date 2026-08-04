@@ -19,6 +19,9 @@ export const useDeleteLabel = () => {
         queryClient.invalidateQueries({
             queryKey: labelsQueryKeys.lists(),
         });
+        queryClient.invalidateQueries({
+            queryKey: labelsQueryKeys.listsSimple(),
+        });
 
         const responseMessages = messages(data?.data?.messageCode);
 

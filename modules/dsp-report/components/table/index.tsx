@@ -67,7 +67,7 @@ export const DspReportTable = ({ ...props }: Props) => {
         //     title: messages('dspReport.table.dsp'),
         //     key: 'dspCode',
         //     dataIndex: ['pgDspsSync', 'dspCode'],
-         //    width: 220,
+        //    width: 220,
         //     render: (_, record) => {
         //         if (!record.pgDspsSync) return '-';
         //         return (
@@ -140,7 +140,10 @@ export const DspReportTable = ({ ...props }: Props) => {
                         }
                     >
                         <IconButton>
-                            <Trash size={SIZE_ICON} className="text-red-500 hover:text-red-700" />
+                            <Trash
+                                size={SIZE_ICON}
+                                className="text-red-500 hover:text-red-700"
+                            />
                         </IconButton>
                     </Popconfirm>
                 </PermissionGate>
@@ -161,7 +164,10 @@ export const DspReportTable = ({ ...props }: Props) => {
             }}
             expandable={{
                 expandedRowRender: (record) => (
-                    <FtpParserConfigList dspReportId={record.idDspsReport} />
+                    <FtpParserConfigList
+                        dspReportId={record.idDspsReport}
+                        dspName={record?.dspName}
+                    />
                 ),
             }}
         />

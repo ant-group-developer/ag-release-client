@@ -1,16 +1,12 @@
-import AppForm from '@/components/ui/antd-form/form';
-import AppFormItem from '@/components/ui/antd-form/form-Item';
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
-import TenantSelectActive from '@/components/ui/select/tenant-select-active';
-import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input, Switch } from 'antd';
+import { Form, Tabs, Tooltip } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
+import { useEffect, useState } from 'react';
+import { CHANNEL_FORM_TAB } from '../../enums';
 import { useCreateChannel } from '../../hooks/use-create-channel';
 import { useUpdateChannel } from '../../hooks/use-update-channel';
 import { ChannelsData } from '../../types';
@@ -18,6 +14,8 @@ import {
     CreateChannelPayload,
     UpdateChannelPayload,
 } from '../../types/payload';
+import ChannelAccessTab from './channel-access-tab';
+import ChannelInfoForm from './channel-info-form';
 
 type ChannelFormValues = UpdateChannelPayload;
 
@@ -30,6 +28,9 @@ export default function ChannelFormModal({ ...props }: Props) {
     const dataEdit = useModalStore((state) => state.dataEdit as ChannelsData);
     const isUpdateForm = !!dataEdit?.id;
     const { active, deActive, isActive } = useActive();
+    const [activeTab, setActiveTab] = useState<CHANNEL_FORM_TAB>(
+        CHANNEL_FORM_TAB.INFO
+    );
 
     const { createChannel, isPending: isCreatePending } = useCreateChannel();
     const { updateChannel, isPending: isUpdatePending } = useUpdateChannel();
@@ -67,6 +68,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             youtubeChannelId: values.youtubeChannelId,
             thumbUrl: values.thumbUrl,
             existedOnVevoBackstage: values.existedOnVevoBackstage,
+            isActive: values.isActive,
         } as CreateChannelPayload;
 
         const variables: CreateVariables<CreateChannelPayload> = {
@@ -74,6 +76,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             onSuccess: () => {
                 form.resetFields();
                 deActive();
+                closeModal();
             },
             onError: handleFormError,
         };
@@ -89,6 +92,7 @@ export default function ChannelFormModal({ ...props }: Props) {
             payload: values,
             onSuccess: () => {
                 deActive();
+                closeModal();
             },
             onError: handleFormError,
         };
@@ -118,118 +122,64 @@ export default function ChannelFormModal({ ...props }: Props) {
             youtubeChannelId: dataEdit?.youtubeChannelId ?? undefined,
             thumbUrl: dataEdit?.thumbUrl ?? undefined,
             existedOnVevoBackstage: dataEdit?.existedOnVevoBackstage ?? false,
+            isActive: dataEdit?.isActive ?? true,
         };
         form.setFieldsValue(initialData);
     }, [dataEdit, form]);
 
+    const tabItems = [
+        {
+            key: CHANNEL_FORM_TAB.INFO,
+            label: messages('channel.infoTab'),
+            children: (
+                <ChannelInfoForm
+                    form={form}
+                    onFinish={onfinish}
+                    isUpdateForm={isUpdateForm}
+                    isActive={isActive}
+                />
+            ),
+        },
+        {
+            key: CHANNEL_FORM_TAB.ACCESS,
+            label: !isUpdateForm ? (
+                <Tooltip title={messages('channel.createFirstToManageMembers')}>
+                    <span>{messages('channel.accessManagementTab')}</span>
+                </Tooltip>
+            ) : (
+                messages('channel.accessManagementTab')
+            ),
+            disabled: !isUpdateForm,
+            children: dataEdit?.id ? (
+                <ChannelAccessTab channelId={dataEdit.id} />
+            ) : null,
+        },
+    ];
+
     return (
         <AppModal
-            width={500}
+            centered
+            width="50vw"
+            styles={{
+                body: {
+                    minHeight: '60vh',
+                    maxHeight: '75vh',
+                    overflowY: 'auto',
+                },
+            }}
             {...props}
             title={modalTitle()}
             open
             onCancel={closeModal}
-            onOk={form.submit}
+            onOk={activeTab === CHANNEL_FORM_TAB.INFO ? form.submit : undefined}
+            footer={activeTab === CHANNEL_FORM_TAB.ACCESS ? null : undefined}
             loading={isCreatePending || isUpdatePending}
         >
-            <AppForm
-                form={form}
-                showSubmit={false}
-                onFinish={onfinish}
-                layout="vertical"
-                disabled={isActive}
-            >
-                <AppFormItem
-                    name="tenantId"
-                    label={messages('tenant.label')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                    ]}
-                >
-                    <TenantSelectActive
-                        placeholder={messages('tenant.selectTitle')}
-                    />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="name"
-                    label={messages('channel.name')}
-                    required
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.input'),
-                        },
-                        {
-                            max: MAX_NAME_LENGTH,
-                            message: messages('validation.stringMax', {
-                                max: MAX_NAME_LENGTH,
-                                field: messages('channel.name'),
-                            }),
-                        },
-                        {
-                            pattern: /^[A-Za-z0-9]+VEVO$/,
-                            message: messages('channel.validation.nameFormat'),
-                        },
-                    ]}
-                >
-                    <Input placeholder={messages('channel.name')} allowClear disabled={isUpdateForm || isActive} />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="youtubeChannelId"
-                    label={messages('channel.youtubeChannelId')}
-                    rules={[
-                        {
-                            max: 100,
-                            message: messages('validation.stringMax', {
-                                max: 100,
-                                field: messages('channel.youtubeChannelId'),
-                            }),
-                        },
-                    ]}
-                >
-                    <Input placeholder="UC..." allowClear disabled={isUpdateForm || isActive} />
-                </AppFormItem>
-
-                <AppFormItem
-                    name="thumbUrl"
-                    label={messages('common.thumbnailUrl')}
-                    rules={[
-                        {
-                            type: 'url',
-                            message: messages('validation.url'),
-                        },
-                        {
-                            max: CHANNEL_THUMB_URL_MAX_LENGTH,
-                            message: messages('validation.stringMax', {
-                                max: CHANNEL_THUMB_URL_MAX_LENGTH,
-                                field: messages('common.thumbnailUrl'),
-                            }),
-                        },
-                    ]}
-                >
-                    <Input
-                        placeholder="https://..."
-                        allowClear
-                        disabled={isActive}
-                    />
-                </AppFormItem>
-
-                {!isUpdateForm && (
-                    <AppFormItem
-                        name="existedOnVevoBackstage"
-                        label={messages('channel.existedOnVevoBackstage')}
-                        valuePropName="checked"
-                    >
-                        <Switch disabled={isActive} />
-                    </AppFormItem>
-                )}
-            </AppForm>
+            <Tabs
+                activeKey={activeTab}
+                onChange={(key) => setActiveTab(key as CHANNEL_FORM_TAB)}
+                items={tabItems}
+            />
         </AppModal>
     );
 }

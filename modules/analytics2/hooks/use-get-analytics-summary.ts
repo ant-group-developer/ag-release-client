@@ -9,11 +9,15 @@ const DEFAULT_ANALYTICS_SUMMARY_DATA: AnalyticsSummaryData = {
     totalRevenueUsd: 0,
 };
 
-export const useGetAnalyticsSummary = (params: AnalyticsCommonParams) => {
+export const useGetAnalyticsSummary = (
+    params: AnalyticsCommonParams,
+    enabled: boolean = true
+) => {
     const { data, ...res } = useQuery({
         queryKey: analytics2QueryKeys.analyticsSummary(params),
         queryFn: () => analytics2Apis.getAnalyticsSummary(params),
         placeholderData: (prev) => prev,
+        enabled,
     });
 
     return {

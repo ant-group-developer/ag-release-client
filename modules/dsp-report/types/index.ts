@@ -1,4 +1,8 @@
 import { CommonParams } from '@/types/api';
+import {
+    FTP_REPORT_FILE_RULE_SOURCE_CATEGORY,
+    FTP_REPORT_FILE_RULE_STATUS,
+} from '../enums';
 
 export interface PgDspsSyncData {
     pgUuid: string;
@@ -60,4 +64,50 @@ export interface FtpParserConfig {
     createdAt: string;
     updatedAt: string;
     parser: FtpParser;
+}
+
+export interface FtpReportSampleFile {
+    ftpPath: string;
+    key: string;
+    fileName: string;
+    url: string;
+}
+
+export interface FtpReportFileRule {
+    id: string;
+    source: string;
+    sourceCategory: FTP_REPORT_FILE_RULE_SOURCE_CATEGORY | string;
+    dspFolderPattern: string;
+    fileNamePattern: string;
+    status: FTP_REPORT_FILE_RULE_STATUS | string;
+    parserCode: string;
+    description: string | null;
+    configVersion: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+    sampleFiles: FtpReportSampleFile[];
+}
+
+export interface FtpReportFileRuleFilter extends CommonParams {
+    sourceCategory?: FTP_REPORT_FILE_RULE_SOURCE_CATEGORY | string;
+    status?: FTP_REPORT_FILE_RULE_STATUS | string;
+    isActive?: boolean;
+    source?: string;
+    dspFolder?: string;
+}
+
+export interface FtpReportFileDiscoveryRun {
+    id: string;
+    source: string;
+    force: number;
+    status: string;
+    periods_scanned: number;
+    folders_scanned: number;
+    files_scanned: number;
+    patterns_upserted: number;
+    error_message: string;
+    started_at: string;
+    completed_at: string;
+    updated_at: string;
 }

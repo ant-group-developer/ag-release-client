@@ -10,6 +10,7 @@ import UpdateInfo from './update-info';
 import UpdatePassword from './update-password';
 import UpdatePermission from './update-permission';
 import UpdateTenant from './update-tenant';
+import UserChannels from './user-channels';
 import ViewPermission from './view-permission';
 
 type Props = {} & AppModalProps;
@@ -20,6 +21,7 @@ enum TAB_KEY {
     UPDATE_TENANT = 'update-tenant',
     UPDATE_PERMISSION = 'update-permission',
     VIEW_PERMISSION = 'view-permission',
+    USER_CHANNELS = 'user-channels',
 }
 
 function UpdateUserModal({ ...props }: Props) {
@@ -51,6 +53,11 @@ function UpdateUserModal({ ...props }: Props) {
             label: messages('permission.label'),
             children: <ViewPermission dataEdit={dataEdit!} />,
         },
+        {
+            key: TAB_KEY.USER_CHANNELS,
+            label: messages('channel.label'),
+            children: <UserChannels dataEdit={dataEdit!} />,
+        },
     ];
 
     if (isSystemTenant) {
@@ -68,7 +75,7 @@ function UpdateUserModal({ ...props }: Props) {
                 label: dataEdit.email,
             })}
             footer={null}
-            width={800}
+            width={'50vw'}
             loading={loading}
             className="!top-5"
         >

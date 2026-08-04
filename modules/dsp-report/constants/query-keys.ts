@@ -18,6 +18,31 @@ export const dspReportQueryKeys = {
         [...dspReportQueryKeys.all, QUERY_KEY.DSP_REPORT.GET_FTP_PARSER_CONFIGS] as const,
     ftpParserConfigs: (id: string) =>
         [...dspReportQueryKeys.ftpParserConfigsDetails(), id] as const,
+
+    ftpReportFileRulesDetails: () =>
+        [
+            ...dspReportQueryKeys.all,
+            QUERY_KEY.DSP_REPORT.GET_FTP_REPORT_FILE_RULES,
+        ] as const,
+    ftpReportFileRules: (params?: Record<string, any>) =>
+        [
+            ...dspReportQueryKeys.ftpReportFileRulesDetails(),
+            params,
+        ] as const,
+
+    parserCatalogDetails: () =>
+        [
+            ...dspReportQueryKeys.all,
+            QUERY_KEY.DSP_REPORT.GET_PARSER_CATALOG_DETAIL,
+        ] as const,
+    parserCatalogDetail: (parserCode: string) =>
+        [...dspReportQueryKeys.parserCatalogDetails(), parserCode] as const,
+
+    ftpReportFileDiscoveryRuns: () =>
+        [
+            ...dspReportQueryKeys.all,
+            QUERY_KEY.DSP_REPORT.GET_FTP_REPORT_FILE_DISCOVERY_RUNS,
+        ] as const,
 };
 
 export const pgDspsSyncQueryKeys = {

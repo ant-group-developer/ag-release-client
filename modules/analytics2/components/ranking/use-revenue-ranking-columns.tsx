@@ -437,7 +437,7 @@ export function useRevenueRankingColumns({ setDetailModal }: Props) {
                                     setDetailModal({
                                         type: ANALYTICS_MODAL_TYPE.DSP,
                                         title: text,
-                                        id: record.pgDspId,
+                                        id: record.pgDspId ?? '',
                                         dspReportId: record.dspReportId,
                                     })
                                 }

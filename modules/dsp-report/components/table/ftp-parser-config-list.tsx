@@ -1,206 +1,121 @@
 import AppTable from '@/components/ui/table/normal-table';
-import { Button, Tag, theme, Typography } from 'antd';
+import { Button, Select, Tag, theme, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { FtpParser } from '../../types';
+import { useState } from 'react';
+import { FTP_REPORT_FILE_RULE_STATUS } from '../../enums';
+import { useGetListFtpReportFileRules } from '../../hooks/use-get-list-ftp-report-file-rules';
+import { useUpdateFtpReportFileRule } from '../../hooks/use-update-ftp-report-file-rule';
+import { FtpReportFileRule, FtpReportSampleFile } from '../../types';
+import { SampleFilesModal } from '../modal/sample-files-modal';
 import { FtpParserDetailModal } from './ftp-parser-detail-modal';
-
-export interface FtpParserConfigItem {
-    id: string;
-    fileName: string;
-    folder: string;
-    source: string;
-    actionStatus: 'import' | 'ignore' | 'pending';
-    actionStatusLabel: string;
-    parser?: FtpParser;
-}
-
-export const FAKE_FTP_PARSER_CONFIG_DATA: FtpParserConfigItem[] = [
-    {
-        id: '1',
-        fileName:
-            'bombshelter-digital-services-llc_vevo_merlin_user_interactions_[abcregex]',
-        folder: '/trends/vvo-vevo',
-        source: 'ftp_merlin',
-        actionStatus: 'import',
-        actionStatusLabel: 'Lấy vào báo cáo',
-        parser: {
-            parserCode: 'VEVO_USER_INTERACTIONS',
-            sourceCategory: 'vvo-vevo',
-            parserName: 'Vevo User Interactions Parser',
-            sourceFile:
-                'bombshelter-digital-services-llc_vevo_merlin_user_interactions_[abcregex]',
-            targetTable: 'dsp_report_vevo_user_interactions',
-            fieldMappings: [
-                {
-                    reportColumn: 'user_id',
-                    parserColumn: 'user_id',
-                    targetColumn: 'user_id',
-                    transform: 'TRIM(LOWER(user_id))',
-                },
-                {
-                    reportColumn: 'interaction_type',
-                    parserColumn: 'interaction_type',
-                    targetColumn: 'action_type',
-                    transform: 'COALESCE(interaction_type, "unknown")',
-                },
-                {
-                    reportColumn: 'event_timestamp',
-                    parserColumn: 'event_timestamp',
-                    targetColumn: 'created_at',
-                    transform: 'TO_TIMESTAMP(event_timestamp)',
-                },
-                {
-                    reportColumn: 'country_code',
-                    parserColumn: 'country_code',
-                    targetColumn: 'country',
-                    transform: 'UPPER(country_code)',
-                },
-            ],
-            sourceHash: 'abc123hash',
-            isSelectable: true,
-            syncedAt: '2026-07-30 12:00:00',
-        },
-    },
-    {
-        id: '2',
-        fileName:
-            'bombshelter-digital-services-llc_vevo_merlin_user_attributes_',
-        folder: '/trends/vvo-vevo',
-        source: 'ftp_merlin',
-        actionStatus: 'ignore',
-        actionStatusLabel: 'Bỏ qua',
-        parser: {
-            parserCode: 'VEVO_USER_ATTRIBUTES',
-            sourceCategory: 'vvo-vevo',
-            parserName: 'Vevo User Attributes Parser',
-            sourceFile:
-                'bombshelter-digital-services-llc_vevo_merlin_user_attributes_',
-            targetTable: 'dsp_report_vevo_user_attributes',
-            fieldMappings: [
-                {
-                    reportColumn: 'user_id',
-                    parserColumn: 'user_id',
-                    targetColumn: 'user_id',
-                    transform: 'TRIM(user_id)',
-                },
-                {
-                    reportColumn: 'age_group',
-                    parserColumn: 'age_group',
-                    targetColumn: 'age_range',
-                    transform: 'DEFAULT_AGE(age_group)',
-                },
-                {
-                    reportColumn: 'subscription_status',
-                    parserColumn: 'subscription_status',
-                    targetColumn: 'is_premium',
-                    transform:
-                        'CASE WHEN subscription_status = "active" THEN true ELSE false END',
-                },
-            ],
-            sourceHash: 'def456hash',
-            isSelectable: false,
-            syncedAt: '2026-07-30 12:00:00',
-        },
-    },
-    {
-        id: '3',
-        fileName: 'bombshelter-digital-services-llc_vevo_merlin_devices_',
-        folder: '/trends/vvo-vevo',
-        source: 'ftp_merlin',
-        actionStatus: 'pending',
-        actionStatusLabel: 'Chờ admin xác nhận',
-        parser: {
-            parserCode: 'VEVO_DEVICES',
-            sourceCategory: 'vvo-vevo',
-            parserName: 'Vevo Devices Parser',
-            sourceFile: 'bombshelter-digital-services-llc_vevo_merlin_devices_',
-            targetTable: 'dsp_report_vevo_devices',
-            fieldMappings: [
-                {
-                    reportColumn: 'device_id',
-                    parserColumn: 'device_id',
-                    targetColumn: 'device_id',
-                    transform: 'TRIM(device_id)',
-                },
-                {
-                    reportColumn: 'os_version',
-                    parserColumn: 'os_version',
-                    targetColumn: 'platform_version',
-                    transform: 'LOWER(os_version)',
-                },
-                {
-                    reportColumn: 'model_name',
-                    parserColumn: 'model_name',
-                    targetColumn: 'device_model',
-                    transform: 'COALESCE(model_name, "Generic")',
-                },
-            ],
-            sourceHash: 'ghi789hash',
-            isSelectable: false,
-            syncedAt: '2026-07-30 12:00:00',
-        },
-    },
-];
 
 interface FtpParserConfigListProps {
     dspReportId?: string;
-    data?: FtpParserConfigItem[];
+    sourceCategory?: string;
+    dspName?: string;
 }
 
-// Sub-component rendering status tag according to component breakdown rule
-const ActionStatusTag = ({
+// Sub-component rendering status select according to component breakdown rule
+const ActionStatusSelect = ({
     status,
-    label,
+    onChange,
+    disabled,
 }: {
-    status: FtpParserConfigItem['actionStatus'];
-    label: string;
+    status: string;
+    onChange: (value: string) => void;
+    disabled?: boolean;
 }) => {
-    const colorMap: Record<FtpParserConfigItem['actionStatus'], string> = {
-        import: 'success',
-        ignore: 'default',
-        pending: 'processing',
-    };
+    const messages = useTranslations();
 
-    return <Tag color={colorMap[status] || 'default'}>{label}</Tag>;
+    const options = [
+        {
+            value: FTP_REPORT_FILE_RULE_STATUS.IMPORT,
+            label: messages('dspReport.ruleStatus.import'),
+        },
+        {
+            value: FTP_REPORT_FILE_RULE_STATUS.IGNORE,
+            label: messages('dspReport.ruleStatus.ignore'),
+        },
+        {
+            value: FTP_REPORT_FILE_RULE_STATUS.PENDING,
+            label: messages('dspReport.ruleStatus.pending'),
+        },
+    ];
+
+    return (
+        <Select
+            value={status}
+            onChange={onChange}
+            options={options}
+            disabled={disabled}
+            className="!w-full"
+        />
+    );
 };
 
 export const FtpParserConfigList = ({
     dspReportId,
-    data = FAKE_FTP_PARSER_CONFIG_DATA,
+    sourceCategory,
+    dspName,
 }: FtpParserConfigListProps) => {
     const messages = useTranslations();
-    const [activeParser, setActiveParser] = useState<FtpParser | undefined>(
-        undefined
-    );
+    const [activeParserCode, setActiveParserCode] = useState<string>('');
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [activeSampleFiles, setActiveSampleFiles] = useState<
+        FtpReportSampleFile[]
+    >([]);
+    const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
+    const [updatingId, setUpdatingId] = useState<string | null>(null);
     const { token } = theme.useToken();
 
-    const handleViewConfig = (record: FtpParserConfigItem) => {
-        if (record.parser) {
-            setActiveParser(record.parser);
-            setIsDetailModalOpen(true);
-        }
+    const { ftpReportFileRulesData, isLoading } = useGetListFtpReportFileRules({
+        sourceCategory,
+        dspFolder: dspName,
+    });
+
+    const { updateFtpReportFileRule, isUpdating } =
+        useUpdateFtpReportFileRule();
+
+    const handleChange = (id: string, payload: Partial<FtpReportFileRule>) => {
+        setUpdatingId(id);
+        updateFtpReportFileRule({
+            id,
+            payload,
+            onSuccess: () => {
+                setUpdatingId(null);
+            },
+            onError: () => {
+                setUpdatingId(null);
+            },
+        });
     };
 
-    const columns: ColumnType<FtpParserConfigItem>[] = [
+    const handleViewConfig = (record: FtpReportFileRule) => {
+        setActiveParserCode(record.parserCode || '');
+        setIsDetailModalOpen(true);
+    };
+
+    const handleViewSampleFiles = (record: FtpReportFileRule) => {
+        setActiveSampleFiles(record.sampleFiles || []);
+        setIsSampleModalOpen(true);
+    };
+
+    const columns: ColumnType<FtpReportFileRule>[] = [
         {
             title: messages('common.fileName'),
-            key: 'fileName',
-            dataIndex: 'fileName',
+            key: 'fileNamePattern',
+            dataIndex: 'fileNamePattern',
             width: 380,
             ellipsis: true,
             render: (value: string) => (
-                <Typography.Text copyable strong className="font-mono">
-                    {value}
-                </Typography.Text>
+                <Typography.Text>{value}</Typography.Text>
             ),
         },
         {
             title: messages('common.folder'),
-            key: 'folder',
-            dataIndex: 'folder',
+            key: 'dspFolderPattern',
+            dataIndex: 'dspFolderPattern',
             width: 180,
             ellipsis: true,
             render: (value: string) => (
@@ -215,29 +130,67 @@ export const FtpParserConfigList = ({
             render: (value: string) => <Tag color="blue">{value}</Tag>,
         },
         {
-            title: messages('common.action'),
-            key: 'actionStatus',
+            title: messages('common.category'),
+            key: 'sourceCategory',
+            dataIndex: 'sourceCategory',
+            width: 130,
+            render: (value: string) => <Tag color="cyan">{value}</Tag>,
+        },
+        {
+            title: messages('dspReport.ftpParserDetail.parserCode'),
+            key: 'parserCode',
+            dataIndex: 'parserCode',
             width: 180,
-            render: (_, record) => (
-                <ActionStatusTag
-                    status={record.actionStatus}
-                    label={record.actionStatusLabel}
+            render: (value: string) => {
+                if (!value) return '-';
+                return <Typography.Text code>{value}</Typography.Text>;
+            },
+        },
+        {
+            title: messages('common.action'),
+            key: 'status',
+            dataIndex: 'status',
+            width: 200,
+            render: (status: string, record: FtpReportFileRule) => (
+                <ActionStatusSelect
+                    status={status}
+                    disabled={isUpdating && updatingId === record.id}
+                    onChange={(newStatus) =>
+                        handleChange(record.id, {
+                            status: newStatus,
+                        })
+                    }
                 />
             ),
         },
         {
-            title: messages('common.action'),
             key: 'action',
-            width: 140,
+            width: 260,
             align: 'center',
             render: (_, record) => (
-                <Button
-                    type="link"
-                    size="small"
-                    onClick={() => handleViewConfig(record)}
-                >
-                    {messages('common.viewConfig')}
-                </Button>
+                <div className="flex items-center justify-center gap-2">
+                    <Button
+                        type="link"
+                        size="small"
+                        disabled={!record.parserCode}
+                        onClick={() => handleViewConfig(record)}
+                    >
+                        {messages('common.viewConfig')}
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        disabled={
+                            !record.sampleFiles ||
+                            record.sampleFiles.length === 0
+                        }
+                        onClick={() => handleViewSampleFiles(record)}
+                    >
+                        {messages('dspReport.sampleFilesButton', {
+                            count: record.sampleFiles?.length || 0,
+                        })}
+                    </Button>
+                </div>
             ),
         },
     ];
@@ -249,21 +202,34 @@ export const FtpParserConfigList = ({
                 backgroundColor: token.colorBgContainer,
             }}
         >
-            <AppTable<FtpParserConfigItem>
+            <AppTable<FtpReportFileRule>
+                virtual
+                scroll={{ y: 400 }}
                 columns={columns}
-                dataSource={data}
+                dataSource={ftpReportFileRulesData?.items || []}
+                loading={isLoading}
                 rowKey="id"
                 pagination={false}
             />
-            {isDetailModalOpen && activeParser && (
+            {isDetailModalOpen && (
                 <FtpParserDetailModal
                     open={isDetailModalOpen}
                     onCancel={() => {
                         setIsDetailModalOpen(false);
-                        setActiveParser(undefined);
+                        setActiveParserCode('');
                     }}
-                    parser={activeParser}
+                    parserCode={activeParserCode}
                     dspReportId={dspReportId || ''}
+                />
+            )}
+            {isSampleModalOpen && (
+                <SampleFilesModal
+                    open={isSampleModalOpen}
+                    onCancel={() => {
+                        setIsSampleModalOpen(false);
+                        setActiveSampleFiles([]);
+                    }}
+                    files={activeSampleFiles}
                 />
             )}
         </div>

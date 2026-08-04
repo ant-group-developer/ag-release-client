@@ -3,6 +3,7 @@ import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import LabelFormModal from '@/modules/labels/components/modal/label-form';
 import { useGetListLabelsSimple } from '@/modules/labels/hooks/use-get-list-simple-labels';
+import { LabelData } from '@/modules/labels/types';
 import { Button, Select, SelectProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -10,11 +11,13 @@ import { useState } from 'react';
 type Props = SelectProps & {
     fallBack?: string;
     showCreate?: boolean;
+    onCreateSuccess?: (data: LabelData) => void;
 };
 
 export default function LabelSelect({
     fallBack,
     showCreate = false,
+    onCreateSuccess,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -74,6 +77,10 @@ export default function LabelSelect({
             <LabelFormModal
                 open={openCreate}
                 onCancel={() => setOpenCreate(false)}
+                onCreateSuccess={(data) => {
+                    setOpenCreate(false);
+                    onCreateSuccess?.(data);
+                }}
             />
         </>
     );

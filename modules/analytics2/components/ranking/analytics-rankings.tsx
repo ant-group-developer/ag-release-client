@@ -1,6 +1,7 @@
 'use client';
 
 import { APP_ROUTES } from '@/enums/routes';
+import useModalStore from '@/hooks/use-modal';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -43,6 +44,7 @@ export default function AnalyticsRankings({
 }: Props) {
     const messages = useTranslations();
     const topN = 5;
+    const openModal = useModalStore((state) => state.openModal);
     const topRankingTitle = (title: string) =>
         messages('analytics2.topRankingTitle', {
             count: topN,
@@ -186,15 +188,27 @@ export default function AnalyticsRankings({
                                 labelKey="title"
                                 valueKey="totalViews"
                                 defaultView={RankingCardView.LIST}
-                                viewMoreHref={createViewMoreHref(
-                                    APP_ROUTES.ANALYTICS_RELEASES,
-                                    {
-                                        fromDate,
-                                        toDate,
-                                        type: ANALYTICS_VIEW_TYPE.VIEW,
-                                        releaseType,
-                                    }
-                                )}
+                                // viewMoreHref={createViewMoreHref(
+                                //     APP_ROUTES.ANALYTICS_RELEASES,
+                                //     {
+                                //         fromDate,
+                                //         toDate,
+                                //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                                //         releaseType,
+                                //     }
+                                // )}
+                                onViewMore={() =>
+                                    openModal(
+                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
+                                        {
+                                            fromDate,
+                                            toDate,
+                                            initialEntity: {
+                                                type: 'Release',
+                                            },
+                                        }
+                                    )
+                                }
                             />
                         </Col>
                         <Col span={12} xs={24} lg={12}>
