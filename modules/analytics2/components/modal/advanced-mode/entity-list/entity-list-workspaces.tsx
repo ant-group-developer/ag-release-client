@@ -1,7 +1,8 @@
 'use client';
 
-import { formattedNumber } from '@/helpers/common';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { TenantRankingItem } from '@/modules/analytics2/types';
+import TenantTag from '@/modules/tenant/components/tenant-tag';
 import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { ContentItem } from '../content-entity-selector';
@@ -40,20 +41,20 @@ export default function EntityListWorkspaces({
     return (
         <List
             dataSource={items}
-            renderItem={(item) => (
+            renderItem={(item: TenantRankingItem) => (
                 <List.Item
                     onClick={() =>
                         onSelect({
-                            id: item.tenantId || item.id,
-                            title: item.tenantName || 'Workspace',
+                            id: item.tenantId,
+                            title: item.tenantName,
                             type: 'Workspace',
-                            thumbnailUrl: item.logo,
-                            subtitle: `${formattedNumber(item.totalViews)} views`,
+                            thumbnailUrl: item.logo || '',
+                            // subtitle: `${formattedNumber(item.totalViews)} views`,
                         })
                     }
-                    className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
+                    className="cursor-pointer rounded-lg py-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
                 >
-                    <div className="flex w-full items-center justify-between gap-3">
+                    <div className="flex w-full items-center justify-between gap-3 px-2">
                         <div className="flex items-center gap-3 overflow-hidden">
                             <Avatar
                                 shape="square"
@@ -70,22 +71,11 @@ export default function EntityListWorkspaces({
                                 >
                                     {item.tenantName}
                                 </Typography.Text>
-                                <Typography.Text
-                                    type="secondary"
-                                    className="text-xs"
-                                >
-                                    Workspace
-                                </Typography.Text>
+                                <div className="mt-0.5">
+                                    <TenantTag type={item.type} />
+                                </div>
                             </div>
                         </div>
-                        {item.totalViews !== undefined && (
-                            <Typography.Text
-                                type="secondary"
-                                className="shrink-0 text-right text-xs"
-                            >
-                                {formattedNumber(item.totalViews)} views
-                            </Typography.Text>
-                        )}
                     </div>
                 </List.Item>
             )}

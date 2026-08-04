@@ -90,19 +90,13 @@ export default function ReleaseAnalyticsOverviewChart({
         isEnabled && isRevenueMetric
     );
 
-    const lineChartData = isRevenueMetric
-        ? revenueLineData
-        : trendViewLineData;
+    const lineChartData = isRevenueMetric ? revenueLineData : trendViewLineData;
     const isLineChartLoading = isRevenueMetric
         ? isRevenueLineFetching
         : isTrendViewLineFetching;
 
-    const dspData = isRevenueMetric
-        ? dspRevenueData
-        : dspTrendViewData;
-    const terData = isRevenueMetric
-        ? terRevenueData
-        : terTrendViewData;
+    const dspData = isRevenueMetric ? dspRevenueData : dspTrendViewData;
+    const terData = isRevenueMetric ? terRevenueData : terTrendViewData;
     const isBarChartLoading = isRevenueMetric
         ? isDspRevenueFetching || isTerRevenueFetching
         : isDspTrendViewFetching || isTerTrendViewFetching;

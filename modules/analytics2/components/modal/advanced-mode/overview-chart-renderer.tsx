@@ -6,6 +6,7 @@ import ArtistAnalyticsOverviewChart from '../../chart/artist-analytics-overview-
 import DspAnalyticsOverviewChart from '../../chart/dsp-analytics-overview-chart';
 import LabelAnalyticsOverviewChart from '../../chart/label-analytics-overview-chart';
 import ReleaseAnalyticsOverviewChart from '../../chart/release-analytics-overview-chart';
+import RootAnalyticsOverviewChart from '../../chart/root-analytics-overview-chart';
 import TenantAnalyticsOverviewChart from '../../chart/tenant-analytics-overview-chart';
 import TrackAnalyticsOverviewChart from '../../chart/track-analytics-overview-chart';
 
@@ -34,49 +35,55 @@ export default function OverviewChartRenderer({
         enabled,
     };
 
+    if (!activeEntity.id) {
+        return <RootAnalyticsOverviewChart {...commonProps} />;
+    }
+
     switch (activeEntity.type) {
         case ANALYTICS_ENTITY_TYPE.TRACK:
             return (
                 <TrackAnalyticsOverviewChart
-                    isrc=""
+                    isrc={activeEntity.id}
                     {...commonProps}
                 />
             );
         case ANALYTICS_ENTITY_TYPE.RELEASE:
             return (
                 <ReleaseAnalyticsOverviewChart
-                    releaseId=""
+                    releaseId={activeEntity.id}
                     {...commonProps}
                 />
             );
         case ANALYTICS_ENTITY_TYPE.WORKSPACE:
             return (
                 <TenantAnalyticsOverviewChart
-                    tenantId=""
+                    tenantId={activeEntity.id}
                     {...commonProps}
                 />
             );
         case ANALYTICS_ENTITY_TYPE.LABEL:
             return (
                 <LabelAnalyticsOverviewChart
-                    labelId=""
+                    labelId={activeEntity.id}
                     {...commonProps}
                 />
             );
         case ANALYTICS_ENTITY_TYPE.DSP:
             return (
                 <DspAnalyticsOverviewChart
-                    pgDspId=""
-                    dspReportId=""
+                    pgDspId={activeEntity.id}
+                    dspReportId={activeEntity.entitySubId ?? ''}
                     {...commonProps}
                 />
             );
         case ANALYTICS_ENTITY_TYPE.ARTIST:
             return (
                 <ArtistAnalyticsOverviewChart
-                    artistId=""
+                    artistId={activeEntity.id}
                     {...commonProps}
                 />
             );
+        default:
+            return <RootAnalyticsOverviewChart {...commonProps} />;
     }
 }

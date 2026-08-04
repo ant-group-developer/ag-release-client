@@ -10,12 +10,17 @@ import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTenant } from '@/modules/analytics2/hooks/use-get-revenue-data';
@@ -35,9 +40,13 @@ import { useEffect, useState } from 'react';
 const DEFAULT_PAGE = 1;
 
 export interface TenantRankingTableCardProps {
+    tenantId?: string;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
 }
@@ -50,9 +59,13 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function TenantRankingTableCard({
+    tenantId,
     fromDate,
     toDate,
     releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
 }: TenantRankingTableCardProps) {
@@ -107,7 +120,15 @@ export default function TenantRankingTableCard({
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
     const requestReleaseType =
         selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
@@ -125,6 +146,7 @@ export default function TenantRankingTableCard({
                 keyword: dataFilter.keyword ?? undefined,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                tenantId,
             },
             { enabled: enabled && !isRevenue }
         );
@@ -139,8 +161,10 @@ export default function TenantRankingTableCard({
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
+                sortBy: revenueSortBy,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                tenantId,
             },
             { enabled: enabled && isRevenue }
         );
@@ -180,15 +204,20 @@ export default function TenantRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setDetailModal({
-                                    open: true,
+                            onClick={() => {
+                                // setDetailModal({
+                                //     open: true,
+                                //     title: text,
+                                //     tenantId: record.tenantId,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.tenantId,
                                     title: text,
-                                    tenantId: record.tenantId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                });
+                            }}
                         >
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 </div>
@@ -200,7 +229,7 @@ export default function TenantRankingTableCard({
             key: 'type',
             width: 140,
             render: (type?: TENANT_TYPE) =>
-                type ? <TenantTag type={type} /> : '—',
+                type ? <TenantTag type={type} /> : '-',
         },
         {
             title: messages('common.sourcePlatform'),
@@ -208,7 +237,7 @@ export default function TenantRankingTableCard({
             key: 'bySource',
             width: 280,
             render: (bySource?: BySourceItem[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
@@ -218,13 +247,18 @@ export default function TenantRankingTableCard({
                             >
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                    onClick={() => {
+                                        // setDetailSourceModal({
+                                        //     open: true,
+                                        //     title: item.sourceLabel,
+                                        //     sourceType: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}: $
                                     {formattedNumber(item.revenueUsd)}
@@ -294,15 +328,20 @@ export default function TenantRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setDetailModal({
-                                    open: true,
+                            onClick={() => {
+                                // setDetailModal({
+                                //     open: true,
+                                //     title: text,
+                                //     tenantId: record.tenantId,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.tenantId,
                                     title: text,
-                                    tenantId: record.tenantId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                });
+                            }}
                         >
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 </div>
@@ -314,7 +353,7 @@ export default function TenantRankingTableCard({
             key: 'type',
             width: 140,
             render: (type?: TENANT_TYPE) =>
-                type ? <TenantTag type={type} /> : '—',
+                type ? <TenantTag type={type} /> : '-',
         },
         {
             title: messages('common.sourcePlatform'),
@@ -322,7 +361,7 @@ export default function TenantRankingTableCard({
             key: 'bySource',
             width: 280,
             render: (bySource?: BySourceItem[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
@@ -332,13 +371,18 @@ export default function TenantRankingTableCard({
                             >
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                    onClick={() => {
+                                        // setDetailSourceModal({
+                                        //     open: true,
+                                        //     title: item.sourceLabel,
+                                        //     sourceType: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}:{' '}
                                     {formattedNumber(item.quantity)}
@@ -380,8 +424,7 @@ export default function TenantRankingTableCard({
                             setSelectedReleaseType(selectedType);
                             onChangeFilter({
                                 releaseType:
-                                    selectedType ===
-                                    ANALYTICS_RELEASE_TYPE.ALL
+                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
                                         ? undefined
                                         : selectedType,
                             });
@@ -402,9 +445,18 @@ export default function TenantRankingTableCard({
                         ]}
                     />
                     <Segmented
-                        value={currentType}
+                        value={
+                            isRevenue
+                                ? ANALYTICS_VIEW_TYPE.REVENUE
+                                : ANALYTICS_VIEW_TYPE.VIEW
+                        }
                         onChange={(value) => {
                             setCurrentType(value as ANALYTICS_VIEW_TYPE);
+                            onMetricChange?.(
+                                value === ANALYTICS_VIEW_TYPE.VIEW
+                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                            );
                             onChangeFilter({
                                 type: value as ANALYTICS_VIEW_TYPE,
                             });

@@ -12,11 +12,16 @@ import DetailArtistAnalyticsModal from '@/modules/analytics2/components/detail-a
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import ArtistRevenueTable from '@/modules/analytics2/components/table/artist-revenue-table';
 import ArtistViewsTable from '@/modules/analytics2/components/table/artist-views-table';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import { useGetArtistRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopArtist } from '@/modules/analytics2/hooks/use-get-revenue-data';
@@ -29,9 +34,13 @@ import { useEffect, useState } from 'react';
 const DEFAULT_PAGE = 1;
 
 export interface ArtistRankingTableCardProps {
+    artistId?: string;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
 }
@@ -44,9 +53,13 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function ArtistRankingTableCard({
+    artistId,
     fromDate,
     toDate,
     releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
 }: ArtistRankingTableCardProps) {
@@ -106,7 +119,15 @@ export default function ArtistRankingTableCard({
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
     const requestReleaseType =
         selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
@@ -124,6 +145,7 @@ export default function ArtistRankingTableCard({
                 keyword: dataFilter.keyword ?? undefined,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                artistId,
             },
             { enabled: enabled && !isRevenue }
         );
@@ -138,8 +160,10 @@ export default function ArtistRankingTableCard({
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
+                sortBy: revenueSortBy,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                artistId,
             },
             { enabled: enabled && isRevenue }
         );
@@ -147,18 +171,28 @@ export default function ArtistRankingTableCard({
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
     const handleDetailArtist = (artistId: string, artistName: string) => {
-        setDetailModal({
-            open: true,
+        // setDetailModal({
+        //     open: true,
+        //     title: artistName,
+        //     artistId,
+        // });
+        onSelectEntity?.({
+            id: artistId,
             title: artistName,
-            artistId,
+            type: ANALYTICS_ENTITY_TYPE.ARTIST,
         });
     };
 
     const handleDetailSource = (sourceType: string, title: string) => {
-        setDetailSourceModal({
-            open: true,
+        // setDetailSourceModal({
+        //     open: true,
+        //     title,
+        //     sourceType,
+        // });
+        onSelectEntity?.({
+            id: sourceType,
             title,
-            sourceType,
+            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
         });
     };
 
@@ -201,9 +235,14 @@ export default function ArtistRankingTableCard({
                         ]}
                     />
                     <Segmented
-                        value={currentType}
+                        value={isRevenue ? ANALYTICS_VIEW_TYPE.REVENUE : ANALYTICS_VIEW_TYPE.VIEW}
                         onChange={(value) => {
                             setCurrentType(value as ANALYTICS_VIEW_TYPE);
+                            onMetricChange?.(
+                                value === ANALYTICS_VIEW_TYPE.VIEW
+                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                            );
                             onChangeFilter({
                                 type: value as ANALYTICS_VIEW_TYPE,
                             });
