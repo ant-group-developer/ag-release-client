@@ -1,0 +1,406 @@
+'use client';
+
+import AppSearch from '@/components/ui/input/search';
+import AppPagination from '@/components/ui/pagination';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
+import { SCREEN } from '@/enums/common';
+import { formattedNumber } from '@/helpers/common';
+import { useFilter } from '@/hooks/use-filter';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
+import {
+    ANALYTICS_DEFAULT_END_DATE,
+    ANALYTICS_DEFAULT_START_DATE,
+} from '@/modules/analytics2/constants/types';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
+import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+    type AnalyticsScopeParams,
+} from '@/modules/analytics2/helpers';
+import { useGetSourceTypeRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopSourceType } from '@/modules/analytics2/hooks/use-get-revenue-data';
+import {
+    RevenueSourceTypeItem,
+    SourceTypeRankingItem,
+} from '@/modules/analytics2/types';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { CommonParams } from '@/types/api';
+import { Card, Segmented, Table, Typography } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState } from 'react';
+
+const DEFAULT_PAGE = 1;
+const SOURCE_TYPE_THUMBNAIL_SIZE = 32;
+
+export interface SourceTypeRankingTableCardProps {
+    sourceType?: string;
+    scopeParams?: AnalyticsScopeParams;
+    fromDate?: string;
+    toDate?: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
+    enabled?: boolean;
+    className?: string;
+    paramPrefix?: string;
+}
+
+interface RankingFilter extends CommonParams {
+    startDate?: string;
+    endDate?: string;
+    type?: ANALYTICS_VIEW_TYPE;
+    releaseType?: ANALYTICS_RELEASE_TYPE;
+}
+
+export default function SourceTypeRankingTableCard({
+    sourceType,
+    scopeParams,
+    fromDate,
+    toDate,
+    releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
+    enabled = true,
+    className = 'rounded-xl border-none shadow-sm',
+    paramPrefix,
+}: SourceTypeRankingTableCardProps) {
+    const messages = useTranslations();
+
+    const effectiveFromDate = fromDate || ANALYTICS_DEFAULT_START_DATE;
+    const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
+
+    const { dataFilter, onChangeFilter, onChangePage, onSearch } =
+        useFilter<RankingFilter>(
+            {
+                page: DEFAULT_PAGE,
+                pageSize: PAGE_SIZE_DEFAULT,
+                startDate: effectiveFromDate,
+                endDate: effectiveToDate,
+                type: ANALYTICS_VIEW_TYPE.VIEW,
+                releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
+            },
+            { paramPrefix, history: paramPrefix ? 'replace' : 'push' }
+        );
+
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(dataFilter.type ?? null)
+    );
+    const [selectedReleaseType, setSelectedReleaseType] =
+        useState<ANALYTICS_RELEASE_TYPE>(() =>
+            getAnalyticsReleaseType(dataFilter.releaseType ?? null)
+        );
+
+    useEffect(() => {
+        if (releaseType !== undefined) {
+            setSelectedReleaseType(releaseType);
+        }
+    }, [releaseType]);
+
+    const page = dataFilter.page ?? DEFAULT_PAGE;
+    const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
+
+    const requestReleaseType =
+        selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
+            ? undefined
+            : selectedReleaseType;
+
+    const { sourceTypeRankingData, isFetching: isViewsFetching } =
+        useGetSourceTypeRanking(
+            {
+                fromDate: effectiveFromDate,
+                toDate: effectiveToDate,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+                releaseType: requestReleaseType,
+                sourceType,
+                ...scopeParams,
+            },
+            { enabled: enabled && !isRevenue }
+        );
+
+    const { topSourceTypeData, isFetching: isRevenueFetching } =
+        useGetRevenueTopSourceType(
+            {
+                fromDate: effectiveFromDate,
+                toDate: effectiveToDate,
+                page,
+                pageSize,
+                keyword: dataFilter.keyword,
+                includeOther: false,
+                sortBy: revenueSortBy,
+                releaseType: requestReleaseType,
+                sourceType,
+                ...scopeParams,
+            },
+            { enabled: enabled && isRevenue }
+        );
+
+    const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    // The API omits `rank` on some responses; derive it from the page offset.
+    const viewItems = useMemo(
+        () =>
+            (sourceTypeRankingData?.items || []).map(
+                (item: SourceTypeRankingItem, index: number) => ({
+                    ...item,
+                    rank: item.rank || (page - 1) * pageSize + index + 1,
+                })
+            ),
+        [sourceTypeRankingData, page, pageSize]
+    );
+
+    const revenueItems = useMemo(
+        () =>
+            (topSourceTypeData?.items || []).map(
+                (item: RevenueSourceTypeItem, index: number) => ({
+                    ...item,
+                    rank: item.rank || (page - 1) * pageSize + index + 1,
+                })
+            ),
+        [topSourceTypeData, page, pageSize]
+    );
+
+    const renderSourceTypeName = (
+        text: string,
+        record: SourceTypeRankingItem | RevenueSourceTypeItem
+    ) => (
+        <div className="flex items-center gap-3">
+            <ReleaseCoverImage
+                width={SOURCE_TYPE_THUMBNAIL_SIZE}
+                height={SOURCE_TYPE_THUMBNAIL_SIZE}
+                src={record.imageUrl}
+            />
+            <CustomTooltip title={messages('common.detailedAnalysis')}>
+                <Typography.Text
+                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                    onClick={() =>
+                        onSelectEntity?.({
+                            id: record.sourceType,
+                            title: text,
+                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                            thumbnailUrl: record.imageUrl || undefined,
+                        })
+                    }
+                >
+                    {text || '-'}
+                </Typography.Text>
+            </CustomTooltip>
+        </div>
+    );
+
+    const revenueColumns: ColumnsType<RevenueSourceTypeItem> = [
+        {
+            title: messages('analytics2.rank'),
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 100,
+            align: 'center' as const,
+            fixed: 'left',
+            render: (rank: number) => (
+                <Typography.Text className="text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('analytics2.distributors'),
+            dataIndex: 'sourceTypeLabel',
+            key: 'sourceTypeLabel',
+            width: 250,
+            ellipsis: true,
+            fixed: 'left',
+            render: renderSourceTypeName,
+        },
+        {
+            title: messages('common.usage'),
+            dataIndex: 'quantity',
+            key: 'quantity',
+            width: 250,
+            fixed: 'right',
+            render: (qty: number) => (
+                <Typography.Text type="secondary">
+                    {qty ? qty.toLocaleString() : 0}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('common.revenue'),
+            dataIndex: 'revenueUsd',
+            key: 'revenueUsd',
+            width: 250,
+            fixed: 'right',
+            render: (val: number) => (
+                <Typography.Text>
+                    ${val ? formattedNumber(val) : '0.00'}
+                </Typography.Text>
+            ),
+        },
+    ];
+
+    const viewColumns: ColumnsType<SourceTypeRankingItem> = [
+        {
+            title: messages('analytics2.rank'),
+            dataIndex: 'rank',
+            key: 'rank',
+            width: 100,
+            align: 'center' as const,
+            fixed: 'left',
+            render: (rank: number) => (
+                <Typography.Text className="text-gray-700 dark:text-zinc-300">
+                    #{rank}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: messages('analytics2.distributors'),
+            dataIndex: 'sourceTypeLabel',
+            key: 'sourceTypeLabel',
+            width: 250,
+            ellipsis: true,
+            fixed: 'left',
+            render: renderSourceTypeName,
+        },
+        {
+            title: messages('common.streams'),
+            dataIndex: 'totalViews',
+            key: 'totalViews',
+            width: 250,
+            fixed: 'right',
+            render: (views: number) => (
+                <Typography.Text>
+                    {views ? views.toLocaleString() : 0}
+                </Typography.Text>
+            ),
+        },
+    ];
+
+    return (
+        <Card className={className}>
+            <div className="mb-4 flex items-center gap-2">
+                <AppSearch
+                    onChange={onSearch}
+                    defaultValue={dataFilter.keyword}
+                    style={{ width: 200 }}
+                />
+                <Segmented
+                    value={selectedReleaseType}
+                    onChange={(value) => {
+                        const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                        setSelectedReleaseType(selectedType);
+                        onChangeFilter({
+                            releaseType:
+                                selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                    ? undefined
+                                    : selectedType,
+                        });
+                    }}
+                    options={[
+                        {
+                            label: messages('common.all'),
+                            value: ANALYTICS_RELEASE_TYPE.ALL,
+                        },
+                        {
+                            label: messages('common.audio'),
+                            value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                        },
+                        {
+                            label: messages('common.video'),
+                            value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                        },
+                    ]}
+                />
+                <Segmented
+                    value={
+                        isRevenue
+                            ? ANALYTICS_VIEW_TYPE.REVENUE
+                            : ANALYTICS_VIEW_TYPE.VIEW
+                    }
+                    onChange={(value) => {
+                        const nextType = value as ANALYTICS_VIEW_TYPE;
+                        setCurrentType(nextType);
+                        // The metric owns the view type when it is controlled;
+                        // writing both params would race two URL updates built
+                        // from the same stale snapshot.
+                        if (onMetricChange) {
+                            onMetricChange(
+                                nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                            );
+                            return;
+                        }
+                        onChangeFilter({ type: nextType });
+                    }}
+                    options={[
+                        {
+                            label: messages('common.views'),
+                            value: ANALYTICS_VIEW_TYPE.VIEW,
+                        },
+                        {
+                            label: messages('common.revenue'),
+                            value: ANALYTICS_VIEW_TYPE.REVENUE,
+                        },
+                    ]}
+                />
+            </div>
+            {isRevenue ? (
+                <Table<RevenueSourceTypeItem>
+                    sticky
+                    size="small"
+                    columns={revenueColumns}
+                    dataSource={revenueItems}
+                    loading={isFetching}
+                    rowKey="sourceType"
+                    pagination={false}
+                    scroll={{ x: SCREEN.LG }}
+                />
+            ) : (
+                <Table<SourceTypeRankingItem>
+                    sticky
+                    size="small"
+                    columns={viewColumns}
+                    dataSource={viewItems}
+                    loading={isFetching}
+                    rowKey="sourceType"
+                    pagination={false}
+                    scroll={{ x: SCREEN.LG }}
+                />
+            )}
+            <AppPagination
+                align="end"
+                className="!mt-4"
+                current={page}
+                pageSize={pageSize}
+                total={
+                    isRevenue
+                        ? topSourceTypeData?.metadata?.totalItems || 0
+                        : sourceTypeRankingData?.metadata?.totalItems || 0
+                }
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
+        </Card>
+    );
+}

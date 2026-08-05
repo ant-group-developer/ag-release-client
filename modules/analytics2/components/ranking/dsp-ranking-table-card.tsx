@@ -19,6 +19,11 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+    type AnalyticsScopeParams,
+} from '@/modules/analytics2/helpers';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -38,6 +43,7 @@ export interface DspRankingTableCardProps {
     dspId?: string;
     pgDspId?: string;
     dspReportId?: string;
+    scopeParams?: AnalyticsScopeParams;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -46,6 +52,7 @@ export interface DspRankingTableCardProps {
     onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
+    paramPrefix?: string;
 }
 
 interface RankingFilter extends CommonParams {
@@ -60,6 +67,7 @@ export default function DspRankingTableCard({
     dspId,
     pgDspId,
     dspReportId,
+    scopeParams,
     fromDate,
     toDate,
     releaseType,
@@ -68,6 +76,7 @@ export default function DspRankingTableCard({
     onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
+    paramPrefix,
 }: DspRankingTableCardProps) {
     const messages = useTranslations();
 
@@ -75,21 +84,24 @@ export default function DspRankingTableCard({
     const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<RankingFilter>({
-            page: DEFAULT_PAGE,
-            pageSize: PAGE_SIZE_DEFAULT,
-            startDate: effectiveFromDate,
-            endDate: effectiveToDate,
-            type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
-        });
+        useFilter<RankingFilter>(
+            {
+                page: DEFAULT_PAGE,
+                pageSize: PAGE_SIZE_DEFAULT,
+                startDate: effectiveFromDate,
+                endDate: effectiveToDate,
+                type: ANALYTICS_VIEW_TYPE.VIEW,
+                releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
+            },
+            { paramPrefix, history: paramPrefix ? 'replace' : 'push' }
+        );
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(dataFilter.type ?? null)
     );
     const [selectedReleaseType, setSelectedReleaseType] =
-        useState<ANALYTICS_RELEASE_TYPE>(
-            releaseType || ANALYTICS_RELEASE_TYPE.ALL
+        useState<ANALYTICS_RELEASE_TYPE>(() =>
+            getAnalyticsReleaseType(dataFilter.releaseType ?? null)
         );
 
     useEffect(() => {
@@ -137,6 +149,7 @@ export default function DspRankingTableCard({
             releaseType: requestReleaseType,
             pgDspId: pgDspId || '',
             dspReportId: dspReportId || '',
+            ...scopeParams,
         },
         { enabled: enabled && !isRevenue }
     );
@@ -155,6 +168,7 @@ export default function DspRankingTableCard({
             releaseType: requestReleaseType,
             pgDspId: pgDspId || '',
             dspReportId: dspReportId || '',
+            ...scopeParams,
         },
         { enabled: enabled && isRevenue }
     );
@@ -217,6 +231,7 @@ export default function DspRankingTableCard({
                                 id: record.source || '',
                                 title: text || record.source || '',
                                 type: ANALYTICS_ENTITY_TYPE.DSP,
+                                thumbnailUrl: record.imageUrl ?? undefined,
                             });
                         }}
                     >
@@ -327,6 +342,7 @@ export default function DspRankingTableCard({
                                 id: record.source || '',
                                 title: text || record.source || '',
                                 type: ANALYTICS_ENTITY_TYPE.DSP,
+                                thumbnailUrl: record.imageUrl ?? undefined,
                             });
                         }}
                     >
@@ -431,15 +447,20 @@ export default function DspRankingTableCard({
                                 : ANALYTICS_VIEW_TYPE.VIEW
                         }
                         onChange={(value) => {
-                            setCurrentType(value as ANALYTICS_VIEW_TYPE);
-                            onMetricChange?.(
-                                value === ANALYTICS_VIEW_TYPE.VIEW
-                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                            );
-                            onChangeFilter({
-                                type: value as ANALYTICS_VIEW_TYPE,
-                            });
+                            const nextType = value as ANALYTICS_VIEW_TYPE;
+                            setCurrentType(nextType);
+                            // The metric owns the view type when it is
+                            // controlled; writing both params would race two
+                            // URL updates built from the same stale snapshot.
+                            if (onMetricChange) {
+                                onMetricChange(
+                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                                );
+                                return;
+                            }
+                            onChangeFilter({ type: nextType });
                         }}
                         options={[
                             {

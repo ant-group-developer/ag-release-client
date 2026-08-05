@@ -5,25 +5,23 @@ import FullScreenModal, {
 } from '@/components/ui/modal/fullScreenModal';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import useModalStore from '@/hooks/use-modal';
 import { Button, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { parseAsString, useQueryStates } from 'nuqs';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
-import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
 import {
-    ActiveAnalyticsEntity,
-    AnalyticModalStoreData,
-    AnalyticsCommonParams,
-    AnalyticsEntityType,
-} from '../../types';
+    ADVANCED_MODE_PARAM_PREFIX,
+    useAdvancedModeModal,
+} from '../../hooks/use-advanced-mode-modal';
+import { getAnalyticsScopeParams } from '../../helpers';
+import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
+import { ActiveAnalyticsEntity, AnalyticsCommonParams } from '../../types';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
@@ -31,157 +29,61 @@ import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
-    fromDate?: string;
-    toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function AdvancedModeModal({
-    fromDate,
-    toDate,
     releaseType,
     ...props
 }: AdvancedModeModalProps) {
     const messages = useTranslations();
-    const data = useModalStore<AnalyticModalStoreData>(
-        (state) => state.dataEdit
-    );
-    const initialEntity = data?.initialEntity;
-    const effectiveFromDate = fromDate ?? data?.fromDate;
-    const effectiveToDate = toDate ?? data?.toDate;
 
-    const [
-        {
-            entityType: urlEntityType,
-            entityId: urlEntityId,
-            entitySubId: urlEntitySubId,
-        },
-        setQueryParams,
-    ] = useQueryStates({
-        entityType: parseAsString,
-        entityId: parseAsString,
-        entitySubId: parseAsString,
-        page: parseAsString,
-        pageSize: parseAsString,
-        keyword: parseAsString,
-        startDate: parseAsString,
-        endDate: parseAsString,
-        type: parseAsString,
-        releaseType: parseAsString,
-    });
+    const {
+        entity,
+        fromDate,
+        toDate,
+        metric: activeMetric,
+        rankBy,
+        setEntity,
+        setDateRange,
+        setMetric,
+        setRankBy,
+    } = useAdvancedModeModal();
 
-    const [selectedItem, setSelectedItem] = useState<ContentItem | undefined>();
     const [showSidebar, setShowSidebar] = useState(true);
-    const [localFromDate, setLocalFromDate] = useState(
-        effectiveFromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD')
+
+    const effectiveFromDate =
+        fromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD');
+    const effectiveToDate = toDate || dayjs().format('YYYY-MM-DD');
+
+    const activeEntity = useMemo<ActiveAnalyticsEntity>(
+        () => ({
+            type: entity.type,
+            id: entity.id,
+            entitySubId: entity.entitySubId,
+        }),
+        [entity.type, entity.id, entity.entitySubId]
     );
-    const [localToDate, setLocalToDate] = useState(
-        effectiveToDate || dayjs().format('YYYY-MM-DD')
-    );
-    const [activeMetric, setActiveMetric] = useState<ANALYTICS_METRIC_KEY>(
-        ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-    );
-
-    const handleClearQueryParams = () => {
-        setSelectedItem(undefined);
-        setQueryParams({
-            entityType: null,
-            entityId: null,
-            entitySubId: null,
-            page: null,
-            pageSize: null,
-            keyword: null,
-            startDate: null,
-            endDate: null,
-            type: null,
-            releaseType: null,
-        });
-    };
-
-    useEffect(() => {
-        if (effectiveFromDate) setLocalFromDate(effectiveFromDate);
-        if (effectiveToDate) setLocalToDate(effectiveToDate);
-
-        return () => {
-            handleClearQueryParams();
-        };
-    }, [effectiveFromDate, effectiveToDate]);
-
-    // Active Entity resolution
-    const activeEntity = useMemo<ActiveAnalyticsEntity>(() => {
-        let type: AnalyticsEntityType =
-            initialEntity.type ?? ANALYTICS_ENTITY_TYPE.RELEASE;
-
-        if (urlEntityType) {
-            type = urlEntityType as AnalyticsEntityType;
-        }
-
-        return {
-            type,
-            id: urlEntityId ?? selectedItem?.id ?? initialEntity.id,
-            entitySubId:
-                urlEntitySubId ??
-                selectedItem?.entitySubId ??
-                initialEntity.entitySubId,
-        };
-    }, [
-        urlEntityType,
-        urlEntityId,
-        urlEntitySubId,
-        initialEntity.type,
-        initialEntity.id,
-        initialEntity.entitySubId,
-        selectedItem?.id,
-        selectedItem?.entitySubId,
-    ]);
 
     const analyticsSummaryParams = useMemo<AnalyticsCommonParams>(() => {
         const params: AnalyticsCommonParams = {
-            fromDate: localFromDate,
-            toDate: localToDate,
+            fromDate: effectiveFromDate,
+            toDate: effectiveToDate,
             releaseType,
+            ...getAnalyticsScopeParams(activeEntity),
         };
 
-        if (!activeEntity.id) {
-            return params;
+        // Video releases live behind the same `releaseId` as audio ones, so the
+        // summary needs the release type to disambiguate.
+        if (
+            activeEntity.id &&
+            activeEntity.type === ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO
+        ) {
+            return { ...params, releaseType: ANALYTICS_RELEASE_TYPE.VIDEO };
         }
 
-        switch (activeEntity.type) {
-            case ANALYTICS_ENTITY_TYPE.TRACK:
-                return {
-                    ...params,
-                    trackId: activeEntity.id,
-                    isrc: activeEntity.id,
-                };
-            case ANALYTICS_ENTITY_TYPE.RELEASE:
-                return { ...params, releaseId: activeEntity.id };
-            case ANALYTICS_ENTITY_TYPE.WORKSPACE:
-                return { ...params, tenantId: activeEntity.id };
-            case ANALYTICS_ENTITY_TYPE.LABEL:
-                return { ...params, labelId: activeEntity.id };
-            case ANALYTICS_ENTITY_TYPE.DSP:
-                return {
-                    ...params,
-                    pgDspId: activeEntity.id,
-                    dspReportId: activeEntity.entitySubId || activeEntity.id,
-                };
-            case ANALYTICS_ENTITY_TYPE.ARTIST:
-                return { ...params, artistId: activeEntity.id };
-            case ANALYTICS_ENTITY_TYPE.CHANNEL:
-                return { ...params, channelId: activeEntity.id };
-            case ANALYTICS_ENTITY_TYPE.SOURCE_TYPE:
-                return { ...params, sourceType: activeEntity.id };
-            default:
-                return params;
-        }
-    }, [
-        activeEntity.entitySubId,
-        activeEntity.id,
-        activeEntity.type,
-        localFromDate,
-        localToDate,
-        releaseType,
-    ]);
+        return params;
+    }, [activeEntity, effectiveFromDate, effectiveToDate, releaseType]);
 
     // Single unified Analytics Summary hook replacing separate summary calls
     const { analyticsSummaryData } = useGetAnalyticsSummary(
@@ -190,54 +92,37 @@ export default function AdvancedModeModal({
 
     const handleSelectEntity = (item?: ContentItem) => {
         if (!item || (!item.id && !item.entitySubId)) {
-            setSelectedItem(undefined);
-            setQueryParams({
-                entityType: null,
-                entityId: null,
-                entitySubId: null,
-                page: null,
-                pageSize: null,
-                keyword: null,
-                startDate: null,
-                endDate: null,
-            });
+            setEntity({ type: entity.type });
             return;
         }
 
-        setSelectedItem(item);
-
-        setQueryParams({
-            entityType: item.type || null,
-            entityId: item.id || null,
-            entitySubId: item.entitySubId || null,
-            page: null,
-            pageSize: null,
-            keyword: null,
-            startDate: null,
-            endDate: null,
-            type: null,
-            releaseType: null,
+        setEntity({
+            type: (item.type || entity.type) as ActiveAnalyticsEntity['type'],
+            id: item.id,
+            entitySubId: item.entitySubId,
+            title: item.title,
+            thumbnail: item.thumbnailUrl,
         });
     };
 
     const currentSelectedItem = useMemo<ContentItem | undefined>(() => {
-        if (!selectedItem && !urlEntityId && !initialEntity.id) {
+        if (!entity.id) {
             return undefined;
         }
+
         return {
-            id: selectedItem?.id || activeEntity.id || '',
-            entitySubId: selectedItem?.entitySubId || activeEntity.entitySubId,
-            title: selectedItem?.title || activeEntity.type,
-            type: activeEntity.type,
-            thumbnailUrl: selectedItem?.thumbnailUrl,
+            id: entity.id,
+            entitySubId: entity.entitySubId,
+            title: entity.title || entity.type,
+            type: entity.type,
+            thumbnailUrl: entity.thumbnail,
         };
     }, [
-        activeEntity.type,
-        activeEntity.id,
-        activeEntity.entitySubId,
-        selectedItem,
-        urlEntityId,
-        initialEntity.id,
+        entity.type,
+        entity.id,
+        entity.entitySubId,
+        entity.title,
+        entity.thumbnail,
     ]);
 
     const metricTabItems: MetricHeaderTabItem[] = [
@@ -270,14 +155,6 @@ export default function AdvancedModeModal({
     return (
         <FullScreenModal
             {...props}
-            onCancel={(e) => {
-                handleClearQueryParams();
-                props.onCancel?.(e);
-            }}
-            afterClose={() => {
-                handleClearQueryParams();
-                props.afterClose?.();
-            }}
             footer={null}
             styles={{
                 body: {
@@ -315,19 +192,20 @@ export default function AdvancedModeModal({
                 >
                     <div className="h-full w-[350px] overflow-y-auto">
                         <ControlsSidebar
-                            fromDate={localFromDate}
-                            toDate={localToDate}
+                            fromDate={effectiveFromDate}
+                            toDate={effectiveToDate}
                             onDateChange={(start, end) => {
-                                setLocalFromDate(start);
-                                setLocalToDate(end);
+                                setDateRange(start, end);
                             }}
                             activeMetric={activeMetric}
                             onMetricChange={(metric) =>
-                                setActiveMetric(metric as ANALYTICS_METRIC_KEY)
+                                setMetric(metric as ANALYTICS_METRIC_KEY)
                             }
                             selectedItem={currentSelectedItem}
-                            initialType={initialEntity.type}
+                            initialType={entity.type}
                             onContentSelect={handleSelectEntity}
+                            rankBy={rankBy}
+                            onRankByChange={setRankBy}
                         />
                     </div>
                 </div>
@@ -341,15 +219,13 @@ export default function AdvancedModeModal({
                                 items={metricTabItems}
                                 activeKey={activeMetric}
                                 onChangeKey={(metric) =>
-                                    setActiveMetric(
-                                        metric as ANALYTICS_METRIC_KEY
-                                    )
+                                    setMetric(metric as ANALYTICS_METRIC_KEY)
                                 }
                             />
                             <OverviewChartRenderer
                                 activeEntity={activeEntity}
-                                fromDate={localFromDate}
-                                toDate={localToDate}
+                                fromDate={effectiveFromDate}
+                                toDate={effectiveToDate}
                                 releaseType={releaseType}
                                 activeMetric={activeMetric}
                                 enabled={props.open !== false}
@@ -359,12 +235,14 @@ export default function AdvancedModeModal({
                         {/* Details / Table Section */}
                         <DetailContentRenderer
                             activeEntity={activeEntity}
-                            fromDate={localFromDate}
-                            toDate={localToDate}
+                            rankBy={rankBy}
+                            fromDate={effectiveFromDate}
+                            toDate={effectiveToDate}
                             releaseType={releaseType}
                             activeMetric={activeMetric}
+                            paramPrefix={ADVANCED_MODE_PARAM_PREFIX}
                             onMetricChange={(metric) =>
-                                setActiveMetric(metric as ANALYTICS_METRIC_KEY)
+                                setMetric(metric as ANALYTICS_METRIC_KEY)
                             }
                             onSelectEntity={handleSelectEntity}
                             enabled={props.open !== false}

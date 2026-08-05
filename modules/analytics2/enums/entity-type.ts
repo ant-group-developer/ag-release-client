@@ -7,4 +7,5 @@ export enum ANALYTICS_ENTITY_TYPE {
     ARTIST = 'Artist',
     CHANNEL = 'Channel',
     SOURCE_TYPE = 'SourceType',
+    RELEASE_VIDEO = 'ReleaseVideo',
 }

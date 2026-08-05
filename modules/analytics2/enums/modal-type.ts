@@ -8,5 +8,4 @@ export enum ANALYTICS_MODAL_TYPE {
     DSP = 'dsp',
     SOURCE_TYPE = 'source_type',
     ADVANCED_MODE = 'advanced_mode',
-    RELEASE_ADVANCED_MODE = 'release_advanced_mode',
 }

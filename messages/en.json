@@ -338,6 +338,8 @@
         "release": "Release",
         "releases": "Releases",
         "releasesVideo": "Video releases",
+        "releasevideo": "Video releases",
+        "sourcetype": "Distributors",
         "plays": "Plays",
         "dark": "Dark",
         "light": "Light",
@@ -3325,6 +3327,7 @@
         "topReleases": "Top Releases",
         "topTracks": "Top Tracks",
         "distributors": "Distributors",
+        "rankBy": "Rank by",
         "detailEntityTitle": "({entity}: {title})",
         "filters": {
             "allPlatforms": "All platforms",
