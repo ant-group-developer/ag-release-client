@@ -338,6 +338,8 @@
         "release": "Bản phát hành",
         "releases": "Phát hành",
         "releasesVideo": "Video phát hành",
+        "releasevideo": "Video phát hành",
+        "sourcetype": "Nhà phân phối",
         "plays": "Lượt phát",
         "dark": "Tối",
         "light": "Sáng",
@@ -3333,6 +3335,7 @@
         "topReleases": "Top bản phát hành",
         "topTracks": "Top bài hát",
         "distributors": "Nhà phân phối",
+        "rankBy": "Xếp hạng theo",
         "detailEntityTitle": "({entity}: {title})",
         "filters": {
             "allPlatforms": "Tất cả nền tảng",

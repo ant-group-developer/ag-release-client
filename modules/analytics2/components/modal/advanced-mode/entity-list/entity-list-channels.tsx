@@ -1,0 +1,105 @@
+'use client';
+
+import { formattedNumber } from '@/helpers/common';
+import ImageFallback from '@/components/ui/image/image-fallback';
+import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import { ANALYTICS_ENTITY_TYPE } from '@/modules/analytics2/enums';
+import { useGetChannelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
+import dayjs from 'dayjs';
+import { Youtube } from 'lucide-react';
+import { ContentItem } from '../content-entity-selector';
+
+interface Props {
+    fromDate?: string;
+    toDate?: string;
+    keyword?: string;
+    onSelect: (item: ContentItem) => void;
+}
+
+export default function EntityListChannels({
+    fromDate = dayjs().subtract(27, 'day').format('YYYY-MM-DD'),
+    toDate = dayjs().format('YYYY-MM-DD'),
+    keyword,
+    onSelect,
+}: Props) {
+    const { channelRankingData, isFetching } = useGetChannelRanking({
+        fromDate,
+        toDate,
+        page: 1,
+        pageSize: 15,
+        keyword,
+    });
+
+    if (isFetching && !channelRankingData?.items?.length) {
+        return <Skeleton active paragraph={{ rows: 4 }} className="p-2" />;
+    }
+
+    const items = channelRankingData?.items || [];
+
+    if (!items.length) {
+        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className="my-4" />;
+    }
+
+    return (
+        <List
+            dataSource={items}
+            renderItem={(item) => (
+                <List.Item
+                    onClick={() =>
+                        onSelect({
+                            id: item.channelId,
+                            title: item.channelName || '',
+                            type: ANALYTICS_ENTITY_TYPE.CHANNEL,
+                            thumbnailUrl: item.thumbUrl || undefined,
+                            subtitle: `${formattedNumber(item.totalViews)} views`,
+                        })
+                    }
+                    className="cursor-pointer rounded-lg py-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
+                >
+                    <div className="flex w-full items-center justify-between gap-3 px-2">
+                        <div className="flex items-center gap-3 overflow-hidden">
+                            {item.thumbUrl ? (
+                                <ImageFallback
+                                    src={item.thumbUrl}
+                                    alt={item.channelName || ''}
+                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    className="aspect-square shrink-0 rounded-full object-cover"
+                                />
+                            ) : (
+                                <Avatar
+                                    shape="circle"
+                                    size={40}
+                                    icon={<Youtube className="h-5 w-5" />}
+                                    className="shrink-0 bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
+                                >
+                                    {(item.channelName || 'C')[0]?.toUpperCase()}
+                                </Avatar>
+                            )}
+                            <div className="flex flex-col overflow-hidden">
+                                <Typography.Text
+                                    ellipsis={{ tooltip: item.channelName }}
+                                    className="text-sm font-medium"
+                                >
+                                    {item.channelName}
+                                </Typography.Text>
+                                {item.tenant?.name && (
+                                    <Typography.Text
+                                        type="secondary"
+                                        className="text-xs"
+                                        ellipsis={{
+                                            tooltip: item.tenant.name,
+                                        }}
+                                    >
+                                        {item.tenant.name}
+                                    </Typography.Text>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </List.Item>
+            )}
+        />
+    );
+}

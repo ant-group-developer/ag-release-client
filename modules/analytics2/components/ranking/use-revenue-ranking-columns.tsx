@@ -1,7 +1,7 @@
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedNumber } from '@/helpers/common';
-import useModalStore from '@/hooks/use-modal';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
@@ -19,6 +19,7 @@ import {
 
 import { ANALYTICS_ENTITY_TYPE } from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+import { useAdvancedModeModal } from '../../hooks/use-advanced-mode-modal';
 
 interface DetailModalState {
     type: ANALYTICS_MODAL_TYPE | null;
@@ -40,7 +41,7 @@ export function useRevenueRankingColumns({
     toDate,
 }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
+    const { openAdvancedMode } = useAdvancedModeModal();
 
     const artistColumns = useMemo(
         () => [
@@ -65,17 +66,15 @@ export function useRevenueRankingColumns({
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.ARTIST,
-                                                id: record.artistId,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.ARTIST,
+                                        entityId: record.artistId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.picture,
+                                    })
                                 }
                             >
                                 {text}
@@ -118,7 +117,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const trackColumns = useMemo(
@@ -145,17 +144,18 @@ export function useRevenueRankingColumns({
                                 <span
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        openModal(
-                                            ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                            {
-                                                fromDate,
-                                                toDate,
-                                                initialEntity: {
-                                                    type: ANALYTICS_ENTITY_TYPE.TRACK,
-                                                    id: record.isrc,
-                                                },
-                                            }
-                                        )
+                                        openAdvancedMode({
+                                            fromDate,
+                                            toDate,
+                                            entityType:
+                                                ANALYTICS_ENTITY_TYPE.TRACK,
+                                            entityId: record.isrc,
+                                            entityTitle: text,
+                                            entityThumbnail: record?.release
+                                                ?.coverArtThumbnails?.[
+                                                RELEASE_COVER_ART_SIZE.S75
+                                            ] as string,
+                                        })
                                     }
                                 >
                                     {text}
@@ -200,7 +200,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const releaseColumns = useMemo(
@@ -227,17 +227,18 @@ export function useRevenueRankingColumns({
                                 <span
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        openModal(
-                                            ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                            {
-                                                fromDate,
-                                                toDate,
-                                                initialEntity: {
-                                                    type: ANALYTICS_ENTITY_TYPE.RELEASE,
-                                                    id: record.releaseId,
-                                                },
-                                            }
-                                        )
+                                        openAdvancedMode({
+                                            fromDate,
+                                            toDate,
+                                            entityType:
+                                                ANALYTICS_ENTITY_TYPE.RELEASE,
+                                            entityId: record.releaseId,
+                                            entityTitle: text,
+                                            entityThumbnail: record.release
+                                                ?.coverArtThumbnails?.[
+                                                RELEASE_COVER_ART_SIZE.S75
+                                            ] as string,
+                                        })
                                     }
                                 >
                                     {text}
@@ -282,7 +283,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const releaseVideoColumns = useMemo(
@@ -309,17 +310,18 @@ export function useRevenueRankingColumns({
                                 <span
                                     className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        openModal(
-                                            ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                            {
-                                                fromDate,
-                                                toDate,
-                                                initialEntity: {
-                                                    type: ANALYTICS_ENTITY_TYPE.RELEASE,
-                                                    id: record.releaseId,
-                                                },
-                                            }
-                                        )
+                                        openAdvancedMode({
+                                            fromDate,
+                                            toDate,
+                                            entityType:
+                                                ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                            entityId: record.releaseId,
+                                            entityTitle: text,
+                                            entityThumbnail: record.release
+                                                ?.coverArtThumbnails?.[
+                                                RELEASE_COVER_ART_SIZE.S75
+                                            ] as string,
+                                        })
                                     }
                                 >
                                     {text}
@@ -440,7 +442,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
     const dspColumns = useMemo(
         () => [
@@ -465,18 +467,15 @@ export function useRevenueRankingColumns({
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.DSP,
-                                                id: record.pgDspId ?? '',
-                                                entitySubId: record.dspReportId,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType: ANALYTICS_ENTITY_TYPE.DSP,
+                                        entityId: record.pgDspId ?? '',
+                                        entitySubId: record.dspReportId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.imageUrl,
+                                    })
                                 }
                             >
                                 {text || '—'}
@@ -508,7 +507,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const tenantColumns = useMemo(
@@ -534,17 +533,15 @@ export function useRevenueRankingColumns({
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
-                                                id: record.tenantId,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                        entityId: record.tenantId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.logo,
+                                    })
                                 }
                             >
                                 {text || '-'}
@@ -576,7 +573,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const labelColumns = useMemo(
@@ -602,17 +599,14 @@ export function useRevenueRankingColumns({
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.LABEL,
-                                                id: record.labelId,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType: ANALYTICS_ENTITY_TYPE.LABEL,
+                                        entityId: record.labelId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.picture,
+                                    })
                                 }
                             >
                                 {text}
@@ -666,7 +660,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const channelColumns = useMemo(
@@ -690,17 +684,15 @@ export function useRevenueRankingColumns({
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.CHANNEL,
-                                                id: record.channelId,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.CHANNEL,
+                                        entityId: record.channelId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.thumbUrl,
+                                    })
                                 }
                             >
                                 {text || '-'}
@@ -767,7 +759,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, openModal, fromDate, toDate]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const sourceTypeColumns = useMemo(
@@ -791,17 +783,15 @@ export function useRevenueRankingColumns({
                             <span
                                 className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
-                                                id: record.sourceType,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        entityId: record.sourceType,
+                                        entityTitle: text,
+                                        entityThumbnail: record.imageUrl,
+                                    })
                                 }
                             >
                                 {text || '—'}
@@ -833,7 +823,7 @@ export function useRevenueRankingColumns({
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     return {

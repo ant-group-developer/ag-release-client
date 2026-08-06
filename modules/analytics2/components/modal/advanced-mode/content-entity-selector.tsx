@@ -1,14 +1,17 @@
 'use client';
 
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { Avatar, Input, Popover, Tabs, Typography } from 'antd';
+import { Input, Popover, Tabs, Typography } from 'antd';
 import { ChevronDown, Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import EntityListArtists from './entity-list/entity-list-artists';
+import EntityListChannels from './entity-list/entity-list-channels';
 import EntityListDsps from './entity-list/entity-list-dsps';
 import EntityListLabels from './entity-list/entity-list-labels';
+import EntityListReleaseVideos from './entity-list/entity-list-release-videos';
 import EntityListReleases from './entity-list/entity-list-releases';
+import EntityListSourceTypes from './entity-list/entity-list-source-types';
 import EntityListTracks from './entity-list/entity-list-tracks';
 import EntityListWorkspaces from './entity-list/entity-list-workspaces';
 
@@ -40,20 +43,21 @@ export interface ContentEntitySelectorProps {
 }
 
 function ContentItemAvatar({ item }: { item: ContentItem }) {
-    if (!item.thumbnailUrl) {
-        return (
-            <Avatar shape="square" size={28} className="shrink-0 rounded">
-                {(item.title || 'S')[0]?.toUpperCase()}
-            </Avatar>
-        );
-    }
+    const thumbnail = item.thumbnailUrl?.trim();
+
+    // `thumbnailUrl` is overloaded: entity lists for Release/Track put an
+    // internal fileId here, the others put an absolute URL. Passing both `src`
+    // and `fileId` disables fileId resolution inside ReleaseCoverImage.
+    // With neither set, ReleaseCoverImage renders the shared image fallback —
+    // same as the ranking tables do for records without a cover art.
+    const isAbsoluteUrl = !!thumbnail && /^(https?:)?\/\//.test(thumbnail);
 
     return (
         <ReleaseCoverImage
             width={28}
             height={28}
-            src={item?.thumbnailUrl}
-            fileId={item.thumbnailUrl}
+            src={isAbsoluteUrl ? thumbnail : undefined}
+            fileId={!thumbnail || isAbsoluteUrl ? undefined : thumbnail}
             className="shrink-0 overflow-hidden rounded"
         />
     );
@@ -83,11 +87,14 @@ export default function ContentEntitySelector({
     const getTabFromType = (type: string) => {
         const lower = type.toLowerCase();
         if (lower.startsWith('workspace')) return 'workspaces';
+        if (lower.startsWith('releasevideo')) return 'releaseVideos';
         if (lower.startsWith('release')) return 'releases';
         if (lower.startsWith('track')) return 'tracks';
         if (lower.startsWith('label')) return 'labels';
         if (lower.startsWith('dsp')) return 'dsps';
         if (lower.startsWith('artist')) return 'artists';
+        if (lower.startsWith('channel')) return 'channels';
+        if (lower.startsWith('sourcetype')) return 'sourceTypes';
         return 'releases';
     };
 
@@ -159,6 +166,15 @@ export default function ContentEntitySelector({
                     { key: 'labels', label: 'Label' },
                     { key: 'dsps', label: messages('common.dsps') },
                     { key: 'artists', label: messages('artist.label') },
+                    {
+                        key: 'releaseVideos',
+                        label: messages('common.releasesVideo'),
+                    },
+                    { key: 'channels', label: messages('common.channel') },
+                    {
+                        key: 'sourceTypes',
+                        label: messages('analytics2.distributors'),
+                    },
                 ]}
             />
 
@@ -221,6 +237,33 @@ export default function ContentEntitySelector({
 
                 {activeTab === 'artists' && (
                     <EntityListArtists
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        keyword={searchQuery}
+                        onSelect={handleItemClick}
+                    />
+                )}
+
+                {activeTab === 'releaseVideos' && (
+                    <EntityListReleaseVideos
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        keyword={searchQuery}
+                        onSelect={handleItemClick}
+                    />
+                )}
+
+                {activeTab === 'channels' && (
+                    <EntityListChannels
+                        fromDate={fromDate}
+                        toDate={toDate}
+                        keyword={searchQuery}
+                        onSelect={handleItemClick}
+                    />
+                )}
+
+                {activeTab === 'sourceTypes' && (
+                    <EntityListSourceTypes
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}

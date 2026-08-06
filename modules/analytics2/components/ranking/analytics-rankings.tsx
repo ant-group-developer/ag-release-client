@@ -1,17 +1,14 @@
 'use client';
 
 import { APP_ROUTES } from '@/enums/routes';
-import useModalStore from '@/hooks/use-modal';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import {
-    ANALYTICS_ENTITY_TYPE,
-    ANALYTICS_RELEASE_TYPE,
-} from '../../enums';
+import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import { ANALYTICS_VIEW_TYPE } from '../../enums/tabs';
 import { createViewMoreHref } from '../../helpers';
+import { useAdvancedModeModal } from '../../hooks/use-advanced-mode-modal';
 import {
     useGetArtistRanking,
     useGetChannelRanking,
@@ -32,6 +29,7 @@ import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analyt
 import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
+import AdvancedModeModal from '../modal/advanced-mode';
 import { useAnalyticsRankingColumns } from './use-analytics-ranking-columns';
 
 interface Props {
@@ -47,7 +45,11 @@ export default function AnalyticsRankings({
 }: Props) {
     const messages = useTranslations();
     const topN = 5;
-    const openModal = useModalStore((state) => state.openModal);
+    const {
+        openAdvancedMode,
+        isOpen: isAdvancedModeOpen,
+        closeAdvancedMode,
+    } = useAdvancedModeModal();
     const topRankingTitle = (title: string) =>
         messages('analytics2.topRankingTitle', {
             count: topN,
@@ -201,16 +203,12 @@ export default function AnalyticsRankings({
                                 //     }
                                 // )}
                                 onViewMore={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.RELEASE,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.RELEASE,
+                                    })
                                 }
                             />
                         </Col>
@@ -236,16 +234,11 @@ export default function AnalyticsRankings({
                                 //     }
                                 // )}
                                 onViewMore={() =>
-                                    openModal(
-                                        ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                        {
-                                            fromDate,
-                                            toDate,
-                                            initialEntity: {
-                                                type: ANALYTICS_ENTITY_TYPE.TRACK,
-                                            },
-                                        }
-                                    )
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType: ANALYTICS_ENTITY_TYPE.TRACK,
+                                    })
                                 }
                             />
                         </Col>
@@ -272,16 +265,11 @@ export default function AnalyticsRankings({
                         //     }
                         // )}
                         onViewMore={() =>
-                            openModal(
-                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    initialEntity: {
-                                        type: ANALYTICS_ENTITY_TYPE.ARTIST,
-                                    },
-                                }
-                            )
+                            openAdvancedMode({
+                                fromDate,
+                                toDate,
+                                entityType: ANALYTICS_ENTITY_TYPE.ARTIST,
+                            })
                         }
                     />
                 </Col>
@@ -305,16 +293,11 @@ export default function AnalyticsRankings({
                         //     }
                         // )}
                         onViewMore={() =>
-                            openModal(
-                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    initialEntity: {
-                                        type: ANALYTICS_ENTITY_TYPE.LABEL,
-                                    },
-                                }
-                            )
+                            openAdvancedMode({
+                                fromDate,
+                                toDate,
+                                entityType: ANALYTICS_ENTITY_TYPE.LABEL,
+                            })
                         }
                     />
                 </Col>
@@ -338,16 +321,11 @@ export default function AnalyticsRankings({
                         //     }
                         // )}
                         onViewMore={() =>
-                            openModal(
-                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    initialEntity: {
-                                        type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
-                                    },
-                                }
-                            )
+                            openAdvancedMode({
+                                fromDate,
+                                toDate,
+                                entityType: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                            })
                         }
                     />
                 </Col>
@@ -371,16 +349,11 @@ export default function AnalyticsRankings({
                         //     }
                         // )}
                         onViewMore={() =>
-                            openModal(
-                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    initialEntity: {
-                                        type: ANALYTICS_ENTITY_TYPE.DSP,
-                                    },
-                                }
-                            )
+                            openAdvancedMode({
+                                fromDate,
+                                toDate,
+                                entityType: ANALYTICS_ENTITY_TYPE.DSP,
+                            })
                         }
                     />
                 </Col>
@@ -405,16 +378,11 @@ export default function AnalyticsRankings({
                             //     }
                             // )}
                             onViewMore={() =>
-                                openModal(
-                                    ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                    {
-                                        fromDate,
-                                        toDate,
-                                        initialEntity: {
-                                            type: ANALYTICS_ENTITY_TYPE.CHANNEL,
-                                        },
-                                    }
-                                )
+                                openAdvancedMode({
+                                    fromDate,
+                                    toDate,
+                                    entityType: ANALYTICS_ENTITY_TYPE.CHANNEL,
+                                })
                             }
                         />
                     </Col>
@@ -441,16 +409,11 @@ export default function AnalyticsRankings({
                         //     }
                         // )}
                         onViewMore={() =>
-                            openModal(
-                                ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                {
-                                    fromDate,
-                                    toDate,
-                                    initialEntity: {
-                                        type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
-                                    },
-                                }
-                            )
+                            openAdvancedMode({
+                                fromDate,
+                                toDate,
+                                entityType: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                            })
                         }
                     />
                 </Col>
@@ -477,16 +440,12 @@ export default function AnalyticsRankings({
                             //     }
                             // )}
                             onViewMore={() =>
-                                openModal(
-                                    ANALYTICS_MODAL_TYPE.ADVANCED_MODE,
-                                    {
-                                        fromDate,
-                                        toDate,
-                                        initialEntity: {
-                                            type: ANALYTICS_ENTITY_TYPE.RELEASE,
-                                        },
-                                    }
-                                )
+                                openAdvancedMode({
+                                    fromDate,
+                                    toDate,
+                                    entityType:
+                                        ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                })
                             }
                         />
                     </Col>
@@ -595,6 +554,13 @@ export default function AnalyticsRankings({
                     sourceType={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {isAdvancedModeOpen && (
+                <AdvancedModeModal
+                    open
+                    onCancel={closeAdvancedMode}
                     releaseType={releaseType}
                 />
             )}
