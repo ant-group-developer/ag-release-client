@@ -4,9 +4,8 @@ import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
+import { Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { Radio } from 'lucide-react';
 import { ContentItem } from '../content-entity-selector';
 
 interface Props {
@@ -66,25 +65,12 @@ export default function EntityListDsps({
                     >
                         <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
-                                {dspLogo ? (
-                                    <ReleaseCoverImage
-                                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                        height={
-                                            ANALYTICS_RANKING_THUMBNAIL_SIZE
-                                        }
-                                        src={dspLogo}
-                                    />
-                                ) : (
-                                    <Avatar
-                                        shape="square"
-                                        size={40}
-                                        icon={<Radio className="h-5 w-5" />}
-                                        className="shrink-0 rounded-md bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400"
-                                    >
-                                        {(item.dspName ||
-                                            'D')[0]?.toUpperCase()}
-                                    </Avatar>
-                                )}
+                                <ReleaseCoverImage
+                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    src={dspLogo}
+                                />
+
                                 <div className="flex flex-col overflow-hidden">
                                     <Typography.Text
                                         ellipsis={{ tooltip: item.dspName }}

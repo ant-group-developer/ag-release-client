@@ -6,10 +6,12 @@ import { APP_ROUTES } from '@/enums/routes';
 import { validatePassword } from '@/helpers/validation';
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { Link } from '@/i18n/routing';
+import { authApi } from '@/modules/auth/api';
+import { useCheckPermission } from '@/modules/auth/hooks/use-permission';
 import { useCurrentDomain } from '@/modules/tenant/hooks/use-current-domain';
 import { Alert, Button, Input, theme } from 'antd';
 import { signIn } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
@@ -21,6 +23,8 @@ interface FormValues {
 export default function SignInPage() {
     const { token } = theme.useToken();
     const currentDomain = useCurrentDomain();
+    const locale = useLocale();
+    const { getFirstAccessibleRoute } = useCheckPermission();
     // const { domainData } = useResolveDomain(currentDomain);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -43,13 +47,13 @@ export default function SignInPage() {
     const onFinish = async (values: FormValues) => {
         setIsLoading(true);
 
-        const callbackUrl = `${window.location.origin}${APP_ROUTES.DASHBOARD}`;
+        // const callbackUrl = `${window.location.origin}${APP_ROUTES.DASHBOARD}`;
         try {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
                 redirect: false,
-                callbackUrl,
+                // callbackUrl,
                 ...(currentDomain && currentDomain !== LOCALHOST
                     ? { currentDomain }
                     : {}),
@@ -60,7 +64,15 @@ export default function SignInPage() {
                 const newUrl = `${window.location.pathname}?error=${encodeURIComponent(result.error)}`;
                 window.history.replaceState(null, '', newUrl);
             } else if (result?.ok && result?.url) {
-                window.location.href = result.url;
+                try {
+                    const infoRes = await authApi.getInfo();
+                    const targetRoute = getFirstAccessibleRoute(
+                        infoRes.data?.data
+                    );
+                    window.location.href = `${window.location.origin}/${locale}${targetRoute}`;
+                } catch {
+                    window.location.href = result.url;
+                }
             }
         } catch (error: any) {
             handleError(error);

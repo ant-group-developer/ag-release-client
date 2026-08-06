@@ -1,5 +1,5 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
-import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { FALLBACK_IMAGE } from '@/constants/common';
 
 type Props = {
     thumbUrl?: string | null;
@@ -7,11 +7,11 @@ type Props = {
 };
 
 export default function ChannelThumbImage({ thumbUrl, name }: Props) {
-    const imageUrl = thumbUrl || getAvatarUrl(name);
+    const imageUrl = thumbUrl;
 
     return (
         <ImageFallback
-            src={imageUrl}
+            src={imageUrl ?? FALLBACK_IMAGE}
             alt={name}
             width={48}
             height={48}
