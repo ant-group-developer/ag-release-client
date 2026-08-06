@@ -6,8 +6,7 @@ import {
     ANALYTICS_METRIC_KEY,
 } from '@/modules/analytics2/enums';
 import { AnalyticsEntityType } from '@/modules/analytics2/types';
-import { Button, Radio, Select, Tooltip, Typography } from 'antd';
-import { X } from 'lucide-react';
+import { Radio, Select, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import ContentEntitySelector, { ContentItem } from './content-entity-selector';
 
@@ -53,7 +52,10 @@ export default function ControlsSidebar({
             label: messages('artist.artists'),
             value: ANALYTICS_ENTITY_TYPE.ARTIST,
         },
-        { label: messages('common.labels'), value: ANALYTICS_ENTITY_TYPE.LABEL },
+        {
+            label: messages('common.labels'),
+            value: ANALYTICS_ENTITY_TYPE.LABEL,
+        },
         {
             label: messages('tenant.workspaces'),
             value: ANALYTICS_ENTITY_TYPE.WORKSPACE,
@@ -98,18 +100,6 @@ export default function ControlsSidebar({
                         >
                             {messages('analytics2.rankBy')}
                         </Typography.Text>
-                        {!!rankBy && (
-                            <Tooltip title={messages('common.clearFilter')}>
-                                <Button
-                                    size="small"
-                                    type="text"
-                                    aria-label={messages('common.clearFilter')}
-                                    icon={<X className="size-3.5" />}
-                                    onClick={() => onRankByChange?.('')}
-                                    className="flex items-center justify-center !p-1 opacity-60 hover:opacity-100"
-                                />
-                            </Tooltip>
-                        )}
                     </div>
                     <Radio.Group
                         value={rankBy ?? ''}
