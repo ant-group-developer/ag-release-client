@@ -1,4 +1,5 @@
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
+import { toNonAccentVietnamese } from '@/helpers/string';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { DspData } from '@/modules/dsp/types';
@@ -26,6 +27,7 @@ export default function PlatformSelect({ mode, ...props }: Props) {
                               value: 'ALL',
                               label: messages('common.all'),
                               id: 0,
+                              name: messages('common.all'),
                           },
                       ],
                   },
@@ -50,6 +52,7 @@ export default function PlatformSelect({ mode, ...props }: Props) {
                     </div>
                 ),
                 id: dsp.id,
+                name: dsp.name,
             })),
         },
     ];
@@ -69,6 +72,12 @@ export default function PlatformSelect({ mode, ...props }: Props) {
 
     return (
         <Select
+            showSearch
+            filterOption={(input, option) =>
+                toNonAccentVietnamese((option as any)?.name ?? '')
+                    .toLowerCase()
+                    .includes(toNonAccentVietnamese(input).toLowerCase())
+            }
             {...props}
             mode={mode}
             options={options}
