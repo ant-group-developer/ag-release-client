@@ -82,6 +82,17 @@ export interface RankingParams {
     topN?: number;
     includeOther?: boolean;
     sortBy?: string;
+    trackId?: string;
+    isrc?: string;
+    releaseId?: string;
+    tenantId?: string;
+    labelId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    dspId?: string;
+    artistId?: string;
+    channelId?: string;
+    sourceType?: string;
 }
 
 export interface TrackRankingItem {
@@ -236,6 +247,17 @@ export interface RevenueQueryParams extends CommonParams {
     groupBySource?: boolean;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     sortBy?: string;
+    trackId?: string;
+    isrc?: string;
+    releaseId?: string;
+    tenantId?: string;
+    labelId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    dspId?: string;
+    artistId?: string;
+    channelId?: string;
+    sourceType?: string;
 }
 
 // Summary Response
@@ -632,11 +654,17 @@ export interface AnalyticsCommonParams extends CommonParams {
     includeOther?: boolean;
     releaseId?: string;
     trackId?: string;
+    isrc?: string;
     workspaceId?: string;
     tenantId?: string;
     labelId?: string;
     dspId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
     artistId?: string;
+    channelId?: string;
+    sourceType?: string;
+    groupBySource?: boolean;
 }
 
 export type ReleaseDspParams = AnalyticsCommonParams;
@@ -770,19 +798,12 @@ export interface RevenueSourceTypeItem {
     imageUrl?: string | null;
 }
 
-export type AnalyticsEntityType = ANALYTICS_ENTITY_TYPE | `${ANALYTICS_ENTITY_TYPE}`;
-
-export interface AnalyticsEntity {
-    type: AnalyticsEntityType;
-    id?: string;
-}
+export type AnalyticsEntityType =
+    | ANALYTICS_ENTITY_TYPE
+    | `${ANALYTICS_ENTITY_TYPE}`;
 
 export interface ActiveAnalyticsEntity {
     type: AnalyticsEntityType;
-}
-
-export interface AnalyticModalStoreData {
-    fromDate: string;
-    toDate: string;
-    initialEntity: AnalyticsEntity;
+    id?: string;
+    entitySubId?: string;
 }

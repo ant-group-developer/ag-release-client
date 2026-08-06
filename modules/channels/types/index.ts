@@ -50,3 +50,36 @@ export interface ChannelDataFilter extends CommonParams {
     status?: string;
     isActive?: boolean | string;
 }
+
+export interface YoutubeChannelSyncRun extends CommonAttribute {
+    actorId: string;
+    force: boolean;
+    totalChannels: number;
+    processedChannels: number;
+    updatedChannels: number;
+    updatedFields: number;
+    noChangeChannels: number;
+    missingYoutubeChannelId: number;
+    notFoundOnYoutube: number;
+    failedChannels: number;
+    errors: string[];
+    completedAt: string | null;
+}
+
+export interface YoutubeChannelSyncRunLog extends CommonAttribute {
+    channelId: string;
+    runId: string;
+    youtubeChannelId: string;
+    actorId: string;
+    force: boolean;
+    fieldName: string;
+    previousValue: string | null;
+    nextValue: string | null;
+    channel?: Pick<ChannelsData, 'id' | 'name' | 'thumbUrl'>;
+}
+
+export interface YoutubeChannelSyncRunFilter extends CommonParams {}
+
+export interface YoutubeChannelSyncRunLogFilter extends CommonParams {
+    runId: string;
+}

@@ -26,7 +26,11 @@ interface ArtistViewsTableProps {
     dataSource: ArtistRankingItem[];
     loading: boolean;
     dspData?: any;
-    onDetailArtist: (artistId: string, artistName: string) => void;
+    onDetailArtist: (
+        artistId: string,
+        artistName: string,
+        thumbnailUrl?: string | null
+    ) => void;
     onDetailSource?: (sourceType: string, title: string) => void;
 }
 
@@ -73,7 +77,11 @@ export default function ArtistViewsTable({
                         <span
                             className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                             onClick={() =>
-                                onDetailArtist(record.artistId, text)
+                                onDetailArtist(
+                                    record.artistId,
+                                    text,
+                                    record.picture
+                                )
                             }
                         >
                             {text}

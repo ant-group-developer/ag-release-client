@@ -30,6 +30,15 @@ export type UseFilterProps<DataFilterType> = {
     defaultFilter: DataFilterType;
 };
 
+export type UseFilterOptions = {
+    /**
+     * Namespaces every query param this instance reads and writes, so filters
+     * of a modal and of the page underneath it can coexist in one URL.
+     */
+    paramPrefix?: string;
+    history?: 'push' | 'replace';
+};
+
 const compareObjects = (obj1: any, obj2: any) => {
     // const customize = (objValue: any, othValue: any) => {
     //     if (objValue == othValue) {
@@ -81,16 +90,28 @@ const serializeQueryParamValue = (value: unknown) => {
 };
 
 export const useFilter = <DataFilterType extends CommonParams>(
-    defaultFilter: DataFilterType
+    defaultFilter: DataFilterType,
+    options?: UseFilterOptions
 ): UseFilterProps<DataFilterType> => {
     const pathname = usePathname();
+    const prefix = options?.paramPrefix ?? '';
+    const historyMode = options?.history ?? 'push';
 
     const searchParams = useSearchParams();
     const queryParams = useQueryParams();
     const router = useRouter();
+
+    const scopedQueryParams = prefix
+        ? Object.fromEntries(
+              Object.entries(queryParams)
+                  .filter(([key]) => key.startsWith(prefix))
+                  .map(([key, value]) => [key.slice(prefix.length), value])
+          )
+        : queryParams;
+
     const dataFilter: DataFilterType = {
         ...defaultFilter,
-        ...queryParams,
+        ...scopedQueryParams,
     };
 
     const syncParamsToURL = (params: any) => {
@@ -98,14 +119,21 @@ export const useFilter = <DataFilterType extends CommonParams>(
             Array.from((searchParams ?? new URLSearchParams()).entries())
         );
         for (const [key, value] of Object.entries(params)) {
+            const paramKey = `${prefix}${key}`;
             if (value) {
-                current.set(key, serializeQueryParamValue(value));
+                current.set(paramKey, serializeQueryParamValue(value));
             } else {
-                current.delete(key);
+                current.delete(paramKey);
             }
         }
 
-        router.push(`${pathname}?${current.toString()}`);
+        const url = `${pathname}?${current.toString()}`;
+        if (historyMode === 'replace') {
+            router.replace(url);
+            return;
+        }
+
+        router.push(url);
     };
 
     const onChangePage: OnChangePage = (page, pageSize = PAGE_SIZE) => {
@@ -157,7 +185,23 @@ export const useFilter = <DataFilterType extends CommonParams>(
     };
 
     const removeFilter = () => {
-        window.history.pushState(null, '', pathname ?? '');
+        if (!prefix) {
+            window.history.pushState(null, '', pathname ?? '');
+            return;
+        }
+
+        const current = new URLSearchParams(
+            Array.from((searchParams ?? new URLSearchParams()).entries())
+        );
+        Array.from(current.keys())
+            .filter((key) => key.startsWith(prefix))
+            .forEach((key) => current.delete(key));
+
+        window.history.pushState(
+            null,
+            '',
+            `${pathname}?${current.toString()}`
+        );
     };
 
     removeNullValue(dataFilter);

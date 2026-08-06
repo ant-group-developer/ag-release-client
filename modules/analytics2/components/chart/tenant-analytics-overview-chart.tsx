@@ -63,14 +63,12 @@ export default function TenantAnalyticsOverviewChart({
         isEnabled && !isRevenueMetric
     );
 
-    const {
-        revenueLineChartData,
-        isFetching: isRevenueLineFetching,
-    } = useGetTenantRevenueLineChart(
-        tenantId,
-        chartFilterParams,
-        isEnabled && isRevenueMetric
-    );
+    const { revenueLineChartData, isFetching: isRevenueLineFetching } =
+        useGetTenantRevenueLineChart(
+            tenantId,
+            chartFilterParams,
+            isEnabled && isRevenueMetric
+        );
 
     const {
         revenueDspBarChartData: dspRevenueData,
@@ -97,12 +95,8 @@ export default function TenantAnalyticsOverviewChart({
         ? isRevenueLineFetching
         : isTrendViewLineFetching;
 
-    const dspData = isRevenueMetric
-        ? dspRevenueData
-        : dspTrendViewData;
-    const terData = isRevenueMetric
-        ? terRevenueData
-        : terTrendViewData;
+    const dspData = isRevenueMetric ? dspRevenueData : dspTrendViewData;
+    const terData = isRevenueMetric ? terRevenueData : terTrendViewData;
     const isBarChartLoading = isRevenueMetric
         ? isDspRevenueFetching || isTerRevenueFetching
         : isDspTrendViewFetching || isTerTrendViewFetching;

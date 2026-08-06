@@ -2,11 +2,11 @@
 
 import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
-import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetArtistRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { Radio } from 'lucide-react';
+import { User } from 'lucide-react';
 import { ContentItem } from '../content-entity-selector';
 
 interface Props {
@@ -16,13 +16,13 @@ interface Props {
     onSelect: (item: ContentItem) => void;
 }
 
-export default function EntityListDsps({
+export default function EntityListArtists({
     fromDate = dayjs().subtract(27, 'day').format('YYYY-MM-DD'),
     toDate = dayjs().format('YYYY-MM-DD'),
     keyword,
     onSelect,
 }: Props) {
-    const { dspRankingData, isFetching } = useGetDspRanking({
+    const { artistRankingData, isFetching } = useGetArtistRanking({
         fromDate,
         toDate,
         page: 1,
@@ -30,11 +30,11 @@ export default function EntityListDsps({
         keyword,
     });
 
-    if (isFetching && !dspRankingData?.items?.length) {
+    if (isFetching && !artistRankingData?.items?.length) {
         return <Skeleton active paragraph={{ rows: 4 }} className="p-2" />;
     }
 
-    const items = dspRankingData?.items || [];
+    const items = artistRankingData?.items || [];
 
     if (!items.length) {
         return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className="my-4" />;
@@ -44,21 +44,20 @@ export default function EntityListDsps({
         <List
             dataSource={items}
             renderItem={(item) => {
-                const dspLogo =
-                    (item as any).imageUrl ||
-                    (item as any).picture ||
-                    (item as any).logo ||
-                    (item as any).icon;
+                const artistImage =
+                    item.picture ||
+                    item.image ||
+                    (item as any).avatar ||
+                    (item as any).imageUrl;
 
                 return (
                     <List.Item
                         onClick={() =>
                             onSelect({
-                                id: item?.pgDspId || item?.dspReportId || '',
-                                entitySubId: item?.dspReportId || '',
-                                title: item.dspName || '',
-                                type: 'DSP',
-                                thumbnailUrl: dspLogo || undefined,
+                                id: item.artistId,
+                                title: item.artistName,
+                                type: 'Artist',
+                                thumbnailUrl: artistImage || undefined,
                                 subtitle: `${formattedNumber(item.totalViews)} views`,
                             })
                         }
@@ -66,38 +65,38 @@ export default function EntityListDsps({
                     >
                         <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
-                                {dspLogo ? (
+                                {artistImage ? (
                                     <ReleaseCoverImage
                                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                                         height={
                                             ANALYTICS_RANKING_THUMBNAIL_SIZE
                                         }
-                                        src={dspLogo}
+                                        src={artistImage}
                                     />
                                 ) : (
                                     <Avatar
                                         shape="square"
                                         size={40}
-                                        icon={<Radio className="h-5 w-5" />}
-                                        className="shrink-0 rounded-md bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400"
+                                        icon={<User className="h-5 w-5" />}
+                                        className="shrink-0 rounded-md bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
                                     >
-                                        {(item.dspName ||
-                                            'D')[0]?.toUpperCase()}
+                                        {(item.artistName ||
+                                            'A')[0]?.toUpperCase()}
                                     </Avatar>
                                 )}
                                 <div className="flex flex-col overflow-hidden">
                                     <Typography.Text
-                                        ellipsis={{ tooltip: item.dspName }}
+                                        ellipsis={{ tooltip: item.artistName }}
                                         className="text-sm font-medium"
                                     >
-                                        {item.dspName}
+                                        {item.artistName}
                                     </Typography.Text>
-                                    {/* <Typography.Text
+                                    <Typography.Text
                                         type="secondary"
                                         className="text-xs"
                                     >
-                                        DSP Platform
-                                    </Typography.Text> */}
+                                        Artist
+                                    </Typography.Text>
                                 </div>
                             </div>
                         </div>

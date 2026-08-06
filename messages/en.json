@@ -141,6 +141,7 @@
         "dsps": "DSPs",
         "workspace": "Workspace",
         "label": "Label",
+        "dsp": "DSP",
         "onlineLink": "Online Link",
         "yes": "Yes",
         "no": "No",
@@ -337,6 +338,8 @@
         "release": "Release",
         "releases": "Releases",
         "releasesVideo": "Video releases",
+        "releasevideo": "Video releases",
+        "sourcetype": "Distributors",
         "plays": "Plays",
         "dark": "Dark",
         "light": "Light",
@@ -735,6 +738,21 @@
         "createFirstToManageMembers": "Please create the channel first before managing members",
         "existedOnVevoBackstage": "Existed on Vevo Backstage",
         "youtubeChannelId": "YouTube channel ID",
+        "youtubeSyncRuns": {
+            "button": "YouTube channel sync runs",
+            "title": "YouTube channel sync runs",
+            "detailTitle": "YouTube channel sync log details",
+            "runButton": "Run sync",
+            "columns": {
+                "totalChannels": "Total channels",
+                "updatedChannels": "Updated channels",
+                "updatedFields": "Updated fields",
+                "failedChannels": "Failed channels",
+                "fieldName": "Changed field",
+                "previousValue": "Previous value",
+                "nextValue": "Next value"
+            }
+        },
         "validation": {
             "nameFormat": "Channel name can only contain letters and numbers, and must end with VEVO."
         },
@@ -3325,6 +3343,7 @@
         "topReleases": "Top Releases",
         "topTracks": "Top Tracks",
         "distributors": "Distributors",
+        "rankBy": "Rank by",
         "detailEntityTitle": "({entity}: {title})",
         "filters": {
             "allPlatforms": "All platforms",

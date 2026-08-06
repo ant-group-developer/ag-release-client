@@ -12,13 +12,23 @@ import { useFilter } from '@/hooks/use-filter';
 import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+    type AnalyticsScopeParams,
+} from '@/modules/analytics2/helpers';
 import { useGetLabelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { LabelRankingItem, RevenueLabelItem } from '@/modules/analytics2/types';
@@ -39,11 +49,17 @@ const VIEWS_COLUMN_WIDTH = 160;
 const LABEL_COLUMN_WIDTH = 300;
 
 export interface LabelRankingTableCardProps {
+    labelId?: string;
+    scopeParams?: AnalyticsScopeParams;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
+    paramPrefix?: string;
 }
 
 interface RankingFilter extends CommonParams {
@@ -54,11 +70,17 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function LabelRankingTableCard({
+    labelId,
+    scopeParams,
     fromDate,
     toDate,
     releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
+    paramPrefix,
 }: LabelRankingTableCardProps) {
     const messages = useTranslations();
 
@@ -66,21 +88,24 @@ export default function LabelRankingTableCard({
     const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<RankingFilter>({
-            page: DEFAULT_PAGE,
-            pageSize: PAGE_SIZE_DEFAULT,
-            startDate: effectiveFromDate,
-            endDate: effectiveToDate,
-            type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
-        });
+        useFilter<RankingFilter>(
+            {
+                page: DEFAULT_PAGE,
+                pageSize: PAGE_SIZE_DEFAULT,
+                startDate: effectiveFromDate,
+                endDate: effectiveToDate,
+                type: ANALYTICS_VIEW_TYPE.VIEW,
+                releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
+            },
+            { paramPrefix, history: paramPrefix ? 'replace' : 'push' }
+        );
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(dataFilter.type ?? null)
     );
     const [selectedReleaseType, setSelectedReleaseType] =
-        useState<ANALYTICS_RELEASE_TYPE>(
-            releaseType || ANALYTICS_RELEASE_TYPE.ALL
+        useState<ANALYTICS_RELEASE_TYPE>(() =>
+            getAnalyticsReleaseType(dataFilter.releaseType ?? null)
         );
 
     useEffect(() => {
@@ -101,7 +126,15 @@ export default function LabelRankingTableCard({
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
     const requestReleaseType =
         selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
@@ -119,6 +152,8 @@ export default function LabelRankingTableCard({
                 keyword: dataFilter.keyword,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                labelId,
+                ...scopeParams,
             },
             { enabled: enabled && !isRevenue }
         );
@@ -133,8 +168,11 @@ export default function LabelRankingTableCard({
                 pageSize,
                 keyword: dataFilter.keyword ?? undefined,
                 includeOther: false,
+                sortBy: revenueSortBy,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                labelId,
+                ...scopeParams,
             },
             { enabled: enabled && isRevenue }
         );
@@ -174,15 +212,24 @@ export default function LabelRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setActiveDetail({
-                                    type: 'label',
+                            onClick={() => {
+                                // setActiveDetail({
+                                //     type: 'label',
+                                //     title: text,
+                                //     targetId: record.labelId,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.labelId,
                                     title: text,
-                                    targetId: record.labelId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                    thumbnailUrl:
+                                        record.logoUrl ??
+                                        record.picture ??
+                                        undefined,
+                                });
+                            }}
                         >
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 </div>
@@ -200,7 +247,7 @@ export default function LabelRankingTableCard({
                 if (!workspaceName) {
                     return (
                         <Typography.Text className="truncate">
-                            {workspaceName || '—'}
+                            {workspaceName || '-'}
                         </Typography.Text>
                     );
                 }
@@ -210,15 +257,20 @@ export default function LabelRankingTableCard({
                             <Avatar src={workspace?.logo as string} />
                             <Typography.Text
                                 className="cursor-pointer transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'tenant',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'tenant',
+                                    //     title: workspaceName || '',
+                                    //     targetId: workspace?.id,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: workspace?.id || '',
                                         title: workspaceName || '',
-                                        targetId: workspace?.id,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                    });
+                                }}
                             >
-                                {workspaceName || '—'}
+                                {workspaceName || '-'}
                             </Typography.Text>
                         </Space>
                     </CustomTooltip>
@@ -231,7 +283,7 @@ export default function LabelRankingTableCard({
             key: 'bySource',
             width: 280,
             render: (bySource?: any[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={bySource}
@@ -244,13 +296,18 @@ export default function LabelRankingTableCard({
                             >
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setActiveDetail({
-                                            type: 'source',
+                                    onClick={() => {
+                                        // setActiveDetail({
+                                        //     type: 'source',
+                                        //     title: item.sourceLabel,
+                                        //     targetId: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            targetId: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}: $
                                     {formattedNumber(item.revenueUsd)}
@@ -338,15 +395,24 @@ export default function LabelRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setActiveDetail({
-                                    type: 'label',
+                            onClick={() => {
+                                // setActiveDetail({
+                                //     type: 'label',
+                                //     title: text,
+                                //     targetId: record.labelId,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.labelId,
                                     title: text,
-                                    targetId: record.labelId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                    thumbnailUrl:
+                                        record.logoUrl ??
+                                        record.picture ??
+                                        undefined,
+                                });
+                            }}
                         >
-                            {text || '—'}
+                            {text || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 </div>
@@ -370,15 +436,20 @@ export default function LabelRankingTableCard({
                         >
                             <Typography.Text
                                 className="cursor-pointer transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'tenant',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'tenant',
+                                    //     title: workspaceName || '',
+                                    //     targetId: tenantId,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: tenantId,
                                         title: workspaceName || '',
-                                        targetId: tenantId,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                    });
+                                }}
                             >
-                                {workspaceName || '—'}
+                                {workspaceName || '-'}
                             </Typography.Text>
                         </CustomTooltip>
                     </div>
@@ -391,7 +462,7 @@ export default function LabelRankingTableCard({
             key: 'bySource',
             width: 200,
             render: (bySource?: any[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={bySource}
@@ -404,13 +475,18 @@ export default function LabelRankingTableCard({
                             >
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setActiveDetail({
-                                            type: 'source',
+                                    onClick={() => {
+                                        // setActiveDetail({
+                                        //     type: 'source',
+                                        //     title: item.sourceLabel,
+                                        //     targetId: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            targetId: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}:{' '}
                                     {formattedNumber(item.quantity)}
@@ -491,12 +567,26 @@ export default function LabelRankingTableCard({
                         ]}
                     />
                     <Segmented
-                        value={currentType}
+                        value={
+                            isRevenue
+                                ? ANALYTICS_VIEW_TYPE.REVENUE
+                                : ANALYTICS_VIEW_TYPE.VIEW
+                        }
                         onChange={(value) => {
-                            setCurrentType(value as ANALYTICS_VIEW_TYPE);
-                            onChangeFilter({
-                                type: value as ANALYTICS_VIEW_TYPE,
-                            });
+                            const nextType = value as ANALYTICS_VIEW_TYPE;
+                            setCurrentType(nextType);
+                            // The metric owns the view type when it is
+                            // controlled; writing both params would race two
+                            // URL updates built from the same stale snapshot.
+                            if (onMetricChange) {
+                                onMetricChange(
+                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                                );
+                                return;
+                            }
+                            onChangeFilter({ type: nextType });
                         }}
                         options={[
                             {

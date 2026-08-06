@@ -8,12 +8,22 @@ import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+    type AnalyticsScopeParams,
+} from '@/modules/analytics2/helpers';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -30,11 +40,19 @@ import { useEffect, useMemo, useState } from 'react';
 const DEFAULT_PAGE = 1;
 
 export interface DspRankingTableCardProps {
+    dspId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    scopeParams?: AnalyticsScopeParams;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
+    paramPrefix?: string;
 }
 
 interface RankingFilter extends CommonParams {
@@ -46,11 +64,19 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function DspRankingTableCard({
+    dspId,
+    pgDspId,
+    dspReportId,
+    scopeParams,
     fromDate,
     toDate,
     releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
+    paramPrefix,
 }: DspRankingTableCardProps) {
     const messages = useTranslations();
 
@@ -58,21 +84,24 @@ export default function DspRankingTableCard({
     const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<RankingFilter>({
-            page: DEFAULT_PAGE,
-            pageSize: PAGE_SIZE_DEFAULT,
-            startDate: effectiveFromDate,
-            endDate: effectiveToDate,
-            type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
-        });
+        useFilter<RankingFilter>(
+            {
+                page: DEFAULT_PAGE,
+                pageSize: PAGE_SIZE_DEFAULT,
+                startDate: effectiveFromDate,
+                endDate: effectiveToDate,
+                type: ANALYTICS_VIEW_TYPE.VIEW,
+                releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
+            },
+            { paramPrefix, history: paramPrefix ? 'replace' : 'push' }
+        );
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(dataFilter.type ?? null)
     );
     const [selectedReleaseType, setSelectedReleaseType] =
-        useState<ANALYTICS_RELEASE_TYPE>(
-            releaseType || ANALYTICS_RELEASE_TYPE.ALL
+        useState<ANALYTICS_RELEASE_TYPE>(() =>
+            getAnalyticsReleaseType(dataFilter.releaseType ?? null)
         );
 
     useEffect(() => {
@@ -93,7 +122,15 @@ export default function DspRankingTableCard({
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
     const requestReleaseType =
         selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
@@ -110,6 +147,9 @@ export default function DspRankingTableCard({
             keyword: dataFilter.keyword ?? undefined,
             groupBySource: true,
             releaseType: requestReleaseType,
+            pgDspId: pgDspId || '',
+            dspReportId: dspReportId || '',
+            ...scopeParams,
         },
         { enabled: enabled && !isRevenue }
     );
@@ -123,8 +163,12 @@ export default function DspRankingTableCard({
             pageSize,
             keyword: dataFilter.keyword ?? undefined,
             includeOther: false,
+            sortBy: revenueSortBy,
             groupBySource: true,
             releaseType: requestReleaseType,
+            pgDspId: pgDspId || '',
+            dspReportId: dspReportId || '',
+            ...scopeParams,
         },
         { enabled: enabled && isRevenue }
     );
@@ -170,19 +214,28 @@ export default function DspRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: RevenueDspItem & { rank: number }) => (
+            render: (
+                text: string,
+                record: RevenueDspItem & { rank: number }
+            ) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <Typography.Text
                         className="cursor-pointer transition-colors hover:text-blue-500"
-                        onClick={() =>
-                            setDetailSourceModal({
-                                open: true,
+                        onClick={() => {
+                            // setDetailSourceModal({
+                            //     open: true,
+                            //     title: text || record.source || '',
+                            //     sourceType: record.source || '',
+                            // });
+                            onSelectEntity?.({
+                                id: record.source || '',
                                 title: text || record.source || '',
-                                sourceType: record.source || '',
-                            })
-                        }
+                                type: ANALYTICS_ENTITY_TYPE.DSP,
+                                thumbnailUrl: record.imageUrl ?? undefined,
+                            });
+                        }}
                     >
-                        {text || record.source || '—'}
+                        {text || record.source || '— '}
                     </Typography.Text>
                 </CustomTooltip>
             ),
@@ -193,7 +246,7 @@ export default function DspRankingTableCard({
             key: 'bySource',
             width: 280,
             render: (bySource?: BySourceItem[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '— ';
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
@@ -203,13 +256,18 @@ export default function DspRankingTableCard({
                             >
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                    onClick={() => {
+                                        // setDetailSourceModal({
+                                        //     open: true,
+                                        //     title: item.sourceLabel,
+                                        //     sourceType: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}: $
                                     {formattedNumber(item.revenueUsd)}
@@ -267,19 +325,28 @@ export default function DspRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: DspRankingItem & { rank: number }) => (
+            render: (
+                text: string,
+                record: DspRankingItem & { rank: number }
+            ) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <Typography.Text
                         className="cursor-pointer transition-colors hover:text-blue-500"
-                        onClick={() =>
-                            setDetailSourceModal({
-                                open: true,
+                        onClick={() => {
+                            // setDetailSourceModal({
+                            //     open: true,
+                            //     title: text || record.source || '',
+                            //     sourceType: record.source || '',
+                            // });
+                            onSelectEntity?.({
+                                id: record.source || '',
                                 title: text || record.source || '',
-                                sourceType: record.source || '',
-                            })
-                        }
+                                type: ANALYTICS_ENTITY_TYPE.DSP,
+                                thumbnailUrl: record.imageUrl ?? undefined,
+                            });
+                        }}
                     >
-                        {text || record.source || '—'}
+                        {text || record.source || '— '}
                     </Typography.Text>
                 </CustomTooltip>
             ),
@@ -290,7 +357,7 @@ export default function DspRankingTableCard({
             key: 'bySource',
             width: 280,
             render: (bySource?: BySourceItem[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '— ';
                 return (
                     <div className="flex flex-wrap gap-1.5">
                         {bySource.map((item) => (
@@ -300,13 +367,18 @@ export default function DspRankingTableCard({
                             >
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setDetailSourceModal({
-                                            open: true,
+                                    onClick={() => {
+                                        // setDetailSourceModal({
+                                        //     open: true,
+                                        //     title: item.sourceLabel,
+                                        //     sourceType: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            sourceType: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}:{' '}
                                     {formattedNumber(item.quantity)}
@@ -369,12 +441,26 @@ export default function DspRankingTableCard({
                         ]}
                     />
                     <Segmented
-                        value={currentType}
+                        value={
+                            isRevenue
+                                ? ANALYTICS_VIEW_TYPE.REVENUE
+                                : ANALYTICS_VIEW_TYPE.VIEW
+                        }
                         onChange={(value) => {
-                            setCurrentType(value as ANALYTICS_VIEW_TYPE);
-                            onChangeFilter({
-                                type: value as ANALYTICS_VIEW_TYPE,
-                            });
+                            const nextType = value as ANALYTICS_VIEW_TYPE;
+                            setCurrentType(nextType);
+                            // The metric owns the view type when it is
+                            // controlled; writing both params would race two
+                            // URL updates built from the same stale snapshot.
+                            if (onMetricChange) {
+                                onMetricChange(
+                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                                );
+                                return;
+                            }
+                            onChangeFilter({ type: nextType });
                         }}
                         options={[
                             {

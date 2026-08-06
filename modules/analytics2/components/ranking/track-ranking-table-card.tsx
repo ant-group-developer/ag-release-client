@@ -11,13 +11,23 @@ import { useFilter } from '@/hooks/use-filter';
 import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
 import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
-import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
+import {
+    getAnalyticsReleaseType,
+    getAnalyticsViewType,
+    type AnalyticsScopeParams,
+} from '@/modules/analytics2/helpers';
 import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { RevenueTrackItem, TrackRankingItem } from '@/modules/analytics2/types';
@@ -32,11 +42,18 @@ import { useEffect, useState } from 'react';
 const DEFAULT_PAGE = 1;
 
 export interface TrackRankingTableCardProps {
+    trackId?: string;
+    isrc?: string;
+    scopeParams?: AnalyticsScopeParams;
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+    metricKey?: ANALYTICS_METRIC_KEY;
+    onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
+    onSelectEntity?: (item?: ContentItem) => void;
     enabled?: boolean;
     className?: string;
+    paramPrefix?: string;
 }
 
 interface RankingFilter extends CommonParams {
@@ -47,11 +64,17 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function TrackRankingTableCard({
+    trackId,
+    scopeParams,
     fromDate,
     toDate,
     releaseType,
+    metricKey,
+    onMetricChange,
+    onSelectEntity,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
+    paramPrefix,
 }: TrackRankingTableCardProps) {
     const messages = useTranslations();
 
@@ -59,21 +82,24 @@ export default function TrackRankingTableCard({
     const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
 
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
-        useFilter<RankingFilter>({
-            page: DEFAULT_PAGE,
-            pageSize: PAGE_SIZE_DEFAULT,
-            startDate: effectiveFromDate,
-            endDate: effectiveToDate,
-            type: ANALYTICS_VIEW_TYPE.VIEW,
-            releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
-        });
+        useFilter<RankingFilter>(
+            {
+                page: DEFAULT_PAGE,
+                pageSize: PAGE_SIZE_DEFAULT,
+                startDate: effectiveFromDate,
+                endDate: effectiveToDate,
+                type: ANALYTICS_VIEW_TYPE.VIEW,
+                releaseType: releaseType || ANALYTICS_RELEASE_TYPE.ALL,
+            },
+            { paramPrefix, history: paramPrefix ? 'replace' : 'push' }
+        );
 
-    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(
-        ANALYTICS_VIEW_TYPE.VIEW
+    const [currentType, setCurrentType] = useState<ANALYTICS_VIEW_TYPE>(() =>
+        getAnalyticsViewType(dataFilter.type ?? null)
     );
     const [selectedReleaseType, setSelectedReleaseType] =
-        useState<ANALYTICS_RELEASE_TYPE>(
-            releaseType || ANALYTICS_RELEASE_TYPE.ALL
+        useState<ANALYTICS_RELEASE_TYPE>(() =>
+            getAnalyticsReleaseType(dataFilter.releaseType ?? null)
         );
 
     useEffect(() => {
@@ -94,7 +120,15 @@ export default function TrackRankingTableCard({
 
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
-    const isRevenue = currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const isRevenue = metricKey
+        ? metricKey !== ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+        : currentType === ANALYTICS_VIEW_TYPE.REVENUE;
+    const revenueSortBy =
+        metricKey === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : metricKey === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
     const requestReleaseType =
         selectedReleaseType === ANALYTICS_RELEASE_TYPE.ALL
@@ -112,6 +146,8 @@ export default function TrackRankingTableCard({
                 keyword: dataFilter.keyword,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                trackId: trackId,
+                ...scopeParams,
             },
             { enabled: enabled && !isRevenue }
         );
@@ -126,8 +162,11 @@ export default function TrackRankingTableCard({
                 pageSize,
                 keyword: dataFilter.keyword,
                 includeOther: false,
+                sortBy: revenueSortBy,
                 groupBySource: true,
                 releaseType: requestReleaseType,
+                trackId: trackId,
+                ...scopeParams,
             },
             { enabled: enabled && isRevenue }
         );
@@ -172,13 +211,22 @@ export default function TrackRankingTableCard({
                         >
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'track',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'track',
+                                    //     title: text,
+                                    //     targetId: record.isrc,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: record.isrc,
                                         title: text,
-                                        targetId: record.isrc,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.TRACK,
+                                        thumbnailUrl: record.release
+                                            ?.coverArtThumbnails?.[
+                                            RELEASE_COVER_ART_SIZE.S75
+                                        ] as string,
+                                    });
+                                }}
                             >
                                 {text}
                             </Typography.Text>
@@ -195,7 +243,7 @@ export default function TrackRankingTableCard({
             ellipsis: true,
             render: (text: string) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '—'}
+                    {text || '-'}
                 </Typography.Text>
             ),
         },
@@ -212,15 +260,20 @@ export default function TrackRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setActiveDetail({
-                                    type: 'label',
+                            onClick={() => {
+                                // setActiveDetail({
+                                //     type: 'label',
+                                //     title: labelName || '',
+                                //     targetId: record.labelId as string,
+                                // });
+                                onSelectEntity?.({
+                                    id: record.labelId as string,
                                     title: labelName || '',
-                                    targetId: record.labelId as string,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                });
+                            }}
                         >
-                            {labelName || '—'}
+                            {labelName || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 );
@@ -239,12 +292,12 @@ export default function TrackRankingTableCard({
                     track?.metadataExternal ||
                     record.release?.metadataExternal;
 
-                if (!metadataExternalObj) return '—';
+                if (!metadataExternalObj) return '-';
                 const entries = Object.entries(metadataExternalObj).filter(
                     ([, metadata]: [string, any]) =>
                         !!metadata?.trackUrl || !!metadata?.albumUrl
                 );
-                if (entries.length === 0) return '—';
+                if (entries.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={entries}
@@ -282,7 +335,7 @@ export default function TrackRankingTableCard({
             key: 'bySource',
             width: 200,
             render: (bySource?: any[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={bySource}
@@ -295,13 +348,18 @@ export default function TrackRankingTableCard({
                             >
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setActiveDetail({
-                                            type: 'source',
+                                    onClick={() => {
+                                        // setActiveDetail({
+                                        //     type: 'source',
+                                        //     title: item.sourceLabel,
+                                        //     targetId: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            targetId: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}: $
                                     {formattedNumber(item.revenueUsd)}
@@ -376,13 +434,22 @@ export default function TrackRankingTableCard({
                         >
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                                onClick={() =>
-                                    setActiveDetail({
-                                        type: 'track',
+                                onClick={() => {
+                                    // setActiveDetail({
+                                    //     type: 'track',
+                                    //     title: text,
+                                    //     targetId: record.isrc,
+                                    // });
+                                    onSelectEntity?.({
+                                        id: record.isrc,
                                         title: text,
-                                        targetId: record.isrc,
-                                    })
-                                }
+                                        type: ANALYTICS_ENTITY_TYPE.TRACK,
+                                        thumbnailUrl: record.release
+                                            ?.coverArtThumbnails?.[
+                                            RELEASE_COVER_ART_SIZE.S75
+                                        ] as string,
+                                    });
+                                }}
                             >
                                 {text}
                             </Typography.Text>
@@ -399,7 +466,7 @@ export default function TrackRankingTableCard({
             ellipsis: true,
             render: (text: string) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '—'}
+                    {text || '-'}
                 </Typography.Text>
             ),
         },
@@ -415,7 +482,7 @@ export default function TrackRankingTableCard({
                 if (!labelId) {
                     return (
                         <Typography.Text className="truncate">
-                            {labelName || '—'}
+                            {labelName || '-'}
                         </Typography.Text>
                     );
                 }
@@ -423,15 +490,20 @@ export default function TrackRankingTableCard({
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                setActiveDetail({
-                                    type: 'label',
+                            onClick={() => {
+                                // setActiveDetail({
+                                //     type: 'label',
+                                //     title: labelName || '',
+                                //     targetId: labelId,
+                                // });
+                                onSelectEntity?.({
+                                    id: labelId,
                                     title: labelName || '',
-                                    targetId: labelId,
-                                })
-                            }
+                                    type: ANALYTICS_ENTITY_TYPE.LABEL,
+                                });
+                            }}
                         >
-                            {labelName || '—'}
+                            {labelName || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 );
@@ -444,12 +516,12 @@ export default function TrackRankingTableCard({
             render: (_, record: TrackRankingItem) => {
                 const metadataExternalObj = record.metadataExternal;
 
-                if (!metadataExternalObj) return '—';
+                if (!metadataExternalObj) return '-';
                 const entries = Object.entries(metadataExternalObj).filter(
                     ([, metadata]: [string, any]) =>
                         !!metadata?.trackUrl || !!metadata?.albumUrl
                 );
-                if (entries.length === 0) return '—';
+                if (entries.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={entries}
@@ -487,7 +559,7 @@ export default function TrackRankingTableCard({
             key: 'bySource',
             width: 200,
             render: (bySource?: any[]) => {
-                if (!bySource || bySource.length === 0) return '—';
+                if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
                         items={bySource}
@@ -500,13 +572,18 @@ export default function TrackRankingTableCard({
                             >
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
-                                    onClick={() =>
-                                        setActiveDetail({
-                                            type: 'source',
+                                    onClick={() => {
+                                        // setActiveDetail({
+                                        //     type: 'source',
+                                        //     title: item.sourceLabel,
+                                        //     targetId: item.source,
+                                        // });
+                                        onSelectEntity?.({
+                                            id: item.source,
                                             title: item.sourceLabel,
-                                            targetId: item.source,
-                                        })
-                                    }
+                                            type: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        });
+                                    }}
                                 >
                                     {item.sourceLabel}:{' '}
                                     {formattedNumber(item.quantity)}
@@ -548,8 +625,7 @@ export default function TrackRankingTableCard({
                             setSelectedReleaseType(selectedType);
                             onChangeFilter({
                                 releaseType:
-                                    selectedType ===
-                                    ANALYTICS_RELEASE_TYPE.ALL
+                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
                                         ? undefined
                                         : selectedType,
                             });
@@ -570,12 +646,26 @@ export default function TrackRankingTableCard({
                         ]}
                     />
                     <Segmented
-                        value={currentType}
+                        value={
+                            isRevenue
+                                ? ANALYTICS_VIEW_TYPE.REVENUE
+                                : ANALYTICS_VIEW_TYPE.VIEW
+                        }
                         onChange={(value) => {
-                            setCurrentType(value as ANALYTICS_VIEW_TYPE);
-                            onChangeFilter({
-                                type: value as ANALYTICS_VIEW_TYPE,
-                            });
+                            const nextType = value as ANALYTICS_VIEW_TYPE;
+                            setCurrentType(nextType);
+                            // The metric owns the view type when it is
+                            // controlled; writing both params would race two
+                            // URL updates built from the same stale snapshot.
+                            if (onMetricChange) {
+                                onMetricChange(
+                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                                );
+                                return;
+                            }
+                            onChangeFilter({ type: nextType });
                         }}
                         options={[
                             {

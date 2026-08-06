@@ -5,130 +5,125 @@ import FullScreenModal, {
 } from '@/components/ui/modal/fullScreenModal';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import useModalStore from '@/hooks/use-modal';
 import { Button, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { parseAsString, useQueryStates } from 'nuqs';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
-import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
 import {
-    ActiveAnalyticsEntity,
-    AnalyticModalStoreData,
-} from '../../types';
+    ADVANCED_MODE_PARAM_PREFIX,
+    useAdvancedModeModal,
+} from '../../hooks/use-advanced-mode-modal';
+import { getAnalyticsScopeParams } from '../../helpers';
+import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
+import { ActiveAnalyticsEntity, AnalyticsCommonParams } from '../../types';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
-import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
+import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
-    fromDate?: string;
-    toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
 }
 
 export default function AdvancedModeModal({
-    fromDate,
-    toDate,
     releaseType,
     ...props
 }: AdvancedModeModalProps) {
     const messages = useTranslations();
-    const data = useModalStore<AnalyticModalStoreData>(
-        (state) => state.dataEdit
-    );
-    const initialEntity = data?.initialEntity ?? {
-        type: ANALYTICS_ENTITY_TYPE.RELEASE,
-    };
-    const effectiveFromDate = fromDate ?? data?.fromDate;
-    const effectiveToDate = toDate ?? data?.toDate;
 
-    const [{ entityType: urlEntityType }, setQueryParams] = useQueryStates({
-        entityType: parseAsString,
-    });
+    const {
+        entity,
+        fromDate,
+        toDate,
+        metric: activeMetric,
+        rankBy,
+        setEntity,
+        setDateRange,
+        setMetric,
+        setRankBy,
+    } = useAdvancedModeModal();
 
-    const [selectedItem, setSelectedItem] = useState<ContentItem | undefined>();
     const [showSidebar, setShowSidebar] = useState(true);
-    const [localFromDate, setLocalFromDate] = useState(
-        effectiveFromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD')
-    );
-    const [localToDate, setLocalToDate] = useState(
-        effectiveToDate || dayjs().format('YYYY-MM-DD')
-    );
-    const [activeMetric, setActiveMetric] = useState<string>(
-        ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+
+    const effectiveFromDate =
+        fromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD');
+    const effectiveToDate = toDate || dayjs().format('YYYY-MM-DD');
+
+    const activeEntity = useMemo<ActiveAnalyticsEntity>(
+        () => ({
+            type: entity.type,
+            id: entity.id,
+            entitySubId: entity.entitySubId,
+        }),
+        [entity.type, entity.id, entity.entitySubId]
     );
 
-    useEffect(() => {
-        if (props.open) {
-            if (effectiveFromDate) setLocalFromDate(effectiveFromDate);
-            if (effectiveToDate) setLocalToDate(effectiveToDate);
-        }
-    }, [props.open, effectiveFromDate, effectiveToDate]);
-
-    // Active Entity resolution
-    const activeEntity = useMemo<ActiveAnalyticsEntity>(() => {
-        if (urlEntityType) {
-            const normalized = urlEntityType.toLowerCase();
-            if (normalized === 'workspace' || normalized === 'workspaces')
-                return { type: ANALYTICS_ENTITY_TYPE.WORKSPACE };
-            if (normalized === 'release' || normalized === 'releases')
-                return { type: ANALYTICS_ENTITY_TYPE.RELEASE };
-            if (normalized === 'track' || normalized === 'tracks')
-                return { type: ANALYTICS_ENTITY_TYPE.TRACK };
-            if (normalized === 'label' || normalized === 'labels')
-                return { type: ANALYTICS_ENTITY_TYPE.LABEL };
-            if (normalized === 'dsp' || normalized === 'dsps')
-                return { type: ANALYTICS_ENTITY_TYPE.DSP };
-            if (normalized === 'artist' || normalized === 'artists')
-                return { type: ANALYTICS_ENTITY_TYPE.ARTIST };
-        }
-
-        return {
-            type: initialEntity.type ?? ANALYTICS_ENTITY_TYPE.RELEASE,
+    const analyticsSummaryParams = useMemo<AnalyticsCommonParams>(() => {
+        const params: AnalyticsCommonParams = {
+            fromDate: effectiveFromDate,
+            toDate: effectiveToDate,
+            releaseType,
+            ...getAnalyticsScopeParams(activeEntity),
         };
-    }, [urlEntityType, initialEntity.type]);
+
+        // Video releases live behind the same `releaseId` as audio ones, so the
+        // summary needs the release type to disambiguate.
+        if (
+            activeEntity.id &&
+            activeEntity.type === ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO
+        ) {
+            return { ...params, releaseType: ANALYTICS_RELEASE_TYPE.VIDEO };
+        }
+
+        return params;
+    }, [activeEntity, effectiveFromDate, effectiveToDate, releaseType]);
 
     // Single unified Analytics Summary hook replacing separate summary calls
     const { analyticsSummaryData } = useGetAnalyticsSummary(
-        {
-            fromDate: localFromDate,
-            toDate: localToDate,
-            releaseType,
-        },
-        !!props.open
+        analyticsSummaryParams
     );
 
-    const handleSelectEntity = (item: {
-        id: string;
-        type: string;
-        title?: string;
-    }) => {
-        setSelectedItem({
-            id: '',
-            title: item.title || item.type,
-            type: item.type as any,
-        });
+    const handleSelectEntity = (item?: ContentItem) => {
+        if (!item || (!item.id && !item.entitySubId)) {
+            setEntity({ type: entity.type });
+            return;
+        }
 
-        setQueryParams({
-            entityType: item.type.toLowerCase(),
+        setEntity({
+            type: (item.type || entity.type) as ActiveAnalyticsEntity['type'],
+            id: item.id,
+            entitySubId: item.entitySubId,
+            title: item.title,
+            thumbnail: item.thumbnailUrl,
         });
     };
 
     const currentSelectedItem = useMemo<ContentItem | undefined>(() => {
+        if (!entity.id) {
+            return undefined;
+        }
+
         return {
-            id: '',
-            title: selectedItem?.title || activeEntity.type,
-            type: activeEntity.type,
+            id: entity.id,
+            entitySubId: entity.entitySubId,
+            title: entity.title || entity.type,
+            type: entity.type,
+            thumbnailUrl: entity.thumbnail,
         };
-    }, [activeEntity.type, selectedItem]);
+    }, [
+        entity.type,
+        entity.id,
+        entity.entitySubId,
+        entity.title,
+        entity.thumbnail,
+    ]);
 
     const metricTabItems: MetricHeaderTabItem[] = [
         {
@@ -197,16 +192,20 @@ export default function AdvancedModeModal({
                 >
                     <div className="h-full w-[350px] overflow-y-auto">
                         <ControlsSidebar
-                            fromDate={localFromDate}
-                            toDate={localToDate}
+                            fromDate={effectiveFromDate}
+                            toDate={effectiveToDate}
                             onDateChange={(start, end) => {
-                                setLocalFromDate(start);
-                                setLocalToDate(end);
+                                setDateRange(start, end);
                             }}
                             activeMetric={activeMetric}
-                            onMetricChange={setActiveMetric}
+                            onMetricChange={(metric) =>
+                                setMetric(metric as ANALYTICS_METRIC_KEY)
+                            }
                             selectedItem={currentSelectedItem}
+                            initialType={entity.type}
                             onContentSelect={handleSelectEntity}
+                            rankBy={rankBy}
+                            onRankByChange={setRankBy}
                         />
                     </div>
                 </div>
@@ -219,12 +218,14 @@ export default function AdvancedModeModal({
                             <MetricHeaderTabs
                                 items={metricTabItems}
                                 activeKey={activeMetric}
-                                onChangeKey={setActiveMetric}
+                                onChangeKey={(metric) =>
+                                    setMetric(metric as ANALYTICS_METRIC_KEY)
+                                }
                             />
                             <OverviewChartRenderer
                                 activeEntity={activeEntity}
-                                fromDate={localFromDate}
-                                toDate={localToDate}
+                                fromDate={effectiveFromDate}
+                                toDate={effectiveToDate}
                                 releaseType={releaseType}
                                 activeMetric={activeMetric}
                                 enabled={props.open !== false}
@@ -234,9 +235,16 @@ export default function AdvancedModeModal({
                         {/* Details / Table Section */}
                         <DetailContentRenderer
                             activeEntity={activeEntity}
-                            fromDate={localFromDate}
-                            toDate={localToDate}
+                            rankBy={rankBy}
+                            fromDate={effectiveFromDate}
+                            toDate={effectiveToDate}
                             releaseType={releaseType}
+                            activeMetric={activeMetric}
+                            paramPrefix={ADVANCED_MODE_PARAM_PREFIX}
+                            onMetricChange={(metric) =>
+                                setMetric(metric as ANALYTICS_METRIC_KEY)
+                            }
+                            onSelectEntity={handleSelectEntity}
                             enabled={props.open !== false}
                         />
                     </div>

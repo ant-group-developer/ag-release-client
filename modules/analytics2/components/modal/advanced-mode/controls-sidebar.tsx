@@ -1,8 +1,13 @@
 'use client';
 
 import DateSelect2 from '@/components/ui/select/date-select2';
-import { ANALYTICS_METRIC_KEY } from '@/modules/analytics2/enums';
-import { Select, Typography } from 'antd';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_METRIC_KEY,
+} from '@/modules/analytics2/enums';
+import { AnalyticsEntityType } from '@/modules/analytics2/types';
+import { Button, Radio, Select, Tooltip, Typography } from 'antd';
+import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import ContentEntitySelector, { ContentItem } from './content-entity-selector';
 
@@ -12,8 +17,11 @@ interface ControlsSidebarProps {
     onDateChange: (fromDate: string, toDate: string) => void;
     activeMetric?: string;
     onMetricChange?: (value: string) => void;
-    onContentSelect?: (item: ContentItem) => void;
+    onContentSelect?: (item?: ContentItem) => void;
     selectedItem?: ContentItem;
+    initialType?: ContentItem['type'];
+    rankBy?: AnalyticsEntityType;
+    onRankByChange?: (rankBy?: AnalyticsEntityType | '') => void;
 }
 
 export default function ControlsSidebar({
@@ -24,8 +32,46 @@ export default function ControlsSidebar({
     onMetricChange,
     onContentSelect,
     selectedItem,
+    initialType,
+    rankBy,
+    onRankByChange,
 }: ControlsSidebarProps) {
     const messages = useTranslations();
+
+    const showRankBy = !!selectedItem?.id;
+
+    const rankByOptions: { label: string; value: AnalyticsEntityType }[] = [
+        {
+            label: messages('common.releases'),
+            value: ANALYTICS_ENTITY_TYPE.RELEASE,
+        },
+        {
+            label: messages('common.tracks'),
+            value: ANALYTICS_ENTITY_TYPE.TRACK,
+        },
+        {
+            label: messages('artist.artists'),
+            value: ANALYTICS_ENTITY_TYPE.ARTIST,
+        },
+        { label: messages('common.labels'), value: ANALYTICS_ENTITY_TYPE.LABEL },
+        {
+            label: messages('tenant.workspaces'),
+            value: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+        },
+        { label: messages('dsp.label'), value: ANALYTICS_ENTITY_TYPE.DSP },
+        {
+            label: messages('common.channel'),
+            value: ANALYTICS_ENTITY_TYPE.CHANNEL,
+        },
+        {
+            label: messages('analytics2.distributors'),
+            value: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+        },
+        {
+            label: messages('common.releasesVideo'),
+            value: ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+        },
+    ].filter((option) => option.value !== selectedItem?.type);
 
     return (
         <div className="flex min-h-full flex-col space-y-5 border-r border-slate-200 p-6 dark:border-zinc-800">
@@ -38,9 +84,54 @@ export default function ControlsSidebar({
                     fromDate={fromDate}
                     toDate={toDate}
                     selectedItem={selectedItem}
+                    initialType={initialType}
                     onSelect={onContentSelect}
                 />
             </div>
+
+            {showRankBy && (
+                <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                        <Typography.Text
+                            type="secondary"
+                            className="text-xs font-medium"
+                        >
+                            {messages('analytics2.rankBy')}
+                        </Typography.Text>
+                        {!!rankBy && (
+                            <Tooltip title={messages('common.clearFilter')}>
+                                <Button
+                                    size="small"
+                                    type="text"
+                                    aria-label={messages('common.clearFilter')}
+                                    icon={<X className="size-3.5" />}
+                                    onClick={() => onRankByChange?.('')}
+                                    className="flex items-center justify-center !p-1 opacity-60 hover:opacity-100"
+                                />
+                            </Tooltip>
+                        )}
+                    </div>
+                    <Radio.Group
+                        value={rankBy ?? ''}
+                        onChange={(e) => onRankByChange?.(e.target.value)}
+                        className="flex w-full flex-col gap-0.5"
+                    >
+                        <label className="flex cursor-pointer items-center rounded-md px-1 py-1.5 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700">
+                            <Radio value="">{messages('common.none')}</Radio>
+                        </label>
+                        {rankByOptions.map((option) => (
+                            <label
+                                key={option.value}
+                                className="flex cursor-pointer items-center rounded-md px-1 py-1.5 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700"
+                            >
+                                <Radio value={option.value}>
+                                    {option.label}
+                                </Radio>
+                            </label>
+                        ))}
+                    </Radio.Group>
+                </div>
+            )}
 
             {/* Date Select */}
             <div>

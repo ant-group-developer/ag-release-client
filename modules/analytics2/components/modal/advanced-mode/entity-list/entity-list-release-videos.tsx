@@ -1,7 +1,11 @@
 'use client';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
-import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_RELEASE_TYPE,
+} from '@/modules/analytics2/enums';
+import { useGetReleaseVideoRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Empty, List, Skeleton, Typography } from 'antd';
@@ -15,25 +19,26 @@ interface Props {
     onSelect: (item: ContentItem) => void;
 }
 
-export default function EntityListTracks({
+export default function EntityListReleaseVideos({
     fromDate = dayjs().subtract(27, 'day').format('YYYY-MM-DD'),
     toDate = dayjs().format('YYYY-MM-DD'),
     keyword,
     onSelect,
 }: Props) {
-    const { trackRankingData, isFetching } = useGetTrackRanking({
+    const { releaseVideoRankingData, isFetching } = useGetReleaseVideoRanking({
         fromDate,
         toDate,
         page: 1,
         pageSize: 15,
         keyword,
+        releaseType: ANALYTICS_RELEASE_TYPE.VIDEO,
     });
 
-    if (isFetching && !trackRankingData?.items?.length) {
+    if (isFetching && !releaseVideoRankingData?.items?.length) {
         return <Skeleton active paragraph={{ rows: 4 }} className="p-2" />;
     }
 
-    const items = trackRankingData?.items || [];
+    const items = releaseVideoRankingData?.items || [];
 
     if (!items.length) {
         return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className="my-4" />;
@@ -46,17 +51,18 @@ export default function EntityListTracks({
                 const coverUrl = item.release?.coverArtThumbnails?.[
                     RELEASE_COVER_ART_SIZE.S75
                 ] as string;
+                const identifier = item.video?.isrc || item.upc;
 
                 return (
                     <List.Item
                         onClick={() =>
                             onSelect({
-                                id: item.isrc || item.trackId,
+                                id: item.releaseId,
                                 title: item.title,
-                                type: 'Track',
+                                type: ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
                                 thumbnailUrl: coverUrl,
-                                subtitle: item.isrc
-                                    ? `ISRC: ${item.isrc}`
+                                subtitle: identifier
+                                    ? `ISRC: ${identifier}`
                                     : undefined,
                             })
                         }
@@ -80,9 +86,9 @@ export default function EntityListTracks({
                                         type="secondary"
                                         className="text-xs"
                                     >
-                                        {item.isrc
-                                            ? `ISRC: ${item.isrc}`
-                                            : 'Track'}
+                                        {identifier
+                                            ? `ISRC: ${identifier}`
+                                            : 'Video'}
                                     </Typography.Text>
                                 </div>
                             </div>

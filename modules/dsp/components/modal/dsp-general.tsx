@@ -61,6 +61,11 @@ export default function DspGeneral({ form, isActive }: Props) {
                 rules={[
                     formRules.required(),
                     formRules.stringMax({ field: messages('dsp.name') }),
+                    formRules.stringMin({ min: 2, field: messages('dsp.name') }),
+                    {
+                        whitespace: true,
+                        message: messages('validation.input'),
+                    },
                     {
                         validator: (_, value) => {
                             if (value && value.includes('_')) {

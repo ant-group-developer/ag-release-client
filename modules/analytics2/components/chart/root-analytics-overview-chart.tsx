@@ -12,6 +12,7 @@ export interface RootAnalyticsOverviewChartProps {
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
+    enabled?: boolean;
 }
 
 export default function RootAnalyticsOverviewChart({
@@ -19,6 +20,7 @@ export default function RootAnalyticsOverviewChart({
     toDate,
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+    enabled = true,
 }: RootAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -34,36 +36,36 @@ export default function RootAnalyticsOverviewChart({
         lineChartData: trendViewLineData,
         isFetching: isTrendViewLineFetching,
     } = useGetTrendViewLineChart(chartFilterParams, {
-        enabled: !isRevenueMetric,
+        enabled: enabled && !isRevenueMetric,
     });
 
     const {
         barChartData: dspTrendViewData,
         isFetching: isDspTrendViewFetching,
     } = useGetTrendViewDspBarChart(chartFilterParams, {
-        enabled: !isRevenueMetric,
+        enabled: enabled && !isRevenueMetric,
     });
 
     const {
         barChartData: terTrendViewData,
         isFetching: isTerTrendViewFetching,
     } = useGetTrendViewTerBarChart(chartFilterParams, {
-        enabled: !isRevenueMetric,
+        enabled: enabled && !isRevenueMetric,
     });
 
     const { revenueLineChartData, isFetching: isRevenueLineFetching } =
         useGetRevenueLineChart(chartFilterParams, {
-            enabled: isRevenueMetric,
+            enabled: enabled && isRevenueMetric,
         });
 
     const { revenueDspBarChartData, isFetching: isDspRevenueFetching } =
         useGetRevenueDspBarChart(chartFilterParams, {
-            enabled: isRevenueMetric,
+            enabled: enabled && isRevenueMetric,
         });
 
     const { revenueTerBarChartData, isFetching: isTerRevenueFetching } =
         useGetRevenueTerBarChart(chartFilterParams, {
-            enabled: isRevenueMetric,
+            enabled: enabled && isRevenueMetric,
         });
 
     const lineChartData = isRevenueMetric

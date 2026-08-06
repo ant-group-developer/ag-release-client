@@ -4,10 +4,11 @@ import { APP_ROUTES } from '@/enums/routes';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
-import { ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
 import { ANALYTICS_VIEW_TYPE } from '../../enums/tabs';
 import { createViewMoreHref } from '../../helpers';
+import { useAdvancedModeModal } from '../../hooks/use-advanced-mode-modal';
 import {
     useGetRevenueTopArtist,
     useGetRevenueTopChannel,
@@ -29,6 +30,7 @@ import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analyt
 import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
 import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
 import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
+import AdvancedModeModal from '../modal/advanced-mode';
 import { useRevenueRankingColumns } from './use-revenue-ranking-columns';
 
 interface Props {
@@ -46,6 +48,11 @@ export default function RevenueRankings({
 }: Props) {
     const messages = useTranslations();
     const topN = 5;
+    const {
+        openAdvancedMode,
+        isOpen: isAdvancedModeOpen,
+        closeAdvancedMode,
+    } = useAdvancedModeModal();
     const [detailModal, setDetailModal] = useState<{
         type: ANALYTICS_MODAL_TYPE | null;
         title: string;
@@ -70,7 +77,7 @@ export default function RevenueRankings({
         labelColumns,
         channelColumns,
         sourceTypeColumns,
-    } = useRevenueRankingColumns({ setDetailModal });
+    } = useRevenueRankingColumns({ setDetailModal, fromDate, toDate });
 
     const topRankingTitle = (title: string) =>
         messages('analytics2.topRankingTitle', {
@@ -215,16 +222,24 @@ export default function RevenueRankings({
                                 labelKey="title"
                                 valueKey="revenueUsd"
                                 defaultView={RankingCardView.LIST}
-                                viewMoreHref={createViewMoreHref(
-                                    APP_ROUTES.ANALYTICS_RELEASES,
-                                    {
+                                // viewMoreHref={createViewMoreHref(
+                                //     APP_ROUTES.ANALYTICS_RELEASES,
+                                //     {
+                                //         fromDate,
+                                //         toDate,
+                                //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                                //         releaseType,
+                                //         sortBy,
+                                //     }
+                                // )}
+                                onViewMore={() =>
+                                    openAdvancedMode({
                                         fromDate,
                                         toDate,
-                                        type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                        releaseType,
-                                        sortBy,
-                                    }
-                                )}
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.RELEASE,
+                                    })
+                                }
                             />
                         </Col>
                         <Col span={12} xs={24} lg={12}>
@@ -239,16 +254,23 @@ export default function RevenueRankings({
                                 labelKey="title"
                                 valueKey="revenueUsd"
                                 defaultView={RankingCardView.LIST}
-                                viewMoreHref={createViewMoreHref(
-                                    APP_ROUTES.ANALYTICS_TRACKS,
-                                    {
+                                // viewMoreHref={createViewMoreHref(
+                                //     APP_ROUTES.ANALYTICS_TRACKS,
+                                //     {
+                                //         fromDate,
+                                //         toDate,
+                                //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                                //         releaseType,
+                                //         sortBy,
+                                //     }
+                                // )}
+                                onViewMore={() =>
+                                    openAdvancedMode({
                                         fromDate,
                                         toDate,
-                                        type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                        releaseType,
-                                        sortBy,
-                                    }
-                                )}
+                                        entityType: ANALYTICS_ENTITY_TYPE.TRACK,
+                                    })
+                                }
                             />
                         </Col>
                     </>
@@ -264,16 +286,23 @@ export default function RevenueRankings({
                         labelKey="artistName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_ARTISTS,
-                            {
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_ARTISTS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                        //         releaseType,
+                        //         sortBy,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openAdvancedMode({
                                 fromDate,
                                 toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                                sortBy,
-                            }
-                        )}
+                                entityType: ANALYTICS_ENTITY_TYPE.ARTIST,
+                            })
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -286,16 +315,23 @@ export default function RevenueRankings({
                         labelKey="labelName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_LABELS,
-                            {
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_LABELS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                        //         releaseType,
+                        //         sortBy,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openAdvancedMode({
                                 fromDate,
                                 toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                                sortBy,
-                            }
-                        )}
+                                entityType: ANALYTICS_ENTITY_TYPE.LABEL,
+                            })
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -308,16 +344,23 @@ export default function RevenueRankings({
                         labelKey="tenantName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_TENANTS,
-                            {
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_TENANTS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                        //         releaseType,
+                        //         sortBy,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openAdvancedMode({
                                 fromDate,
                                 toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                                sortBy,
-                            }
-                        )}
+                                entityType: ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                            })
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -330,16 +373,23 @@ export default function RevenueRankings({
                         labelKey="dspName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_DSPS,
-                            {
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_DSPS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                        //         releaseType,
+                        //         sortBy,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openAdvancedMode({
                                 fromDate,
                                 toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                                sortBy,
-                            }
-                        )}
+                                entityType: ANALYTICS_ENTITY_TYPE.DSP,
+                            })
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -352,16 +402,23 @@ export default function RevenueRankings({
                         labelKey="channelName"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_CHANNELS,
-                            {
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_CHANNELS,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                        //         releaseType,
+                        //         sortBy,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openAdvancedMode({
                                 fromDate,
                                 toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                                sortBy,
-                            }
-                        )}
+                                entityType: ANALYTICS_ENTITY_TYPE.CHANNEL,
+                            })
+                        }
                     />
                 </Col>
                 <Col span={12} xs={24} lg={12}>
@@ -376,16 +433,23 @@ export default function RevenueRankings({
                         labelKey="sourceTypeLabel"
                         valueKey="revenueUsd"
                         defaultView={RankingCardView.LIST}
-                        viewMoreHref={createViewMoreHref(
-                            APP_ROUTES.ANALYTICS_SOURCE_TYPES,
-                            {
+                        // viewMoreHref={createViewMoreHref(
+                        //     APP_ROUTES.ANALYTICS_SOURCE_TYPES,
+                        //     {
+                        //         fromDate,
+                        //         toDate,
+                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                        //         releaseType,
+                        //         sortBy,
+                        //     }
+                        // )}
+                        onViewMore={() =>
+                            openAdvancedMode({
                                 fromDate,
                                 toDate,
-                                type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                releaseType,
-                                sortBy,
-                            }
-                        )}
+                                entityType: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                            })
+                        }
                     />
                 </Col>
                 {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
@@ -401,16 +465,24 @@ export default function RevenueRankings({
                             labelKey="title"
                             valueKey="revenueUsd"
                             defaultView={RankingCardView.LIST}
-                            viewMoreHref={createViewMoreHref(
-                                APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
-                                {
+                            // viewMoreHref={createViewMoreHref(
+                            //     APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
+                            //     {
+                            //         fromDate,
+                            //         toDate,
+                            //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                            //         releaseType,
+                            //         sortBy,
+                            //     }
+                            // )}
+                            onViewMore={() =>
+                                openAdvancedMode({
                                     fromDate,
                                     toDate,
-                                    type: ANALYTICS_VIEW_TYPE.REVENUE,
-                                    releaseType,
-                                    sortBy,
-                                }
-                            )}
+                                    entityType:
+                                        ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                })
+                            }
                         />
                     </Col>
                 )}
@@ -542,6 +614,13 @@ export default function RevenueRankings({
                     sourceType={detailModal.id}
                     fromDate={fromDate}
                     toDate={toDate}
+                    releaseType={releaseType}
+                />
+            )}
+            {isAdvancedModeOpen && (
+                <AdvancedModeModal
+                    open
+                    onCancel={closeAdvancedMode}
                     releaseType={releaseType}
                 />
             )}

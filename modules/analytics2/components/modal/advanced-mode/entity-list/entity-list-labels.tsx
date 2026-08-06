@@ -61,14 +61,16 @@ export default function EntityListLabels({
                                 subtitle: `${formattedNumber(item.totalViews)} views`,
                             })
                         }
-                        className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
+                        className="cursor-pointer rounded-lg py-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
                     >
-                        <div className="flex w-full items-center justify-between gap-3">
+                        <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
                                 {labelLogo ? (
                                     <ReleaseCoverImage
                                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                        height={
+                                            ANALYTICS_RANKING_THUMBNAIL_SIZE
+                                        }
                                         src={labelLogo}
                                     />
                                 ) : (
@@ -78,7 +80,8 @@ export default function EntityListLabels({
                                         icon={<Disc className="h-5 w-5" />}
                                         className="shrink-0 rounded-md bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
                                     >
-                                        {(item.labelName || 'L')[0]?.toUpperCase()}
+                                        {(item.labelName ||
+                                            'L')[0]?.toUpperCase()}
                                     </Avatar>
                                 )}
                                 <div className="flex flex-col overflow-hidden">
@@ -96,14 +99,6 @@ export default function EntityListLabels({
                                     </Typography.Text>
                                 </div>
                             </div>
-                            {item.totalViews !== undefined && (
-                                <Typography.Text
-                                    type="secondary"
-                                    className="shrink-0 text-right text-xs"
-                                >
-                                    {formattedNumber(item.totalViews)} views
-                                </Typography.Text>
-                            )}
                         </div>
                     </List.Item>
                 );

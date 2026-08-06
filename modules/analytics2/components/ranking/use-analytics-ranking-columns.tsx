@@ -16,7 +16,9 @@ import {
     TrackRankingItem,
 } from '../../types';
 
+import { ANALYTICS_ENTITY_TYPE } from '../../enums';
 import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
+import { useAdvancedModeModal } from '../../hooks/use-advanced-mode-modal';
 
 interface DetailModalState {
     type: ANALYTICS_MODAL_TYPE | null;
@@ -27,11 +29,18 @@ interface DetailModalState {
 }
 
 interface Props {
-    setDetailModal: React.Dispatch<React.SetStateAction<DetailModalState>>;
+    setDetailModal?: React.Dispatch<React.SetStateAction<DetailModalState>>;
+    fromDate?: string;
+    toDate?: string;
 }
 
-export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
+export function useAnalyticsRankingColumns({
+    setDetailModal,
+    fromDate,
+    toDate,
+}: Props) {
     const messages = useTranslations();
+    const { openAdvancedMode } = useAdvancedModeModal();
 
     const trackColumns = useMemo(
         () => [
@@ -59,10 +68,17 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 <span
                                     className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        setDetailModal({
-                                            type: ANALYTICS_MODAL_TYPE.TRACK,
-                                            title: text,
-                                            id: record.isrc,
+                                        openAdvancedMode({
+                                            fromDate,
+                                            toDate,
+                                            entityType:
+                                                ANALYTICS_ENTITY_TYPE.TRACK,
+                                            entityId: record.isrc,
+                                            entityTitle: text,
+                                            entityThumbnail: record?.release
+                                                ?.coverArtThumbnails?.[
+                                                RELEASE_COVER_ART_SIZE.S75
+                                            ] as string,
                                         })
                                     }
                                 >
@@ -97,7 +113,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const releaseColumns = useMemo(
@@ -126,11 +142,17 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 <span
                                     className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        setDetailModal({
-                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
-                                            title: text,
-                                            id: record.releaseId,
-                                            upc: record.upc,
+                                        openAdvancedMode({
+                                            fromDate,
+                                            toDate,
+                                            entityType:
+                                                ANALYTICS_ENTITY_TYPE.RELEASE,
+                                            entityId: record.releaseId,
+                                            entityTitle: text,
+                                            entityThumbnail: record.release
+                                                ?.coverArtThumbnails?.[
+                                                RELEASE_COVER_ART_SIZE.S75
+                                            ] as string,
                                         })
                                     }
                                 >
@@ -176,7 +198,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const releaseVideoColumns = useMemo(
@@ -205,11 +227,17 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                 <span
                                     className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                     onClick={() =>
-                                        setDetailModal({
-                                            type: ANALYTICS_MODAL_TYPE.RELEASE,
-                                            title: text,
-                                            id: record.releaseId,
-                                            upc: record.upc,
+                                        openAdvancedMode({
+                                            fromDate,
+                                            toDate,
+                                            entityType:
+                                                ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                            entityId: record.releaseId,
+                                            entityTitle: text,
+                                            entityThumbnail: record.release
+                                                ?.coverArtThumbnails?.[
+                                                RELEASE_COVER_ART_SIZE.S75
+                                            ] as string,
                                         })
                                     }
                                 >
@@ -247,14 +275,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                     title={messages('common.detailedAnalysis')}
                                 >
                                     <span
-                                        className="cursor-pointer transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                        onClick={() =>
-                                            setDetailModal({
-                                                type: ANALYTICS_MODAL_TYPE.CHANNEL,
-                                                title: c.name,
-                                                id: c.id,
-                                            })
-                                        }
+                                        className="cursor-pointer transition-colors dark:text-zinc-100"
+                                        onClick={() => {
+                                            // setDetailModal({
+                                            //     type: ANALYTICS_MODAL_TYPE.CHANNEL,
+                                            //     title: c.name,
+                                            //     id: c.id,
+                                            // })
+                                        }}
                                     >
                                         {c.name}
                                     </span>
@@ -290,14 +318,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                                         )}
                                     >
                                         <span
-                                            className="cursor-pointer transition-colors hover:text-blue-500 dark:text-zinc-100"
-                                            onClick={() =>
-                                                setDetailModal({
-                                                    type: ANALYTICS_MODAL_TYPE.TENANT,
-                                                    title: w.name,
-                                                    id: w.id,
-                                                })
-                                            }
+                                            className="cursor-pointer transition-colors dark:text-zinc-100"
+                                            onClick={() => {
+                                                // setDetailModal({
+                                                //     type: ANALYTICS_MODAL_TYPE.TENANT,
+                                                //     title: w.name,
+                                                //     id: w.id,
+                                                // })
+                                            }}
                                         >
                                             {w.name}
                                         </span>
@@ -320,7 +348,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const artistColumns = useMemo(
@@ -344,10 +372,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.ARTIST,
-                                        title: text,
-                                        id: record.artistId,
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.ARTIST,
+                                        entityId: record.artistId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.picture,
                                     })
                                 }
                             >
@@ -380,7 +412,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const labelColumns = useMemo(
@@ -404,10 +436,13 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.LABEL,
-                                        title: text,
-                                        id: record.labelId,
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType: ANALYTICS_ENTITY_TYPE.LABEL,
+                                        entityId: record.labelId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.picture,
                                     })
                                 }
                             >
@@ -440,7 +475,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const tenantColumns = useMemo(
@@ -464,10 +499,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.TENANT,
-                                        title: text,
-                                        id: record.tenantId,
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.WORKSPACE,
+                                        entityId: record.tenantId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.logo,
                                     })
                                 }
                             >
@@ -489,7 +528,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const dspColumns = useMemo(
@@ -513,11 +552,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.DSP,
-                                        title: text,
-                                        id: record.pgDspId ?? '',
-                                        dspReportId: record.dspReportId,
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType: ANALYTICS_ENTITY_TYPE.DSP,
+                                        entityId: record.pgDspId ?? '',
+                                        entitySubId: record.dspReportId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.imageUrl,
                                     })
                                 }
                             >
@@ -539,7 +581,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const channelColumns = useMemo(
@@ -563,10 +605,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.CHANNEL,
-                                        title: text,
-                                        id: record.channelId,
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.CHANNEL,
+                                        entityId: record.channelId,
+                                        entityTitle: text,
+                                        entityThumbnail: record.thumbUrl,
                                     })
                                 }
                             >
@@ -623,7 +669,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     const sourceTypeColumns = useMemo(
@@ -647,10 +693,14 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                             <span
                                 className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
                                 onClick={() =>
-                                    setDetailModal({
-                                        type: ANALYTICS_MODAL_TYPE.SOURCE_TYPE,
-                                        title: text,
-                                        id: record.sourceType,
+                                    openAdvancedMode({
+                                        fromDate,
+                                        toDate,
+                                        entityType:
+                                            ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                        entityId: record.sourceType,
+                                        entityTitle: text,
+                                        entityThumbnail: record.imageUrl,
                                     })
                                 }
                             >
@@ -672,7 +722,7 @@ export function useAnalyticsRankingColumns({ setDetailModal }: Props) {
                 ),
             },
         ],
-        [messages, setDetailModal]
+        [messages, openAdvancedMode, fromDate, toDate]
     );
 
     return {
