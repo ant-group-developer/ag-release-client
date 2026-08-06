@@ -280,6 +280,17 @@ export default function ArtistFormModal({
                                     field: messages('artist.name'),
                                 }),
                             },
+                            {
+                                min: 2,
+                                message: messages('validation.stringMin', {
+                                    min: 2,
+                                    field: messages('artist.name'),
+                                }),
+                            },
+                            {
+                                whitespace: true,
+                                message: messages('validation.input'),
+                            },
                         ]}
                     >
                         <Input allowClear />

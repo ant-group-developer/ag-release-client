@@ -202,6 +202,17 @@ export default function LabelFormModal({
                             }),
                         },
                         {
+                            min: 2,
+                            message: messages('validation.stringMin', {
+                                min: 2,
+                                field: messages('label.name'),
+                            }),
+                        },
+                        {
+                            whitespace: true,
+                            message: messages('validation.input'),
+                        },
+                        {
                             validator: (_, value) => {
                                 if (value && value.includes('_')) {
                                     return Promise.reject(
