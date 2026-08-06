@@ -141,7 +141,7 @@ function Dashboard({}: Props) {
                         loading={isLoading}
                     />
 
-                    <div className="flex flex-col overflow-hidden rounded-lg shadow-sm">
+                    <div className="flex flex-col overflow-hidden rounded-lg border shadow-sm">
                         <MetricHeaderTabs
                             items={metricTabItems}
                             activeKey={activeMetric}
