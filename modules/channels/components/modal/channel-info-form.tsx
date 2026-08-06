@@ -1,8 +1,10 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import TenantSelectActive from '@/components/ui/select/tenant-select-active';
+import { FALLBACK_IMAGE } from '@/constants/common';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
-import { FormInstance, Input, Switch } from 'antd';
+import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { Form, FormInstance, Image, Input, Switch } from 'antd';
 import { useTranslations } from 'next-intl';
 import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
 
@@ -20,12 +22,23 @@ export default function ChannelInfoForm({
     isActive,
 }: Props) {
     const messages = useTranslations();
+    const thumbUrl = Form.useWatch('thumbUrl', form);
+
+    const handleFinish = (values: any) => {
+        const payloadValues = {
+            ...values,
+            thumbUrl: values?.thumbUrl
+                ? values.thumbUrl
+                : getAvatarUrl(values?.name || ''),
+        };
+        onFinish(payloadValues);
+    };
 
     return (
         <AppForm
             form={form}
             showSubmit={false}
-            onFinish={onFinish}
+            onFinish={handleFinish}
             layout="vertical"
             disabled={isActive}
         >
@@ -117,6 +130,22 @@ export default function ChannelInfoForm({
                     disabled={isActive}
                 />
             </AppFormItem>
+
+            {thumbUrl && (
+                <div className="mb-4 flex items-center gap-3">
+                    <Image
+                        src={thumbUrl}
+                        alt="Thumbnail preview"
+                        width={80}
+                        height={80}
+                        className="rounded-lg border border-solid object-cover"
+                        fallback={FALLBACK_IMAGE}
+                        preview={{
+                            maskClassName: 'rounded-lg',
+                        }}
+                    />
+                </div>
+            )}
 
             {!isUpdateForm && (
                 <AppFormItem
