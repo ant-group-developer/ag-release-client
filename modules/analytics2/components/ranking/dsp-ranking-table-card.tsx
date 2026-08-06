@@ -64,7 +64,6 @@ interface RankingFilter extends CommonParams {
 }
 
 export default function DspRankingTableCard({
-    dspId,
     pgDspId,
     dspReportId,
     scopeParams,
