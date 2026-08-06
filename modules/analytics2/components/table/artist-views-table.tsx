@@ -1,14 +1,17 @@
 'use client';
 
 import ImageFallback from '@/components/ui/image/image-fallback';
+import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ArtistRankingItem, BySourceItem } from '@/modules/analytics2/types';
-import { Avatar, Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Avatar, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const COLUMN_WIDTH_RANK = 80;
@@ -26,6 +29,7 @@ interface ArtistViewsTableProps {
     dataSource: ArtistRankingItem[];
     loading: boolean;
     dspData?: any;
+    toolbar?: any;
     onDetailArtist: (
         artistId: string,
         artistName: string,
@@ -38,12 +42,13 @@ export default function ArtistViewsTable({
     dataSource,
     loading,
     dspData,
+    toolbar,
     onDetailArtist,
     onDetailSource,
 }: ArtistViewsTableProps) {
     const messages = useTranslations();
 
-    const viewColumns: ColumnsType<ArtistRankingItem> = [
+    const viewColumns: ProColumns<ArtistRankingItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -51,10 +56,10 @@ export default function ArtistViewsTable({
             width: COLUMN_WIDTH_RANK,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <span className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
+            render: (_, record: ArtistRankingItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
+                </Typography.Text>
             ),
         },
         {
@@ -64,28 +69,28 @@ export default function ArtistViewsTable({
             width: COLUMN_WIDTH_ARTIST,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: ArtistRankingItem) => (
+            render: (_, record: ArtistRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
                         src={record.picture ?? ''}
-                        alt={text}
+                        alt={record.artistName}
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        <Typography.Text
+                            className="cursor-pointer truncate transition-colors hover:text-blue-500"
                             onClick={() =>
                                 onDetailArtist(
                                     record.artistId,
-                                    text,
+                                    record.artistName,
                                     record.picture
                                 )
                             }
                         >
-                            {text}
-                        </span>
+                            {record.artistName}
+                        </Typography.Text>
                     </CustomTooltip>
                 </div>
             ),
@@ -95,7 +100,7 @@ export default function ArtistViewsTable({
             key: 'profiles',
             dataIndex: 'profiles',
             width: COLUMN_WIDTH_PROFILES,
-            render: (_, record) => (
+            render: (_, record: ArtistRankingItem) => (
                 <div>
                     <Avatar.Group
                         max={{
@@ -140,10 +145,10 @@ export default function ArtistViewsTable({
             dataIndex: 'country',
             width: COLUMN_WIDTH_COUNTRY,
             ellipsis: true,
-            render: (_, record) => (
-                <span className="text-gray-600 dark:text-zinc-400">
+            render: (_, record: ArtistRankingItem) => (
+                <Typography.Text type="secondary" className="truncate">
                     {record?.country || '-'}
-                </span>
+                </Typography.Text>
             ),
         },
         {
@@ -152,10 +157,10 @@ export default function ArtistViewsTable({
             dataIndex: 'genre',
             width: COLUMN_WIDTH_GENRE,
             ellipsis: true,
-            render: (_, record) => (
-                <span className="text-gray-600 dark:text-zinc-400">
+            render: (_, record: ArtistRankingItem) => (
+                <Typography.Text type="secondary" className="truncate">
                     {record?.genre || '-'}
-                </span>
+                </Typography.Text>
             ),
         },
         {
@@ -163,7 +168,8 @@ export default function ArtistViewsTable({
             dataIndex: 'bySource',
             key: 'bySource',
             width: COLUMN_WIDTH_SOURCE,
-            render: (bySource) => {
+            render: (_, record: ArtistRankingItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '—';
                 return (
                     <div className="flex flex-wrap gap-1.5">
@@ -195,10 +201,10 @@ export default function ArtistViewsTable({
             dataIndex: 'trackCount',
             key: 'trackCount',
             width: COLUMN_WIDTH_TRACKS,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
+            render: (_, record: ArtistRankingItem) => (
+                <Typography.Text type="secondary">
+                    {record.trackCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -207,16 +213,18 @@ export default function ArtistViewsTable({
             key: 'totalViews',
             width: COLUMN_WIDTH_VIEWS,
             fixed: 'right',
-            render: (views: number) => (
-                <span className="text-gray-900 dark:text-zinc-100">
-                    {views ? views.toLocaleString() : 0}
-                </span>
+            render: (_, record: ArtistRankingItem) => (
+                <Typography.Text>
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
+                </Typography.Text>
             ),
         },
     ];
 
     return (
-        <Table<ArtistRankingItem>
+        <AppProTable<ArtistRankingItem>
+            className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+            toolbar={toolbar}
             sticky
             size="small"
             columns={viewColumns}
@@ -224,7 +232,17 @@ export default function ArtistViewsTable({
             loading={loading}
             rowKey="artistId"
             pagination={false}
+            search={false}
+            options={{
+                setting: {
+                    settingIcon: <Columns3 size={SIZE_ICON} />,
+                },
+                density: false,
+                fullScreen: false,
+                reload: false,
+            }}
             scroll={{ x: SCREEN.LG }}
         />
     );
 }
+

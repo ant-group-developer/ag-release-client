@@ -2,12 +2,13 @@
 
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
@@ -32,8 +33,9 @@ import {
     RevenueDspItem,
 } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
-import { Card, Segmented, Table, Tag, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Card, Segmented, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -109,16 +111,6 @@ export default function DspRankingTableCard({
         }
     }, [releaseType]);
 
-    const [detailSourceModal, setDetailSourceModal] = useState<{
-        open: boolean;
-        title: string;
-        sourceType: string;
-    }>({
-        open: false,
-        title: '',
-        sourceType: '',
-    });
-
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = metricKey
@@ -192,7 +184,7 @@ export default function DspRankingTableCard({
         );
     }, [dspRankingData, page, pageSize]);
 
-    const revenueColumns: ColumnsType<RevenueDspItem & { rank: number }> = [
+    const revenueColumns: ProColumns<RevenueDspItem & { rank: number }>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -200,9 +192,9 @@ export default function DspRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -213,28 +205,21 @@ export default function DspRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: 'left',
-            render: (
-                text: string,
-                record: RevenueDspItem & { rank: number }
-            ) => (
+            render: (_, record) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <Typography.Text
                         className="cursor-pointer transition-colors hover:text-blue-500"
                         onClick={() => {
-                            // setDetailSourceModal({
-                            //     open: true,
-                            //     title: text || record.source || '',
-                            //     sourceType: record.source || '',
-                            // });
                             onSelectEntity?.({
                                 id: record.source || '',
-                                title: text || record.source || '',
+                                title:
+                                    record.sourceLabel || record.source || '',
                                 type: ANALYTICS_ENTITY_TYPE.DSP,
                                 thumbnailUrl: record.imageUrl ?? undefined,
                             });
                         }}
                     >
-                        {text || record.source || '— '}
+                        {record.dspName || '—'}
                     </Typography.Text>
                 </CustomTooltip>
             ),
@@ -244,11 +229,12 @@ export default function DspRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 280,
-            render: (bySource?: BySourceItem[]) => {
+            render: (_, record) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '— ';
                 return (
                     <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                        {bySource.map((item: BySourceItem) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
@@ -256,11 +242,6 @@ export default function DspRankingTableCard({
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() => {
-                                        // setDetailSourceModal({
-                                        //     open: true,
-                                        //     title: item.sourceLabel,
-                                        //     sourceType: item.source,
-                                        // });
                                         onSelectEntity?.({
                                             id: item.source,
                                             title: item.sourceLabel,
@@ -283,9 +264,9 @@ export default function DspRankingTableCard({
             key: 'quantity',
             width: 150,
             fixed: 'right',
-            render: (qty: number) => (
+            render: (_, record) => (
                 <Typography.Text type="secondary">
-                    {qty ? qty.toLocaleString() : 0}
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
@@ -295,15 +276,18 @@ export default function DspRankingTableCard({
             key: 'revenueUsd',
             width: 180,
             fixed: 'right',
-            render: (val: number) => (
+            render: (_, record) => (
                 <Typography.Text>
-                    ${val ? formattedNumber(val) : '0.00'}
+                    $
+                    {record.revenueUsd
+                        ? formattedNumber(record.revenueUsd)
+                        : '0.00'}
                 </Typography.Text>
             ),
         },
     ];
 
-    const viewsColumns: ColumnsType<DspRankingItem & { rank: number }> = [
+    const viewsColumns: ProColumns<DspRankingItem & { rank: number }>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -311,9 +295,9 @@ export default function DspRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -324,28 +308,21 @@ export default function DspRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: 'left',
-            render: (
-                text: string,
-                record: DspRankingItem & { rank: number }
-            ) => (
+            render: (_, record) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <Typography.Text
                         className="cursor-pointer transition-colors hover:text-blue-500"
                         onClick={() => {
-                            // setDetailSourceModal({
-                            //     open: true,
-                            //     title: text || record.source || '',
-                            //     sourceType: record.source || '',
-                            // });
                             onSelectEntity?.({
                                 id: record.source || '',
-                                title: text || record.source || '',
+                                title:
+                                    record.sourceLabel || record.source || '',
                                 type: ANALYTICS_ENTITY_TYPE.DSP,
                                 thumbnailUrl: record.imageUrl ?? undefined,
                             });
                         }}
                     >
-                        {text || record.source || '— '}
+                        {record.dspName || '—'}
                     </Typography.Text>
                 </CustomTooltip>
             ),
@@ -355,11 +332,12 @@ export default function DspRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 280,
-            render: (bySource?: BySourceItem[]) => {
+            render: (_, record) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '— ';
                 return (
                     <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                        {bySource.map((item: BySourceItem) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
@@ -367,11 +345,6 @@ export default function DspRankingTableCard({
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() => {
-                                        // setDetailSourceModal({
-                                        //     open: true,
-                                        //     title: item.sourceLabel,
-                                        //     sourceType: item.source,
-                                        // });
                                         onSelectEntity?.({
                                             id: item.source,
                                             title: item.sourceLabel,
@@ -394,142 +367,148 @@ export default function DspRankingTableCard({
             key: 'totalViews',
             width: 180,
             fixed: 'right',
-            render: (views: number) => (
+            render: (_, record) => (
                 <Typography.Text>
-                    {views ? views.toLocaleString() : 0}
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
     ];
 
-    return (
-        <>
-            <Card className={className}>
-                <div className="mb-4 flex items-center gap-2">
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        style={{ width: 200 }}
-                    />
-                    <Segmented
-                        value={selectedReleaseType}
-                        onChange={(value) => {
-                            const selectedType =
-                                value as ANALYTICS_RELEASE_TYPE;
-                            setSelectedReleaseType(selectedType);
-                            onChangeFilter({
-                                releaseType:
-                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
-                                        ? undefined
-                                        : selectedType,
-                            });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.all'),
-                                value: ANALYTICS_RELEASE_TYPE.ALL,
-                            },
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Segmented
-                        value={
-                            isRevenue
-                                ? ANALYTICS_VIEW_TYPE.REVENUE
-                                : ANALYTICS_VIEW_TYPE.VIEW
-                        }
-                        onChange={(value) => {
-                            const nextType = value as ANALYTICS_VIEW_TYPE;
-                            setCurrentType(nextType);
-                            // The metric owns the view type when it is
-                            // controlled; writing both params would race two
-                            // URL updates built from the same stale snapshot.
-                            if (onMetricChange) {
-                                onMetricChange(
-                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                                );
-                                return;
-                            }
-                            onChangeFilter({ type: nextType });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.views'),
-                                value: ANALYTICS_VIEW_TYPE.VIEW,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS_VIEW_TYPE.REVENUE,
-                            },
-                        ]}
-                    />
-                </div>
-                {isRevenue ? (
-                    <Table<RevenueDspItem & { rank: number }>
-                        sticky
-                        size="small"
-                        columns={revenueColumns}
-                        dataSource={revenueDataWithRank}
-                        loading={isFetching}
-                        rowKey="source"
-                        pagination={false}
-                        scroll={{ x: SCREEN.LG }}
-                    />
-                ) : (
-                    <Table<DspRankingItem & { rank: number }>
-                        sticky
-                        size="small"
-                        columns={viewsColumns}
-                        dataSource={viewsDataWithRank}
-                        loading={isFetching}
-                        rowKey="source"
-                        pagination={false}
-                        scroll={{ x: SCREEN.LG }}
-                    />
-                )}
-                <AppPagination
-                    align="end"
-                    className="!mt-4"
-                    current={page}
-                    pageSize={pageSize}
-                    total={
-                        isRevenue
-                            ? topDspData?.metadata?.totalItems || 0
-                            : dspRankingData?.metadata?.totalItems || 0
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="releaseType"
+                value={selectedReleaseType}
+                onChange={(value) => {
+                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                    setSelectedReleaseType(selectedType);
+                    onChangeFilter({
+                        releaseType:
+                            selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                ? undefined
+                                : selectedType,
+                    });
+                }}
+                options={[
+                    {
+                        label: messages('common.all'),
+                        value: ANALYTICS_RELEASE_TYPE.ALL,
+                    },
+                    {
+                        label: messages('common.audio'),
+                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                    },
+                    {
+                        label: messages('common.video'),
+                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                    },
+                ]}
+            />,
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
                     }
-                    onChange={onChangePage}
-                    showTotalText
-                    showSizeChanger
-                    showQuickJumper
-                    pageSizeOptions={PAGE_SIZE_OPTIONS}
-                />
-            </Card>
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
 
-            {detailSourceModal.open && (
-                <DetailSourceTypeAnalyticsModal
-                    open={detailSourceModal.open}
-                    onClose={() =>
-                        setDetailSourceModal((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    title={detailSourceModal.title}
-                    sourceType={detailSourceModal.sourceType}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
+    return (
+        <Card className={className}>
+            {isRevenue ? (
+                <AppProTable<RevenueDspItem & { rank: number }>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
+                    sticky
+                    size="small"
+                    columns={revenueColumns}
+                    dataSource={revenueDataWithRank}
+                    loading={isFetching}
+                    rowKey="source"
+                    pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
+                    scroll={{ x: SCREEN.LG }}
+                />
+            ) : (
+                <AppProTable<DspRankingItem & { rank: number }>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
+                    sticky
+                    size="small"
+                    columns={viewsColumns}
+                    dataSource={viewsDataWithRank}
+                    loading={isFetching}
+                    rowKey="source"
+                    pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
+                    scroll={{ x: SCREEN.LG }}
                 />
             )}
-        </>
+            <AppPagination
+                align="end"
+                className="!mt-4"
+                current={page}
+                pageSize={pageSize}
+                total={
+                    isRevenue
+                        ? topDspData?.metadata?.totalItems || 0
+                        : dspRankingData?.metadata?.totalItems || 0
+                }
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
+        </Card>
     );
 }

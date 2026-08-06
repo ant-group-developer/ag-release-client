@@ -129,9 +129,9 @@ export const useGetDspRanking = (
         queryFn: () => analytics2Apis.getDspRanking(params),
         placeholderData: (prev) => prev,
         ...options,
-        enabled:
-            (options?.enabled ?? true) &&
-            Boolean(params.dspReportId || params.pgDspId),
+        // enabled:
+        //     (options?.enabled ?? true) &&
+        //     Boolean(params.dspReportId || params.pgDspId),
     });
 
     const dspRankingData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;

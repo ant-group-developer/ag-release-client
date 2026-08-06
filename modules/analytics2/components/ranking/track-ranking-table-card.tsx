@@ -2,15 +2,14 @@
 
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import AppProTable from '@/components/ui/table/pro-table';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
-import DetailTrackAnalyticsModal from '@/modules/analytics2/components/detail-track/detail-track-analytics-modal';
 import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
@@ -34,8 +33,9 @@ import { RevenueTrackItem, TrackRankingItem } from '@/modules/analytics2/types';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
-import { Card, Segmented, Table, Tag, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Card, Segmented, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -108,16 +108,6 @@ export default function TrackRankingTableCard({
         }
     }, [releaseType]);
 
-    const [activeDetail, setActiveDetail] = useState<{
-        type: 'track' | 'source' | 'label' | null;
-        title: string;
-        targetId: string;
-    }>({
-        type: null,
-        title: '',
-        targetId: '',
-    });
-
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = metricKey
@@ -173,7 +163,7 @@ export default function TrackRankingTableCard({
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueColumns: ColumnsType<RevenueTrackItem> = [
+    const revenueColumns: ProColumns<RevenueTrackItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -181,9 +171,9 @@ export default function TrackRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: RevenueTrackItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -194,7 +184,7 @@ export default function TrackRankingTableCard({
             width: 300,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: RevenueTrackItem) => (
+            render: (_, record: RevenueTrackItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -212,14 +202,9 @@ export default function TrackRankingTableCard({
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() => {
-                                    // setActiveDetail({
-                                    //     type: 'track',
-                                    //     title: text,
-                                    //     targetId: record.isrc,
-                                    // });
                                     onSelectEntity?.({
                                         id: record.isrc,
-                                        title: text,
+                                        title: record.title,
                                         type: ANALYTICS_ENTITY_TYPE.TRACK,
                                         thumbnailUrl: record.release
                                             ?.coverArtThumbnails?.[
@@ -228,7 +213,7 @@ export default function TrackRankingTableCard({
                                     });
                                 }}
                             >
-                                {text}
+                                {record.title}
                             </Typography.Text>
                         </CustomTooltip>
                     </div>
@@ -241,9 +226,9 @@ export default function TrackRankingTableCard({
             key: 'isrc',
             width: 150,
             ellipsis: true,
-            render: (text: string) => (
+            render: (_, record: RevenueTrackItem) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '-'}
+                    {record.isrc || '-'}
                 </Typography.Text>
             ),
         },
@@ -253,7 +238,7 @@ export default function TrackRankingTableCard({
             key: 'labelName',
             width: 160,
             ellipsis: true,
-            render: (text: string, record: RevenueTrackItem) => {
+            render: (_, record: RevenueTrackItem) => {
                 const labelName = record?.labelName;
                 if (!record.labelId) return '-';
                 return (
@@ -261,11 +246,6 @@ export default function TrackRankingTableCard({
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
                             onClick={() => {
-                                // setActiveDetail({
-                                //     type: 'label',
-                                //     title: labelName || '',
-                                //     targetId: record.labelId as string,
-                                // });
                                 onSelectEntity?.({
                                     id: record.labelId as string,
                                     title: labelName || '',
@@ -334,7 +314,8 @@ export default function TrackRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 200,
-            render: (bySource?: any[]) => {
+            render: (_, record: RevenueTrackItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
@@ -349,11 +330,6 @@ export default function TrackRankingTableCard({
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() => {
-                                        // setActiveDetail({
-                                        //     type: 'source',
-                                        //     title: item.sourceLabel,
-                                        //     targetId: item.source,
-                                        // });
                                         onSelectEntity?.({
                                             id: item.source,
                                             title: item.sourceLabel,
@@ -376,9 +352,9 @@ export default function TrackRankingTableCard({
             key: 'quantity',
             width: 120,
             fixed: 'right',
-            render: (qty: number) => (
+            render: (_, record: RevenueTrackItem) => (
                 <Typography.Text type="secondary">
-                    {qty ? qty.toLocaleString() : 0}
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
@@ -388,15 +364,18 @@ export default function TrackRankingTableCard({
             key: 'revenueUsd',
             width: 140,
             fixed: 'right',
-            render: (val: number) => (
+            render: (_, record: RevenueTrackItem) => (
                 <Typography.Text>
-                    ${val ? formattedNumber(val) : '0.00'}
+                    $
+                    {record.revenueUsd
+                        ? formattedNumber(record.revenueUsd)
+                        : '0.00'}
                 </Typography.Text>
             ),
         },
     ];
 
-    const viewColumns: ColumnsType<TrackRankingItem> = [
+    const viewColumns: ProColumns<TrackRankingItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -404,9 +383,9 @@ export default function TrackRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: TrackRankingItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -417,7 +396,7 @@ export default function TrackRankingTableCard({
             ellipsis: true,
             width: 300,
             fixed: 'left',
-            render: (text: string, record: TrackRankingItem) => (
+            render: (_, record: TrackRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -435,14 +414,9 @@ export default function TrackRankingTableCard({
                             <Typography.Text
                                 className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() => {
-                                    // setActiveDetail({
-                                    //     type: 'track',
-                                    //     title: text,
-                                    //     targetId: record.isrc,
-                                    // });
                                     onSelectEntity?.({
                                         id: record.isrc,
-                                        title: text,
+                                        title: record.title,
                                         type: ANALYTICS_ENTITY_TYPE.TRACK,
                                         thumbnailUrl: record.release
                                             ?.coverArtThumbnails?.[
@@ -451,7 +425,7 @@ export default function TrackRankingTableCard({
                                     });
                                 }}
                             >
-                                {text}
+                                {record.title}
                             </Typography.Text>
                         </CustomTooltip>
                     </div>
@@ -464,9 +438,9 @@ export default function TrackRankingTableCard({
             key: 'isrc',
             width: 150,
             ellipsis: true,
-            render: (text: string) => (
+            render: (_, record: TrackRankingItem) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '-'}
+                    {record.isrc || '-'}
                 </Typography.Text>
             ),
         },
@@ -476,8 +450,8 @@ export default function TrackRankingTableCard({
             key: 'labelName',
             width: 160,
             ellipsis: true,
-            render: (text: string, record: TrackRankingItem) => {
-                const labelName = text || record.release?.label?.name;
+            render: (_, record: TrackRankingItem) => {
+                const labelName = record.labelName || record.release?.label?.name;
                 const labelId = record.labelId || record.release?.label?.id;
                 if (!labelId) {
                     return (
@@ -491,11 +465,6 @@ export default function TrackRankingTableCard({
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
                             onClick={() => {
-                                // setActiveDetail({
-                                //     type: 'label',
-                                //     title: labelName || '',
-                                //     targetId: labelId,
-                                // });
                                 onSelectEntity?.({
                                     id: labelId,
                                     title: labelName || '',
@@ -558,7 +527,8 @@ export default function TrackRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 200,
-            render: (bySource?: any[]) => {
+            render: (_, record: TrackRankingItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
@@ -573,11 +543,6 @@ export default function TrackRankingTableCard({
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() => {
-                                        // setActiveDetail({
-                                        //     type: 'source',
-                                        //     title: item.sourceLabel,
-                                        //     targetId: item.source,
-                                        // });
                                         onSelectEntity?.({
                                             id: item.source,
                                             title: item.sourceLabel,
@@ -600,173 +565,149 @@ export default function TrackRankingTableCard({
             key: 'totalViews',
             width: 150,
             fixed: 'right',
-            render: (views: number) => (
+            render: (_, record: TrackRankingItem) => (
                 <Typography.Text>
-                    {views ? views.toLocaleString() : 0}
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
     ];
 
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="releaseType"
+                value={selectedReleaseType}
+                onChange={(value) => {
+                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                    setSelectedReleaseType(selectedType);
+                    onChangeFilter({
+                        releaseType:
+                            selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                ? undefined
+                                : selectedType,
+                    });
+                }}
+                options={[
+                    {
+                        label: messages('common.all'),
+                        value: ANALYTICS_RELEASE_TYPE.ALL,
+                    },
+                    {
+                        label: messages('common.audio'),
+                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                    },
+                    {
+                        label: messages('common.video'),
+                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                    },
+                ]}
+            />,
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
+                    }
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
+
     return (
-        <>
-            <Card className={className}>
-                <div className="mb-4 flex items-center gap-2">
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        style={{ width: 200 }}
-                    />
-                    <Segmented
-                        value={selectedReleaseType}
-                        onChange={(value) => {
-                            const selectedType =
-                                value as ANALYTICS_RELEASE_TYPE;
-                            setSelectedReleaseType(selectedType);
-                            onChangeFilter({
-                                releaseType:
-                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
-                                        ? undefined
-                                        : selectedType,
-                            });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.all'),
-                                value: ANALYTICS_RELEASE_TYPE.ALL,
-                            },
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Segmented
-                        value={
-                            isRevenue
-                                ? ANALYTICS_VIEW_TYPE.REVENUE
-                                : ANALYTICS_VIEW_TYPE.VIEW
-                        }
-                        onChange={(value) => {
-                            const nextType = value as ANALYTICS_VIEW_TYPE;
-                            setCurrentType(nextType);
-                            // The metric owns the view type when it is
-                            // controlled; writing both params would race two
-                            // URL updates built from the same stale snapshot.
-                            if (onMetricChange) {
-                                onMetricChange(
-                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                                );
-                                return;
-                            }
-                            onChangeFilter({ type: nextType });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.views'),
-                                value: ANALYTICS_VIEW_TYPE.VIEW,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS_VIEW_TYPE.REVENUE,
-                            },
-                        ]}
-                    />
-                </div>
-                {isRevenue ? (
-                    <Table<RevenueTrackItem>
-                        sticky
-                        size="small"
-                        columns={revenueColumns}
-                        dataSource={topTrackData.items}
-                        loading={isFetching}
-                        rowKey="isrc"
-                        pagination={false}
-                        scroll={{ x: SCREEN.LG }}
-                    />
-                ) : (
-                    <Table<TrackRankingItem>
-                        sticky
-                        size="small"
-                        columns={viewColumns}
-                        dataSource={trackRankingData.items}
-                        loading={isFetching}
-                        rowKey="isrc"
-                        pagination={false}
-                        scroll={{ x: SCREEN.LG }}
-                    />
-                )}
-                <AppPagination
-                    align="end"
-                    className="!mt-4"
-                    current={page}
-                    pageSize={pageSize}
-                    total={
-                        isRevenue
-                            ? topTrackData?.metadata?.totalItems || 0
-                            : trackRankingData?.metadata?.totalItems || 0
-                    }
-                    onChange={onChangePage}
-                    showTotalText
-                    showSizeChanger
-                    showQuickJumper
-                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+        <Card className={className}>
+            {isRevenue ? (
+                <AppProTable<RevenueTrackItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
+                    sticky
+                    size="small"
+                    columns={revenueColumns}
+                    dataSource={topTrackData.items}
+                    loading={isFetching}
+                    rowKey="isrc"
+                    pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
+                    scroll={{ x: SCREEN.LG }}
                 />
-            </Card>
-
-            {activeDetail.type === 'track' && (
-                <DetailTrackAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({ ...prev, type: null }))
-                    }
-                    title={activeDetail.title}
-                    isrc={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
+            ) : (
+                <AppProTable<TrackRankingItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
+                    sticky
+                    size="small"
+                    columns={viewColumns}
+                    dataSource={trackRankingData.items}
+                    loading={isFetching}
+                    rowKey="isrc"
+                    pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
+                    scroll={{ x: SCREEN.LG }}
                 />
             )}
-
-            {activeDetail.type === 'source' && (
-                <DetailSourceTypeAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    sourceType={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-
-            {activeDetail.type === 'label' && (
-                <DetailLabelAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    labelId={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-        </>
+            <AppPagination
+                align="end"
+                className="!mt-4"
+                current={page}
+                pageSize={pageSize}
+                total={
+                    isRevenue
+                        ? topTrackData?.metadata?.totalItems || 0
+                        : trackRankingData?.metadata?.totalItems || 0
+                }
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
+        </Card>
     );
 }
+

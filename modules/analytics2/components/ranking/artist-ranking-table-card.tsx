@@ -8,8 +8,6 @@ import {
     PAGE_SIZE_OPTIONS,
 } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
-import DetailArtistAnalyticsModal from '@/modules/analytics2/components/detail-artist/detail-artist-analytics-modal';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
 import ArtistRevenueTable from '@/modules/analytics2/components/table/artist-revenue-table';
 import ArtistViewsTable from '@/modules/analytics2/components/table/artist-views-table';
 import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
@@ -109,26 +107,6 @@ export default function ArtistRankingTableCard({
         }
     }, [releaseType]);
 
-    const [detailModal, setDetailModal] = useState<{
-        open: boolean;
-        title: string;
-        artistId: string;
-    }>({
-        open: false,
-        title: '',
-        artistId: '',
-    });
-
-    const [detailSourceModal, setDetailSourceModal] = useState<{
-        open: boolean;
-        title: string;
-        sourceType: string;
-    }>({
-        open: false,
-        title: '',
-        sourceType: '',
-    });
-
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = metricKey
@@ -189,11 +167,6 @@ export default function ArtistRankingTableCard({
         artistName: string,
         thumbnailUrl?: string | null
     ) => {
-        // setDetailModal({
-        //     open: true,
-        //     title: artistName,
-        //     artistId,
-        // });
         onSelectEntity?.({
             id: artistId,
             title: artistName,
@@ -203,11 +176,6 @@ export default function ArtistRankingTableCard({
     };
 
     const handleDetailSource = (sourceType: string, title: string) => {
-        // setDetailSourceModal({
-        //     open: true,
-        //     title,
-        //     sourceType,
-        // });
         onSelectEntity?.({
             id: sourceType,
             title,
@@ -215,139 +183,115 @@ export default function ArtistRankingTableCard({
         });
     };
 
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="releaseType"
+                value={selectedReleaseType}
+                onChange={(value) => {
+                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                    setSelectedReleaseType(selectedType);
+                    onChangeFilter({
+                        releaseType:
+                            selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                ? undefined
+                                : selectedType,
+                    });
+                }}
+                options={[
+                    {
+                        label: messages('common.all'),
+                        value: ANALYTICS_RELEASE_TYPE.ALL,
+                    },
+                    {
+                        label: messages('common.audio'),
+                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                    },
+                    {
+                        label: messages('common.video'),
+                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                    },
+                ]}
+            />,
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
+                    }
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
+
     return (
-        <>
-            <Card className={className}>
-                <div className="mb-4 flex items-center gap-2">
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        style={{ width: 200 }}
-                    />
-                    <Segmented
-                        value={selectedReleaseType}
-                        onChange={(value) => {
-                            const selectedType =
-                                value as ANALYTICS_RELEASE_TYPE;
-                            setSelectedReleaseType(selectedType);
-                            onChangeFilter({
-                                releaseType:
-                                    selectedType ===
-                                    ANALYTICS_RELEASE_TYPE.ALL
-                                        ? undefined
-                                        : selectedType,
-                            });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.all'),
-                                value: ANALYTICS_RELEASE_TYPE.ALL,
-                            },
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Segmented
-                        value={isRevenue ? ANALYTICS_VIEW_TYPE.REVENUE : ANALYTICS_VIEW_TYPE.VIEW}
-                        onChange={(value) => {
-                            const nextType = value as ANALYTICS_VIEW_TYPE;
-                            setCurrentType(nextType);
-                            // The metric owns the view type when it is
-                            // controlled; writing both params would race two
-                            // URL updates built from the same stale snapshot.
-                            if (onMetricChange) {
-                                onMetricChange(
-                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                                );
-                                return;
-                            }
-                            onChangeFilter({ type: nextType });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.views'),
-                                value: ANALYTICS_VIEW_TYPE.VIEW,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS_VIEW_TYPE.REVENUE,
-                            },
-                        ]}
-                    />
-                </div>
-                {isRevenue ? (
-                    <ArtistRevenueTable
-                        dataSource={topArtistData.items}
-                        loading={isFetching}
-                        dspData={dspData}
-                        onDetailArtist={handleDetailArtist}
-                        onDetailSource={handleDetailSource}
-                    />
-                ) : (
-                    <ArtistViewsTable
-                        dataSource={artistRankingData.items}
-                        loading={isFetching}
-                        dspData={dspData}
-                        onDetailArtist={handleDetailArtist}
-                        onDetailSource={handleDetailSource}
-                    />
-                )}
-                <AppPagination
-                    align="end"
-                    className="!mt-4"
-                    current={page}
-                    pageSize={pageSize}
-                    total={
-                        isRevenue
-                            ? topArtistData?.metadata?.totalItems || 0
-                            : artistRankingData?.metadata?.totalItems || 0
-                    }
-                    onChange={onChangePage}
-                    showTotalText
-                    showSizeChanger
-                    showQuickJumper
-                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+        <Card className={className}>
+            {isRevenue ? (
+                <ArtistRevenueTable
+                    toolbar={toolbarConfig}
+                    dataSource={topArtistData.items}
+                    loading={isFetching}
+                    dspData={dspData}
+                    onDetailArtist={handleDetailArtist}
+                    onDetailSource={handleDetailSource}
                 />
-            </Card>
-
-            {detailModal.open && (
-                <DetailArtistAnalyticsModal
-                    open={detailModal.open}
-                    onClose={() =>
-                        setDetailModal((prev) => ({ ...prev, open: false }))
-                    }
-                    title={detailModal.title}
-                    artistId={detailModal.artistId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
+            ) : (
+                <ArtistViewsTable
+                    toolbar={toolbarConfig}
+                    dataSource={artistRankingData.items}
+                    loading={isFetching}
+                    dspData={dspData}
+                    onDetailArtist={handleDetailArtist}
+                    onDetailSource={handleDetailSource}
                 />
             )}
-
-            {detailSourceModal.open && (
-                <DetailSourceTypeAnalyticsModal
-                    open={detailSourceModal.open}
-                    onClose={() =>
-                        setDetailSourceModal((prev) => ({
-                            ...prev,
-                            open: false,
-                        }))
-                    }
-                    title={detailSourceModal.title}
-                    sourceType={detailSourceModal.sourceType}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-        </>
+            <AppPagination
+                align="end"
+                className="!mt-4"
+                current={page}
+                pageSize={pageSize}
+                total={
+                    isRevenue
+                        ? topArtistData?.metadata?.totalItems || 0
+                        : artistRankingData?.metadata?.totalItems || 0
+                }
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
+        </Card>
     );
 }
+

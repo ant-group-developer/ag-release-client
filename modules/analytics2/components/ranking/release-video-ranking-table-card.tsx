@@ -2,8 +2,10 @@
 
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import AppProTable from '@/components/ui/table/pro-table';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
@@ -34,8 +36,9 @@ import {
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
-import { Card, Segmented, Table, Tag, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Card, Segmented, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -156,7 +159,7 @@ export default function ReleaseVideoRankingTableCard({
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
     const renderRank = (rank: number) => (
-        <Typography.Text className="text-gray-700 dark:text-zinc-300">
+        <Typography.Text type="secondary">
             #{rank}
         </Typography.Text>
     );
@@ -350,7 +353,7 @@ export default function ReleaseVideoRankingTableCard({
         );
     };
 
-    const revenueColumns: ColumnsType<RevenueReleaseVideoItem> = [
+    const revenueColumns: ProColumns<RevenueReleaseVideoItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -358,7 +361,7 @@ export default function ReleaseVideoRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: renderRank,
+            render: (_, record: RevenueReleaseVideoItem) => renderRank(record.rank),
         },
         {
             title: messages('common.releasesVideo'),
@@ -367,7 +370,7 @@ export default function ReleaseVideoRankingTableCard({
             width: 300,
             ellipsis: true,
             fixed: 'left',
-            render: renderTitle,
+            render: (_, record: RevenueReleaseVideoItem) => renderTitle(record.title, record),
         },
         {
             title: 'ISRC',
@@ -382,7 +385,7 @@ export default function ReleaseVideoRankingTableCard({
             key: 'labelName',
             width: 140,
             ellipsis: true,
-            render: renderLabel,
+            render: (_, record: RevenueReleaseVideoItem) => renderLabel(record.labelName, record),
         },
         {
             title: messages('common.workspace'),
@@ -390,8 +393,8 @@ export default function ReleaseVideoRankingTableCard({
             key: 'workspaces',
             width: 180,
             ellipsis: true,
-            render: (workspaces?: WorkspaceCell[]) =>
-                renderWorkspaces(workspaces),
+            render: (_, record: RevenueReleaseVideoItem) =>
+                renderWorkspaces(record.workspaces),
         },
         {
             title: messages('common.channel'),
@@ -399,7 +402,7 @@ export default function ReleaseVideoRankingTableCard({
             key: 'channels',
             width: 180,
             ellipsis: true,
-            render: (channels?: ChannelCell[]) => renderChannels(channels),
+            render: (_, record: RevenueReleaseVideoItem) => renderChannels(record.channels),
         },
         {
             title: messages('common.youtubeId'),
@@ -413,7 +416,7 @@ export default function ReleaseVideoRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 150,
-            render: (bySource?: BySourceItem[]) =>
+            render: (bySource: any) =>
                 renderBySource(bySource, true),
         },
         {
@@ -422,9 +425,9 @@ export default function ReleaseVideoRankingTableCard({
             key: 'quantity',
             width: 120,
             fixed: 'right',
-            render: (qty: number) => (
+            render: (_, record: RevenueReleaseVideoItem) => (
                 <Typography.Text type="secondary">
-                    {qty ? qty.toLocaleString() : 0}
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
@@ -434,15 +437,15 @@ export default function ReleaseVideoRankingTableCard({
             key: 'revenueUsd',
             width: 120,
             fixed: 'right',
-            render: (val: number) => (
+            render: (_, record: RevenueReleaseVideoItem) => (
                 <Typography.Text>
-                    ${val ? formattedNumber(val) : '0.00'}
+                    ${record.revenueUsd ? formattedNumber(record.revenueUsd) : '0.00'}
                 </Typography.Text>
             ),
         },
     ];
 
-    const viewColumns: ColumnsType<ReleaseVideoRankingItem> = [
+    const viewColumns: ProColumns<ReleaseVideoRankingItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -450,7 +453,7 @@ export default function ReleaseVideoRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: renderRank,
+            render: (_, record: ReleaseVideoRankingItem) => renderRank(record.rank),
         },
         {
             title: messages('common.releasesVideo'),
@@ -459,7 +462,7 @@ export default function ReleaseVideoRankingTableCard({
             width: 300,
             ellipsis: true,
             fixed: 'left',
-            render: renderTitle,
+            render: (_, record: ReleaseVideoRankingItem) => renderTitle(record.title, record),
         },
         {
             title: 'ISRC',
@@ -474,7 +477,7 @@ export default function ReleaseVideoRankingTableCard({
             key: 'labelName',
             width: 140,
             ellipsis: true,
-            render: renderLabel,
+            render: (_, record: ReleaseVideoRankingItem) => renderLabel(record.labelName, record),
         },
         {
             title: messages('common.workspace'),
@@ -482,8 +485,8 @@ export default function ReleaseVideoRankingTableCard({
             key: 'workspaces',
             width: 180,
             ellipsis: true,
-            render: (workspaces?: WorkspaceCell[]) =>
-                renderWorkspaces(workspaces),
+            render: (_, record: ReleaseVideoRankingItem) =>
+                renderWorkspaces(record.workspaces),
         },
         {
             title: messages('common.channel'),
@@ -491,7 +494,7 @@ export default function ReleaseVideoRankingTableCard({
             key: 'channels',
             width: 180,
             ellipsis: true,
-            render: (channels?: ChannelCell[]) => renderChannels(channels),
+            render: (_, record: ReleaseVideoRankingItem) => renderChannels(record.channels),
         },
         {
             title: messages('common.youtubeId'),
@@ -505,7 +508,7 @@ export default function ReleaseVideoRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 150,
-            render: (bySource?: BySourceItem[]) => renderBySource(bySource),
+            render: (bySource: any) => renderBySource(bySource),
         },
         {
             title: messages('common.streams'),
@@ -513,58 +516,63 @@ export default function ReleaseVideoRankingTableCard({
             key: 'totalViews',
             width: 120,
             fixed: 'right',
-            render: (views: number) => (
+            render: (_, record: ReleaseVideoRankingItem) => (
                 <Typography.Text>
-                    {views ? views.toLocaleString() : 0}
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
     ];
 
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
+                    }
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
+
     return (
         <Card className={className}>
-            <div className="mb-4 flex items-center gap-2">
-                <AppSearch
-                    onChange={onSearch}
-                    defaultValue={dataFilter.keyword}
-                    style={{ width: 200 }}
-                />
-                <Segmented
-                    value={
-                        isRevenue
-                            ? ANALYTICS_VIEW_TYPE.REVENUE
-                            : ANALYTICS_VIEW_TYPE.VIEW
-                    }
-                    onChange={(value) => {
-                        const nextType = value as ANALYTICS_VIEW_TYPE;
-                        setCurrentType(nextType);
-                        // The metric owns the view type when it is controlled;
-                        // writing both params would race two URL updates built
-                        // from the same stale snapshot.
-                        if (onMetricChange) {
-                            onMetricChange(
-                                nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                            );
-                            return;
-                        }
-                        onChangeFilter({ type: nextType });
-                    }}
-                    options={[
-                        {
-                            label: messages('common.views'),
-                            value: ANALYTICS_VIEW_TYPE.VIEW,
-                        },
-                        {
-                            label: messages('common.revenue'),
-                            value: ANALYTICS_VIEW_TYPE.REVENUE,
-                        },
-                    ]}
-                />
-            </div>
             {isRevenue ? (
-                <Table<RevenueReleaseVideoItem>
+                <AppProTable<RevenueReleaseVideoItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
                     sticky
                     size="small"
                     columns={revenueColumns}
@@ -572,10 +580,21 @@ export default function ReleaseVideoRankingTableCard({
                     loading={isFetching}
                     rowKey="releaseId"
                     pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
                     scroll={{ x: SCREEN.LG }}
                 />
             ) : (
-                <Table<ReleaseVideoRankingItem>
+                <AppProTable<ReleaseVideoRankingItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
                     sticky
                     size="small"
                     columns={viewColumns}
@@ -583,6 +602,15 @@ export default function ReleaseVideoRankingTableCard({
                     loading={isFetching}
                     rowKey="releaseId"
                     pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
                     scroll={{ x: SCREEN.LG }}
                 />
             )}
@@ -605,3 +633,4 @@ export default function ReleaseVideoRankingTableCard({
         </Card>
     );
 }
+
