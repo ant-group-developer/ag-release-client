@@ -4,9 +4,8 @@ import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { useGetLabelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
+import { Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { Disc } from 'lucide-react';
 import { ContentItem } from '../content-entity-selector';
 
 interface Props {
@@ -65,25 +64,12 @@ export default function EntityListLabels({
                     >
                         <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
-                                {labelLogo ? (
-                                    <ReleaseCoverImage
-                                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                        height={
-                                            ANALYTICS_RANKING_THUMBNAIL_SIZE
-                                        }
-                                        src={labelLogo}
-                                    />
-                                ) : (
-                                    <Avatar
-                                        shape="square"
-                                        size={40}
-                                        icon={<Disc className="h-5 w-5" />}
-                                        className="shrink-0 rounded-md bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                    >
-                                        {(item.labelName ||
-                                            'L')[0]?.toUpperCase()}
-                                    </Avatar>
-                                )}
+                                <ReleaseCoverImage
+                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    src={labelLogo}
+                                />
+
                                 <div className="flex flex-col overflow-hidden">
                                     <Typography.Text
                                         ellipsis={{ tooltip: item.labelName }}

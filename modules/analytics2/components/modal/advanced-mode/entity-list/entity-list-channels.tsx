@@ -1,13 +1,12 @@
 'use client';
 
-import { formattedNumber } from '@/helpers/common';
 import ImageFallback from '@/components/ui/image/image-fallback';
+import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { ANALYTICS_ENTITY_TYPE } from '@/modules/analytics2/enums';
 import { useGetChannelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
-import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
+import { Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { Youtube } from 'lucide-react';
 import { ContentItem } from '../content-entity-selector';
 
 interface Props {
@@ -59,24 +58,14 @@ export default function EntityListChannels({
                 >
                     <div className="flex w-full items-center justify-between gap-3 px-2">
                         <div className="flex items-center gap-3 overflow-hidden">
-                            {item.thumbUrl ? (
-                                <ImageFallback
-                                    src={item.thumbUrl}
-                                    alt={item.channelName || ''}
-                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                    className="aspect-square shrink-0 rounded-full object-cover"
-                                />
-                            ) : (
-                                <Avatar
-                                    shape="circle"
-                                    size={40}
-                                    icon={<Youtube className="h-5 w-5" />}
-                                    className="shrink-0 bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-                                >
-                                    {(item.channelName || 'C')[0]?.toUpperCase()}
-                                </Avatar>
-                            )}
+                            <ImageFallback
+                                src={item.thumbUrl}
+                                alt={item.channelName || ''}
+                                width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                className="aspect-square shrink-0 rounded-full object-cover"
+                            />
+
                             <div className="flex flex-col overflow-hidden">
                                 <Typography.Text
                                     ellipsis={{ tooltip: item.channelName }}
