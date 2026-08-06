@@ -62,6 +62,17 @@ export default function ChannelInfoForm({
                         }),
                     },
                     {
+                        min: 2,
+                        message: messages('validation.stringMin', {
+                            min: 2,
+                            field: messages('channel.name'),
+                        }),
+                    },
+                    {
+                        whitespace: true,
+                        message: messages('validation.input'),
+                    },
+                    {
                         pattern: /^[A-Za-z0-9]+VEVO$/,
                         message: messages('channel.validation.nameFormat'),
                     },
