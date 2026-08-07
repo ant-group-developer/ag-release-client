@@ -2,16 +2,14 @@
 
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import AppProTable from '@/components/ui/table/pro-table';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
-import DetailReleaseAnalyticsModal from '@/modules/analytics2/components/detail-release/detail-release-analytics-modal';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
-import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
@@ -38,8 +36,9 @@ import {
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
-import { Avatar, Card, Segmented, Space, Table, Tag, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Avatar, Card, Segmented, Space, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -111,16 +110,6 @@ export default function ReleaseRankingTableCard({
         }
     }, [releaseType]);
 
-    const [activeDetail, setActiveDetail] = useState<{
-        type: 'release' | 'source' | 'label' | 'tenant' | null;
-        title: string;
-        targetId: string;
-    }>({
-        type: null,
-        title: '',
-        targetId: '',
-    });
-
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = metricKey
@@ -176,7 +165,7 @@ export default function ReleaseRankingTableCard({
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueColumns: ColumnsType<RevenueReleaseItem> = [
+    const revenueColumns: ProColumns<RevenueReleaseItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -184,9 +173,9 @@ export default function ReleaseRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: RevenueReleaseItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -197,7 +186,7 @@ export default function ReleaseRankingTableCard({
             width: 350,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: RevenueReleaseItem) => (
+            render: (_, record: RevenueReleaseItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -217,12 +206,12 @@ export default function ReleaseRankingTableCard({
                                 onClick={() => {
                                     // setActiveDetail({
                                     //     type: 'release',
-                                    //     title: text,
+                                    //     title: record.title,
                                     //     targetId: record.releaseId,
                                     // });
                                     onSelectEntity?.({
                                         id: record.releaseId,
-                                        title: text,
+                                        title: record.title,
                                         type: ANALYTICS_ENTITY_TYPE.RELEASE,
                                         thumbnailUrl: record.release
                                             ?.coverArtThumbnails?.[
@@ -231,7 +220,7 @@ export default function ReleaseRankingTableCard({
                                     });
                                 }}
                             >
-                                {text}
+                                {record.title}
                             </Typography.Text>
                         </CustomTooltip>
                     </div>
@@ -244,9 +233,9 @@ export default function ReleaseRankingTableCard({
             key: 'upc',
             width: 160,
             ellipsis: true,
-            render: (text: string) => (
+            render: (_, record: RevenueReleaseItem) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '-'}
+                    {record.upc || '-'}
                 </Typography.Text>
             ),
         },
@@ -256,11 +245,11 @@ export default function ReleaseRankingTableCard({
             key: 'labelName',
             width: 180,
             ellipsis: true,
-            render: (text: string, record: RevenueReleaseItem) => {
+            render: (_, record: RevenueReleaseItem) => {
                 if (!record.labelId) {
                     return (
                         <Typography.Text className="truncate">
-                            {text || '-'}
+                            {record.labelName || '-'}
                         </Typography.Text>
                     );
                 }
@@ -271,17 +260,17 @@ export default function ReleaseRankingTableCard({
                             onClick={() => {
                                 // setActiveDetail({
                                 //     type: 'label',
-                                //     title: text,
+                                //     title: record.labelName,
                                 //     targetId: record.labelId,
                                 // });
                                 onSelectEntity?.({
                                     id: record.labelId,
-                                    title: text,
+                                    title: record.labelName,
                                     type: ANALYTICS_ENTITY_TYPE.LABEL,
                                 });
                             }}
                         >
-                            {text || '-'}
+                            {record.labelName || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 );
@@ -374,7 +363,8 @@ export default function ReleaseRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 280,
-            render: (bySource?: any[]) => {
+            render: (_, record: RevenueReleaseItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
@@ -415,8 +405,10 @@ export default function ReleaseRankingTableCard({
             dataIndex: 'trackCount',
             key: 'trackCount',
             width: 120,
-            render: (count: number) => (
-                <Typography.Text type="secondary">{count || 0}</Typography.Text>
+            render: (_, record: RevenueReleaseItem) => (
+                <Typography.Text type="secondary">
+                    {record.trackCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -425,9 +417,9 @@ export default function ReleaseRankingTableCard({
             key: 'quantity',
             width: 140,
             fixed: 'right',
-            render: (qty: number) => (
+            render: (_, record: RevenueReleaseItem) => (
                 <Typography.Text type="secondary">
-                    {qty ? qty.toLocaleString() : 0}
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
@@ -437,15 +429,18 @@ export default function ReleaseRankingTableCard({
             key: 'revenueUsd',
             width: 150,
             fixed: 'right',
-            render: (val: number) => (
+            render: (_, record: RevenueReleaseItem) => (
                 <Typography.Text>
-                    ${val ? formattedNumber(val) : '0.00'}
+                    $
+                    {record.revenueUsd
+                        ? formattedNumber(record.revenueUsd)
+                        : '0.00'}
                 </Typography.Text>
             ),
         },
     ];
 
-    const viewColumns: ColumnsType<ReleaseRankingItem> = [
+    const viewColumns: ProColumns<ReleaseRankingItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -453,9 +448,9 @@ export default function ReleaseRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: ReleaseRankingItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -466,7 +461,7 @@ export default function ReleaseRankingTableCard({
             width: 350,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: ReleaseRankingItem) => (
+            render: (_, record: ReleaseRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ReleaseCoverImage
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
@@ -486,12 +481,12 @@ export default function ReleaseRankingTableCard({
                                 onClick={() => {
                                     // setActiveDetail({
                                     //     type: 'release',
-                                    //     title: text,
+                                    //     title: record.title,
                                     //     targetId: record.releaseId,
                                     // });
                                     onSelectEntity?.({
                                         id: record.releaseId,
-                                        title: text,
+                                        title: record.title,
                                         type: ANALYTICS_ENTITY_TYPE.RELEASE,
                                         thumbnailUrl: record.release
                                             ?.coverArtThumbnails?.[
@@ -500,7 +495,7 @@ export default function ReleaseRankingTableCard({
                                     });
                                 }}
                             >
-                                {text}
+                                {record.title}
                             </Typography.Text>
                         </CustomTooltip>
                     </div>
@@ -513,9 +508,9 @@ export default function ReleaseRankingTableCard({
             key: 'upc',
             width: 160,
             ellipsis: true,
-            render: (text: string) => (
+            render: (_, record: ReleaseRankingItem) => (
                 <Typography.Text type="secondary" className="truncate">
-                    {text || '-'}
+                    {record.upc || '-'}
                 </Typography.Text>
             ),
         },
@@ -525,11 +520,11 @@ export default function ReleaseRankingTableCard({
             key: 'labelName',
             width: 180,
             ellipsis: true,
-            render: (text: string, record: ReleaseRankingItem) => {
+            render: (_, record: ReleaseRankingItem) => {
                 if (!record.labelId) {
                     return (
                         <Typography.Text className="truncate">
-                            {text || '-'}
+                            {record.labelName || '-'}
                         </Typography.Text>
                     );
                 }
@@ -540,17 +535,17 @@ export default function ReleaseRankingTableCard({
                             onClick={() => {
                                 // setActiveDetail({
                                 //     type: 'label',
-                                //     title: text,
+                                //     title: record.labelName,
                                 //     targetId: record.labelId,
                                 // });
                                 onSelectEntity?.({
                                     id: record.labelId,
-                                    title: text,
+                                    title: record.labelName,
                                     type: ANALYTICS_ENTITY_TYPE.LABEL,
                                 });
                             }}
                         >
-                            {text || '-'}
+                            {record.labelName || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 );
@@ -639,7 +634,8 @@ export default function ReleaseRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 200,
-            render: (bySource?: any[]) => {
+            render: (_, record: ReleaseRankingItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
@@ -680,8 +676,10 @@ export default function ReleaseRankingTableCard({
             dataIndex: 'trackCount',
             key: 'trackCount',
             width: 120,
-            render: (count: number) => (
-                <Typography.Text type="secondary">{count || 0}</Typography.Text>
+            render: (_, record: ReleaseRankingItem) => (
+                <Typography.Text type="secondary">
+                    {record.trackCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -690,87 +688,93 @@ export default function ReleaseRankingTableCard({
             key: 'totalViews',
             width: 150,
             fixed: 'right',
-            render: (views: number) => (
+            render: (_, record: ReleaseRankingItem) => (
                 <Typography.Text>
-                    {views ? views.toLocaleString() : 0}
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
     ];
 
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="releaseType"
+                value={selectedReleaseType}
+                onChange={(value) => {
+                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                    setSelectedReleaseType(selectedType);
+                    onChangeFilter({
+                        releaseType:
+                            selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                ? undefined
+                                : selectedType,
+                    });
+                }}
+                options={[
+                    {
+                        label: messages('common.all'),
+                        value: ANALYTICS_RELEASE_TYPE.ALL,
+                    },
+                    {
+                        label: messages('common.audio'),
+                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                    },
+                    {
+                        label: messages('common.video'),
+                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                    },
+                ]}
+            />,
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
+                    }
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
+
     return (
         <>
             <Card className={className}>
-                <div className="mb-4 flex items-center gap-2">
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        style={{ width: 200 }}
-                    />
-                    <Segmented
-                        value={selectedReleaseType}
-                        onChange={(value) => {
-                            const selectedType =
-                                value as ANALYTICS_RELEASE_TYPE;
-                            setSelectedReleaseType(selectedType);
-                            onChangeFilter({
-                                releaseType:
-                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
-                                        ? undefined
-                                        : selectedType,
-                            });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.all'),
-                                value: ANALYTICS_RELEASE_TYPE.ALL,
-                            },
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Segmented
-                        value={
-                            isRevenue
-                                ? ANALYTICS_VIEW_TYPE.REVENUE
-                                : ANALYTICS_VIEW_TYPE.VIEW
-                        }
-                        onChange={(value) => {
-                            const nextType = value as ANALYTICS_VIEW_TYPE;
-                            setCurrentType(nextType);
-                            // The metric owns the view type when it is
-                            // controlled; writing both params would race two
-                            // URL updates built from the same stale snapshot.
-                            if (onMetricChange) {
-                                onMetricChange(
-                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                                );
-                                return;
-                            }
-                            onChangeFilter({ type: nextType });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.views'),
-                                value: ANALYTICS_VIEW_TYPE.VIEW,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS_VIEW_TYPE.REVENUE,
-                            },
-                        ]}
-                    />
-                </div>
                 {isRevenue ? (
-                    <Table<RevenueReleaseItem>
+                    <AppProTable<RevenueReleaseItem>
+                        className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                        toolbar={toolbarConfig}
                         sticky
                         size="small"
                         columns={revenueColumns}
@@ -778,10 +782,21 @@ export default function ReleaseRankingTableCard({
                         loading={isFetching}
                         rowKey="releaseId"
                         pagination={false}
+                        search={false}
+                        options={{
+                            setting: {
+                                settingIcon: <Columns3 size={SIZE_ICON} />,
+                            },
+                            density: false,
+                            fullScreen: false,
+                            reload: false,
+                        }}
                         scroll={{ x: SCREEN.LG }}
                     />
                 ) : (
-                    <Table<ReleaseRankingItem>
+                    <AppProTable<ReleaseRankingItem>
+                        className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                        toolbar={toolbarConfig}
                         sticky
                         size="small"
                         columns={viewColumns}
@@ -789,6 +804,15 @@ export default function ReleaseRankingTableCard({
                         loading={isFetching}
                         rowKey="releaseId"
                         pagination={false}
+                        search={false}
+                        options={{
+                            setting: {
+                                settingIcon: <Columns3 size={SIZE_ICON} />,
+                            },
+                            density: false,
+                            fullScreen: false,
+                            reload: false,
+                        }}
                         scroll={{ x: SCREEN.LG }}
                     />
                 )}
@@ -809,71 +833,6 @@ export default function ReleaseRankingTableCard({
                     pageSizeOptions={PAGE_SIZE_OPTIONS}
                 />
             </Card>
-
-            {activeDetail.type === 'release' && (
-                <DetailReleaseAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({ ...prev, type: null }))
-                    }
-                    title={activeDetail.title}
-                    releaseId={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-
-            {activeDetail.type === 'source' && (
-                <DetailSourceTypeAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    sourceType={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-
-            {activeDetail.type === 'label' && (
-                <DetailLabelAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    labelId={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-
-            {activeDetail.type === 'tenant' && (
-                <DetailTenantAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    tenantId={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
         </>
     );
 }

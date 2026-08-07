@@ -108,7 +108,7 @@ export default function ReleaseSubmitStepTable({
             title: messages('releaseExecution.detail.columns.stepType'),
             dataIndex: 'type',
             key: 'type',
-            width: 250,
+            width: 280,
             render: (value, record) => {
                 return messages(
                     `releaseExecution.stepTypeOptions.${record?.type}`
@@ -320,7 +320,8 @@ export default function ReleaseSubmitStepTable({
                         RELEASE_EXECUTION_STEP_TYPE.SYNC_DATA_PARTNER &&
                     record.status === RELEASE_SUBMIT_STEP_STATUS.DONE;
 
-                const showRetry = isFailed || isSyncDataDspCiDone || isSyncDataPartnerDone;
+                const showRetry =
+                    isFailed || isSyncDataDspCiDone || isSyncDataPartnerDone;
 
                 return (
                     <div className="flex items-center justify-start gap-2">

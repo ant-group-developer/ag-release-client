@@ -3,15 +3,14 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import AppProTable from '@/components/ui/table/pro-table';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
-import DetailLabelAnalyticsModal from '@/modules/analytics2/components/detail-label/detail-label-analytics-modal';
-import DetailSourceTypeAnalyticsModal from '@/modules/analytics2/components/detail-source-type/detail-source-type-analytics-modal';
-import DetailTenantAnalyticsModal from '@/modules/analytics2/components/detail-tenant/detail-tenant-analytics-modal';
 import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
@@ -33,8 +32,9 @@ import { useGetLabelRanking } from '@/modules/analytics2/hooks/use-get-rankings'
 import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { LabelRankingItem, RevenueLabelItem } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
-import { Avatar, Card, Segmented, Space, Table, Tag, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Avatar, Card, Segmented, Space, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -114,16 +114,6 @@ export default function LabelRankingTableCard({
         }
     }, [releaseType]);
 
-    const [activeDetail, setActiveDetail] = useState<{
-        type: 'source' | 'label' | 'tenant' | null;
-        title: string;
-        targetId: string;
-    }>({
-        type: null,
-        title: '',
-        targetId: '',
-    });
-
     const page = dataFilter.page ?? DEFAULT_PAGE;
     const pageSize = dataFilter.pageSize ?? PAGE_SIZE_DEFAULT;
     const isRevenue = metricKey
@@ -179,7 +169,7 @@ export default function LabelRankingTableCard({
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
 
-    const revenueColumns: ColumnsType<RevenueLabelItem> = [
+    const revenueColumns: ProColumns<RevenueLabelItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -187,9 +177,9 @@ export default function LabelRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: RevenueLabelItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -200,11 +190,11 @@ export default function LabelRankingTableCard({
             width: LABEL_COLUMN_WIDTH,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: RevenueLabelItem) => (
+            render: (_, record: RevenueLabelItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
                         src={record.logoUrl ?? record.picture ?? ''}
-                        alt={text}
+                        alt={record.labelName}
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
@@ -213,14 +203,9 @@ export default function LabelRankingTableCard({
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
                             onClick={() => {
-                                // setActiveDetail({
-                                //     type: 'label',
-                                //     title: text,
-                                //     targetId: record.labelId,
-                                // });
                                 onSelectEntity?.({
                                     id: record.labelId,
-                                    title: text,
+                                    title: record.labelName,
                                     type: ANALYTICS_ENTITY_TYPE.LABEL,
                                     thumbnailUrl:
                                         record.logoUrl ??
@@ -229,7 +214,7 @@ export default function LabelRankingTableCard({
                                 });
                             }}
                         >
-                            {text || '-'}
+                            {record.labelName || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 </div>
@@ -258,11 +243,6 @@ export default function LabelRankingTableCard({
                             <Typography.Text
                                 className="cursor-pointer transition-colors hover:text-blue-500"
                                 onClick={() => {
-                                    // setActiveDetail({
-                                    //     type: 'tenant',
-                                    //     title: workspaceName || '',
-                                    //     targetId: workspace?.id,
-                                    // });
                                     onSelectEntity?.({
                                         id: workspace?.id || '',
                                         title: workspaceName || '',
@@ -282,7 +262,8 @@ export default function LabelRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 280,
-            render: (bySource?: any[]) => {
+            render: (_, record: RevenueLabelItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
@@ -297,11 +278,6 @@ export default function LabelRankingTableCard({
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() => {
-                                        // setActiveDetail({
-                                        //     type: 'source',
-                                        //     title: item.sourceLabel,
-                                        //     targetId: item.source,
-                                        // });
                                         onSelectEntity?.({
                                             id: item.source,
                                             title: item.sourceLabel,
@@ -323,8 +299,10 @@ export default function LabelRankingTableCard({
             dataIndex: 'releaseCount',
             key: 'releaseCount',
             width: RELEASES_COLUMN_WIDTH,
-            render: (count: number) => (
-                <Typography.Text type="secondary">{count || 0}</Typography.Text>
+            render: (_, record: RevenueLabelItem) => (
+                <Typography.Text type="secondary">
+                    {record.releaseCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -332,8 +310,10 @@ export default function LabelRankingTableCard({
             dataIndex: 'trackCount',
             key: 'trackCount',
             width: TRACKS_COLUMN_WIDTH,
-            render: (count: number) => (
-                <Typography.Text type="secondary">{count || 0}</Typography.Text>
+            render: (_, record: RevenueLabelItem) => (
+                <Typography.Text type="secondary">
+                    {record.trackCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -342,9 +322,9 @@ export default function LabelRankingTableCard({
             key: 'quantity',
             width: QUANTITY_COLUMN_WIDTH,
             fixed: 'right',
-            render: (qty: number) => (
+            render: (_, record: RevenueLabelItem) => (
                 <Typography.Text type="secondary">
-                    {qty ? qty.toLocaleString() : 0}
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
@@ -354,15 +334,18 @@ export default function LabelRankingTableCard({
             key: 'revenueUsd',
             width: REVENUE_COLUMN_WIDTH,
             fixed: 'right',
-            render: (val: number) => (
+            render: (_, record: RevenueLabelItem) => (
                 <Typography.Text>
-                    ${val ? formattedNumber(val) : '0.00'}
+                    $
+                    {record.revenueUsd
+                        ? formattedNumber(record.revenueUsd)
+                        : '0.00'}
                 </Typography.Text>
             ),
         },
     ];
 
-    const viewColumns: ColumnsType<LabelRankingItem> = [
+    const viewColumns: ProColumns<LabelRankingItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -370,9 +353,9 @@ export default function LabelRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: LabelRankingItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -383,11 +366,11 @@ export default function LabelRankingTableCard({
             width: LABEL_COLUMN_WIDTH,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: LabelRankingItem) => (
+            render: (_, record: LabelRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
                         src={record.logoUrl ?? ''}
-                        alt={text}
+                        alt={record.labelName}
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
@@ -396,14 +379,9 @@ export default function LabelRankingTableCard({
                         <Typography.Text
                             className="cursor-pointer transition-colors hover:text-blue-500"
                             onClick={() => {
-                                // setActiveDetail({
-                                //     type: 'label',
-                                //     title: text,
-                                //     targetId: record.labelId,
-                                // });
                                 onSelectEntity?.({
                                     id: record.labelId,
-                                    title: text,
+                                    title: record.labelName,
                                     type: ANALYTICS_ENTITY_TYPE.LABEL,
                                     thumbnailUrl:
                                         record.logoUrl ??
@@ -412,7 +390,7 @@ export default function LabelRankingTableCard({
                                 });
                             }}
                         >
-                            {text || '-'}
+                            {record.labelName || '-'}
                         </Typography.Text>
                     </CustomTooltip>
                 </div>
@@ -437,11 +415,6 @@ export default function LabelRankingTableCard({
                             <Typography.Text
                                 className="cursor-pointer transition-colors hover:text-blue-500"
                                 onClick={() => {
-                                    // setActiveDetail({
-                                    //     type: 'tenant',
-                                    //     title: workspaceName || '',
-                                    //     targetId: tenantId,
-                                    // });
                                     onSelectEntity?.({
                                         id: tenantId,
                                         title: workspaceName || '',
@@ -461,7 +434,8 @@ export default function LabelRankingTableCard({
             dataIndex: 'bySource',
             key: 'bySource',
             width: 200,
-            render: (bySource?: any[]) => {
+            render: (_, record: LabelRankingItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '-';
                 return (
                     <PopoverTagsV2
@@ -476,11 +450,6 @@ export default function LabelRankingTableCard({
                                 <Tag
                                     className="!m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() => {
-                                        // setActiveDetail({
-                                        //     type: 'source',
-                                        //     title: item.sourceLabel,
-                                        //     targetId: item.source,
-                                        // });
                                         onSelectEntity?.({
                                             id: item.source,
                                             title: item.sourceLabel,
@@ -502,8 +471,10 @@ export default function LabelRankingTableCard({
             dataIndex: 'releaseCount',
             key: 'releaseCount',
             width: RELEASES_COLUMN_WIDTH,
-            render: (count: number) => (
-                <Typography.Text type="secondary">{count || 0}</Typography.Text>
+            render: (_, record: LabelRankingItem) => (
+                <Typography.Text type="secondary">
+                    {record.releaseCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -511,8 +482,10 @@ export default function LabelRankingTableCard({
             dataIndex: 'trackCount',
             key: 'trackCount',
             width: TRACKS_COLUMN_WIDTH,
-            render: (count: number) => (
-                <Typography.Text type="secondary">{count || 0}</Typography.Text>
+            render: (_, record: LabelRankingItem) => (
+                <Typography.Text type="secondary">
+                    {record.trackCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -521,173 +494,149 @@ export default function LabelRankingTableCard({
             key: 'totalViews',
             width: VIEWS_COLUMN_WIDTH,
             fixed: 'right',
-            render: (views: number) => (
+            render: (_, record: LabelRankingItem) => (
                 <Typography.Text>
-                    {views ? views.toLocaleString() : 0}
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
     ];
 
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="releaseType"
+                value={selectedReleaseType}
+                onChange={(value) => {
+                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                    setSelectedReleaseType(selectedType);
+                    onChangeFilter({
+                        releaseType:
+                            selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                ? undefined
+                                : selectedType,
+                    });
+                }}
+                options={[
+                    {
+                        label: messages('common.all'),
+                        value: ANALYTICS_RELEASE_TYPE.ALL,
+                    },
+                    {
+                        label: messages('common.audio'),
+                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                    },
+                    {
+                        label: messages('common.video'),
+                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                    },
+                ]}
+            />,
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
+                    }
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
+
     return (
-        <>
-            <Card className={className}>
-                <div className="mb-4 flex items-center gap-2">
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        style={{ width: 200 }}
-                    />
-                    <Segmented
-                        value={selectedReleaseType}
-                        onChange={(value) => {
-                            const selectedType =
-                                value as ANALYTICS_RELEASE_TYPE;
-                            setSelectedReleaseType(selectedType);
-                            onChangeFilter({
-                                releaseType:
-                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
-                                        ? undefined
-                                        : selectedType,
-                            });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.all'),
-                                value: ANALYTICS_RELEASE_TYPE.ALL,
-                            },
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Segmented
-                        value={
-                            isRevenue
-                                ? ANALYTICS_VIEW_TYPE.REVENUE
-                                : ANALYTICS_VIEW_TYPE.VIEW
-                        }
-                        onChange={(value) => {
-                            const nextType = value as ANALYTICS_VIEW_TYPE;
-                            setCurrentType(nextType);
-                            // The metric owns the view type when it is
-                            // controlled; writing both params would race two
-                            // URL updates built from the same stale snapshot.
-                            if (onMetricChange) {
-                                onMetricChange(
-                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                                );
-                                return;
-                            }
-                            onChangeFilter({ type: nextType });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.views'),
-                                value: ANALYTICS_VIEW_TYPE.VIEW,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS_VIEW_TYPE.REVENUE,
-                            },
-                        ]}
-                    />
-                </div>
-                {isRevenue ? (
-                    <Table<RevenueLabelItem>
-                        sticky
-                        size="small"
-                        columns={revenueColumns}
-                        dataSource={topLabelData.items}
-                        loading={isFetching}
-                        rowKey="labelId"
-                        pagination={false}
-                        scroll={{ x: SCREEN.LG }}
-                    />
-                ) : (
-                    <Table<LabelRankingItem>
-                        sticky
-                        size="small"
-                        columns={viewColumns}
-                        dataSource={labelRankingData.items}
-                        loading={isFetching}
-                        rowKey="labelId"
-                        pagination={false}
-                        scroll={{ x: SCREEN.LG }}
-                    />
-                )}
-                <AppPagination
-                    align="end"
-                    className="!mt-4"
-                    current={page}
-                    pageSize={pageSize}
-                    total={
-                        isRevenue
-                            ? topLabelData?.metadata?.totalItems || 0
-                            : labelRankingData?.metadata?.totalItems || 0
-                    }
-                    onChange={onChangePage}
-                    showTotalText
-                    showSizeChanger
-                    showQuickJumper
-                    pageSizeOptions={PAGE_SIZE_OPTIONS}
+        <Card className={className}>
+            {isRevenue ? (
+                <AppProTable<RevenueLabelItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
+                    sticky
+                    size="small"
+                    columns={revenueColumns}
+                    dataSource={topLabelData.items}
+                    loading={isFetching}
+                    rowKey="labelId"
+                    pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
+                    scroll={{ x: SCREEN.LG }}
                 />
-            </Card>
-
-            {activeDetail.type === 'label' && (
-                <DetailLabelAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({ ...prev, type: null }))
-                    }
-                    title={activeDetail.title}
-                    labelId={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
+            ) : (
+                <AppProTable<LabelRankingItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
+                    sticky
+                    size="small"
+                    columns={viewColumns}
+                    dataSource={labelRankingData.items}
+                    loading={isFetching}
+                    rowKey="labelId"
+                    pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
+                    scroll={{ x: SCREEN.LG }}
                 />
             )}
-
-            {activeDetail.type === 'source' && (
-                <DetailSourceTypeAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    sourceType={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-
-            {activeDetail.type === 'tenant' && (
-                <DetailTenantAnalyticsModal
-                    open={true}
-                    onClose={() =>
-                        setActiveDetail((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={activeDetail.title}
-                    tenantId={activeDetail.targetId}
-                    fromDate={effectiveFromDate}
-                    toDate={effectiveToDate}
-                    releaseType={requestReleaseType}
-                />
-            )}
-        </>
+            <AppPagination
+                align="end"
+                className="!mt-4"
+                current={page}
+                pageSize={pageSize}
+                total={
+                    isRevenue
+                        ? topLabelData?.metadata?.totalItems || 0
+                        : labelRankingData?.metadata?.totalItems || 0
+                }
+                onChange={onChangePage}
+                showTotalText
+                showSizeChanger
+                showQuickJumper
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
+        </Card>
     );
 }
+

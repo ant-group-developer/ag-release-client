@@ -2,7 +2,9 @@
 
 import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
+import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
@@ -31,8 +33,9 @@ import {
 } from '@/modules/analytics2/types';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { CommonParams } from '@/types/api';
-import { Card, Segmented, Table, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Card, Segmented, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -207,7 +210,7 @@ export default function SourceTypeRankingTableCard({
         </div>
     );
 
-    const revenueColumns: ColumnsType<RevenueSourceTypeItem> = [
+    const revenueColumns: ProColumns<RevenueSourceTypeItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -215,9 +218,9 @@ export default function SourceTypeRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: RevenueSourceTypeItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -228,7 +231,8 @@ export default function SourceTypeRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: 'left',
-            render: renderSourceTypeName,
+            render: (_, record: RevenueSourceTypeItem) =>
+                renderSourceTypeName(record.sourceTypeLabel, record),
         },
         {
             title: messages('common.usage'),
@@ -236,9 +240,9 @@ export default function SourceTypeRankingTableCard({
             key: 'quantity',
             width: 250,
             fixed: 'right',
-            render: (qty: number) => (
+            render: (_, record: RevenueSourceTypeItem) => (
                 <Typography.Text type="secondary">
-                    {qty ? qty.toLocaleString() : 0}
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
@@ -248,15 +252,18 @@ export default function SourceTypeRankingTableCard({
             key: 'revenueUsd',
             width: 250,
             fixed: 'right',
-            render: (val: number) => (
+            render: (_, record: RevenueSourceTypeItem) => (
                 <Typography.Text>
-                    ${val ? formattedNumber(val) : '0.00'}
+                    $
+                    {record.revenueUsd
+                        ? formattedNumber(record.revenueUsd)
+                        : '0.00'}
                 </Typography.Text>
             ),
         },
     ];
 
-    const viewColumns: ColumnsType<SourceTypeRankingItem> = [
+    const viewColumns: ProColumns<SourceTypeRankingItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -264,9 +271,9 @@ export default function SourceTypeRankingTableCard({
             width: 100,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <Typography.Text className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
+            render: (_, record: SourceTypeRankingItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
                 </Typography.Text>
             ),
         },
@@ -277,7 +284,8 @@ export default function SourceTypeRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: 'left',
-            render: renderSourceTypeName,
+            render: (_, record: SourceTypeRankingItem) =>
+                renderSourceTypeName(record.sourceTypeLabel, record),
         },
         {
             title: messages('common.streams'),
@@ -285,85 +293,91 @@ export default function SourceTypeRankingTableCard({
             key: 'totalViews',
             width: 250,
             fixed: 'right',
-            render: (views: number) => (
+            render: (_, record: SourceTypeRankingItem) => (
                 <Typography.Text>
-                    {views ? views.toLocaleString() : 0}
+                    {record.totalViews ? record.totalViews.toLocaleString() : 0}
                 </Typography.Text>
             ),
         },
     ];
 
+    const toolbarConfig = {
+        search: (
+            <AppSearch
+                onChange={onSearch}
+                defaultValue={dataFilter.keyword}
+                style={{ width: 200 }}
+            />
+        ),
+        actions: [
+            <Segmented
+                key="releaseType"
+                value={selectedReleaseType}
+                onChange={(value) => {
+                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+                    setSelectedReleaseType(selectedType);
+                    onChangeFilter({
+                        releaseType:
+                            selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                ? undefined
+                                : selectedType,
+                    });
+                }}
+                options={[
+                    {
+                        label: messages('common.all'),
+                        value: ANALYTICS_RELEASE_TYPE.ALL,
+                    },
+                    {
+                        label: messages('common.audio'),
+                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
+                    },
+                    {
+                        label: messages('common.video'),
+                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
+                    },
+                ]}
+            />,
+            <Segmented
+                key="metricType"
+                value={
+                    isRevenue
+                        ? ANALYTICS_VIEW_TYPE.REVENUE
+                        : ANALYTICS_VIEW_TYPE.VIEW
+                }
+                onChange={(value) => {
+                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                    setCurrentType(nextType);
+                    if (onMetricChange) {
+                        onMetricChange(
+                            nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                        );
+                        return;
+                    }
+                    onChangeFilter({ type: nextType });
+                }}
+                options={[
+                    {
+                        label: messages('common.views'),
+                        value: ANALYTICS_VIEW_TYPE.VIEW,
+                    },
+                    {
+                        label: messages('common.revenue'),
+                        value: ANALYTICS_VIEW_TYPE.REVENUE,
+                    },
+                ]}
+            />,
+        ],
+    };
+
     return (
         <Card className={className}>
-            <div className="mb-4 flex items-center gap-2">
-                <AppSearch
-                    onChange={onSearch}
-                    defaultValue={dataFilter.keyword}
-                    style={{ width: 200 }}
-                />
-                <Segmented
-                    value={selectedReleaseType}
-                    onChange={(value) => {
-                        const selectedType = value as ANALYTICS_RELEASE_TYPE;
-                        setSelectedReleaseType(selectedType);
-                        onChangeFilter({
-                            releaseType:
-                                selectedType === ANALYTICS_RELEASE_TYPE.ALL
-                                    ? undefined
-                                    : selectedType,
-                        });
-                    }}
-                    options={[
-                        {
-                            label: messages('common.all'),
-                            value: ANALYTICS_RELEASE_TYPE.ALL,
-                        },
-                        {
-                            label: messages('common.audio'),
-                            value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                        },
-                        {
-                            label: messages('common.video'),
-                            value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                        },
-                    ]}
-                />
-                <Segmented
-                    value={
-                        isRevenue
-                            ? ANALYTICS_VIEW_TYPE.REVENUE
-                            : ANALYTICS_VIEW_TYPE.VIEW
-                    }
-                    onChange={(value) => {
-                        const nextType = value as ANALYTICS_VIEW_TYPE;
-                        setCurrentType(nextType);
-                        // The metric owns the view type when it is controlled;
-                        // writing both params would race two URL updates built
-                        // from the same stale snapshot.
-                        if (onMetricChange) {
-                            onMetricChange(
-                                nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                            );
-                            return;
-                        }
-                        onChangeFilter({ type: nextType });
-                    }}
-                    options={[
-                        {
-                            label: messages('common.views'),
-                            value: ANALYTICS_VIEW_TYPE.VIEW,
-                        },
-                        {
-                            label: messages('common.revenue'),
-                            value: ANALYTICS_VIEW_TYPE.REVENUE,
-                        },
-                    ]}
-                />
-            </div>
             {isRevenue ? (
-                <Table<RevenueSourceTypeItem>
+                <AppProTable<RevenueSourceTypeItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
                     sticky
                     size="small"
                     columns={revenueColumns}
@@ -371,10 +385,21 @@ export default function SourceTypeRankingTableCard({
                     loading={isFetching}
                     rowKey="sourceType"
                     pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
                     scroll={{ x: SCREEN.LG }}
                 />
             ) : (
-                <Table<SourceTypeRankingItem>
+                <AppProTable<SourceTypeRankingItem>
+                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+                    toolbar={toolbarConfig}
                     sticky
                     size="small"
                     columns={viewColumns}
@@ -382,6 +407,15 @@ export default function SourceTypeRankingTableCard({
                     loading={isFetching}
                     rowKey="sourceType"
                     pagination={false}
+                    search={false}
+                    options={{
+                        setting: {
+                            settingIcon: <Columns3 size={SIZE_ICON} />,
+                        },
+                        density: false,
+                        fullScreen: false,
+                        reload: false,
+                    }}
                     scroll={{ x: SCREEN.LG }}
                 />
             )}
@@ -404,3 +438,4 @@ export default function SourceTypeRankingTableCard({
         </Card>
     );
 }
+

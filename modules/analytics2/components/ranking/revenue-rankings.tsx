@@ -1,13 +1,9 @@
 'use client';
 
-import { APP_ROUTES } from '@/enums/routes';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../../enums';
-import { ANALYTICS_MODAL_TYPE } from '../../enums/modal-type';
-import { ANALYTICS_VIEW_TYPE } from '../../enums/tabs';
-import { createViewMoreHref } from '../../helpers';
 import { useAdvancedModeModal } from '../../hooks/use-advanced-mode-modal';
 import {
     useGetRevenueTopArtist,
@@ -22,14 +18,6 @@ import {
 } from '../../hooks/use-get-revenue-data';
 import { RevenueDspItem } from '../../types';
 import RankingCard, { RankingCardView } from '../card/ranking-card';
-import DetailArtistAnalyticsModal from '../detail-artist/detail-artist-analytics-modal';
-import DetailChannelAnalyticsModal from '../detail-channel/detail-channel-analytics-modal';
-import DetailDspAnalyticsModal from '../detail-dsp/detail-dsp-analytics-modal';
-import DetailLabelAnalyticsModal from '../detail-label/detail-label-analytics-modal';
-import DetailReleaseAnalyticsModal from '../detail-release/detail-release-analytics-modal';
-import DetailSourceTypeAnalyticsModal from '../detail-source-type/detail-source-type-analytics-modal';
-import DetailTenantAnalyticsModal from '../detail-tenant/detail-tenant-analytics-modal';
-import DetailTrackAnalyticsModal from '../detail-track/detail-track-analytics-modal';
 import AdvancedModeModal from '../modal/advanced-mode';
 import { useRevenueRankingColumns } from './use-revenue-ranking-columns';
 
@@ -53,19 +41,6 @@ export default function RevenueRankings({
         isOpen: isAdvancedModeOpen,
         closeAdvancedMode,
     } = useAdvancedModeModal();
-    const [detailModal, setDetailModal] = useState<{
-        type: ANALYTICS_MODAL_TYPE | null;
-        title: string;
-        id: string;
-        upc?: string;
-        dspReportId?: string;
-    }>({
-        type: null,
-        title: '',
-        id: '',
-        upc: '',
-        dspReportId: '',
-    });
 
     const {
         artistColumns,
@@ -77,7 +52,7 @@ export default function RevenueRankings({
         labelColumns,
         channelColumns,
         sourceTypeColumns,
-    } = useRevenueRankingColumns({ setDetailModal, fromDate, toDate });
+    } = useRevenueRankingColumns({ fromDate, toDate });
 
     const topRankingTitle = (title: string) =>
         messages('analytics2.topRankingTitle', {
@@ -487,136 +462,7 @@ export default function RevenueRankings({
                     </Col>
                 )}
             </Row>
-            {detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST && (
-                <DetailArtistAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.ARTIST}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    artistId={detailModal.id}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.TRACK && (
-                <DetailTrackAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.TRACK}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    isrc={detailModal.id}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE && (
-                <DetailReleaseAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.RELEASE}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    releaseId={detailModal.id}
-                    upc={detailModal.upc}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.LABEL && (
-                <DetailLabelAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.LABEL}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    labelId={detailModal.id}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.TENANT && (
-                <DetailTenantAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.TENANT}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    tenantId={detailModal.id}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL && (
-                <DetailChannelAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.CHANNEL}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    channelId={detailModal.id}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.DSP && (
-                <DetailDspAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.DSP}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    pgDspId={detailModal.id}
-                    dspReportId={detailModal.dspReportId || ''}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
-            {detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE && (
-                <DetailSourceTypeAnalyticsModal
-                    open={detailModal.type === ANALYTICS_MODAL_TYPE.SOURCE_TYPE}
-                    onClose={() =>
-                        setDetailModal((prev) => ({
-                            ...prev,
-                            type: null,
-                        }))
-                    }
-                    title={detailModal.title}
-                    sourceType={detailModal.id}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                    releaseType={releaseType}
-                />
-            )}
+
             {isAdvancedModeOpen && (
                 <AdvancedModeModal
                     open

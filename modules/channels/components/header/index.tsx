@@ -4,8 +4,6 @@ import AppSearch from '@/components/ui/input/search';
 import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { UseFilterProps } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { HistoryOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Select, Space } from 'antd';
@@ -124,15 +122,11 @@ export default function ChannelsHeader({
                             {messages('channel.youtubeSyncRuns.button')}
                         </Button>
                     )}
-                    <PermissionGate permission={PERMISSION.CHANNEL.CREATE}>
-                        <CreateButton
-                            canCreate={true}
-                            text={messages('channel.add')}
-                            onClick={() =>
-                                openModal(TYPE_MODAL_CHANNELS.CREATE)
-                            }
-                        />
-                    </PermissionGate>
+                    <CreateButton
+                        canCreate={isAdmin}
+                        text={messages('channel.add')}
+                        onClick={() => openModal(TYPE_MODAL_CHANNELS.CREATE)}
+                    />
                 </div>
             </AppHeaderGroup>
         </AppHeader>

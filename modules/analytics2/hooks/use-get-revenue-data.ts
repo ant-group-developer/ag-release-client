@@ -8,8 +8,6 @@ import {
     RevenueQueryParams,
     RevenueSummaryData,
     RevenueTimelineData,
-    RevenueLabelItem,
-    RevenueReleaseVideoItem,
 } from '../types';
 
 export const useGetRevenueSummary = (params: AnalyticsCommonParams) => {
@@ -47,6 +45,9 @@ export const useGetRevenueTopDsp = (
         queryFn: () => analytics2Apis.getRevenueTopDsp(params),
         placeholderData: (prev) => prev,
         ...options,
+        // enabled:
+        //     (options?.enabled ?? true) &&
+        //     Boolean(params.dspReportId || params.pgDspId),
     });
 
     const topDspData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
@@ -209,4 +210,3 @@ export const useGetRevenueTopSourceType = (
         ...query,
     };
 };
-
