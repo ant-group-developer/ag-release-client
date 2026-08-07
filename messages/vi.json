@@ -2848,6 +2848,61 @@
         "cancelConfirmTitle": "Hủy lệnh phân phối",
         "cancelConfirmMessage": "Bạn có chắc chắn muốn hủy lệnh phân phối này?"
     },
+    "assetImport": {
+        "label": "Nhập tài sản",
+        "scan": {
+            "title": "Quét file",
+            "targetTenant": "Đối tác đích",
+            "file": "File",
+            "dragDropHint": "Nhấn hoặc kéo file CSV/XLSX vào đây để tải lên",
+            "options": "Tùy chọn",
+            "updateOwnership": "Cập nhật quyền sở hữu",
+            "overwriteMetadata": "Ghi đè metadata",
+            "createIfNotFound": "Tạo mới nếu không tìm thấy",
+            "fillEmptyOnly": "Chỉ điền vào trường trống",
+            "createLabelIfMissing": "Tạo label nếu chưa có",
+            "uploadFailed": "Tải file lên thất bại"
+        },
+        "batch": {
+            "fileName": "Tên file",
+            "targetTenant": "Đối tác đích",
+            "totalRows": "Tổng số dòng",
+            "matchedRows": "Số dòng khớp",
+            "appliedRows": "Số dòng đã áp dụng",
+            "status": {
+                "SCANNING": "Đang quét",
+                "SCANNED": "Đã quét",
+                "APPLYING": "Đang áp dụng",
+                "APPLIED": "Đã áp dụng",
+                "PARTIALLY_APPLIED": "Áp dụng một phần",
+                "FAILED": "Thất bại",
+                "CANCELLED": "Đã hủy"
+            }
+        },
+        "item": {
+            "rowNumber": "Dòng",
+            "trackName": "Tên bài hát",
+            "matchType": "Loại khớp",
+            "changes": "Thay đổi",
+            "applySelected": "Áp dụng đã chọn ({count})",
+            "applyAll": "Áp dụng tất cả",
+            "applyingHint": "Đang áp dụng thay đổi, vui lòng chờ...",
+            "action": {
+                "label": "Hành động",
+                "CREATE": "Tạo mới",
+                "UPDATE": "Cập nhật",
+                "NO_CHANGE": "Không thay đổi",
+                "INVALID": "Không hợp lệ",
+                "CONFLICT": "Xung đột"
+            },
+            "status": {
+                "PENDING": "Đang chờ",
+                "APPLIED": "Đã áp dụng",
+                "SKIPPED": "Bỏ qua",
+                "FAILED": "Thất bại"
+            }
+        }
+    },
     "releaseExecution": {
         "label": "Triển khai phát hành",
         "labelOld": "Triển khai phát hành (Cũ)",
