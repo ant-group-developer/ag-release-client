@@ -163,6 +163,10 @@
         "direct": "Direct",
         "distributionMethod": "Distribution method",
         "releaseVia": "Distributed via",
+        "success": "Success",
+        "failed": "Failed",
+        "processing": "Processing",
+        "totalDsp": "Total DSPs",
         "others": "Others",
         "remove": "Remove",
         "save": "Save",
@@ -1882,6 +1886,7 @@
             "metadataLanguageCountryId": "Metadata country language",
             "recordingCountryId": "Recording country"
         },
+        "isInstrumental": "Is instrumental",
         "releaseContributors": "Release contributors",
         "trackContributors": "Track contributors",
         "upc": "UPC",
