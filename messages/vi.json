@@ -2856,6 +2856,7 @@
         "label": "Nhập tài sản",
         "scan": {
             "title": "Quét file",
+            "downloadTemplate": "Tải file mẫu",
             "targetTenant": "Đối tác đích",
             "file": "File",
             "dragDropHint": "Nhấn hoặc kéo file CSV/XLSX vào đây để tải lên",

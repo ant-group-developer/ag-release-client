@@ -1,11 +1,13 @@
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
-import { Form, Modal } from 'antd';
+import { Button, Form, Modal } from 'antd';
 import axios from 'axios';
+import { Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { TYPE_MODAL_ASSET_IMPORT } from '../../enums';
 import { usePresignAssetImport } from '../../hooks/use-presign-asset-import';
+import { useDownloadAssetImportTemplate } from '../../hooks/use-download-template';
 import { useScanAssetImport } from '../../hooks/use-scan-asset-import';
 import { PresignUploadResponse } from '../../types/payload';
 import { ScanForm } from './scan-form';
@@ -44,6 +46,10 @@ export default function ScanAssetImportModal() {
 
     const { presignAssetImport } = usePresignAssetImport();
     const { scanAssetImport, isPending: isScanning } = useScanAssetImport();
+    const {
+        downloadAssetImportTemplate,
+        isPending: isDownloadingTemplate,
+    } = useDownloadAssetImportTemplate();
 
     const isProcessing = isUploading || isScanning;
 
@@ -123,7 +129,19 @@ export default function ScanAssetImportModal() {
 
     return (
         <Modal
-            title={messages('assetImport.scan.title')}
+            title={
+                <div className="flex items-center justify-between gap-4 pr-10">
+                    <span>{messages('assetImport.scan.title')}</span>
+                    <Button
+                        type="link"
+                        icon={<Download size={16} />}
+                        loading={isDownloadingTemplate}
+                        onClick={() => downloadAssetImportTemplate()}
+                    >
+                        {messages('assetImport.scan.downloadTemplate')}
+                    </Button>
+                </div>
+            }
             open={open}
             centered
             destroyOnHidden

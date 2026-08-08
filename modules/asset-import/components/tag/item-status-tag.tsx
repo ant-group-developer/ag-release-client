@@ -9,7 +9,7 @@ type Props = {
 export const getItemStatusColor = (status: AssetImportItemStatus) => {
     switch (status) {
         case AssetImportItemStatus.PENDING:
-            return 'default';
+            return 'gold';
         case AssetImportItemStatus.APPLIED:
             return 'success';
         case AssetImportItemStatus.SKIPPED:

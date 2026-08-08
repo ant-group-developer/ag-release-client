@@ -57,7 +57,7 @@ export default function AssetImportDetailDrawer() {
         <Drawer
             open={open}
             onClose={closeModal}
-            width="90vw"
+            width="100vw"
             destroyOnHidden
             title={
                 <div className="flex items-center gap-2">

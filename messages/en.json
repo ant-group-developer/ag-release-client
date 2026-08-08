@@ -2863,6 +2863,7 @@
         "label": "Asset import",
         "scan": {
             "title": "Scan file",
+            "downloadTemplate": "Download template",
             "targetTenant": "Target tenant",
             "file": "File",
             "dragDropHint": "Click or drag a CSV/XLSX file to this area to upload",

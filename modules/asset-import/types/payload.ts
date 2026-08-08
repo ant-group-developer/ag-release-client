@@ -39,6 +39,11 @@ export interface ScanAssetImportResponse {
     status?: string;
 }
 
+/** ---------- Template ---------- */
+export interface TemplateDownloadResponse {
+    downloadUrl: string;
+}
+
 /** ---------- Item detail / changes ---------- */
 export interface AssetImportChange {
     field: string;

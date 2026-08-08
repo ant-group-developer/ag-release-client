@@ -1,4 +1,5 @@
-import ActionButton from '@/components/ui/button/action-button';
+import DeleteButton from '@/components/ui/button/delete-button';
+import ViewButton from '@/components/ui/button/view-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import {
     formattedDate,
@@ -132,16 +133,20 @@ export default function AssetImportBatchesTable({
             align: 'center',
             fixed: 'right',
             render: (_, record) => (
-                <ActionButton
-                    showDetail
-                    onShowDetail={() =>
-                        openModal(TYPE_MODAL_ASSET_IMPORT.DETAIL, record)
-                    }
-                    showDelete
-                    onShowDelete={() =>
-                        openModal(TYPE_MODAL_ASSET_IMPORT.DELETE, record)
-                    }
-                />
+                <div className="flex items-center justify-center">
+                    <ViewButton
+                        canView
+                        onClick={() =>
+                            openModal(TYPE_MODAL_ASSET_IMPORT.DETAIL, record)
+                        }
+                    />
+                    <DeleteButton
+                        canDelete
+                        onClick={() =>
+                            openModal(TYPE_MODAL_ASSET_IMPORT.DELETE, record)
+                        }
+                    />
+                </div>
             ),
         },
     ];
