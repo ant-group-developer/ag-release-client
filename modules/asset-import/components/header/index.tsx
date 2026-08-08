@@ -38,7 +38,7 @@ export default function AssetImportBatchesHeader({
     return (
         <AppHeader className="app-header p-2">
             <AppHeaderGroup>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                     <AppSearch
                         className="max-w-52"
                         onChange={onSearch}
@@ -46,7 +46,7 @@ export default function AssetImportBatchesHeader({
                     />
                     <TenantSelect
                         allowClear
-                        className="!w-52"
+                        className="!w-72"
                         placeholder={messages('assetImport.batch.targetTenant')}
                         value={dataFilter.targetTenantId}
                         onChange={(value) =>

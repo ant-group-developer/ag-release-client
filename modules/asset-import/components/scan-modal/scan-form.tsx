@@ -1,5 +1,6 @@
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import TenantSelect from '@/components/ui/select/tenant-select';
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Checkbox, Form, FormInstance, Progress, Upload } from 'antd';
 import { useTranslations } from 'next-intl';
 import React from 'react';
@@ -17,6 +18,20 @@ const normFile = (e: any) => {
     }
     return e?.fileList;
 };
+
+type OptionLabelProps = {
+    label: string;
+    hint: string;
+};
+
+const OptionLabel: React.FC<OptionLabelProps> = ({ label, hint }) => (
+    <span className="inline-flex items-center gap-1">
+        {label}
+        <CustomTooltip title={hint} size="small">
+            <QuestionCircleOutlined className="text-gray-400" />
+        </CustomTooltip>
+    </span>
+);
 
 export const ScanForm: React.FC<ScanFormProps> = ({
     form,
@@ -86,7 +101,10 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                     noStyle
                 >
                     <Checkbox>
-                        {messages('assetImport.scan.updateOwnership')}
+                        <OptionLabel
+                            label={messages('assetImport.scan.updateOwnership')}
+                            hint={messages('assetImport.scan.updateOwnershipHint')}
+                        />
                     </Checkbox>
                 </Form.Item>
                 <br />
@@ -96,7 +114,10 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                     noStyle
                 >
                     <Checkbox>
-                        {messages('assetImport.scan.overwriteMetadata')}
+                        <OptionLabel
+                            label={messages('assetImport.scan.overwriteMetadata')}
+                            hint={messages('assetImport.scan.overwriteMetadataHint')}
+                        />
                     </Checkbox>
                 </Form.Item>
                 <br />
@@ -106,7 +127,10 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                     noStyle
                 >
                     <Checkbox>
-                        {messages('assetImport.scan.createIfNotFound')}
+                        <OptionLabel
+                            label={messages('assetImport.scan.createIfNotFound')}
+                            hint={messages('assetImport.scan.createIfNotFoundHint')}
+                        />
                     </Checkbox>
                 </Form.Item>
                 <br />
@@ -116,7 +140,10 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                     noStyle
                 >
                     <Checkbox>
-                        {messages('assetImport.scan.fillEmptyOnly')}
+                        <OptionLabel
+                            label={messages('assetImport.scan.fillEmptyOnly')}
+                            hint={messages('assetImport.scan.fillEmptyOnlyHint')}
+                        />
                     </Checkbox>
                 </Form.Item>
                 <br />
@@ -126,7 +153,10 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                     noStyle
                 >
                     <Checkbox>
-                        {messages('assetImport.scan.createLabelIfMissing')}
+                        <OptionLabel
+                            label={messages('assetImport.scan.createLabelIfMissing')}
+                            hint={messages('assetImport.scan.createLabelIfMissingHint')}
+                        />
                     </Checkbox>
                 </Form.Item>
             </Form.Item>
