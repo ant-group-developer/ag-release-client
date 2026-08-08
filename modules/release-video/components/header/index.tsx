@@ -2,6 +2,7 @@ import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
 import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
+import { SIZE_ICON } from '@/constants/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { UseFilterProps } from '@/hooks/use-filter';
 import { useRouter } from '@/i18n/routing';
@@ -14,6 +15,7 @@ import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simp
 import { RELEASES_STATUS, RELEASE_TYPE } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { ReleasesDataFilter } from '@/modules/releases/types';
+import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import {
     BarcodeOutlined,
     BarsOutlined,
@@ -23,6 +25,7 @@ import {
     YoutubeOutlined,
 } from '@ant-design/icons';
 import { Space } from 'antd';
+import { Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import { useMemo, useState } from 'react';
@@ -48,12 +51,14 @@ export default function ReleaseVideoHeader({
     const messages = useTranslations();
     const router = useRouter();
     const { createReleaseDraft, isPending } = useCreateReleaseDraft();
-    const { isSystemTenant } = useAuth();
+    const { isAdmin, isSystemTenant } = useAuth();
 
     const [artistKeyword, setArtistKeyword] = useState('');
     const { channelsData, isLoading: isLoadingChannels } =
         useGetListSimpleChannel();
     const { genresData } = useGetListSimpleGenres();
+    const { tenantSimpleData, isLoading: isLoadingTenants } =
+        useGetListSimpleTenant();
     const { artistsData, isLoading: isLoadingArtists } = useGetArtistSimpleList(
         {
             keyword: artistKeyword,
@@ -97,6 +102,15 @@ export default function ReleaseVideoHeader({
         [artistsData]
     );
 
+    const tenantOptions = useMemo(
+        () =>
+            tenantSimpleData.map((item) => ({
+                label: item.name,
+                value: item.id,
+            })),
+        [tenantSimpleData]
+    );
+
     const isImportedFromReportOptions = useMemo(
         () => [
             {
@@ -112,7 +126,7 @@ export default function ReleaseVideoHeader({
     );
 
     const filterConfigs: FilterConfig[] = useMemo(() => {
-        return [
+        const configs: FilterConfig[] = [
             {
                 key: 'channelId',
                 label: messages('releaseVideo.fields.channel'),
@@ -171,8 +185,26 @@ export default function ReleaseVideoHeader({
                 onSearch: (val) => setArtistKeyword(val),
             },
         ];
+
+        if (isAdmin) {
+            configs.unshift({
+                key: 'tenantIds',
+                label: messages('tenant.label'),
+                icon: <Layers size={SIZE_ICON} />,
+                type: 'checkbox',
+                filterKey: 'tenantIds',
+                options: tenantOptions,
+                loading: isLoadingTenants,
+                isCommaSeparated: true,
+            });
+        }
+
+        return configs;
     }, [
         messages,
+        isAdmin,
+        tenantOptions,
+        isLoadingTenants,
         channelOptions,
         isLoadingChannels,
         releaseStatusOptions,
