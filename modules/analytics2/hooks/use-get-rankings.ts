@@ -129,6 +129,9 @@ export const useGetDspRanking = (
         queryFn: () => analytics2Apis.getDspRanking(params),
         placeholderData: (prev) => prev,
         ...options,
+        // enabled:
+        //     (options?.enabled ?? true) &&
+        //     Boolean(params.dspReportId || params.pgDspId),
     });
 
     const dspRankingData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
@@ -150,7 +153,8 @@ export const useGetChannelRanking = (
         ...options,
     });
 
-    const channelRankingData = query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
+    const channelRankingData =
+        query.data?.data?.data ?? DEFAULT_DATA_PAGINATION;
 
     return {
         channelRankingData,
@@ -177,5 +181,3 @@ export const useGetSourceTypeRanking = (
         ...query,
     };
 };
-
-

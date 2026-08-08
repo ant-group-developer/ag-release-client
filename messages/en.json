@@ -163,6 +163,10 @@
         "direct": "Direct",
         "distributionMethod": "Distribution method",
         "releaseVia": "Distributed via",
+        "success": "Success",
+        "failed": "Failed",
+        "processing": "Processing",
+        "totalDsp": "Total DSPs",
         "others": "Others",
         "remove": "Remove",
         "save": "Save",
@@ -1882,6 +1886,7 @@
             "metadataLanguageCountryId": "Metadata country language",
             "recordingCountryId": "Recording country"
         },
+        "isInstrumental": "Is instrumental",
         "releaseContributors": "Release contributors",
         "trackContributors": "Track contributors",
         "upc": "UPC",
@@ -2853,6 +2858,61 @@
         },
         "cancelConfirmTitle": "Cancel distribution job",
         "cancelConfirmMessage": "Are you sure you want to cancel this distribution job?"
+    },
+    "assetImport": {
+        "label": "Asset import",
+        "scan": {
+            "title": "Scan file",
+            "targetTenant": "Target tenant",
+            "file": "File",
+            "dragDropHint": "Click or drag a CSV/XLSX file to this area to upload",
+            "options": "Options",
+            "updateOwnership": "Update ownership",
+            "overwriteMetadata": "Overwrite metadata",
+            "createIfNotFound": "Create if not found",
+            "fillEmptyOnly": "Fill empty fields only",
+            "createLabelIfMissing": "Create label if missing",
+            "uploadFailed": "File upload failed"
+        },
+        "batch": {
+            "fileName": "File name",
+            "targetTenant": "Target tenant",
+            "totalRows": "Total rows",
+            "matchedRows": "Matched rows",
+            "appliedRows": "Applied rows",
+            "status": {
+                "SCANNING": "Scanning",
+                "SCANNED": "Scanned",
+                "APPLYING": "Applying",
+                "APPLIED": "Applied",
+                "PARTIALLY_APPLIED": "Partially applied",
+                "FAILED": "Failed",
+                "CANCELLED": "Cancelled"
+            }
+        },
+        "item": {
+            "rowNumber": "Row",
+            "trackName": "Track name",
+            "matchType": "Match type",
+            "changes": "Changes",
+            "applySelected": "Apply selected ({count})",
+            "applyAll": "Apply all",
+            "applyingHint": "Applying changes, please wait...",
+            "action": {
+                "label": "Action",
+                "CREATE": "Create",
+                "UPDATE": "Update",
+                "NO_CHANGE": "No change",
+                "INVALID": "Invalid",
+                "CONFLICT": "Conflict"
+            },
+            "status": {
+                "PENDING": "Pending",
+                "APPLIED": "Applied",
+                "SKIPPED": "Skipped",
+                "FAILED": "Failed"
+            }
+        }
     },
     "releaseExecution": {
         "label": "Release executions",

@@ -5,9 +5,8 @@ import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants
 import { ANALYTICS_ENTITY_TYPE } from '@/modules/analytics2/enums';
 import { useGetSourceTypeRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
+import { Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { Globe } from 'lucide-react';
 import { ContentItem } from '../content-entity-selector';
 
 interface Props {
@@ -59,26 +58,12 @@ export default function EntityListSourceTypes({
                 >
                     <div className="flex w-full items-center justify-between gap-3 px-2">
                         <div className="flex items-center gap-3 overflow-hidden">
-                            {item.imageUrl ? (
-                                <ReleaseCoverImage
-                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                    src={item.imageUrl}
-                                />
-                            ) : (
-                                <Avatar
-                                    shape="square"
-                                    size={40}
-                                    icon={<Globe className="h-5 w-5" />}
-                                    className="shrink-0 rounded-md bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                                >
-                                    {(
-                                        item.sourceTypeLabel ||
-                                        item.sourceType ||
-                                        'S'
-                                    )[0]?.toUpperCase()}
-                                </Avatar>
-                            )}
+                            <ReleaseCoverImage
+                                width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                src={item.imageUrl}
+                            />
+
                             <div className="flex flex-col overflow-hidden">
                                 <Typography.Text
                                     ellipsis={{

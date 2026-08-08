@@ -7,23 +7,23 @@ import ListRelease from '@/modules/dashboard/components/list-release';
 // import MapChart from '@/modules/dashboard/components/map-chart';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { DATE_FORMAT } from '@/enums/common';
-import LineChartView from '@/modules/analytics2/components/chart/line-chart-view';
-import PieChartView from '@/modules/analytics2/components/chart/pie-chart-view';
+import { formattedNumber } from '@/helpers/common';
+import RootAnalyticsOverviewChart from '@/modules/analytics2/components/chart/root-analytics-overview-chart';
+import MetricHeaderTabs, {
+    MetricHeaderTabItem,
+} from '@/modules/analytics2/components/metric-header-tabs';
 import AnalyticsRankings from '@/modules/analytics2/components/ranking/analytics-rankings';
-import { useGetRevenueDspBarChart } from '@/modules/analytics2/hooks/use-get-revenue-dsp-bar-chart';
-import { useGetRevenueLineChart } from '@/modules/analytics2/hooks/use-get-revenue-line-chart';
-import { useGetRevenueTerBarChart } from '@/modules/analytics2/hooks/use-get-revenue-ter-bar-chart';
-import { useGetTrendViewDspBarChart } from '@/modules/analytics2/hooks/use-get-trend-view-dsp-bar-chart';
-import { useGetTrendViewLineChart } from '@/modules/analytics2/hooks/use-get-trend-view-line-chart';
-import { useGetTrendViewTerBarChart } from '@/modules/analytics2/hooks/use-get-trend-view-ter-bar-chart';
+import { ANALYTICS_METRIC_KEY } from '@/modules/analytics2/enums';
+import { useGetAnalyticsSummary } from '@/modules/analytics2/hooks/use-get-analytics-summary';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
-import { Col, Row, Select, Typography, theme } from 'antd';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
+import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 type Props = {};
 
@@ -31,7 +31,7 @@ function Dashboard({}: Props) {
     // const router = useRouter();
     const { token } = theme.useToken();
     const [startDate] = useState(() =>
-        dayjs().subtract(12, 'month').toISOString()
+        dayjs().subtract(6, 'month').toISOString()
     );
     const [endDate] = useState(() => dayjs().toISOString());
 
@@ -58,92 +58,48 @@ function Dashboard({}: Props) {
         ? dayjs(dataFilter.endDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
         : '';
 
-    const [trendViewType, setTrendViewType] = useState<'dsp' | 'ter'>('dsp');
-    const [revenueViewType, setRevenueViewType] = useState<'dsp' | 'ter'>(
-        'dsp'
+    const [activeMetric, setActiveMetric] = useState<string>(
+        ANALYTICS_METRIC_KEY.TOTAL_VIEWS
     );
 
-    const isEnabled = !!(fromDate && toDate);
+    const handleMetricChange = (key: string) => {
+        setActiveMetric(key);
+    };
 
-    // Gọi API lấy thông tin biểu đồ lượt nghe tổng quan (trend)
-    const {
-        lineChartData: trendViewLineChartData,
-        isFetching: isTrendViewLineChartFetching,
-    } = useGetTrendViewLineChart({ fromDate, toDate }, { enabled: isEnabled });
+    const effectiveReleaseType = undefined;
 
-    // Gọi API lấy phân bố lượt nghe theo DSP
-    const {
-        barChartData: trendViewDspBarChartData,
-        isFetching: isTrendViewDspBarChartFetching,
-    } = useGetTrendViewDspBarChart(
-        { fromDate, toDate },
-        { enabled: isEnabled && trendViewType === 'dsp' }
-    );
+    const { analyticsSummaryData } = useGetAnalyticsSummary({
+        fromDate,
+        toDate,
+        releaseType: effectiveReleaseType,
+    });
 
-    // Gọi API lấy phân bố lượt nghe theo quốc gia
-    const {
-        barChartData: trendViewTerBarChartData,
-        isFetching: isTrendViewTerBarChartFetching,
-    } = useGetTrendViewTerBarChart(
-        { fromDate, toDate },
-        { enabled: isEnabled && trendViewType === 'ter' }
-    );
-
-    const mappedTrendPieData = useMemo(() => {
-        if (trendViewType === 'dsp') {
-            return trendViewDspBarChartData.map((item) => ({
-                type: item.dspName,
-                value: item.totalViews,
-            }));
-        } else {
-            return trendViewTerBarChartData.map((item) => ({
-                type: item.territory,
-                value: item.totalViews,
-            }));
-        }
-    }, [trendViewType, trendViewDspBarChartData, trendViewTerBarChartData]);
-
-    const isTrendBarChartFetching =
-        trendViewType === 'dsp'
-            ? isTrendViewDspBarChartFetching
-            : isTrendViewTerBarChartFetching;
-
-    // Gọi API lấy thông tin biểu đồ doanh thu tổng quan
-    const { revenueLineChartData, isFetching: isLineChartFetching } =
-        useGetRevenueLineChart({ fromDate, toDate }, { enabled: isEnabled });
-
-    // Gọi API lấy phân bố doanh thu theo DSP
-    const { revenueDspBarChartData, isFetching: isRevenueDspBarChartFetching } =
-        useGetRevenueDspBarChart(
-            { fromDate, toDate },
-            { enabled: isEnabled && revenueViewType === 'dsp' }
-        );
-
-    // Gọi API lấy phân bố doanh thu theo quốc gia
-    const { revenueTerBarChartData, isFetching: isRevenueTerBarChartFetching } =
-        useGetRevenueTerBarChart(
-            { fromDate, toDate },
-            { enabled: isEnabled && revenueViewType === 'ter' }
-        );
-
-    const mappedRevenuePieData = useMemo(() => {
-        if (revenueViewType === 'dsp') {
-            return revenueDspBarChartData.map((item) => ({
-                type: item.dspName,
-                value: item.revenueUsd,
-            }));
-        } else {
-            return revenueTerBarChartData.map((item) => ({
-                type: item.territory,
-                value: item.revenueUsd,
-            }));
-        }
-    }, [revenueViewType, revenueDspBarChartData, revenueTerBarChartData]);
-
-    const isRevenueBarChartFetching =
-        revenueViewType === 'dsp'
-            ? isRevenueDspBarChartFetching
-            : isRevenueTerBarChartFetching;
+    const metricTabItems: MetricHeaderTabItem[] = [
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+            label: messages('analytics.totalTrendViews'),
+            value: formattedNumber(analyticsSummaryData?.totalTrendViews),
+            icon: Eye,
+            color: 'text-emerald-600 dark:text-emerald-400',
+            bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
+        },
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
+            label: messages('analytics.revenue.totalUsage'),
+            value: formattedNumber(analyticsSummaryData?.totalUsage),
+            icon: Music,
+            color: 'text-purple-600 dark:text-purple-400',
+            bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
+        },
+        {
+            key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
+            label: messages('analytics.totalRevenueUsd'),
+            value: formattedNumber(analyticsSummaryData?.totalRevenueUsd),
+            icon: DollarSign,
+            color: 'text-cyan-600 dark:text-cyan-400',
+            bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
+        },
+    ];
 
     return (
         <div
@@ -185,176 +141,19 @@ function Dashboard({}: Props) {
                         loading={isLoading}
                     />
 
-                    {/* <DistributionRow
-                        startDate={
-                            dataFilter.startDate
-                                ? dayjs(dataFilter.startDate).format(
-                                      DATE_FORMAT.MYSQL_TYPE_DATE
-                                  )
-                                : undefined
-                        }
-                        endDate={
-                            dataFilter.endDate
-                                ? dayjs(dataFilter.endDate).format(
-                                      DATE_FORMAT.MYSQL_TYPE_DATE
-                                  )
-                                : undefined
-                        }
-                    /> */}
-
-                    {/* <DashboardAnalyticsRow
-                        startDate={dataFilter.startDate}
-                        endDate={dataFilter.endDate}
-                    />  */}
-
-                    {/* <Row gutter={16} align="stretch"> */}
-                    {/* <Col span={12}>
-                            <ListTop />
-                        </Col> */}
-                    {/* <Col span={12}>
-                            <NewUpdatesCard />
-                        </Col> */}
-                    {/* <Col span={8}>
-                            <RecentIssuesCard issuesData={countIssuesData} />
-                        </Col> */}
-                    {/* </Row> */}
-
-                    {/* <PlaysTimelineChart
-                        fromDate={fromDate}
-                        toDate={toDate}
-                    /> */}
-
-                    <Row gutter={[24, 24]}>
-                        <Col xs={24} lg={15}>
-                            <LineChartView
-                                title={messages('analytics.trendViewsByMonth')}
-                                data={trendViewLineChartData}
-                                xAxisKey="period"
-                                lineKey="totalViews"
-                                lineName={messages('common.streams')}
-                                loading={isTrendViewLineChartFetching}
-                                chartHeight={250}
-                            />
-                        </Col>
-                        <Col xs={24} lg={9}>
-                            <PieChartView
-                                title={
-                                    <Select
-                                        variant="borderless"
-                                        value={trendViewType}
-                                        onChange={(val) =>
-                                            setTrendViewType(val)
-                                        }
-                                        options={[
-                                            {
-                                                value: 'dsp',
-                                                label: (
-                                                    <Typography.Title
-                                                        level={5}
-                                                        className="!text-sm"
-                                                    >
-                                                        {messages(
-                                                            'analytics.dspDistribution'
-                                                        )}
-                                                    </Typography.Title>
-                                                ),
-                                            },
-                                            {
-                                                value: 'ter',
-                                                label: (
-                                                    <Typography.Title
-                                                        level={4}
-                                                        className="!text-sm"
-                                                    >
-                                                        {messages(
-                                                            'analytics.terDistribution'
-                                                        )}
-                                                    </Typography.Title>
-                                                ),
-                                            },
-                                        ]}
-                                        className="w-[250px]"
-                                    />
-                                }
-                                data={mappedTrendPieData}
-                                loading={isTrendBarChartFetching}
-                                legendPosition="right"
-                                chartHeight={250}
-                            />
-                        </Col>
-                    </Row>
-
-                    <Row gutter={[24, 24]}>
-                        <Col xs={24} lg={15}>
-                            <LineChartView
-                                title={messages('analytics.revenue.label')}
-                                data={revenueLineChartData}
-                                xAxisKey="period"
-                                lineKey="revenueUsd"
-                                lineName={messages(
-                                    'analytics.revenue.modeRevenue'
-                                )}
-                                loading={isLineChartFetching}
-                                chartHeight={250}
-                                valuePrefix="$"
-                                additionalTooltipKeys={[
-                                    {
-                                        key: 'quantity',
-                                        name: messages(
-                                            'analytics.revenue.usage'
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </Col>
-                        <Col xs={24} lg={9}>
-                            <PieChartView
-                                title={
-                                    <Select
-                                        variant="borderless"
-                                        value={revenueViewType}
-                                        onChange={(val) =>
-                                            setRevenueViewType(val)
-                                        }
-                                        options={[
-                                            {
-                                                value: 'dsp',
-                                                label: (
-                                                    <Typography.Title
-                                                        level={5}
-                                                        className="!text-sm"
-                                                    >
-                                                        {messages(
-                                                            'analytics.revenueDspDistribution'
-                                                        )}
-                                                    </Typography.Title>
-                                                ),
-                                            },
-                                            {
-                                                value: 'ter',
-                                                label: (
-                                                    <Typography.Title
-                                                        level={4}
-                                                        className="!text-sm"
-                                                    >
-                                                        {messages(
-                                                            'analytics.revenueTerDistribution'
-                                                        )}
-                                                    </Typography.Title>
-                                                ),
-                                            },
-                                        ]}
-                                        className="w-[250px]"
-                                    />
-                                }
-                                data={mappedRevenuePieData}
-                                loading={isRevenueBarChartFetching}
-                                legendPosition="right"
-                                chartHeight={250}
-                                valuePrefix="$"
-                            />
-                        </Col>
-                    </Row>
+                    <div className="flex flex-col overflow-hidden rounded-lg border shadow-sm">
+                        <MetricHeaderTabs
+                            items={metricTabItems}
+                            activeKey={activeMetric}
+                            onChangeKey={handleMetricChange}
+                        />
+                        <RootAnalyticsOverviewChart
+                            fromDate={fromDate}
+                            toDate={toDate}
+                            releaseType={effectiveReleaseType as any}
+                            activeMetric={activeMetric}
+                        />
+                    </div>
 
                     <AnalyticsRankings fromDate={fromDate} toDate={toDate} />
                 </div>

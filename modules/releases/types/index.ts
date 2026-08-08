@@ -37,6 +37,7 @@ export interface ReleaseCoverArt {
 
 export interface ReleasesData extends CommonAttribute {
     creatorId: string;
+    creator?: Pick<UserData, 'id' | 'email' | 'name' | 'avatar'>;
     modifierId: string;
     modifier: UserData;
     upc: string;

@@ -1,17 +1,20 @@
 'use client';
 
 import ImageFallback from '@/components/ui/image/image-fallback';
+import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON } from '@/constants/common';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { BySourceItem, RevenueArtistItem } from '@/modules/analytics2/types';
-import { Avatar, Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { ProColumns } from '@ant-design/pro-components';
+import { Avatar, Tag, Typography } from 'antd';
+import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-const COLUMN_WIDTH_RANK = 80;
+const COLUMN_WIDTH_RANK = 100;
 const COLUMN_WIDTH_ARTIST = 250;
 const COLUMN_WIDTH_PROFILES = 180;
 const COLUMN_WIDTH_COUNTRY = 150;
@@ -27,6 +30,7 @@ interface ArtistRevenueTableProps {
     dataSource: RevenueArtistItem[];
     loading: boolean;
     dspData?: any;
+    toolbar?: any;
     onDetailArtist: (
         artistId: string,
         artistName: string,
@@ -39,12 +43,13 @@ export default function ArtistRevenueTable({
     dataSource,
     loading,
     dspData,
+    toolbar,
     onDetailArtist,
     onDetailSource,
 }: ArtistRevenueTableProps) {
     const messages = useTranslations();
 
-    const revenueColumns: ColumnsType<RevenueArtistItem> = [
+    const revenueColumns: ProColumns<RevenueArtistItem>[] = [
         {
             title: messages('analytics2.rank'),
             dataIndex: 'rank',
@@ -52,10 +57,10 @@ export default function ArtistRevenueTable({
             width: COLUMN_WIDTH_RANK,
             align: 'center' as const,
             fixed: 'left',
-            render: (rank: number) => (
-                <span className="text-gray-700 dark:text-zinc-300">
-                    #{rank}
-                </span>
+            render: (_, record: RevenueArtistItem) => (
+                <Typography.Text type="secondary">
+                    #{record.rank}
+                </Typography.Text>
             ),
         },
         {
@@ -65,28 +70,28 @@ export default function ArtistRevenueTable({
             width: COLUMN_WIDTH_ARTIST,
             ellipsis: true,
             fixed: 'left',
-            render: (text: string, record: RevenueArtistItem) => (
+            render: (_, record: RevenueArtistItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
                         src={record.picture ?? ''}
-                        alt={text}
+                        alt={record.artistName}
                         width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
                         className="aspect-square rounded-full object-cover"
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
-                        <span
-                            className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                        <Typography.Text
+                            className="cursor-pointer truncate transition-colors hover:text-blue-500"
                             onClick={() =>
                                 onDetailArtist(
                                     record.artistId,
-                                    text,
+                                    record.artistName,
                                     record.picture
                                 )
                             }
                         >
-                            {text}
-                        </span>
+                            {record.artistName}
+                        </Typography.Text>
                     </CustomTooltip>
                 </div>
             ),
@@ -96,7 +101,7 @@ export default function ArtistRevenueTable({
             key: 'profiles',
             dataIndex: 'profiles',
             width: COLUMN_WIDTH_PROFILES,
-            render: (_, record) => (
+            render: (_, record: RevenueArtistItem) => (
                 <div>
                     <Avatar.Group
                         max={{
@@ -141,10 +146,10 @@ export default function ArtistRevenueTable({
             dataIndex: 'country',
             width: COLUMN_WIDTH_COUNTRY,
             ellipsis: true,
-            render: (_, record) => (
-                <span className="text-gray-600 dark:text-zinc-400">
+            render: (_, record: RevenueArtistItem) => (
+                <Typography.Text type="secondary" className="truncate">
                     {record?.country || '-'}
-                </span>
+                </Typography.Text>
             ),
         },
         {
@@ -153,10 +158,10 @@ export default function ArtistRevenueTable({
             dataIndex: 'genre',
             width: COLUMN_WIDTH_GENRE,
             ellipsis: true,
-            render: (_, record) => (
-                <span className="text-gray-600 dark:text-zinc-400">
+            render: (_, record: RevenueArtistItem) => (
+                <Typography.Text type="secondary" className="truncate">
                     {record?.genre || '-'}
-                </span>
+                </Typography.Text>
             ),
         },
         {
@@ -164,11 +169,12 @@ export default function ArtistRevenueTable({
             dataIndex: 'bySource',
             key: 'bySource',
             width: COLUMN_WIDTH_SOURCE,
-            render: (bySource?: BySourceItem[]) => {
+            render: (_, record: RevenueArtistItem) => {
+                const bySource = record.bySource;
                 if (!bySource || bySource.length === 0) return '—';
                 return (
                     <div className="flex flex-wrap gap-1.5">
-                        {bySource.map((item) => (
+                        {bySource.map((item: BySourceItem) => (
                             <CustomTooltip
                                 key={item.source}
                                 title={messages('common.detailedAnalysis')}
@@ -176,10 +182,14 @@ export default function ArtistRevenueTable({
                                 <Tag
                                     className="m-0 cursor-pointer transition-colors hover:border-blue-500 hover:text-blue-500"
                                     onClick={() =>
-                                        onDetailSource?.(item.source, item.sourceLabel)
+                                        onDetailSource?.(
+                                            item.source,
+                                            item.sourceLabel
+                                        )
                                     }
                                 >
-                                    {item.sourceLabel}: ${formattedNumber(item.revenueUsd)}
+                                    {item.sourceLabel}: $
+                                    {formattedNumber(item.revenueUsd)}
                                 </Tag>
                             </CustomTooltip>
                         ))}
@@ -192,10 +202,10 @@ export default function ArtistRevenueTable({
             dataIndex: 'trackCount',
             key: 'trackCount',
             width: COLUMN_WIDTH_TRACKS,
-            render: (count: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {count || 0}
-                </span>
+            render: (_, record: RevenueArtistItem) => (
+                <Typography.Text type="secondary">
+                    {record.trackCount || 0}
+                </Typography.Text>
             ),
         },
         {
@@ -204,10 +214,10 @@ export default function ArtistRevenueTable({
             key: 'quantity',
             width: COLUMN_WIDTH_USAGE,
             fixed: 'right',
-            render: (qty: number) => (
-                <span className="text-gray-600 dark:text-zinc-400">
-                    {qty ? qty.toLocaleString() : 0}
-                </span>
+            render: (_, record: RevenueArtistItem) => (
+                <Typography.Text type="secondary">
+                    {record.quantity ? record.quantity.toLocaleString() : 0}
+                </Typography.Text>
             ),
         },
         {
@@ -216,16 +226,21 @@ export default function ArtistRevenueTable({
             key: 'revenueUsd',
             width: COLUMN_WIDTH_REVENUE,
             fixed: 'right',
-            render: (val: number) => (
-                <span className="text-gray-900 dark:text-zinc-100">
-                    ${val ? formattedNumber(val) : '0.00'}
-                </span>
+            render: (_, record: RevenueArtistItem) => (
+                <Typography.Text>
+                    $
+                    {record.revenueUsd
+                        ? formattedNumber(record.revenueUsd)
+                        : '0.00'}
+                </Typography.Text>
             ),
         },
     ];
 
     return (
-        <Table<RevenueArtistItem>
+        <AppProTable<RevenueArtistItem>
+            className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
+            toolbar={toolbar}
             sticky
             size="small"
             columns={revenueColumns}
@@ -233,6 +248,15 @@ export default function ArtistRevenueTable({
             loading={loading}
             rowKey="artistId"
             pagination={false}
+            search={false}
+            options={{
+                setting: {
+                    settingIcon: <Columns3 size={SIZE_ICON} />,
+                },
+                density: false,
+                fullScreen: false,
+                reload: false,
+            }}
             scroll={{ x: SCREEN.LG }}
         />
     );

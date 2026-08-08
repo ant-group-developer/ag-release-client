@@ -4,9 +4,8 @@ import { formattedNumber } from '@/helpers/common';
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
 import { useGetArtistRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
-import { Avatar, Empty, List, Skeleton, Typography } from 'antd';
+import { Empty, List, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { User } from 'lucide-react';
 import { ContentItem } from '../content-entity-selector';
 
 interface Props {
@@ -65,25 +64,12 @@ export default function EntityListArtists({
                     >
                         <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
-                                {artistImage ? (
-                                    <ReleaseCoverImage
-                                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                        height={
-                                            ANALYTICS_RANKING_THUMBNAIL_SIZE
-                                        }
-                                        src={artistImage}
-                                    />
-                                ) : (
-                                    <Avatar
-                                        shape="square"
-                                        size={40}
-                                        icon={<User className="h-5 w-5" />}
-                                        className="shrink-0 rounded-md bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
-                                    >
-                                        {(item.artistName ||
-                                            'A')[0]?.toUpperCase()}
-                                    </Avatar>
-                                )}
+                                <ReleaseCoverImage
+                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                                    src={artistImage}
+                                />
+
                                 <div className="flex flex-col overflow-hidden">
                                     <Typography.Text
                                         ellipsis={{ tooltip: item.artistName }}

@@ -6,7 +6,7 @@ import { Link } from '@/i18n/routing';
 import ReleaseVideoCoverImage from '@/modules/release-video/components/image/release-video-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
-import { Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Tag, Tooltip, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { RELEASE_VIDEO_VISIBILITY } from '../../enums';
@@ -29,6 +29,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'iNo',
             width: 60,
             align: 'center',
+            fixed: 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -250,6 +251,31 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             ellipsis: true,
             render: (value) => value || '-',
         },
+        {
+            title: messages('common.creator'),
+            key: 'creator',
+            dataIndex: 'creator',
+            align: 'left',
+            width: 200,
+            render: (_, record) => {
+                const creatorName =
+                    record.creator?.name || record.creator?.email;
+
+                if (!creatorName) return '-';
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <Avatar
+                            className="shrink-0"
+                            src={record.creator?.avatar}
+                        />
+                        <span className="min-w-0 break-words">
+                            {creatorName}
+                        </span>
+                    </div>
+                );
+            },
+        },
 
         // {
         //     title: messages('common.createdAt'),
@@ -272,6 +298,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 200,
             sorter: true,
+            fixed: 'right',
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
