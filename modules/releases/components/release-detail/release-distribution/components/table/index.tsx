@@ -4,7 +4,7 @@ import AppModal from '@/components/ui/modal/normal-modal';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE, SIZE_ICON } from '@/constants/common';
-import { getSortOrder } from '@/helpers/common';
+import { formattedDate, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useThemeMode } from '@/hooks/use-theme-mode';
@@ -96,44 +96,7 @@ export default function DistributionTable({
                 );
             },
         },
-        // {
-        //     title: messages('distribution.lastEnqueue'),
-        //     key: 'releaseDspDelivery.lastEnqueuedAt',
-        //     dataIndex: 'releaseDspDelivery.lastEnqueuedAt',
-        //     align: 'left',
-        //     width: 250,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter?.orderBy,
-        //         dataFilter?.fieldOrder,
-        //         'releaseDspDelivery.lastEnqueuedAt'
-        //     ),
-        //     render: (value, record) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(record?.lastEnqueuedAt)}{' '}
-        //         </span>
-        //     ),
-        // },
-        // {
-        //     title: 'Last Delivered',
-        //     key: 'releaseDspDelivery.lastDeliveredAt',
-        //     dataIndex: 'releaseDspDelivery.lastDeliveredAt',
-        //     align: 'left',
-        //     width: 250,
-        //     sorter: true,
-        //     sortOrder: getSortOrder(
-        //         dataFilter?.orderBy,
-        //         dataFilter?.fieldOrder,
-        //         'releaseDspDelivery.lastDeliveredAt'
-        //     ),
-        //     render: (value, record) => (
-        //         <span className="truncate text-wrap">
-        //             {' '}
-        //             {formattedDate(record?.lastDeliveredAt)}{' '}
-        //         </span>
-        //     ),
-        // },
+
         {
             title: messages('distribution.hasLiveVersion'),
             key: 'hasLiveVersion',
@@ -187,6 +150,30 @@ export default function DistributionTable({
                 }
                 return <ReleaseDspStatusTag status={record?.status} />;
             },
+        },
+        {
+            title: messages('distribution.lastEnqueue'),
+            key: 'releaseDspDelivery.lastEnqueuedAt',
+            dataIndex: 'releaseDspDelivery.lastEnqueuedAt',
+            align: 'left',
+            width: 150,
+            render: (value, record) => (
+                <span className="truncate text-wrap">
+                    {formattedDate(record?.lastEnqueuedAt)}
+                </span>
+            ),
+        },
+        {
+            title: messages('distribution.lastDelivered'),
+            key: 'releaseDspDelivery.lastDeliveredAt',
+            dataIndex: 'releaseDspDelivery.lastDeliveredAt',
+            align: 'left',
+            width: 150,
+            render: (value, record) => (
+                <span className="truncate text-wrap">
+                    {formattedDate(record?.lastDeliveredAt)}
+                </span>
+            ),
         },
         {
             key: 'actions',

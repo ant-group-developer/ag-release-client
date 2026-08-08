@@ -17,7 +17,6 @@ import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
@@ -40,6 +39,7 @@ import {
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
 import DspDeliveryFilterDropdown from './dsp-delivery-filter-dropdown';
+import DspLiveColumn from './dsp-live-column';
 import DspStatusModal from './dsp-status-modal';
 import ReleaseTitleColumn from './title-column';
 
@@ -181,7 +181,7 @@ export default function ReleasesTable({
             key: RELEASES_TABLE_KEY.DSP_LIVES,
             dataIndex: RELEASES_TABLE_KEY.DSP_LIVES,
             align: 'left',
-            width: 140,
+            width: 200,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -209,27 +209,15 @@ export default function ReleasesTable({
                     onClose={() => setIsDspFilterOpen(false)}
                 />
             ),
-            render: (_, record) => {
-                const releaseDspDeliveries = record?.releaseDspDeliveries ?? [];
-                const liveCount = releaseDspDeliveries.filter(
-                    (item) =>
-                        item.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
-                ).length;
-                const totalCount = releaseDspDeliveries.length;
-                return (
-                    <div data-stop-row-click="true">
-                        <span
-                            className="cursor-pointer hover:text-blue-500"
-                            onClick={() => {
-                                setSelectedRecord(record);
-                                setIsDspModalOpen(true);
-                            }}
-                        >
-                            {`${liveCount}/${totalCount}`}
-                        </span>
-                    </div>
-                );
-            },
+            render: (_, record) => (
+                <DspLiveColumn
+                    releaseDspDeliveries={record?.releaseDspDeliveries}
+                    onClick={() => {
+                        setSelectedRecord(record);
+                        setIsDspModalOpen(true);
+                    }}
+                />
+            ),
         },
         {
             title: messages('release.trackCount'),
