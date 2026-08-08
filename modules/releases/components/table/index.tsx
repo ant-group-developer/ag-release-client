@@ -21,9 +21,8 @@ import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
-import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ProColumns } from '@ant-design/pro-components';
-import { Modal, Tag, theme } from 'antd';
+import { Tag, theme } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import { CircleX, Filter, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -41,6 +40,7 @@ import ReleaseStatusTag from '../tag/release-status-tag';
 import DspDeliveryFilterDropdown from './dsp-delivery-filter-dropdown';
 import DspLiveColumn from './dsp-live-column';
 import DspStatusModal from './dsp-status-modal';
+import TakedownReleaseModal from './takedown-release-modal';
 import ReleaseTitleColumn from './title-column';
 
 type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
@@ -66,12 +66,14 @@ export default function ReleasesTable({
     const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
         null
     );
+    const [takedownRecord, setTakedownRecord] = useState<ReleasesData | null>(
+        null
+    );
     const { isSystemTenant, isAdmin } = useAuth();
     const { hasPermission } = usePermission();
     const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
     const canTakedown = hasPermission(PERMISSION.RELEASE_AUDIO.TAKE_DOWN);
     const setAction = useReleaseActionStore((state) => state.setAction);
-    const { takedownRelease } = useTakedownRelease();
 
     const column: ProColumns<ReleasesData>[] = [
         {
@@ -371,34 +373,14 @@ export default function ReleasesTable({
                                         </div>
                                     ),
                                     show:
-                                        status ===
+                                        (status ===
                                             (RELEASES_STATUS.DISTRIBUTED ||
                                                 RELEASES_STATUS.AWAITING_ACTION) &&
-                                        canTakedown,
+                                            canTakedown) ||
+                                        isAdmin,
                                     danger: true,
                                     onClick: () => {
-                                        Modal.confirm({
-                                            title: messages(
-                                                'release.takeDownConfirmTitle'
-                                            ),
-                                            content: messages.rich(
-                                                'release.takeDownConfirmContent',
-                                                {
-                                                    title: record?.title,
-                                                    b: (chuck) => (
-                                                        <strong>{chuck}</strong>
-                                                    ),
-                                                }
-                                            ),
-                                            okText: messages('common.yes'),
-                                            cancelText:
-                                                messages('common.cancel'),
-                                            onOk: () => {
-                                                takedownRelease({
-                                                    id: record?.id,
-                                                });
-                                            },
-                                        });
+                                        setTakedownRecord(record);
                                     },
                                 },
                                 {
@@ -475,6 +457,11 @@ export default function ReleasesTable({
                 //         );
                 //     },
                 // })}
+            />
+            <TakedownReleaseModal
+                open={Boolean(takedownRecord)}
+                record={takedownRecord}
+                onCancel={() => setTakedownRecord(null)}
             />
             <DspStatusModal
                 open={isDspModalOpen}
