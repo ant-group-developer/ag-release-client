@@ -82,6 +82,7 @@ export default function AssetImportDetailDrawer() {
                         open={open}
                         batchId={batchId}
                         batchStatus={liveStatus}
+                        waitForItems={dataEdit.waitForItems}
                         onApplyStart={handleApplyStart}
                     />
                 </>

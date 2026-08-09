@@ -28,6 +28,8 @@ export interface AssetImportBatchData extends CommonAttribute {
     failedRows?: number;
     errorMessage?: string | null;
     createdBy?: string | null;
+    /** Used only by the client to refresh items immediately after a scan. */
+    waitForItems?: boolean;
 }
 
 export interface AssetImportBatchFilter extends CommonParams {
