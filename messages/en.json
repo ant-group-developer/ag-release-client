@@ -2863,15 +2863,21 @@
         "label": "Asset import",
         "scan": {
             "title": "Scan file",
+            "downloadTemplate": "Download template",
             "targetTenant": "Target tenant",
             "file": "File",
             "dragDropHint": "Click or drag a CSV/XLSX file to this area to upload",
             "options": "Options",
             "updateOwnership": "Update ownership",
+            "updateOwnershipHint": "Update the workspace (tenant) and label of matched records based on the data in the import file.",
             "overwriteMetadata": "Overwrite metadata",
+            "overwriteMetadataHint": "Overwrite the existing track title, album title and UPC with the values from the file.",
             "createIfNotFound": "Create if not found",
+            "createIfNotFoundHint": "If no record is found by ISRC/UPC, create a new Release and Track from the data in the file.",
             "fillEmptyOnly": "Fill empty fields only",
+            "fillEmptyOnlyHint": "Only fill in fields that are currently empty; existing data is not replaced. If enabled together with Overwrite metadata, this option takes priority.",
             "createLabelIfMissing": "Create label if missing",
+            "createLabelIfMissingHint": "If the label in the file doesn't exist in the target workspace, a new label will be created.",
             "uploadFailed": "File upload failed"
         },
         "batch": {

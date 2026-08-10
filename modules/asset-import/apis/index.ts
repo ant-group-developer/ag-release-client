@@ -13,6 +13,7 @@ import {
     AssetImportItemData,
     PresignUploadPayload,
     PresignUploadResponse,
+    TemplateDownloadResponse,
     ScanAssetImportPayload,
     ScanAssetImportResponse,
 } from '../types/payload';
@@ -20,6 +21,7 @@ import {
 const ASSET_IMPORT_API_PATHS = {
     PRESIGN: '/asset-import/uploads/presign',
     SCAN: '/asset-import/scan',
+    TEMPLATE_DOWNLOAD: '/asset-import/template/download',
     BATCHES: '/asset-import/batches',
 } as const;
 
@@ -40,6 +42,12 @@ export const assetImportApis = {
         return axiosInstance.post<DetailResponse<ScanAssetImportResponse>>(
             ASSET_IMPORT_API_PATHS.SCAN,
             payload
+        );
+    },
+
+    downloadTemplate: () => {
+        return axiosInstance.get<DetailResponse<TemplateDownloadResponse>>(
+            ASSET_IMPORT_API_PATHS.TEMPLATE_DOWNLOAD
         );
     },
 

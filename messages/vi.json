@@ -2856,15 +2856,21 @@
         "label": "Nhập tài sản",
         "scan": {
             "title": "Quét file",
+            "downloadTemplate": "Tải file mẫu",
             "targetTenant": "Đối tác đích",
             "file": "File",
             "dragDropHint": "Nhấn hoặc kéo file CSV/XLSX vào đây để tải lên",
             "options": "Tùy chọn",
             "updateOwnership": "Cập nhật quyền sở hữu",
+            "updateOwnershipHint": "Cập nhật workspace (tenant) và label của bản ghi đã tìm thấy theo dữ liệu trong file import.",
             "overwriteMetadata": "Ghi đè metadata",
+            "overwriteMetadataHint": "Ghi đè title track, title album và UPC hiện có bằng giá trị trong file.",
             "createIfNotFound": "Tạo mới nếu không tìm thấy",
+            "createIfNotFoundHint": "Nếu hệ thống không tìm thấy bản ghi theo ISRC/UPC, tạo mới Release và Track từ dữ liệu trong file.",
             "fillEmptyOnly": "Chỉ điền vào trường trống",
+            "fillEmptyOnlyHint": "Chỉ điền dữ liệu vào các trường đang trống; không thay thế dữ liệu đã có. Nếu bật cùng Overwrite metadata, tuỳ chọn này được ưu tiên.",
             "createLabelIfMissing": "Tạo label nếu chưa có",
+            "createLabelIfMissingHint": "Nếu label trong file chưa tồn tại trong workspace đích, hệ thống sẽ tạo label mới.",
             "uploadFailed": "Tải file lên thất bại"
         },
         "batch": {

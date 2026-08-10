@@ -27,6 +27,7 @@ type Props = {
     open: boolean;
     batchId?: string | null;
     batchStatus?: string | null;
+    waitForItems?: boolean;
     onApplyStart?: () => void;
 };
 
@@ -39,6 +40,7 @@ export default function ItemsTable({
     open,
     batchId,
     batchStatus,
+    waitForItems,
     onApplyStart,
 }: Props) {
     const messages = useTranslations();
@@ -48,7 +50,8 @@ export default function ItemsTable({
 
     const { assetImportItemData, isFetching } = useGetListAssetImportItem(
         batchId,
-        filter
+        filter,
+        waitForItems
     );
     const { applyAssetImport, isPending: isApplying } = useApplyAssetImport();
 

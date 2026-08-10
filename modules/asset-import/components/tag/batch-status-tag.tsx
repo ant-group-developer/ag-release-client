@@ -12,7 +12,7 @@ export const getBatchStatusColor = (status: AssetImportBatchStatus) => {
         case AssetImportBatchStatus.APPLYING:
             return 'processing';
         case AssetImportBatchStatus.SCANNED:
-            return 'default';
+            return 'cyan';
         case AssetImportBatchStatus.APPLIED:
             return 'success';
         case AssetImportBatchStatus.PARTIALLY_APPLIED:
@@ -20,7 +20,7 @@ export const getBatchStatusColor = (status: AssetImportBatchStatus) => {
         case AssetImportBatchStatus.FAILED:
             return 'error';
         case AssetImportBatchStatus.CANCELLED:
-            return 'default';
+            return 'orange';
         default:
             return 'default';
     }

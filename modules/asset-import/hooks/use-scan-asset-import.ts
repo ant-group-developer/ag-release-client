@@ -16,7 +16,7 @@ export const useScanAssetImport = () => {
                 queryKey: assetImportBatchQueryKeys.lists(),
             });
             handleSuccess(data?.data);
-            onSuccess?.(data?.data);
+            onSuccess?.(data?.data?.data);
         },
         onError: (error, { onError }: ScanAssetImportVariables) => {
             onError?.();
