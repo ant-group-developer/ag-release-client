@@ -28,14 +28,6 @@ type Props = {
 };
 
 const DEFAULT_RELEASE_VIDEO_TAB = RELEASE_VIDEO_TABS.DETAILS;
-const PRESERVED_ARTIST_FIELD_NAMES = [
-    'artistIds',
-    'featuredArtistIds',
-    'composers',
-    'editors',
-    'producers',
-    'directors',
-];
 
 export default function ReleaseVideoForm({ dataEdit }: Props) {
     const messages = useTranslations();
