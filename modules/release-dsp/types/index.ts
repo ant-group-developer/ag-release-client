@@ -16,3 +16,18 @@ export interface ReleaseDspData extends CommonAttribute {
 export interface ReleaseDspDataFilter extends CommonParams {
     status?: RELEASE_DSP_DELIVERY_STATUS;
 }
+
+export interface CiStatusItem {
+    ciCode: string;
+    name: string;
+    status: string;
+    task: string;
+    taskStatus: string;
+}
+
+export interface SyncStatusFromCiResponse {
+    releaseId: string;
+    releaseStatus: string;
+    ciStatuses: CiStatusItem[];
+}
+

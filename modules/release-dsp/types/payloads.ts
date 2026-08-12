@@ -9,3 +9,8 @@ export interface ReleaseDspPayload extends CommonFunction {
 export interface ReleaseDspBulkUpdate extends CommonFunction {
     items: Partial<ReleaseDspData>[];
 }
+
+export interface SyncStatusFromCiPayload extends CommonFunction {
+    releaseId: string;
+}
+
