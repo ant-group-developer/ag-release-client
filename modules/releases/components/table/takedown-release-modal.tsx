@@ -1,7 +1,10 @@
-import { FALLBACK_IMAGE } from '@/constants/common';
+'use client';
+
+import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
+import DistributionTable from '@/modules/releases/components/release-detail/release-distribution/components/table';
 import { useTakedownRelease } from '@/modules/releases/hooks/use-takedown-release';
 import { ReleasesData } from '@/modules/releases/types';
-import { Avatar, Checkbox, Empty, Modal, Typography } from 'antd';
+import { Modal, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -20,28 +23,23 @@ export default function TakedownReleaseModal({
     const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
     const { takedownRelease, isPending } = useTakedownRelease();
 
-    const activeDsps = useMemo(() => {
-        const uniqueDsps = new Map<
-            string,
-            NonNullable<ReleasesData['releaseDspDeliveries']>[number]['dsp']
-        >();
-
-        record?.releaseDspDeliveries
-            ?.filter((delivery) => delivery.dsp?.isActive === true)
-            .forEach((delivery) => {
-                if (delivery.dsp?.code) {
-                    uniqueDsps.set(delivery.dsp.code, delivery.dsp);
-                }
-            });
-
-        return Array.from(uniqueDsps.values());
+    const distributedDeliveries = useMemo(() => {
+        return (
+            record?.releaseDspDeliveries?.filter(
+                (delivery) =>
+                    delivery.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+            ) ?? []
+        );
     }, [record]);
 
     useEffect(() => {
         if (open) {
-            setSelectedCodes(activeDsps.map((dsp) => dsp.code));
+            const codes = distributedDeliveries
+                .map((item) => item.dsp?.code)
+                .filter(Boolean) as string[];
+            setSelectedCodes(codes);
         }
-    }, [activeDsps, open, record?.id]);
+    }, [distributedDeliveries, open]);
 
     const handleTakedown = () => {
         if (!record?.id || selectedCodes.length === 0) return;
@@ -56,7 +54,11 @@ export default function TakedownReleaseModal({
     return (
         <Modal
             open={open}
-            title={messages('release.takeDownConfirmTitle')}
+            title={
+                <Typography.Title level={4} className="!mb-0">
+                    {messages('release.takeDownConfirmTitle')}
+                </Typography.Title>
+            }
             okText={messages('release.takeDown')}
             cancelText={messages('common.cancel')}
             okButtonProps={{
@@ -66,8 +68,10 @@ export default function TakedownReleaseModal({
             confirmLoading={isPending}
             onOk={handleTakedown}
             onCancel={onCancel}
+            width={'80vw'}
+            centered
         >
-            <div className="space-y-4">
+            <div className="space-y-4 py-2">
                 <Typography.Text>
                     {messages.rich('release.takeDownConfirmContent', {
                         title: record?.title ?? '',
@@ -75,46 +79,28 @@ export default function TakedownReleaseModal({
                     })}
                 </Typography.Text>
 
-                <div>
-                    <Typography.Text strong>
-                        {messages('placeholder.selectDsp')}
-                    </Typography.Text>
-
-                    {activeDsps.length > 0 ? (
-                        <Checkbox.Group
-                            className="mt-3 w-full"
-                            value={selectedCodes}
-                            onChange={(values) =>
-                                setSelectedCodes(values as string[])
-                            }
-                        >
-                            <div className="flex max-h-64 w-full flex-col gap-2 overflow-y-auto pr-2">
-                                {activeDsps.map((dsp) => (
-                                    <Checkbox key={dsp.code} value={dsp.code}>
-                                        <span className="inline-flex items-center gap-2">
-                                            <Avatar
-                                                size={24}
-                                                src={
-                                                    dsp.picture ??
-                                                    FALLBACK_IMAGE
-                                                }
-                                            />
-                                            <Typography.Text>
-                                                {dsp.name}
-                                            </Typography.Text>
-                                        </span>
-                                    </Checkbox>
-                                ))}
-                            </div>
-                        </Checkbox.Group>
-                    ) : (
-                        <Empty
-                            className="mt-3"
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            description={messages('common.noDataAvailable')}
-                        />
-                    )}
-                </div>
+                {record && (
+                    <DistributionTable
+                        dataSource={distributedDeliveries}
+                        size="middle"
+                        rowKey={(item) => item.dsp?.code ?? ''}
+                        rowSelection={{
+                            selectedRowKeys: selectedCodes,
+                            onChange: (keys) =>
+                                setSelectedCodes(keys as string[]),
+                        }}
+                        pagination={{
+                            current: 1,
+                            pageSize: 999,
+                        }}
+                        scroll={{
+                            x: '70vw',
+                            y: '60vh',
+                        }}
+                        className="overflow-hidden rounded-lg border border-slate-100 dark:border-zinc-800"
+                        options={false}
+                    />
+                )}
             </div>
         </Modal>
     );

@@ -373,11 +373,12 @@ export default function ReleasesTable({
                                         </div>
                                     ),
                                     show:
-                                        (status ===
-                                            (RELEASES_STATUS.DISTRIBUTED ||
-                                                RELEASES_STATUS.AWAITING_ACTION) &&
+                                        (status ==
+                                            RELEASES_STATUS.DISTRIBUTED &&
                                             canTakedown) ||
-                                        isAdmin,
+                                        (status ==
+                                            RELEASES_STATUS.DISTRIBUTED &&
+                                            isAdmin),
                                     danger: true,
                                     onClick: () => {
                                         setTakedownRecord(record);
