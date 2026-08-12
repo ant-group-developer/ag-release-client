@@ -1,7 +1,11 @@
 import axiosInstance from '@/api/axios-auth';
 import { ReleasesData } from '@/modules/releases/types';
-import { PaginationResponse } from '@/types/api';
-import { ReleaseDspData, ReleaseDspDataFilter } from '../types';
+import { DetailResponse, PaginationResponse } from '@/types/api';
+import {
+    ReleaseDspData,
+    ReleaseDspDataFilter,
+    SyncStatusFromCiResponse,
+} from '../types';
 import { ReleaseDspBulkUpdate } from '../types/payloads';
 
 export const releaseDspApis = {
@@ -21,4 +25,10 @@ export const releaseDspApis = {
             { items }
         );
     },
+    syncStatusFromCi: (releaseId: string) => {
+        return axiosInstance.post<DetailResponse<SyncStatusFromCiResponse>>(
+            `/release-dsp-deliveries/sync-status-from-ci/release/${releaseId}`
+        );
+    },
 };
+

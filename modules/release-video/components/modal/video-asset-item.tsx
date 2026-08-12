@@ -1,6 +1,7 @@
 import axiosInstance from '@/api/axios-auth';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
+import { formatFileSize2 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
@@ -8,7 +9,7 @@ import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
 import { VideoCameraOutlined } from '@ant-design/icons';
-import { Button, FormInstance, Modal, Space, Upload } from 'antd';
+import { Button, FormInstance, Modal, Space, Tag, Upload } from 'antd';
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -280,13 +281,21 @@ export default function VideoAssetItem({
     };
 
     const fileList = form.getFieldValue('videoFile')?.fileList || [];
+    const fileSize = dataEdit?.video?.videoFile?.fileSize;
 
     return (
         <div className="mb-5">
-            <Space className="text-xs font-bold">
-                <span>{messages('releaseVideo.fields.videoFile')}</span>
-                <span className="text-red-500">*</span>
-            </Space>
+            <div className="mb-1 flex w-full justify-between">
+                <Space className="text-xs font-bold">
+                    <span>{messages('releaseVideo.fields.videoFile')}</span>
+                    <span className="text-red-500">*</span>
+                </Space>
+                {fileSize ? (
+                    <Tag color="blue" bordered={false}>
+                        {formatFileSize2(fileSize)}
+                    </Tag>
+                ) : null}
+            </div>
 
             <AppFormItem
                 name="videoFile"

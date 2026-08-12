@@ -4,10 +4,11 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { DATE_FORMAT } from '@/enums/common';
 import {
     convertSecondsToHoursMinutes,
+    formatFileSize2,
     timeStringToSeconds,
 } from '@/helpers/common';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Input, TimePicker } from 'antd';
 import { NamePath } from 'antd/es/form/interface';
@@ -279,7 +280,7 @@ export default function AudioSpecSection({
                     {/* Audio file info table */}
                     {trackData.audioFile && (
                         <div className="col-span-2 mt-6 overflow-hidden rounded-md border">
-                            <div className="grid grid-cols-4 gap-4 p-4 text-sm">
+                            <div className="grid grid-cols-5 gap-4 p-4 text-sm">
                                 <div>
                                     <p className="font-bold">Bit Depth</p>
                                     <p>{trackData.audioFile.bitDepth ?? '-'}</p>
@@ -301,6 +302,15 @@ export default function AudioSpecSection({
                                         {trackData.audioFile.sampleRate ?? '-'}
                                     </p>
                                 </div>
+                                <div>
+                                    <p className="font-bold">File Size</p>
+                                    <p>
+                                        {formatFileSize2(
+                                            trackData.audioFile?.file
+                                                ?.fileSize ?? 0
+                                        )}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -309,4 +319,3 @@ export default function AudioSpecSection({
         </ConfigProvider>
     );
 }
-

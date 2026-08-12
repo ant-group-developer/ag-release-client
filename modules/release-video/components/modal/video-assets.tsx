@@ -63,9 +63,9 @@ export default function VideoAssets({
 
             <div>
                 <div className="mt-6 border-t border-gray-100 pt-6">
-                    <h3 className="mb-4 text-base font-bold tracking-wide">
+                    {/* <h3 className="mb-4 text-base font-bold tracking-wide">
                         {messages('releaseVideo.fields.assets')}
-                    </h3>
+                    </h3> */}
 
                     {/* Asset: Video file */}
                     <VideoAssetItem

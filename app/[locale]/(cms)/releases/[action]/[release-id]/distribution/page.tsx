@@ -23,6 +23,7 @@ import { releaseDspQueryKey } from '@/modules/release-dsp/constants/query-keys';
 import { RELEASE_DSP_TABLE_KEY } from '@/modules/release-dsp/enums';
 import { useBulkUpdateReleaseDsp } from '@/modules/release-dsp/hooks/use-bulk-update';
 import { useGetListReleaseDsp } from '@/modules/release-dsp/hooks/use-get-list-release-dsp';
+import { useSyncStatusFromCi } from '@/modules/release-dsp/hooks/use-sync-status-from-ci';
 import {
     ReleaseDspData,
     ReleaseDspDataFilter,
@@ -33,11 +34,13 @@ import { TYPE_MODAL_RELEASE_DISTRIBUTION } from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useQueryClient } from '@tanstack/react-query';
-import { theme } from 'antd';
+import { Button, theme } from 'antd';
 import { debounce } from 'lodash';
+import { RefreshCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 type Props = {};
+
 
 export default function Distribution({}: Props) {
     // const messages = useTranslations();
@@ -80,12 +83,25 @@ export default function Distribution({}: Props) {
     } = useGetListReleaseDsp(formValues?.id ?? '', dataFilter);
 
     const { distributeRelease } = useDistributeRelease();
+    const { syncStatusFromCi, isPending: isSyncingStatus } =
+        useSyncStatusFromCi();
 
     const { token } = theme.useToken();
 
     const { isDark } = useThemeMode();
     const messages = useTranslations();
     const queryClient = useQueryClient();
+
+    const handleSyncStatus = () => {
+        if (!formValues?.id) return;
+        const promise = syncStatusFromCi({
+            releaseId: formValues.id,
+        });
+        toastPromise(promise, messages, {
+            pending: messages('common.loading'),
+        });
+    };
+
 
     const handleDistribution = () => {
         closeModal();
@@ -209,7 +225,20 @@ export default function Distribution({}: Props) {
                         dataSource={releaseDsp?.items}
                         // scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}
-                        tableAlertOptionRender={isReadMode ? false : undefined}
+                        tableAlertOptionRender={() => (
+                            <Button
+                                type="primary"
+                                icon={
+                                    <RefreshCw
+                                        className={`size-4 ${isSyncingStatus ? 'animate-spin' : ''}`}
+                                    />
+                                }
+                                loading={isSyncingStatus}
+                                onClick={handleSyncStatus}
+                            >
+                                {messages('common.syncData')}
+                            </Button>
+                        )}
                         size="large"
                         rowKey={(record) => record.dsp?.id}
                         pagination={{
@@ -222,6 +251,7 @@ export default function Distribution({}: Props) {
                         dataFilter={dataFilter}
                     />
                 </div>
+
             </div>
 
             <AppPagination
