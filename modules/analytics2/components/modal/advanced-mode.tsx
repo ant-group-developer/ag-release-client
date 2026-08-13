@@ -5,11 +5,11 @@ import FullScreenModal, {
 } from '@/components/ui/modal/fullScreenModal';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { Button, Typography } from 'antd';
+import { Button, Grid, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -37,6 +37,7 @@ export default function AdvancedModeModal({
     ...props
 }: AdvancedModeModalProps) {
     const messages = useTranslations();
+    const screens = Grid.useBreakpoint();
 
     const {
         entity,
@@ -51,6 +52,16 @@ export default function AdvancedModeModal({
     } = useAdvancedModeModal();
 
     const [showSidebar, setShowSidebar] = useState(true);
+
+    useEffect(() => {
+        if (props.open) {
+            if (screens.md === false) {
+                setShowSidebar(false);
+            } else if (screens.md === true) {
+                setShowSidebar(true);
+            }
+        }
+    }, [props.open, screens.md]);
 
     const effectiveFromDate =
         fromDate || dayjs().subtract(27, 'day').format('YYYY-MM-DD');
@@ -93,16 +104,19 @@ export default function AdvancedModeModal({
     const handleSelectEntity = (item?: ContentItem) => {
         if (!item || (!item.id && !item.entitySubId)) {
             setEntity({ type: entity.type });
-            return;
+        } else {
+            setEntity({
+                type: (item.type || entity.type) as ActiveAnalyticsEntity['type'],
+                id: item.id,
+                entitySubId: item.entitySubId,
+                title: item.title,
+                thumbnail: item.thumbnailUrl,
+            });
         }
 
-        setEntity({
-            type: (item.type || entity.type) as ActiveAnalyticsEntity['type'],
-            id: item.id,
-            entitySubId: item.entitySubId,
-            title: item.title,
-            thumbnail: item.thumbnailUrl,
-        });
+        if (screens.md === false) {
+            setShowSidebar(false);
+        }
     };
 
     const currentSelectedItem = useMemo<ContentItem | undefined>(() => {
@@ -182,15 +196,26 @@ export default function AdvancedModeModal({
             }
             width="100%"
         >
-            <div className="flex h-[calc(100vh-57px)] w-full overflow-hidden">
+            <div className="relative flex h-[calc(100vh-57px)] w-full overflow-hidden">
+                {/* Backdrop overlay for mobile screen */}
+                {showSidebar && screens.md === false && (
+                    <div
+                        className="absolute inset-0 z-20 bg-black/40 backdrop-blur-xs md:hidden"
+                        onClick={() => setShowSidebar(false)}
+                    />
+                )}
+
                 {/* Menu / Controls Sidebar Wrapper */}
                 <div
                     className={cn(
                         'shrink-0 overflow-hidden transition-all duration-300 ease-in-out',
-                        showSidebar ? 'w-[350px] opacity-100' : 'w-0 opacity-0'
+                        'absolute inset-y-0 left-0 z-30 bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 shadow-xl md:relative md:z-auto md:bg-transparent md:border-r-0 md:shadow-none',
+                        showSidebar
+                            ? 'w-[320px] max-w-[85vw] md:w-[350px] opacity-100'
+                            : 'w-0 opacity-0 pointer-events-none md:pointer-events-auto'
                     )}
                 >
-                    <div className="h-full w-[350px] overflow-y-auto">
+                    <div className="h-full w-[320px] max-w-[85vw] md:w-[350px] overflow-y-auto">
                         <ControlsSidebar
                             fromDate={effectiveFromDate}
                             toDate={effectiveToDate}

@@ -25,7 +25,7 @@ function AppPagination({
         const totalItems = formattedNumber(total, locale, false);
 
         return (
-            <p>
+            <p className="whitespace-nowrap">
                 <span className="font-semibold">
                     {offset}-{limit}
                 </span>{' '}
@@ -40,7 +40,7 @@ function AppPagination({
             hideOnSinglePage
             showSizeChanger={false}
             className={cn(
-                'rounded-b-lg !px-5 !py-3 text-center',
+                'max-w-full flex-wrap gap-y-2 overflow-x-auto rounded-b-lg !px-5 !py-3 text-center [&>.ant-pagination-total-text]:whitespace-nowrap',
                 {
                     'text-right': showTotalText,
                 },

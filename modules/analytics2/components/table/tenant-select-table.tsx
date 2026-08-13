@@ -26,6 +26,7 @@ export default function TenantSelectTable({
             title: messages('tenant.name'),
             dataIndex: 'name',
             key: 'name',
+            minWidth: 160,
             render: (name: string, record: any) => (
                 <div className="inline-flex items-center gap-2 align-middle overflow-hidden">
                     <Avatar
@@ -50,6 +51,7 @@ export default function TenantSelectTable({
             title: messages('tenant.owner'),
             dataIndex: 'ownerEmail',
             key: 'ownerEmail',
+            minWidth: 150,
             render: (_: any, record: any) => {
                 const ownerEmail = getTenantOwnerEmail(record.tenantUser);
                 return (
@@ -66,6 +68,7 @@ export default function TenantSelectTable({
             title: messages('tenant.type.title'),
             dataIndex: 'type',
             key: 'type',
+            minWidth: 120,
             render: (_: any, record: any) =>
                 record.type ? <TenantTag type={record.type} /> : '-',
         },
@@ -79,6 +82,7 @@ export default function TenantSelectTable({
                 columns={columns}
                 size="small"
                 pagination={false}
+                scroll={{ x: 'max-content' }}
             />
         );
     }
@@ -89,7 +93,7 @@ export default function TenantSelectTable({
             columns={columns}
             rowKey="id"
             pagination={false}
-            scroll={{ y: DEFAULT_TABLE_SCROLL_Y }}
+            scroll={{ x: 'max-content', y: DEFAULT_TABLE_SCROLL_Y }}
             defaultExpandAllRows={true}
             rowSelection={{
                 type: 'checkbox',
