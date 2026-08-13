@@ -1,6 +1,5 @@
 'use client';
 
-import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import {
     PAGE_SIZE_DEFAULT,
@@ -8,9 +7,9 @@ import {
     PAGE_SIZE_OPTIONS,
 } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import ArtistRevenueTable from '@/modules/analytics2/components/table/artist-revenue-table';
 import ArtistViewsTable from '@/modules/analytics2/components/table/artist-views-table';
-import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode/content-entity-selector';
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
@@ -31,6 +30,7 @@ import { useGetRevenueTopArtist } from '@/modules/analytics2/hooks/use-get-reven
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { CommonParams } from '@/types/api';
 import { Card, Segmented } from 'antd';
+import RankingTableFilter from './ranking-table-filter';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -183,20 +183,14 @@ export default function ArtistRankingTableCard({
         });
     };
 
-    const toolbarConfig = {
-        search: (
-            <AppSearch
-                onChange={onSearch}
-                defaultValue={dataFilter.keyword}
-                style={{ width: 200 }}
-            />
-        ),
-        actions: [
-            <Segmented
-                key="releaseType"
-                value={selectedReleaseType}
-                onChange={(value) => {
-                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+    return (
+        <Card className={className}>
+            <RankingTableFilter
+                keyword={dataFilter.keyword}
+                onSearch={onSearch}
+                showReleaseType
+                releaseType={selectedReleaseType}
+                onReleaseTypeChange={(selectedType) => {
                     setSelectedReleaseType(selectedType);
                     onChangeFilter({
                         releaseType:
@@ -205,30 +199,13 @@ export default function ArtistRankingTableCard({
                                 : selectedType,
                     });
                 }}
-                options={[
-                    {
-                        label: messages('common.all'),
-                        value: ANALYTICS_RELEASE_TYPE.ALL,
-                    },
-                    {
-                        label: messages('common.audio'),
-                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                    },
-                    {
-                        label: messages('common.video'),
-                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                    },
-                ]}
-            />,
-            <Segmented
-                key="metricType"
-                value={
+                showMetricType
+                metricType={
                     isRevenue
                         ? ANALYTICS_VIEW_TYPE.REVENUE
                         : ANALYTICS_VIEW_TYPE.VIEW
                 }
-                onChange={(value) => {
-                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                onMetricTypeChange={(nextType) => {
                     setCurrentType(nextType);
                     if (onMetricChange) {
                         onMetricChange(
@@ -240,25 +217,9 @@ export default function ArtistRankingTableCard({
                     }
                     onChangeFilter({ type: nextType });
                 }}
-                options={[
-                    {
-                        label: messages('common.views'),
-                        value: ANALYTICS_VIEW_TYPE.VIEW,
-                    },
-                    {
-                        label: messages('common.revenue'),
-                        value: ANALYTICS_VIEW_TYPE.REVENUE,
-                    },
-                ]}
-            />,
-        ],
-    };
-
-    return (
-        <Card className={className}>
+            />
             {isRevenue ? (
                 <ArtistRevenueTable
-                    toolbar={toolbarConfig}
                     dataSource={topArtistData.items}
                     loading={isFetching}
                     dspData={dspData}
@@ -267,7 +228,6 @@ export default function ArtistRankingTableCard({
                 />
             ) : (
                 <ArtistViewsTable
-                    toolbar={toolbarConfig}
                     dataSource={artistRankingData.items}
                     loading={isFetching}
                     dspData={dspData}
@@ -294,4 +254,3 @@ export default function ArtistRankingTableCard({
         </Card>
     );
 }
-

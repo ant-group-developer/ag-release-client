@@ -1,7 +1,6 @@
 'use client';
 
 import ImageFallback from '@/components/ui/image/image-fallback';
-import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -37,10 +36,11 @@ import {
 import TenantTag from '@/modules/tenant/components/tenant-tag';
 import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { CommonParams } from '@/types/api';
-import { Card, Segmented, Table, Tag, Typography } from 'antd';
+import { Card, Grid, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import RankingTableFilter from './ranking-table-filter';
 
 const DEFAULT_PAGE = 1;
 
@@ -79,6 +79,11 @@ export default function TenantRankingTableCard({
     paramPrefix,
 }: TenantRankingTableCardProps) {
     const messages = useTranslations();
+
+    const screens = Grid.useBreakpoint();
+    const isMobile = screens.md === false;
+    const fixedLeft = isMobile ? undefined : 'left';
+    const fixedRight = isMobile ? undefined : 'right';
 
     const effectiveFromDate = fromDate || ANALYTICS_DEFAULT_START_DATE;
     const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
@@ -192,7 +197,7 @@ export default function TenantRankingTableCard({
             key: 'rank',
             width: 100,
             align: 'center' as const,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (rank: number) => (
                 <Typography.Text className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -205,7 +210,7 @@ export default function TenantRankingTableCard({
             key: 'tenantName',
             width: 250,
             ellipsis: true,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (text: string, record: RevenueTenantItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -289,7 +294,7 @@ export default function TenantRankingTableCard({
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
-            fixed: 'right',
+            fixed: fixedRight,
             render: (qty: number) => (
                 <Typography.Text type="secondary">
                     {qty ? qty.toLocaleString() : 0}
@@ -301,7 +306,7 @@ export default function TenantRankingTableCard({
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 180,
-            fixed: 'right',
+            fixed: fixedRight,
             render: (val: number) => (
                 <Typography.Text>
                     ${val ? formattedNumber(val) : '0.00'}
@@ -317,7 +322,7 @@ export default function TenantRankingTableCard({
             key: 'rank',
             width: 100,
             align: 'center' as const,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (rank: number) => (
                 <Typography.Text className="text-gray-700 dark:text-zinc-300">
                     #{rank}
@@ -330,7 +335,7 @@ export default function TenantRankingTableCard({
             key: 'tenantName',
             width: 250,
             ellipsis: true,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (text: string, record: TenantRankingItem) => (
                 <div className="flex items-center gap-3">
                     <ImageFallback
@@ -414,7 +419,7 @@ export default function TenantRankingTableCard({
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,
-            fixed: 'right',
+            fixed: fixedRight,
             render: (views: number) => (
                 <Typography.Text>
                     {views ? views.toLocaleString() : 0}
@@ -426,76 +431,42 @@ export default function TenantRankingTableCard({
     return (
         <>
             <Card className={className}>
-                <div className="mb-4 flex items-center gap-2">
-                    <AppSearch
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                        style={{ width: 200 }}
-                    />
-                    <Segmented
-                        value={selectedReleaseType}
-                        onChange={(value) => {
-                            const selectedType =
-                                value as ANALYTICS_RELEASE_TYPE;
-                            setSelectedReleaseType(selectedType);
-                            onChangeFilter({
-                                releaseType:
-                                    selectedType === ANALYTICS_RELEASE_TYPE.ALL
-                                        ? undefined
-                                        : selectedType,
-                            });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.all'),
-                                value: ANALYTICS_RELEASE_TYPE.ALL,
-                            },
-                            {
-                                label: messages('common.audio'),
-                                value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                            },
-                            {
-                                label: messages('common.video'),
-                                value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                            },
-                        ]}
-                    />
-                    <Segmented
-                        value={
-                            isRevenue
-                                ? ANALYTICS_VIEW_TYPE.REVENUE
-                                : ANALYTICS_VIEW_TYPE.VIEW
+                <RankingTableFilter
+                    keyword={dataFilter.keyword}
+                    onSearch={onSearch}
+                    showReleaseType
+                    releaseType={selectedReleaseType}
+                    onReleaseTypeChange={(selectedType) => {
+                        setSelectedReleaseType(selectedType);
+                        onChangeFilter({
+                            releaseType:
+                                selectedType === ANALYTICS_RELEASE_TYPE.ALL
+                                    ? undefined
+                                    : selectedType,
+                        });
+                    }}
+                    showMetricType
+                    metricType={
+                        isRevenue
+                            ? ANALYTICS_VIEW_TYPE.REVENUE
+                            : ANALYTICS_VIEW_TYPE.VIEW
+                    }
+                    onMetricTypeChange={(nextType) => {
+                        setCurrentType(nextType);
+                        if (onMetricChange) {
+                            onMetricChange(
+                                nextType === ANALYTICS_VIEW_TYPE.VIEW
+                                    ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+                                    : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+                            );
+                            return;
                         }
-                        onChange={(value) => {
-                            const nextType = value as ANALYTICS_VIEW_TYPE;
-                            setCurrentType(nextType);
-                            // The metric owns the view type when it is
-                            // controlled; writing both params would race two
-                            // URL updates built from the same stale snapshot.
-                            if (onMetricChange) {
-                                onMetricChange(
-                                    nextType === ANALYTICS_VIEW_TYPE.VIEW
-                                        ? ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-                                        : ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
-                                );
-                                return;
-                            }
-                            onChangeFilter({ type: nextType });
-                        }}
-                        options={[
-                            {
-                                label: messages('common.views'),
-                                value: ANALYTICS_VIEW_TYPE.VIEW,
-                            },
-                            {
-                                label: messages('common.revenue'),
-                                value: ANALYTICS_VIEW_TYPE.REVENUE,
-                            },
-                        ]}
-                    />
-                </div>
+                        onChangeFilter({ type: nextType });
+                    }}
+                />
                 {isRevenue ? (
                     <Table<RevenueTenantItem>
+                        key={isMobile ? 'mobile' : 'desktop'}
                         sticky
                         size="small"
                         columns={revenueColumns}
@@ -507,6 +478,7 @@ export default function TenantRankingTableCard({
                     />
                 ) : (
                     <Table<TenantRankingItem>
+                        key={isMobile ? 'mobile' : 'desktop'}
                         sticky
                         size="small"
                         columns={viewsColumns}
