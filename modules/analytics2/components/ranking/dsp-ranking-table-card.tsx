@@ -1,10 +1,8 @@
 'use client';
 
-import AppSearch from '@/components/ui/input/search';
 import AppPagination from '@/components/ui/pagination';
 import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
@@ -34,10 +32,10 @@ import {
 } from '@/modules/analytics2/types';
 import { CommonParams } from '@/types/api';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Card, Segmented, Tag, Typography } from 'antd';
-import { Columns3 } from 'lucide-react';
+import { Card, Grid, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import RankingTableFilter from './ranking-table-filter';
 
 const DEFAULT_PAGE = 1;
 
@@ -80,6 +78,11 @@ export default function DspRankingTableCard({
     paramPrefix,
 }: DspRankingTableCardProps) {
     const messages = useTranslations();
+
+    const screens = Grid.useBreakpoint();
+    const isMobile = screens.md === false;
+    const fixedLeft = isMobile ? undefined : 'left';
+    const fixedRight = isMobile ? undefined : 'right';
 
     const effectiveFromDate = fromDate || ANALYTICS_DEFAULT_START_DATE;
     const effectiveToDate = toDate || ANALYTICS_DEFAULT_END_DATE;
@@ -191,7 +194,7 @@ export default function DspRankingTableCard({
             key: 'rank',
             width: 100,
             align: 'center' as const,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (_, record) => (
                 <Typography.Text type="secondary">
                     #{record.rank}
@@ -204,7 +207,7 @@ export default function DspRankingTableCard({
             key: 'sourceLabel',
             width: 250,
             ellipsis: true,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (_, record) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <Typography.Text
@@ -263,7 +266,7 @@ export default function DspRankingTableCard({
             dataIndex: 'quantity',
             key: 'quantity',
             width: 150,
-            fixed: 'right',
+            fixed: fixedRight,
             render: (_, record) => (
                 <Typography.Text type="secondary">
                     {record.quantity ? record.quantity.toLocaleString() : 0}
@@ -275,7 +278,7 @@ export default function DspRankingTableCard({
             dataIndex: 'revenueUsd',
             key: 'revenueUsd',
             width: 180,
-            fixed: 'right',
+            fixed: fixedRight,
             render: (_, record) => (
                 <Typography.Text>
                     $
@@ -294,7 +297,7 @@ export default function DspRankingTableCard({
             key: 'rank',
             width: 100,
             align: 'center' as const,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (_, record) => (
                 <Typography.Text type="secondary">
                     #{record.rank}
@@ -307,7 +310,7 @@ export default function DspRankingTableCard({
             key: 'sourceLabel',
             width: 250,
             ellipsis: true,
-            fixed: 'left',
+            fixed: fixedLeft,
             render: (_, record) => (
                 <CustomTooltip title={messages('common.detailedAnalysis')}>
                     <Typography.Text
@@ -366,7 +369,7 @@ export default function DspRankingTableCard({
             dataIndex: 'totalViews',
             key: 'totalViews',
             width: 180,
-            fixed: 'right',
+            fixed: fixedRight,
             render: (_, record) => (
                 <Typography.Text>
                     {record.totalViews ? record.totalViews.toLocaleString() : 0}
@@ -375,20 +378,14 @@ export default function DspRankingTableCard({
         },
     ];
 
-    const toolbarConfig = {
-        search: (
-            <AppSearch
-                onChange={onSearch}
-                defaultValue={dataFilter.keyword}
-                style={{ width: 200 }}
-            />
-        ),
-        actions: [
-            <Segmented
-                key="releaseType"
-                value={selectedReleaseType}
-                onChange={(value) => {
-                    const selectedType = value as ANALYTICS_RELEASE_TYPE;
+    return (
+        <Card className={className}>
+            <RankingTableFilter
+                keyword={dataFilter.keyword}
+                onSearch={onSearch}
+                showReleaseType
+                releaseType={selectedReleaseType}
+                onReleaseTypeChange={(selectedType) => {
                     setSelectedReleaseType(selectedType);
                     onChangeFilter({
                         releaseType:
@@ -397,30 +394,13 @@ export default function DspRankingTableCard({
                                 : selectedType,
                     });
                 }}
-                options={[
-                    {
-                        label: messages('common.all'),
-                        value: ANALYTICS_RELEASE_TYPE.ALL,
-                    },
-                    {
-                        label: messages('common.audio'),
-                        value: ANALYTICS_RELEASE_TYPE.AUDIO,
-                    },
-                    {
-                        label: messages('common.video'),
-                        value: ANALYTICS_RELEASE_TYPE.VIDEO,
-                    },
-                ]}
-            />,
-            <Segmented
-                key="metricType"
-                value={
+                showMetricType
+                metricType={
                     isRevenue
                         ? ANALYTICS_VIEW_TYPE.REVENUE
                         : ANALYTICS_VIEW_TYPE.VIEW
                 }
-                onChange={(value) => {
-                    const nextType = value as ANALYTICS_VIEW_TYPE;
+                onMetricTypeChange={(nextType) => {
                     setCurrentType(nextType);
                     if (onMetricChange) {
                         onMetricChange(
@@ -432,26 +412,11 @@ export default function DspRankingTableCard({
                     }
                     onChangeFilter({ type: nextType });
                 }}
-                options={[
-                    {
-                        label: messages('common.views'),
-                        value: ANALYTICS_VIEW_TYPE.VIEW,
-                    },
-                    {
-                        label: messages('common.revenue'),
-                        value: ANALYTICS_VIEW_TYPE.REVENUE,
-                    },
-                ]}
-            />,
-        ],
-    };
-
-    return (
-        <Card className={className}>
+            />
             {isRevenue ? (
                 <AppProTable<RevenueDspItem & { rank: number }>
-                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
-                    toolbar={toolbarConfig}
+                    key={isMobile ? 'mobile' : 'desktop'}
+                    options={false}
                     sticky
                     size="small"
                     columns={revenueColumns}
@@ -460,20 +425,12 @@ export default function DspRankingTableCard({
                     rowKey="source"
                     pagination={false}
                     search={false}
-                    options={{
-                        setting: {
-                            settingIcon: <Columns3 size={SIZE_ICON} />,
-                        },
-                        density: false,
-                        fullScreen: false,
-                        reload: false,
-                    }}
                     scroll={{ x: SCREEN.LG }}
                 />
             ) : (
                 <AppProTable<DspRankingItem & { rank: number }>
-                    className="[&_.ant-pro-table-list-toolbar-container]:!px-0 [&_.ant-pro-table-list-toolbar-container]:!pt-0"
-                    toolbar={toolbarConfig}
+                    key={isMobile ? 'mobile' : 'desktop'}
+                    options={false}
                     sticky
                     size="small"
                     columns={viewsColumns}
@@ -482,14 +439,6 @@ export default function DspRankingTableCard({
                     rowKey="source"
                     pagination={false}
                     search={false}
-                    options={{
-                        setting: {
-                            settingIcon: <Columns3 size={SIZE_ICON} />,
-                        },
-                        density: false,
-                        fullScreen: false,
-                        reload: false,
-                    }}
                     scroll={{ x: SCREEN.LG }}
                 />
             )}

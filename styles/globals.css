@@ -112,6 +112,7 @@ body {
     @apply !max-w-full;
     @apply !top-0;
     @apply !pb-0;
+    @apply !m-0;
 }
 
 .full-screen-modal .ant-modal-content {

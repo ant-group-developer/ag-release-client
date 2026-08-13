@@ -34,9 +34,9 @@ export default function AnalyticsOverviewChart({
         setViewType(defaultBarChartType);
     }, [defaultBarChartType]);
 
-    const isRevenueMetric =
-        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
-        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
+    // const isRevenueMetric =
+    //     activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
+    //     activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
     const isUsage = activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE;
     const isRevenueUsd =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
@@ -90,10 +90,10 @@ export default function AnalyticsOverviewChart({
                     lineName={lineName}
                     loading={isLineChartLoading}
                     chartHeight={250}
-                    className="!rounded-none !border-0 !border-r !shadow-none"
+                    className="!rounded-none !border-0 lg:!border-r !shadow-none"
                 />
             </Col>
-            <Col xs={24} lg={8}>
+            <Col xs={0} lg={8} className="hidden lg:block">
                 <PieChartView
                     title={
                         showSegment ? (

@@ -1,7 +1,7 @@
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { ANALYTICS_RELEASE_TYPE } from '@/modules/analytics2/enums';
 import { DownloadOutlined } from '@ant-design/icons';
-import { Button, Radio, Space } from 'antd';
+import { Button, Flex, Radio } from 'antd';
 import { useTranslations } from 'next-intl';
 
 export type AnalyticsExtraHeaderProps = {
@@ -24,8 +24,17 @@ export default function AnalyticsExtraHeader({
     const messages = useTranslations();
 
     return (
-        <Space>
-            <Button icon={<DownloadOutlined />} onClick={onExportClick}>
+        <Flex
+            wrap
+            gap="small"
+            align="center"
+            className="w-full sm:w-auto justify-start sm:justify-end"
+        >
+            <Button
+                icon={<DownloadOutlined />}
+                onClick={onExportClick}
+                className="!w-full sm:!w-auto"
+            >
                 {messages('common.exportReport')}
             </Button>
             <Radio.Group
@@ -51,9 +60,10 @@ export default function AnalyticsExtraHeader({
                         value: ANALYTICS_RELEASE_TYPE.VIDEO,
                     },
                 ]}
+                className="!w-full sm:!w-auto !flex [&>label]:!flex-1 [&>label]:!text-center [&>label]:!inline-flex [&>label]:!justify-center [&>label]:!items-center sm:[&>label]:!flex-none"
             />
             <DateSelect2
-                style={{ width: 240 }}
+                className="!w-full sm:!w-[240px]"
                 value={`${fromDate},${toDate}`}
                 onChange={(value) => {
                     const [startDate, endDate] = value.toString().split(',');
@@ -62,6 +72,6 @@ export default function AnalyticsExtraHeader({
                 }}
                 picker="date"
             />
-        </Space>
+        </Flex>
     );
 }

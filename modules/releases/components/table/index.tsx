@@ -330,6 +330,9 @@ export default function ReleasesTable({
             fixed: 'right',
             render: (_, record) => {
                 const status = record?.status;
+                const isFailed = record?.status === RELEASES_STATUS.FAILED;
+                const isDistributed =
+                    record?.status === RELEASES_STATUS.DISTRIBUTED;
                 return (
                     <div onClick={(e) => e.stopPropagation()}>
                         <ActionButton
@@ -373,11 +376,9 @@ export default function ReleasesTable({
                                         </div>
                                     ),
                                     show:
-                                        (status ==
-                                            RELEASES_STATUS.DISTRIBUTED &&
+                                        ((isDistributed || isFailed) &&
                                             canTakedown) ||
-                                        (status ==
-                                            RELEASES_STATUS.DISTRIBUTED &&
+                                        ((isDistributed || isFailed) &&
                                             isAdmin),
                                     danger: true,
                                     onClick: () => {

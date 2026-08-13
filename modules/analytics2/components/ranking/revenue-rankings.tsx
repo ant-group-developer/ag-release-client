@@ -1,5 +1,6 @@
 'use client';
 
+import { usePermission } from '@/hooks/use-permission';
 import { Col, Row } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -34,6 +35,7 @@ export default function RevenueRankings({
     releaseType,
     sortBy,
 }: Props) {
+    const { isAdmin } = usePermission();
     const messages = useTranslations();
     const topN = 5;
     const {
@@ -396,37 +398,40 @@ export default function RevenueRankings({
                         }
                     />
                 </Col>
-                <Col span={12} xs={24} lg={12}>
-                    <RankingCard
-                        title={topRankingTitle(
-                            messages('analytics2.distributors')
-                        )}
-                        columns={sourceTypeColumns}
-                        dataSource={sourceTypeDataWithRank}
-                        loading={isSourceTypesLoading}
-                        rowKey="sourceType"
-                        labelKey="sourceTypeLabel"
-                        valueKey="revenueUsd"
-                        defaultView={RankingCardView.LIST}
-                        // viewMoreHref={createViewMoreHref(
-                        //     APP_ROUTES.ANALYTICS_SOURCE_TYPES,
-                        //     {
-                        //         fromDate,
-                        //         toDate,
-                        //         type: ANALYTICS_VIEW_TYPE.REVENUE,
-                        //         releaseType,
-                        //         sortBy,
-                        //     }
-                        // )}
-                        onViewMore={() =>
-                            openAdvancedMode({
-                                fromDate,
-                                toDate,
-                                entityType: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
-                            })
-                        }
-                    />
-                </Col>
+                {isAdmin && (
+                    <Col span={12} xs={24} lg={12}>
+                        <RankingCard
+                            title={topRankingTitle(
+                                messages('analytics2.distributors')
+                            )}
+                            columns={sourceTypeColumns}
+                            dataSource={sourceTypeDataWithRank}
+                            loading={isSourceTypesLoading}
+                            rowKey="sourceType"
+                            labelKey="sourceTypeLabel"
+                            valueKey="revenueUsd"
+                            defaultView={RankingCardView.LIST}
+                            // viewMoreHref={createViewMoreHref(
+                            //     APP_ROUTES.ANALYTICS_SOURCE_TYPES,
+                            //     {
+                            //         fromDate,
+                            //         toDate,
+                            //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                            //         releaseType,
+                            //         sortBy,
+                            //     }
+                            // )}
+                            onViewMore={() =>
+                                openAdvancedMode({
+                                    fromDate,
+                                    toDate,
+                                    entityType:
+                                        ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                                })
+                            }
+                        />
+                    </Col>
+                )}
                 {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
                     <Col span={12} xs={24} lg={12}>
                         <RankingCard
