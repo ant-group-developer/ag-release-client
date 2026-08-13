@@ -153,7 +153,8 @@ export default function ExportReportModal({
             open={open}
             onCancel={handleClose}
             destroyOnHidden
-            width={'50vw'}
+            width={600}
+            style={{ maxWidth: 'calc(100vw - 24px)' }}
             footer={[
                 <Button
                     key="cancel"
@@ -222,7 +223,7 @@ export default function ExportReportModal({
                                 },
                             ]}
                         >
-                            <Radio.Group>
+                            <Radio.Group className="flex flex-wrap gap-2">
                                 <Radio value={PERIOD_TYPE.NONE}>
                                     {messages('analytics.splitMode.none')}
                                 </Radio>
