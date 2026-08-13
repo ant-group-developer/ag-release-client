@@ -1,6 +1,7 @@
 import { LOCALE } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { Pagination, PaginationProps, theme } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -11,14 +12,17 @@ type AppPaginationProps = {
 function AppPagination({
     className,
     showTotalText,
+    size,
     ...props
 }: AppPaginationProps) {
+    const isMobile = useIsMobile();
     const locale = useLocale() as LOCALE;
     const messages = useTranslations();
     const { token } = theme.useToken();
+
     const showTotal = (total: number, range: [number, number]) => {
         if (props.showTotal) return props.showTotal(total, range);
-        if (!showTotalText) return undefined;
+        if (!showTotalText || isMobile) return undefined;
 
         const offset = formattedNumber(range[0], locale, false);
         const limit = formattedNumber(range[1], locale, false);
@@ -39,10 +43,11 @@ function AppPagination({
         <Pagination
             hideOnSinglePage
             showSizeChanger={false}
+            size={isMobile ? 'small' : size}
             className={cn(
-                'max-w-full flex-wrap gap-y-2 overflow-x-auto rounded-b-lg !px-5 !py-3 text-center [&>.ant-pagination-total-text]:whitespace-nowrap',
+                'max-w-full overflow-x-auto rounded-b-lg !px-3 !py-2 text-center max-sm:!flex-nowrap max-sm:!justify-center sm:!px-5 sm:!py-3 [&>.ant-pagination-total-text]:whitespace-nowrap max-sm:[&>.ant-pagination-total-text]:!hidden',
                 {
-                    'text-right': showTotalText,
+                    'text-right': showTotalText && !isMobile,
                 },
                 className
             )}
@@ -51,7 +56,7 @@ function AppPagination({
             }}
             {...props}
             showTotal={showTotal}
-            align="end"
+            align={isMobile ? 'center' : 'end'}
         />
     );
 }
