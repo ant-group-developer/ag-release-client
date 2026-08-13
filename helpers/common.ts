@@ -290,6 +290,23 @@ export function formatFileSize(bytes: number) {
     return `${parseFloat(mb.toFixed(2))} MB`;
 }
 
+export function formatFileSize2(
+    bytes: number | string | undefined | null,
+    decimals = 2
+): string {
+    if (bytes === undefined || bytes === null || bytes === '') return '';
+    const numBytes = Number(bytes);
+    if (isNaN(numBytes) || numBytes <= 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
+    const i = Math.floor(Math.log(numBytes) / Math.log(k));
+
+    return `${parseFloat((numBytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
 export const getColorByUploadType = (value: string) => {
     const defaultColor = 'blue';
     const colorSets: Record<string, string> = {

@@ -206,12 +206,12 @@ export const releasesApi = {
         });
     },
 
-    takedownRelease: (id: ReleasesData['id']) => {
+    takedownRelease: (id: ReleasesData['id'], code: string[]) => {
         return axiosInstance.post<DetailResponse<ReleasesData>>(
-            `/releases/${id}/takedown`
+            `/releases/${id}/takedown`,
+            { code }
         );
     },
-
     bulkSubmit: (payload: BulkSubmitRelease) => {
         return axiosInstance.post('/releases/bulk-submit', payload);
     },

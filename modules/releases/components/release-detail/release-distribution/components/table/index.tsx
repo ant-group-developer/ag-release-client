@@ -30,11 +30,13 @@ type Props = Omit<AppProTableProps<ReleaseDspData>, 'columns'> & {
         current: number;
         pageSize: number;
     };
+    showAction?: boolean;
 };
 
 export default function DistributionTable({
     dataFilter,
     pagination,
+    showAction = false,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -184,7 +186,8 @@ export default function DistributionTable({
                 className: record.isActive === false ? '!bg-zinc-50' : '',
             }),
             render: (value, record) => {
-                if (!isEditMode || record?.isActive === false) return;
+                if (!isEditMode || record?.isActive === false || !showAction)
+                    return;
                 return (
                     <PermissionGate
                         permission={PERMISSION.RELEASE_AUDIO.UPDATE}
