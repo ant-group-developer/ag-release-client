@@ -12,6 +12,10 @@ import DetailsTab from '@/modules/release-video/components/modal/details-tab';
 import DistributionTab from '@/modules/release-video/components/modal/distribution-tab';
 import SubmitsTab from '@/modules/release-video/components/modal/submits-tab';
 import {
+    RELEASE_AI_CONTENT,
+    RELEASE_MADE_FOR_KIDS,
+} from '@/modules/releases/enums';
+import {
     RELEASE_VIDEO_TABS,
     RELEASE_VIDEO_VISIBILITY,
 } from '@/modules/release-video/enums';
@@ -120,6 +124,9 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     : undefined,
                 video: {
                     ...dataEdit.video,
+                    madeForKids:
+                        dataEdit.video?.madeForKids ||
+                        RELEASE_MADE_FOR_KIDS.CHANNEL_DEFAULT,
                     visibility:
                         dataEdit.video?.visibility ||
                         RELEASE_VIDEO_VISIBILITY.DEFAULT,
