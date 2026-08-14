@@ -1,6 +1,7 @@
 'use client';
 
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Input, Popover, Tabs, Typography } from 'antd';
 import { ChevronDown, Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -74,6 +75,7 @@ export default function ContentEntitySelector({
     className,
 }: ContentEntitySelectorProps) {
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
 
     const getInitialTypeLabel = (type: string) => {
         const lowerType = type.toLowerCase();
@@ -171,10 +173,14 @@ export default function ContentEntitySelector({
                         label: messages('common.releasesVideo'),
                     },
                     { key: 'channels', label: messages('common.channel') },
-                    {
-                        key: 'sourceTypes',
-                        label: messages('analytics2.distributors'),
-                    },
+                    ...(isAdmin
+                        ? [
+                              {
+                                  key: 'sourceTypes',
+                                  label: messages('analytics2.distributors'),
+                              },
+                          ]
+                        : []),
                 ]}
             />
 

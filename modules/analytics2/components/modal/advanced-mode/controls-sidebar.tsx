@@ -6,6 +6,7 @@ import {
     ANALYTICS_METRIC_KEY,
 } from '@/modules/analytics2/enums';
 import { AnalyticsEntityType } from '@/modules/analytics2/types';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Radio, Select, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import ContentEntitySelector, { ContentItem } from './content-entity-selector';
@@ -36,6 +37,7 @@ export default function ControlsSidebar({
     onRankByChange,
 }: ControlsSidebarProps) {
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
 
     const showRankBy = !!selectedItem?.id;
 
@@ -65,10 +67,14 @@ export default function ControlsSidebar({
             label: messages('common.channel'),
             value: ANALYTICS_ENTITY_TYPE.CHANNEL,
         },
-        {
-            label: messages('analytics2.distributors'),
-            value: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
-        },
+        ...(isAdmin
+            ? [
+                  {
+                      label: messages('analytics2.distributors'),
+                      value: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
+                  },
+              ]
+            : []),
         {
             label: messages('common.releasesVideo'),
             value: ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
