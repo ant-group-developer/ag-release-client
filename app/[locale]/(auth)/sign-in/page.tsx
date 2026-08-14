@@ -47,13 +47,13 @@ export default function SignInPage() {
     const onFinish = async (values: FormValues) => {
         setIsLoading(true);
 
-        // const callbackUrl = `${window.location.origin}${APP_ROUTES.DASHBOARD}`;
+        const defaultCallbackUrl = `${window.location.origin}/${locale}${APP_ROUTES.DASHBOARD}`;
         try {
             const result = await signIn('credentials', {
                 email: values.email,
                 password: values.password,
                 redirect: false,
-                // callbackUrl,
+                callbackUrl: defaultCallbackUrl,
                 ...(currentDomain && currentDomain !== LOCALHOST
                     ? { currentDomain }
                     : {}),
@@ -63,7 +63,13 @@ export default function SignInPage() {
                 // handleError(result.error);
                 const newUrl = `${window.location.pathname}?error=${encodeURIComponent(result.error)}`;
                 window.history.replaceState(null, '', newUrl);
-            } else if (result?.ok && result?.url) {
+            } else if (result?.ok) {
+                window.history.replaceState(null, '', window.location.pathname);
+                const fallbackUrl =
+                    result?.url && !result.url.includes(APP_ROUTES.SIGN_IN)
+                        ? result.url
+                        : defaultCallbackUrl;
+
                 try {
                     const infoRes = await authApi.getInfo();
                     const targetRoute = getFirstAccessibleRoute(
@@ -71,7 +77,7 @@ export default function SignInPage() {
                     );
                     window.location.href = `${window.location.origin}/${locale}${targetRoute}`;
                 } catch {
-                    window.location.href = result.url;
+                    window.location.href = fallbackUrl;
                 }
             }
         } catch (error: any) {
