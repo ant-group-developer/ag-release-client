@@ -1,7 +1,14 @@
-import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import TenantSelect from '@/components/ui/select/tenant-select';
+import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { InboxOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { Checkbox, Form, FormInstance, Progress, Upload } from 'antd';
+import {
+    Checkbox,
+    DatePicker,
+    Form,
+    FormInstance,
+    Progress,
+    Upload,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
@@ -59,6 +66,41 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                 <TenantSelect placeholder={messages('tenant.selectTitle')} />
             </Form.Item>
 
+            <Form.Item
+                name="effectiveDate"
+                label={messages('assetImport.scan.effectiveDate')}
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                ]}
+            >
+                <DatePicker
+                    className="w-full"
+                    format="YYYY-MM-DD"
+                    placeholder={messages('assetImport.scan.selectDate')}
+                />
+            </Form.Item>
+
+            <Form.Item
+                name="revenueEffectiveFrom"
+                label={messages('assetImport.scan.revenueEffectiveFrom')}
+                rules={[
+                    {
+                        required: true,
+                        message: messages('validation.input'),
+                    },
+                ]}
+            >
+                <DatePicker
+                    className="w-full"
+                    picker="month"
+                    format="MM/YYYY"
+                    placeholder={messages('assetImport.scan.selectMonth')}
+                />
+            </Form.Item>
+
             <Form.Item label={messages('assetImport.scan.file')} required>
                 <Form.Item
                     name="file"
@@ -103,7 +145,9 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                     <Checkbox>
                         <OptionLabel
                             label={messages('assetImport.scan.updateOwnership')}
-                            hint={messages('assetImport.scan.updateOwnershipHint')}
+                            hint={messages(
+                                'assetImport.scan.updateOwnershipHint'
+                            )}
                         />
                     </Checkbox>
                 </Form.Item>
@@ -115,8 +159,12 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                 >
                     <Checkbox>
                         <OptionLabel
-                            label={messages('assetImport.scan.overwriteMetadata')}
-                            hint={messages('assetImport.scan.overwriteMetadataHint')}
+                            label={messages(
+                                'assetImport.scan.overwriteMetadata'
+                            )}
+                            hint={messages(
+                                'assetImport.scan.overwriteMetadataHint'
+                            )}
                         />
                     </Checkbox>
                 </Form.Item>
@@ -128,21 +176,23 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                 >
                     <Checkbox>
                         <OptionLabel
-                            label={messages('assetImport.scan.createIfNotFound')}
-                            hint={messages('assetImport.scan.createIfNotFoundHint')}
+                            label={messages(
+                                'assetImport.scan.createIfNotFound'
+                            )}
+                            hint={messages(
+                                'assetImport.scan.createIfNotFoundHint'
+                            )}
                         />
                     </Checkbox>
                 </Form.Item>
                 <br />
-                <Form.Item
-                    name="fillEmptyOnly"
-                    valuePropName="checked"
-                    noStyle
-                >
+                <Form.Item name="fillEmptyOnly" valuePropName="checked" noStyle>
                     <Checkbox>
                         <OptionLabel
                             label={messages('assetImport.scan.fillEmptyOnly')}
-                            hint={messages('assetImport.scan.fillEmptyOnlyHint')}
+                            hint={messages(
+                                'assetImport.scan.fillEmptyOnlyHint'
+                            )}
                         />
                     </Checkbox>
                 </Form.Item>
@@ -154,8 +204,12 @@ export const ScanForm: React.FC<ScanFormProps> = ({
                 >
                     <Checkbox>
                         <OptionLabel
-                            label={messages('assetImport.scan.createLabelIfMissing')}
-                            hint={messages('assetImport.scan.createLabelIfMissingHint')}
+                            label={messages(
+                                'assetImport.scan.createLabelIfMissing'
+                            )}
+                            hint={messages(
+                                'assetImport.scan.createLabelIfMissingHint'
+                            )}
                         />
                     </Checkbox>
                 </Form.Item>
