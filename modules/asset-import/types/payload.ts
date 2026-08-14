@@ -2,8 +2,8 @@ import { CommonFunction } from '@/types/api';
 import {
     AssetImportAction,
     AssetImportChangeType,
-    AssetImportMatchType,
     AssetImportItemStatus,
+    AssetImportMatchType,
 } from '../enums';
 import { AssetImportBatchData } from './index';
 
@@ -31,6 +31,8 @@ export interface ScanAssetImportOptions {
 export interface ScanAssetImportPayload {
     r2Key: string;
     targetTenantId: string;
+    effectiveDate: string;
+    revenueEffectiveFrom: string;
     options?: ScanAssetImportOptions;
 }
 
