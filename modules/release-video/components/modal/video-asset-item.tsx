@@ -22,6 +22,8 @@ interface VideoAssetItemProps {
     disabled?: boolean;
 }
 
+const MAX_VIDEO_SIZE = 5 * 1024 * 1024 * 1024; // 5GB in bytes
+
 export default function VideoAssetItem({
     form,
     videoUrl,
@@ -334,6 +336,16 @@ export default function VideoAssetItem({
                             showNotification(
                                 'error',
                                 messages('releaseVideo.fields.invalidVideoFile')
+                            );
+                            return Upload.LIST_IGNORE;
+                        }
+                        if (file.size > MAX_VIDEO_SIZE) {
+                            showNotification(
+                                'error',
+                                messages(
+                                    'releaseVideo.fields.maxVideoFileSize',
+                                    { size: '5GB' }
+                                )
                             );
                             return Upload.LIST_IGNORE;
                         }
