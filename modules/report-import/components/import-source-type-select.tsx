@@ -21,6 +21,10 @@ const IMPORT_SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
         'reportConfigs.importResult.sourceTypeSpotifyR2Sync',
     [ETL_JOB_SOURCE_TYPE.SPOTIFY_EXPORT_TRIGGER]:
         'reportConfigs.importResult.sourceTypeSpotifyExportTrigger',
+    [ETL_JOB_SOURCE_TYPE.ASSET_IMPORT_SCAN]:
+        'reportConfigs.importResult.sourceTypeAssetImportScan',
+    [ETL_JOB_SOURCE_TYPE.ASSET_IMPORT_APPLY]:
+        'reportConfigs.importResult.sourceTypeAssetImportApply',
 };
 
 const IMPORT_SOURCE_TYPE_SELECT_EXCLUDED_VALUES = [

@@ -3351,6 +3351,8 @@
             "sourceTypeReportReleaseDelete": "Report release delete",
             "sourceTypeSpotifyR2Sync": "Spotify R2 sync",
             "sourceTypeSpotifyExportTrigger": "Export report Box -> R2",
+            "sourceTypeAssetImportScan": "Asset import scan",
+            "sourceTypeAssetImportApply": "Asset import apply",
             "totalRows": "Total Rows",
             "processedRows": "Processed",
             "skippedRows": "Skipped",

@@ -3342,6 +3342,8 @@
             "sourceTypeReportReleaseDelete": "Xóa phát hành báo cáo",
             "sourceTypeSpotifyR2Sync": "Đồng bộ Spotify R2",
             "sourceTypeSpotifyExportTrigger": "Xuất báo cáo Box -> R2",
+            "sourceTypeAssetImportScan": "Quét asset import",
+            "sourceTypeAssetImportApply": "Áp dụng asset import",
             "totalRows": "Tổng số dòng",
             "processedRows": "Đã xử lý",
             "skippedRows": "Bỏ qua",
