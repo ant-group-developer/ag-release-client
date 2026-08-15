@@ -1,4 +1,5 @@
 import { CommonAttribute, CommonParams } from '@/types/api';
+import { REPORT_SOURCE } from '../enums';
 
 export interface ReportConfigData extends CommonAttribute {
     sourceCode: string;
@@ -15,6 +16,10 @@ export interface ReportConfigData extends CommonAttribute {
 }
 
 export interface ReportConfigDataFilter extends CommonParams {}
+
+export interface EtlJobsDataFilter extends CommonParams {
+    reportSource?: REPORT_SOURCE;
+}
 
 export interface FtpExcludePatternData extends CommonAttribute {
     pattern: string;
