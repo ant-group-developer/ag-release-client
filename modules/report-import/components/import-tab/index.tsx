@@ -2,9 +2,10 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SyncOutlined } from '@ant-design/icons';
-import { Button, theme } from 'antd';
+import { Button, Select, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { REPORT_SOURCE } from '../../enums';
 import { useGetListEtlJobs } from '../../hooks/use-get-list-etl-jobs';
 import { EtlJobData } from '../../types/payload';
 import EtlJobsTable from './etl-jobs-table';
@@ -23,11 +24,20 @@ export default function ImportTab() {
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [reportSource, setReportSource] = useState<REPORT_SOURCE | null>(null);
 
     const { etlJobsData, isLoading, isFetching, refetch } = useGetListEtlJobs({
         page,
         pageSize,
+        ...(reportSource ? { reportSource } : {}),
     });
+
+    const reportSourceOptions = [
+        { label: messages('common.all'), value: null },
+        { label: 'Merlin', value: REPORT_SOURCE.MERLIN },
+        { label: 'Spotify', value: REPORT_SOURCE.SPOTIFY },
+        { label: 'Warner', value: REPORT_SOURCE.WARNER },
+    ];
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -68,6 +78,17 @@ export default function ImportTab() {
                                 alignItems: 'center',
                             }}
                         >
+                            <Select
+                                allowClear
+                                placeholder={messages('reportConfigs.source')}
+                                value={reportSource}
+                                onChange={(value) => {
+                                    setReportSource(value ?? null);
+                                    setPage(1);
+                                }}
+                                options={reportSourceOptions}
+                                style={{ minWidth: 140 }}
+                            />
                             <Button
                                 icon={<SyncOutlined />}
                                 onClick={() => refetch()}

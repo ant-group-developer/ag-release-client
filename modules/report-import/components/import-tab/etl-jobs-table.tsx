@@ -34,6 +34,10 @@ const SOURCE_TYPE_MESSAGE_KEYS: Record<ETL_JOB_SOURCE_TYPE, string> = {
         'reportConfigs.importResult.sourceTypeSpotifyR2Sync',
     [ETL_JOB_SOURCE_TYPE.SPOTIFY_EXPORT_TRIGGER]:
         'reportConfigs.importResult.sourceTypeSpotifyExportTrigger',
+    [ETL_JOB_SOURCE_TYPE.ASSET_IMPORT_SCAN]:
+        'reportConfigs.importResult.sourceTypeAssetImportScan',
+    [ETL_JOB_SOURCE_TYPE.ASSET_IMPORT_APPLY]:
+        'reportConfigs.importResult.sourceTypeAssetImportApply',
 };
 
 const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
@@ -46,6 +50,8 @@ const SOURCE_TYPE_TAG_COLORS: Record<ETL_JOB_SOURCE_TYPE, string> = {
     [ETL_JOB_SOURCE_TYPE.REPORT_RELEASE_DELETE]: 'red',
     [ETL_JOB_SOURCE_TYPE.SPOTIFY_R2_SYNC]: 'volcano',
     [ETL_JOB_SOURCE_TYPE.SPOTIFY_EXPORT_TRIGGER]: 'gold',
+    [ETL_JOB_SOURCE_TYPE.ASSET_IMPORT_SCAN]: 'magenta',
+    [ETL_JOB_SOURCE_TYPE.ASSET_IMPORT_APPLY]: 'lime',
 };
 
 type Props = Omit<AppTableProps<EtlJobData>, 'columns'> & {

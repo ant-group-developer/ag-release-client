@@ -13,3 +13,11 @@ export const settingQueryKeys = {
             QUERY_KEY.SETTING.GET_SETTING_PUBLIC,
         ] as const,
 };
+
+export const releaseCiStatusSyncQueryKeys = {
+    all: ['RELEASE_CI_STATUS_SYNC'] as const,
+    schedule: () => [...releaseCiStatusSyncQueryKeys.all, 'SCHEDULE'] as const,
+    update: () => [...releaseCiStatusSyncQueryKeys.all, 'UPDATE'] as const,
+    runNow: () => [...releaseCiStatusSyncQueryKeys.all, 'RUN_NOW'] as const,
+};
+

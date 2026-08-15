@@ -136,3 +136,41 @@ export interface ResendConfig {
     email: string;
     apiKey: string;
 }
+
+export interface ReleaseCiStatusSyncSchedule {
+    id: string;
+    name: string;
+    syncStatusEnabled: boolean;
+    cronExpression: string;
+    timezone: string;
+    releaseStatuses: string[];
+    batchSize: number;
+    concurrency: number;
+    isRunning: boolean;
+    runningSince: string | null;
+    runningBy: string | null;
+    lastRunAt: string | null;
+    lastFinishedAt: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface UpdateReleaseCiStatusSyncSchedulePayload {
+    syncStatusEnabled?: boolean;
+    cronExpression?: string;
+    timezone?: string;
+    releaseStatuses?: string[];
+    batchSize?: number;
+    concurrency?: number;
+}
+
+export interface ReleaseCiStatusSyncSummary {
+    scheduleId: string;
+    trigger: 'cron' | 'manual';
+    total: number;
+    succeeded: number;
+    failed: number;
+    durationMs: number;
+    stoppedBecauseDisabled: boolean;
+}
+

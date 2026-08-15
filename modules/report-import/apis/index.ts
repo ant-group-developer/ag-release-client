@@ -11,6 +11,7 @@ import {
     FtpExcludePatternDataFilter,
     ReportConfigData,
     ReportConfigDataFilter,
+    EtlJobsDataFilter,
     SyncConfigData,
     SpotifyR2SyncConfig,
     SpotifyExportSchedulerConfig,
@@ -97,7 +98,7 @@ export const reportConfigApis = {
             `/report-import/jobs/${jobId}/status`
         );
     },
-    getListEtlJobs: (params: CommonParams) => {
+    getListEtlJobs: (params: EtlJobsDataFilter) => {
         return axiosInstance.get<PaginationResponse<EtlJobData>>('/etl/jobs', {
             params,
         });

@@ -34,6 +34,28 @@ export const settingApis = {
     },
 };
 
+export const releaseCiStatusSyncApis = {
+    getSchedule: () => {
+        return axiosInstance.get<DetailResponse<import('../types').ReleaseCiStatusSyncSchedule>>(
+            '/release-ci-status-sync/schedule'
+        );
+    },
+
+    updateSchedule: (payload: import('../types').UpdateReleaseCiStatusSyncSchedulePayload) => {
+        return axiosInstance.put<DetailResponse<import('../types').ReleaseCiStatusSyncSchedule>>(
+            '/release-ci-status-sync/schedule',
+            payload
+        );
+    },
+
+    runNow: () => {
+        return axiosInstance.post<DetailResponse<import('../types').ReleaseCiStatusSyncSummary>>(
+            '/release-ci-status-sync/run-now'
+        );
+    },
+};
+
+
 export async function getSettingPublicServer() {
     try {
         const API_BASE = (process.env.API_URL ?? '').replace(/\/+$/, '');

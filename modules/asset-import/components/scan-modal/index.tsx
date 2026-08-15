@@ -6,8 +6,8 @@ import { Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { AssetImportBatchStatus, TYPE_MODAL_ASSET_IMPORT } from '../../enums';
-import { usePresignAssetImport } from '../../hooks/use-presign-asset-import';
 import { useDownloadAssetImportTemplate } from '../../hooks/use-download-template';
+import { usePresignAssetImport } from '../../hooks/use-presign-asset-import';
 import { useScanAssetImport } from '../../hooks/use-scan-asset-import';
 import { AssetImportBatchData } from '../../types';
 import {
@@ -51,10 +51,8 @@ export default function ScanAssetImportModal() {
 
     const { presignAssetImport } = usePresignAssetImport();
     const { scanAssetImport, isPending: isScanning } = useScanAssetImport();
-    const {
-        downloadAssetImportTemplate,
-        isPending: isDownloadingTemplate,
-    } = useDownloadAssetImportTemplate();
+    const { downloadAssetImportTemplate, isPending: isDownloadingTemplate } =
+        useDownloadAssetImportTemplate();
 
     const isProcessing = isUploading || isScanning;
 
@@ -76,6 +74,8 @@ export default function ScanAssetImportModal() {
 
         const {
             targetTenantId,
+            effectiveDate,
+            revenueEffectiveFrom,
             updateOwnership,
             overwriteMetadata,
             createIfNotFound,
@@ -105,6 +105,10 @@ export default function ScanAssetImportModal() {
                         payload: {
                             r2Key: presignData.r2Key,
                             targetTenantId,
+                            effectiveDate: effectiveDate.format('YYYY-MM-DD'),
+                            revenueEffectiveFrom: revenueEffectiveFrom
+                                .startOf('month')
+                                .format('YYYY-MM-DD'),
                             options: {
                                 updateOwnership,
                                 overwriteMetadata,

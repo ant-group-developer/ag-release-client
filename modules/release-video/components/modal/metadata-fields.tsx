@@ -709,10 +709,12 @@ export default function MetadataFields({
             <AppFormItem
                 name={['video', 'madeForKids']}
                 label={messages('releaseVideo.fields.isMadeForKids')}
+                initialValue={RELEASE_MADE_FOR_KIDS.CHANNEL_DEFAULT}
             >
                 <Select
+                    disabled
                     placeholder={messages('common.select')}
-                    allowClear
+                    allowClear={false}
                     options={[
                         {
                             value: RELEASE_MADE_FOR_KIDS.NO,
