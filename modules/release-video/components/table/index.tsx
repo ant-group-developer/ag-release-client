@@ -134,7 +134,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'visibility',
             dataIndex: ['video', 'visibility'],
             align: 'left',
-            width: 240,
+            width: 150,
             render: (value: RELEASE_VIDEO_VISIBILITY) => {
                 const config = {
                     [RELEASE_VIDEO_VISIBILITY.DEFAULT]: {
@@ -166,7 +166,16 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
 
                 if (!value) return '-';
 
-                return <Tag color={config.color}>{config.label}</Tag>;
+                return (
+                    <Tooltip title={config.label}>
+                        <Tag
+                            color={config.color}
+                            className="max-w-[120px] truncate"
+                        >
+                            {config.label}
+                        </Tag>
+                    </Tooltip>
+                );
             },
         },
         {
@@ -174,7 +183,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'status',
             dataIndex: 'status',
             align: 'left',
-            width: 200,
+            width: 150,
             render: (value, record) => {
                 return <ReleaseStatusTag status={record?.status} />;
             },

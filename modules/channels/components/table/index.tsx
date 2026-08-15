@@ -1,13 +1,11 @@
-import ActionButton from '@/components/ui/button/action-button';
 import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Button, Space, Switch, Tooltip, Typography, theme } from 'antd';
+import { Button, Switch, Tooltip, Typography, theme } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_CHANNELS } from '../../enums';
@@ -15,6 +13,7 @@ import { useUpdateChannel } from '../../hooks/use-update-channel';
 import { ChannelDataFilter, ChannelsData } from '../../types';
 import ChannelThumbImage from '../image/channel-thumb-image';
 import ChannelStatusTag from '../tag/channel-status-tag';
+import { ChannelActions } from './channel-actions';
 
 type Props = Omit<AppTableProps<ChannelsData>, 'columns'> & {
     pagination: {
@@ -91,48 +90,53 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     : undefined;
 
                 return (
-                    <Space className="max-w-full">
+                    <div className="flex items-center gap-3 pr-2">
                         <ChannelThumbImage
                             thumbUrl={record.thumbUrl}
                             name={record.name}
                         />
-                        <div className="flex max-w-full items-center gap-1">
-                            {youtubeUrl ? (
-                                <Tooltip
-                                    title={messages('common.viewOnYoutube')}
-                                >
-                                    <Typography.Link
-                                        href={youtubeUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={
-                                            {
-                                                color: token.colorText,
-                                                '--hover-color':
-                                                    token.colorLink,
-                                            } as React.CSSProperties
-                                        }
-                                        className="truncate font-medium hover:!text-[var(--hover-color)] hover:underline"
+                        <div className="flex min-w-0 flex-1 flex-col gap-1 truncate">
+                            <div className="flex items-center gap-1">
+                                {youtubeUrl ? (
+                                    <Tooltip
+                                        title={messages('common.viewOnYoutube')}
                                     >
+                                        <Typography.Link
+                                            href={youtubeUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={
+                                                {
+                                                    color: token.colorText,
+                                                    '--hover-color':
+                                                        token.colorLink,
+                                                } as React.CSSProperties
+                                            }
+                                            className="truncate font-medium hover:!text-[var(--hover-color)] hover:underline"
+                                        >
+                                            {record.name}
+                                        </Typography.Link>
+                                    </Tooltip>
+                                ) : (
+                                    <span className="truncate font-medium">
                                         {record.name}
-                                    </Typography.Link>
-                                </Tooltip>
-                            ) : (
-                                <span className="truncate">{record.name}</span>
-                            )}
-                            <span
-                                data-stop-row-click="true"
-                                className="inline-block align-middle"
-                            >
-                                <Typography.Text
-                                    copyable={{
-                                        text: record.name,
-                                        tooltips: false,
-                                    }}
-                                />
-                            </span>
+                                    </span>
+                                )}
+                                <span
+                                    data-stop-row-click="true"
+                                    className="inline-block align-middle"
+                                >
+                                    <Typography.Text
+                                        copyable={{
+                                            text: record.name,
+                                            tooltips: false,
+                                        }}
+                                    />
+                                </span>
+                            </div>
+                            <ChannelActions record={record} />
                         </div>
-                    </Space>
+                    </div>
                 );
             },
         },
@@ -296,33 +300,6 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
                     {formattedDate(record.updatedAt)}
                 </span>
             ),
-        },
-        {
-            key: 'actions',
-            align: 'center',
-            width: 50,
-            fixed: 'right',
-            render: (_, record) => {
-                return (
-                    <PermissionGate
-                        anyOf={[
-                            PERMISSION.CHANNEL.UPDATE,
-                            PERMISSION.CHANNEL.DELETE,
-                        ]}
-                    >
-                        <ActionButton
-                            showDelete={canDelete}
-                            onShowDelete={() =>
-                                openModal(TYPE_MODAL_CHANNELS.DELETE, record)
-                            }
-                            showUpdate={canUpdate}
-                            onShowUpdate={() =>
-                                openModal(TYPE_MODAL_CHANNELS.UPDATE, record)
-                            }
-                        />
-                    </PermissionGate>
-                );
-            },
         },
     ];
 
