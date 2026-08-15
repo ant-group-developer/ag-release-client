@@ -681,6 +681,27 @@
         "ciTemplate": {
             "currentFile": "File CI Template hiện tại",
             "excelDataStartRow": "Dòng bắt đầu dữ liệu Excel"
+        },
+        "syncStatus": {
+            "label": "Sync status",
+            "executionStatus": "Trạng thái thực thi",
+            "currentStatus": "Trạng thái hiện tại",
+            "running": "Đang đồng bộ",
+            "idle": "Sẵn sàng",
+            "lastRunAt": "Lần chạy gần nhất",
+            "lastFinishedAt": "Lần kết thúc gần nhất",
+            "runningSince": "Bắt đầu từ lúc",
+            "runNow": "Chạy ngay",
+            "enableSync": "Bật đồng bộ trạng thái CI",
+            "cronExpression": "Lịch Cron",
+            "cronExpressionTooltip": "Cú pháp Cron expression (ví dụ: 0 6 * * *)",
+            "timezone": "Múi giờ (Timezone)",
+            "targetStatuses": "Các trạng thái release đồng bộ",
+            "batchSize": "Số lượng mỗi batch",
+            "batchSizeTooltip": "Số bản ghi release xử lý trong mỗi đợt (1-500)",
+            "concurrency": "Số tiến trình đồng thời",
+            "concurrencyTooltip": "Số release xử lý song song cùng lúc (1-10)",
+            "processedTotal": "Tổng đã xử lý"
         }
     },
     "log": {

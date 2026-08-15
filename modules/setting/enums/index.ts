@@ -8,6 +8,7 @@ export enum SETTING_TABS {
     CI_TEMPLATE = 'ciTemplate',
     RESEND = 'resend',
     PARTNERS = 'partners',
+    SYNC_STATUS = 'syncStatus',
 }
 
 export enum STATUS_BACKUP {

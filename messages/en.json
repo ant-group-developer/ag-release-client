@@ -684,6 +684,27 @@
         "ciTemplate": {
             "currentFile": "Current CI Template file",
             "excelDataStartRow": "Excel data start row"
+        },
+        "syncStatus": {
+            "label": "Sync status",
+            "executionStatus": "Execution status",
+            "currentStatus": "Current status",
+            "running": "Syncing",
+            "idle": "Idle",
+            "lastRunAt": "Last run at",
+            "lastFinishedAt": "Last finished at",
+            "runningSince": "Running since",
+            "runNow": "Run now",
+            "enableSync": "Enable CI status sync",
+            "cronExpression": "Cron expression",
+            "cronExpressionTooltip": "Cron expression syntax (e.g. 0 6 * * *)",
+            "timezone": "Timezone",
+            "targetStatuses": "Target release statuses",
+            "batchSize": "Batch size",
+            "batchSizeTooltip": "Number of release records to fetch per batch (1-500)",
+            "concurrency": "Concurrency",
+            "concurrencyTooltip": "Number of releases to sync concurrently (1-10)",
+            "processedTotal": "Total processed"
         }
     },
     "log": {
