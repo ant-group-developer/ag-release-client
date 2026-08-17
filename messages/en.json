@@ -3429,7 +3429,7 @@
     },
     "analytics2": {
         "rank": "Rank",
-        "topRankingTitle": "Top {count} {title}",
+        "topRankingTitle": "Top {title}",
         "topReleases": "Top Releases",
         "topTracks": "Top Tracks",
         "distributors": "Distributors",

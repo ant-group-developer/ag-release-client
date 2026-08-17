@@ -50,7 +50,7 @@ export const PeriodStatusDetail: React.FC<PeriodStatusDetailProps> = ({
             title: messages('video.fileSize'),
             dataIndex: 'fileSizeBytes',
             key: 'fileSizeBytes',
-            width: 120,
+            width: 50,
             align: 'right' as const,
             render: (value: number) =>
                 value !== undefined && value !== null
@@ -61,7 +61,7 @@ export const PeriodStatusDetail: React.FC<PeriodStatusDetailProps> = ({
             title: messages('reportConfigs.importResult.totalRows'),
             dataIndex: 'totalLines',
             key: 'totalLines',
-            width: 120,
+            width: 50,
             align: 'right' as const,
             render: (value: number) =>
                 value !== undefined && value !== null
@@ -72,7 +72,7 @@ export const PeriodStatusDetail: React.FC<PeriodStatusDetailProps> = ({
             title: messages('reportConfigs.importResult.processedRows'),
             dataIndex: 'processedRows',
             key: 'processedRows',
-            width: 120,
+            width: 50,
             align: 'right' as const,
             render: (value: number) =>
                 value !== undefined && value !== null
@@ -83,7 +83,7 @@ export const PeriodStatusDetail: React.FC<PeriodStatusDetailProps> = ({
             title: messages('reportConfigs.importResult.duration'),
             dataIndex: 'durationMs',
             key: 'durationMs',
-            width: 120,
+            width: 50,
             align: 'right' as const,
             render: (value: number) =>
                 value !== undefined && value !== null
