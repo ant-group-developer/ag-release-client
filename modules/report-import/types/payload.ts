@@ -434,3 +434,31 @@ export interface UpdateSourceTypeConfigPayload {
     imageUrl?: string | null;
 }
 
+export interface CreateFtpProviderConfigPayload {
+    code: string;
+    name: string;
+    host: string;
+    port: number;
+    username: string;
+    password?: string;
+    secure: string | boolean;
+    basePath: string;
+    isActive: boolean;
+    description?: string;
+}
+
+export interface UpdateFtpProviderConfigPayload
+    extends Partial<CreateFtpProviderConfigPayload> {}
+
+export interface TestFtpConnectionPayload {
+    host: string;
+    port: number;
+    username: string;
+    password?: string;
+    secure: string | boolean;
+}
+
+export interface TestFtpConnectionResponse {
+    ok: boolean;
+}
+

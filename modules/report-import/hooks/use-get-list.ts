@@ -4,16 +4,20 @@ import { useQuery } from '@tanstack/react-query';
 import {
     enrichScanScheduleApis,
     ftpExcludePatternApis,
+    ftpProviderConfigApis,
     reportConfigApis,
 } from '../apis';
 import {
     enrichScanScheduleQueryKeys,
     ftpExcludePatternQueryKeys,
+    ftpProviderConfigQueryKeys,
     reportConfigQueryKeys,
 } from '../constants/query-keys';
 import {
     FtpExcludePatternData,
     FtpExcludePatternDataFilter,
+    FtpProviderConfigData,
+    FtpProviderConfigDataFilter,
     ReportConfigData,
     ReportConfigDataFilter,
 } from '../types';
@@ -66,6 +70,25 @@ export const useGetListEnrichScanSchedule = () => {
 
     return {
         enrichScanSchedulesData,
+        ...res,
+    };
+};
+
+export const useGetListFtpProviderConfig = (
+    params: FtpProviderConfigDataFilter
+) => {
+    const { data, ...res } = useQuery({
+        queryKey: ftpProviderConfigQueryKeys.list(params),
+        queryFn: () => ftpProviderConfigApis.getList(params),
+        placeholderData: (prev) => prev,
+    });
+
+    const ftpProviderConfigsData =
+        data?.data?.data ??
+        (DEFAULT_DATA_PAGINATION as PaginationResponse<FtpProviderConfigData>['data']);
+
+    return {
+        ftpProviderConfigsData,
         ...res,
     };
 };

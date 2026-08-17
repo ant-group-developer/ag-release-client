@@ -3082,6 +3082,31 @@
         "configReport": "Config report",
         "importReport": "Report logs",
         "importSftp": "Config import SFTP",
+        "ftpProviderConfig": {
+            "label": "FTP Provider Configs",
+            "code": "Code",
+            "name": "Name",
+            "host": "Host",
+            "port": "Port",
+            "username": "Username",
+            "password": "Password",
+            "passwordPlaceholder": "Enter FTP password",
+            "passwordPlaceholderUpdate": "Leave blank to keep current password",
+            "secure": "Secure",
+            "basePath": "Base Path",
+            "isActive": "Status",
+            "description": "Description",
+            "testConnection": "Test Connection",
+            "testConnectionLabel": "FTP Connection Test",
+            "testConnectionHint": "Verify FTP connection settings before creating",
+            "testConnectionSuccess": "FTP connection successful!",
+            "testConnectionFailed": "FTP connection failed! Please check your credentials.",
+            "testConnectionRequired": "Please test connection successfully before creating.",
+            "action": {
+                "create": "Create FTP Provider Config",
+                "update": "Update FTP Provider Config"
+            }
+        },
         "sourceTypeConfigs": {
             "label": "Source Type Configs",
             "sourceType": "Source Type",
@@ -3474,6 +3499,14 @@
             "deliveryPoint": "Delivery point",
             "deliveryPointStatus": "Status",
             "transferEndDate": "Transfer end date"
+        }
+    },
+    "ftpProviderConfig": {
+        "message": {
+            "success": {
+                "create": "FTP Provider config created successfully",
+                "update": "FTP Provider config updated successfully"
+            }
         }
     }
 }
