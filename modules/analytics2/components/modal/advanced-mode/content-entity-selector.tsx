@@ -41,6 +41,7 @@ export interface ContentEntitySelectorProps {
     fromDate?: string;
     toDate?: string;
     className?: string;
+    activeMetric?: string;
 }
 
 function ContentItemAvatar({ item }: { item: ContentItem }) {
@@ -73,6 +74,7 @@ export default function ContentEntitySelector({
     fromDate,
     toDate,
     className,
+    activeMetric,
 }: ContentEntitySelectorProps) {
     const messages = useTranslations();
     const { isAdmin } = useAuth();
@@ -201,6 +203,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -210,6 +213,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -219,6 +223,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -228,6 +233,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -237,6 +243,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -246,6 +253,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -255,6 +263,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -264,6 +273,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}
@@ -273,6 +283,7 @@ export default function ContentEntitySelector({
                         fromDate={fromDate}
                         toDate={toDate}
                         keyword={searchQuery}
+                        activeMetric={activeMetric}
                         onSelect={handleItemClick}
                     />
                 )}

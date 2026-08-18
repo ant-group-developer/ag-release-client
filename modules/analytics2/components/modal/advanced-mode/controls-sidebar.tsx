@@ -93,6 +93,7 @@ export default function ControlsSidebar({
                     toDate={toDate}
                     selectedItem={selectedItem}
                     initialType={initialType}
+                    activeMetric={activeMetric}
                     onSelect={onContentSelect}
                 />
             </div>

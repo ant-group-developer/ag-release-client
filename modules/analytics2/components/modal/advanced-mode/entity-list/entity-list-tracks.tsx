@@ -1,7 +1,9 @@
 'use client';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import { ANALYTICS_METRIC_KEY } from '@/modules/analytics2/enums';
 import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Empty, List, Skeleton, Typography } from 'antd';
@@ -12,6 +14,7 @@ interface Props {
     fromDate?: string;
     toDate?: string;
     keyword?: string;
+    activeMetric?: string;
     onSelect: (item: ContentItem) => void;
 }
 
@@ -19,71 +22,59 @@ export default function EntityListTracks({
     fromDate = dayjs().subtract(27, 'day').format('YYYY-MM-DD'),
     toDate = dayjs().format('YYYY-MM-DD'),
     keyword,
+    activeMetric,
     onSelect,
 }: Props) {
-    const { trackRankingData, isFetching } = useGetTrackRanking({
-        fromDate,
-        toDate,
-        page: 1,
-        pageSize: 15,
-        keyword,
-    });
+    const isRevenue =
+        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
+        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
+    const sortBy =
+        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+            ? 'usage'
+            : activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+              ? 'revenue'
+              : undefined;
 
-    if (isFetching && !trackRankingData?.items?.length) {
-        return <Skeleton active paragraph={{ rows: 4 }} className="p-2" />;
-    }
+    const { trackRankingData, isFetching: isRankingFetching } = useGetTrackRanking(
+        { fromDate, toDate, page: 1, pageSize: 15, keyword },
+        { enabled: !isRevenue }
+    );
+    const { topTrackData, isFetching: isRevenueFetching } = useGetRevenueTopTrack(
+        { fromDate, toDate, page: 1, pageSize: 15, keyword: keyword || undefined, sortBy, includeOther: false },
+        { enabled: isRevenue }
+    );
 
-    const items = trackRankingData?.items || [];
+    const isFetching = isRevenue ? isRevenueFetching : isRankingFetching;
+    const hasData = isRevenue ? !!topTrackData?.items?.length : !!trackRankingData?.items?.length;
+    if (isFetching && !hasData) return <Skeleton active paragraph={{ rows: 4 }} className="p-2" />;
 
-    if (!items.length) {
-        return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className="my-4" />;
-    }
+    const items: any[] = isRevenue ? topTrackData?.items || [] : trackRankingData?.items || [];
+    if (!items.length) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className="my-4" />;
 
     return (
         <List
             dataSource={items}
             renderItem={(item) => {
-                const coverUrl = item.release?.coverArtThumbnails?.[
-                    RELEASE_COVER_ART_SIZE.S75
-                ] as string;
-
+                const coverUrl = item.release?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S75] as string;
                 return (
                     <List.Item
                         onClick={() =>
                             onSelect({
-                                id: item.isrc || item.trackId,
+                                id: item.isrc || (item as any).trackId || '',
                                 title: item.title,
                                 type: 'Track',
                                 thumbnailUrl: coverUrl,
-                                subtitle: item.isrc
-                                    ? `ISRC: ${item.isrc}`
-                                    : undefined,
+                                subtitle: item.isrc ? `ISRC: ${item.isrc}` : undefined,
                             })
                         }
                         className="cursor-pointer rounded-lg py-2 transition-colors hover:bg-slate-100 dark:hover:bg-zinc-800"
                     >
                         <div className="flex w-full items-center justify-between gap-3 px-2">
                             <div className="flex items-center gap-3 overflow-hidden">
-                                <ReleaseCoverImage
-                                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                                    fileId={coverUrl}
-                                />
+                                <ReleaseCoverImage width={ANALYTICS_RANKING_THUMBNAIL_SIZE} height={ANALYTICS_RANKING_THUMBNAIL_SIZE} fileId={coverUrl} />
                                 <div className="flex flex-col overflow-hidden">
-                                    <Typography.Text
-                                        ellipsis={{ tooltip: item.title }}
-                                        className="text-sm font-medium"
-                                    >
-                                        {item.title}
-                                    </Typography.Text>
-                                    <Typography.Text
-                                        type="secondary"
-                                        className="text-xs"
-                                    >
-                                        {item.isrc
-                                            ? `ISRC: ${item.isrc}`
-                                            : 'Track'}
-                                    </Typography.Text>
+                                    <Typography.Text ellipsis={{ tooltip: item.title }} className="text-sm font-medium">{item.title}</Typography.Text>
+                                    <Typography.Text type="secondary" className="text-xs">{item.isrc ? `ISRC: ${item.isrc}` : 'Track'}</Typography.Text>
                                 </div>
                             </div>
                         </div>

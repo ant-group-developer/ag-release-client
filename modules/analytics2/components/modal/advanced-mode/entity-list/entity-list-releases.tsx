@@ -1,7 +1,9 @@
 'use client';
 
 import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants/types';
+import { ANALYTICS_METRIC_KEY } from '@/modules/analytics2/enums';
 import { useGetReleaseRanking } from '@/modules/analytics2/hooks/use-get-rankings';
+import { useGetRevenueTopRelease } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { Empty, List, Skeleton, Typography } from 'antd';
@@ -12,6 +14,7 @@ interface Props {
     fromDate?: string;
     toDate?: string;
     keyword?: string;
+    activeMetric?: string;
     onSelect: (item: ContentItem) => void;
 }
 
@@ -19,21 +22,50 @@ export default function EntityListReleases({
     fromDate = dayjs().subtract(27, 'day').format('YYYY-MM-DD'),
     toDate = dayjs().format('YYYY-MM-DD'),
     keyword,
+    activeMetric,
     onSelect,
 }: Props) {
-    const { releaseRankingData, isFetching } = useGetReleaseRanking({
-        fromDate,
-        toDate,
-        page: 1,
-        pageSize: 15,
-        keyword,
-    });
+    const isRevenue =
+        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
+        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
+    const sortBy = activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+        ? 'usage'
+        : activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+          ? 'revenue'
+          : undefined;
 
-    if (isFetching && !releaseRankingData?.items?.length) {
+    const { releaseRankingData, isFetching: isRankingFetching } =
+        useGetReleaseRanking(
+            { fromDate, toDate, page: 1, pageSize: 15, keyword },
+            { enabled: !isRevenue }
+        );
+
+    const { topReleaseData, isFetching: isRevenueFetching } =
+        useGetRevenueTopRelease(
+            {
+                fromDate,
+                toDate,
+                page: 1,
+                pageSize: 15,
+                keyword: keyword || undefined,
+                sortBy,
+                includeOther: false,
+            },
+            { enabled: isRevenue }
+        );
+
+    const isFetching = isRevenue ? isRevenueFetching : isRankingFetching;
+    const hasData = isRevenue
+        ? !!topReleaseData?.items?.length
+        : !!releaseRankingData?.items?.length;
+
+    if (isFetching && !hasData) {
         return <Skeleton active paragraph={{ rows: 4 }} className="p-2" />;
     }
 
-    const items = releaseRankingData?.items || [];
+    const items: any[] = isRevenue
+        ? topReleaseData?.items || []
+        : releaseRankingData?.items || [];
 
     if (!items.length) {
         return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className="my-4" />;
