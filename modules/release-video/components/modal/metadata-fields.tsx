@@ -646,23 +646,7 @@ export default function MetadataFields({
                         },
                     },
                 ]}
-            >
-                <div>
-                    <Select
-                        mode="tags"
-                        placeholder={messages(
-                            'releaseVideo.fields.keywordsPlaceholder'
-                        )}
-                        allowClear
-                        tokenSeparators={[',']}
-                        onChange={(value) =>
-                            onFieldUpdate?.({
-                                video: {
-                                    keywords: value,
-                                },
-                            })
-                        }
-                    />
+                extra={
                     <div className="mt-1 text-right">
                         <Typography.Text
                             type={keywordsLength > 500 ? 'danger' : 'secondary'}
@@ -671,7 +655,23 @@ export default function MetadataFields({
                             {keywordsLength} / 500
                         </Typography.Text>
                     </div>
-                </div>
+                }
+            >
+                <Select
+                    mode="tags"
+                    placeholder={messages(
+                        'releaseVideo.fields.keywordsPlaceholder'
+                    )}
+                    allowClear
+                    tokenSeparators={[',']}
+                    onChange={(value) =>
+                        onFieldUpdate?.({
+                            video: {
+                                keywords: value,
+                            },
+                        })
+                    }
+                />
             </AppFormItem>
 
             {/* Description (Full Width) */}
