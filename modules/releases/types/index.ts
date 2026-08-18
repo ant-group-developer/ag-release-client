@@ -149,7 +149,7 @@ export interface QueryReleaseDspDelivery {
 
 export interface ReleasesDataFilter extends CommonParams {
     type?: RELEASE_TYPE;
-    status?: RELEASES_STATUS;
+    status?: RELEASES_STATUS | string;
     startDateRelease?: string;
     endDateRelease?: string;
     primaryGenreId?: string;
