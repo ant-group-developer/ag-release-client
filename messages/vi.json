@@ -2099,6 +2099,10 @@
             "isSelectable": "Có thể chọn",
             "syncedAt": "Ngày đồng bộ",
             "fieldMappings": "Ánh xạ trường dữ liệu",
+            "reportColumn": "Cột báo cáo",
+            "parserColumn": "Cột Parser",
+            "targetColumn": "Cột đích",
+            "transform": "Chuyển đổi",
             "sampleFileList": "Danh sách file mẫu",
             "parserSource": "Mã nguồn Parser",
             "yes": "Có",
@@ -3094,6 +3098,31 @@
         "configReport": "Cấu hình báo cáo",
         "importReport": "Nhật ký báo cáo",
         "importSftp": "Cấu hình SFTP",
+        "ftpProviderConfig": {
+            "label": "Cấu hình FTP Provider",
+            "code": "Mã provider",
+            "name": "Tên provider",
+            "host": "Máy chủ (Host)",
+            "port": "Cổng (Port)",
+            "username": "Tên đăng nhập",
+            "password": "Mật khẩu",
+            "passwordPlaceholder": "Nhập mật khẩu FTP",
+            "passwordPlaceholderUpdate": "Để trống nếu giữ nguyên mật khẩu cũ",
+            "secure": "Bảo mật (Secure)",
+            "basePath": "Đường dẫn gốc (Base Path)",
+            "isActive": "Trạng thái",
+            "description": "Mô tả",
+            "testConnection": "Kiểm tra kết nối",
+            "testConnectionLabel": "Kiểm tra kết nối FTP",
+            "testConnectionHint": "Kiểm tra thông số kết nối trước khi tạo cấu hình",
+            "testConnectionSuccess": "Kết nối FTP thành công!",
+            "testConnectionFailed": "Kết nối FTP thất bại! Vui lòng kiểm tra lại thông tin.",
+            "testConnectionRequired": "Vui lòng kiểm tra kết nối thành công trước khi tạo.",
+            "action": {
+                "create": "Tạo cấu hình FTP Provider",
+                "update": "Cập nhật cấu hình FTP Provider"
+            }
+        },
         "sourceTypeConfigs": {
             "label": "Cấu hình loại nguồn",
             "sourceType": "Loại nguồn",
@@ -3484,6 +3513,14 @@
             "deliveryPoint": "Điểm phân phối",
             "deliveryPointStatus": "Trạng thái",
             "transferEndDate": "Ngày kết thúc giao"
+        }
+    },
+    "ftpProviderConfig": {
+        "message": {
+            "success": {
+                "create": "Tạo cấu hình FTP Provider thành công",
+                "update": "Cập nhật cấu hình FTP Provider thành công"
+            }
         }
     }
 }

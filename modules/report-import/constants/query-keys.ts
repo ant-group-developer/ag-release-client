@@ -103,4 +103,24 @@ export const sourceTypeConfigQueryKeys = {
         ] as const,
 };
 
+export const ftpProviderConfigQueryKeys = {
+    all: [QUERY_KEY.FTP_PROVIDER_CONFIG.KEY] as const,
+    lists: () =>
+        [
+            ...ftpProviderConfigQueryKeys.all,
+            QUERY_KEY.FTP_PROVIDER_CONFIG.GET_LIST,
+        ] as const,
+    list: (params?: any) =>
+        params
+            ? ([...ftpProviderConfigQueryKeys.lists(), params] as const)
+            : ftpProviderConfigQueryKeys.lists(),
+    details: () =>
+        [
+            ...ftpProviderConfigQueryKeys.all,
+            QUERY_KEY.FTP_PROVIDER_CONFIG.GET_DETAIL,
+        ] as const,
+    detail: (id: string) =>
+        [...ftpProviderConfigQueryKeys.details(), id] as const,
+};
+
 

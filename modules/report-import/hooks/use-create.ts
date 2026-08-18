@@ -1,9 +1,24 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { CreateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys } from '../constants/query-keys';
-import { CreateReportConfigPayload, CreateFtpExcludePatternPayload, CreateEnrichScanSchedulePayload } from '../types/payload';
+import {
+    reportConfigApis,
+    ftpExcludePatternApis,
+    ftpProviderConfigApis,
+    enrichScanScheduleApis,
+} from '../apis';
+import {
+    reportConfigQueryKeys,
+    ftpExcludePatternQueryKeys,
+    ftpProviderConfigQueryKeys,
+    enrichScanScheduleQueryKeys,
+} from '../constants/query-keys';
+import {
+    CreateReportConfigPayload,
+    CreateFtpExcludePatternPayload,
+    CreateFtpProviderConfigPayload,
+    CreateEnrichScanSchedulePayload,
+} from '../types/payload';
 
 export const useCreateReportConfig = () => {
     const queryClient = useQueryClient();
@@ -103,6 +118,40 @@ export const useCreateEnrichScanSchedule = () => {
 
     return {
         createEnrichScanSchedule: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useCreateFtpProviderConfig = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            payload,
+        }: CreateVariables<CreateFtpProviderConfigPayload>) =>
+            ftpProviderConfigApis.create(payload),
+        onSuccess: (
+            data,
+            { onSuccess }: CreateVariables<CreateFtpProviderConfigPayload>
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: ftpProviderConfigQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: CreateVariables<CreateFtpProviderConfigPayload>
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        createFtpProviderConfig: mutation.mutate,
         ...mutation,
     };
 };
