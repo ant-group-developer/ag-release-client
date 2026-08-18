@@ -1703,6 +1703,7 @@
             "containsAiContent": "Có chứa nội dung AI",
             "isMadeForKids": "Dành cho trẻ em",
             "videoTitlePlaceholder": "Thêm tiêu đề",
+            "titleLengthNote": "Note: Tiêu đề dài hơn 70 ký tự sẽ hiển thị rút gọn trên YouTube.",
             "isrcPlaceholder": "ISRC của bạn",
             "upc": "UPC",
             "videoVersion": "Phiên bản video",

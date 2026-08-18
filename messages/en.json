@@ -1710,6 +1710,7 @@
             "containsAiContent": "Contains AI content",
             "isMadeForKids": "Made for kids",
             "videoTitlePlaceholder": "Add a title",
+            "titleLengthNote": "Note: Titles over 70 characters will appear shortened on YouTube.",
             "isrcPlaceholder": "Your ISRC",
             "upc": "UPC",
             "videoVersion": "Video version",

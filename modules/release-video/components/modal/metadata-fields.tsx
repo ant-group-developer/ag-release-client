@@ -32,6 +32,7 @@ import {
     Tag,
     Tooltip,
     Typography,
+    theme,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useTranslations } from 'next-intl';
@@ -50,7 +51,10 @@ export default function MetadataFields({
     onFieldUpdate,
     form,
 }: MetadataFieldsProps) {
+    const { token } = theme.useToken();
     const messages = useTranslations();
+    const titleValue = Form.useWatch('title', form) ?? dataEdit?.title ?? '';
+    const titleLength = titleValue ? titleValue.length : 0;
     const keywordsValue = Form.useWatch(['video', 'keywords'], form);
     const keywordsLength = Array.isArray(keywordsValue)
         ? keywordsValue.join(',').length
@@ -218,6 +222,16 @@ export default function MetadataFields({
                         }),
                     },
                 ]}
+                extra={
+                    titleLength > 70 ? (
+                        <Typography.Text
+                            style={{ color: token.colorLink }}
+                            className="text-xs"
+                        >
+                            {messages('releaseVideo.fields.titleLengthNote')}
+                        </Typography.Text>
+                    ) : null
+                }
             >
                 <Input
                     placeholder={messages(
