@@ -64,7 +64,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -111,7 +111,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -142,7 +142,7 @@ export function useRevenueRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -194,7 +194,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -225,7 +225,7 @@ export function useRevenueRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -277,7 +277,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -308,7 +308,7 @@ export function useRevenueRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -358,7 +358,7 @@ export function useRevenueRankingColumns({
                                     title={messages('common.detailedAnalysis')}
                                 >
                                     <span
-                                        className="cursor-pointer transition-colors dark:text-zinc-100"
+                                        className="cursor-pointer transition-colors "
                                         onClick={() => {
                                             // setDetailModal({
                                             //     type: ANALYTICS_MODAL_TYPE.CHANNEL,
@@ -401,7 +401,7 @@ export function useRevenueRankingColumns({
                                         )}
                                     >
                                         <span
-                                            className="cursor-pointer transition-colors dark:text-zinc-100"
+                                            className="cursor-pointer transition-colors "
                                             onClick={() => {
                                                 // setDetailModal({
                                                 //     type: ANALYTICS_MODAL_TYPE.TENANT,
@@ -436,7 +436,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -465,7 +465,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -501,7 +501,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -531,7 +531,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -567,7 +567,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -597,7 +597,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -654,7 +654,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -682,7 +682,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -753,7 +753,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
@@ -779,9 +779,11 @@ export function useRevenueRankingColumns({
                                 src={record.imageUrl}
                             />
                         </div>
-                        <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <CustomTooltip
+                            title={messages('common.detailedAnalysis')}
+                        >
                             <span
-                                className="cursor-pointer truncate font-medium text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -817,7 +819,7 @@ export function useRevenueRankingColumns({
                 key: 'revenueUsd',
                 width: '20%',
                 render: (val: number) => (
-                    <span className="font-semibold text-gray-900 dark:text-zinc-100">
+                    <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
                     </span>
                 ),
