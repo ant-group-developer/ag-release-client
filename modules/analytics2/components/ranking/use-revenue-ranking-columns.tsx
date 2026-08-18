@@ -64,7 +64,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -142,7 +142,7 @@ export function useRevenueRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -225,7 +225,7 @@ export function useRevenueRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -308,7 +308,7 @@ export function useRevenueRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -465,7 +465,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -531,7 +531,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -597,7 +597,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -682,7 +682,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -783,7 +783,7 @@ export function useRevenueRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate font-medium transition-colors hover:text-blue-500"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
