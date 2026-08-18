@@ -2,6 +2,7 @@ import AppFormItem from '@/components/ui/antd-form/form-Item';
 import CountrySelect from '@/components/ui/select/country-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Radio } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -45,6 +46,7 @@ export default function GenreLanguageSectionV2({
                         name="primaryGenreId"
                         render={({ field }) => (
                             <GenresSelect
+                                scope={GENRE_SCOPE.AUDIO}
                                 showSearch
                                 className="w-full"
                                 id="primaryGenreId"
@@ -75,6 +77,7 @@ export default function GenreLanguageSectionV2({
                         name="subGenreId"
                         render={({ field }) => (
                             <GenresSelect
+                                scope={GENRE_SCOPE.AUDIO}
                                 className="w-full"
                                 allowClear
                                 showSearch
@@ -171,8 +174,12 @@ export default function GenreLanguageSectionV2({
                                 }}
                                 disabled={isCreateReleasePage || isReadMode}
                             >
-                                <Radio value={false}>{messages('common.containsLyrics')}</Radio>
-                                <Radio value={true}>{messages('common.instrumental')}</Radio>
+                                <Radio value={false}>
+                                    {messages('common.containsLyrics')}
+                                </Radio>
+                                <Radio value={true}>
+                                    {messages('common.instrumental')}
+                                </Radio>
                             </Radio.Group>
                         )}
                     />

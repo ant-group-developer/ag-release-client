@@ -66,7 +66,7 @@ export function useAnalyticsRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -107,7 +107,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -140,7 +140,7 @@ export function useAnalyticsRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -192,7 +192,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -225,7 +225,7 @@ export function useAnalyticsRankingColumns({
                                 title={messages('common.detailedAnalysis')}
                             >
                                 <span
-                                    className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                     onClick={() =>
                                         openAdvancedMode({
                                             fromDate,
@@ -275,7 +275,7 @@ export function useAnalyticsRankingColumns({
                                     title={messages('common.detailedAnalysis')}
                                 >
                                     <span
-                                        className="cursor-pointer transition-colors dark:text-zinc-100"
+                                        className="cursor-pointer transition-colors "
                                         onClick={() => {
                                             // setDetailModal({
                                             //     type: ANALYTICS_MODAL_TYPE.CHANNEL,
@@ -318,7 +318,7 @@ export function useAnalyticsRankingColumns({
                                         )}
                                     >
                                         <span
-                                            className="cursor-pointer transition-colors dark:text-zinc-100"
+                                            className="cursor-pointer transition-colors "
                                             onClick={() => {
                                                 // setDetailModal({
                                                 //     type: ANALYTICS_MODAL_TYPE.TENANT,
@@ -342,7 +342,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -370,7 +370,7 @@ export function useAnalyticsRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -406,7 +406,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -434,7 +434,7 @@ export function useAnalyticsRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -469,7 +469,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -497,7 +497,7 @@ export function useAnalyticsRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -522,7 +522,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -550,7 +550,7 @@ export function useAnalyticsRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -575,7 +575,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -603,7 +603,7 @@ export function useAnalyticsRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -663,7 +663,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),
@@ -691,7 +691,7 @@ export function useAnalyticsRankingColumns({
                             title={messages('common.detailedAnalysis')}
                         >
                             <span
-                                className="cursor-pointer truncate text-gray-900 transition-colors hover:text-blue-500 dark:text-zinc-100"
+                                className="cursor-pointer truncate transition-colors hover:text-blue-500"
                                 onClick={() =>
                                     openAdvancedMode({
                                         fromDate,
@@ -716,7 +716,7 @@ export function useAnalyticsRankingColumns({
                 key: 'totalViews',
                 width: '30%',
                 render: (views: number) => (
-                    <span className="text-gray-900 dark:text-zinc-100">
+                    <span className="">
                         {views ? views.toLocaleString() : 0}
                     </span>
                 ),

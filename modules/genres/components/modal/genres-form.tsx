@@ -10,9 +10,10 @@ import useModalStore from '@/hooks/use-modal';
 import { uploadApi } from '@/modules/upload/apis';
 import { ENTITY_TYPE_PICTURE } from '@/modules/upload/types/data';
 import { CreateVariables, UpdateVariables } from '@/types/api';
-import { Form, Input } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+import { GENRE_SCOPE } from '../../enums';
 import { useCreateGenre } from '../../hooks/use-create-genre';
 import { useUpdateGenre } from '../../hooks/use-update-genre';
 import { GenresData } from '../../types';
@@ -106,6 +107,7 @@ export default function GenresFormModal({ ...props }: Props) {
 
     useEffect(() => {
         const initialData = {
+            scope: GENRE_SCOPE.AUDIO,
             ...dataEdit,
             pictureFile: dataEdit?.picture
                 ? {
@@ -226,6 +228,36 @@ export default function GenresFormModal({ ...props }: Props) {
                     ]}
                 >
                     <Input placeholder={messages('common.code')} allowClear />
+                </AppFormItem>
+
+                <AppFormItem
+                    name="scope"
+                    label={messages('common.scope')}
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: messages('validation.select'),
+                        },
+                    ]}
+                >
+                    <Select
+                        placeholder={messages('common.scope')}
+                        options={[
+                            {
+                                label: messages('common.audio'),
+                                value: GENRE_SCOPE.AUDIO,
+                            },
+                            {
+                                label: messages('common.video'),
+                                value: GENRE_SCOPE.VIDEO,
+                            },
+                            {
+                                label: messages('common.both'),
+                                value: GENRE_SCOPE.BOTH,
+                            },
+                        ]}
+                    />
                 </AppFormItem>
 
                 <AppFormItem

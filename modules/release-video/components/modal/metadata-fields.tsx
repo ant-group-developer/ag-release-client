@@ -8,6 +8,7 @@ import { usePermission } from '@/hooks/use-permission';
 import { useGetListSimpleArtistRole } from '@/modules/artist-role/hooks/use-get-list-simple-artist-role';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import ChannelSelect from '@/modules/channels/components/select/channel-select';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { useBulkCreateReleaseArtist } from '@/modules/release-artist/hooks/use-bulk-create-release-artist';
 import { useDeleteReleaseArtist } from '@/modules/release-artist/hooks/use-delete-release-artist';
 import { useBulkCreateReleaseContributor } from '@/modules/release-contributor/hooks/use-bulk-create-release-contributor';
@@ -645,23 +646,7 @@ export default function MetadataFields({
                         },
                     },
                 ]}
-            >
-                <div>
-                    <Select
-                        mode="tags"
-                        placeholder={messages(
-                            'releaseVideo.fields.keywordsPlaceholder'
-                        )}
-                        allowClear
-                        tokenSeparators={[',']}
-                        onChange={(value) =>
-                            onFieldUpdate?.({
-                                video: {
-                                    keywords: value,
-                                },
-                            })
-                        }
-                    />
+                extra={
                     <div className="mt-1 text-right">
                         <Typography.Text
                             type={keywordsLength > 500 ? 'danger' : 'secondary'}
@@ -670,7 +655,23 @@ export default function MetadataFields({
                             {keywordsLength} / 500
                         </Typography.Text>
                     </div>
-                </div>
+                }
+            >
+                <Select
+                    mode="tags"
+                    placeholder={messages(
+                        'releaseVideo.fields.keywordsPlaceholder'
+                    )}
+                    allowClear
+                    tokenSeparators={[',']}
+                    onChange={(value) =>
+                        onFieldUpdate?.({
+                            video: {
+                                keywords: value,
+                            },
+                        })
+                    }
+                />
             </AppFormItem>
 
             {/* Description (Full Width) */}

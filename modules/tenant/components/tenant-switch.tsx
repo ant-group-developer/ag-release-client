@@ -15,6 +15,7 @@ import { TENANT_TYPE } from '../enums';
 import { useTenantActive } from '../hooks/use-get-tenant';
 import { TenantData } from '../types/data';
 import { getTenantAvatar, getTenantOwnerEmail } from '../utils';
+import TenantSwitchSearch from './tenant-switch-search';
 import TenantTag from './tenant-tag';
 
 type Props = {};
@@ -22,6 +23,35 @@ type Props = {};
 interface TenantTableRecord extends TenantData {
     isSystem?: boolean;
 }
+
+const filterTenantTree = <T extends { name: string; children?: any }>(
+    nodes: T[],
+    keyword: string
+): T[] => {
+    const trimmed = keyword.trim().toLowerCase();
+    if (!trimmed) return nodes;
+
+    return nodes.reduce<T[]>((acc, item) => {
+        const matchesSelf = item.name?.toLowerCase().includes(trimmed);
+        const childrenArr: T[] = Array.isArray(item.children)
+            ? item.children
+            : [];
+        const filteredChildren =
+            childrenArr.length > 0
+                ? filterTenantTree(childrenArr, keyword)
+                : [];
+
+        if (matchesSelf) {
+            acc.push(item);
+        } else if (filteredChildren.length > 0) {
+            acc.push({
+                ...item,
+                children: filteredChildren,
+            });
+        }
+        return acc;
+    }, []);
+};
 
 function TenantSwitch({}: Props) {
     const messages = useTranslations();
@@ -63,6 +93,7 @@ function TenantSwitch({}: Props) {
 
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState('');
 
     const [value, setValue] = useState<TenantData['id']>(tenantId);
     const currentData =
@@ -83,6 +114,8 @@ function TenantSwitch({}: Props) {
     useEffect(() => {
         setValue(tenantId);
     }, [tenantId]);
+
+    const filteredDataSource = filterTenantTree(dataSource, searchKeyword);
 
     const columns: ColumnsType<TenantTableRecord> = [
         {
@@ -187,12 +220,19 @@ function TenantSwitch({}: Props) {
             <Modal
                 title={messages('tenant.selectTitle')}
                 open={modalOpen}
-                onCancel={() => setModalOpen(false)}
+                onCancel={() => {
+                    setModalOpen(false);
+                    setSearchKeyword('');
+                }}
                 footer={null}
                 width={800}
             >
+                <TenantSwitchSearch
+                    value={searchKeyword}
+                    onChange={setSearchKeyword}
+                />
                 <AppTable
-                    dataSource={removeEmptyChildren(dataSource)}
+                    dataSource={removeEmptyChildren(filteredDataSource)}
                     columns={columns}
                     loading={loading}
                     pagination={false}
@@ -216,3 +256,4 @@ function TenantSwitch({}: Props) {
 }
 
 export default TenantSwitch;
+

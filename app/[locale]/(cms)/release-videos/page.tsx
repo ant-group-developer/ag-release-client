@@ -11,13 +11,21 @@ import useModalStore from '@/hooks/use-modal';
 import ReleaseVideoHeader from '@/modules/release-video/components/header';
 import { ReleaseVideoTable } from '@/modules/release-video/components/table';
 import { TYPE_MODAL_RELEASE_VIDEO } from '@/modules/release-video/enums';
-import { RELEASE_TYPE, RELEASES_TABLE_KEY } from '@/modules/releases/enums';
+import {
+    RELEASE_TYPE,
+    RELEASES_STATUS,
+    RELEASES_TABLE_KEY,
+} from '@/modules/releases/enums';
+import { useBulkSubmitRelease } from '@/modules/releases/hooks/use-bulk-submit-release';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
+import { SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
+import { Button, Space, TableProps } from 'antd';
 import { useTranslations } from 'next-intl';
+import { Key, useState } from 'react';
 
 export default function ReleaseVideos() {
     // hooks - state
@@ -40,16 +48,21 @@ export default function ReleaseVideos() {
     });
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
-    const dataEdit = useModalStore<ReleasesData>((state) => state.dataEdit);
+    const openModal = useModalStore((state) => state.openModal);
+    const dataEdit = useModalStore<ReleasesData | Key[]>((state) => state.dataEdit);
+    const [selectedRows, setSelectedRows] = useState<Key[]>([]);
 
     // apis
-    const { releasesData, isFetching } = useGetListReleases(dataFilter);
+    const { releasesData, isFetching, refetch } = useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
+    const { bulkSubmitRelease, isPending: isBulkSubmitting } =
+        useBulkSubmitRelease();
 
     // func
     const handleDeleteReleaseVideo = () => {
+        const release = dataEdit as ReleasesData;
         const variables: DeleteVariables<ReleasesData['id']> = {
-            id: dataEdit?.id,
+            id: release?.id,
             onSuccess: () => {
                 closeModal();
             },
@@ -71,11 +84,23 @@ export default function ReleaseVideos() {
         );
     };
 
+    const rowSelection: TableProps<ReleasesData>['rowSelection'] = {
+        selectedRowKeys: selectedRows,
+        onChange: (selectedRowKeys: Key[]) => {
+            setSelectedRows(selectedRowKeys);
+        },
+        getCheckboxProps: (record: ReleasesData) => {
+            return {
+                disabled: record.status !== RELEASES_STATUS.FAILED,
+            };
+        },
+    };
+
     return (
         <AppPageWrapper>
             <PageContainer title={messages('releaseVideo.routeLabel')}>
                 <ReleaseVideoTable
-                    title={() => (
+                    headerTitle={
                         <ReleaseVideoHeader
                             dataFilter={dataFilter}
                             defaultFilter={defaultFilter}
@@ -84,7 +109,7 @@ export default function ReleaseVideos() {
                             removeFilter={removeFilter}
                             onSearch={onSearch}
                         />
-                    )}
+                    }
                     sticky
                     dataSource={releasesData.items}
                     loading={isFetching}
@@ -95,6 +120,30 @@ export default function ReleaseVideos() {
                     }}
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
+                    rowSelection={rowSelection}
+                    options={{
+                        reload: () => {
+                            refetch();
+                        },
+                    }}
+                    tableAlertRender={({ selectedRowKeys }) => {
+                        return (
+                            <Space>
+                                <Button
+                                    type="primary"
+                                    icon={<SendOutlined />}
+                                    onClick={() =>
+                                        openModal(
+                                            TYPE_MODAL_RELEASE_VIDEO.BULK_SUBMIT,
+                                            selectedRowKeys
+                                        )
+                                    }
+                                >
+                                    {messages('release.bulkSubmit')}
+                                </Button>
+                            </Space>
+                        );
+                    }}
                 />
                 <AppPagination
                     align="end"
@@ -113,10 +162,42 @@ export default function ReleaseVideos() {
                         open
                         modalTitle={messages('delete.confirmTitle')}
                         paragraph={messages('delete.confirmMessage', {
-                            value: dataEdit?.title,
+                            value: (dataEdit as ReleasesData)?.title,
                         })}
                         onCancel={closeModal}
                         onOk={() => handleDeleteReleaseVideo()}
+                    />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE_VIDEO.BULK_SUBMIT && (
+                    <AppConfirm
+                        open
+                        typeDelete={false}
+                        onOk={() => {
+                            const ids =
+                                (dataEdit as string[]) ||
+                                (selectedRows as string[]) ||
+                                [];
+                            if (ids.length === 0) return;
+                            bulkSubmitRelease({
+                                payload: {
+                                    ids,
+                                    codes: ['vevo'],
+                                },
+                                onSuccess: () => {
+                                    closeModal();
+                                    setSelectedRows([]);
+                                },
+                            });
+                        }}
+                        onCancel={closeModal}
+                        modalTitle={messages('release.bulkSubmit')}
+                        loading={isBulkSubmitting}
+                        paragraph={messages('release.bulkSubmitConfirm', {
+                            count:
+                                (dataEdit as Key[])?.length ||
+                                selectedRows.length,
+                        })}
                     />
                 )}
             </PageContainer>

@@ -124,6 +124,10 @@
         }
     },
     "common": {
+        "scope": "Scope",
+        "audio": "Audio",
+        "video": "Video",
+        "both": "Both",
         "controls": "Controls",
         "metrics": "Metrics",
         "advancedMode": "Advanced Mode",
@@ -3464,7 +3468,7 @@
     },
     "analytics2": {
         "rank": "Rank",
-        "topRankingTitle": "Top {count} {title}",
+        "topRankingTitle": "Top {title}",
         "topReleases": "Top Releases",
         "topTracks": "Top Tracks",
         "distributors": "Distributors",

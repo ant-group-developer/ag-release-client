@@ -7,7 +7,7 @@ import {
 } from '@/modules/analytics2/enums';
 import { AnalyticsEntityType } from '@/modules/analytics2/types';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { Radio, Select, Typography } from 'antd';
+import { Radio, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import ContentEntitySelector, { ContentItem } from './content-entity-selector';
 
@@ -93,6 +93,7 @@ export default function ControlsSidebar({
                     toDate={toDate}
                     selectedItem={selectedItem}
                     initialType={initialType}
+                    activeMetric={activeMetric}
                     onSelect={onContentSelect}
                 />
             </div>
@@ -145,7 +146,7 @@ export default function ControlsSidebar({
             </div>
 
             {/* Metrics Section */}
-            <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
                 <Typography.Text
                     type="secondary"
                     className="text-xs font-medium"
@@ -177,7 +178,7 @@ export default function ControlsSidebar({
                         },
                     ]}
                 />
-            </div>
+            </div> */}
         </div>
     );
 }

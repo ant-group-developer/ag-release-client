@@ -3,6 +3,7 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { TrackData } from '@/modules/tracks/types';
 import { ConfigProvider, Form, Typography } from 'antd';
@@ -65,6 +66,7 @@ export default function GenreSection({
                             id={`tracks.${index}.primaryGenreId`}
                             className="w-full"
                             showSearch
+                            scope={GENRE_SCOPE.AUDIO}
                             disabled={isReadMode}
                             onChange={(value) => {
                                 updateTrackDraft(
@@ -93,6 +95,7 @@ export default function GenreSection({
                             className="w-full"
                             showSearch
                             allowClear
+                            scope={GENRE_SCOPE.AUDIO}
                             disabled={isReadMode}
                             onChange={(value) => {
                                 updateTrackDraft(

@@ -74,6 +74,7 @@ export default function Genres() {
                     title={() => (
                         <GenresHeader
                             dataFilter={dataFilter}
+                            onChangeFilter={onChangeFilter}
                             onSearch={onSearch}
                         />
                     )}

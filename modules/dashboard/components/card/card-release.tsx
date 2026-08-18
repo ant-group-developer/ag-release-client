@@ -2,10 +2,11 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { Link } from '@/i18n/routing';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { RELEASES_TABS } from '@/modules/releases/enums';
+import { RELEASES_TABS, RELEASE_TYPE } from '@/modules/releases/enums';
 import { getReleaseDetailTabRoute } from '@/modules/releases/helpers/link';
 import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
@@ -21,6 +22,11 @@ type Props = CardProps & {
 export default function CardRelease({ data, ...props }: Props) {
     const messages = useTranslations();
     // const router = useRouter();
+
+    const isVideo = data?.type === RELEASE_TYPE.VIDEO || Boolean(data?.video);
+    const releaseDetailRoute = isVideo
+        ? `${APP_ROUTES.RELEASE_VIDEOS}/${data.id}`
+        : getReleaseDetailTabRoute(data.id, RELEASES_TABS.CORE_DETAIL);
 
     const imageFileId =
         data?.coverArtThumbnails?.[RELEASE_COVER_ART_SIZE.S300] ??
@@ -53,12 +59,7 @@ export default function CardRelease({ data, ...props }: Props) {
                 },
             }}
             cover={
-                <Link
-                    href={getReleaseDetailTabRoute(
-                        data.id,
-                        RELEASES_TABS.CORE_DETAIL
-                    )}
-                >
+                <Link href={releaseDetailRoute}>
                     <div className="relative aspect-square overflow-hidden rounded-t-lg">
                         {showSkeleton ? (
                             <Skeleton.Node
@@ -90,12 +91,7 @@ export default function CardRelease({ data, ...props }: Props) {
         >
             <Meta
                 title={
-                    <Link
-                        href={getReleaseDetailTabRoute(
-                            data.id,
-                            RELEASES_TABS.CORE_DETAIL
-                        )}
-                    >
+                    <Link href={releaseDetailRoute}>
                         <CustomTooltip title={data.title}>
                             <span className="cursor-pointer text-sm">
                                 {' '}

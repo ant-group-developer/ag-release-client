@@ -124,6 +124,14 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     : undefined,
                 video: {
                     ...dataEdit.video,
+                    keywords: Array.isArray(dataEdit.video?.keywords)
+                        ? dataEdit.video?.keywords
+                        : typeof dataEdit.video?.keywords === 'string'
+                        ? (dataEdit.video?.keywords as string)
+                              .split(',')
+                              .map((k) => k.trim())
+                              .filter(Boolean)
+                        : [],
                     madeForKids:
                         dataEdit.video?.madeForKids ||
                         RELEASE_MADE_FOR_KIDS.CHANNEL_DEFAULT,

@@ -93,16 +93,14 @@ export default function RankingTableFilter({
                         key="releaseType"
                         value={releaseType ?? ANALYTICS_RELEASE_TYPE.ALL}
                         onChange={(value) =>
-                            onReleaseTypeChange(
-                                value as ANALYTICS_RELEASE_TYPE
-                            )
+                            onReleaseTypeChange(value as ANALYTICS_RELEASE_TYPE)
                         }
                         className="w-full sm:w-auto [&_.ant-segmented-group]:w-full sm:[&_.ant-segmented-group]:w-auto [&_.ant-segmented-item]:flex-1 sm:[&_.ant-segmented-item]:flex-none"
                         options={releaseTypeOptions || defaultReleaseOptions}
                     />
                 )}
 
-                {showMetricType && onMetricTypeChange && (
+                {/* {showMetricType && onMetricTypeChange && (
                     <Segmented
                         key="metricType"
                         value={metricType ?? ANALYTICS_VIEW_TYPE.VIEW}
@@ -112,7 +110,7 @@ export default function RankingTableFilter({
                         className="w-full sm:w-auto [&_.ant-segmented-group]:w-full sm:[&_.ant-segmented-group]:w-auto [&_.ant-segmented-item]:flex-1 sm:[&_.ant-segmented-item]:flex-none"
                         options={metricTypeOptions || defaultMetricOptions}
                     />
-                )}
+                )} */}
 
                 {children}
             </div>

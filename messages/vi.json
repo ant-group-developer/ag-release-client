@@ -124,6 +124,10 @@
         }
     },
     "common": {
+        "scope": "Phạm vi",
+        "audio": "Audio",
+        "video": "Video",
+        "both": "Cả hai",
         "controls": "Bộ điều khiển",
         "metrics": "Chỉ số",
         "advancedMode": "Chế độ nâng cao",
@@ -3455,7 +3459,7 @@
     },
     "analytics2": {
         "rank": "Thứ hạng",
-        "topRankingTitle": "Top {count} {title}",
+        "topRankingTitle": "Top {title}",
         "topReleases": "Top bản phát hành",
         "topTracks": "Top bài hát",
         "distributors": "Nhà phân phối",
