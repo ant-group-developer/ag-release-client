@@ -124,6 +124,10 @@
         }
     },
     "common": {
+        "scope": "Scope",
+        "audio": "Audio",
+        "video": "Video",
+        "both": "Both",
         "controls": "Controls",
         "metrics": "Metrics",
         "advancedMode": "Advanced Mode",

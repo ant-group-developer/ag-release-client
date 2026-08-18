@@ -4,6 +4,7 @@ import ArtistSelect from '@/components/ui/select/artist-select';
 import GenresSelect from '@/components/ui/select/genres-select';
 import { arrayFromString, getDateRange } from '@/helpers/array';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { useGetListSimpleReleaseTypes } from '@/modules/release-types/hooks/use-get-list-simple-release-types';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import {
@@ -132,6 +133,7 @@ export default function DistributionHeaderV2({
 
                 <ProForm.Item name="genres" label={messages('genre.label')}>
                     <GenresSelect
+                        scope={GENRE_SCOPE.AUDIO}
                         allowClear
                         placeholder={messages('placeholder.filterBy', {
                             value: messages('genre.genres').toLowerCase(),

@@ -10,6 +10,7 @@ import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
 import { showNotification } from '@/helpers/messages-helper';
 import useModalStore from '@/hooks/use-modal';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { useBulkUpdateTrack } from '@/modules/tracks/hooks/use-bulk-update-track';
 import { DatePicker, Form, Input, Radio, theme } from 'antd';
@@ -137,6 +138,7 @@ export default function BulkUpdateTracksModal({
                                 name="primaryGenreId"
                             >
                                 <GenresSelect
+                                    scope={GENRE_SCOPE.AUDIO}
                                     className="w-full"
                                     showSearch
                                     allowClear
@@ -148,6 +150,7 @@ export default function BulkUpdateTracksModal({
                                 name="subGenreId"
                             >
                                 <GenresSelect
+                                    scope={GENRE_SCOPE.AUDIO}
                                     className="w-full"
                                     showSearch
                                     allowClear
