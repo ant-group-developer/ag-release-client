@@ -57,7 +57,7 @@ export default function DistributionTable({
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: 60,
             align: 'center',
             render: (_, __, index) =>
                 ((pagination?.current || 1) - 1) *

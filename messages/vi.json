@@ -147,6 +147,7 @@
         "label": "Label",
         "dsp": "DSP",
         "onlineLink": "Link trực tuyến",
+        "skip": "Bỏ qua",
         "yes": "Có",
         "no": "Không",
         "back": "Quay lại",
@@ -2039,7 +2040,17 @@
         "onlyIn": "Chỉ phân phối trong",
         "everyWhereExcept": "Phân phối khắp nơi ngoại trừ",
         "wordWide": "Phân phối khắp thế giới",
-        "confirmDistribute": "Bạn có chắc chắn muốn phát hành trên nền tảng này không?"
+        "confirmDistribute": "Bạn có chắc chắn muốn phát hành trên nền tảng này không?",
+        "confirmTitle": "Xác nhận phân phối",
+        "selectedDsps": "Danh sách DSP đã chọn ({count}):",
+        "dspsToDistribute": "DSP sẽ phân phối ({count}):",
+        "skippedDsps": "DSP bị bỏ qua ({count}):",
+        "skipDistributed": "Bỏ qua các DSP đã phát hành",
+        "noDspSelectedTitle": "Chưa chọn DSP phân phối",
+        "noDspSelectedMessage": "Bạn chưa chọn DSP nào để phân phối. Vui lòng chuyển sang tab \"Phân phối\" để chọn các DSP mong muốn.",
+        "goToDistribution": "Chuyển đến Phân phối",
+        "noDspToSend": "Không có DSP nào để phân phối",
+        "toDistributeCount": "Phân phối tới {count} DSP"
     },
     "takeDown": {
         "label": "Gỡ khỏi nền tảng",

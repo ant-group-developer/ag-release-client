@@ -147,6 +147,7 @@
         "label": "Label",
         "dsp": "DSP",
         "onlineLink": "Online Link",
+        "skip": "Skip",
         "yes": "Yes",
         "no": "No",
         "back": "Back",
@@ -2046,7 +2047,17 @@
         "onlyIn": "Distribute only in",
         "everyWhereExcept": "Distribute everywhere except",
         "wordWide": "Distribute worldwide",
-        "confirmDistribute": "Are you sure you want to distribute on this platform?"
+        "confirmDistribute": "Are you sure you want to distribute on this platform?",
+        "confirmTitle": "Confirm Distribution",
+        "selectedDsps": "Selected DSPs ({count}):",
+        "dspsToDistribute": "DSPs to Distribute ({count}):",
+        "skippedDsps": "Skipped DSPs ({count}):",
+        "skipDistributed": "Skip already released DSPs",
+        "noDspSelectedTitle": "No DSP Selected",
+        "noDspSelectedMessage": "You have not selected any DSP for distribution. Please go to the \"Distribution\" tab to select DSPs.",
+        "goToDistribution": "Go to Distribution",
+        "noDspToSend": "No DSPs to distribute",
+        "toDistributeCount": "Distributing to {count} DSPs"
     },
     "takeDown": {
         "label": "Take down from platform",

@@ -118,7 +118,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'ISRC',
             dataIndex: ['video', 'isrc'],
             align: 'left',
-            width: 200,
+            width: 150,
             render: (_, record) => {
                 const value = record.video?.isrc;
                 if (!value) return '-';
