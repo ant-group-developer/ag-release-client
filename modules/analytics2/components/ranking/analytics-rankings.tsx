@@ -39,11 +39,16 @@ export default function AnalyticsRankings({
         isOpen: isAdvancedModeOpen,
         closeAdvancedMode,
     } = useAdvancedModeModal();
-    const topRankingTitle = (title: string) =>
-        messages('analytics2.topRankingTitle', {
+    const topRankingTitle = (title: string) => {
+        const formattedTitle =
+            title === title.toUpperCase() && title.length <= 4
+                ? title
+                : title.toLowerCase();
+        return messages('analytics2.topRankingTitle', {
             count: topN,
-            title,
+            title: formattedTitle,
         });
+    };
 
     const {
         trackColumns,
