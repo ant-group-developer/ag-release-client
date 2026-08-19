@@ -196,7 +196,7 @@ export default function AnalyticsRankings({
                         <Col span={12} xs={24} lg={12}>
                             <RankingCard
                                 title={topRankingTitle(
-                                    messages('common.tracks')
+                                    messages('common.track')
                                 )}
                                 columns={trackColumns}
                                 dataSource={trackRankingData?.items}
@@ -224,6 +224,38 @@ export default function AnalyticsRankings({
                             />
                         </Col>
                     </>
+                )}
+
+                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
+                    <Col span={12} xs={24} lg={12}>
+                        <RankingCard
+                            title={topRankingTitle(messages('common.video'))}
+                            columns={releaseVideoColumns}
+                            dataSource={releaseVideoRankingData?.items}
+                            loading={isReleaseVideoFetching}
+                            rowKey="releaseId"
+                            labelKey="title"
+                            valueKey="totalViews"
+                            defaultView={RankingCardView.LIST}
+                            // viewMoreHref={createViewMoreHref(
+                            //     APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
+                            //     {
+                            //         fromDate,
+                            //         toDate,
+                            //         type: ANALYTICS_VIEW_TYPE.VIEW,
+                            //         releaseType,
+                            //     }
+                            // )}
+                            onViewMore={() =>
+                                openAdvancedMode({
+                                    fromDate,
+                                    toDate,
+                                    entityType:
+                                        ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                })
+                            }
+                        />
+                    </Col>
                 )}
 
                 <Col span={12} xs={24} lg={12}>
@@ -394,40 +426,8 @@ export default function AnalyticsRankings({
                                 openAdvancedMode({
                                     fromDate,
                                     toDate,
-                                    entityType: ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
-                                })
-                            }
-                        />
-                    </Col>
-                )}
-                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
-                    <Col span={12} xs={24} lg={12}>
-                        <RankingCard
-                            title={topRankingTitle(
-                                messages('common.releasesVideo')
-                            )}
-                            columns={releaseVideoColumns}
-                            dataSource={releaseVideoRankingData?.items}
-                            loading={isReleaseVideoFetching}
-                            rowKey="releaseId"
-                            labelKey="title"
-                            valueKey="totalViews"
-                            defaultView={RankingCardView.LIST}
-                            // viewMoreHref={createViewMoreHref(
-                            //     APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
-                            //     {
-                            //         fromDate,
-                            //         toDate,
-                            //         type: ANALYTICS_VIEW_TYPE.VIEW,
-                            //         releaseType,
-                            //     }
-                            // )}
-                            onViewMore={() =>
-                                openAdvancedMode({
-                                    fromDate,
-                                    toDate,
                                     entityType:
-                                        ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                        ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
                                 })
                             }
                         />
