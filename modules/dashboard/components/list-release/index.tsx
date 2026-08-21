@@ -1,6 +1,7 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
 import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
+import { RELEASE_TYPE } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
 import { RightOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Skeleton, theme } from 'antd';
@@ -14,12 +15,30 @@ import CardRelease from '../card/card-release';
 type Props = {
     data: ReleasesData[];
     loading?: boolean;
+    releaseType?: RELEASE_TYPE | string;
 };
 
-export default function ListRelease({ data, loading }: Props) {
+export default function ListRelease({ data, loading, releaseType }: Props) {
     const messages = useTranslations();
     const { token } = theme.useToken();
     const releaseLength = data?.length;
+
+    const getTitle = () => {
+        if (releaseType === RELEASE_TYPE.VIDEO) {
+            return messages('release.latestVideoReleases');
+        }
+        if (releaseType === RELEASE_TYPE.AUDIO) {
+            return messages('release.latestAudioReleases');
+        }
+        return messages('release.latestReleases');
+    };
+
+    const getSeeMoreHref = () => {
+        if (releaseType === RELEASE_TYPE.VIDEO) {
+            return APP_ROUTES.RELEASE_VIDEOS;
+        }
+        return APP_ROUTES.RELEASES;
+    };
 
     return (
         <Card
@@ -30,12 +49,10 @@ export default function ListRelease({ data, loading }: Props) {
             }}
             title={
                 <div className="flex items-center justify-between">
-                    <h3 className="text-md m-0 font-bold">
-                        {messages('release.latestReleases')}
-                    </h3>
+                    <h3 className="text-md m-0 font-bold">{getTitle()}</h3>
 
                     {!loading && releaseLength >= 7 && (
-                        <Link href={APP_ROUTES.RELEASES}>
+                        <Link href={getSeeMoreHref()}>
                             <SeeMoreButton
                                 type="default"
                                 style={{

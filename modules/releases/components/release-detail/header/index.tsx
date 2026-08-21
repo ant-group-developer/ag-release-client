@@ -20,8 +20,10 @@ import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribut
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import {
     RELEASE_ROUTE_ACTION,
+    RELEASES_TABS,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
 import {
@@ -57,7 +59,9 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ReleaseStatusTag from '../../tag/release-status-tag';
+import DistributeConfirmModal from './distribute-confirm-modal';
 import DownloadMenu from './download-menu';
+import NoDspSelectedModal from './no-dsp-selected-modal';
 import ReleaseInfoV2 from './release-info-v2';
 type Props = {
     isScrolled: boolean;
@@ -86,6 +90,10 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
     const router = useRouter();
     const releaseAction = useReleaseActionStore((state) => state.action);
     const setReleaseAction = useReleaseActionStore((state) => state.setAction);
+    const { getReleaseTabRoute } = useGetReleaseDetailRoute();
+    const [isNoDspModalOpen, setIsNoDspModalOpen] = useState(false);
+    const [isDistributeConfirmModalOpen, setIsDistributeConfirmModalOpen] =
+        useState(false);
 
     // apis
     const { updateReleaseDraft, isPending: isUpdatingRelease } =
@@ -373,17 +381,24 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         };
         deleteRelease(variables);
     };
-    const handleDistribution = async () => {
+    const handleDistributionClick = () => {
+        if (!selectedRows || selectedRows.length === 0) {
+            setIsNoDspModalOpen(true);
+        } else {
+            setIsDistributeConfirmModalOpen(true);
+        }
+    };
+
+    const handleConfirmDistribution = async (finalCodes: string[]) => {
+        setIsDistributeConfirmModalOpen(false);
         closeModal();
 
         // Đợi cho đến khi các mutation đang active hoàn thành mới xử lý tiếp
         await waitForLoading(queryClient, LoadingType.Mutating);
 
-        const dspCode = selectedRows.map((row) => row.dsp.code);
-
         const variables: DistributeRelease = {
             id: formValues?.id ?? '',
-            code: dspCode,
+            code: finalCodes,
             onSuccess(e) {
                 setReleaseAction(RELEASE_DETAIL_ACTION.READ);
                 router.push(APP_ROUTES.RELEASES);
@@ -391,6 +406,18 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
         };
         const promise = distributeRelease(variables);
         toastPromise(promise, messages);
+    };
+
+    const handleGoToDistribution = () => {
+        setIsNoDspModalOpen(false);
+        if (formValues?.id) {
+            router.push(
+                getReleaseTabRoute(
+                    formValues.id as string,
+                    RELEASES_TABS.DISTRIBUTION
+                )
+            );
+        }
     };
 
     const handleGetPreviewUrl = async (file: any) => {
@@ -567,7 +594,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                         {!isCreateReleasePage && !isReadMode && (
                             <Button
                                 loading={isDistributingRelease}
-                                onClick={handleDistribution}
+                                onClick={handleDistributionClick}
                                 type="primary"
                                 disabled={validateLength > 0 || isAnyMutating}
                                 shape="default"
@@ -660,7 +687,9 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                                 <div className="flex justify-between">
                                     <div>{isScrolled && <DownloadMenu />}</div>
                                     <PermissionGate
-                                        permission={PERMISSION.RELEASE_AUDIO.UPDATE}
+                                        permission={
+                                            PERMISSION.RELEASE_AUDIO.UPDATE
+                                        }
                                     >
                                         {isReadMode && (
                                             <Button
@@ -707,6 +736,20 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                     })}
                 />
             )}
+
+            <NoDspSelectedModal
+                open={isNoDspModalOpen}
+                onCancel={() => setIsNoDspModalOpen(false)}
+                onGoToDistribution={handleGoToDistribution}
+            />
+
+            <DistributeConfirmModal
+                open={isDistributeConfirmModalOpen}
+                onCancel={() => setIsDistributeConfirmModalOpen(false)}
+                onConfirm={handleConfirmDistribution}
+                selectedRows={selectedRows}
+                loading={isDistributingRelease}
+            />
         </div>
     );
 }

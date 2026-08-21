@@ -10,7 +10,7 @@ export interface GenresData extends CommonAttribute {
 }
 
 export interface GenresSimpleData
-    extends Pick<GenresData, 'id' | 'code' | 'name'> {}
+    extends Pick<GenresData, 'id' | 'code' | 'name' | 'scope'> {}
 
 export interface GenresDataFilter extends CommonParams {
     keyword?: string;
