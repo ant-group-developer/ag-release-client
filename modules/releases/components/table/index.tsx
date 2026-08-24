@@ -37,10 +37,10 @@ import {
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
-import StatusFilterDropdown from './status-filter-dropdown';
 import DspDeliveryFilterDropdown from './dsp-delivery-filter-dropdown';
 import DspLiveColumn from './dsp-live-column';
 import DspStatusModal from './dsp-status-modal';
+import StatusFilterDropdown from './status-filter-dropdown';
 import TakedownReleaseModal from './takedown-release-modal';
 import ReleaseTitleColumn from './title-column';
 
@@ -396,11 +396,7 @@ export default function ReleasesTable({
                                             {messages('release.takeDown')}
                                         </div>
                                     ),
-                                    show:
-                                        ((isDistributed || isFailed) &&
-                                            canTakedown) ||
-                                        ((isDistributed || isFailed) &&
-                                            isAdmin),
+                                    show: canTakedown,
                                     danger: true,
                                     onClick: () => {
                                         setTakedownRecord(record);
