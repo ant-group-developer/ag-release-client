@@ -7,6 +7,7 @@ import ConfigTab from '@/modules/report-import/components/config-tab';
 import DeleteReportTab from '@/modules/report-import/components/delete-report-tab';
 import EnrichDataCronTab from '@/modules/report-import/components/enrich-data-cron-tab';
 import EnrichDataImportTab from '@/modules/report-import/components/enrich-data-import-tab';
+import FtpProviderConfigTab from '@/modules/report-import/components/ftp-provider-config-tab';
 import ImportTab from '@/modules/report-import/components/import-tab';
 import SftpExcludeTab from '@/modules/report-import/components/sftp-exclude-tab';
 import SourceTypeConfigTab from '@/modules/report-import/components/source-type-config-tab';
@@ -16,6 +17,7 @@ import { REPORT_IMPORT_TAB } from '@/modules/report-import/enums';
 import { useGetListReportConfig } from '@/modules/report-import/hooks/use-get-list';
 import { ReportConfigDataFilter } from '@/modules/report-import/types';
 import {
+    ApiOutlined,
     AppstoreOutlined,
     ClockCircleOutlined,
     CloudServerOutlined,
@@ -123,6 +125,12 @@ export default function ReportConfigs() {
                 label: messages('reportConfigs.sourceTypeConfigs.label'),
                 icon: <AppstoreOutlined />,
                 children: <SourceTypeConfigTab />,
+            },
+            {
+                key: REPORT_IMPORT_TAB.FTP_PROVIDER_CONFIG,
+                label: messages('reportConfigs.ftpProviderConfig.label'),
+                icon: <ApiOutlined />,
+                children: <FtpProviderConfigTab />,
             },
         ],
         [

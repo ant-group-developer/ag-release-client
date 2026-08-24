@@ -1,6 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import ArtistSelect from '@/components/ui/select/artist-select';
-import GenresSelect from '@/components/ui/select/genres-select';
+import GenresVideoSelect from '@/components/ui/select/genres-video-select';
 import LabelSelect from '@/components/ui/select/label-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import { showNotification } from '@/helpers/messages-helper';
@@ -29,6 +29,7 @@ import {
     Row,
     Select,
     Tag,
+    theme,
     Tooltip,
     Typography,
 } from 'antd';
@@ -49,7 +50,10 @@ export default function MetadataFields({
     onFieldUpdate,
     form,
 }: MetadataFieldsProps) {
+    const { token } = theme.useToken();
     const messages = useTranslations();
+    const titleValue = Form.useWatch('title', form) ?? dataEdit?.title ?? '';
+    const titleLength = titleValue ? titleValue.length : 0;
     const keywordsValue = Form.useWatch(['video', 'keywords'], form);
     const keywordsLength = Array.isArray(keywordsValue)
         ? keywordsValue.join(',').length
@@ -217,6 +221,16 @@ export default function MetadataFields({
                         }),
                     },
                 ]}
+                extra={
+                    titleLength > 70 ? (
+                        <Typography.Text
+                            style={{ color: token.colorLink }}
+                            className="text-xs"
+                        >
+                            {messages('releaseVideo.fields.titleLengthNote')}
+                        </Typography.Text>
+                    ) : null
+                }
             >
                 <Input
                     placeholder={messages(
@@ -288,7 +302,7 @@ export default function MetadataFields({
                     },
                 ]}
             >
-                <GenresSelect
+                <GenresVideoSelect
                     placeholder={messages('releaseVideo.fields.genre')}
                     allowClear
                     onChange={(value) =>
@@ -645,23 +659,7 @@ export default function MetadataFields({
                         },
                     },
                 ]}
-            >
-                <div>
-                    <Select
-                        mode="tags"
-                        placeholder={messages(
-                            'releaseVideo.fields.keywordsPlaceholder'
-                        )}
-                        allowClear
-                        tokenSeparators={[',']}
-                        onChange={(value) =>
-                            onFieldUpdate?.({
-                                video: {
-                                    keywords: value,
-                                },
-                            })
-                        }
-                    />
+                extra={
                     <div className="mt-1 text-right">
                         <Typography.Text
                             type={keywordsLength > 500 ? 'danger' : 'secondary'}
@@ -670,7 +668,22 @@ export default function MetadataFields({
                             {keywordsLength} / 500
                         </Typography.Text>
                     </div>
-                </div>
+                }
+            >
+                <Select
+                    mode="tags"
+                    placeholder={messages(
+                        'releaseVideo.fields.keywordsPlaceholder'
+                    )}
+                    tokenSeparators={[',']}
+                    onChange={(value) =>
+                        onFieldUpdate?.({
+                            video: {
+                                keywords: value,
+                            },
+                        })
+                    }
+                />
             </AppFormItem>
 
             {/* Description (Full Width) */}

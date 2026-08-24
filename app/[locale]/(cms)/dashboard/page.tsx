@@ -7,21 +7,14 @@ import ListRelease from '@/modules/dashboard/components/list-release';
 // import MapChart from '@/modules/dashboard/components/map-chart';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedNumber } from '@/helpers/common';
-import RootAnalyticsOverviewChart from '@/modules/analytics2/components/chart/root-analytics-overview-chart';
-import MetricHeaderTabs, {
-    MetricHeaderTabItem,
-} from '@/modules/analytics2/components/metric-header-tabs';
 import AnalyticsRankings from '@/modules/analytics2/components/ranking/analytics-rankings';
-import { ANALYTICS_METRIC_KEY } from '@/modules/analytics2/enums';
-import { useGetAnalyticsSummary } from '@/modules/analytics2/hooks/use-get-analytics-summary';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import { DashboardDataFilter } from '@/modules/dashboard/types';
+import { RELEASE_TYPE } from '@/modules/releases/enums';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import dayjs from 'dayjs';
-import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -49,7 +42,17 @@ function Dashboard({}: Props) {
         isImportedFromReport: 'false',
     });
     const messages = useTranslations();
-    const { releasesData, isLoading } = useGetListReleases(dataFilter);
+    const { releasesData: audioReleasesData, isLoading: isLoadingAudio } =
+        useGetListReleases({
+            ...dataFilter,
+            type: RELEASE_TYPE.AUDIO,
+        });
+
+    const { releasesData: videoReleasesData, isLoading: isLoadingVideo } =
+        useGetListReleases({
+            ...dataFilter,
+            type: RELEASE_TYPE.VIDEO,
+        });
 
     const fromDate = dataFilter.startDate
         ? dayjs(dataFilter.startDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
@@ -58,48 +61,48 @@ function Dashboard({}: Props) {
         ? dayjs(dataFilter.endDate).format(DATE_FORMAT.MYSQL_TYPE_DATE)
         : '';
 
-    const [activeMetric, setActiveMetric] = useState<string>(
-        ANALYTICS_METRIC_KEY.TOTAL_VIEWS
-    );
+    // const [activeMetric, setActiveMetric] = useState<string>(
+    //     ANALYTICS_METRIC_KEY.TOTAL_VIEWS
+    // );
 
-    const handleMetricChange = (key: string) => {
-        setActiveMetric(key);
-    };
+    // const handleMetricChange = (key: string) => {
+    //     setActiveMetric(key);
+    // };
 
     const effectiveReleaseType = undefined;
 
-    const { analyticsSummaryData } = useGetAnalyticsSummary({
-        fromDate,
-        toDate,
-        releaseType: effectiveReleaseType,
-    });
+    // const { analyticsSummaryData } = useGetAnalyticsSummary({
+    //     fromDate,
+    //     toDate,
+    //     releaseType: effectiveReleaseType,
+    // });
 
-    const metricTabItems: MetricHeaderTabItem[] = [
-        {
-            key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
-            label: messages('analytics.totalTrendViews'),
-            value: formattedNumber(analyticsSummaryData?.totalTrendViews),
-            icon: Eye,
-            color: 'text-emerald-600 dark:text-emerald-400',
-            bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
-        },
-        {
-            key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
-            label: messages('analytics.revenue.totalUsage'),
-            value: formattedNumber(analyticsSummaryData?.totalUsage),
-            icon: Music,
-            color: 'text-purple-600 dark:text-purple-400',
-            bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
-        },
-        {
-            key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
-            label: messages('analytics.totalRevenueUsd'),
-            value: formattedNumber(analyticsSummaryData?.totalRevenueUsd),
-            icon: DollarSign,
-            color: 'text-cyan-600 dark:text-cyan-400',
-            bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
-        },
-    ];
+    // const metricTabItems: MetricHeaderTabItem[] = [
+    //     {
+    //         key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
+    //         label: messages('analytics.totalTrendViews'),
+    //         value: formattedNumber(analyticsSummaryData?.totalTrendViews),
+    //         icon: Eye,
+    //         color: 'text-emerald-600 dark:text-emerald-400',
+    //         bgColor: 'bg-emerald-100/50 dark:bg-emerald-900/30',
+    //     },
+    //     {
+    //         key: ANALYTICS_METRIC_KEY.TOTAL_USAGE,
+    //         label: messages('analytics.revenue.totalUsage'),
+    //         value: formattedNumber(analyticsSummaryData?.totalUsage),
+    //         icon: Music,
+    //         color: 'text-purple-600 dark:text-purple-400',
+    //         bgColor: 'bg-purple-100/50 dark:bg-purple-900/30',
+    //     },
+    //     {
+    //         key: ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD,
+    //         label: messages('analytics.totalRevenueUsd'),
+    //         value: formattedNumber(analyticsSummaryData?.totalRevenueUsd),
+    //         icon: DollarSign,
+    //         color: 'text-cyan-600 dark:text-cyan-400',
+    //         bgColor: 'bg-cyan-100/50 dark:bg-cyan-900/30',
+    //     },
+    // ];
 
     return (
         <div
@@ -137,11 +140,18 @@ function Dashboard({}: Props) {
                     />
 
                     <ListRelease
-                        data={releasesData.items.slice(0, 10)}
-                        loading={isLoading}
+                        data={audioReleasesData.items.slice(0, 10)}
+                        loading={isLoadingAudio}
+                        releaseType={RELEASE_TYPE.AUDIO}
                     />
 
-                    <div className="flex flex-col overflow-hidden rounded-lg border shadow-sm">
+                    <ListRelease
+                        data={videoReleasesData.items.slice(0, 10)}
+                        loading={isLoadingVideo}
+                        releaseType={RELEASE_TYPE.VIDEO}
+                    />
+
+                    {/* <div className="flex flex-col overflow-hidden rounded-lg border shadow-sm">
                         <MetricHeaderTabs
                             items={metricTabItems}
                             activeKey={activeMetric}
@@ -153,7 +163,7 @@ function Dashboard({}: Props) {
                             releaseType={effectiveReleaseType as any}
                             activeMetric={activeMetric}
                         />
-                    </div>
+                    </div> */}
 
                     <AnalyticsRankings fromDate={fromDate} toDate={toDate} />
                 </div>

@@ -1,9 +1,26 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { DeleteVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis, sourceTypeConfigApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys, sourceTypeConfigQueryKeys } from '../constants/query-keys';
-import { ReportConfigData, FtpExcludePatternData, EnrichScanScheduleData } from '../types';
+import {
+    reportConfigApis,
+    ftpExcludePatternApis,
+    ftpProviderConfigApis,
+    enrichScanScheduleApis,
+    sourceTypeConfigApis,
+} from '../apis';
+import {
+    reportConfigQueryKeys,
+    ftpExcludePatternQueryKeys,
+    ftpProviderConfigQueryKeys,
+    enrichScanScheduleQueryKeys,
+    sourceTypeConfigQueryKeys,
+} from '../constants/query-keys';
+import {
+    ReportConfigData,
+    FtpExcludePatternData,
+    FtpProviderConfigData,
+    EnrichScanScheduleData,
+} from '../types';
 
 export const useDeleteReportConfig = () => {
     const queryClient = useQueryClient();
@@ -130,6 +147,38 @@ export const useDeleteSourceTypeConfig = () => {
 
     return {
         deleteSourceTypeConfig: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useDeleteFtpProviderConfig = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({ id }: DeleteVariables<FtpProviderConfigData['id']>) =>
+            ftpProviderConfigApis.delete(id),
+        onSuccess: (
+            data,
+            { onSuccess }: DeleteVariables<FtpProviderConfigData['id']>
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: ftpProviderConfigQueryKeys.lists(),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: DeleteVariables<FtpProviderConfigData['id']>
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        deleteFtpProviderConfig: mutation.mutate,
         ...mutation,
     };
 };

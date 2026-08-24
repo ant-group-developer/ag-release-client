@@ -9,6 +9,8 @@ import {
     EnrichScanScheduleData,
     FtpExcludePatternData,
     FtpExcludePatternDataFilter,
+    FtpProviderConfigData,
+    FtpProviderConfigDataFilter,
     ReportConfigData,
     ReportConfigDataFilter,
     EtlJobsDataFilter,
@@ -20,6 +22,7 @@ import {
 import {
     CreateEnrichScanSchedulePayload,
     CreateFtpExcludePatternPayload,
+    CreateFtpProviderConfigPayload,
     CreateReportConfigPayload,
     DeleteImportedReleasesPayload,
     DeleteImportedReleasesResponse,
@@ -33,8 +36,11 @@ import {
     PreValidateImportResponse,
     StartEnrichScanPayload,
     StartEnrichScanResponse,
+    TestFtpConnectionPayload,
+    TestFtpConnectionResponse,
     UpdateEnrichScanSchedulePayload,
     UpdateFtpExcludePatternPayload,
+    UpdateFtpProviderConfigPayload,
     UpdateReportConfigPayload,
     UpdateSourceTypeConfigPayload,
 } from '../types/payload';
@@ -277,6 +283,44 @@ export const sourceTypeConfigApis = {
     },
     delete: (sourceType: string) => {
         return axiosInstance.delete(`/analytics/source-type-configs/${sourceType}`);
+    },
+};
+
+export const ftpProviderConfigApis = {
+    getList: (params: FtpProviderConfigDataFilter) => {
+        return axiosInstance.get<PaginationResponse<FtpProviderConfigData>>(
+            '/admin/ftp-provider-configs',
+            { params }
+        );
+    },
+    getDetail: (id: FtpProviderConfigData['id']) => {
+        return axiosInstance.get<DetailResponse<FtpProviderConfigData>>(
+            `/admin/ftp-provider-configs/${id}`
+        );
+    },
+    create: (payload: CreateFtpProviderConfigPayload) => {
+        return axiosInstance.post<DetailResponse<FtpProviderConfigData>>(
+            '/admin/ftp-provider-config',
+            payload
+        );
+    },
+    update: (
+        id: FtpProviderConfigData['id'],
+        payload: UpdateFtpProviderConfigPayload
+    ) => {
+        return axiosInstance.patch<DetailResponse<FtpProviderConfigData>>(
+            `/admin/ftp-provider-configs/${id}`,
+            payload
+        );
+    },
+    delete: (id: FtpProviderConfigData['id']) => {
+        return axiosInstance.delete(`/admin/ftp-provider-configs/${id}`);
+    },
+    testConnection: (payload: TestFtpConnectionPayload) => {
+        return axiosInstance.post<DetailResponse<TestFtpConnectionResponse>>(
+            '/admin/ftp-provider-configs/test',
+            payload
+        );
     },
 };
 

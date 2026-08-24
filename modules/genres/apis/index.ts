@@ -1,5 +1,6 @@
 import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, PaginationResponse } from '@/types/api';
+import { GENRE_SCOPE } from '../enums';
 import { GenresData, GenresDataFilter, GenresSimpleData } from '../types';
 import { CreateGenrePayload, UpdateGenrePayload } from '../types/payload';
 
@@ -10,9 +11,10 @@ export const genresApi = {
         });
     },
 
-    getListSimple: () => {
+    getListSimple: (params?: { scope?: GENRE_SCOPE }) => {
         return axiosInstance.get<DetailResponse<GenresSimpleData[]>>(
-            '/genres/simple'
+            '/genres/simple',
+            { params }
         );
     },
 

@@ -34,6 +34,13 @@ export enum REPORT_IMPORT_TAB {
     DELETE_REPORT = 'delete-report',
     SPOTIFY_R2_SYNC = 'spotify-r2-sync',
     SOURCE_TYPE_CONFIG = 'source-type-config',
+    FTP_PROVIDER_CONFIG = 'ftp-provider-config',
+}
+
+export enum TYPE_MODAL_FTP_PROVIDER_CONFIG {
+    CREATE = 'CREATE_FTP_PROVIDER_CONFIG',
+    UPDATE = 'UPDATE_FTP_PROVIDER_CONFIG',
+    DELETE = 'DELETE_FTP_PROVIDER_CONFIG',
 }
 
 export enum TYPE_MODAL_ENRICH_SCAN_SCHEDULE {

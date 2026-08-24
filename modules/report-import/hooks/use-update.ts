@@ -1,10 +1,33 @@
 import { useApiNotify } from '@/hooks/use-api-notify';
 import { UpdateVariables } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { reportConfigApis, ftpExcludePatternApis, enrichScanScheduleApis, sourceTypeConfigApis } from '../apis';
-import { reportConfigQueryKeys, ftpExcludePatternQueryKeys, enrichScanScheduleQueryKeys, sourceTypeConfigQueryKeys } from '../constants/query-keys';
-import { ReportConfigData, FtpExcludePatternData, EnrichScanScheduleData } from '../types';
-import { UpdateReportConfigPayload, UpdateFtpExcludePatternPayload, UpdateEnrichScanSchedulePayload, UpdateSourceTypeConfigPayload } from '../types/payload';
+import {
+    reportConfigApis,
+    ftpExcludePatternApis,
+    ftpProviderConfigApis,
+    enrichScanScheduleApis,
+    sourceTypeConfigApis,
+} from '../apis';
+import {
+    reportConfigQueryKeys,
+    ftpExcludePatternQueryKeys,
+    ftpProviderConfigQueryKeys,
+    enrichScanScheduleQueryKeys,
+    sourceTypeConfigQueryKeys,
+} from '../constants/query-keys';
+import {
+    ReportConfigData,
+    FtpExcludePatternData,
+    FtpProviderConfigData,
+    EnrichScanScheduleData,
+} from '../types';
+import {
+    UpdateReportConfigPayload,
+    UpdateFtpExcludePatternPayload,
+    UpdateFtpProviderConfigPayload,
+    UpdateEnrichScanSchedulePayload,
+    UpdateSourceTypeConfigPayload,
+} from '../types/payload';
 
 export const useUpdateReportConfig = () => {
     const queryClient = useQueryClient();
@@ -179,6 +202,55 @@ export const useUpdateSourceTypeConfig = () => {
 
     return {
         updateSourceTypeConfig: mutation.mutate,
+        ...mutation,
+    };
+};
+
+export const useUpdateFtpProviderConfig = () => {
+    const queryClient = useQueryClient();
+    const { handleSuccess, handleError } = useApiNotify();
+
+    const mutation = useMutation({
+        mutationFn: ({
+            id,
+            payload,
+        }: UpdateVariables<
+            FtpProviderConfigData['id'],
+            UpdateFtpProviderConfigPayload
+        >) => ftpProviderConfigApis.update(id, payload),
+        onSuccess: (
+            data,
+            {
+                id,
+                onSuccess,
+            }: UpdateVariables<
+                FtpProviderConfigData['id'],
+                UpdateFtpProviderConfigPayload
+            >
+        ) => {
+            queryClient.invalidateQueries({
+                queryKey: ftpProviderConfigQueryKeys.lists(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: ftpProviderConfigQueryKeys.detail(id),
+            });
+            handleSuccess(data?.data);
+            onSuccess?.();
+        },
+        onError: (
+            error,
+            { onError }: UpdateVariables<
+                FtpProviderConfigData['id'],
+                UpdateFtpProviderConfigPayload
+            >
+        ) => {
+            onError?.();
+            handleError(error);
+        },
+    });
+
+    return {
+        updateFtpProviderConfig: mutation.mutate,
         ...mutation,
     };
 };

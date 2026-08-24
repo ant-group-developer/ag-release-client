@@ -41,7 +41,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 type Props = {};
 
-
 export default function Distribution({}: Props) {
     // const messages = useTranslations();
     const selectedRow = useReleaseDistribute((state) => state.selectedRows);
@@ -92,16 +91,12 @@ export default function Distribution({}: Props) {
     const messages = useTranslations();
     const queryClient = useQueryClient();
 
-    const handleSyncStatus = () => {
+    const handleSyncStatus = async () => {
         if (!formValues?.id) return;
-        const promise = syncStatusFromCi({
+        await syncStatusFromCi({
             releaseId: formValues.id,
         });
-        toastPromise(promise, messages, {
-            pending: messages('common.loading'),
-        });
     };
-
 
     const handleDistribution = () => {
         closeModal();
@@ -251,7 +246,6 @@ export default function Distribution({}: Props) {
                         dataFilter={dataFilter}
                     />
                 </div>
-
             </div>
 
             <AppPagination

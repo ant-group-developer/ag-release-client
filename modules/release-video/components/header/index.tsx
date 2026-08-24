@@ -11,6 +11,7 @@ import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetListSimpleChannel } from '@/modules/channels/hooks/use-get-list-simple-channel';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
 import { RELEASES_STATUS, RELEASE_TYPE } from '@/modules/releases/enums';
 import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';

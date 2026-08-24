@@ -1,19 +1,18 @@
-import { cn } from '@/helpers/common';
 import { useQueryParams } from '@/hooks/use-query-params';
 import ArtistFormModal from '@/modules/artist/components/modal/artist-form';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
 import {
     ArtistData,
     ArtistDataSimple,
-    ArtistProfileData,
 } from '@/modules/artist/types';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { Avatar, Button, Empty, Select, SelectProps, Spin } from 'antd';
+import { Button, Empty, Select, SelectProps, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import CustomTooltip from '../tooltip/custom-tooltip';
+import { ArtistOptionItem } from './artist-option-item';
 
 type Props = SelectProps & {
     fallBack?: string;
@@ -83,52 +82,12 @@ export default function ArtistSelect({
         const item = oriOption.data.artistData as ArtistDataSimple;
         const disabled = oriOption.disabled;
         return (
-            <div
-                className={cn('grid grid-cols-3 items-center gap-1')}
-                style={{
-                    backgroundColor: disabled ? '#ccc' : '',
-                }}
-            >
-                <span className="truncate">
-                    <CustomTooltip title={item.name}>{item.name}</CustomTooltip>
-                </span>
-                <div className="flex gap-4">
-                    <div className="flex flex-col text-gray-500">
-                        <span>{messages('country.label')}</span>
-                        <span> {messages('genre.label')}</span>
-                    </div>
-                    <div className="flex flex-col font-medium">
-                        <span>{item?.country?.name}</span>
-                        <span>{item?.genre?.name}</span>
-                    </div>
-                </div>
-                <div className="mr-2 flex justify-end gap-1">
-                    <Avatar.Group
-                        max={{
-                            count: 2,
-                        }}
-                    >
-                        {item?.artistProfiles?.map(
-                            (profile: ArtistProfileData) => (
-                                <Avatar
-                                    key={profile.id}
-                                    size={26}
-                                    src={profile.dsp?.picture ?? ''}
-                                    className="hover:opacity-80"
-                                    onClick={(e) => {
-                                        e?.stopPropagation();
-                                        window.open(
-                                            profile.url,
-                                            '_blank',
-                                            'noopener'
-                                        );
-                                    }}
-                                />
-                            )
-                        )}
-                    </Avatar.Group>
-                </div>
-            </div>
+            <ArtistOptionItem
+                item={item}
+                disabled={disabled}
+                countryLabel={messages('country.label')}
+                genreLabel={messages('genre.label')}
+            />
         );
     };
 
@@ -148,6 +107,7 @@ export default function ArtistSelect({
         <>
             <Select
                 {...props}
+                virtual={false}
                 loading={isFetching || props?.loading}
                 showSearch
                 onSearch={(value) => debounceSearch(value)}
@@ -159,17 +119,16 @@ export default function ArtistSelect({
                     return (
                         <div>
                             {menu}
-                            <div className="p-2 text-center">
-                                <Spin
-                                    spinning={isFetchingNextPage}
-                                    size="small"
-                                />
-                            </div>
+                            {isFetchingNextPage && (
+                                <div className="p-2 text-center">
+                                    <Spin size="small" />
+                                </div>
+                            )}
                             {showCreate && (
                                 <PermissionGate
                                     permission={PERMISSION.ARTIST.CREATE}
                                 >
-                                    <div className="py-1">
+                                    <div className="p-1">
                                         <Button
                                             type="primary"
                                             className="w-full"
@@ -183,20 +142,20 @@ export default function ArtistSelect({
                         </div>
                     );
                 }}
-                // onPopupScroll={(e) => {
-                //     const target = e.target as HTMLElement;
-                //     if (
-                //         target.scrollTop + target.offsetHeight >=
-                //         target.scrollHeight - 50
-                //     ) {
-                //         if (hasNextPage && !isFetchingNextPage) {
-                //             fetchNextPage();
-                //         }
-                //     }
-                // }}
+                onPopupScroll={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (
+                        target.scrollTop + target.offsetHeight >=
+                        target.scrollHeight - 30
+                    ) {
+                        if (hasNextPage && !isFetchingNextPage) {
+                            fetchNextPage();
+                        }
+                    }
+                }}
                 notFoundContent={
                     isFetching ? (
-                        <div className="min-h-5 text-center">
+                        <div className="min-h-5 text-center p-2">
                             <Spin spinning={true} />
                         </div>
                     ) : (

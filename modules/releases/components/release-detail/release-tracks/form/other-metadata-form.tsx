@@ -4,8 +4,9 @@ import GenresSelect from '@/components/ui/select/genres-select';
 import LanguageSelect from '@/components/ui/select/language-select';
 import OriginalTypeSelect from '@/components/ui/select/original-type-select';
 import TrackTypesSelect from '@/components/ui/select/track-types-select';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import SensitiveContentSelect from '@/modules/track-sensitive/components/select/isSensitiveContent-select';
 import { useUpdateTrackDraft } from '@/modules/tracks/hooks/use-update-track-draft';
@@ -146,6 +147,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                 <GenresSelect
                                     className="w-full"
                                     showSearch
+                                    scope={GENRE_SCOPE.AUDIO}
                                     {...field}
                                     fallBack={trackData?.primaryGenre?.name}
                                     onChange={(e) => {
@@ -177,6 +179,7 @@ export default function OtherMetadataForm({ trackData }: Props) {
                                     className="w-full"
                                     showSearch
                                     allowClear
+                                    scope={GENRE_SCOPE.AUDIO}
                                     {...field}
                                     fallBack={trackData?.subGenre?.name}
                                     onChange={(e) => {
@@ -631,4 +634,3 @@ export default function OtherMetadataForm({ trackData }: Props) {
         </ConfigProvider>
     );
 }
-

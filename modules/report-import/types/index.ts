@@ -87,4 +87,21 @@ export interface SourceTypeConfigData {
     updatedAt: string;
 }
 
+export interface FtpProviderConfigData extends CommonAttribute {
+    code: string;
+    name: string;
+    host: string;
+    port: number;
+    username: string;
+    secure: string | boolean;
+    basePath: string;
+    isActive: boolean;
+    description: string;
+}
+
+export interface FtpProviderConfigDataFilter extends CommonParams {
+    keyword?: string;
+    isActive?: boolean | string;
+}
+
 

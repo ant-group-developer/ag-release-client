@@ -56,11 +56,16 @@ export default function RevenueRankings({
         sourceTypeColumns,
     } = useRevenueRankingColumns({ fromDate, toDate });
 
-    const topRankingTitle = (title: string) =>
-        messages('analytics2.topRankingTitle', {
+    const topRankingTitle = (title: string) => {
+        const formattedTitle =
+            title === title.toUpperCase() && title.length <= 4
+                ? title
+                : title.toLowerCase();
+        return messages('analytics2.topRankingTitle', {
             count: topN,
-            title,
+            title: formattedTitle,
         });
+    };
 
     const { topArtistData, isFetching: isArtistsLoading } =
         useGetRevenueTopArtist({
@@ -222,7 +227,7 @@ export default function RevenueRankings({
                         <Col span={12} xs={24} lg={12}>
                             <RankingCard
                                 title={topRankingTitle(
-                                    messages('common.tracks')
+                                    messages('common.track')
                                 )}
                                 columns={trackColumns}
                                 dataSource={topTrackData?.items}
@@ -251,6 +256,39 @@ export default function RevenueRankings({
                             />
                         </Col>
                     </>
+                )}
+
+                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
+                    <Col span={12} xs={24} lg={12}>
+                        <RankingCard
+                            title={topRankingTitle(messages('common.video'))}
+                            columns={releaseVideoColumns}
+                            dataSource={topReleaseVideoData?.items}
+                            loading={isReleaseVideoLoading}
+                            rowKey="releaseId"
+                            labelKey="title"
+                            valueKey="revenueUsd"
+                            defaultView={RankingCardView.LIST}
+                            // viewMoreHref={createViewMoreHref(
+                            //     APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
+                            //     {
+                            //         fromDate,
+                            //         toDate,
+                            //         type: ANALYTICS_VIEW_TYPE.REVENUE,
+                            //         releaseType,
+                            //         sortBy,
+                            //     }
+                            // )}
+                            onViewMore={() =>
+                                openAdvancedMode({
+                                    fromDate,
+                                    toDate,
+                                    entityType:
+                                        ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                })
+                            }
+                        />
+                    </Col>
                 )}
 
                 <Col span={12} xs={24} lg={12}>
@@ -427,40 +465,6 @@ export default function RevenueRankings({
                                     toDate,
                                     entityType:
                                         ANALYTICS_ENTITY_TYPE.SOURCE_TYPE,
-                                })
-                            }
-                        />
-                    </Col>
-                )}
-                {releaseType !== ANALYTICS_RELEASE_TYPE.AUDIO && (
-                    <Col span={12} xs={24} lg={12}>
-                        <RankingCard
-                            title={topRankingTitle(
-                                messages('common.releasesVideo')
-                            )}
-                            columns={releaseVideoColumns}
-                            dataSource={topReleaseVideoData?.items}
-                            loading={isReleaseVideoLoading}
-                            rowKey="releaseId"
-                            labelKey="title"
-                            valueKey="revenueUsd"
-                            defaultView={RankingCardView.LIST}
-                            // viewMoreHref={createViewMoreHref(
-                            //     APP_ROUTES.ANALYTICS_VIDEO_RELEASES,
-                            //     {
-                            //         fromDate,
-                            //         toDate,
-                            //         type: ANALYTICS_VIEW_TYPE.REVENUE,
-                            //         releaseType,
-                            //         sortBy,
-                            //     }
-                            // )}
-                            onViewMore={() =>
-                                openAdvancedMode({
-                                    fromDate,
-                                    toDate,
-                                    entityType:
-                                        ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
                                 })
                             }
                         />

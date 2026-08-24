@@ -8,8 +8,10 @@ import ActionButton from '@/components/ui/button/action-button';
 import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import { FALLBACK_IMAGE } from '@/constants/common';
-import { TYPE_MODAL_GENRES } from '../../enums';
+import { GENRE_SCOPE, TYPE_MODAL_GENRES } from '../../enums';
 import { GenresData, GenresDataFilter } from '../../types';
+
+import { GenreScopeSelect } from './genre-scope-select';
 
 // Table cho Genres
 
@@ -101,6 +103,16 @@ export const GenresTable = ({ dataFilter, ...props }: Props) => {
                 <span className="line-clamp-3 truncate whitespace-pre-line">
                     {value}
                 </span>
+            ),
+        },
+        {
+            title: messages('common.scope'),
+            key: 'scope',
+            dataIndex: 'scope',
+            align: 'left',
+            width: 150,
+            render: (value: GENRE_SCOPE, record: GenresData) => (
+                <GenreScopeSelect value={value} record={record} />
             ),
         },
         {

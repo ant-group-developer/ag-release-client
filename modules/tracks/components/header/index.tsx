@@ -3,6 +3,7 @@ import { SIZE_ICON } from '@/constants/common';
 import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
 import {
     CalendarOutlined,
@@ -315,6 +316,7 @@ export default function TrackHeader({
 
                 <ProForm.Item name="genres" label={messages('genre.label')}>
                     <GenresSelect
+                        scope={GENRE_SCOPE.AUDIO}
                         allowClear
                         placeholder={messages('placeholder.filterBy', {
                             value: messages('genre.genres').toLowerCase(),

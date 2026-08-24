@@ -32,7 +32,7 @@ export const FieldMappingsTable = ({
     }, [fieldMappings]);
 
     const getRowKey = (record: FieldMapping) =>
-        `${record.reportColumn}-${record.targetColumn}`;
+        `${record.reportColumn}-${record.parserColumn}-${record.targetColumn}`;
 
     const isEditing = (record: FieldMapping) =>
         getRowKey(record) === editingKey;
@@ -67,7 +67,7 @@ export const FieldMappingsTable = ({
                         fieldMappings: [
                             {
                                 reportColumn: row.reportColumn,
-                                parserColumn: record.parserColumn,
+                                parserColumn: row.parserColumn,
                                 targetColumn: row.targetColumn,
                                 transform: row.transform,
                             },
@@ -99,21 +99,28 @@ export const FieldMappingsTable = ({
 
     const columns = [
         {
-            title: 'Report Column',
+            title: messages('dspReport.ftpParserDetail.reportColumn'),
             dataIndex: 'reportColumn',
             key: 'reportColumn',
             editable: true,
             width: 220,
         },
         {
-            title: 'Target Column',
+            title: messages('dspReport.ftpParserDetail.parserColumn'),
+            dataIndex: 'parserColumn',
+            key: 'parserColumn',
+            editable: true,
+            width: 220,
+        },
+        {
+            title: messages('dspReport.ftpParserDetail.targetColumn'),
             dataIndex: 'targetColumn',
             key: 'targetColumn',
             editable: true,
             width: 220,
         },
         {
-            title: 'Transform',
+            title: messages('dspReport.ftpParserDetail.transform'),
             dataIndex: 'transform',
             key: 'transform',
             editable: true,

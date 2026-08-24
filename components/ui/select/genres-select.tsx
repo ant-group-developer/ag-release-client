@@ -1,13 +1,15 @@
 import { toNonAccentVietnamese } from '@/helpers/string';
+import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
 import { Select, SelectProps } from 'antd';
 
 type Props = Omit<SelectProps, 'options'> & {
     fallBack?: string;
+    scope?: GENRE_SCOPE;
 };
 
-export default function GenresSelect({ fallBack, ...props }: Props) {
-    const { genresData } = useGetListSimpleGenres();
+export default function GenresSelect({ fallBack, scope, ...props }: Props) {
+    const { genresData } = useGetListSimpleGenres({ scope });
     const option = genresData?.map((item) => {
         return {
             id: item.id,

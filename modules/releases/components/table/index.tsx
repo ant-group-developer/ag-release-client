@@ -37,6 +37,7 @@ import {
 } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
 import ReleaseStatusTag from '../tag/release-status-tag';
+import StatusFilterDropdown from './status-filter-dropdown';
 import DspDeliveryFilterDropdown from './dsp-delivery-filter-dropdown';
 import DspLiveColumn from './dsp-live-column';
 import DspStatusModal from './dsp-status-modal';
@@ -63,6 +64,7 @@ export default function ReleasesTable({
     const { token } = theme.useToken();
     const [isDspModalOpen, setIsDspModalOpen] = useState(false);
     const [isDspFilterOpen, setIsDspFilterOpen] = useState(false);
+    const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false);
     const [selectedRecord, setSelectedRecord] = useState<ReleasesData | null>(
         null
     );
@@ -174,6 +176,25 @@ export default function ReleasesTable({
             dataIndex: RELEASES_TABLE_KEY.STATUS,
             align: 'left',
             width: 150,
+            filterDropdownOpen: isStatusFilterOpen,
+            onFilterDropdownOpenChange: setIsStatusFilterOpen,
+            filterIcon: () => (
+                <Filter
+                    size={SIZE_ICON_SMALL}
+                    style={{
+                        color: dataFilter.status
+                            ? token.colorPrimary
+                            : undefined,
+                    }}
+                />
+            ),
+            filterDropdown: () => (
+                <StatusFilterDropdown
+                    dataFilter={dataFilter}
+                    onChangeFilter={onChangeFilter}
+                    onClose={() => setIsStatusFilterOpen(false)}
+                />
+            ),
             render: (value, record) => {
                 return <ReleaseStatusTag status={record?.status} />;
             },
