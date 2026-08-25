@@ -45,7 +45,7 @@ export type AnalyticsScopeParams = Pick<
     | 'dspReportId'
     | 'artistId'
     | 'channelId'
-    | 'sourceType'
+    | 'importSource'
 >;
 
 /**
@@ -82,7 +82,7 @@ export const getAnalyticsScopeParams = (
         case ANALYTICS_ENTITY_TYPE.CHANNEL:
             return { channelId: entity.id };
         case ANALYTICS_ENTITY_TYPE.SOURCE_TYPE:
-            return { sourceType: entity.id };
+            return { importSource: entity.id };
         default:
             return {};
     }
