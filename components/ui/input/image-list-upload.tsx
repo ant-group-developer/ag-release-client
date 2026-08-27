@@ -17,6 +17,7 @@ type Props = UploadProps & {
     imageFit?: 'contain' | 'cover';
     previewAspectRatio?: string;
     onGetPreviewUrl?: (file: UploadFile) => Promise<string>;
+    uploadButton?: ReactNode;
 };
 
 export default function ImageListUpload({
@@ -113,7 +114,7 @@ export default function ImageListUpload({
         props.onChange?.(info);
     };
 
-    const uploadButton = (
+    const defaultUploadButton = (
         <button className="flex flex-col items-center" type="button">
             <Plus />
             {showText && (
@@ -168,7 +169,9 @@ export default function ImageListUpload({
                 onChange={handleChange}
                 beforeUpload={beforeUpload}
             >
-                {fileList.length >= (props.maxCount || 0) ? null : uploadButton}
+                {fileList.length >= (props.maxCount || 0)
+                    ? null
+                    : (props.uploadButton ?? defaultUploadButton)}
             </Upload>
 
             {description}

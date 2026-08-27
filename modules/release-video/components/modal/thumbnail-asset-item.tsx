@@ -7,7 +7,8 @@ import { ReleasesData } from '@/modules/releases/types';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { CreateBucketFile } from '@/modules/upload/types/data';
-import { FormInstance, Modal, Space } from 'antd';
+import { PictureOutlined } from '@ant-design/icons';
+import { FormInstance, Modal, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -34,7 +35,7 @@ export default function ThumbnailAssetItem({
         useGetLinkReadFile(coverArtFileId);
 
     useEffect(() => {
-        if (thumbnailReadUrl) {
+        if (thumbnailReadUrl && coverArtFileId) {
             setThumbnailUrl(thumbnailReadUrl);
             form.setFieldsValue({
                 thumbnailFile: {
@@ -42,6 +43,7 @@ export default function ThumbnailAssetItem({
                         {
                             uid: coverArtFileId,
                             url: thumbnailReadUrl,
+                            thumbUrl: thumbnailReadUrl,
                             name: dataEdit?.title
                                 ? messages(
                                       'releaseVideo.fields.thumbnailFileName',
@@ -55,43 +57,30 @@ export default function ThumbnailAssetItem({
                     ],
                 },
             });
-        } else if (!coverArtFileId) {
-            setThumbnailUrl('');
-            form.setFieldsValue({
-                thumbnailFile: null,
-            });
         }
-    }, [
-        thumbnailReadUrl,
-        coverArtFileId,
-        dataEdit?.title,
-        form,
-        messages,
-        setThumbnailUrl,
-    ]);
+    }, [thumbnailReadUrl, coverArtFileId, dataEdit?.title, form, messages]);
 
     const handleThumbnailUpload = async (info: any) => {
         if (disabled) return;
-        setIsThumbnailUploading(true);
-        const file = info.fileList[0];
-        if (!file) {
+        const file = info.fileList?.[0];
+        if (!file || !file.originFileObj) {
             return;
         }
+        setIsThumbnailUploading(true);
         const fileOriginal = file.originFileObj;
-        if (!fileOriginal) return;
 
         const objectUrl = URL.createObjectURL(fileOriginal);
-        const updatedFileList = info.fileList.map((item: any) =>
-            item.uid === file.uid
-                ? {
-                      ...item,
-                      status: 'uploading',
-                      percent: 99,
-                      url: objectUrl,
-                      thumbUrl: objectUrl,
-                  }
-                : item
-        );
+        const updatedFileList = [
+            {
+                uid: file.uid,
+                name: fileOriginal.name,
+                status: 'uploading',
+                percent: 99,
+                url: objectUrl,
+                thumbUrl: objectUrl,
+                originFileObj: fileOriginal,
+            },
+        ];
         form.setFieldsValue({
             thumbnailFile: {
                 ...info,
@@ -129,67 +118,72 @@ export default function ThumbnailAssetItem({
                             setIsThumbnailUploading(false);
                             setThumbnailUrl(objectUrl);
 
-                            const successFileList = info.fileList.map(
-                                (item: any) =>
-                                    item.uid === file.uid
-                                        ? {
-                                              ...item,
-                                              status: 'done',
-                                              url: objectUrl,
-                                              thumbUrl: objectUrl,
-                                              originFileObj: fileOriginal,
-                                              name: fileOriginal.name,
-                                          }
-                                        : item
-                            );
+                            const successFileList = [
+                                {
+                                    uid: fileId,
+                                    name: fileOriginal.name,
+                                    status: 'done',
+                                    url: objectUrl,
+                                    thumbUrl: objectUrl,
+                                    originFileObj: fileOriginal,
+                                },
+                            ];
                             form.setFieldsValue({
                                 thumbnailFile: {
-                                    ...info,
                                     fileList: successFileList,
                                 },
                             });
                         },
                         onError: () => {
                             setIsThumbnailUploading(false);
-                            form.setFieldsValue({
-                                thumbnailFile: null,
-                            });
+                            form.setFields([
+                                {
+                                    name: 'thumbnailFile',
+                                    value: null,
+                                    errors: [],
+                                },
+                            ]);
                         },
                     });
                 } else {
                     setIsThumbnailUploading(false);
                     setThumbnailUrl(objectUrl);
-                    const successFileList = info.fileList.map((item: any) =>
-                        item.uid === file.uid
-                            ? {
-                                  ...item,
-                                  status: 'done',
-                                  url: objectUrl,
-                                  thumbUrl: objectUrl,
-                                  originFileObj: fileOriginal,
-                                  name: fileOriginal.name,
-                              }
-                            : item
-                    );
+                    const successFileList = [
+                        {
+                            uid: fileId || file.uid,
+                            name: fileOriginal.name,
+                            status: 'done',
+                            url: objectUrl,
+                            thumbUrl: objectUrl,
+                            originFileObj: fileOriginal,
+                        },
+                    ];
                     form.setFieldsValue({
                         thumbnailFile: {
-                            ...info,
                             fileList: successFileList,
                         },
                     });
                 }
             } else {
                 setIsThumbnailUploading(false);
-                form.setFieldsValue({
-                    thumbnailFile: null,
-                });
+                form.setFields([
+                    {
+                        name: 'thumbnailFile',
+                        value: null,
+                        errors: [],
+                    },
+                ]);
             }
         } catch (error) {
             console.error('Thumbnail upload failed:', error);
             setIsThumbnailUploading(false);
-            form.setFieldsValue({
-                thumbnailFile: null,
-            });
+            form.setFields([
+                {
+                    name: 'thumbnailFile',
+                    value: null,
+                    errors: [],
+                },
+            ]);
         }
     };
 
@@ -215,9 +209,13 @@ export default function ThumbnailAssetItem({
                             },
                             onSuccess: () => {
                                 setThumbnailUrl('');
-                                form.setFieldsValue({
-                                    thumbnailFile: null,
-                                });
+                                form.setFields([
+                                    {
+                                        name: 'thumbnailFile',
+                                        value: null,
+                                        errors: [],
+                                    },
+                                ]);
                                 setIsThumbnailUploading(false);
                                 resolve(true);
                             },
@@ -228,9 +226,13 @@ export default function ThumbnailAssetItem({
                         });
                     } else {
                         setThumbnailUrl('');
-                        form.setFieldsValue({
-                            thumbnailFile: null,
-                        });
+                        form.setFields([
+                            {
+                                name: 'thumbnailFile',
+                                value: null,
+                                errors: [],
+                            },
+                        ]);
                         resolve(true);
                     }
                 },
@@ -248,36 +250,10 @@ export default function ThumbnailAssetItem({
                 <span className="text-red-500">*</span>
             </Space>
 
-            <AppFormItem
-                name="thumbnailFile"
-                rules={[
-                    {
-                        validator: async (_, value) => {
-                            if (
-                                !value ||
-                                !value.fileList ||
-                                value.fileList.length === 0
-                            ) {
-                                return Promise.reject(
-                                    new Error(
-                                        messages(
-                                            'releaseVideo.fields.thumbnailNotUploaded'
-                                        )
-                                    )
-                                );
-                            }
-                            if (isThumbnailUploading) {
-                                return Promise.reject(
-                                    new Error(messages('common.processing'))
-                                );
-                            }
-                        },
-                    },
-                ]}
-            >
+            <AppFormItem name="thumbnailFile">
                 <ImageListUpload
                     id="thumbnailFile"
-                    // loading={isThumbnailUploading}
+                    loading={isThumbnailUploading}
                     accept="image/*"
                     maxCount={1}
                     imageFit="contain"
@@ -287,6 +263,22 @@ export default function ThumbnailAssetItem({
                     disabled={disabled || isThumbnailUploading}
                     onChange={handleThumbnailUpload}
                     onRemove={handleRemove}
+                    uploadButton={
+                        <div className="flex flex-col items-center justify-center gap-1.5 p-2">
+                            <div className="flex size-10 items-center justify-center rounded-full bg-blue-50 text-blue-500 dark:bg-blue-950/50">
+                                <PictureOutlined style={{ fontSize: 20 }} />
+                            </div>
+                            <Typography.Text strong style={{ fontSize: 13 }}>
+                                {messages('common.uploadImage')}
+                            </Typography.Text>
+                            <Typography.Text
+                                type="secondary"
+                                style={{ fontSize: 11 }}
+                            >
+                                PNG, JPG, JPEG (16:9 • )
+                            </Typography.Text>
+                        </div>
+                    }
                 />
             </AppFormItem>
         </div>
