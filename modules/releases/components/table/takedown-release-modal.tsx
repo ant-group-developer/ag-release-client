@@ -27,6 +27,7 @@ export default function TakedownReleaseModal({
         return (
             record?.releaseDspDeliveries?.filter(
                 (delivery) =>
+                    Boolean(delivery.hasLiveVersion) ||
                     delivery.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
             ) ?? []
         );

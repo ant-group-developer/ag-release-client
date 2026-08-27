@@ -67,7 +67,7 @@ export default function SystemReviewTab() {
     ).length;
 
     return (
-        <div className="flex flex-col gap-6 pb-12">
+        <div className="flex flex-col gap-4 pb-12">
             {/* CARD 1: KHUNG DUYỆT THỰC THI */}
             <ApprovalCard
                 releaseId={releaseId}

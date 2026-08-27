@@ -1326,6 +1326,7 @@
             "label": "Release status",
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
+            "partial_done": "Partial done",
             "failed": "Failed"
         },
         "statusV2": {

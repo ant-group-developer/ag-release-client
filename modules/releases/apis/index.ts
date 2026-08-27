@@ -27,9 +27,6 @@ import {
     UpsertReleaseCaptionsPayload,
 } from '../types/payload';
 
-const RELEASE_ENRICHED_ERRORS_API_PATH = '/release-errors/enriched';
-const RELEASE_ERRORS_BULK_API_PATH = '/release-errors/bulk';
-
 export const releasesApi = {
     getList: (params: ReleasesDataFilter) => {
         return axiosInstance.post<PaginationResponse<ReleasesData>>(
@@ -96,7 +93,7 @@ export const releasesApi = {
 
     getEnrichedErrors: (params: ReleaseEnrichedErrorFilter) => {
         return axiosInstance.get<DetailResponse<ReleaseEnrichedError[]>>(
-            RELEASE_ENRICHED_ERRORS_API_PATH,
+            '/release-errors/enriched',
             {
                 params,
             }
@@ -104,11 +101,11 @@ export const releasesApi = {
     },
 
     bulkUpdateReleaseErrors: (payload: BulkUpdateReleaseErrorsPayload) => {
-        return axiosInstance.put(RELEASE_ERRORS_BULK_API_PATH, payload);
+        return axiosInstance.put('/release-errors/bulk', payload);
     },
 
     bulkCreateReleaseErrors: (payload: BulkCreateReleaseErrorsPayload) => {
-        return axiosInstance.post(RELEASE_ERRORS_BULK_API_PATH, payload);
+        return axiosInstance.post('/release-errors/bulk', payload);
     },
 
     updateReleaseReviewDecision: (
