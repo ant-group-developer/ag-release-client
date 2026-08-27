@@ -56,6 +56,7 @@ type ReleaseStatusMessageKey =
     | 'release.status.processing'
     | 'release.status.awaiting_action'
     | 'release.status.distributed'
+    | 'release.status.partial_done'
     | 'release.status.partially_failed'
     | 'release.status.failed'
     | 'release.status.taken_down'
@@ -68,6 +69,7 @@ export const getIntlCodeByReleaseStatus = (
         [RELEASES_STATUS.PROCESSING]: 'release.status.processing',
         [RELEASES_STATUS.AWAITING_ACTION]: 'release.status.awaiting_action',
         [RELEASES_STATUS.DISTRIBUTED]: 'release.status.distributed',
+        [RELEASES_STATUS.PARTIAL_DONE]: 'release.status.partial_done',
         [RELEASES_STATUS.PARTIALLY_FAILED]: 'release.status.partially_failed',
         [RELEASES_STATUS.FAILED]: 'release.status.failed',
         [RELEASES_STATUS.TAKEN_DOWN]: 'release.status.taken_down',
