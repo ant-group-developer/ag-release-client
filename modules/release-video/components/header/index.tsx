@@ -1,20 +1,12 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
 import { FilterConfig, FilterPanel } from '@/components/filter-panel';
-import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import { SIZE_ICON } from '@/constants/common';
-import { APP_ROUTES } from '@/enums/routes';
 import { UseFilterProps } from '@/hooks/use-filter';
-import { useRouter } from '@/i18n/routing';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetListSimpleChannel } from '@/modules/channels/hooks/use-get-list-simple-channel';
-import { GENRE_SCOPE } from '@/modules/genres/enums';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
-import { RELEASES_STATUS, RELEASE_TYPE } from '@/modules/releases/enums';
-import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { ReleasesDataFilter } from '@/modules/releases/types';
 import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import {
@@ -28,7 +20,6 @@ import {
 import { Space } from 'antd';
 import { Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import nProgress from 'nprogress';
 import { useMemo, useState } from 'react';
 
 type Props = Pick<
@@ -50,9 +41,7 @@ export default function ReleaseVideoHeader({
     onSearch,
 }: Props) {
     const messages = useTranslations();
-    const router = useRouter();
-    const { createReleaseDraft, isPending } = useCreateReleaseDraft();
-    const { isAdmin, isSystemTenant } = useAuth();
+    const { isAdmin } = useAuth();
 
     const [artistKeyword, setArtistKeyword] = useState('');
     const { channelsData, isLoading: isLoadingChannels } =
@@ -215,27 +204,6 @@ export default function ReleaseVideoHeader({
         isLoadingArtists,
     ]);
 
-    const handleCreateReleaseVideo = () => {
-        nProgress.start();
-        createReleaseDraft({
-            payload: {
-                title: 'New release video',
-                type: RELEASE_TYPE.VIDEO,
-            },
-            onSuccess: (data) => {
-                nProgress.done();
-                if (data?.id) {
-                    router.push(`${APP_ROUTES.RELEASE_VIDEOS}/${data.id}`);
-                } else {
-                    router.push(APP_ROUTES.RELEASE_VIDEOS);
-                }
-            },
-            onError: () => {
-                nProgress.done();
-            },
-        });
-    };
-
     const handleChangeFilter = (
         newValue: Partial<ReleasesDataFilter>,
         backToFirstPage?: boolean
@@ -259,40 +227,22 @@ export default function ReleaseVideoHeader({
     }, [dataFilter]);
 
     return (
-        <AppHeader className="app-header">
-            <AppHeaderGroup>
-                <Space>
-                    <AppSearch
-                        className="max-w-52"
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                    />
-                    <FilterPanel
-                        configs={filterConfigs}
-                        dataFilter={mappedDataFilter}
-                        defaultFilter={defaultFilter}
-                        onChangeFilter={handleChangeFilter}
-                        removeFilter={removeFilter}
-                        canClearFilter={canClearFilter}
-                    />
-                </Space>
-            </AppHeaderGroup>
-            <AppHeaderGroup position="end" className="flex-1">
-                <div className="flex items-center gap-2">
-                    {!isSystemTenant && (
-                        <PermissionGate
-                            permission={PERMISSION.RELEASE_VIDEO.CREATE}
-                        >
-                            <CreateButton
-                                canCreate={true}
-                                text={messages('releaseVideo.add')}
-                                loading={isPending}
-                                onClick={handleCreateReleaseVideo}
-                            />
-                        </PermissionGate>
-                    )}
-                </div>
-            </AppHeaderGroup>
-        </AppHeader>
+        <div className="app-header">
+            <Space>
+                <AppSearch
+                    className="max-w-52"
+                    onChange={onSearch}
+                    defaultValue={dataFilter.keyword}
+                />
+                <FilterPanel
+                    configs={filterConfigs}
+                    dataFilter={mappedDataFilter}
+                    defaultFilter={defaultFilter}
+                    onChangeFilter={handleChangeFilter}
+                    removeFilter={removeFilter}
+                    canClearFilter={canClearFilter}
+                />
+            </Space>
+        </div>
     );
 }

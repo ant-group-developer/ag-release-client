@@ -1,13 +1,19 @@
 'use client';
 
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useRouter } from '@/i18n/routing';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ReleaseVideoHeader from '@/modules/release-video/components/header';
 import { ReleaseVideoTable } from '@/modules/release-video/components/table';
 import { TYPE_MODAL_RELEASE_VIDEO } from '@/modules/release-video/enums';
@@ -17,6 +23,7 @@ import {
     RELEASES_TABLE_KEY,
 } from '@/modules/releases/enums';
 import { useBulkSubmitRelease } from '@/modules/releases/hooks/use-bulk-submit-release';
+import { useCreateReleaseDraft } from '@/modules/releases/hooks/use-create-release-draft';
 import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
@@ -25,11 +32,14 @@ import { SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps } from 'antd';
 import { useTranslations } from 'next-intl';
+import nProgress from 'nprogress';
 import { Key, useState } from 'react';
 
 export default function ReleaseVideos() {
     // hooks - state
     const messages = useTranslations();
+    const router = useRouter();
+    const { isSystemTenant } = useAuth();
     const {
         dataFilter,
         defaultFilter,
@@ -49,16 +59,42 @@ export default function ReleaseVideos() {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const openModal = useModalStore((state) => state.openModal);
-    const dataEdit = useModalStore<ReleasesData | Key[]>((state) => state.dataEdit);
+    const dataEdit = useModalStore<ReleasesData | Key[]>(
+        (state) => state.dataEdit
+    );
     const [selectedRows, setSelectedRows] = useState<Key[]>([]);
 
     // apis
-    const { releasesData, isFetching, refetch } = useGetListReleases(dataFilter);
+    const { releasesData, isFetching, refetch } =
+        useGetListReleases(dataFilter);
     const { deleteRelease } = useDeleteRelease();
+    const { createReleaseDraft, isPending: isCreatingDraft } =
+        useCreateReleaseDraft();
     const { bulkSubmitRelease, isPending: isBulkSubmitting } =
         useBulkSubmitRelease();
 
     // func
+    const handleCreateReleaseVideo = () => {
+        nProgress.start();
+        createReleaseDraft({
+            payload: {
+                title: 'New release video',
+                type: RELEASE_TYPE.VIDEO,
+            },
+            onSuccess: (data) => {
+                nProgress.done();
+                if (data?.id) {
+                    router.push(`${APP_ROUTES.RELEASE_VIDEOS}/${data.id}`);
+                } else {
+                    router.push(APP_ROUTES.RELEASE_VIDEOS);
+                }
+            },
+            onError: () => {
+                nProgress.done();
+            },
+        });
+    };
+
     const handleDeleteReleaseVideo = () => {
         const release = dataEdit as ReleasesData;
         const variables: DeleteVariables<ReleasesData['id']> = {
@@ -98,7 +134,25 @@ export default function ReleaseVideos() {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('releaseVideo.routeLabel')}>
+            <PageContainer
+                title={messages('releaseVideo.routeLabel')}
+                extra={
+                    <div className="flex items-center gap-2">
+                        {!isSystemTenant && (
+                            <PermissionGate
+                                permission={PERMISSION.RELEASE_VIDEO.CREATE}
+                            >
+                                <CreateButton
+                                    canCreate={true}
+                                    text={messages('releaseVideo.add')}
+                                    loading={isCreatingDraft}
+                                    onClick={handleCreateReleaseVideo}
+                                />
+                            </PermissionGate>
+                        )}
+                    </div>
+                }
+            >
                 <ReleaseVideoTable
                     headerTitle={
                         <ReleaseVideoHeader
