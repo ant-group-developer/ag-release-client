@@ -13,7 +13,11 @@ import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
 import { PERMISSION } from '@/modules/auth/constants/permission';
-import { TYPE_MODAL_RELEASE, TYPE_MODAL_TRACK } from '@/modules/releases/enums';
+import {
+    RELEASES_STATUS,
+    TYPE_MODAL_RELEASE,
+    TYPE_MODAL_TRACK,
+} from '@/modules/releases/enums';
 import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useReleaseValidate } from '@/modules/releases/hooks/release-validate';
@@ -63,6 +67,10 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
     // const
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
+    const isIsrcEditableStatus =
+        formValues?.status === RELEASES_STATUS.DRAFT ||
+        formValues?.status === RELEASES_STATUS.FAILED;
+    const canEditIsrc = !isReadMode && isIsrcEditableStatus;
     const { hasPermission } = usePermission();
     const canUpdate = hasPermission(PERMISSION.RELEASE_AUDIO.UPDATE);
     const tracksLength = props.dataSource?.length || 0;
@@ -88,7 +96,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     );
 
     const columns: ColumnType<TrackData>[] = [
-        ...(canUpdate && !isReadMode
+        ...(canUpdate && !isReadMode && isIsrcEditableStatus
             ? [
                   {
                       key: 'sort',
@@ -197,7 +205,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                 return (
                     <EditableIsrc
                         record={record}
-                        isReadMode={isReadMode}
+                        isReadMode={!canEditIsrc}
                         onUpdate={handleUpdateTrack}
                     />
                 );
