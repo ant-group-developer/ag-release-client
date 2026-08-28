@@ -137,7 +137,7 @@ export default function SourceTypeRankingTableCard({
                 pageSize,
                 keyword: dataFilter.keyword,
                 releaseType: requestReleaseType,
-                sourceType,
+                importSource: sourceType,
                 ...scopeParams,
             },
             { enabled: enabled && !isRevenue }
@@ -154,7 +154,7 @@ export default function SourceTypeRankingTableCard({
                 includeOther: false,
                 sortBy: revenueSortBy,
                 releaseType: requestReleaseType,
-                sourceType,
+                importSource: sourceType,
                 ...scopeParams,
             },
             { enabled: enabled && isRevenue }

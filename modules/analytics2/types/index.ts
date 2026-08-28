@@ -92,7 +92,7 @@ export interface RankingParams {
     dspId?: string;
     artistId?: string;
     channelId?: string;
-    sourceType?: string;
+    importSource?: string;
 }
 
 export interface TrackRankingItem {
@@ -257,7 +257,7 @@ export interface RevenueQueryParams extends CommonParams {
     dspId?: string;
     artistId?: string;
     channelId?: string;
-    sourceType?: string;
+    importSource?: string;
 }
 
 // Summary Response
@@ -663,7 +663,7 @@ export interface AnalyticsCommonParams extends CommonParams {
     dspReportId?: string;
     artistId?: string;
     channelId?: string;
-    sourceType?: string;
+    importSource?: string;
     groupBySource?: boolean;
 }
 
