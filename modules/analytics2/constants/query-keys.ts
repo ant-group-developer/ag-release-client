@@ -60,6 +60,24 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.TREND_VIEW_TER_BAR_CHART,
             params,
         ] as const,
+    trendViewDeviceBarChart: (params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_DEVICE_BAR_CHART,
+            params,
+        ] as const,
+    trendViewGenderBarChart: (params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_GENDER_BAR_CHART,
+            params,
+        ] as const,
+    trendViewAgeRangeBarChart: (params: AnalyticsCommonParams) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_AGE_RANGE_BAR_CHART,
+            params,
+        ] as const,
     dspSalesTimeline: (params: DspTimelineParams) =>
         [
             ...analytics2QueryKeys.all,

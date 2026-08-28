@@ -59,6 +59,7 @@ import {
     TrackDspItem,
     TrackRankingItem,
     TrackTerItem,
+    TrendViewDemographicsBarChartData,
     TrendViewDspBarChartItem,
     TrendViewDspBarChartParams,
     TrendViewLineChartItem,
@@ -122,6 +123,21 @@ export const analytics2Apis = {
             '/analytics/trend-view/ter/bar-chart',
             params
         );
+    },
+    getTrendViewDeviceBarChart: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<
+            DetailResponse<TrendViewDemographicsBarChartData>
+        >('/analytics/trend-view/device/bar-chart', params);
+    },
+    getTrendViewGenderBarChart: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<
+            DetailResponse<TrendViewDemographicsBarChartData>
+        >('/analytics/trend-view/gender/bar-chart', params);
+    },
+    getTrendViewAgeRangeBarChart: (params: AnalyticsCommonParams) => {
+        return axiosInstance.post<
+            DetailResponse<TrendViewDemographicsBarChartData>
+        >('/analytics/trend-view/age-range/bar-chart', params);
     },
     getTrackRanking: (params: RankingParams) => {
         return axiosInstance.post<PaginationResponse<TrackRankingItem>>(

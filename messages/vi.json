@@ -3467,6 +3467,26 @@
         "distributors": "Nhà phân phối",
         "rankBy": "Xếp hạng theo",
         "detailEntityTitle": "({entity}: {title})",
+        "demographics": {
+            "device": {
+                "label": "Thiết bị",
+                "mobilePhone": "Điện thoại",
+                "tv": "TV",
+                "tablet": "Máy tính bảng",
+                "computer": "Máy tính",
+                "gameConsole": "Máy chơi game",
+                "unknown": "Không xác định"
+            },
+            "gender": {
+                "label": "Giới tính",
+                "male": "Nam",
+                "female": "Nữ",
+                "unknown": "Không xác định"
+            },
+            "age": {
+                "label": "Độ tuổi"
+            }
+        },
         "filters": {
             "allPlatforms": "Tất cả nền tảng",
             "allRegions": "Tất cả khu vực",

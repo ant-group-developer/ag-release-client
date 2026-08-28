@@ -665,6 +665,20 @@ export interface AnalyticsCommonParams extends CommonParams {
     channelId?: string;
     importSource?: string;
     groupBySource?: boolean;
+    territoryCode?: string;
+}
+
+export interface TrendViewDemographicsBarChartItem {
+    label: string;
+    dimensionValue: string;
+    totalViews: number;
+    percent: number;
+}
+
+export interface TrendViewDemographicsBarChartData {
+    totalViews: number;
+    coverage: number | null;
+    items: TrendViewDemographicsBarChartItem[];
 }
 
 export type ReleaseDspParams = AnalyticsCommonParams;
