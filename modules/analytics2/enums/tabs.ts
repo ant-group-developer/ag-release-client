@@ -27,5 +27,8 @@ export enum ANALYTICS_METRIC_KEY {
 export enum ANALYTICS_BAR_CHART_TYPE {
     DSP = 'dsp',
     TERRITORY = 'ter',
+    DEVICE = 'device',
+    GENDER = 'gender',
+    AGE = 'age',
 }
 

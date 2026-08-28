@@ -3477,6 +3477,26 @@
         "distributors": "Distributors",
         "rankBy": "Rank by",
         "detailEntityTitle": "({entity}: {title})",
+        "demographics": {
+            "device": {
+                "label": "Device",
+                "mobilePhone": "Mobile phone",
+                "tv": "TV",
+                "tablet": "Tablet",
+                "computer": "Computer",
+                "gameConsole": "Game console",
+                "unknown": "Unknown"
+            },
+            "gender": {
+                "label": "Gender",
+                "male": "Male",
+                "female": "Female",
+                "unknown": "Unknown"
+            },
+            "age": {
+                "label": "Age"
+            }
+        },
         "filters": {
             "allPlatforms": "All platforms",
             "allRegions": "All regions",
