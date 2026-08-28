@@ -1,69 +1,90 @@
 import SeeMoreButton from '@/components/ui/button/see-more-button';
-import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { APP_ROUTES } from '@/enums/routes';
+import { Link } from '@/i18n/routing';
 import PostCard from '@/modules/news/components/post-card';
+import { NEWS_STATUS } from '@/modules/news/enums';
 import { useGetListNewsPublic } from '@/modules/news/hooks/use-get-list-public';
 import { RightOutlined } from '@ant-design/icons';
-import { Skeleton } from 'antd';
+import { Card, Col, Empty, Row, Skeleton, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import 'swiper/css'; // style cơ bản
-import 'swiper/css/pagination'; // nếu dùng pagination
-import { Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 type Props = {};
 
 export default function ListNews({}: Props) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const { newsData, isFetching } = useGetListNewsPublic({
-        pageSize: PAGE_SIZE_EXTRA_LARGE,
+        pageSize: 4,
+        status: NEWS_STATUS.PUBLIC,
     });
-    // const { token } = theme.useToken();
-    const newsDataLength = newsData?.metadata?.totalItems;
-
-    if (newsDataLength < 1) return;
+    const newsDataLength = newsData?.metadata?.totalItems ?? 0;
 
     return (
-        <div className="my-8 space-y-2">
-            <div className="flex items-center justify-between">
-                <p className="text-lg font-bold">
-                    {messages('dashboard.latestNews')}
-                </p>
-                {newsDataLength >= 7 && (
-                    <Link href={APP_ROUTES.NEWS}>
-                        <SeeMoreButton type="link" icon={<RightOutlined />} />
-                    </Link>
-                )}
-            </div>
+        <Card
+            className="overflow-hidden rounded-lg border-0 shadow-sm"
+            styles={{
+                header: { borderBottom: 0, paddingBottom: 0, paddingTop: 24 },
+                body: { padding: '24px' },
+            }}
+            title={
+                <div className="flex items-center justify-between">
+                    <h3 className="text-md m-0 font-bold">
+                        {messages('dashboard.latestNews')}
+                    </h3>
 
-            {isFetching && (
-                <div className="flex gap-4">
-                    <Skeleton.Node active className="min-h-64 !w-full" />
-                    <Skeleton.Node active className="min-h-64 !w-full" />
-                    <Skeleton.Node active className="min-h-64 !w-full" />
-                    <Skeleton.Node active className="min-h-64 !w-full" />
-                    <Skeleton.Node active className="min-h-64 !w-full" />
+                    {!isFetching && (
+                        <Link href={APP_ROUTES.NEWS}>
+                            <SeeMoreButton
+                                type="default"
+                                style={{
+                                    height: 32,
+                                }}
+                                icon={<RightOutlined />}
+                            />
+                        </Link>
+                    )}
                 </div>
-            )}
-
-            {!isFetching && (
-                <Swiper
-                    modules={[Pagination, Navigation]}
-                    spaceBetween={20}
-                    slidesPerView={5}
-                    // navigation
-                    pagination={{ clickable: true }}
-                >
-                    {newsData?.items?.map((item, index) => (
-                        <SwiperSlide className="pb-8" key={index}>
-                            <Link href={`${APP_ROUTES.NEWS}/${item?.slug}`}>
+            }
+        >
+            {isFetching ? (
+                <Row gutter={[20, 20]}>
+                    {Array.from({ length: 4 }).map((_, index) => (
+                        <Col key={index} xs={24} sm={12} md={12} lg={6}>
+                            <Card className="rounded-2xl">
+                                <Skeleton.Node
+                                    active
+                                    className="!mb-4 !h-10 !w-10 !rounded-xl"
+                                />
+                                <Skeleton
+                                    active
+                                    paragraph={{ rows: 2 }}
+                                    title={{ width: '80%' }}
+                                />
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            ) : newsData?.items && newsData.items.length > 0 ? (
+                <Row gutter={[20, 20]}>
+                    {newsData.items.slice(0, 4).map((item) => (
+                        <Col key={item.id.toString()} xs={24} sm={12} md={12} lg={6}>
+                            <Link
+                                href={`${APP_ROUTES.NEWS}/${item?.slug}`}
+                                className="block h-full"
+                            >
                                 <PostCard data={item} />
                             </Link>
-                        </SwiperSlide>
+                        </Col>
                     ))}
-                </Swiper>
+                </Row>
+            ) : (
+                <Empty
+                    className="!mx-0 rounded-lg py-6"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                    }}
+                />
             )}
-        </div>
+        </Card>
     );
 }

@@ -88,3 +88,53 @@ export const getAnalyticsScopeParams = (
     }
 };
 
+export type DemographicsDimension = 'device' | 'gender' | 'age';
+
+const DEMOGRAPHICS_AGE_LABELS: Record<string, string> = {
+    AGE_13_17: '13–17',
+    AGE_18_24: '18–24',
+    AGE_25_34: '25–34',
+    AGE_35_44: '35–44',
+    AGE_45_54: '45–54',
+    AGE_55_64: '55–64',
+    AGE_65_: '65+',
+};
+
+const DEMOGRAPHICS_DEVICE_I18N_KEYS: Record<string, string> = {
+    'mobile phone': 'mobilePhone',
+    tv: 'tv',
+    tablet: 'tablet',
+    computer: 'computer',
+    'game console': 'gameConsole',
+    unknown: 'unknown',
+};
+
+const DEMOGRAPHICS_GENDER_I18N_KEYS: Record<string, string> = {
+    M: 'male',
+    F: 'female',
+    U: 'unknown',
+};
+
+export const formatDemographicsLabel = (
+    dimensionValue: string,
+    kind: DemographicsDimension,
+    t: (key: string) => string
+): string => {
+    if (kind === 'age') {
+        return DEMOGRAPHICS_AGE_LABELS[dimensionValue] ?? dimensionValue;
+    }
+
+    if (kind === 'gender') {
+        const genderKey = DEMOGRAPHICS_GENDER_I18N_KEYS[dimensionValue];
+        return genderKey
+            ? t(`analytics2.demographics.gender.${genderKey}`)
+            : dimensionValue;
+    }
+
+    const deviceKey =
+        DEMOGRAPHICS_DEVICE_I18N_KEYS[dimensionValue.toLowerCase()];
+    return deviceKey
+        ? t(`analytics2.demographics.device.${deviceKey}`)
+        : dimensionValue;
+};
+

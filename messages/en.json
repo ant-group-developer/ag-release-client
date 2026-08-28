@@ -158,6 +158,10 @@
         "undetermined": "Undetermined",
         "partly": "Partly",
         "none": "None",
+        "chartLine": "Line",
+        "chartColumn": "Column",
+        "table": "Table",
+        "period": "Period",
         "select": "Select...",
         "apply": "Apply",
         "include": "Include",
@@ -2156,7 +2160,8 @@
         "systemTenantNoAgreement": "System administrators do not have DSP agreements.",
         "name": "Platform name",
         "codeCi": "CI Code",
-        "hasDeal": "Has deal CI",
+        "hasDeal": "Deal Merlin",
+        "dealMerlin": "Deal Merlin",
         "add": "Add platform",
         "oneLinkPerLine": "One link per line",
         "profileList": "Profile list",
@@ -3477,6 +3482,26 @@
         "distributors": "Distributors",
         "rankBy": "Rank by",
         "detailEntityTitle": "({entity}: {title})",
+        "demographics": {
+            "device": {
+                "label": "Device",
+                "mobilePhone": "Mobile phone",
+                "tv": "TV",
+                "tablet": "Tablet",
+                "computer": "Computer",
+                "gameConsole": "Game console",
+                "unknown": "Unknown"
+            },
+            "gender": {
+                "label": "Gender",
+                "male": "Male",
+                "female": "Female",
+                "unknown": "Unknown"
+            },
+            "age": {
+                "label": "Age"
+            }
+        },
         "filters": {
             "allPlatforms": "All platforms",
             "allRegions": "All regions",

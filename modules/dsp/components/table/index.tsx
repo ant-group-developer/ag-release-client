@@ -185,7 +185,7 @@ export const DspTable = ({ ...props }: Props) => {
             ),
         },
         {
-            title: messages('dsp.hasDeal'),
+            title: messages('dsp.dealMerlin'),
             key: 'hasDeal',
             dataIndex: DSP_TABLE_KEY.HAS_DEAL,
             align: 'center',
