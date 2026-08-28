@@ -3,11 +3,11 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { Card, Empty } from 'antd';
+import { Card, Empty, Skeleton } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
-    Area,
-    AreaChart,
+    Bar,
+    BarChart,
     CartesianGrid,
     ResponsiveContainer,
     Tooltip,
@@ -15,107 +15,76 @@ import {
     YAxis,
 } from 'recharts';
 
-export interface TooltipKeyConfig {
-    key: string;
-    name: string;
-    valuePrefix?: string;
-}
-
-const DEFAULT_MIN_TICK_GAP = 15;
-
-interface LineChartViewProps {
+interface OverviewBarChartViewProps {
     title: React.ReactNode;
     data: any[];
     xAxisKey: string;
-    lineKey: string;
-    lineName: string;
-    strokeColor?: string;
+    barKey: string;
+    barName: string;
+    barColor?: string;
     chartHeight?: number;
     loading?: boolean;
     valuePrefix?: string;
-    additionalTooltipKeys?: TooltipKeyConfig[];
-    minTickGap?: number;
     className?: string;
 }
 
-const CustomLineTooltip = ({
+const CustomBarTooltip = ({
     active,
     payload,
     label,
-    lineName,
+    barName,
     valuePrefix = '',
-    additionalTooltipKeys = [],
 }: any) => {
     if (active && payload && payload.length) {
         const firstEntry = payload[0];
-        const originalData = firstEntry.payload;
 
         return (
             <div className="flex flex-col gap-1 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
                 <span className="text-[13px] font-semibold text-gray-900 dark:text-zinc-100">
                     {label}
                 </span>
-
-                {/* Main line item */}
                 <div className="flex items-center gap-2">
                     <div
                         className="h-2 w-2 rounded-full"
                         style={{
                             backgroundColor:
                                 firstEntry.color ||
-                                firstEntry.stroke ||
+                                firstEntry.fill ||
                                 '#1890ff',
                         }}
                     />
                     <span className="text-xs text-gray-600 dark:text-zinc-400">
-                        {firstEntry.name || lineName}:
+                        {firstEntry.name || barName}:
                     </span>
                     <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
                         {valuePrefix}
                         {formattedNumber(firstEntry.value)}
                     </span>
                 </div>
-
-                {/* Additional metrics */}
-                {additionalTooltipKeys.map(
-                    (cfg: TooltipKeyConfig, idx: number) => {
-                        const val = originalData?.[cfg.key];
-                        if (val === undefined || val === null) return null;
-                        return (
-                            <div key={idx} className="flex items-center gap-2">
-                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-zinc-500" />
-                                <span className="text-xs text-gray-600 dark:text-zinc-400">
-                                    {cfg.name}:
-                                </span>
-                                <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
-                                    {cfg.valuePrefix || ''}
-                                    {formattedNumber(val)}
-                                </span>
-                            </div>
-                        );
-                    }
-                )}
             </div>
         );
     }
     return null;
 };
 
-export default function LineChartView({
+export default function OverviewBarChartView({
     title,
     data,
     xAxisKey,
-    lineKey,
-    lineName,
-    strokeColor = '#1890ff',
+    barKey,
+    barName,
+    barColor = '#1890ff',
     chartHeight = 400,
     loading = false,
     valuePrefix = '',
-    additionalTooltipKeys = [],
-    minTickGap = DEFAULT_MIN_TICK_GAP,
     className = '',
-}: LineChartViewProps) {
+}: OverviewBarChartViewProps) {
     const messages = useTranslations();
+
+    const barSize = Math.max(
+        16,
+        Math.min(40, Math.floor(300 / (data.length || 1)))
+    );
 
     return (
         <Card
@@ -137,7 +106,9 @@ export default function LineChartView({
                 )}
             </div>
 
-            {data.length === 0 ? (
+            {loading ? (
+                <Skeleton active paragraph={{ rows: 6 }} />
+            ) : data.length === 0 ? (
                 <div
                     style={{
                         flex: 1,
@@ -165,7 +136,7 @@ export default function LineChartView({
                 >
                     <div className="w-full" style={{ flex: 1, minHeight: 0 }}>
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart
+                            <BarChart
                                 data={data}
                                 margin={{
                                     top: 10,
@@ -174,26 +145,6 @@ export default function LineChartView({
                                     bottom: 0,
                                 }}
                             >
-                                <defs>
-                                    <linearGradient
-                                        id="colorViews"
-                                        x1="0"
-                                        y1="0"
-                                        x2="0"
-                                        y2="1"
-                                    >
-                                        <stop
-                                            offset="5%"
-                                            stopColor={strokeColor}
-                                            stopOpacity={0.2}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor={strokeColor}
-                                            stopOpacity={0.01}
-                                        />
-                                    </linearGradient>
-                                </defs>
                                 <CartesianGrid
                                     strokeDasharray="3 3"
                                     vertical={false}
@@ -233,36 +184,21 @@ export default function LineChartView({
                                 />
                                 <Tooltip
                                     content={
-                                        <CustomLineTooltip
-                                            lineName={lineName}
+                                        <CustomBarTooltip
+                                            barName={barName}
                                             valuePrefix={valuePrefix}
-                                            additionalTooltipKeys={
-                                                additionalTooltipKeys
-                                            }
                                         />
                                     }
                                     animationEasing="ease"
                                 />
-                                <Area
-                                    type="monotone"
-                                    dataKey={lineKey}
-                                    name={lineName}
-                                    stroke={strokeColor}
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorViews)"
-                                    // dot={{
-                                    //     r: 4,
-                                    //     fill: strokeColor,
-                                    //     stroke: strokeColor,
-                                    // }}
-                                    // activeDot={{
-                                    //     r: 6,
-                                    //     fill: strokeColor,
-                                    //     stroke: strokeColor,
-                                    // }}
+                                <Bar
+                                    dataKey={barKey}
+                                    name={barName}
+                                    fill={barColor}
+                                    radius={[4, 4, 0, 0]}
+                                    barSize={barSize}
                                 />
-                            </AreaChart>
+                            </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>

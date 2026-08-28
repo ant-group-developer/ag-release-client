@@ -32,3 +32,10 @@ export enum ANALYTICS_BAR_CHART_TYPE {
     AGE = 'age',
 }
 
+export enum ANALYTICS_OVERVIEW_CHART_MODE {
+    LINE = 'line',
+    COLUMN = 'column',
+    TABLE = 'table',
+}
+
+

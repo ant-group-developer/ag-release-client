@@ -1,12 +1,19 @@
 'use client';
 
 import { Col, Row, Segmented } from 'antd';
+import { BarChart3, LineChart, Table } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { ANALYTICS_BAR_CHART_TYPE, ANALYTICS_METRIC_KEY } from '../../enums';
+import {
+    ANALYTICS_BAR_CHART_TYPE,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_OVERVIEW_CHART_MODE,
+} from '../../enums';
 import { formatDemographicsLabel } from '../../helpers';
 import { TrendViewDemographicsBarChartData } from '../../types';
 import LineChartView from './line-chart-view';
+import OverviewBarChartView from './overview-bar-chart-view';
+import OverviewTableView from './overview-table-view';
 import PieChartView from './pie-chart-view';
 
 export interface AnalyticsDemographicsContextValue {
@@ -44,14 +51,15 @@ export default function AnalyticsOverviewChart({
     const demographics = useContext(AnalyticsDemographicsContext);
     const [viewType, setViewType] =
         useState<ANALYTICS_BAR_CHART_TYPE>(defaultBarChartType);
+    const [overviewChartMode, setOverviewChartMode] =
+        useState<ANALYTICS_OVERVIEW_CHART_MODE>(
+            ANALYTICS_OVERVIEW_CHART_MODE.LINE
+        );
 
     useEffect(() => {
         setViewType(defaultBarChartType);
     }, [defaultBarChartType]);
 
-    // const isRevenueMetric =
-    //     activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
-    //     activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
     const isUsage = activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE;
     const isRevenueUsd =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
@@ -74,8 +82,7 @@ export default function AnalyticsOverviewChart({
         viewType === ANALYTICS_BAR_CHART_TYPE.AGE;
 
     const segmentedOptions = useMemo(() => {
-        const extras: { label: string; value: ANALYTICS_BAR_CHART_TYPE }[] =
-            [];
+        const extras: { label: string; value: ANALYTICS_BAR_CHART_TYPE }[] = [];
 
         if (demographics && !isUsage && !isRevenueUsd) {
             if ((demographics.device.items ?? []).length > 0) {
@@ -212,30 +219,96 @@ export default function AnalyticsOverviewChart({
                 imageUrl: item.imageUrl,
             };
         });
-    }, [
-        demographics,
-        dspData,
-        isDemographicsView,
-        isRevenueUsd,
-        isUsage,
-        messages,
-        terData,
-        viewType,
-    ]);
+    }, [viewType, dspData, terData, isRevenueUsd, isUsage]);
+
+    const overviewSegmentHeader = (
+        <div className="flex w-full items-center justify-end">
+            <Segmented
+                options={[
+                    {
+                        label: (
+                            <div className="flex items-center gap-1.5 px-0.5">
+                                <LineChart className="h-3.5 w-3.5" />
+                                <span>
+                                    {messages('common.chartLine') || 'Đường'}
+                                </span>
+                            </div>
+                        ),
+                        value: ANALYTICS_OVERVIEW_CHART_MODE.LINE,
+                    },
+                    {
+                        label: (
+                            <div className="flex items-center gap-1.5 px-0.5">
+                                <BarChart3 className="h-3.5 w-3.5" />
+                                <span>
+                                    {messages('common.chartColumn') || 'Cột'}
+                                </span>
+                            </div>
+                        ),
+                        value: ANALYTICS_OVERVIEW_CHART_MODE.COLUMN,
+                    },
+                    {
+                        label: (
+                            <div className="flex items-center gap-1.5 px-0.5">
+                                <Table className="h-3.5 w-3.5" />
+                                <span>
+                                    {messages('common.table') || 'Bảng'}
+                                </span>
+                            </div>
+                        ),
+                        value: ANALYTICS_OVERVIEW_CHART_MODE.TABLE,
+                    },
+                ]}
+                value={overviewChartMode}
+                onChange={(val) =>
+                    setOverviewChartMode(val as ANALYTICS_OVERVIEW_CHART_MODE)
+                }
+                className="flex-shrink-0"
+            />
+        </div>
+    );
 
     return (
         <Row>
             <Col xs={24} lg={16}>
-                <LineChartView
-                    title={''}
-                    data={lineChartData}
-                    xAxisKey="period"
-                    lineKey={lineKey}
-                    lineName={lineName}
-                    loading={isLineChartLoading}
-                    chartHeight={250}
-                    className="!rounded-none !border-0 lg:!border-r !shadow-none"
-                />
+                {overviewChartMode === ANALYTICS_OVERVIEW_CHART_MODE.LINE ? (
+                    <LineChartView
+                        title={overviewSegmentHeader}
+                        data={lineChartData}
+                        xAxisKey="period"
+                        lineKey={lineKey}
+                        lineName={lineName}
+                        loading={isLineChartLoading}
+                        chartHeight={250}
+                        valuePrefix={isRevenueUsd ? '$' : ''}
+                        className="!rounded-none !border-0 !shadow-none lg:!border-r"
+                    />
+                ) : overviewChartMode ===
+                  ANALYTICS_OVERVIEW_CHART_MODE.COLUMN ? (
+                    <OverviewBarChartView
+                        title={overviewSegmentHeader}
+                        data={lineChartData}
+                        xAxisKey="period"
+                        barKey={lineKey}
+                        barName={lineName}
+                        loading={isLineChartLoading}
+                        chartHeight={250}
+                        valuePrefix={isRevenueUsd ? '$' : ''}
+                        className="!rounded-none !border-0 !shadow-none lg:!border-r"
+                    />
+                ) : (
+                    <OverviewTableView
+                        title={overviewSegmentHeader}
+                        data={lineChartData}
+                        xAxisKey="period"
+                        valueKey={lineKey}
+                        valueName={lineName}
+                        loading={isLineChartLoading}
+                        chartHeight={250}
+                        valuePrefix={isRevenueUsd ? '$' : ''}
+                        className="!rounded-none !border-0 !shadow-none lg:!border-r"
+                    />
+                )}
             </Col>
             <Col xs={0} lg={8} className="hidden lg:block">
                 <PieChartView
