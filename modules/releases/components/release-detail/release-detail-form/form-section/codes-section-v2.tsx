@@ -1,4 +1,6 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
 import { Input } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -20,6 +22,9 @@ export default function CodesSectionV2({
         formState: { errors },
     } = useFormContext<ReleaseDetailSchema>();
     const messages = useTranslations();
+    const formValues = useReleaseFormStore((state) => state.formValues);
+
+    const isDraft = formValues?.status === RELEASES_STATUS.DRAFT;
 
     return (
         <div id="codes" className="flex flex-col gap-6">
@@ -50,7 +55,11 @@ export default function CodesSectionV2({
                                 }}
                                 allowClear
                                 status={errors.upc ? 'error' : undefined}
-                                disabled={isCreateReleasePage || isReadMode}
+                                disabled={
+                                    isCreateReleasePage ||
+                                    isReadMode ||
+                                    !isDraft
+                                }
                             />
                         )}
                     />
