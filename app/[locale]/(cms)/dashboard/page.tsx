@@ -7,7 +7,7 @@ import ListRelease from '@/modules/dashboard/components/list-release';
 // import MapChart from '@/modules/dashboard/components/map-chart';
 import DateSelect2 from '@/components/ui/select/date-select2';
 import { DATE_FORMAT } from '@/enums/common';
-import AnalyticsRankings from '@/modules/analytics2/components/ranking/analytics-rankings';
+import ListNews from '@/modules/dashboard/components/list-news';
 import StatsOverview from '@/modules/dashboard/components/stats-overview';
 import { DashboardDataFilter } from '@/modules/dashboard/types';
 import { RELEASE_TYPE } from '@/modules/releases/enums';
@@ -151,24 +151,8 @@ function Dashboard({}: Props) {
                         releaseType={RELEASE_TYPE.VIDEO}
                     />
 
-                    {/* <div className="flex flex-col overflow-hidden rounded-lg border shadow-sm">
-                        <MetricHeaderTabs
-                            items={metricTabItems}
-                            activeKey={activeMetric}
-                            onChangeKey={handleMetricChange}
-                        />
-                        <RootAnalyticsOverviewChart
-                            fromDate={fromDate}
-                            toDate={toDate}
-                            releaseType={effectiveReleaseType as any}
-                            activeMetric={activeMetric}
-                        />
-                    </div> */}
-
-                    <AnalyticsRankings fromDate={fromDate} toDate={toDate} />
+                    <ListNews />
                 </div>
-
-                {/* <ListNews /> */}
             </PageContainer>
         </div>
     );

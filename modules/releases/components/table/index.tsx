@@ -351,18 +351,14 @@ export default function ReleasesTable({
             fixed: 'right',
             render: (_, record) => {
                 const status = record?.status;
-                const isFailed = record?.status === RELEASES_STATUS.FAILED;
-                const isDistributed =
-                    record?.status === RELEASES_STATUS.DISTRIBUTED;
+                const isDraft = status === RELEASES_STATUS.DRAFT;
                 return (
                     <div onClick={(e) => e.stopPropagation()}>
                         <ActionButton
                             showDetail
                             showUpdate
                             showDelete={
-                                (status === RELEASES_STATUS.DRAFT &&
-                                    canDelete) ||
-                                isAdmin
+                                (isDraft && canDelete) || (isAdmin && isDraft)
                             }
                             onShowDelete={() =>
                                 openModal(TYPE_MODAL_RELEASE.DELETE, record)

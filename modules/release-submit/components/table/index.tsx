@@ -4,7 +4,12 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
-import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import {
+    formattedDate,
+    getAvatarPlaceholder,
+    getIndex,
+    getSortOrder,
+} from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
@@ -112,7 +117,7 @@ export default function ReleaseSubmitTable({
                     coverArts?.find((art) => art.type === '75x75')?.fileId ??
                     coverArts?.[0]?.fileId;
                 return (
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
                         {coverArtFileId ? (
                             <div className="flex-shrink-0">
                                 <ReleaseCoverImage
@@ -122,11 +127,18 @@ export default function ReleaseSubmitTable({
                                 />
                             </div>
                         ) : (
-                            <Avatar shape="square" size={36} className="flex-shrink-0">
+                            <Avatar
+                                shape="square"
+                                size={36}
+                                className="flex-shrink-0"
+                            >
                                 -
                             </Avatar>
                         )}
-                        <Typography.Text copyable className="flex-1 min-w-0 break-words">
+                        <Typography.Text
+                            copyable
+                            className="min-w-0 flex-1 break-words"
+                        >
                             {releaseSnapshot?.title || '-'}
                         </Typography.Text>
                     </div>
@@ -274,6 +286,30 @@ export default function ReleaseSubmitTable({
                                 </Typography.Text>
                             )}
                         </div>
+                    </CustomTooltip>
+                );
+            },
+        },
+        {
+            title: messages('common.creator'),
+            key: 'creator',
+            dataIndex: 'creator',
+            align: 'center',
+            width: 90,
+            render: (_, record) => {
+                const creatorName =
+                    record?.creator?.name || record?.creator?.email;
+
+                if (!creatorName) return '-';
+
+                return (
+                    <CustomTooltip title={creatorName}>
+                        <Avatar
+                            src={record.creator?.avatar}
+                            className="cursor-pointer"
+                        >
+                            {getAvatarPlaceholder(creatorName)}
+                        </Avatar>
                     </CustomTooltip>
                 );
             },

@@ -56,9 +56,11 @@ export default function SourceTypeConfigForm({ ...props }: Props) {
     const onFinish = async (values: FormValues) => {
         if (!dataEdit?.sourceType) return;
 
-        let finalImageUrl = values.imageUrl || null;
+        let finalImageUrl: string | null = null;
 
-        const file = values.pictureFile?.fileList?.[0]?.originFileObj;
+        const fileList = values.pictureFile?.fileList;
+        const file = fileList?.[0]?.originFileObj;
+
         if (file) {
             setUploading(true);
             try {
@@ -84,7 +86,9 @@ export default function SourceTypeConfigForm({ ...props }: Props) {
             } finally {
                 setUploading(false);
             }
-        } else if (!values.pictureFile?.fileList?.length) {
+        } else if (fileList && fileList.length > 0) {
+            finalImageUrl = fileList[0].url || dataEdit.imageUrl || null;
+        } else {
             finalImageUrl = null;
         }
 

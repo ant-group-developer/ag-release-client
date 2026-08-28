@@ -1,6 +1,7 @@
 import { DspData } from '@/modules/dsp/types';
 import { RELEASES_STATUS, RELEASE_TYPE } from '@/modules/releases/enums';
 import { ReleasesData } from '@/modules/releases/types';
+import { UserData } from '@/modules/user/types/data';
 import { CommonAttribute, CommonParams, PaginationResponse } from '@/types/api';
 import {
     CHILD_EXECUTION_MODE,
@@ -13,6 +14,8 @@ import {
 } from '../enums';
 
 export interface ReleaseSubmitData extends CommonAttribute {
+    creatorId?: string;
+    creator?: Pick<UserData, 'id' | 'email' | 'name' | 'avatar'>;
     releaseId: ReleasesData['id'];
     type: RELEASE_SUBMIT_TYPE;
     status: RELEASE_SUBMIT_STATUS;
