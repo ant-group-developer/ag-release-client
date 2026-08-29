@@ -59,6 +59,20 @@ export default function ChannelHistoryModal() {
                         render: (value) => value || '-',
                     },
                     {
+                        title: messages('channel.transfer.effectiveDate'),
+                        dataIndex: 'effectiveDate',
+                        key: 'effectiveDate',
+                        width: 140,
+                        render: (value) => value || '-',
+                    },
+                    {
+                        title: messages('channel.transfer.revenueEffectiveFrom'),
+                        dataIndex: 'revenueEffectiveFrom',
+                        key: 'revenueEffectiveFrom',
+                        width: 140,
+                        render: (value) => value || '-',
+                    },
+                    {
                         title: 'YouTube channel ID',
                         dataIndex: ['channel', 'youtubeChannelId'],
                         key: 'youtubeChannelId',

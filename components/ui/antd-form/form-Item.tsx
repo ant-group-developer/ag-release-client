@@ -6,6 +6,7 @@ import IconInfoTooltip from '../tooltip/icon-info-tooltip';
 type AppFormItemProps = {
     children: ReactNode;
     tooltipInfo?: string;
+    tooltipIconClassName?: string;
 } & FormItemProps;
 
 function AppFormItem({
@@ -14,6 +15,7 @@ function AppFormItem({
     label,
     required,
     tooltipInfo,
+    tooltipIconClassName,
     ...props
 }: AppFormItemProps) {
     const isRequired =
@@ -35,7 +37,12 @@ function AppFormItem({
                 </Typography.Text>
                 {isRequired && <span style={{ color: 'red' }}> *</span>}
             </span>
-            {tooltipInfo && <IconInfoTooltip title={tooltipInfo} />}
+            {tooltipInfo && (
+                <IconInfoTooltip
+                    title={tooltipInfo}
+                    iconClassName={tooltipIconClassName}
+                />
+            )}
         </div>
     ) : (
         label

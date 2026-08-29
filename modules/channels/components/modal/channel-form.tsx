@@ -84,12 +84,13 @@ export default function ChannelFormModal({ ...props }: Props) {
     };
 
     const handleUpdateChannel = (values: ChannelFormValues) => {
+        const { tenantId: _tenantId, ...payload } = values;
         const variables: UpdateVariables<
             ChannelsData['id'],
             UpdateChannelPayload
         > = {
             id: dataEdit?.id,
-            payload: values,
+            payload,
             onSuccess: () => {
                 deActive();
                 closeModal();

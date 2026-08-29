@@ -10,6 +10,7 @@ import useModalStore from '@/hooks/use-modal';
 import ChannelsHeader from '@/modules/channels/components/header';
 import ChannelFormModal from '@/modules/channels/components/modal/channel-form';
 import ChannelHistoryModal from '@/modules/channels/components/modal/channel-history-modal';
+import ChannelTransferModal from '@/modules/channels/components/modal/channel-transfer-modal';
 import YoutubeChannelSyncRunsModal from '@/modules/channels/components/modal/youtube-channel-sync-runs-modal';
 import { ChannelsTable } from '@/modules/channels/components/table';
 import { TYPE_MODAL_CHANNELS } from '@/modules/channels/enums';
@@ -123,6 +124,10 @@ export default function Channels({}: Props) {
 
                 {typeModal === TYPE_MODAL_CHANNELS.HISTORY && (
                     <ChannelHistoryModal />
+                )}
+
+                {typeModal === TYPE_MODAL_CHANNELS.TRANSFER && (
+                    <ChannelTransferModal />
                 )}
 
                 {isYoutubeChannelSyncRunsModalOpen && (

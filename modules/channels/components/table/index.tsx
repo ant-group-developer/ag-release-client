@@ -35,11 +35,11 @@ export const ChannelsTable = ({ dataFilter, ...props }: Props) => {
     const canUpdate = hasPermission(PERMISSION.CHANNEL.UPDATE);
 
     const handleUpdateTenant = (record: ChannelsData, tenantId: string) => {
-        updateChannel({
-            id: record.id,
-            payload: {
-                tenantId,
-            },
+        const currentTenantId = record.tenantId || record.tenant?.id;
+        if (!tenantId || tenantId === currentTenantId) return;
+        openModal(TYPE_MODAL_CHANNELS.TRANSFER, {
+            ...record,
+            destTenantId: tenantId,
         });
     };
 
