@@ -3,6 +3,7 @@ export enum TYPE_MODAL_CHANNELS {
     UPDATE = 'update',
     DELETE = 'delete',
     HISTORY = 'history',
+    TRANSFER = 'transfer',
 }
 
 export enum CHANNEL_STATUS {

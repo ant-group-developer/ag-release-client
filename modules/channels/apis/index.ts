@@ -3,6 +3,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     ChannelAccessData,
     ChannelDataFilter,
+    ChannelTransferPreview,
     ChannelsData,
     ChannelsSimpleData,
     UserChannelData,
@@ -11,7 +12,11 @@ import {
     YoutubeChannelSyncRunLog,
     YoutubeChannelSyncRunLogFilter,
 } from '../types';
-import { CreateChannelPayload, UpdateChannelPayload } from '../types/payload';
+import {
+    CreateChannelPayload,
+    TransferChannelTenantPayload,
+    UpdateChannelPayload,
+} from '../types/payload';
 
 export const channelApi = {
     getList: (params: ChannelDataFilter) => {
@@ -53,6 +58,26 @@ export const channelApi = {
 
     updateChannel: (id: ChannelsData['id'], payload: UpdateChannelPayload) => {
         return axiosInstance.put(`/channels/${id}`, payload);
+    },
+
+    previewTransfer: (
+        id: ChannelsData['id'],
+        payload: TransferChannelTenantPayload
+    ) => {
+        return axiosInstance.post<DetailResponse<ChannelTransferPreview>>(
+            `/channels/${id}/transfer/preview`,
+            payload
+        );
+    },
+
+    transferChannel: (
+        id: ChannelsData['id'],
+        payload: TransferChannelTenantPayload
+    ) => {
+        return axiosInstance.post<DetailResponse<unknown>>(
+            `/channels/${id}/transfer`,
+            payload
+        );
     },
 
     deleteChannel: (id: ChannelsData['id']) => {

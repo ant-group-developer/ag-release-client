@@ -46,6 +46,11 @@ export default function ChannelInfoForm({
                 name="tenantId"
                 label={messages('tenant.label')}
                 required
+                extra={
+                    isUpdateForm
+                        ? messages('channel.transfer.changeWorkspaceHint')
+                        : undefined
+                }
                 rules={[
                     {
                         required: true,
@@ -55,6 +60,7 @@ export default function ChannelInfoForm({
             >
                 <TenantSelectActive
                     placeholder={messages('tenant.selectTitle')}
+                    disabled={isUpdateForm || isActive}
                 />
             </AppFormItem>
 
