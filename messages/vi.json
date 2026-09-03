@@ -2094,6 +2094,7 @@
         "clickToSelectHint": "Nhấp vào thẻ để chọn hoặc huỷ chọn",
         "confirmSendNotice": "Sẽ gửi lệnh phân phối tới {count} DSPs đã chọn.",
         "selectedCountNotice": "Sẽ gửi lệnh phân phối tới {selected}/{total} DSPs đã chọn.",
+        "processingWarning": "Bản phát hành này đang được xử lý, chỉ gửi lại nếu như bạn cần sửa gấp thông tin.",
         "distributeNow": "Phân phối ngay"
     },
     "takeDown": {

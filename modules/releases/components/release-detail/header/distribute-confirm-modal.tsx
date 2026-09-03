@@ -1,7 +1,8 @@
 import AppModal from '@/components/ui/modal/normal-modal';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { ReleaseDspData } from '@/modules/release-dsp/types';
-import { Button, Empty, Typography } from 'antd';
+import { Alert, Button, Empty, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import DspCardItem from './sub-components/dsp-card-item';
@@ -13,6 +14,7 @@ type Props = {
     onConfirm: (selectedCodes: string[]) => void;
     selectedRows: ReleaseDspData[];
     loading?: boolean;
+    releaseStatus?: string;
 };
 
 export default function DistributeConfirmModal({
@@ -21,10 +23,21 @@ export default function DistributeConfirmModal({
     onConfirm,
     selectedRows,
     loading = false,
+    releaseStatus,
 }: Props) {
     const messages = useTranslations();
     const [skipDistributed, setSkipDistributed] = useState(true);
     const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
+
+    const isProcessing = useMemo(() => {
+        return (
+            releaseStatus === RELEASES_STATUS.PROCESSING ||
+            releaseStatus === RELEASE_DSP_DELIVERY_STATUS.PROCESSING ||
+            selectedRows.some(
+                (row) => row.status === RELEASE_DSP_DELIVERY_STATUS.PROCESSING
+            )
+        );
+    }, [releaseStatus, selectedRows]);
 
     useEffect(() => {
         if (open) {
@@ -137,7 +150,7 @@ export default function DistributeConfirmModal({
             onCancel={onCancel}
             width={900}
             title={
-                <Typography.Text className="!mb-0 !text-xl font-bold">
+                <Typography.Text className="!mb-0 text-base font-semibold">
                     {messages('distribute.confirmTitle')}
                 </Typography.Text>
             }
@@ -187,6 +200,15 @@ export default function DistributeConfirmModal({
             }
         >
             <div className="space-y-4 py-2">
+                {isProcessing && (
+                    <Alert
+                        type="warning"
+                        showIcon
+                        message={messages('distribute.processingWarning')}
+                        className="!rounded-lg"
+                    />
+                )}
+
                 <DspFilterBar
                     isAllSelected={isAllDisplayedSelected}
                     isIndeterminate={isIndeterminate}

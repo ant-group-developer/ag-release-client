@@ -2102,6 +2102,7 @@
         "clickToSelectHint": "Click card to select or deselect",
         "confirmSendNotice": "Will send distribution command to {count} selected DSPs.",
         "selectedCountNotice": "Will send distribution command to {selected}/{total} selected DSPs.",
+        "processingWarning": "This release is currently processing, only re-submit if you urgently need to update information.",
         "distributeNow": "Distribute now"
     },
     "takeDown": {
