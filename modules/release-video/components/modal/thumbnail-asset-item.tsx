@@ -250,7 +250,33 @@ export default function ThumbnailAssetItem({
                 <span className="text-red-500">*</span>
             </Space>
 
-            <AppFormItem name="thumbnailFile">
+            <AppFormItem
+                name="thumbnailFile"
+                rules={[
+                    {
+                        validator: async (_, value) => {
+                            if (
+                                !value ||
+                                !value.fileList ||
+                                value.fileList.length === 0
+                            ) {
+                                return Promise.reject(
+                                    new Error(
+                                        messages(
+                                            'releaseVideo.fields.thumbnailNotUploaded'
+                                        )
+                                    )
+                                );
+                            }
+                            if (isThumbnailUploading) {
+                                return Promise.reject(
+                                    new Error(messages('common.processing'))
+                                );
+                            }
+                        },
+                    },
+                ]}
+            >
                 <ImageListUpload
                     id="thumbnailFile"
                     loading={isThumbnailUploading}
