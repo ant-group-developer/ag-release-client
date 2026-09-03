@@ -1,7 +1,10 @@
 import { ReleasesData } from '@/modules/releases/types';
-import { FormInstance } from 'antd';
+import {
+    useMultipartVideoUpload,
+} from '@/modules/release-video/hooks/use-multipart-video-upload';
+import { FormInstance, theme } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import CaptionsAssetItem from './captions-asset-item';
 import ThumbnailAssetItem from './thumbnail-asset-item';
@@ -19,7 +22,39 @@ export default function VideoAssets({
     disabled = false,
 }: VideoAssetsProps) {
     const messages = useTranslations();
+    const { token } = theme.useToken();
     const [videoUrl, setVideoUrl] = useState<string>('');
+    const previewObjectUrlRef = useRef<string | null>(null);
+
+    // Coordinate multipart upload state
+    const upload = useMultipartVideoUpload({
+        releaseId: dataEdit?.id,
+        onCompleted: ({ readUrl, file }) => {
+            // Clean up any previous object URL
+            if (previewObjectUrlRef.current) {
+                URL.revokeObjectURL(previewObjectUrlRef.current);
+                previewObjectUrlRef.current = null;
+            }
+
+            if (readUrl) {
+                setVideoUrl(readUrl);
+            } else if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                previewObjectUrlRef.current = objectUrl;
+                setVideoUrl(objectUrl);
+            }
+        },
+    });
+
+    // Revoke object URL on unmount
+    useEffect(() => {
+        return () => {
+            if (previewObjectUrlRef.current) {
+                URL.revokeObjectURL(previewObjectUrlRef.current);
+            }
+        };
+    }, []);
+
     return (
         <>
             {/* Video Player Display Screen */}
@@ -51,9 +86,6 @@ export default function VideoAssets({
                     />
                 ) : (
                     <div className="flex flex-col items-center justify-center gap-2 text-gray-600">
-                        {/* <div className="select-none text-5xl font-extrabold tracking-widest text-zinc-800">
-                            vevo
-                        </div> */}
                         <div className="select-none text-xl font-semibold uppercase tracking-wider text-zinc-600">
                             {messages('releaseVideo.fields.noVideoSelected')}
                         </div>
@@ -62,11 +94,10 @@ export default function VideoAssets({
             </div>
 
             <div>
-                <div className="mt-6 border-t border-gray-100 pt-6">
-                    {/* <h3 className="mb-4 text-base font-bold tracking-wide">
-                        {messages('releaseVideo.fields.assets')}
-                    </h3> */}
-
+                <div
+                    className="mt-6 pt-6"
+                    style={{ borderTop: `1px solid ${token.colorBorderSecondary}` }}
+                >
                     {/* Asset: Video file */}
                     <VideoAssetItem
                         form={form}
@@ -74,6 +105,7 @@ export default function VideoAssets({
                         setVideoUrl={setVideoUrl}
                         dataEdit={dataEdit}
                         disabled={disabled}
+                        upload={upload}
                     />
 
                     {/* Asset: Thumbnail */}

@@ -87,3 +87,65 @@ export interface DownloadNonFile {
     isPublic: boolean;
     fileName: string;
 }
+
+export interface InitiateMultipartResponse {
+    fileId: string;
+    key: string;
+    partSize: number;
+    partCount: number;
+    expiresAt: string | Date;
+}
+
+export interface PresignMultipartPartResponse {
+    partNumber: number;
+    urlUpload: string;
+    expiresIn: number;
+}
+
+export interface PresignMultipartPartsResponse {
+    parts: Array<{
+        partNumber: number;
+        urlUpload: string;
+        expiresIn: number;
+    }>;
+}
+
+export interface UploadedPart {
+    partNumber: number;
+    eTag: string;
+    size?: number;
+}
+
+export interface ListUploadedPartsResponse {
+    fileId: string;
+    partSize: number;
+    partCount: number;
+    parts: UploadedPart[];
+}
+
+export interface CompleteMultipartResponse {
+    fileId: string;
+    key: string;
+    fileSize: number;
+    contentType: string;
+    readUrl: string;
+    downloadUrl: string;
+}
+
+export interface AbortMultipartResponse {
+    fileId: string;
+    status: string;
+}
+
+export interface VideoUploadResumeDescriptor {
+    releaseId: string;
+    fileId: string;
+    fingerprint: string;
+    fileName: string;
+    fileSize: number;
+    partSize: number;
+    partCount: number;
+    expiresAt: string;
+    completed?: boolean;
+}
+

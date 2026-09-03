@@ -245,7 +245,7 @@ export default function ThumbnailAssetItem({
 
     return (
         <div className="thumbnail-upload-container mb-5">
-            <Space className="mb-2 text-xs font-bold">
+            <Space className="mb-2 font-bold">
                 <span>{messages('releaseVideo.fields.thumbnailFile')}</span>
                 <span className="text-red-500">*</span>
             </Space>
@@ -301,7 +301,7 @@ export default function ThumbnailAssetItem({
                                 type="secondary"
                                 style={{ fontSize: 11 }}
                             >
-                                PNG, JPG, JPEG (16:9 • )
+                                PNG, JPG, JPEG (16:9 • Max 5MB)
                             </Typography.Text>
                         </div>
                     }

@@ -1,7 +1,76 @@
 import axiosInstance from '@/api/axios-auth';
-import { CreateBucketFile, DownloadNonFile } from '../types/data';
+import {
+    AbortMultipartResponse,
+    CompleteMultipartResponse,
+    CreateBucketFile,
+    DownloadNonFile,
+    InitiateMultipartResponse,
+    ListUploadedPartsResponse,
+    PresignMultipartPartResponse,
+    PresignMultipartPartsResponse,
+    UploadedPart,
+} from '../types/data';
 
 export const bucketApi = {
+    initiateMultipart: async (
+        payload: CreateBucketFile
+    ): Promise<InitiateMultipartResponse> => {
+        const response = await axiosInstance.post(
+            '/bucket2/private/multipart/initiate',
+            payload
+        );
+        return response.data.data;
+    },
+
+    presignMultipartPart: async (
+        fileId: string,
+        partNumber: number
+    ): Promise<PresignMultipartPartResponse> => {
+        const response = await axiosInstance.post(
+            `/bucket2/private/${fileId}/multipart/presign-part`,
+            { partNumber }
+        );
+        return response.data.data;
+    },
+
+    presignMultipartParts: async (
+        fileId: string,
+        partNumbers: number[]
+    ): Promise<PresignMultipartPartsResponse> => {
+        const response = await axiosInstance.post(
+            `/bucket2/private/${fileId}/multipart/presign-parts`,
+            { partNumbers }
+        );
+        return response.data.data;
+    },
+
+    listMultipartParts: async (
+        fileId: string
+    ): Promise<ListUploadedPartsResponse> => {
+        const response = await axiosInstance.get(
+            `/bucket2/private/${fileId}/multipart/parts`
+        );
+        return response.data.data;
+    },
+
+    completeMultipart: async (
+        fileId: string,
+        parts: Array<{ partNumber: number; eTag: string }>
+    ): Promise<CompleteMultipartResponse> => {
+        const response = await axiosInstance.post(
+            `/bucket2/private/${fileId}/multipart/complete`,
+            { parts }
+        );
+        return response.data.data;
+    },
+
+    abortMultipart: async (fileId: string): Promise<AbortMultipartResponse> => {
+        const response = await axiosInstance.post(
+            `/bucket2/private/${fileId}/multipart/abort`
+        );
+        return response.data.data;
+    },
+
     createBuckets: async (payload: { bucketDtos: CreateBucketFile[] }) => {
         const response = await axiosInstance.post(
             '/bucket2/private/bulk',
@@ -52,3 +121,4 @@ export const bucketApi = {
         return axiosInstance.post(`/bucket2/non-file/download`, payload);
     },
 };
+
