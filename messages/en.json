@@ -2088,7 +2088,21 @@
         "noDspSelectedMessage": "You have not selected any DSP for distribution. Please go to the \"Distribution\" tab to select DSPs.",
         "goToDistribution": "Go to Distribution",
         "noDspToSend": "No DSPs to distribute",
-        "toDistributeCount": "Distributing to {count} DSPs"
+        "toDistributeCount": "Distributing to {count} DSPs",
+        "confirmDescription": "Select digital music platforms (DSPs) to distribute or re-release your record.",
+        "selectedTag": "Selected: {selected}/{total} DSPs",
+        "quickFilter": "Quick filter:",
+        "filterAll": "All",
+        "filterNotReleased": "Unreleased",
+        "filterFailed": "Failed / Error DSPs",
+        "filterReleased": "Released",
+        "deselectAll": "Deselect all",
+        "selectAll": "Select all",
+        "partnerPlatforms": "Partner platforms ({count} available platforms)",
+        "clickToSelectHint": "Click card to select or deselect",
+        "confirmSendNotice": "Will send distribution command to {count} selected DSPs.",
+        "selectedCountNotice": "Will send distribution command to {selected}/{total} selected DSPs.",
+        "distributeNow": "Distribute now"
     },
     "takeDown": {
         "label": "Take down from platform",

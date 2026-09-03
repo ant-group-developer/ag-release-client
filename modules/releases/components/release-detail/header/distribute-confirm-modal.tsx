@@ -1,10 +1,11 @@
 import AppModal from '@/components/ui/modal/normal-modal';
-import { FALLBACK_IMAGE } from '@/constants/common';
 import { RELEASE_DSP_DELIVERY_STATUS } from '@/modules/distribution/enum';
 import { ReleaseDspData } from '@/modules/release-dsp/types';
-import { Avatar, Button, Checkbox, Typography, theme } from 'antd';
+import { Button, Empty, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import DspCardItem from './sub-components/dsp-card-item';
+import DspFilterBar from './sub-components/dsp-filter-bar';
 
 type Props = {
     open: boolean;
@@ -22,37 +23,111 @@ export default function DistributeConfirmModal({
     loading = false,
 }: Props) {
     const messages = useTranslations();
-    const { token } = theme.useToken();
     const [skipDistributed, setSkipDistributed] = useState(true);
+    const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
 
-    const { toDistributeList, skippedList, effectiveCodes, activeCount } =
-        useMemo(() => {
-            const toDistribute = skipDistributed
-                ? selectedRows.filter(
-                      (row) =>
-                          row.status !== RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
-                  )
-                : selectedRows;
-            const skipped = skipDistributed
-                ? selectedRows.filter(
-                      (row) =>
-                          row.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
-                  )
-                : [];
-            const codes = toDistribute
+    useEffect(() => {
+        if (open) {
+            const initialCodes = selectedRows
+                .filter((row) =>
+                    skipDistributed
+                        ? row.status !== RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                        : true
+                )
                 .map((row) => row.dsp?.code)
                 .filter((code): code is string => Boolean(code));
-            return {
-                toDistributeList: toDistribute,
-                skippedList: skipped,
-                effectiveCodes: codes,
-                activeCount: codes.length,
-            };
-        }, [selectedRows, skipDistributed]);
+            setSelectedCodes(initialCodes);
+        }
+    }, [open, selectedRows, skipDistributed]);
 
-    const handleOk = () => {
-        if (effectiveCodes.length > 0) {
-            onConfirm(effectiveCodes);
+    const handleToggleSkipDistributed = (checked: boolean) => {
+        setSkipDistributed(checked);
+        if (checked) {
+            const distributedCodes = new Set(
+                selectedRows
+                    .filter(
+                        (row) =>
+                            row.status ===
+                            RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                    )
+                    .map((row) => row.dsp?.code)
+            );
+            setSelectedCodes((prev) =>
+                prev.filter((code) => !distributedCodes.has(code))
+            );
+        } else {
+            const distributedCodes = selectedRows
+                .filter(
+                    (row) =>
+                        row.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+                )
+                .map((row) => row.dsp?.code)
+                .filter((code): code is string => Boolean(code));
+            setSelectedCodes((prev) =>
+                Array.from(new Set([...prev, ...distributedCodes]))
+            );
+        }
+    };
+
+    const displayedRows = useMemo(() => {
+        return selectedRows.filter((row) => {
+            if (
+                skipDistributed &&
+                row.status === RELEASE_DSP_DELIVERY_STATUS.DISTRIBUTED
+            ) {
+                return false;
+            }
+            return true;
+        });
+    }, [selectedRows, skipDistributed]);
+
+    const handleToggleSelectCard = (code: string) => {
+        setSelectedCodes((prev) =>
+            prev.includes(code)
+                ? prev.filter((c) => c !== code)
+                : [...prev, code]
+        );
+    };
+
+    const isAllDisplayedSelected = useMemo(() => {
+        if (displayedRows.length === 0) return false;
+        return displayedRows.every(
+            (row) => row.dsp?.code && selectedCodes.includes(row.dsp.code)
+        );
+    }, [displayedRows, selectedCodes]);
+
+    const isIndeterminate = useMemo(() => {
+        const displayedCodes = displayedRows
+            .map((row) => row.dsp?.code)
+            .filter((code): code is string => Boolean(code));
+        const selectedDisplayedCount = displayedCodes.filter((code) =>
+            selectedCodes.includes(code)
+        ).length;
+        return (
+            selectedDisplayedCount > 0 &&
+            selectedDisplayedCount < displayedCodes.length
+        );
+    }, [displayedRows, selectedCodes]);
+
+    const handleToggleSelectAll = () => {
+        const displayedCodes = displayedRows
+            .map((row) => row.dsp?.code)
+            .filter((code): code is string => Boolean(code));
+
+        if (isAllDisplayedSelected) {
+            setSelectedCodes((prev) =>
+                prev.filter((code) => !displayedCodes.includes(code))
+            );
+        } else {
+            setSelectedCodes((prev) =>
+                Array.from(new Set([...prev, ...displayedCodes]))
+            );
+        }
+    };
+
+    const handleConfirm = () => {
+        if (selectedCodes.length > 0) {
+            onConfirm(selectedCodes);
         }
     };
 
@@ -60,16 +135,24 @@ export default function DistributeConfirmModal({
         <AppModal
             open={open}
             onCancel={onCancel}
-            width={840}
+            width={900}
             title={
-                <Typography className="!mb-0 !text-lg">
+                <Typography.Text className="!mb-0 !text-xl font-bold">
                     {messages('distribute.confirmTitle')}
-                </Typography>
+                </Typography.Text>
             }
             footer={
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                     <div>
-                        {activeCount === 0 && (
+                        {selectedCodes.length > 0 ? (
+                            <Typography.Text className="text-sm font-medium">
+                                •{' '}
+                                {messages('distribute.selectedCountNotice', {
+                                    selected: selectedCodes.length,
+                                    total: selectedRows.length,
+                                })}
+                            </Typography.Text>
+                        ) : (
                             <Typography.Text
                                 type="danger"
                                 strong
@@ -90,132 +173,51 @@ export default function DistributeConfirmModal({
                         <Button
                             type="primary"
                             loading={loading}
-                            disabled={activeCount === 0 || loading}
-                            onClick={handleOk}
+                            disabled={selectedCodes.length === 0 || loading}
+                            onClick={handleConfirm}
                             className="!rounded-lg"
                         >
-                            {messages('distribute.label')}
+                            {messages('distribute.distributeNow')}
+                            {selectedCodes.length > 0
+                                ? ` (${selectedCodes.length})`
+                                : ''}
                         </Button>
                     </div>
                 </div>
             }
         >
-            <div className="space-y-4 py-3">
-                <div>
-                    <Checkbox
-                        checked={skipDistributed}
-                        onChange={(e) => setSkipDistributed(e.target.checked)}
-                    >
-                        <Typography.Text strong className="text-base">
-                            {messages('distribute.skipDistributed')}
-                        </Typography.Text>
-                    </Checkbox>
-                </div>
+            <div className="space-y-4 py-2">
+                <DspFilterBar
+                    isAllSelected={isAllDisplayedSelected}
+                    isIndeterminate={isIndeterminate}
+                    onToggleSelectAll={handleToggleSelectAll}
+                    skipDistributed={skipDistributed}
+                    onToggleSkipDistributed={handleToggleSkipDistributed}
+                />
 
-                <div className="thin-scrollbar max-h-[60vh] space-y-4 overflow-y-auto pr-1">
-                    {/* List DSPs to distribute */}
-                    <div className="space-y-2">
-                        <Typography.Text strong className="text-base">
-                            {skipDistributed
-                                ? messages('distribute.dspsToDistribute', {
-                                      count: toDistributeList.length,
-                                  })
-                                : messages('distribute.selectedDsps', {
-                                      count: selectedRows.length,
-                                  })}
-                        </Typography.Text>
-
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
-                            {toDistributeList.map((row) => (
-                                <div
-                                    key={row.id || row.dsp?.id || row.dsp?.code}
-                                    className="shadow-xs flex items-center gap-3 rounded-xl border p-2.5 transition-all"
-                                    style={{
-                                        borderColor: token.colorBorderSecondary,
-                                        backgroundColor: token.colorBgContainer,
-                                    }}
-                                >
-                                    <Avatar
-                                        src={row.dsp?.picture || FALLBACK_IMAGE}
-                                        alt={row.dsp?.name || row.dsp?.code}
-                                        size={32}
-                                        shape="square"
-                                        className="shrink-0 !rounded-lg"
-                                    />
-                                    <Typography.Text
-                                        strong
-                                        ellipsis={{
-                                            tooltip:
-                                                row.dsp?.name || row.dsp?.code,
-                                        }}
-                                        className="text-sm font-semibold"
-                                    >
-                                        {row.dsp?.name || row.dsp?.code}
-                                    </Typography.Text>
-                                </div>
+                <div className="thin-scrollbar max-h-[60vh] overflow-y-auto pr-1">
+                    {displayedRows.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                            {displayedRows.map((row) => (
+                                <DspCardItem
+                                    key={
+                                        row.id ||
+                                        row.dsp?.id ||
+                                        row.dsp?.code
+                                    }
+                                    row={row}
+                                    isSelected={Boolean(
+                                        row.dsp?.code &&
+                                            selectedCodes.includes(
+                                                row.dsp.code
+                                            )
+                                    )}
+                                    onToggleSelect={handleToggleSelectCard}
+                                />
                             ))}
                         </div>
-                    </div>
-
-                    {/* Skipped DSPs section if skipDistributed is checked */}
-                    {skipDistributed && skippedList.length > 0 && (
-                        <div
-                            className="space-y-2 border-t pt-3"
-                            style={{
-                                borderColor: token.colorBorderSecondary,
-                            }}
-                        >
-                            <Typography.Text
-                                type="secondary"
-                                strong
-                                className="text-sm"
-                            >
-                                {messages('distribute.skippedDsps', {
-                                    count: skippedList.length,
-                                })}
-                            </Typography.Text>
-
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
-                                {skippedList.map((row) => (
-                                    <div
-                                        key={
-                                            row.id ||
-                                            row.dsp?.id ||
-                                            row.dsp?.code
-                                        }
-                                        className="flex items-center gap-3 rounded-xl border p-2.5 opacity-50 grayscale transition-all"
-                                        style={{
-                                            borderColor:
-                                                token.colorBorderSecondary,
-                                            backgroundColor:
-                                                token.colorBgLayout,
-                                        }}
-                                    >
-                                        <Avatar
-                                            src={
-                                                row.dsp?.picture ||
-                                                FALLBACK_IMAGE
-                                            }
-                                            alt={row.dsp?.name || row.dsp?.code}
-                                            size={32}
-                                            shape="square"
-                                            className="shrink-0 !rounded-lg"
-                                        />
-                                        <Typography.Text
-                                            type="secondary"
-                                            ellipsis={{
-                                                tooltip:
-                                                    row.dsp?.name ||
-                                                    row.dsp?.code,
-                                            }}
-                                            className="text-sm font-medium"
-                                        >
-                                            {row.dsp?.name || row.dsp?.code}
-                                        </Typography.Text>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                    ) : (
+                        <Empty className="my-8" />
                     )}
                 </div>
             </div>

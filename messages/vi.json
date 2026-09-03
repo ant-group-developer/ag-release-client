@@ -2080,7 +2080,21 @@
         "noDspSelectedMessage": "Bạn chưa chọn DSP nào để phân phối. Vui lòng chuyển sang tab \"Phân phối\" để chọn các DSP mong muốn.",
         "goToDistribution": "Chuyển đến Phân phối",
         "noDspToSend": "Không có DSP nào để phân phối",
-        "toDistributeCount": "Phân phối tới {count} DSP"
+        "toDistributeCount": "Phân phối tới {count} DSP",
+        "confirmDescription": "Chọn các nền tảng nhạc số (DSPs) để phân phối hoặc tái phát hành bản ghi của bạn.",
+        "selectedTag": "Đã chọn: {selected}/{total} DSPs",
+        "quickFilter": "Lọc nhanh:",
+        "filterAll": "Tất cả",
+        "filterNotReleased": "Chưa phát hành",
+        "filterFailed": "DSP bị lỗi / Thất bại",
+        "filterReleased": "Đã phát hành",
+        "deselectAll": "Bỏ chọn tất cả",
+        "selectAll": "Chọn tất cả",
+        "partnerPlatforms": "Danh sách nền tảng đối tác ({count} nền tảng khả dụng)",
+        "clickToSelectHint": "Nhấp vào thẻ để chọn hoặc huỷ chọn",
+        "confirmSendNotice": "Sẽ gửi lệnh phân phối tới {count} DSPs đã chọn.",
+        "selectedCountNotice": "Sẽ gửi lệnh phân phối tới {selected}/{total} DSPs đã chọn.",
+        "distributeNow": "Phân phối ngay"
     },
     "takeDown": {
         "label": "Gỡ khỏi nền tảng",
