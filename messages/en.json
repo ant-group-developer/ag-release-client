@@ -777,6 +777,32 @@
                 "nextValue": "Next value"
             }
         },
+        "transfer": {
+            "title": "Transfer channel workspace",
+            "confirm": "Transfer workspace",
+            "hint": "From the transfer dates, views/revenue belong to the new workspace. Earlier dates stay with the old workspace. Both dates are required.",
+            "effectiveDate": "Views transfer date",
+            "effectiveDateHelp": "Trend views from this date belong to the new workspace.",
+            "revenueEffectiveFrom": "Revenue transfer month",
+            "revenueEffectiveFromHelp": "Revenue from this month belongs to the new workspace.",
+            "selectDate": "Select date",
+            "selectMonth": "Select month",
+            "currentWorkspace": "Channel belongs to",
+            "changeWorkspaceHint": "Change workspace from the channel list (workspace column). You must pick a views date and a revenue month.",
+            "fromStart": "Transfer from the beginning",
+            "fromStartHelp": "Fills the earliest allowed dates so all real views/revenue move to the new workspace.",
+            "success": "Channel workspace transferred successfully",
+            "sharedIsrcTitle": "Cannot transfer: shared ISRC",
+            "sharedIsrcHelp": "A video on this channel shares an ISRC with another release (usually the audio version). Analytics are joined by ISRC, so transferring the channel would also move or double-count that other release. Fix the duplicate ISRC in the catalog, then try again.",
+            "sharedIsrcList": "Shared ISRCs: {isrcs}",
+            "sharedIsrc": "Cannot transfer because {count} ISRC(s) still belong to another release.",
+            "dateNotAfter": "Transfer dates must be after the current period (views: {views}, revenue: {revenue}).",
+            "useTransferEndpoint": "Change the channel workspace with the transfer form, including the views date and revenue month.",
+            "datesRequired": "Views transfer date and revenue transfer month are required.",
+            "alreadyInTenant": "The channel and its assets already belong to the destination workspace.",
+            "dateNotAfterCurrentPeriod": "Transfer dates must be after the open ownership period of every video on the channel.",
+            "tooLarge": "This channel has too many videos to transfer in one request."
+        },
         "validation": {
             "nameFormat": "Channel name can only contain letters and numbers, and must end with VEVO."
         },

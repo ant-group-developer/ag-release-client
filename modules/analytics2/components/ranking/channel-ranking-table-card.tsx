@@ -254,25 +254,38 @@ export default function ChannelRankingTableCard({
         );
     };
 
-    const renderTenant = (tenant?: TenantInfo | null) => {
+    const renderTenant = (
+        tenant?: TenantInfo | null,
+        currentTenant?: TenantInfo | null
+    ) => {
         if (!tenant) return '-';
+        const showCurrent =
+            currentTenant?.id && currentTenant.id !== tenant.id;
         return (
-            <div className="flex items-center gap-3">
-                <ImageFallback
-                    src={tenant.logo ?? ''}
-                    alt={tenant.name ?? ''}
-                    width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                    height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                    className="aspect-square rounded-full object-cover"
-                />
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <Typography.Text
-                        className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                        onClick={() => handleSelectTenant(tenant)}
-                    >
-                        {tenant.name || '-'}
+            <div className="flex min-w-0 flex-col gap-1">
+                <div className="flex items-center gap-3">
+                    <ImageFallback
+                        src={tenant.logo ?? ''}
+                        alt={tenant.name ?? ''}
+                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                        className="aspect-square rounded-full object-cover"
+                    />
+                    <CustomTooltip title={messages('common.detailedAnalysis')}>
+                        <Typography.Text
+                            className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                            onClick={() => handleSelectTenant(tenant)}
+                        >
+                            {tenant.name || '-'}
+                        </Typography.Text>
+                    </CustomTooltip>
+                </div>
+                {showCurrent && (
+                    <Typography.Text type="secondary" className="truncate text-xs">
+                        {messages('channel.transfer.currentWorkspace')}:{' '}
+                        {currentTenant?.name}
                     </Typography.Text>
-                </CustomTooltip>
+                )}
             </div>
         );
     };
@@ -344,7 +357,7 @@ export default function ChannelRankingTableCard({
             width: 240,
             ellipsis: true,
             render: (_, record: RevenueChannelItem) =>
-                renderTenant(record.tenant),
+                renderTenant(record.tenant, record.currentTenant),
         },
         {
             title: messages('common.sourcePlatform'),
@@ -423,7 +436,7 @@ export default function ChannelRankingTableCard({
             width: 240,
             ellipsis: true,
             render: (_, record: ChannelRankingItem) =>
-                renderTenant(record.tenant),
+                renderTenant(record.tenant, record.currentTenant),
         },
         {
             title: messages('common.sourcePlatform'),

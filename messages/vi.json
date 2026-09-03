@@ -774,6 +774,32 @@
                 "nextValue": "Giá trị sau"
             }
         },
+        "transfer": {
+            "title": "Chuyển workspace kênh",
+            "confirm": "Chuyển workspace",
+            "hint": "Từ ngày chuyển, views/revenue thuộc workspace mới. Ngày trước đó vẫn thuộc workspace cũ. Cả hai ngày đều bắt buộc.",
+            "effectiveDate": "Ngày chuyển views",
+            "effectiveDateHelp": "Lượt xem/trend từ ngày này thuộc workspace mới.",
+            "revenueEffectiveFrom": "Tháng chuyển doanh thu",
+            "revenueEffectiveFromHelp": "Doanh thu từ tháng này thuộc workspace mới.",
+            "selectDate": "Chọn ngày",
+            "selectMonth": "Chọn tháng",
+            "currentWorkspace": "Kênh thuộc",
+            "changeWorkspaceHint": "Đổi workspace trên danh sách kênh (cột workspace). Cần chọn ngày chuyển views và tháng chuyển doanh thu.",
+            "fromStart": "Chuyển từ đầu lịch sử",
+            "fromStartHelp": "Tự điền ngày sớm nhất có thể: toàn bộ views/revenue thực tế sẽ thuộc workspace mới.",
+            "success": "Chuyển workspace kênh thành công",
+            "sharedIsrcTitle": "Không chuyển được: ISRC đang dùng chung",
+            "sharedIsrcHelp": "Video trên kênh này dùng chung ISRC với một release khác (thường là bản audio). Thống kê gom theo ISRC, nên nếu chuyển kênh thì lượt nghe/doanh thu của release kia cũng bị kéo sang workspace mới hoặc bị nhân đôi. Hãy tách/gỡ ISRC trùng trên catalog rồi chuyển lại.",
+            "sharedIsrcList": "ISRC trùng: {isrcs}",
+            "sharedIsrc": "Không thể chuyển vì {count} ISRC còn thuộc release khác.",
+            "dateNotAfter": "Ngày chuyển phải sau period hiện tại (views: {views}, revenue: {revenue}).",
+            "useTransferEndpoint": "Đổi workspace kênh phải dùng form chuyển workspace kèm ngày views và tháng doanh thu.",
+            "datesRequired": "Cần chọn ngày chuyển views và tháng chuyển doanh thu.",
+            "alreadyInTenant": "Kênh và tài sản đã thuộc workspace đích.",
+            "dateNotAfterCurrentPeriod": "Ngày chuyển phải sau period ownership đang mở của mọi video trên kênh.",
+            "tooLarge": "Kênh có quá nhiều video để chuyển đồng bộ."
+        },
         "validation": {
             "nameFormat": "Tên kênh chỉ được chứa chữ cái, chữ số và bắt buộc kết thúc bằng VEVO."
         },

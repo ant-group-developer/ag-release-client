@@ -24,6 +24,43 @@ export interface ChannelHistoryData extends CommonAttribute {
         ChannelsData,
         'histories' | 'historyCount' | 'historiesCount'
     >;
+    effectiveDate?: string | null;
+    revenueEffectiveFrom?: string | null;
+    fromTenantId?: string | null;
+    toTenantId?: string | null;
+}
+
+export interface ChannelTransferModalData extends ChannelsData {
+    destTenantId?: string;
+}
+
+export interface ChannelTransferSharedIsrc {
+    isrc: string;
+    channel_release_id: string;
+    other_release_id: string;
+    src: string;
+}
+
+export interface ChannelTransferBlockingRelease {
+    releaseId: string;
+    currentEffectiveFrom: string;
+    currentRevenueEffectiveFrom: string;
+}
+
+export interface ChannelTransferPreview {
+    mode: 'identity' | 'assets_only' | 'first_assign';
+    fromTenantId: string | null;
+    channelId?: string;
+    channelName?: string;
+    totalReleaseCount: number;
+    releasesToTransferCount: number;
+    skippedAlreadyDestCount: number;
+    labelsToClear: string[];
+    baselineCreatedCount: number;
+    blockingReleases: ChannelTransferBlockingRelease[];
+    blockingSharedIsrcs: ChannelTransferSharedIsrc[];
+    maxCurrentEffectiveFrom: string;
+    maxCurrentRevenueEffectiveFrom: string;
 }
 
 export interface ChannelsSimpleData

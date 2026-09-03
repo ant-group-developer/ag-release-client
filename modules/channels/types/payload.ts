@@ -8,3 +8,9 @@ export interface CreateChannelPayload {
 }
 
 export interface UpdateChannelPayload extends Partial<CreateChannelPayload> {}
+
+export interface TransferChannelTenantPayload {
+    tenantId: string;
+    effectiveDate: string;
+    revenueEffectiveFrom: string;
+}

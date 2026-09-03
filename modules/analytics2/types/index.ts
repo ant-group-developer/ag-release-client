@@ -200,6 +200,7 @@ export interface ChannelRankingItem {
     thumbUrl?: string | null;
     totalViews: number;
     tenant?: TenantInfo | null;
+    currentTenant?: TenantInfo | null;
     bySource?: BySourceItem[];
 }
 
@@ -319,6 +320,7 @@ export interface RevenueChannelItem {
     revenueUsd: number;
     quantity: number;
     tenant?: TenantInfo | null;
+    currentTenant?: TenantInfo | null;
     bySource?: BySourceItem[];
 }
 
