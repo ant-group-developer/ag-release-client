@@ -40,9 +40,7 @@ export default function ChannelTransferModal() {
     const { previewTransfer, transferChannel, isPreviewing, isTransferring } =
         useTransferChannel();
     const { handleError } = useApiNotify();
-    const [preview, setPreview] = useState<ChannelTransferPreview | null>(
-        null
-    );
+    const [preview, setPreview] = useState<ChannelTransferPreview | null>(null);
     const tenantId = Form.useWatch('tenantId', form);
     const sharedIsrcs = preview?.blockingSharedIsrcs ?? [];
     const hasSharedIsrc = sharedIsrcs.length > 0;
@@ -80,8 +78,7 @@ export default function ChannelTransferModal() {
     }, [channel?.id, tenantId, previewTransfer]);
 
     const applyFromStart = () => {
-        const viewsFrom =
-            preview?.maxCurrentEffectiveFrom || '1900-01-01';
+        const viewsFrom = preview?.maxCurrentEffectiveFrom || '1900-01-01';
         const revenueFrom =
             preview?.maxCurrentRevenueEffectiveFrom || '1900-01-01';
         form.setFieldsValue({
@@ -136,9 +133,13 @@ export default function ChannelTransferModal() {
         }
     };
 
-    const sharedIsrcList = [
-        ...new Set(sharedIsrcs.map((item) => item.isrc)),
-    ].join(', ');
+    // const sharedIsrcList = [
+    //     ...new Set(sharedIsrcs.map((item) => item.isrc)),
+    // ].join(', ');
+
+    const sharedIsrcList = Array.from(
+        new Set(sharedIsrcs.map((item) => item.isrc))
+    ).join(', ');
 
     return (
         <AppModal
