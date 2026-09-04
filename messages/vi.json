@@ -127,6 +127,9 @@
         "scope": "Phạm vi",
         "audio": "Audio",
         "video": "Video",
+        "seconds": "giây",
+        "mb": "MB",
+        "converted": "Quy đổi",
         "speed": "{speed}/s",
         "remainingTime": "Còn khoảng {time}",
         "uploading": "Đang tải lên...",
@@ -706,6 +709,19 @@
             "concurrency": "Số tiến trình đồng thời",
             "concurrencyTooltip": "Số release xử lý song song cùng lúc (1-10)",
             "processedTotal": "Tổng đã xử lý"
+        },
+        "multipartUpload": {
+            "label": "Multipart Upload",
+            "infoTitle": "Cấu hình tải lên phân đoạn (Multipart Upload)",
+            "infoDesc": "Áp dụng cho các tệp dữ liệu lớn (video, âm thanh chất lượng cao) tải trực tiếp lên Cloudflare R2 theo từng phần song song.",
+            "partSizeMb": "Kích thước mỗi Part",
+            "partSizeMbTooltip": "Kích thước của mỗi phần khi chia nhỏ file upload (Tối thiểu 5MB, khuyến nghị 64 - 256MB)",
+            "presignExpiresSeconds": "Thời hạn Presigned URL",
+            "presignExpiresSecondsTooltip": "Thời gian hết hạn của URL upload từng part (60 - 86.400 giây)",
+            "sessionExpiresSeconds": "Thời hạn phiên upload",
+            "sessionExpiresSecondsTooltip": "Thời hạn tồn tại tối đa của phiên multipart upload (3.600 - 604.800 giây)",
+            "maxFileSizeMb": "Dung lượng file tối đa",
+            "maxFileSizeMbTooltip": "Kích thước file tối đa cho phép upload (Tối thiểu 5MB)"
         }
     },
     "log": {

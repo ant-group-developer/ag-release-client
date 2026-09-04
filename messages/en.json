@@ -127,6 +127,9 @@
         "scope": "Scope",
         "audio": "Audio",
         "video": "Video",
+        "seconds": "seconds",
+        "mb": "MB",
+        "converted": "Converted",
         "speed": "{speed}/s",
         "remainingTime": "About {time} remaining",
         "uploading": "Uploading...",
@@ -709,6 +712,19 @@
             "concurrency": "Concurrency",
             "concurrencyTooltip": "Number of releases to sync concurrently (1-10)",
             "processedTotal": "Total processed"
+        },
+        "multipartUpload": {
+            "label": "Multipart Upload",
+            "infoTitle": "Multipart Upload Configuration",
+            "infoDesc": "Applied to large files (such as high-res video, lossless audio) uploaded directly to Cloudflare R2 in parallel chunks.",
+            "partSizeMb": "Part Size",
+            "partSizeMbTooltip": "Size of each chunk during multipart upload (Min 5MB, recommended 64 - 256MB)",
+            "presignExpiresSeconds": "Presigned URL Expiration",
+            "presignExpiresSecondsTooltip": "Validity period of each part presigned URL (60 - 86,400 seconds)",
+            "sessionExpiresSeconds": "Session Expiration",
+            "sessionExpiresSecondsTooltip": "Maximum duration of a multipart upload session (3,600 - 604,800 seconds)",
+            "maxFileSizeMb": "Max File Size",
+            "maxFileSizeMbTooltip": "Maximum allowable file size for upload (Min 5MB)"
         }
     },
     "log": {
