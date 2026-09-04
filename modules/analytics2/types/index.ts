@@ -823,3 +823,12 @@ export interface ActiveAnalyticsEntity {
     id?: string;
     entitySubId?: string;
 }
+
+export interface AnalyticsFilterItem {
+    type: AnalyticsEntityType;
+    id: string;
+    entitySubId?: string;
+    title: string;
+    thumbnailUrl?: string;
+}
+

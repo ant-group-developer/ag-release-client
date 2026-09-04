@@ -3,7 +3,6 @@
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppProTable from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
-import { SIZE_ICON } from '@/constants/common';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
 
@@ -11,7 +10,6 @@ import { ANALYTICS_RANKING_THUMBNAIL_SIZE } from '@/modules/analytics2/constants
 import { ArtistRankingItem, BySourceItem } from '@/modules/analytics2/types';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Tag, Typography } from 'antd';
-import { Columns3 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const COLUMN_WIDTH_RANK = 80;
@@ -233,14 +231,7 @@ export default function ArtistViewsTable({
             rowKey="artistId"
             pagination={false}
             search={false}
-            options={{
-                setting: {
-                    settingIcon: <Columns3 size={SIZE_ICON} />,
-                },
-                density: false,
-                fullScreen: false,
-                reload: false,
-            }}
+            options={false}
             scroll={{ x: SCREEN.LG }}
         />
     );

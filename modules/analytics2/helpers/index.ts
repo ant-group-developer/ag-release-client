@@ -1,6 +1,6 @@
 import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
 import { ANALYTICS_VIEW_TYPE } from '../enums/tabs';
-import { ActiveAnalyticsEntity, RankingParams } from '../types';
+import { ActiveAnalyticsEntity, AnalyticsFilterItem, RankingParams } from '../types';
 
 export const createViewMoreHref = (
     pathname: string,
@@ -43,6 +43,7 @@ export type AnalyticsScopeParams = Pick<
     | 'labelId'
     | 'pgDspId'
     | 'dspReportId'
+    | 'dspId'
     | 'artistId'
     | 'channelId'
     | 'importSource'
@@ -76,6 +77,7 @@ export const getAnalyticsScopeParams = (
             return {
                 pgDspId: entity.id,
                 dspReportId: entity.entitySubId || entity.id,
+                dspId: entity.id,
             };
         case ANALYTICS_ENTITY_TYPE.ARTIST:
             return { artistId: entity.id };
@@ -87,6 +89,37 @@ export const getAnalyticsScopeParams = (
             return {};
     }
 };
+
+export const getFilterScopeParams = (
+    filters?: AnalyticsFilterItem[]
+): AnalyticsScopeParams => {
+    if (!filters || filters.length === 0) {
+        return {};
+    }
+
+    return filters.reduce<AnalyticsScopeParams>((acc, filter) => {
+        const itemScope = getAnalyticsScopeParams({
+            type: filter.type,
+            id: filter.id,
+            entitySubId: filter.entitySubId,
+        });
+        return { ...acc, ...itemScope };
+    }, {});
+};
+
+export const getCombinedAnalyticsScopeParams = (
+    activeEntity?: ActiveAnalyticsEntity,
+    filters?: AnalyticsFilterItem[]
+): AnalyticsScopeParams => {
+    const entityScope = getAnalyticsScopeParams(activeEntity);
+    const filterScope = getFilterScopeParams(filters);
+
+    return {
+        ...entityScope,
+        ...filterScope,
+    };
+};
+
 
 export type DemographicsDimension = 'device' | 'gender' | 'age';
 
