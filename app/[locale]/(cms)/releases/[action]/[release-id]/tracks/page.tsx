@@ -13,6 +13,7 @@ import DropUploadTracks from '@/modules/releases/components/drop-track-upload';
 import AudioPlayer from '@/modules/releases/components/release-detail/release-tracks/audio-player';
 import AddNewTrackModal from '@/modules/releases/components/release-detail/release-tracks/modal/add-new-track';
 import BulkUpdateTracksModal from '@/modules/releases/components/release-detail/release-tracks/modal/bulk-update-tracks';
+import ReplaceTrackFileModal from '@/modules/releases/components/release-detail/release-tracks/modal/replace-track-file';
 import SyncToTracksModal from '@/modules/releases/components/release-detail/release-tracks/modal/sync-to-tracks';
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
@@ -194,6 +195,10 @@ export default function Tracks() {
 
                 {typeModal === TYPE_MODAL_RELEASE.ADD_TRACK && (
                     <AddNewTrackModal />
+                )}
+
+                {typeModal === TYPE_MODAL_TRACK.REPLACE_FILE && (
+                    <ReplaceTrackFileModal />
                 )}
 
                 {typeModal === TYPE_MODAL_RELEASE.SYNC_TO_TRACKS && (

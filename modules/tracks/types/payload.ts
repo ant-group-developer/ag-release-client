@@ -28,3 +28,12 @@ export interface DeleteTracksPayload extends CommonFunction {
 export interface GenerateIsrc extends CommonFunction {
     trackId: string;
 }
+
+export interface ReplaceTrackAudioPayload {
+    fileId: string;
+    sampleRate: string;
+    bitDepth: number;
+    bitrate?: number | null;
+    duration: number;
+}
+

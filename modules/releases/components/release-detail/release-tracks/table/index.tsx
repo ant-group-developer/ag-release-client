@@ -259,7 +259,8 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                         </IconButton>
                         <TrackActionButton
                             // disabled={isReadMode}
-                            showDelete={!isReadMode}
+                            showDelete={canUpdate && !isReadMode}
+                            showReplaceFile={canUpdate && !isReadMode}
                             showDownload
                             onShowDetail={() => {
                                 router.push(
@@ -269,6 +270,9 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
                                     )
                                 );
                             }}
+                            onShowReplaceFile={() =>
+                                openModal(TYPE_MODAL_TRACK.REPLACE_FILE, record)
+                            }
                             onShowDelete={() =>
                                 openModal(TYPE_MODAL_TRACK.DELETE, record)
                             }
