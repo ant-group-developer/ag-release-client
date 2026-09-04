@@ -213,10 +213,21 @@ export default function DspRankingTableCard({
                     <Typography.Text
                         className="cursor-pointer transition-colors hover:text-blue-500"
                         onClick={() => {
+                            const dspId =
+                                record.pgDspId ||
+                                record.dspReportId ||
+                                record.source ||
+                                record.dspName ||
+                                '';
+                            const dspTitle =
+                                record.dspName ||
+                                record.sourceLabel ||
+                                record.source ||
+                                '';
                             onSelectEntity?.({
-                                id: record.source || '',
-                                title:
-                                    record.sourceLabel || record.source || '',
+                                id: dspId,
+                                entitySubId: record.dspReportId,
+                                title: dspTitle,
                                 type: ANALYTICS_ENTITY_TYPE.DSP,
                                 thumbnailUrl: record.imageUrl ?? undefined,
                             });
@@ -316,10 +327,21 @@ export default function DspRankingTableCard({
                     <Typography.Text
                         className="cursor-pointer transition-colors hover:text-blue-500"
                         onClick={() => {
+                            const dspId =
+                                record.pgDspId ||
+                                record.dspReportId ||
+                                record.source ||
+                                record.dspName ||
+                                '';
+                            const dspTitle =
+                                record.dspName ||
+                                record.sourceLabel ||
+                                record.source ||
+                                '';
                             onSelectEntity?.({
-                                id: record.source || '',
-                                title:
-                                    record.sourceLabel || record.source || '',
+                                id: dspId,
+                                entitySubId: record.dspReportId,
+                                title: dspTitle,
                                 type: ANALYTICS_ENTITY_TYPE.DSP,
                                 thumbnailUrl: record.imageUrl ?? undefined,
                             });

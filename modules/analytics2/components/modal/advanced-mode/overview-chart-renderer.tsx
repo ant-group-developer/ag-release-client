@@ -7,9 +7,16 @@ import {
     ANALYTICS_METRIC_KEY,
     ANALYTICS_RELEASE_TYPE,
 } from '../../../enums';
-import { getAnalyticsScopeParams } from '../../../helpers';
+import {
+    getAnalyticsScopeParams,
+    getCombinedAnalyticsScopeParams,
+} from '../../../helpers';
 import { useGetTrendViewDemographicsBarCharts } from '../../../hooks/use-get-trend-view-demographics-bar-chart';
-import { ActiveAnalyticsEntity, AnalyticsCommonParams } from '../../../types';
+import {
+    ActiveAnalyticsEntity,
+    AnalyticsCommonParams,
+    AnalyticsFilterItem,
+} from '../../../types';
 import {
     AnalyticsDemographicsContext,
     AnalyticsDemographicsContextValue,
@@ -26,6 +33,7 @@ import TrackAnalyticsOverviewChart from '../../chart/track-analytics-overview-ch
 
 export interface OverviewChartRendererProps {
     activeEntity: ActiveAnalyticsEntity;
+    filters?: AnalyticsFilterItem[];
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -35,6 +43,7 @@ export interface OverviewChartRendererProps {
 
 export default function OverviewChartRenderer({
     activeEntity,
+    filters,
     fromDate,
     toDate,
     releaseType,
@@ -60,11 +69,11 @@ export default function OverviewChartRenderer({
                 activeEntity.type === ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO
                     ? ANALYTICS_RELEASE_TYPE.VIDEO
                     : releaseType,
-            ...getAnalyticsScopeParams(activeEntity),
+            ...getCombinedAnalyticsScopeParams(activeEntity, filters),
         };
 
         return params;
-    }, [activeEntity, fromDate, releaseType, toDate]);
+    }, [activeEntity, filters, fromDate, releaseType, toDate]);
 
     const { device, gender, age, isFetching } =
         useGetTrendViewDemographicsBarCharts(demographicsParams, {

@@ -12,6 +12,7 @@ import ResendForm from '@/modules/setting/components/forms/resend-form';
 import WebsiteForm from '@/modules/setting/components/forms/website-form';
 import PartnersForm from '@/modules/setting/components/forms/partners-form';
 import SyncStatusForm from '@/modules/setting/components/forms/sync-status-form';
+import MultipartUploadForm from '@/modules/setting/components/forms/multipart-upload-form';
 import { settingQueryKeys } from '@/modules/setting/constants/query-keys';
 import { SETTING_TABS } from '@/modules/setting/enums';
 import { CommonParams } from '@/types/api';
@@ -88,6 +89,11 @@ export default function SettingPage({}: Props) {
             key: SETTING_TABS.SYNC_STATUS,
             label: messages('setting.syncStatus.label'),
             children: <SyncStatusForm />,
+        },
+        {
+            key: SETTING_TABS.MULTIPART_UPLOAD,
+            label: messages('setting.multipartUpload.label'),
+            children: <MultipartUploadForm />,
         },
     ];
 

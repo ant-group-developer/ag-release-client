@@ -9,6 +9,7 @@ export enum SETTING_TABS {
     RESEND = 'resend',
     PARTNERS = 'partners',
     SYNC_STATUS = 'syncStatus',
+    MULTIPART_UPLOAD = 'multipartUpload',
 }
 
 export enum STATUS_BACKUP {

@@ -20,6 +20,14 @@ export interface SettingConfig {
     other?: OtherConfig;
     resend?: ResendConfig;
     partners?: PartnersConfig;
+    multipartUpload?: MultipartUploadConfig;
+}
+
+export interface MultipartUploadConfig {
+    partSizeMb: number;
+    presignExpiresSeconds: number;
+    sessionExpiresSeconds: number;
+    maxFileSizeMb: number;
 }
 
 export interface PartnersConfig {

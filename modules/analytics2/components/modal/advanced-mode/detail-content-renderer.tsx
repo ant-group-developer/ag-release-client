@@ -7,11 +7,13 @@ import {
 } from '@/modules/analytics2/enums';
 import {
     getAnalyticsScopeParams,
+    getCombinedAnalyticsScopeParams,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
 import {
     ActiveAnalyticsEntity,
     AnalyticsEntityType,
+    AnalyticsFilterItem,
 } from '@/modules/analytics2/types';
 import ArtistRankingTableCard from '../../ranking/artist-ranking-table-card';
 import ChannelRankingTableCard from '../../ranking/channel-ranking-table-card';
@@ -26,6 +28,7 @@ import { ContentItem } from './content-entity-selector';
 
 export interface DetailContentRendererProps {
     activeEntity: ActiveAnalyticsEntity;
+    filters?: AnalyticsFilterItem[];
     rankBy?: AnalyticsEntityType;
     fromDate?: string;
     toDate?: string;
@@ -88,6 +91,7 @@ function RankingTable({ type, ...rest }: RankingTableProps) {
 
 export default function DetailContentRenderer({
     activeEntity,
+    filters,
     rankBy,
     fromDate,
     toDate,
@@ -98,7 +102,7 @@ export default function DetailContentRenderer({
     enabled = true,
     paramPrefix,
 }: DetailContentRendererProps) {
-    const scopeParams = getAnalyticsScopeParams(activeEntity);
+    const scopeParams = getCombinedAnalyticsScopeParams(activeEntity, filters);
 
     const commonTableProps = {
         scopeParams,

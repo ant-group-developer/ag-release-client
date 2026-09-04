@@ -19,13 +19,17 @@ import {
     ADVANCED_MODE_PARAM_PREFIX,
     useAdvancedModeModal,
 } from '../../hooks/use-advanced-mode-modal';
-import { getAnalyticsScopeParams } from '../../helpers';
+import {
+    getAnalyticsScopeParams,
+    getCombinedAnalyticsScopeParams,
+} from '../../helpers';
 import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
-import { ActiveAnalyticsEntity, AnalyticsCommonParams } from '../../types';
+import { ActiveAnalyticsEntity, AnalyticsCommonParams, AnalyticsEntityType } from '../../types';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
 import DetailContentRenderer from './advanced-mode/detail-content-renderer';
+import FilterChipsBar from './advanced-mode/filter-chips-bar';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
@@ -41,6 +45,7 @@ export default function AdvancedModeModal({
 
     const {
         entity,
+        filters,
         fromDate,
         toDate,
         metric: activeMetric,
@@ -49,6 +54,9 @@ export default function AdvancedModeModal({
         setDateRange,
         setMetric,
         setRankBy,
+        toggleFilter,
+        removeFilter,
+        clearAllFilters,
     } = useAdvancedModeModal();
 
     const [showSidebar, setShowSidebar] = useState(true);
@@ -81,7 +89,7 @@ export default function AdvancedModeModal({
             fromDate: effectiveFromDate,
             toDate: effectiveToDate,
             releaseType,
-            ...getAnalyticsScopeParams(activeEntity),
+            ...getCombinedAnalyticsScopeParams(activeEntity, filters),
         };
 
         // Video releases live behind the same `releaseId` as audio ones, so the
@@ -94,7 +102,7 @@ export default function AdvancedModeModal({
         }
 
         return params;
-    }, [activeEntity, effectiveFromDate, effectiveToDate, releaseType]);
+    }, [activeEntity, filters, effectiveFromDate, effectiveToDate, releaseType]);
 
     // Single unified Analytics Summary hook replacing separate summary calls
     const { analyticsSummaryData } = useGetAnalyticsSummary(
@@ -117,6 +125,21 @@ export default function AdvancedModeModal({
         if (screens.md === false) {
             setShowSidebar(false);
         }
+    };
+
+    const handleTableSelectEntity = (item?: ContentItem) => {
+        if (!item || (!item.id && !item.entitySubId)) {
+            return;
+        }
+
+        // All clicks within table cells act as secondary filters
+        toggleFilter({
+            type: (item.type || entity.type) as AnalyticsEntityType,
+            id: (item.id || item.entitySubId) as string,
+            entitySubId: item.entitySubId,
+            title: item.title,
+            thumbnailUrl: item.thumbnailUrl,
+        });
     };
 
     const currentSelectedItem = useMemo<ContentItem | undefined>(() => {
@@ -238,6 +261,13 @@ export default function AdvancedModeModal({
                 {/* Main Content Area (Independent Scroll Area) */}
                 <div className="h-full min-w-0 flex-1 overflow-y-auto transition-all duration-300 ease-in-out">
                     <div className="flex flex-col space-y-4 p-6">
+                        {/* Filter Chips Bar */}
+                        <FilterChipsBar
+                            filters={filters}
+                            onRemoveFilter={removeFilter}
+                            onClearAll={clearAllFilters}
+                        />
+
                         {/* Metric Header Tabs & Overview Chart */}
                         <div className="flex flex-col overflow-hidden rounded-lg border border-slate-200 dark:border-zinc-800">
                             <MetricHeaderTabs
@@ -249,6 +279,7 @@ export default function AdvancedModeModal({
                             />
                             <OverviewChartRenderer
                                 activeEntity={activeEntity}
+                                filters={filters}
                                 fromDate={effectiveFromDate}
                                 toDate={effectiveToDate}
                                 releaseType={releaseType}
@@ -260,6 +291,7 @@ export default function AdvancedModeModal({
                         {/* Details / Table Section */}
                         <DetailContentRenderer
                             activeEntity={activeEntity}
+                            filters={filters}
                             rankBy={rankBy}
                             fromDate={effectiveFromDate}
                             toDate={effectiveToDate}
@@ -269,7 +301,7 @@ export default function AdvancedModeModal({
                             onMetricChange={(metric) =>
                                 setMetric(metric as ANALYTICS_METRIC_KEY)
                             }
-                            onSelectEntity={handleSelectEntity}
+                            onSelectEntity={handleTableSelectEntity}
                             enabled={props.open !== false}
                         />
                     </div>
