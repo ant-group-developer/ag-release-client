@@ -6,6 +6,7 @@ import {
     Eye,
     FileScan,
     MoreVertical,
+    Repeat,
     ScanSearch,
     Trash,
 } from 'lucide-react';
@@ -18,11 +19,13 @@ type Props = {
     showDetail?: boolean;
     showScan?: boolean;
     showScanResult?: boolean;
+    showReplaceFile?: boolean;
     onShowScanResult?: () => void;
     onShowScan?: () => void;
     onShowDetail?: () => void;
     onShowDownload?: () => void;
     onShowDelete?: () => void;
+    onShowReplaceFile?: () => void;
 } & DropdownProps;
 
 enum ACTION_BUTTON {
@@ -36,6 +39,7 @@ enum ACTION_BUTTON {
     DOWNLOAD = 'download',
     SCAN = 'scan',
     SHOW_SCAN_RESULT = 'showScanResult',
+    REPLACE_FILE = 'replaceFile',
 }
 
 export default function TrackActionButton({
@@ -44,11 +48,13 @@ export default function TrackActionButton({
     showDetail,
     showScan,
     showScanResult,
+    showReplaceFile,
     onShowScanResult,
     onShowScan,
     onShowDetail,
     onShowDelete,
     onShowDownload,
+    onShowReplaceFile,
     ...props
 }: Props) {
     const messages = useTranslations();
@@ -97,6 +103,17 @@ export default function TrackActionButton({
             ),
         });
     }
+    if (showReplaceFile) {
+        items.push({
+            key: ACTION_BUTTON.REPLACE_FILE,
+            label: (
+                <div className="flex items-center gap-2">
+                    <Repeat size={SIZE_ICON_SMALL} />
+                    <span>{messages('common.replaceFile')}</span>
+                </div>
+            ),
+        });
+    }
     if (showDelete) {
         items.push({
             type: 'divider',
@@ -123,6 +140,7 @@ export default function TrackActionButton({
             [ACTION_BUTTON.DETAIL]: onShowDetail,
             [ACTION_BUTTON.SCAN]: onShowScan,
             [ACTION_BUTTON.SHOW_SCAN_RESULT]: onShowScanResult,
+            [ACTION_BUTTON.REPLACE_FILE]: onShowReplaceFile,
         };
 
         const callback = callbacks[key];

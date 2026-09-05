@@ -539,10 +539,21 @@ export interface RevenueTerBarChartItem {
 export interface ExportReportRequest {
     fromDate: string;
     endDate: string;
-    tenantIds: string[];
-    splitMode: EXPORT_OPTION;
+    format?: 'xlsx' | 'csv';
+    labelId?: string;
+    artistId?: string;
+    releaseId?: string;
+    dspId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    isrc?: string;
+    channelId?: string;
+    importSource?: string;
+    tenantIds?: string[];
+    splitMode?: EXPORT_OPTION;
     periodUnit?: PERIOD_TYPE;
     isExportArtist?: boolean;
+    releaseType?: 'audio' | 'video';
 }
 
 export interface ExportReportResponse {

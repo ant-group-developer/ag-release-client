@@ -124,6 +124,7 @@
         }
     },
     "common": {
+        "replaceFile": "Thay file",
         "scope": "Phạm vi",
         "audio": "Audio",
         "video": "Video",
@@ -1522,6 +1523,9 @@
         "list": "Danh sách bài hát",
         "number": "Bài hát số",
         "add": "Thêm bài hát",
+        "replaceAudioTitle": "Thay file âm thanh",
+        "replaceAudioDesc": "Chọn file âm thanh WAV mới để thay thế file hiện tại của bài hát.",
+        "currentFile": "File hiện tại",
         "label": "Bài hát",
         "create": "Tạo bài hát",
         "lastedTrack": "Bài hát gần đây",

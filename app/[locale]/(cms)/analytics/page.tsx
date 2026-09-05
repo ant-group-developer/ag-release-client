@@ -26,6 +26,7 @@ import {
     Analytics2DataFilter,
     ExportReportJob,
 } from '@/modules/analytics2/types';
+import { useExportJobStore } from '@/modules/analytics2/store/use-export-job-store';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { DollarSign, Eye, Music } from 'lucide-react';
@@ -47,33 +48,14 @@ export default function Analytics2Page() {
     const searchParams = useSearchParams();
 
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-    const [isExportProgressOpen, setIsExportProgressOpen] = useState(false);
-    const [exportJobs, setExportJobs] = useState<ExportReportJob[]>([]);
-
-    const handleExportStarted = (jobId: string) => {
-        setExportJobs((prevJobs) => {
-            if (prevJobs.some((job) => job.id === jobId)) return prevJobs;
-
-            return [
-                ...prevJobs,
-                {
-                    id: jobId,
-                    createdAt: Date.now(),
-                },
-            ];
-        });
-        setIsExportProgressOpen(true);
-    };
-
-    const handleRemoveExportJob = (jobId: string) => {
-        setExportJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
-    };
-
-    useEffect(() => {
-        if (!exportJobs.length) {
-            setIsExportProgressOpen(false);
-        }
-    }, [exportJobs.length]);
+    const {
+        jobs: exportJobs,
+        isProgressOpen: isExportProgressOpen,
+        addJob: handleExportStarted,
+        removeJob: handleRemoveExportJob,
+        clearJobs,
+        setIsProgressOpen,
+    } = useExportJobStore();
 
     const getMetricKeyFromParams = (
         tab?: string | null,
@@ -226,7 +208,7 @@ export default function Analytics2Page() {
                     toDate={toDate}
                     onExportClick={() => {
                         if (exportJobs.length) {
-                            setIsExportProgressOpen(true);
+                            setIsProgressOpen(true);
                         }
 
                         setIsExportModalOpen(true);
@@ -279,8 +261,7 @@ export default function Analytics2Page() {
                 <ExportReportProgressPopover
                     jobs={exportJobs}
                     onClose={() => {
-                        setIsExportProgressOpen(false);
-                        setExportJobs([]);
+                        clearJobs();
                     }}
                     onRemoveJob={handleRemoveExportJob}
                 />

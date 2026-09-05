@@ -124,6 +124,7 @@
         }
     },
     "common": {
+        "replaceFile": "Replace file",
         "scope": "Scope",
         "audio": "Audio",
         "video": "Video",
@@ -1530,6 +1531,9 @@
         "list": "Track list",
         "number": "Track number",
         "add": "Add track",
+        "replaceAudioTitle": "Replace audio file",
+        "replaceAudioDesc": "Select a new WAV audio file to replace the current file for this track.",
+        "currentFile": "Current file",
         "label": "Track",
         "create": "Create track",
         "lastedTrack": "Lasted track",

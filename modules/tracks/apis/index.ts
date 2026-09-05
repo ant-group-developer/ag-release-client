@@ -4,6 +4,7 @@ import { Key } from 'react';
 import { TrackData, TrackDataFilter } from '../types';
 import {
     BulkUpdateTrackPayload,
+    ReplaceTrackAudioPayload,
     TrackPayload,
     UpdateTrackPayload,
 } from '../types/payload';
@@ -79,4 +80,15 @@ export const trackApi = {
             `/tracks/${id}/gen-isrc`
         );
     },
+
+    replaceTrackAudio: (
+        id: TrackData['id'],
+        payload: ReplaceTrackAudioPayload
+    ) => {
+        return axiosInstance.put<DetailResponse<TrackData>>(
+            `/tracks/draft/${id}/audio`,
+            payload
+        );
+    },
 };
+

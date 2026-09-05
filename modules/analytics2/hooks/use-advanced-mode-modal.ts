@@ -247,8 +247,14 @@ export function useAdvancedModeModal() {
         isOpen,
         entity,
         filters,
-        fromDate: dataFilter.fromDate,
-        toDate: dataFilter.toDate,
+        fromDate:
+            dataFilter.fromDate ||
+            searchParams?.get(`${ADVANCED_MODE_PARAM_PREFIX}fromDate`) ||
+            undefined,
+        toDate:
+            dataFilter.toDate ||
+            searchParams?.get(`${ADVANCED_MODE_PARAM_PREFIX}toDate`) ||
+            undefined,
         metric: dataFilter.metric || ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
         rankBy: dataFilter.rankBy,
         openAdvancedMode,
