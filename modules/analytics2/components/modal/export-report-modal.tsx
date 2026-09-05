@@ -125,7 +125,7 @@ export default function ExportReportModal({
             fromDate,
             endDate: endDateVal,
             format: 'xlsx',
-            tenantIds: values.tenantId ? [values.tenantId] : undefined,
+            ...(values.tenantId ? { tenantIds: [values.tenantId] } : {}),
             ...(values.labelId ? { labelId: values.labelId } : {}),
             ...(values.artistId ? { artistId: values.artistId } : {}),
             ...(values.dspId
@@ -203,12 +203,6 @@ export default function ExportReportModal({
                 <AppFormItem
                     name="tenantId"
                     label={messages('tenant.selectTitle')}
-                    rules={[
-                        {
-                            required: true,
-                            message: messages('validation.select'),
-                        },
-                    ]}
                 >
                     <TenantSelectActive
                         placeholder={messages('tenant.selectTitle')}
