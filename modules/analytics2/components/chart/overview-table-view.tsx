@@ -34,15 +34,17 @@ export default function OverviewTableView({
 
     const columns: ColumnsType<any> = [
         {
-            title: messages('common.period') || 'Thời gian',
+            title: messages('common.period'),
             dataIndex: xAxisKey,
             key: xAxisKey,
             width: '70%',
-            render: (text: any) => (
-                <Typography.Text>
-                    {formattedDate(text, DATE_FORMAT.DATE_ONLY_DASH)}
-                </Typography.Text>
-            ),
+            render: (text: any) => {
+                return (
+                    <Typography.Text>
+                        {formattedDate(text, DATE_FORMAT.MONTH_YEAR)}
+                    </Typography.Text>
+                );
+            },
         },
         {
             title: valueName,

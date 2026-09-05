@@ -7,7 +7,11 @@ import {
 import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
-import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_GRANULARITY,
+    ANALYTICS_RELEASE_TYPE,
+} from '../enums';
 import { ANALYTICS2_TABS } from '../enums/tabs';
 
 export interface Analytics2DataFilter extends CommonParams {
@@ -679,6 +683,7 @@ export interface AnalyticsCommonParams extends CommonParams {
     importSource?: string;
     groupBySource?: boolean;
     territoryCode?: string;
+    granularity?: ANALYTICS_GRANULARITY | 'day' | 'month' | string;
 }
 
 export interface TrendViewDemographicsBarChartItem {
