@@ -749,6 +749,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                 onConfirm={handleConfirmDistribution}
                 selectedRows={selectedRows}
                 loading={isDistributingRelease}
+                releaseStatus={formValues?.status}
             />
         </div>
     );

@@ -19,6 +19,7 @@ type Props = SelectProps & {
     disabledArtistIds?: string[];
     showCreate?: boolean;
     artistId?: string;
+    tenantId?: string;
     onCreateSuccess?: (data: ArtistData) => void;
     onUpdateSuccess?: (data: ArtistData) => void;
 };
@@ -28,6 +29,7 @@ export default function ArtistSelect({
     disabledArtistIds,
     showCreate = true,
     artistId,
+    tenantId,
     onCreateSuccess,
     onUpdateSuccess,
     ...props
@@ -49,6 +51,7 @@ export default function ArtistSelect({
         pageSize: 50,
         keyword: searchKeyword,
         idInclude: artistId ?? artistIdFromParams,
+        tenantIds: tenantId,
     });
 
     const debounceSearch = useMemo(

@@ -10,9 +10,12 @@ export const labelsApi = {
         });
     },
 
-    getListSimple: () => {
+    getListSimple: (params?: LabelDataFilter) => {
         return axiosInstance.get<DetailResponse<LabelSimpleData[]>>(
-            '/labels/simple'
+            '/labels/simple',
+            {
+                params,
+            }
         );
     },
 

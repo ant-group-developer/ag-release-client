@@ -1,18 +1,21 @@
-import axiosInstance from '@/api/axios-auth';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
-import { TYPE_UPLOAD_BUCKET } from '@/enums/common';
 import { formatFileSize2 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
 import { ReleasesData } from '@/modules/releases/types';
-import { bucketApi } from '@/modules/upload/apis/bucket-api';
+import {
+    MAX_VIDEO_SIZE,
+    useMultipartVideoUpload,
+} from '@/modules/release-video/hooks/use-multipart-video-upload';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
-import { CreateBucketFile } from '@/modules/upload/types/data';
 import { VideoCameraOutlined } from '@ant-design/icons';
-import { Button, FormInstance, Modal, Space, Tag, Upload } from 'antd';
-import axios from 'axios';
+import { Button, FormInstance, Modal, Space, Tag, Typography, Upload, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import VideoUploadProgress from './video-upload-progress';
+import VideoUploadResumeBanner from './video-upload-resume-banner';
+
+const { Text } = Typography;
 
 interface VideoAssetItemProps {
     form: FormInstance;
@@ -20,9 +23,8 @@ interface VideoAssetItemProps {
     setVideoUrl: (url: string) => void;
     dataEdit?: ReleasesData;
     disabled?: boolean;
+    upload: ReturnType<typeof useMultipartVideoUpload>;
 }
-
-const MAX_VIDEO_SIZE = 5 * 1024 * 1024 * 1024; // 5GB in bytes
 
 export default function VideoAssetItem({
     form,
@@ -30,17 +32,20 @@ export default function VideoAssetItem({
     setVideoUrl,
     dataEdit,
     disabled = false,
+    upload,
 }: VideoAssetItemProps) {
     const messages = useTranslations();
-    const [isVideoUploading, setIsVideoUploading] = useState(false);
+    const { token } = theme.useToken();
+    const [isRemoving, setIsRemoving] = useState(false);
     const { updateReleaseDraft } = useUpdateReleaseDraft();
 
     // Load existing video file
     const videoFileId = dataEdit?.video?.fileId ?? '';
     const { linkReadFile: videoReadUrl } = useGetLinkReadFile(videoFileId);
 
+    // Synchronize initial existing file from dataEdit
     useEffect(() => {
-        if (videoReadUrl && videoFileId) {
+        if (videoReadUrl && videoFileId && upload.phase === 'idle') {
             const currentFileList =
                 form.getFieldValue('videoFile')?.fileList || [];
             const hasExistingFile = currentFileList.some(
@@ -72,7 +77,7 @@ export default function VideoAssetItem({
                     },
                 });
             }
-        } else if (!videoFileId) {
+        } else if (!videoFileId && upload.phase === 'idle' && !upload.file) {
             const currentVideoFile = form.getFieldValue('videoFile');
             if (currentVideoFile !== null || videoUrl) {
                 if (videoUrl) {
@@ -86,167 +91,121 @@ export default function VideoAssetItem({
     }, [
         videoReadUrl,
         videoFileId,
+        upload.phase,
+        upload.file,
         dataEdit?.title,
+        dataEdit?.video?.videoFile?.fileName,
         form,
         messages,
         setVideoUrl,
         videoUrl,
     ]);
 
-    const handleVideoUpload = async (file: File) => {
-        if (disabled) return;
-        if (!dataEdit?.id) return;
-        setIsVideoUploading(true);
-
-        const initialFile = {
-            uid: '-1',
-            name: file.name,
-            status: 'uploading' as const,
-            percent: 0,
-            originFileObj: file,
-        };
-        form.setFieldsValue({
-            videoFile: {
-                file,
-                fileList: [initialFile],
-            },
-        });
-
-        try {
-            const payload: CreateBucketFile = {
-                folderBucket: {
-                    releaseId: dataEdit.id,
-                    uploadPurpose: TYPE_UPLOAD_BUCKET.VIDEO_FILE,
-                },
-                file: {
-                    fileName: file.name,
-                    contentType: file.type,
-                    extension: file.name.split('.').pop() || '',
-                    fileSize: file.size,
-                },
-            };
-
-            // 1. Retrieve pre-signed URL
-            const response = await axiosInstance.post(
-                '/bucket2/private',
-                payload
-            );
-            if (response.status !== 201) {
-                throw new Error(
-                    'Failed to get upload URL. Please try again later.'
-                );
-            }
-
-            const { fileId, urlUpload } = response.data.data;
-
-            // Update the file list item with the final fileId
+    // Synchronize upload completion with form
+    useEffect(() => {
+        if (upload.phase === 'completed' && upload.fileId) {
             form.setFieldsValue({
                 videoFile: {
-                    file,
+                    file: upload.file,
                     fileList: [
                         {
-                            uid: fileId,
-                            name: file.name,
-                            status: 'uploading' as const,
-                            percent: 0,
-                            originFileObj: file,
+                            originFileObj: upload.file,
+                            uid: upload.fileId,
+                            name: upload.file?.name || '',
+                            status: 'done' as const,
                         },
                     ],
                 },
             });
-
-            // 2. Perform PUT request with progress tracking
-            const uploadResponse = await axios.put(urlUpload, file, {
-                headers: {
-                    'Content-Type': file.type || 'application/octet-stream',
-                },
-                onUploadProgress: (progressEvent) => {
-                    const percent = Math.round(
-                        (progressEvent.loaded * 100) /
-                            (progressEvent.total || 1)
-                    );
-                    form.setFieldsValue({
-                        videoFile: {
-                            file,
-                            fileList: [
-                                {
-                                    uid: fileId,
-                                    name: file.name,
-                                    status: 'uploading' as const,
-                                    percent,
-                                    originFileObj: file,
-                                },
-                            ],
-                        },
-                    });
-                },
-            });
-
-            if (!uploadResponse.status || uploadResponse.status >= 400) {
-                throw new Error(
-                    'Failed to upload file. Please try again later.'
-                );
-            }
-
-            // 3. Submit the file id
-            await bucketApi.submit({ ids: [fileId] });
-
-            // 4. Update the draft
-            updateReleaseDraft({
-                id: dataEdit.id,
-                payload: {
-                    video: {
-                        fileId: fileId as string,
-                    },
-                },
-                onSuccess: () => {
-                    setIsVideoUploading(false);
-                    const objectUrl = URL.createObjectURL(file);
-                    setVideoUrl(objectUrl);
-
-                    form.setFieldsValue({
-                        videoFile: {
-                            file,
-                            fileList: [
-                                {
-                                    originFileObj: file,
-                                    uid: fileId,
-                                    name: file.name,
-                                    status: 'done' as const,
-                                },
-                            ],
-                        },
-                    });
-                },
-                onError: () => {
-                    setIsVideoUploading(false);
-                    form.setFieldsValue({
-                        videoFile: null,
-                    });
-                },
-            });
-        } catch (error) {
-            console.error('Video upload failed:', error);
-            setIsVideoUploading(false);
-            form.setFieldsValue({
-                videoFile: null,
-            });
         }
+    }, [upload.phase, upload.fileId, upload.file, form]);
+
+    const isUploading =
+        upload.phase === 'initiating' ||
+        upload.phase === 'uploading' ||
+        upload.phase === 'completing' ||
+        upload.phase === 'saving' ||
+        upload.phase === 'canceling';
+
+    const handleBeforeUpload = (file: File) => {
+        if (disabled || isUploading) return Upload.LIST_IGNORE;
+
+        const isVideo = file.type.startsWith('video/');
+        if (!isVideo) {
+            showNotification(
+                'error',
+                messages('releaseVideo.fields.invalidVideoFile')
+            );
+            return Upload.LIST_IGNORE;
+        }
+
+        if (file.size > MAX_VIDEO_SIZE) {
+            showNotification(
+                'error',
+                messages('releaseVideo.fields.maxVideoFileSize', {
+                    size: '100GB',
+                })
+            );
+            return Upload.LIST_IGNORE;
+        }
+
+        if (file.name.length > 500) {
+            showNotification(
+                'error',
+                messages('track.validation.trackFileName', {
+                    number: 500,
+                })
+            );
+            return Upload.LIST_IGNORE;
+        }
+
+        form.setFieldsValue({
+            videoFile: {
+                file,
+                fileList: [
+                    {
+                        uid: '-1',
+                        name: file.name,
+                        status: 'uploading' as const,
+                        percent: 0,
+                        originFileObj: file,
+                    },
+                ],
+            },
+        });
+
+        upload.start(file);
+        return false;
+    };
+
+    const handleCancelUpload = () => {
+        Modal.confirm({
+            title: messages('releaseVideo.fields.cancelUploadConfirmTitle'),
+            content: messages('releaseVideo.fields.cancelUploadConfirmMessage'),
+            okText: messages('common.yes'),
+            cancelText: messages('common.cancel'),
+            okButtonProps: { danger: true },
+            onOk: async () => {
+                await upload.cancel();
+                form.setFieldsValue({
+                    videoFile: null,
+                });
+            },
+        });
     };
 
     const handleRemove = () => {
-        if (disabled) return false;
+        if (disabled || isUploading || isRemoving) return false;
         return new Promise<boolean>((resolve) => {
             Modal.confirm({
-                title: messages('delete.confirmTitle'),
-                content: messages('delete.confirmMessage', {
-                    value: messages('common.video'),
-                }),
+                title: messages('releaseVideo.fields.removeVideoConfirmTitle'),
+                content: messages('releaseVideo.fields.removeVideoConfirmMessage'),
                 okText: messages('common.yes'),
                 cancelText: messages('common.cancel'),
+                okButtonProps: { danger: true },
                 onOk: async () => {
                     if (dataEdit?.id) {
-                        setIsVideoUploading(true);
+                        setIsRemoving(true);
                         updateReleaseDraft({
                             id: dataEdit.id,
                             payload: {
@@ -259,11 +218,12 @@ export default function VideoAssetItem({
                                 form.setFieldsValue({
                                     videoFile: null,
                                 });
-                                setIsVideoUploading(false);
+                                upload.reset();
+                                setIsRemoving(false);
                                 resolve(true);
                             },
                             onError: () => {
-                                setIsVideoUploading(false);
+                                setIsRemoving(false);
                                 resolve(false);
                             },
                         });
@@ -272,6 +232,7 @@ export default function VideoAssetItem({
                         form.setFieldsValue({
                             videoFile: null,
                         });
+                        upload.reset();
                         resolve(true);
                     }
                 },
@@ -283,14 +244,17 @@ export default function VideoAssetItem({
     };
 
     const fileList = form.getFieldValue('videoFile')?.fileList || [];
-    const fileSize = dataEdit?.video?.videoFile?.fileSize;
+    const fileSize =
+        dataEdit?.video?.videoFile?.fileSize || upload.file?.size;
 
     return (
         <div className="mb-5">
-            <div className="mb-1 flex w-full justify-between">
+            <div className="mb-1 flex w-full justify-between items-center">
                 <Space className="text-xs font-bold">
-                    <span>{messages('releaseVideo.fields.videoFile')}</span>
-                    <span className="text-red-500">*</span>
+                    <Text strong className="text-xs">
+                        {messages('releaseVideo.fields.videoFile')}
+                    </Text>
+                    <Text type="danger">*</Text>
                 </Space>
                 {fileSize ? (
                     <Tag color="blue" bordered={false}>
@@ -304,6 +268,14 @@ export default function VideoAssetItem({
                 rules={[
                     {
                         validator: async (_, value) => {
+                            if (isUploading) {
+                                return Promise.reject(
+                                    new Error(messages('common.processing'))
+                                );
+                            }
+                            if (upload.canResume && upload.phase === 'idle') {
+                                return Promise.resolve();
+                            }
                             if (
                                 !value ||
                                 !value.fileList ||
@@ -317,67 +289,75 @@ export default function VideoAssetItem({
                                     )
                                 );
                             }
-                            if (isVideoUploading) {
-                                return Promise.reject(
-                                    new Error(messages('common.processing'))
-                                );
-                            }
                         },
                     },
                 ]}
             >
-                <Upload
-                    accept="video/*"
-                    fileList={fileList}
-                    disabled={disabled || isVideoUploading}
-                    beforeUpload={(file) => {
-                        const isVideo = file.type.startsWith('video/');
-                        if (!isVideo) {
-                            showNotification(
-                                'error',
-                                messages('releaseVideo.fields.invalidVideoFile')
-                            );
-                            return Upload.LIST_IGNORE;
+                {/* 1. Resume Banner if there is an interrupted session */}
+                {upload.canResume && upload.phase === 'idle' && upload.resumeDescriptor ? (
+                    <VideoUploadResumeBanner
+                        descriptor={upload.resumeDescriptor}
+                        onResumeFileSelected={(file) => upload.resume(file)}
+                        onCancel={() => upload.cancel()}
+                        disabled={disabled}
+                    />
+                ) : upload.phase !== 'idle' && upload.phase !== 'completed' ? (
+                    /* 2. Uploading / In-progress view */
+                    <VideoUploadProgress
+                        phase={upload.phase}
+                        fileName={
+                            upload.file?.name ||
+                            upload.resumeDescriptor?.fileName
                         }
-                        if (file.size > MAX_VIDEO_SIZE) {
-                            showNotification(
-                                'error',
-                                messages(
-                                    'releaseVideo.fields.maxVideoFileSize',
-                                    { size: '5GB' }
-                                )
-                            );
-                            return Upload.LIST_IGNORE;
+                        fileSize={
+                            upload.file?.size ||
+                            upload.resumeDescriptor?.fileSize
                         }
-                        if (file.name.length > 500) {
-                            showNotification(
-                                'error',
-                                messages('track.validation.trackFileName', {
-                                    number: 500,
-                                })
-                            );
-                            return Upload.LIST_IGNORE;
-                        }
-                        handleVideoUpload(file);
-                        return false;
-                    }}
-                    onRemove={handleRemove}
-                    listType="picture"
-                    iconRender={() => (
-                        <VideoCameraOutlined
-                            style={{ fontSize: 24, color: '#3b82f6' }}
-                        />
-                    )}
-                >
-                    {fileList.length < 1 && (
-                        <Button
-                            icon={<VideoCameraOutlined />}
-                            disabled={disabled || isVideoUploading}
+                        percent={upload.percent}
+                        speed={upload.speed}
+                        loaded={upload.loaded}
+                        total={upload.total}
+                        completedParts={upload.completedParts}
+                        partCount={upload.partCount}
+                        error={upload.error}
+                        onRetry={() => upload.retry()}
+                        onCancel={handleCancelUpload}
+                        disabled={disabled}
+                    />
+                ) : (
+                    /* 3. Standard Idle or Completed view */
+                    <div>
+                        <Upload
+                            accept="video/*"
+                            fileList={fileList}
+                            disabled={disabled || isUploading || isRemoving}
+                            beforeUpload={handleBeforeUpload}
+                            onRemove={handleRemove}
+                            listType="picture"
+                            iconRender={() => (
+                                <VideoCameraOutlined
+                                    style={{
+                                        fontSize: 24,
+                                        color: token.colorPrimary,
+                                    }}
+                                />
+                            )}
                         >
-                            {messages('common.upload')}
-                        </Button>
-                    )}
-                </Upload>
+                            {fileList.length < 1 && (
+                                <Button
+                                    icon={<VideoCameraOutlined />}
+                                    disabled={
+                                        disabled ||
+                                        isUploading ||
+                                        isRemoving
+                                    }
+                                >
+                                    {messages('common.upload')}
+                                </Button>
+                            )}
+                        </Upload>
+                    </div>
+                )}
             </AppFormItem>
         </div>
     );

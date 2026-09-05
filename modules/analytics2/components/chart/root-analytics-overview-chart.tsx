@@ -1,10 +1,17 @@
-import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { useState } from 'react';
+import {
+    ANALYTICS_GRANULARITY,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_OVERVIEW_CHART_MODE,
+    ANALYTICS_RELEASE_TYPE,
+} from '../../enums';
 import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
 import { useGetRevenueLineChart } from '../../hooks/use-get-revenue-line-chart';
 import { useGetRevenueTerBarChart } from '../../hooks/use-get-revenue-ter-bar-chart';
 import { useGetTrendViewDspBarChart } from '../../hooks/use-get-trend-view-dsp-bar-chart';
 import { useGetTrendViewLineChart } from '../../hooks/use-get-trend-view-line-chart';
 import { useGetTrendViewTerBarChart } from '../../hooks/use-get-trend-view-ter-bar-chart';
+import { AnalyticsCommonParams } from '../../types';
 import AnalyticsOverviewChart from './analytics-overview-chart';
 
 export interface RootAnalyticsOverviewChartProps {
@@ -13,6 +20,8 @@ export interface RootAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
+    onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
 }
 
 export default function RootAnalyticsOverviewChart({
@@ -21,15 +30,33 @@ export default function RootAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    overviewChartMode: externalOverviewChartMode,
+    onOverviewChartModeChange,
 }: RootAnalyticsOverviewChartProps) {
+    const [internalOverviewChartMode, setInternalOverviewChartMode] =
+        useState<ANALYTICS_OVERVIEW_CHART_MODE>(
+            ANALYTICS_OVERVIEW_CHART_MODE.LINE
+        );
+
+    const overviewChartMode =
+        externalOverviewChartMode ?? internalOverviewChartMode;
+    const handleOverviewChartModeChange =
+        onOverviewChartModeChange ?? setInternalOverviewChartMode;
+
+    const granularity =
+        overviewChartMode === ANALYTICS_OVERVIEW_CHART_MODE.TABLE
+            ? ANALYTICS_GRANULARITY.MONTH
+            : ANALYTICS_GRANULARITY.DAY;
+
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
 
-    const chartFilterParams = {
+    const chartFilterParams: AnalyticsCommonParams = {
         fromDate,
         toDate,
         releaseType,
+        granularity,
     };
 
     const {
@@ -93,6 +120,8 @@ export default function RootAnalyticsOverviewChart({
             dspData={dspData}
             terData={terData}
             isBarChartLoading={isBarChartLoading}
+            overviewChartMode={overviewChartMode}
+            onOverviewChartModeChange={handleOverviewChartModeChange}
         />
     );
 }

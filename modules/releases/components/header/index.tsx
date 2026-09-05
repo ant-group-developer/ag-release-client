@@ -60,7 +60,7 @@ export default function ReleasesHeaderV2({
     const messages = useTranslations();
     const { releaseTypesData } = useGetListSimpleReleaseTypes();
     const { genresData } = useGetListSimpleGenres();
-    const { labelsData } = useGetListLabelsSimple({
+    const { labelsData } = useGetListLabelsSimple(undefined, {
         enabled: !hideLabelFilter,
     });
     const { isAdmin } = useAuth();

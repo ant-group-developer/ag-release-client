@@ -38,4 +38,9 @@ export enum ANALYTICS_OVERVIEW_CHART_MODE {
     TABLE = 'table',
 }
 
+export enum ANALYTICS_GRANULARITY {
+    DAY = 'day',
+    MONTH = 'month',
+}
+
 

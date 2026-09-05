@@ -1,15 +1,23 @@
 'use client';
 
 import { ANALYTIC_SORT_BY } from '@/enums/common';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
+    ANALYTICS_OVERVIEW_CHART_MODE,
     ANALYTICS_RELEASE_TYPE,
 } from '../../../enums';
-import { getAnalyticsScopeParams } from '../../../helpers';
+import {
+    getAnalyticsScopeParams,
+    getCombinedAnalyticsScopeParams,
+} from '../../../helpers';
 import { useGetTrendViewDemographicsBarCharts } from '../../../hooks/use-get-trend-view-demographics-bar-chart';
-import { ActiveAnalyticsEntity, AnalyticsCommonParams } from '../../../types';
+import {
+    ActiveAnalyticsEntity,
+    AnalyticsCommonParams,
+    AnalyticsFilterItem,
+} from '../../../types';
 import {
     AnalyticsDemographicsContext,
     AnalyticsDemographicsContextValue,
@@ -26,6 +34,7 @@ import TrackAnalyticsOverviewChart from '../../chart/track-analytics-overview-ch
 
 export interface OverviewChartRendererProps {
     activeEntity: ActiveAnalyticsEntity;
+    filters?: AnalyticsFilterItem[];
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -35,18 +44,26 @@ export interface OverviewChartRendererProps {
 
 export default function OverviewChartRenderer({
     activeEntity,
+    filters,
     fromDate,
     toDate,
     releaseType,
     activeMetric,
     enabled = true,
 }: OverviewChartRendererProps) {
+    const [overviewChartMode, setOverviewChartMode] =
+        useState<ANALYTICS_OVERVIEW_CHART_MODE>(
+            ANALYTICS_OVERVIEW_CHART_MODE.LINE
+        );
+
     const commonProps = {
         fromDate,
         toDate,
         releaseType,
         activeMetric,
         enabled,
+        overviewChartMode,
+        onOverviewChartModeChange: setOverviewChartMode,
     };
 
     const isViewsMetric = activeMetric === ANALYTICS_METRIC_KEY.TOTAL_VIEWS;
@@ -60,11 +77,11 @@ export default function OverviewChartRenderer({
                 activeEntity.type === ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO
                     ? ANALYTICS_RELEASE_TYPE.VIDEO
                     : releaseType,
-            ...getAnalyticsScopeParams(activeEntity),
+            ...getCombinedAnalyticsScopeParams(activeEntity, filters),
         };
 
         return params;
-    }, [activeEntity, fromDate, releaseType, toDate]);
+    }, [activeEntity, filters, fromDate, releaseType, toDate]);
 
     const { device, gender, age, isFetching } =
         useGetTrendViewDemographicsBarCharts(demographicsParams, {

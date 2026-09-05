@@ -1,27 +1,47 @@
 import AppForm from '@/components/ui/antd-form/form';
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import ArtistSelect from '@/components/ui/select/artist-select';
 import DateSelect2 from '@/components/ui/select/date-select2';
+import LabelSelect from '@/components/ui/select/label-select';
+import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { useExportAnalyticsReport } from '@/modules/analytics2/hooks/use-export-analytics-report';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
+import DspSelect from '@/modules/dsp/components/select/dsp-select';
+import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
 import { DetailResponse } from '@/types/api';
-import { Button, Checkbox, Form, Modal, Radio } from 'antd';
+import { Button, Form, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
-import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
+import { useExportJobStore } from '../../store/use-export-job-store';
 import {
     Analytics2DataFilter,
-    EXPORT_OPTION,
+    ExportReportRequest,
     ExportReportResponse,
-    PERIOD_TYPE,
 } from '../../types';
-import TenantSelectTable from '../table/tenant-select-table';
+
+export interface ExportReportInitialValues {
+    fromDate?: string;
+    toDate?: string;
+    tenantId?: string;
+    tenantIds?: string[];
+    labelId?: string;
+    artistId?: string;
+    releaseId?: string;
+    dspId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    isrc?: string;
+    channelId?: string;
+    importSource?: string;
+}
 
 interface ExportReportModalProps {
     open: boolean;
     onClose: () => void;
-    onExportStarted: (jobId: string) => void;
+    onExportStarted?: (jobId: string) => void;
     dataFilter?: Analytics2DataFilter;
+    initialValues?: ExportReportInitialValues;
 }
 
 export default function ExportReportModal({
@@ -29,113 +49,100 @@ export default function ExportReportModal({
     onClose,
     onExportStarted,
     dataFilter,
+    initialValues,
 }: ExportReportModalProps) {
     const messages = useTranslations();
     const [form] = Form.useForm();
     const { profile } = useAuth();
+    const addJob = useExportJobStore((state) => state.addJob);
 
     const { exportAnalyticsReport, isPending: isExporting } =
         useExportAnalyticsReport();
+
+    const watchedArtistId = Form.useWatch('artistId', form);
+    const watchedTenantId = Form.useWatch('tenantId', form);
 
     const { data: tenantActiveData } = useTenantActive();
     const activeTenantIds = useMemo(() => {
         return tenantActiveData?.items?.map((t: any) => t.id) ?? [];
     }, [tenantActiveData]);
 
-    const splitMode = Form.useWatch('splitMode', form);
-    const periodUnit = Form.useWatch('periodUnit', form);
-
-    // Reset/setup periodUnit when open
     useEffect(() => {
         if (open) {
-            if (!form.getFieldValue('periodUnit')) {
-                form.setFieldValue('periodUnit', PERIOD_TYPE.NONE);
-            }
-        }
-    }, [open, form]);
+            form.resetFields();
 
-    // Handle dateRange format when periodUnit changes
-    useEffect(() => {
-        if (open) {
-            const currentPeriodUnit =
-                form.getFieldValue('periodUnit') || PERIOD_TYPE.MONTH;
-            if (currentPeriodUnit === PERIOD_TYPE.QUARTER) {
-                const startDate = dayjs().startOf('year').format('YYYY-[Q]Q');
-                const endDate = dayjs().format('YYYY-[Q]Q');
-                form.setFieldValue('dateRange', `${startDate},${endDate}`);
-            } else {
-                const startDate =
-                    dataFilter?.startDate ??
-                    dayjs().startOf('month').format('YYYY-MM-DD');
-                const endDate =
-                    dataFilter?.endDate ??
-                    dayjs().endOf('month').format('YYYY-MM-DD');
-                form.setFieldValue('dateRange', `${startDate},${endDate}`);
-            }
-        }
-    }, [open, periodUnit, dataFilter, form]);
+            const rawStartDate =
+                initialValues?.fromDate ??
+                dataFilter?.startDate ??
+                dayjs().startOf('month').format('YYYY-MM-DD');
+            const rawEndDate =
+                initialValues?.toDate ??
+                dataFilter?.endDate ??
+                dayjs().endOf('month').format('YYYY-MM-DD');
 
-    useEffect(() => {
-        if (open) {
+            const startDate = dayjs(rawStartDate).isValid()
+                ? dayjs(rawStartDate).startOf('month').format('YYYY-MM-DD')
+                : dayjs().startOf('month').format('YYYY-MM-DD');
+            const endDate = dayjs(rawEndDate).isValid()
+                ? dayjs(rawEndDate).endOf('month').format('YYYY-MM-DD')
+                : dayjs().endOf('month').format('YYYY-MM-DD');
+
             const currentTenantId = profile?.tenantId;
-            const hasActiveTenant = currentTenantId && activeTenantIds.includes(currentTenantId);
+            const hasActiveTenant =
+                currentTenantId && activeTenantIds.includes(currentTenantId);
+
+            const initialTenantId =
+                initialValues?.tenantId && activeTenantIds.includes(initialValues.tenantId)
+                    ? initialValues.tenantId
+                    : initialValues?.tenantIds?.[0] && activeTenantIds.includes(initialValues.tenantIds[0])
+                      ? initialValues.tenantIds[0]
+                      : hasActiveTenant
+                        ? currentTenantId
+                        : undefined;
+
             form.setFieldsValue({
-                splitMode: EXPORT_OPTION.BY_WORKSPACE,
-                tenantIds: hasActiveTenant ? [currentTenantId] : [],
-                isExportArtist: false,
-                periodUnit: PERIOD_TYPE.NONE,
+                dateRange: `${startDate},${endDate}`,
+                tenantId: initialTenantId,
+                labelId: initialValues?.labelId || undefined,
+                artistId: initialValues?.artistId || undefined,
+                dspId: initialValues?.dspId || undefined,
             });
         }
-    }, [open, form, profile, activeTenantIds]);
-
-    const getMonthFromQuarter = (quarterStr: string, isEnd: boolean) => {
-        const match = quarterStr.match(/^(\d{4})-Q([1-4])$/);
-        if (match) {
-            const year = match[1];
-            const quarter = parseInt(match[2], 10);
-            if (isEnd) {
-                const endMonth = quarter * 3;
-                return `${year}-${String(endMonth).padStart(2, '0')}`;
-            } else {
-                const startMonth = (quarter - 1) * 3 + 1;
-                return `${year}-${String(startMonth).padStart(2, '0')}`;
-            }
-        }
-        return quarterStr;
-    };
+    }, [open, form, profile, activeTenantIds, initialValues, dataFilter]);
 
     const handleExport = (values: {
         dateRange: string;
-        tenantIds: string[];
-        splitMode: EXPORT_OPTION;
-        periodUnit?: PERIOD_TYPE;
-        isExportArtist?: boolean;
+        tenantId?: string;
+        labelId?: string;
+        artistId?: string;
+        dspId?: string;
     }) => {
         const [startDate, endDate] = values.dateRange.split(',');
+        const fromDate = dayjs(startDate).format('YYYY-MM');
+        const endDateVal = dayjs(endDate).format('YYYY-MM');
 
-        let fromDate = startDate;
-        let endDateVal = endDate;
-
-        if (values.periodUnit === PERIOD_TYPE.QUARTER) {
-            fromDate = getMonthFromQuarter(startDate, false);
-            endDateVal = getMonthFromQuarter(endDate, true);
-        } else {
-            fromDate = dayjs(startDate).format('YYYY-MM');
-            endDateVal = dayjs(endDate).format('YYYY-MM');
-        }
+        const payload: ExportReportRequest = {
+            fromDate,
+            endDate: endDateVal,
+            format: 'xlsx',
+            tenantIds: values.tenantId ? [values.tenantId] : undefined,
+            ...(values.labelId ? { labelId: values.labelId } : {}),
+            ...(values.artistId ? { artistId: values.artistId } : {}),
+            ...(values.dspId
+                ? {
+                      dspId: values.dspId,
+                      pgDspId: values.dspId,
+                      dspReportId: values.dspId,
+                  }
+                : {}),
+        };
 
         exportAnalyticsReport({
-            payload: {
-                fromDate,
-                endDate: endDateVal,
-                tenantIds: values.tenantIds,
-                splitMode: values.splitMode,
-                periodUnit: values.periodUnit,
-                isExportArtist: !!values.isExportArtist,
-            },
+            payload,
             onSuccess: (data: DetailResponse<ExportReportResponse>) => {
                 if (data?.data?.jobId) {
-                    onExportStarted(data.data.jobId);
+                    onExportStarted?.(data.data.jobId);
+                    addJob(data.data.jobId);
                     handleClose();
                 }
             },
@@ -153,7 +160,7 @@ export default function ExportReportModal({
             open={open}
             onCancel={handleClose}
             destroyOnHidden
-            width={600}
+            width={'50vw'}
             style={{ maxWidth: 'calc(100vw - 24px)' }}
             footer={[
                 <Button
@@ -179,12 +186,6 @@ export default function ExportReportModal({
                 showSubmit={false}
                 layout="vertical"
                 disabled={isExporting}
-                initialValues={{
-                    splitMode: EXPORT_OPTION.BY_WORKSPACE,
-                    tenantIds: profile?.tenantId ? [profile.tenantId] : [],
-                    isExportArtist: false,
-                    periodUnit: PERIOD_TYPE.NONE,
-                }}
             >
                 <AppFormItem
                     name="dateRange"
@@ -196,76 +197,54 @@ export default function ExportReportModal({
                         },
                     ]}
                 >
-                    <DateSelect2
-                        style={{ width: '100%' }}
-                        picker={
-                            periodUnit === PERIOD_TYPE.QUARTER
-                                ? 'quarter'
-                                : 'month'
-                        }
-                        format={
-                            periodUnit === PERIOD_TYPE.QUARTER
-                                ? 'YYYY-[Q]Q'
-                                : undefined
-                        }
-                    />
-                </AppFormItem>
-
-                <AppFormItem label={messages('analytics.splitMode.label')}>
-                    <div className="flex flex-col gap-3">
-                        <Form.Item
-                            name="periodUnit"
-                            noStyle
-                            rules={[
-                                {
-                                    required: true,
-                                    message: messages('validation.radio'),
-                                },
-                            ]}
-                        >
-                            <Radio.Group className="flex flex-wrap gap-2">
-                                <Radio value={PERIOD_TYPE.NONE}>
-                                    {messages('analytics.splitMode.none')}
-                                </Radio>
-                                <Radio value={PERIOD_TYPE.MONTH}>
-                                    {messages('analytics.splitMode.month')}
-                                </Radio>
-                                <Radio value={PERIOD_TYPE.QUARTER}>
-                                    {messages('analytics.splitMode.quarter')}
-                                </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="isExportArtist"
-                            valuePropName="checked"
-                            noStyle
-                        >
-                            <Checkbox>
-                                {messages('analytics.splitMode.isExportArtist')}
-                            </Checkbox>
-                        </Form.Item>
-                    </div>
+                    <DateSelect2 style={{ width: '100%' }} picker="month" />
                 </AppFormItem>
 
                 <AppFormItem
-                    name="tenantIds"
+                    name="tenantId"
                     label={messages('tenant.selectTitle')}
                     rules={[
                         {
-                            validator: (_, value) => {
-                                const validValues = value?.filter((id: string) => id && activeTenantIds.includes(id)) ?? [];
-                                if (!validValues.length) {
-                                    return Promise.reject(
-                                        new Error(messages('validation.select'))
-                                    );
-                                }
-                                return Promise.resolve();
-                            },
+                            required: true,
+                            message: messages('validation.select'),
                         },
                     ]}
                 >
-                    <TenantSelectTable />
+                    <TenantSelectActive
+                        placeholder={messages('tenant.selectTitle')}
+                        allowClear
+                        onChange={() => {
+                            form.setFieldsValue({
+                                labelId: undefined,
+                                artistId: undefined,
+                            });
+                        }}
+                    />
+                </AppFormItem>
+
+                <AppFormItem name="labelId" label={messages('label.label')}>
+                    <LabelSelect
+                        tenantId={watchedTenantId}
+                        placeholder={messages('placeholder.selectLabel')}
+                        allowClear
+                    />
+                </AppFormItem>
+
+                <AppFormItem name="artistId" label={messages('artist.label')}>
+                    <ArtistSelect
+                        tenantId={watchedTenantId}
+                        artistId={watchedArtistId || initialValues?.artistId}
+                        placeholder={messages('placeholder.selectArtist')}
+                        allowClear
+                        showCreate={false}
+                    />
+                </AppFormItem>
+
+                <AppFormItem name="dspId" label="DSP">
+                    <DspSelect
+                        placeholder={messages('placeholder.selectDsp')}
+                        allowClear
+                    />
                 </AppFormItem>
             </AppForm>
         </Modal>

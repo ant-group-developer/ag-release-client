@@ -1,12 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { labelsApi } from '../apis';
 import { labelsQueryKeys } from '../constants/query-keys';
-import { LabelSimpleData } from '../types';
+import { LabelDataFilter, LabelSimpleData } from '../types';
 
-export const useGetListLabelsSimple = (options?: { enabled: boolean }) => {
+export const useGetListLabelsSimple = (
+    params?: LabelDataFilter,
+    options?: { enabled?: boolean }
+) => {
     const { data, ...res } = useQuery({
-        queryKey: labelsQueryKeys.listsSimple(),
-        queryFn: () => labelsApi.getListSimple(),
+        queryKey: labelsQueryKeys.listSimple(params),
+        queryFn: () => labelsApi.getListSimple(params),
         placeholderData: (prev) => prev,
         enabled: options?.enabled ?? true,
     });

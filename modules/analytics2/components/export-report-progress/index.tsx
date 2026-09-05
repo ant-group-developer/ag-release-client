@@ -165,7 +165,7 @@ export default function ExportReportProgressPopover({
                 position: 'fixed',
                 bottom: 0,
                 right: 16,
-                zIndex: 50,
+                zIndex: 1050,
             }}
             styles={{
                 body: { padding: 0 },

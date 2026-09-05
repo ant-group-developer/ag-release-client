@@ -7,7 +7,11 @@ import {
 import { TENANT_TYPE } from '@/modules/tenant/enums';
 import { TenantData } from '@/modules/tenant/types/data';
 import { CommonParams } from '@/types/api';
-import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_GRANULARITY,
+    ANALYTICS_RELEASE_TYPE,
+} from '../enums';
 import { ANALYTICS2_TABS } from '../enums/tabs';
 
 export interface Analytics2DataFilter extends CommonParams {
@@ -539,10 +543,21 @@ export interface RevenueTerBarChartItem {
 export interface ExportReportRequest {
     fromDate: string;
     endDate: string;
-    tenantIds: string[];
-    splitMode: EXPORT_OPTION;
+    format?: 'xlsx' | 'csv';
+    labelId?: string;
+    artistId?: string;
+    releaseId?: string;
+    dspId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    isrc?: string;
+    channelId?: string;
+    importSource?: string;
+    tenantIds?: string[];
+    splitMode?: EXPORT_OPTION;
     periodUnit?: PERIOD_TYPE;
     isExportArtist?: boolean;
+    releaseType?: 'audio' | 'video';
 }
 
 export interface ExportReportResponse {
@@ -668,6 +683,7 @@ export interface AnalyticsCommonParams extends CommonParams {
     importSource?: string;
     groupBySource?: boolean;
     territoryCode?: string;
+    granularity?: ANALYTICS_GRANULARITY | 'day' | 'month' | string;
 }
 
 export interface TrendViewDemographicsBarChartItem {
@@ -823,3 +839,12 @@ export interface ActiveAnalyticsEntity {
     id?: string;
     entitySubId?: string;
 }
+
+export interface AnalyticsFilterItem {
+    type: AnalyticsEntityType;
+    id: string;
+    entitySubId?: string;
+    title: string;
+    thumbnailUrl?: string;
+}
+

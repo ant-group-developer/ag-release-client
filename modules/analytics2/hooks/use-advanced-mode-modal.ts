@@ -2,13 +2,14 @@
 
 import { useFilter } from '@/hooks/use-filter';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { CommonParams } from '@/types/api';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
     ANALYTICS_MODAL_TYPE,
 } from '../enums';
-import { AnalyticsEntityType } from '../types';
+import { AnalyticsEntityType, AnalyticsFilterItem } from '../types';
 
 export const ADVANCED_MODE_PARAM_PREFIX = 'am_';
 export const MODAL_PARAM_KEY = 'modal';
@@ -60,6 +61,20 @@ export function useAdvancedModeModal() {
     const isOpen =
         searchParams?.get(MODAL_PARAM_KEY) ===
         ANALYTICS_MODAL_TYPE.ADVANCED_MODE;
+
+    const filterParamKey = `${ADVANCED_MODE_PARAM_PREFIX}filters`;
+
+    const filters: AnalyticsFilterItem[] = useMemo(() => {
+        const raw = searchParams?.get(filterParamKey);
+        if (!raw) return [];
+        try {
+            const decoded = raw.startsWith('%') ? decodeURIComponent(raw) : raw;
+            const parsed = JSON.parse(decoded);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    }, [searchParams, filterParamKey]);
 
     const entity: AdvancedModeEntity = {
         type: dataFilter.entityType || ANALYTICS_ENTITY_TYPE.RELEASE,
@@ -136,6 +151,7 @@ export function useAdvancedModeModal() {
             page: undefined,
             pageSize: undefined,
             keyword: undefined,
+            filters: undefined,
         };
 
         if (!nextEntity?.id || nextEntity.type === dataFilter.rankBy) {
@@ -152,6 +168,52 @@ export function useAdvancedModeModal() {
         });
 
         router.replace(`${pathname}?${next.toString()}`);
+    };
+
+    const updateFilters = (nextFilters: AnalyticsFilterItem[]) => {
+        const next = new URLSearchParams(
+            Array.from((searchParams ?? new URLSearchParams()).entries())
+        );
+
+        if (nextFilters.length > 0) {
+            next.set(filterParamKey, JSON.stringify(nextFilters));
+        } else {
+            next.delete(filterParamKey);
+        }
+
+        ['page', 'pageSize', 'keyword'].forEach((key) =>
+            next.delete(`${ADVANCED_MODE_PARAM_PREFIX}${key}`)
+        );
+
+        router.replace(`${pathname}?${next.toString()}`);
+    };
+
+    const addFilter = (filter: AnalyticsFilterItem) => {
+        const filtered = filters.filter((f) => f.type !== filter.type);
+        updateFilters([...filtered, filter]);
+    };
+
+    const toggleFilter = (filter: AnalyticsFilterItem) => {
+        const exists = filters.some(
+            (f) => f.type === filter.type && f.id === filter.id
+        );
+        if (exists) {
+            removeFilter(filter.type);
+        } else {
+            addFilter(filter);
+        }
+    };
+
+    const removeFilter = (type: AnalyticsEntityType) => {
+        updateFilters(filters.filter((f) => f.type !== type));
+    };
+
+    const clearAllFilters = () => {
+        updateFilters([]);
+    };
+
+    const isFilterActive = (type: AnalyticsEntityType, id: string) => {
+        return filters.some((f) => f.type === type && f.id === id);
     };
 
     const setDateRange = (fromDate: string, toDate: string) => {
@@ -184,8 +246,15 @@ export function useAdvancedModeModal() {
     return {
         isOpen,
         entity,
-        fromDate: dataFilter.fromDate,
-        toDate: dataFilter.toDate,
+        filters,
+        fromDate:
+            dataFilter.fromDate ||
+            searchParams?.get(`${ADVANCED_MODE_PARAM_PREFIX}fromDate`) ||
+            undefined,
+        toDate:
+            dataFilter.toDate ||
+            searchParams?.get(`${ADVANCED_MODE_PARAM_PREFIX}toDate`) ||
+            undefined,
         metric: dataFilter.metric || ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
         rankBy: dataFilter.rankBy,
         openAdvancedMode,
@@ -194,5 +263,11 @@ export function useAdvancedModeModal() {
         setDateRange,
         setMetric,
         setRankBy,
+        addFilter,
+        toggleFilter,
+        removeFilter,
+        clearAllFilters,
+        isFilterActive,
     };
 }
+

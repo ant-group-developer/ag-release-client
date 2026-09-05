@@ -245,12 +245,38 @@ export default function ThumbnailAssetItem({
 
     return (
         <div className="thumbnail-upload-container mb-5">
-            <Space className="mb-2 text-xs font-bold">
+            <Space className="mb-2 font-bold">
                 <span>{messages('releaseVideo.fields.thumbnailFile')}</span>
                 <span className="text-red-500">*</span>
             </Space>
 
-            <AppFormItem name="thumbnailFile">
+            <AppFormItem
+                name="thumbnailFile"
+                rules={[
+                    {
+                        validator: async (_, value) => {
+                            if (
+                                !value ||
+                                !value.fileList ||
+                                value.fileList.length === 0
+                            ) {
+                                return Promise.reject(
+                                    new Error(
+                                        messages(
+                                            'releaseVideo.fields.thumbnailNotUploaded'
+                                        )
+                                    )
+                                );
+                            }
+                            if (isThumbnailUploading) {
+                                return Promise.reject(
+                                    new Error(messages('common.processing'))
+                                );
+                            }
+                        },
+                    },
+                ]}
+            >
                 <ImageListUpload
                     id="thumbnailFile"
                     loading={isThumbnailUploading}
@@ -275,7 +301,7 @@ export default function ThumbnailAssetItem({
                                 type="secondary"
                                 style={{ fontSize: 11 }}
                             >
-                                PNG, JPG, JPEG (16:9 • )
+                                PNG, JPG, JPEG (16:9 • Max 5MB)
                             </Typography.Text>
                         </div>
                     }
