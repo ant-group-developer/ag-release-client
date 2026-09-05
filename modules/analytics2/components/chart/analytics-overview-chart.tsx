@@ -35,6 +35,8 @@ export interface AnalyticsOverviewChartProps {
     isBarChartLoading?: boolean;
     showSegment?: boolean;
     defaultBarChartType?: ANALYTICS_BAR_CHART_TYPE;
+    overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
+    onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
 }
 
 export default function AnalyticsOverviewChart({
@@ -46,15 +48,28 @@ export default function AnalyticsOverviewChart({
     isBarChartLoading = false,
     showSegment = true,
     defaultBarChartType = ANALYTICS_BAR_CHART_TYPE.DSP,
+    overviewChartMode: externalOverviewChartMode,
+    onOverviewChartModeChange,
 }: AnalyticsOverviewChartProps) {
     const messages = useTranslations();
     const demographics = useContext(AnalyticsDemographicsContext);
     const [viewType, setViewType] =
         useState<ANALYTICS_BAR_CHART_TYPE>(defaultBarChartType);
-    const [overviewChartMode, setOverviewChartMode] =
+    const [internalOverviewChartMode, setInternalOverviewChartMode] =
         useState<ANALYTICS_OVERVIEW_CHART_MODE>(
             ANALYTICS_OVERVIEW_CHART_MODE.LINE
         );
+
+    const overviewChartMode =
+        externalOverviewChartMode ?? internalOverviewChartMode;
+    const handleOverviewChartModeChange = (
+        mode: ANALYTICS_OVERVIEW_CHART_MODE
+    ) => {
+        if (externalOverviewChartMode === undefined) {
+            setInternalOverviewChartMode(mode);
+        }
+        onOverviewChartModeChange?.(mode);
+    };
 
     useEffect(() => {
         setViewType(defaultBarChartType);
@@ -261,7 +276,9 @@ export default function AnalyticsOverviewChart({
                 ]}
                 value={overviewChartMode}
                 onChange={(val) =>
-                    setOverviewChartMode(val as ANALYTICS_OVERVIEW_CHART_MODE)
+                    handleOverviewChartModeChange(
+                        val as ANALYTICS_OVERVIEW_CHART_MODE
+                    )
                 }
                 className="flex-shrink-0"
             />
