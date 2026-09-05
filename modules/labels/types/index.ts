@@ -19,4 +19,5 @@ export interface LabelSimpleData
 
 export interface LabelDataFilter extends CommonParams {
     keyword?: string;
+    tenantIds?: string[] | string;
 }

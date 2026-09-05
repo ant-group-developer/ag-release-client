@@ -11,18 +11,22 @@ import { useState } from 'react';
 type Props = SelectProps & {
     fallBack?: string;
     showCreate?: boolean;
+    tenantId?: string;
     onCreateSuccess?: (data: LabelData) => void;
 };
 
 export default function LabelSelect({
     fallBack,
     showCreate = false,
+    tenantId,
     onCreateSuccess,
     ...props
 }: Props) {
     const messages = useTranslations();
     const [openCreate, setOpenCreate] = useState(false);
-    const { labelsData } = useGetListLabelsSimple();
+    const { labelsData } = useGetListLabelsSimple(
+        tenantId ? { tenantIds: tenantId } : undefined
+    );
 
     const option = labelsData?.map((item) => {
         return {

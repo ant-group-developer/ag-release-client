@@ -78,9 +78,12 @@ export default function RevenueSuperFilter({
         { enabled: typeFilter === TYPE_FILTER.TRACK_ID }
     );
 
-    const { labelsData, isFetching: isLabelFetching } = useGetListLabelsSimple({
-        enabled: typeFilter === TYPE_FILTER.LABEL_ID,
-    });
+    const { labelsData, isFetching: isLabelFetching } = useGetListLabelsSimple(
+        undefined,
+        {
+            enabled: typeFilter === TYPE_FILTER.LABEL_ID,
+        }
+    );
 
     const { dspData, isFetching: isDspFetching } = useGetListDspSimple({
         enabled: typeFilter === TYPE_FILTER.DSP_ID,

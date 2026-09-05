@@ -5,7 +5,8 @@ import FullScreenModal, {
 } from '@/components/ui/modal/fullScreenModal';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { Button, Grid, Typography } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { App, Button, Grid, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -16,21 +17,31 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
 import {
+    getCombinedAnalyticsScopeParams,
+    getFilterScopeParams,
+} from '../../helpers';
+import {
     ADVANCED_MODE_PARAM_PREFIX,
     useAdvancedModeModal,
 } from '../../hooks/use-advanced-mode-modal';
-import {
-    getAnalyticsScopeParams,
-    getCombinedAnalyticsScopeParams,
-} from '../../helpers';
 import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
-import { ActiveAnalyticsEntity, AnalyticsCommonParams, AnalyticsEntityType } from '../../types';
+import {
+    ActiveAnalyticsEntity,
+    AnalyticsCommonParams,
+    AnalyticsEntityType,
+} from '../../types';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
 import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import FilterChipsBar from './advanced-mode/filter-chips-bar';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
+import ExportReportProgressPopover from '../export-report-progress-popover';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { DetailResponse } from '@/types/api';
+import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
+import { useExportJobStore } from '../../store/use-export-job-store';
+import { ExportReportRequest, ExportReportResponse } from '../../types';
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -102,19 +113,120 @@ export default function AdvancedModeModal({
         }
 
         return params;
-    }, [activeEntity, filters, effectiveFromDate, effectiveToDate, releaseType]);
+    }, [
+        activeEntity,
+        filters,
+        effectiveFromDate,
+        effectiveToDate,
+        releaseType,
+    ]);
 
     // Single unified Analytics Summary hook replacing separate summary calls
     const { analyticsSummaryData } = useGetAnalyticsSummary(
         analyticsSummaryParams
     );
 
+    const { message } = App.useApp();
+    const { profile } = useAuth();
+    const {
+        jobs: exportJobs,
+        isProgressOpen: isExportProgressOpen,
+        addJob,
+        removeJob: handleRemoveExportJob,
+        clearJobs,
+    } = useExportJobStore();
+    const { exportAnalyticsReport, isPending: isExporting } =
+        useExportAnalyticsReport();
+
+    const handleExport = () => {
+        const rawStartDate =
+            effectiveFromDate ?? dayjs().startOf('month').format('YYYY-MM-DD');
+        const rawEndDate =
+            effectiveToDate ?? dayjs().endOf('month').format('YYYY-MM-DD');
+
+        const fromDateFormatted = dayjs(rawStartDate).isValid()
+            ? dayjs(rawStartDate).format('YYYY-MM')
+            : dayjs().format('YYYY-MM');
+        const toDateFormatted = dayjs(rawEndDate).isValid()
+            ? dayjs(rawEndDate).format('YYYY-MM')
+            : dayjs().format('YYYY-MM');
+
+        const scopeParams = getCombinedAnalyticsScopeParams(
+            activeEntity,
+            filters
+        );
+        const filterScope = getFilterScopeParams(filters);
+
+        const tenantIds = scopeParams.tenantId
+            ? [scopeParams.tenantId]
+            : profile?.tenantId
+              ? [profile.tenantId]
+              : undefined;
+
+        const payload: ExportReportRequest = {
+            fromDate: fromDateFormatted,
+            endDate: toDateFormatted,
+            format: 'xlsx',
+            tenantIds,
+            ...(scopeParams.labelId ? { labelId: scopeParams.labelId } : {}),
+            ...(scopeParams.artistId ? { artistId: scopeParams.artistId } : {}),
+            ...(scopeParams.releaseId
+                ? { releaseId: scopeParams.releaseId }
+                : {}),
+            ...(scopeParams.dspId
+                ? {
+                      dspId: scopeParams.dspId,
+                      pgDspId: scopeParams.pgDspId || scopeParams.dspId,
+                      dspReportId:
+                          scopeParams.dspReportId || scopeParams.dspId,
+                  }
+                : {}),
+            ...(scopeParams.isrc ? { isrc: scopeParams.isrc } : {}),
+            ...(scopeParams.channelId
+                ? { channelId: scopeParams.channelId }
+                : {}),
+            ...(filterScope.importSource
+                ? { importSource: filterScope.importSource }
+                : {}),
+        };
+
+        message.loading({
+            content: 'Đang xuất báo cáo, vui lòng đợi trong giây lát...',
+            key: 'export-report-status',
+            duration: 2.5,
+        });
+
+        exportAnalyticsReport({
+            payload,
+            onSuccess: (data: DetailResponse<ExportReportResponse>) => {
+                if (data?.data?.jobId) {
+                    addJob(data.data.jobId);
+                }
+                message.success({
+                    content: 'Đang xuất báo cáo, vui lòng đợi trong giây lát...',
+                    key: 'export-report-status',
+                    duration: 3,
+                });
+            },
+            onError: () => {
+                message.error({
+                    content:
+                        messages('common.exportReportFailed') ||
+                        'Xuất báo cáo thất bại',
+                    key: 'export-report-status',
+                    duration: 3,
+                });
+            },
+        });
+    };
+
     const handleSelectEntity = (item?: ContentItem) => {
         if (!item || (!item.id && !item.entitySubId)) {
             setEntity({ type: entity.type });
         } else {
             setEntity({
-                type: (item.type || entity.type) as ActiveAnalyticsEntity['type'],
+                type: (item.type ||
+                    entity.type) as ActiveAnalyticsEntity['type'],
                 id: item.id,
                 entitySubId: item.entitySubId,
                 title: item.title,
@@ -200,21 +312,34 @@ export default function AdvancedModeModal({
                 },
             }}
             title={
-                <div className="flex items-center gap-3">
+                <div className="flex w-full items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <Button
+                            size="small"
+                            type="text"
+                            icon={
+                                <div>
+                                    <Menu className="opacity-70" />
+                                </div>
+                            }
+                            onClick={() => setShowSidebar((prev) => !prev)}
+                            className="flex items-center justify-center !p-1 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                        />
+                        <Typography.Text strong className="text-base">
+                            {messages('common.advancedMode')}
+                        </Typography.Text>
+                    </div>
                     <Button
                         size="small"
-                        type="text"
-                        icon={
-                            <div>
-                                <Menu className="opacity-70" />
-                            </div>
-                        }
-                        onClick={() => setShowSidebar((prev) => !prev)}
-                        className="flex items-center justify-center !p-1 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                    />
-                    <Typography.Text strong className="text-base">
-                        {messages('common.advancedMode')}
-                    </Typography.Text>
+                        type="primary"
+                        icon={<DownloadOutlined />}
+                        loading={isExporting}
+                        disabled={isExporting}
+                        onClick={handleExport}
+                        className="!w-auto"
+                    >
+                        {messages('common.exportReport')}
+                    </Button>
                 </div>
             }
             width="100%"
@@ -223,7 +348,7 @@ export default function AdvancedModeModal({
                 {/* Backdrop overlay for mobile screen */}
                 {showSidebar && screens.md === false && (
                     <div
-                        className="absolute inset-0 z-20 bg-black/40 backdrop-blur-xs md:hidden"
+                        className="backdrop-blur-xs absolute inset-0 z-20 bg-black/40 md:hidden"
                         onClick={() => setShowSidebar(false)}
                     />
                 )}
@@ -232,13 +357,13 @@ export default function AdvancedModeModal({
                 <div
                     className={cn(
                         'shrink-0 overflow-hidden transition-all duration-300 ease-in-out',
-                        'absolute inset-y-0 left-0 z-30 bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 shadow-xl md:relative md:z-auto md:bg-transparent md:border-r-0 md:shadow-none',
+                        'absolute inset-y-0 left-0 z-30 border-r border-slate-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900 md:relative md:z-auto md:border-r-0 md:bg-transparent md:shadow-none',
                         showSidebar
-                            ? 'w-[320px] max-w-[85vw] md:w-[350px] opacity-100'
-                            : 'w-0 opacity-0 pointer-events-none md:pointer-events-auto'
+                            ? 'w-[320px] max-w-[85vw] opacity-100 md:w-[350px]'
+                            : 'pointer-events-none w-0 opacity-0 md:pointer-events-auto'
                     )}
                 >
-                    <div className="h-full w-[320px] max-w-[85vw] md:w-[350px] overflow-y-auto">
+                    <div className="h-full w-[320px] max-w-[85vw] overflow-y-auto md:w-[350px]">
                         <ControlsSidebar
                             fromDate={effectiveFromDate}
                             toDate={effectiveToDate}
@@ -307,6 +432,16 @@ export default function AdvancedModeModal({
                     </div>
                 </div>
             </div>
+
+            {isExportProgressOpen && exportJobs.length ? (
+                <ExportReportProgressPopover
+                    jobs={exportJobs}
+                    onClose={() => {
+                        clearJobs();
+                    }}
+                    onRemoveJob={handleRemoveExportJob}
+                />
+            ) : null}
         </FullScreenModal>
     );
 }
