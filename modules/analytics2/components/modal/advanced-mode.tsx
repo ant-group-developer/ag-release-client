@@ -37,7 +37,6 @@ import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import FilterChipsBar from './advanced-mode/filter-chips-bar';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
 import ExportReportProgressPopover from '../export-report-progress-popover';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { DetailResponse } from '@/types/api';
 import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
 import { useExportJobStore } from '../../store/use-export-job-store';
@@ -127,7 +126,6 @@ export default function AdvancedModeModal({
     );
 
     const { message } = App.useApp();
-    const { profile } = useAuth();
     const {
         jobs: exportJobs,
         isProgressOpen: isExportProgressOpen,
@@ -159,15 +157,13 @@ export default function AdvancedModeModal({
 
         const tenantIds = scopeParams.tenantId
             ? [scopeParams.tenantId]
-            : profile?.tenantId
-              ? [profile.tenantId]
-              : undefined;
+            : undefined;
 
         const payload: ExportReportRequest = {
             fromDate: fromDateFormatted,
             endDate: toDateFormatted,
             format: 'xlsx',
-            tenantIds,
+            ...(tenantIds ? { tenantIds } : {}),
             ...(scopeParams.labelId ? { labelId: scopeParams.labelId } : {}),
             ...(scopeParams.artistId ? { artistId: scopeParams.artistId } : {}),
             ...(scopeParams.releaseId

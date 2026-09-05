@@ -83,7 +83,7 @@ export default function ExportReportProgressPopover({
         if (jobs.length > 0 && isAllCompleted) {
             const timer = setTimeout(() => {
                 onClose();
-            }, 3000);
+            }, 15000);
 
             return () => clearTimeout(timer);
         }
