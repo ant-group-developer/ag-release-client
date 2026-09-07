@@ -26,10 +26,10 @@ export const ReleaseVideoChannelActions = ({ record }: Props) => {
     const youtubeVideoId = record.video?.externalId;
 
     return (
-        <div className="flex h-7 items-center">
+        <div className="flex h-7 min-w-0 items-center">
             {channelName && (
                 <div
-                    className="truncate text-xs group-hover:hidden"
+                    className="min-w-0 truncate text-xs group-hover:hidden"
                     data-stop-row-click="true"
                 >
                     <Tooltip title={messages('common.viewOnYoutube')}>
@@ -37,11 +37,12 @@ export const ReleaseVideoChannelActions = ({ record }: Props) => {
                             href={`https://www.youtube.com/channel/${youtubeChannelId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hover:underline"
+                            className="block truncate hover:underline"
                         >
                             <Typography.Text
                                 type="secondary"
-                                className="truncate"
+                                ellipsis
+                                className="block"
                             >
                                 {channelName}
                             </Typography.Text>
