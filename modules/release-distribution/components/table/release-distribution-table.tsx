@@ -84,7 +84,7 @@ export default function ReleaseDistributionTable({
             dataIndex: RELEASES_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
-            width: 320,
+            width: 250,
             fixed: 'left',
             render: (value, record) => {
                 const release = record.release;
@@ -106,7 +106,7 @@ export default function ReleaseDistributionTable({
             title: messages('common.upc'),
             key: 'upc',
             align: 'center',
-            width: 150,
+            width: 180,
             render: (_, record) => (
                 <Typography.Text copyable={!!record?.release?.upc}>
                     {record?.release?.upc || '-'}

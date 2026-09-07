@@ -48,7 +48,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.track'),
                 dataIndex: 'title',
                 key: 'title',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: TrackRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -122,7 +122,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.release'),
                 dataIndex: 'title',
                 key: 'title',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: ReleaseRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -190,7 +190,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -207,7 +207,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.releasesVideo'),
                 dataIndex: 'title',
                 key: 'title',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: ReleaseVideoRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -340,7 +340,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -357,7 +357,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.artist'),
                 dataIndex: 'artistName',
                 key: 'artistName',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: ArtistRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -404,7 +404,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -421,7 +421,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.label'),
                 dataIndex: 'labelName',
                 key: 'labelName',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: LabelRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -467,7 +467,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -484,7 +484,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('tenant.name'),
                 dataIndex: 'tenantName',
                 key: 'tenantName',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: TenantRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -520,7 +520,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -537,7 +537,7 @@ export function useAnalyticsRankingColumns({
                 title: 'DSP',
                 dataIndex: 'dspName',
                 key: 'dspName',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: DspRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -573,7 +573,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -590,7 +590,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.channel'),
                 dataIndex: 'channelName',
                 key: 'channelName',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: ChannelRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -661,7 +661,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
@@ -678,7 +678,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('analytics2.distributors'),
                 dataIndex: 'sourceTypeLabel',
                 key: 'sourceTypeLabel',
-                width: '70%',
+                width: '65%',
                 ellipsis: true,
                 render: (text: string, record: SourceTypeRankingItem) => (
                     <div className="flex items-center gap-3">
@@ -714,7 +714,7 @@ export function useAnalyticsRankingColumns({
                 title: messages('common.streams'),
                 dataIndex: 'totalViews',
                 key: 'totalViews',
-                width: '30%',
+                width: '35%',
                 render: (views: number) => (
                     <span className="">
                         {views ? views.toLocaleString() : 0}
