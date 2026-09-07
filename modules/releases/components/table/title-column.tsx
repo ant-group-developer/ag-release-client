@@ -58,7 +58,7 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                 >
                     <div className="max-w-[130px] truncate sm:max-w-80">
                         <CustomTooltip title={title}>
-                            <Typography.Text className="cursor-pointer hover:underline" strong>
+                            <Typography.Text className="cursor-pointer hover:underline">
                                 {title}
                             </Typography.Text>
                         </CustomTooltip>
@@ -90,4 +90,3 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
         </div>
     );
 }
-
