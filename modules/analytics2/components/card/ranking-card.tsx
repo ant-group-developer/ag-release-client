@@ -2,8 +2,23 @@
 
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
-import { Button, Card, Empty, Popover, Segmented, Skeleton, Space, Table } from 'antd';
-import { ArrowRight, BarChart3, List, MoreVertical, PieChart } from 'lucide-react';
+import {
+    Button,
+    Card,
+    Empty,
+    Popover,
+    Segmented,
+    Skeleton,
+    Space,
+    Table,
+} from 'antd';
+import {
+    ArrowRight,
+    BarChart3,
+    List,
+    MoreVertical,
+    PieChart,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import RankingBar from '../ranking/ranking-bar';
@@ -65,10 +80,7 @@ export default function RankingCard({
                                 size="small"
                             >
                                 <div className="flex h-full items-center justify-center">
-                                    <List
-                                        size={SIZE_ICON}
-                                        height={22}
-                                    />
+                                    <List size={SIZE_ICON} height={22} />
                                 </div>
                             </CustomTooltip>
                         ),
@@ -81,10 +93,7 @@ export default function RankingCard({
                                 size="small"
                             >
                                 <div className="flex h-full items-center justify-center">
-                                    <BarChart3
-                                        size={SIZE_ICON}
-                                        height={22}
-                                    />
+                                    <BarChart3 size={SIZE_ICON} height={22} />
                                 </div>
                             </CustomTooltip>
                         ),
@@ -97,19 +106,14 @@ export default function RankingCard({
                                 size="small"
                             >
                                 <div className="flex h-full items-center justify-center">
-                                    <PieChart
-                                        size={SIZE_ICON}
-                                        height={22}
-                                    />
+                                    <PieChart size={SIZE_ICON} height={22} />
                                 </div>
                             </CustomTooltip>
                         ),
                     },
                 ]}
                 value={viewType}
-                onChange={(value) =>
-                    setViewType(value as RankingCardView)
-                }
+                onChange={(value) => setViewType(value as RankingCardView)}
                 size="small"
                 className={
                     isMobile
@@ -123,13 +127,11 @@ export default function RankingCard({
                 size="small"
                 className={`!flex !items-center !gap-1 !rounded-full !py-1 !font-medium !text-gray-500 hover:!bg-gray-100 hover:!text-blue-600 dark:!text-zinc-400 dark:hover:!bg-zinc-800 dark:hover:!text-blue-400 ${
                     isMobile
-                        ? '!w-full !justify-center !bg-gray-100 dark:!bg-zinc-800 !px-3'
+                        ? '!w-full !justify-center !bg-gray-100 !px-3 dark:!bg-zinc-800'
                         : '!px-2 sm:!px-3'
                 }`}
             >
-                <span className="text-xs">
-                    {messages('common.seeMore')}
-                </span>
+                <span className="text-xs">{messages('common.seeMore')}</span>
                 <ArrowRight
                     size={14}
                     className="transition-transform duration-200 group-hover:translate-x-0.5"
@@ -184,7 +186,7 @@ export default function RankingCard({
                     loading={loading}
                     rowKey={rowKey}
                     pagination={false}
-                    scroll={{ x: scrollX }}
+                    scroll={{ x: '100%' }}
                     size="small"
                     tableLayout="fixed"
                     onChange={onChange}

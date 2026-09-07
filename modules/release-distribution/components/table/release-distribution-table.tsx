@@ -1,9 +1,10 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { SIZE_ICON } from '@/constants/common';
-import { DATE_FORMAT } from '@/enums/common';
+import { DATE_FORMAT, SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { Link } from '@/i18n/routing';
 import {
     RELEASE_CI_DATA_COLUMNS_DISPLAY,
@@ -49,6 +50,7 @@ export default function ReleaseDistributionTable({
     );
     const { autoSyncCi, isPending } = useAutoSyncCi();
     const [syncingId, setSyncingId] = useState<string | null>(null);
+    const isMobile = useIsMobile();
 
     const handleRetry = (id: string) => {
         setSyncingId(id);
@@ -65,7 +67,7 @@ export default function ReleaseDistributionTable({
             key: 'iNo',
             width: 50,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) => {
                 return (
                     <div data-stop-row-click="true">
@@ -84,8 +86,8 @@ export default function ReleaseDistributionTable({
             dataIndex: RELEASES_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
-            width: 320,
-            fixed: 'left',
+            width: isMobile ? 200 : 250,
+            fixed: isMobile ? undefined : 'left',
             render: (value, record) => {
                 const release = record.release;
                 if (!release) return null;
@@ -95,9 +97,10 @@ export default function ReleaseDistributionTable({
                 return (
                     <Link
                         href={`${APP_ROUTES.RELEASE_DISTRIBUTION}/${record.id}`}
-                        className="cursor-pointer text-blue-500 hover:underline"
                     >
-                        {title}
+                        <Typography.Link className="cursor-pointer">
+                            {title}
+                        </Typography.Link>
                     </Link>
                 );
             },
@@ -106,7 +109,7 @@ export default function ReleaseDistributionTable({
             title: messages('common.upc'),
             key: 'upc',
             align: 'center',
-            width: 150,
+            width: 180,
             render: (_, record) => (
                 <Typography.Text copyable={!!record?.release?.upc}>
                     {record?.release?.upc || '-'}
@@ -124,7 +127,7 @@ export default function ReleaseDistributionTable({
                 dataFilter.fieldOrder,
                 'dsp_live'
             ),
-            width: 150,
+            width: isMobile ? 110 : 150,
             render: (_, record) => {
                 const items = record?.exportParsedData ?? [];
                 const total = items.length;
@@ -136,7 +139,13 @@ export default function ReleaseDistributionTable({
                         className="flex justify-center"
                     >
                         <span
-                            className="cursor-pointer hover:text-blue-500"
+                            className="cursor-pointer hover:underline"
+                            style={{
+                                color:
+                                    total > 0
+                                        ? token.colorPrimary
+                                        : undefined,
+                            }}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedRecord(record);
@@ -153,7 +162,7 @@ export default function ReleaseDistributionTable({
             title: messages('common.status'),
             dataIndex: RELEASE_CI_DATA_COLUMNS_DISPLAY.STATUS,
             align: 'center',
-            width: 180,
+            width: isMobile ? 140 : 180,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -218,12 +227,15 @@ export default function ReleaseDistributionTable({
                             </span>
                         </div>
                         {modify_time && (
-                            <span className="text-xs font-normal">
+                            <Typography.Text
+                                type="secondary"
+                                className="text-xs"
+                            >
                                 {formattedDate(
                                     modify_time,
                                     DATE_FORMAT.DATE_MINUTE
                                 )}
-                            </span>
+                            </Typography.Text>
                         )}
                     </div>
                 );
@@ -374,8 +386,8 @@ export default function ReleaseDistributionTable({
         {
             key: 'action',
             align: 'center',
-            width: 80,
-            fixed: 'right',
+            width: isMobile ? 60 : 80,
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => {
                 const isRowSyncing = isPending && syncingId === record.id;
                 return (
@@ -408,6 +420,10 @@ export default function ReleaseDistributionTable({
                 headerTitle={messages('release.list')}
                 rowKey="id"
                 {...props}
+                scroll={{
+                    x: isMobile ? 'max-content' : SCREEN.XL,
+                    ...props?.scroll,
+                }}
                 pagination={false}
                 columns={column}
                 rowClassName={'group'}

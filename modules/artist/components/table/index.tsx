@@ -4,7 +4,9 @@ import ImageFallback from '@/components/ui/image/image-fallback';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { FALLBACK_IMAGE } from '@/constants/common';
+import { SCREEN } from '@/enums/common';
 import { getIndex, getSortOrder } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
@@ -34,6 +36,7 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
     const router = useRouter();
     const openModal = useModalStore((state) => state.openModal);
     const { token } = theme.useToken();
+    const isMobile = useIsMobile();
 
     const { hasPermission } = usePermission();
     const canDelete = hasPermission(PERMISSION.ARTIST.DELETE);
@@ -42,9 +45,9 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 60,
+            width: isMobile ? 50 : 60,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -58,8 +61,8 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: ARTIST_TABLE_KEY.NAME,
             ellipsis: true,
             align: 'left',
-            fixed: 'left',
-            width: 280,
+            fixed: isMobile ? undefined : 'left',
+            width: isMobile ? 220 : 280,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -225,8 +228,8 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
         {
             key: 'actions',
             align: 'center',
-            width: 80,
-            fixed: 'right',
+            width: isMobile ? 60 : 80,
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate={hasPermission(PERMISSION.ARTIST.UPDATE)}
@@ -254,6 +257,18 @@ export const ArtistsTable = ({ dataFilter, ...props }: Props) => {
 
     return (
         <AppProTable
+            key={isMobile ? 'mobile' : 'desktop'}
+            columnsState={{
+                persistenceKey: isMobile
+                    ? undefined
+                    : 'artists-table-columns-v2',
+                persistenceType: 'sessionStorage',
+                ...props?.columnsState,
+            }}
+            scroll={{
+                x: isMobile ? 'max-content' : SCREEN.XL,
+                ...props?.scroll,
+            }}
             {...props}
             className={`rounded-t-lg ${props?.className}`}
             style={{

@@ -228,9 +228,9 @@ export default function ReleaseVideoHeader({
 
     return (
         <div className="app-header">
-            <Space>
+            <div className="flex flex-wrap items-center gap-2">
                 <AppSearch
-                    className="max-w-52"
+                    wrapperClassName="w-40 sm:w-52"
                     onChange={onSearch}
                     defaultValue={dataFilter.keyword}
                 />
@@ -242,7 +242,7 @@ export default function ReleaseVideoHeader({
                     removeFilter={removeFilter}
                     canClearFilter={canClearFilter}
                 />
-            </Space>
+            </div>
         </div>
     );
 }

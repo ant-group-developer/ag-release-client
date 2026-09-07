@@ -468,7 +468,7 @@ export default function ReleaseSubmitHeader({
     );
 
     return (
-        <Space className="font-normal">
+        <div className="flex flex-wrap items-center gap-2 font-normal">
             <AppSearch
                 className="w-52"
                 placeholder={messages('common.search')}
@@ -529,6 +529,6 @@ export default function ReleaseSubmitHeader({
                 placement="bottom"
                 popoverHeight={380}
             />
-        </Space>
+        </div>
     );
 }

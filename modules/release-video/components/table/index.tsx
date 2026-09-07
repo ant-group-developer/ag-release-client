@@ -1,7 +1,8 @@
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
-import { DATE_FORMAT } from '@/enums/common';
+import { DATE_FORMAT, SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { Link } from '@/i18n/routing';
 import ReleaseVideoCoverImage from '@/modules/release-video/components/image/release-video-cover-image';
 import ReleaseStatusTag from '@/modules/releases/components/tag/release-status-tag';
@@ -22,14 +23,15 @@ type Props = Omit<AppProTableProps<ReleasesData>, 'columns'> & {
 
 export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
 
     const columns: ProColumns<ReleasesData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 60,
+            width: isMobile ? 50 : 60,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -43,9 +45,9 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             dataIndex: 'title',
             ellipsis: true,
             align: 'left',
-            width: 480,
+            width: isMobile ? 300 : 360,
             sorter: true,
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -71,32 +73,31 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                     : value;
 
                 return (
-                    <div className="flex items-center gap-4 pr-2">
-                        <Link href={detailUrl}>
-                            <div className="aspect-[16/9] w-[140px]">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <Link href={detailUrl} className="shrink-0">
+                            <div className="aspect-[16/9] w-[140px] shrink-0">
                                 <ReleaseVideoCoverImage
                                     width={140}
                                     data={record}
                                 />
                             </div>
                         </Link>
-                        <div className="flex flex-col gap-1 truncate">
-                            <div className="flex items-center gap-1">
+                        <div className="flex min-w-0 flex-1 flex-col justify-center overflow-hidden">
+                            <div className="max-w-[130px] truncate sm:max-w-[190px]">
                                 <Tooltip title={fullTitle}>
-                                    <Link href={detailUrl} className="truncate">
-                                        <span className="cursor-pointer font-medium hover:underline">
+                                    <Link href={detailUrl}>
+                                        <Typography.Text
+                                            ellipsis
+                                            className="cursor-pointer font-medium hover:underline"
+                                        >
                                             {fullTitle}
-                                        </span>
+                                        </Typography.Text>
                                     </Link>
                                 </Tooltip>
-                                <span
-                                    className="inline-block align-middle"
-                                    data-stop-row-click="true"
-                                >
-                                    <Typography.Text />
-                                </span>
                             </div>
-                            <ReleaseVideoChannelActions record={record} />
+                            <div className="max-w-[130px] truncate sm:max-w-[190px]">
+                                <ReleaseVideoChannelActions record={record} />
+                            </div>
                         </div>
                     </div>
                 );
@@ -235,14 +236,14 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                 return (
                     <div className="flex items-center gap-1">
                         <Tooltip title={messages('common.viewOnYoutube')}>
-                            <a
+                            <Typography.Link
                                 href={`https://www.youtube.com/watch?v=${value}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="truncate text-blue-500 hover:underline"
+                                className="truncate"
                             >
                                 {value}
-                            </a>
+                            </Typography.Link>
                         </Tooltip>
                         <span
                             className="inline-block align-middle"
@@ -325,7 +326,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             align: 'left',
             width: 200,
             sorter: true,
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -373,6 +374,10 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                 ...props.columnsState,
             }}
             {...props}
+            scroll={{
+                x: isMobile ? 'max-content' : SCREEN.XL,
+                ...props.scroll,
+            }}
             pagination={false}
             columns={columns}
             rowClassName={'group cursor-pointer'}

@@ -48,11 +48,16 @@ export default function ListRelease({ data, loading, releaseType }: Props) {
                 body: { padding: '24px' },
             }}
             title={
-                <div className="flex items-center justify-between">
-                    <h3 className="text-md m-0 font-bold">{getTitle()}</h3>
+                <div className="flex items-center justify-between gap-2 min-w-0">
+                    <h3
+                        className="text-md m-0 font-bold truncate min-w-0"
+                        title={getTitle()}
+                    >
+                        {getTitle()}
+                    </h3>
 
                     {!loading && releaseLength >= 7 && (
-                        <Link href={getSeeMoreHref()}>
+                        <Link href={getSeeMoreHref()} className="shrink-0">
                             <SeeMoreButton
                                 type="default"
                                 style={{
@@ -91,7 +96,13 @@ export default function ListRelease({ data, loading, releaseType }: Props) {
             ) : releaseLength > 0 ? (
                 <Row gutter={[20, 20]}>
                     {data.slice(0, 6).map((release) => (
-                        <Col key={release.id.toString()} xs={24} sm={12} md={8} lg={4}>
+                        <Col
+                            key={release.id.toString()}
+                            xs={24}
+                            sm={12}
+                            md={8}
+                            lg={4}
+                        >
                             <CardRelease data={release} />
                         </Col>
                     ))}

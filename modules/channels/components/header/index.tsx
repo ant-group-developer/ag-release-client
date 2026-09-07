@@ -1,14 +1,11 @@
-import AppHeader, { AppHeaderGroup } from '@/components/cms/app-header';
-import CreateButton from '@/components/ui/button/create-button';
 import AppSearch from '@/components/ui/input/search';
 import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { UseFilterProps } from '@/hooks/use-filter';
-import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { HistoryOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Select, Space } from 'antd';
 import { useTranslations } from 'next-intl';
-import { CHANNEL_STATUS, TYPE_MODAL_CHANNELS } from '../../enums';
+import { CHANNEL_STATUS } from '../../enums';
 import { ChannelDataFilter } from '../../types';
 
 type Props = Pick<
@@ -29,7 +26,6 @@ export default function ChannelsHeader({
     onShowYoutubeChannelSyncRuns,
 }: Props) {
     const messages = useTranslations();
-    const openModal = useModalStore((state) => state.openModal);
     const { isAdmin } = useAuth();
 
     const statusOptions = Object.values(CHANNEL_STATUS).map((status) => {
@@ -55,80 +51,78 @@ export default function ChannelsHeader({
     ];
 
     return (
-        <AppHeader className="app-header p-2">
-            <AppHeaderGroup>
-                <Space wrap>
-                    <AppSearch
-                        className="max-w-52"
-                        onChange={onSearch}
-                        defaultValue={dataFilter.keyword}
-                    />
-                    <TenantSelectActive
-                        className="w-52"
-                        placeholder={messages('tenant.selectTitle')}
-                        allowClear
-                        value={dataFilter.tenantId}
-                        onChange={(tenantId) =>
-                            onChangeFilter?.({
-                                tenantId,
-                            })
-                        }
-                    />
-                    <Select
-                        className="w-40"
-                        placeholder={messages('common.status')}
-                        allowClear
-                        value={dataFilter.status}
-                        options={statusOptions}
-                        onChange={(status) =>
-                            onChangeFilter?.({
-                                status,
-                            })
-                        }
-                    />
-                    <Select
-                        className="w-40"
-                        placeholder={messages('common.isActive')}
-                        allowClear
-                        value={
-                            dataFilter.isActive !== undefined &&
-                            dataFilter.isActive !== null
-                                ? String(dataFilter.isActive)
-                                : undefined
-                        }
-                        options={isActiveOptions}
-                        onChange={(isActive) =>
-                            onChangeFilter?.({
-                                isActive,
-                            })
-                        }
-                    />
-                </Space>
-            </AppHeaderGroup>
-            <AppHeaderGroup position="end" className="flex-1">
-                <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 p-2">
+            <Space
+                wrap
+                className="w-full sm:w-auto [&_.ant-space-item]:w-full sm:[&_.ant-space-item]:w-auto"
+            >
+                <AppSearch
+                    wrapperClassName="w-full sm:w-52"
+                    className="w-full"
+                    onChange={onSearch}
+                    defaultValue={dataFilter.keyword}
+                />
+                <TenantSelectActive
+                    className="!w-full sm:!w-52"
+                    placeholder={messages('tenant.selectTitle')}
+                    allowClear
+                    value={dataFilter.tenantId}
+                    onChange={(tenantId) =>
+                        onChangeFilter?.({
+                            tenantId,
+                        })
+                    }
+                />
+                <Select
+                    className="!w-full sm:!w-40"
+                    placeholder={messages('common.status')}
+                    allowClear
+                    value={dataFilter.status}
+                    options={statusOptions}
+                    onChange={(status) =>
+                        onChangeFilter?.({
+                            status,
+                        })
+                    }
+                />
+                <Select
+                    className="!w-full sm:!w-40"
+                    placeholder={messages('common.isActive')}
+                    allowClear
+                    value={
+                        dataFilter.isActive !== undefined &&
+                        dataFilter.isActive !== null
+                            ? String(dataFilter.isActive)
+                            : undefined
+                    }
+                    options={isActiveOptions}
+                    onChange={(isActive) =>
+                        onChangeFilter?.({
+                            isActive,
+                        })
+                    }
+                />
+            </Space>
+
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+                {isAdmin && onShowYoutubeChannelSyncRuns && (
                     <Button
-                        icon={<SyncOutlined />}
-                        onClick={handleRefresh}
-                        loading={isFetching}
+                        icon={<HistoryOutlined />}
+                        onClick={onShowYoutubeChannelSyncRuns}
+                        className="w-full sm:w-auto"
                     >
-                        {messages('common.refresh')}
+                        {messages('channel.youtubeSyncRuns.button')}
                     </Button>
-                    {isAdmin && onShowYoutubeChannelSyncRuns && (
-                        <Button
-                            icon={<HistoryOutlined />}
-                            onClick={onShowYoutubeChannelSyncRuns}
-                        >
-                            {messages('channel.youtubeSyncRuns.button')}
-                        </Button>
-                    )}
-                    <CreateButton
-                        canCreate={isAdmin}
-                        text={messages('channel.add')}
-                        onClick={() => openModal(TYPE_MODAL_CHANNELS.CREATE)}
-                    />
-                </div>
-            </AppHeaderGroup>
-        </AppHeader>
+                )}
+                <Button
+                    icon={<SyncOutlined />}
+                    onClick={handleRefresh}
+                    loading={isFetching}
+                    className="w-full sm:w-auto"
+                >
+                    {messages('common.refresh')}
+                </Button>
+            </div>
+        </div>
     );
 }

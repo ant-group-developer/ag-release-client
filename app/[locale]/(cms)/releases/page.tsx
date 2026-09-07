@@ -7,6 +7,7 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilterV2 } from '@/hooks/use-filter-v2';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
@@ -84,6 +85,7 @@ export default function Releases({}: Props) {
     const { token } = theme.useToken();
     const [selectedRows, setSelectedRows] = useState<Key[]>([]);
     const { isAdmin } = useAuth();
+    const isMobile = useIsMobile();
 
     // apis
     const {
@@ -173,43 +175,38 @@ export default function Releases({}: Props) {
                     onChangeFilter={onChangeFilter}
                     pagination={{
                         pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                        current: releasesData.metadata.page,
+                        current: releasesData?.metadata?.page || 1,
                     }}
                     onChange={onChangeSort}
                     dataFilter={dataFilter}
-                    options={{
-                        reload: () => {
-                            handleRefresh();
-                        },
-                    }}
-                    toolBarRender={() => [
-                        // <CreateButton
-                        //     canCreate={isAdmin}
-                        //     key="auto-submit"
-                        //     icon={<SendOutlined />}
-                        //     onClick={() =>
-                        //         openModal(
-                        //             TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC
-                        //         )
-                        //     }
-                        //     text={messages(
-                        //         'release.autoSubmitUndistributedMusic'
-                        //     )}
-                        // />,
-                        <CreateButton
-                            canCreate={isAdmin}
-                            key="auto-submit-v2"
-                            icon={<SendOutlined />}
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2
-                                )
-                            }
-                            text={messages(
-                                'release.autoSubmitUndistributedMusic'
-                            )}
-                        />,
-                    ]}
+                    options={
+                        isMobile
+                            ? false
+                            : {
+                                  reload: () => {
+                                      handleRefresh();
+                                  },
+                              }
+                    }
+                    toolBarRender={
+                        isMobile
+                            ? () => []
+                            : () => [
+                                  <CreateButton
+                                      canCreate={isAdmin}
+                                      key="auto-submit-v2"
+                                      icon={<SendOutlined />}
+                                      onClick={() =>
+                                          openModal(
+                                              TYPE_MODAL_RELEASE.AUTO_SUBMIT_UNDISTRIBUTED_MUSIC_V2
+                                          )
+                                      }
+                                      text={messages(
+                                          'release.autoSubmitUndistributedMusic'
+                                      )}
+                                  />,
+                              ]
+                    }
                     rowSelection={rowSelection}
                     tableAlertRender={({ selectedRowKeys }) => {
                         return (

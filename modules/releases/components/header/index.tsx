@@ -468,13 +468,11 @@ export default function ReleasesHeaderV2({
 
     return (
         <div className="app-header">
-            <Space>
+            <div className="flex flex-wrap items-center gap-2">
                 <AppSearch
                     key={dataFilter?.keyword ?? ''}
                     defaultValue={dataFilter?.keyword}
-                    style={{
-                        width: 200,
-                    }}
+                    wrapperClassName="w-40 sm:w-52"
                     onChange={(e) =>
                         onChangeFilter({ keyword: e.target.value })
                     }
@@ -488,7 +486,7 @@ export default function ReleasesHeaderV2({
                     removeFilter={handleRemoveFilter}
                     canClearFilter={canClearFilter}
                 />
-            </Space>
+            </div>
         </div>
     );
 }

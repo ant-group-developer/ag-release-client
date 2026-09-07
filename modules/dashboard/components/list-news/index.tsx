@@ -27,13 +27,16 @@ export default function ListNews({}: Props) {
                 body: { padding: '24px' },
             }}
             title={
-                <div className="flex items-center justify-between">
-                    <h3 className="text-md m-0 font-bold">
+                <div className="flex items-center justify-between gap-2 min-w-0">
+                    <h3
+                        className="text-md m-0 font-bold truncate min-w-0"
+                        title={messages('dashboard.latestNews')}
+                    >
                         {messages('dashboard.latestNews')}
                     </h3>
 
                     {!isFetching && (
-                        <Link href={APP_ROUTES.NEWS}>
+                        <Link href={APP_ROUTES.NEWS} className="shrink-0">
                             <SeeMoreButton
                                 type="default"
                                 style={{
@@ -67,7 +70,13 @@ export default function ListNews({}: Props) {
             ) : newsData?.items && newsData.items.length > 0 ? (
                 <Row gutter={[20, 20]}>
                     {newsData.items.slice(0, 4).map((item) => (
-                        <Col key={item.id.toString()} xs={24} sm={12} md={12} lg={6}>
+                        <Col
+                            key={item.id.toString()}
+                            xs={24}
+                            sm={12}
+                            md={12}
+                            lg={6}
+                        >
                             <Link
                                 href={`${APP_ROUTES.NEWS}/${item?.slug}`}
                                 className="block h-full"

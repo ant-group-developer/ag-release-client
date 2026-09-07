@@ -1,6 +1,7 @@
 'use client';
 
 import { DATE_FORMAT } from '@/enums/common';
+import { Button, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import CheckboxFilterContent from './contents/checkbox-filter-content';
@@ -137,26 +138,29 @@ export default function FilterCategoryContent({
     };
 
     return (
-        <div className="flex h-full w-[450px] flex-col">
+        <div className="flex h-full w-full flex-col md:w-[450px]">
             {/* Header */}
             <div className="flex h-11 items-center justify-between border-b border-gray-100 px-4 dark:border-zinc-700">
                 <div className="flex items-center gap-2">
                     {config.icon && (
-                        <span className="text-base text-gray-500 dark:text-gray-300">
+                        <span className="text-base">
                             {config.icon}
                         </span>
                     )}
-                    <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-300">
+                    <Typography.Text strong className="text-sm">
                         {config.label}
-                    </h3>
+                    </Typography.Text>
                 </div>
                 {hasActiveValues() && (
-                    <button
+                    <Button
+                        type="link"
+                        danger
+                        size="small"
                         onClick={handleClear}
-                        className="text-xs text-blue-500 hover:text-blue-700"
+                        className="!p-0 !text-xs"
                     >
                         {messages('common.delete')}
-                    </button>
+                    </Button>
                 )}
             </div>
 

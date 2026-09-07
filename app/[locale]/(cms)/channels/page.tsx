@@ -1,5 +1,6 @@
 'use client';
 import AppPageWrapper from '@/components/ant-music/app-page-wrapper';
+import CreateButton from '@/components/ui/button/create-button';
 import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
@@ -7,6 +8,7 @@ import { ORDER } from '@/enums/common';
 import { setSortOrder } from '@/helpers/common';
 import { useFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ChannelsHeader from '@/modules/channels/components/header';
 import ChannelFormModal from '@/modules/channels/components/modal/channel-form';
 import ChannelHistoryModal from '@/modules/channels/components/modal/channel-history-modal';
@@ -26,6 +28,7 @@ type Props = {};
 
 export default function Channels({}: Props) {
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<ChannelDataFilter>({
             page: 1,
@@ -34,6 +37,7 @@ export default function Channels({}: Props) {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore<ChannelsData>((state) => state.dataEdit);
+    const openModal = useModalStore((state) => state.openModal);
     const [
         isYoutubeChannelSyncRunsModalOpen,
         setIsYoutubeChannelSyncRunsModalOpen,
@@ -68,7 +72,17 @@ export default function Channels({}: Props) {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('channel.label')}>
+            <PageContainer
+                title={messages('channel.label')}
+                className="[&_.ant-page-header-heading]:flex-wrap [&_.ant-page-header-heading-left]:flex-1"
+                extra={
+                    <CreateButton
+                        canCreate={isAdmin}
+                        text={messages('channel.add')}
+                        onClick={() => openModal(TYPE_MODAL_CHANNELS.CREATE)}
+                    />
+                }
+            >
                 <ChannelsTable
                     title={() => (
                         <ChannelsHeader
