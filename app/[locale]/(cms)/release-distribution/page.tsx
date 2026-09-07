@@ -297,11 +297,16 @@ export default function ReleaseDistributionPage() {
                     }}
                     onChange={onChangeSort}
                     dataFilter={dataFilter}
-                    options={{
-                        reload: () => {
-                            handleRefresh();
-                        },
-                    }}
+                    options={
+                        screens.lg
+                            ? {
+                                  reload: () => {
+                                      handleRefresh();
+                                  },
+                              }
+                            : false
+                    }
+                    toolBarRender={screens.lg ? undefined : () => []}
                 />
 
                 <AppPagination

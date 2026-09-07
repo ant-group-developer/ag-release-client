@@ -148,7 +148,6 @@ export default function ReleasesTable({
             dataIndex: RELEASES_TABLE_KEY.TYPE,
             align: 'left',
             width: 120,
-            responsive: ['sm'],
             render: (_, record) => {
                 return (
                     <Tag className="cursor-pointer truncate">
@@ -163,7 +162,6 @@ export default function ReleasesTable({
             dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
             width: 180,
-            responsive: ['md'],
             render: (value, record) => (
                 <Paragraph
                     data-stop-row-click="true"
@@ -253,7 +251,6 @@ export default function ReleasesTable({
             align: 'left',
             width: 110,
             sorter: true,
-            responsive: ['md'],
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -270,7 +267,6 @@ export default function ReleasesTable({
             align: 'left',
             width: 110,
             sorter: true,
-            responsive: ['md'],
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -290,7 +286,6 @@ export default function ReleasesTable({
             dataIndex: RELEASES_TABLE_KEY.RELEASE_DATE,
             align: 'left',
             width: 150,
-            responsive: ['sm'],
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -307,7 +302,6 @@ export default function ReleasesTable({
             align: 'left',
             width: 150,
             sorter: true,
-            responsive: ['lg'],
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -330,7 +324,6 @@ export default function ReleasesTable({
             align: 'left',
             width: 150,
             sorter: true,
-            responsive: ['lg'],
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -432,7 +425,6 @@ export default function ReleasesTable({
             key: 'tenant',
             dataIndex: RELEASES_TABLE_KEY.TENANT,
             width: 160,
-            responsive: ['md'],
             render: (_, record) => {
                 return record.tenant?.name;
             },
