@@ -21,8 +21,14 @@ import { ArtistData, ArtistDataFilter } from '@/modules/artist/types';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { DeleteVariables } from '@/types/api';
+import { useIsMobile } from '@/hooks/use-is-mobile';
+import {
+    EllipsisOutlined,
+    LoadingOutlined,
+    SyncOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Space, theme } from 'antd';
+import { Button, Dropdown, type MenuProps, theme } from 'antd';
 import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
@@ -35,6 +41,7 @@ export default function Artists({}: Props) {
     const { isAdmin } = usePermission();
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const isMobile = useIsMobile();
     const {
         dataFilter,
         onChangeFilter,
@@ -88,42 +95,103 @@ export default function Artists({}: Props) {
         );
     };
 
+    const syncMenuItems: MenuProps['items'] = [
+        {
+            key: 'sync-spotify',
+            label: messages('artist.syncSpotify'),
+            icon: isSyncingSpotify ? (
+                <LoadingOutlined />
+            ) : (
+                <SyncOutlined />
+            ),
+            disabled: isSyncingSpotify,
+            onClick: () => setIsSyncModalOpen(true),
+        },
+        {
+            key: 'sync-profile-name',
+            label: messages('artist.syncProfileName'),
+            icon: isSyncingArtistProfileName ? (
+                <LoadingOutlined />
+            ) : (
+                <SyncOutlined />
+            ),
+            disabled: isSyncingArtistProfileName,
+            onClick: () => setIsSyncProfileNameModalOpen(true),
+        },
+    ];
+
+    const renderExtra = () => {
+        if (isMobile) {
+            return (
+                <div className="flex items-center gap-2">
+                    <PermissionGate permission={PERMISSION.ARTIST.CREATE}>
+                        <CreateButton
+                            text={messages('artist.create')}
+                            onClick={() =>
+                                openModal(TYPE_MODAL_ARTIST.CREATE)
+                            }
+                        />
+                    </PermissionGate>
+                    {isAdmin && (
+                        <Dropdown
+                            menu={{ items: syncMenuItems }}
+                            trigger={['click']}
+                            placement="bottomRight"
+                        >
+                            <Button
+                                icon={
+                                    isSyncingSpotify ||
+                                    isSyncingArtistProfileName ? (
+                                        <LoadingOutlined />
+                                    ) : (
+                                        <EllipsisOutlined />
+                                    )
+                                }
+                            />
+                        </Dropdown>
+                    )}
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex flex-wrap items-center gap-2">
+                {isAdmin && (
+                    <>
+                        <Button
+                            type="primary"
+                            onClick={() => setIsSyncModalOpen(true)}
+                            loading={isSyncingSpotify}
+                        >
+                            {messages('artist.syncSpotify')}
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                setIsSyncProfileNameModalOpen(true)
+                            }
+                            loading={isSyncingArtistProfileName}
+                        >
+                            {messages('artist.syncProfileName')}
+                        </Button>
+                    </>
+                )}
+                <PermissionGate permission={PERMISSION.ARTIST.CREATE}>
+                    <CreateButton
+                        text={messages('artist.create')}
+                        onClick={() => openModal(TYPE_MODAL_ARTIST.CREATE)}
+                    />
+                </PermissionGate>
+            </div>
+        );
+    };
+
     return (
         <AppPageWrapper>
             <PageContainer
                 title={messages('artist.artists')}
-                extra={
-                    <Space>
-                        {isAdmin && (
-                            <Space>
-                                <Button
-                                    type="primary"
-                                    onClick={() => setIsSyncModalOpen(true)}
-                                    loading={isSyncingSpotify}
-                                >
-                                    {messages('artist.syncSpotify')}
-                                </Button>
-                                <Button
-                                    type="primary"
-                                    onClick={() =>
-                                        setIsSyncProfileNameModalOpen(true)
-                                    }
-                                    loading={isSyncingArtistProfileName}
-                                >
-                                    {messages('artist.syncProfileName')}
-                                </Button>
-                            </Space>
-                        )}
-                        <PermissionGate permission={PERMISSION.ARTIST.CREATE}>
-                            <CreateButton
-                                text={messages('artist.create')}
-                                onClick={() =>
-                                    openModal(TYPE_MODAL_ARTIST.CREATE)
-                                }
-                            />
-                        </PermissionGate>
-                    </Space>
-                }
+                className="[&_.ant-page-header-heading]:flex-wrap [&_.ant-page-header-heading-left]:flex-1"
+                extra={renderExtra()}
             >
                 {/* <ArtistsHeader dataFilter={dataFilter} onSearch={onSearch} /> */}
                 <ArtistsTable
@@ -139,16 +207,21 @@ export default function Artists({}: Props) {
                     dataFilter={dataFilter}
                     headerTitle={
                         <AppSearch
-                            className="max-w-52"
+                            className="w-full sm:max-w-52"
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                         />
                     }
-                    options={{
-                        reload: () => {
-                            handleRefresh();
-                        },
-                    }}
+                    options={
+                        isMobile
+                            ? false
+                            : {
+                                  reload: () => {
+                                      handleRefresh();
+                                  },
+                              }
+                    }
+                    toolBarRender={isMobile ? () => [] : undefined}
                 />
 
                 <AppPagination

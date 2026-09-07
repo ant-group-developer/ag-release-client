@@ -1,7 +1,9 @@
 import CopyText from '@/components/ui/copy-text/copy-text';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SCREEN } from '@/enums/common';
 import { formattedDate, getIndex, getSortOrder } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { Link, useRouter } from '@/i18n/routing';
@@ -17,7 +19,7 @@ import {
 import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 import { bucketApi } from '@/modules/upload/apis/bucket-api';
 import { ProColumns } from '@ant-design/pro-components';
-import { Button, theme } from 'antd';
+import { Button, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import nProgress from 'nprogress';
@@ -41,13 +43,15 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
     const { token } = theme.useToken();
     const { hasPermission } = usePermission();
     const canScan = hasPermission(PERMISSION.TRACK.SCAN);
+    const isMobile = useIsMobile();
+
     const column: ProColumns<TrackData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 30,
+            width: 50,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props?.pagination?.pageSize,
@@ -61,8 +65,8 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             dataIndex: TRACKS_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
-            fixed: 'left',
-            width: 150,
+            fixed: isMobile ? undefined : 'left',
+            width: isMobile ? 220 : 280,
             sorter: true,
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -73,27 +77,43 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 const trackArtist = record?.trackArtists ?? [];
                 const trackName = trackArtist
                     ?.map((item) => item?.artist?.name)
+                    ?.filter(Boolean)
                     ?.join(' & ');
                 return (
-                    <div className="flex items-center gap-4">
+                    <div className="flex min-w-0 items-center gap-3">
                         <TrackCoverArt trackData={record} />
-                        <div className="truncate">
-                            <CustomTooltip
-                                title={messages('common.viewDetail')}
-                            >
-                                <Link
-                                    href={getTrackDetailRoute(
-                                        record?.id,
-                                        TRACK_TABS.METADATA
-                                    )}
-                                    className="block truncate hover:cursor-pointer hover:text-blue-500 hover:underline"
-                                >
-                                    {record?.title}
-                                </Link>
-                            </CustomTooltip>
-                            <span className="truncate text-gray-500">
-                                {trackName}
-                            </span>
+                        <div className="min-w-0 flex-1 flex-col justify-center overflow-hidden">
+                            <div className="max-w-[140px] truncate sm:max-w-[200px]">
+                                <CustomTooltip title={record?.title}>
+                                    <Link
+                                        href={getTrackDetailRoute(
+                                            record?.id,
+                                            TRACK_TABS.METADATA
+                                        )}
+                                    >
+                                        <Typography.Text
+                                            strong
+                                            ellipsis
+                                            className="cursor-pointer hover:underline"
+                                        >
+                                            {record?.title}
+                                        </Typography.Text>
+                                    </Link>
+                                </CustomTooltip>
+                            </div>
+                            {trackName && (
+                                <div className="max-w-[140px] truncate sm:max-w-[200px]">
+                                    <CustomTooltip title={trackName}>
+                                        <Typography.Text
+                                            type="secondary"
+                                            ellipsis
+                                            className="block"
+                                        >
+                                            {trackName}
+                                        </Typography.Text>
+                                    </CustomTooltip>
+                                </div>
+                            )}
                         </div>
                     </div>
                 );
@@ -104,7 +124,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'version',
             dataIndex: TRACKS_TABLE_KEY.VERSION,
             align: 'left',
-            width: 50,
+            width: 80,
             render: (value, record) => {
                 return <span className="truncate"> {record.version} </span>;
             },
@@ -114,7 +134,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'id',
             dataIndex: TRACKS_TABLE_KEY.ID,
             align: 'left',
-            width: 60,
+            width: 90,
             render: (value, record) => (
                 <CopyText text={record?.id}>
                     <span className="truncate"> {value} </span>
@@ -126,7 +146,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: TRACKS_COLUMNS_DISPLAY.RELEASE_TITLE,
             dataIndex: TRACKS_TABLE_KEY.RELEASE_TITLE,
             align: 'left',
-            width: 80,
+            width: 140,
             ellipsis: true,
             render: (_, record) => (
                 <CopyText text={record?.release?.title}>
@@ -139,7 +159,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: TRACKS_COLUMNS_DISPLAY.LABEL_NAME,
             dataIndex: TRACKS_TABLE_KEY.LABEL_NAME,
             align: 'left',
-            width: 80,
+            width: 120,
             ellipsis: true,
             render: (_, record) => (
                 <CopyText text={record?.release?.label?.name}>
@@ -155,7 +175,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'isrc',
             dataIndex: TRACKS_TABLE_KEY.ISRC,
             align: 'left',
-            width: 80,
+            width: 140,
             render: (_, record) => (
                 <CopyText text={record?.isrc as string}>
                     <span className="truncate"> {record?.isrc} </span>
@@ -167,7 +187,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'acrCloud',
             dataIndex: TRACKS_TABLE_KEY.ACR_CLOUD,
             align: 'left',
-            width: 80,
+            width: 120,
             render: (value, record) => {
                 const isUnScanned =
                     record?.scanCopyrightStatus ==
@@ -202,7 +222,7 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
             key: 'createdAt',
             dataIndex: TRACKS_TABLE_KEY.CREATED_AT,
             align: 'left',
-            width: 80,
+            width: 150,
             sorter: true,
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
@@ -219,8 +239,8 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
         {
             key: 'actions',
             align: 'center',
-            width: 30,
-            fixed: 'right',
+            width: isMobile ? 50 : 60,
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => {
                 const isUnScanned =
                     record?.scanCopyrightStatus ==
@@ -286,10 +306,16 @@ export default function TracksTable({ dataFilter, ...props }: Props) {
                 </div>
             )}
             columnsState={{
-                persistenceKey: 'tracks-table-columns',
+                persistenceKey: isMobile
+                    ? undefined
+                    : 'tracks-table-columns-v2',
                 persistenceType: 'sessionStorage',
             }}
             {...props}
+            scroll={{
+                x: isMobile ? 'max-content' : SCREEN.XL,
+                ...props?.scroll,
+            }}
             className={`rounded-t-lg ${props?.className}`}
             style={{
                 backgroundColor: token.colorBgContainer,

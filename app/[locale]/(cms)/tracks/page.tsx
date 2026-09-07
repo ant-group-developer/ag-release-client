@@ -21,7 +21,7 @@ import TracksTable from '@/modules/tracks/components/table';
 import TracksGridTable from '@/modules/tracks/components/table/grid-table';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { PageContainer } from '@ant-design/pro-components';
-import { theme } from 'antd';
+import { Grid, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useState } from 'react';
 
@@ -31,6 +31,7 @@ export default function Tracks({}: Props) {
     // State - hook
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const screens = Grid.useBreakpoint();
     const typeModal = useModalStore((state) => state.typeModal);
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
 
@@ -79,27 +80,18 @@ export default function Tracks({}: Props) {
         );
     };
 
-    // const
     const rowSelection = canScan
         ? {
               selectedRowKeys: selectedRow,
               onChange: handleSelectedRow,
               columnWidth: 30,
+              fixed: screens.md ? ('left' as const) : undefined,
           }
         : false;
 
     return (
         <AppPageWrapper>
             <PageContainer title={messages('common.tracks')}>
-                {/* <div
-                    className="sticky top-0 z-50 mb-4 rounded-lg"
-                    style={{ backgroundColor: token.colorBgContainer }}
-                >
-                    <TrackActions
-                        selectedRowKeys={selectedRow}
-                        resetSelectedRows={handleResetSelectedRow}
-                    />
-                </div> */}
                 {layoutTable === LAYOUT_TABLE.LIST && (
                     <TracksTable
                         headerTitle={
@@ -114,17 +106,22 @@ export default function Tracks({}: Props) {
                         dataSource={tracksData.items}
                         pagination={{
                             pageSize: dataFilter.pageSize ?? PAGE_SIZE,
-                            current: tracksData.metadata.page,
+                            current: tracksData?.metadata?.page || 1,
                         }}
                         loading={isTrackDataLoading}
                         rowSelection={rowSelection}
                         onChange={onChangeSort}
                         dataFilter={dataFilter}
-                        options={{
-                            reload: () => {
-                                handleRefresh();
-                            },
-                        }}
+                        options={
+                            screens.lg
+                                ? {
+                                      reload: () => {
+                                          handleRefresh();
+                                      },
+                                  }
+                                : false
+                        }
+                        toolBarRender={screens.lg ? undefined : () => []}
                     />
                 )}
 
