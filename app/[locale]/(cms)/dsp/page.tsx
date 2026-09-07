@@ -6,6 +6,7 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import useModalStore from '@/hooks/use-modal';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
@@ -26,6 +27,7 @@ export default function Dsp() {
     // hooks - state
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const isMobile = useIsMobile();
     const { dataFilter, onChangePage, onSearch } = useFilter<DspDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
@@ -61,6 +63,7 @@ export default function Dsp() {
         <AppPageWrapper>
             <PageContainer
                 title={'DSPs'}
+                className="[&_.ant-page-header-heading]:flex-wrap [&_.ant-page-header-heading-left]:flex-1"
                 style={{
                     backgroundColor: token.colorBgLayout,
                 }}
@@ -86,16 +89,21 @@ export default function Dsp() {
                     loading={isLoading}
                     headerTitle={
                         <AppSearch
-                            className="max-w-52"
+                            className="w-full sm:max-w-52"
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
                         />
                     }
-                    options={{
-                        reload: () => {
-                            handleRefresh();
-                        },
-                    }}
+                    options={
+                        isMobile
+                            ? false
+                            : {
+                                  reload: () => {
+                                      handleRefresh();
+                                  },
+                              }
+                    }
+                    toolBarRender={isMobile ? () => [] : undefined}
                 />
                 <AppPagination
                     align="end"

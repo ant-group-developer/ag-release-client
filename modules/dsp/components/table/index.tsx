@@ -3,7 +3,9 @@ import CopyText from '@/components/ui/copy-text/copy-text';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import { FALLBACK_IMAGE } from '@/constants/common';
+import { SCREEN } from '@/enums/common';
 import { formattedDate, getIndex } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
@@ -29,14 +31,15 @@ export const DspTable = ({ ...props }: Props) => {
     const { token } = theme.useToken();
     const { hasPermission } = usePermission();
     const canUpdate = hasPermission(PERMISSION.DSP.UPDATE);
+    const isMobile = useIsMobile();
 
     const column: ProColumns<DspData>[] = [
         {
             title: messages('common.iNo'),
             key: 'iNo',
-            width: 50,
+            width: isMobile ? 50 : 60,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination.pageSize,
@@ -50,8 +53,8 @@ export const DspTable = ({ ...props }: Props) => {
             dataIndex: DSP_TABLE_KEY.NAME,
             ellipsis: true,
             align: 'left',
-            width: 250,
-            fixed: 'left',
+            width: isMobile ? 200 : 250,
+            fixed: isMobile ? undefined : 'left',
             render: (value, record) => (
                 <div className="flex items-center gap-4">
                     <div className="flex-shrink-0">
@@ -253,8 +256,8 @@ export const DspTable = ({ ...props }: Props) => {
             title: '',
             key: 'action',
             dataIndex: DSP_TABLE_KEY.ACTION,
-            width: 50,
-            fixed: canUpdate ? 'right' : undefined,
+            width: isMobile ? 50 : 60,
+            fixed: isMobile ? undefined : (canUpdate ? 'right' : undefined),
             render: (_, record) => (
                 <PermissionGate permission={PERMISSION.DSP.UPDATE}>
                     <ActionButton
@@ -274,6 +277,18 @@ export const DspTable = ({ ...props }: Props) => {
 
     return (
         <AppProTable
+            key={isMobile ? 'mobile' : 'desktop'}
+            columnsState={{
+                persistenceKey: isMobile
+                    ? undefined
+                    : 'dsp-table-columns-v2',
+                persistenceType: 'sessionStorage',
+                ...props?.columnsState,
+            }}
+            scroll={{
+                x: isMobile ? 'max-content' : SCREEN.XL,
+                ...props?.scroll,
+            }}
             {...props}
             pagination={false}
             columns={column}
