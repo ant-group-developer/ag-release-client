@@ -2,7 +2,7 @@ import ActionButton from '@/components/ui/button/action-button';
 import AppProTable, { AppProTableProps } from '@/components/ui/table/pro-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON_SMALL } from '@/constants/common';
-import { DATE_FORMAT } from '@/enums/common';
+import { DATE_FORMAT, SCREEN } from '@/enums/common';
 import { APP_ROUTES } from '@/enums/routes';
 import {
     convertSecondsToHoursMinutes,
@@ -11,6 +11,7 @@ import {
     getSortOrder,
 } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
@@ -76,6 +77,7 @@ export default function ReleasesTable({
     const canDelete = hasPermission(PERMISSION.RELEASE_AUDIO.DELETE);
     const canTakedown = hasPermission(PERMISSION.RELEASE_AUDIO.TAKE_DOWN);
     const setAction = useReleaseActionStore((state) => state.setAction);
+    const isMobile = useIsMobile();
 
     const column: ProColumns<ReleasesData>[] = [
         {
@@ -83,7 +85,7 @@ export default function ReleasesTable({
             key: 'iNo',
             width: 50,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) => {
                 return (
                     <div data-stop-row-click="true">
@@ -102,8 +104,8 @@ export default function ReleasesTable({
             dataIndex: RELEASES_TABLE_KEY.TITLE,
             ellipsis: true,
             align: 'left',
-            width: 320,
-            fixed: 'left',
+            width: isMobile ? 220 : 320,
+            fixed: isMobile ? undefined : 'left',
             render: (value, record) => {
                 return (
                     <ReleaseTitleColumn
@@ -118,7 +120,7 @@ export default function ReleasesTable({
             key: 'publisher',
             dataIndex: RELEASES_TABLE_KEY.PUBLISHER,
             align: 'left',
-            width: 200,
+            width: 160,
             ellipsis: true,
             render: (value, record) => (
                 <CustomTooltip
@@ -145,7 +147,8 @@ export default function ReleasesTable({
             key: 'type',
             dataIndex: RELEASES_TABLE_KEY.TYPE,
             align: 'left',
-            width: 130,
+            width: 120,
+            responsive: ['sm'],
             render: (_, record) => {
                 return (
                     <Tag className="cursor-pointer truncate">
@@ -159,7 +162,8 @@ export default function ReleasesTable({
             key: 'upc',
             dataIndex: RELEASES_TABLE_KEY.UPC,
             align: 'left',
-            width: 200,
+            width: 180,
+            responsive: ['md'],
             render: (value, record) => (
                 <Paragraph
                     data-stop-row-click="true"
@@ -247,8 +251,9 @@ export default function ReleasesTable({
             key: 'tracks_count',
             dataIndex: RELEASES_TABLE_KEY.TRACK_COUNT,
             align: 'left',
-            width: 120,
+            width: 110,
             sorter: true,
+            responsive: ['md'],
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -263,8 +268,9 @@ export default function ReleasesTable({
             key: 'total_duration',
             dataIndex: RELEASES_TABLE_KEY.DURATION,
             align: 'left',
-            width: 120,
+            width: 110,
             sorter: true,
+            responsive: ['md'],
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -283,13 +289,8 @@ export default function ReleasesTable({
             key: 'releaseDate',
             dataIndex: RELEASES_TABLE_KEY.RELEASE_DATE,
             align: 'left',
-            width: 160,
-            // sorter: true,
-            // sortOrder: getSortOrder(
-            //     dataFilter.orderBy,
-            //     dataFilter.fieldOrder,
-            //     'releaseDate'
-            // ),
+            width: 150,
+            responsive: ['sm'],
             render: (value, record) => (
                 <span className="truncate text-wrap">
                     {' '}
@@ -302,11 +303,11 @@ export default function ReleasesTable({
         },
         {
             title: messages('common.createdAt'),
-            // key: 'createdAt',
             dataIndex: RELEASES_TABLE_KEY.CREATED_AT,
             align: 'left',
-            width: 160,
+            width: 150,
             sorter: true,
+            responsive: ['lg'],
             defaultSortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -327,8 +328,9 @@ export default function ReleasesTable({
             key: 'updatedAt',
             dataIndex: RELEASES_TABLE_KEY.UPDATED_AT,
             align: 'left',
-            width: 160,
+            width: 150,
             sorter: true,
+            responsive: ['lg'],
             sortOrder: getSortOrder(
                 dataFilter.orderBy,
                 dataFilter.fieldOrder,
@@ -348,7 +350,7 @@ export default function ReleasesTable({
             key: 'actions',
             align: 'center',
             width: 50,
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => {
                 const status = record?.status;
                 const isDraft = status === RELEASES_STATUS.DRAFT;
@@ -429,7 +431,8 @@ export default function ReleasesTable({
             title: messages('tenant.label'),
             key: 'tenant',
             dataIndex: RELEASES_TABLE_KEY.TENANT,
-            width: 180,
+            width: 160,
+            responsive: ['md'],
             render: (_, record) => {
                 return record.tenant?.name;
             },
@@ -441,6 +444,10 @@ export default function ReleasesTable({
             <AppProTable
                 headerTitle={messages('release.list')}
                 {...props}
+                scroll={{
+                    x: isMobile ? 'max-content' : SCREEN.XL,
+                    ...props?.scroll,
+                }}
                 pagination={false}
                 columns={column}
                 rowClassName={'group'}

@@ -7,6 +7,7 @@ import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
+import { Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { RELEASES_TABS } from '../../enums';
 import { ReleasesData, ReleasesDataFilter } from '../../types';
@@ -35,7 +36,7 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
         record?.title + (record?.version ? ` [${record?.version}]` : '');
 
     return (
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-3">
             <Link
                 href={getReleaseDetailTabRoute(
                     record?.id,
@@ -43,11 +44,11 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                 )}
                 onClick={() => setAction(RELEASE_DETAIL_ACTION.READ)}
             >
-                <div className="h-14 min-w-14">
+                <div className="h-12 w-12 min-w-12 sm:h-14 sm:w-14 sm:min-w-14">
                     <ReleaseCoverImage data={record} />
                 </div>
             </Link>
-            <div>
+            <div className="min-w-0 flex-1">
                 <Link
                     href={getReleaseDetailTabRoute(
                         record?.id,
@@ -55,18 +56,19 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                     )}
                     onClick={() => setAction(RELEASE_DETAIL_ACTION.READ)}
                 >
-                    <div className="!max-w-80 truncate">
+                    <div className="max-w-[130px] truncate sm:max-w-80">
                         <CustomTooltip title={title}>
-                            <span className="cursor-pointer hover:underline">
+                            <Typography.Text className="cursor-pointer hover:underline" strong>
                                 {title}
-                            </span>
+                            </Typography.Text>
                         </CustomTooltip>
                     </div>
                 </Link>
                 <CustomTooltip title={displayName}>
                     {isVariousArtist ? (
-                        <span
-                            className="cursor-pointer truncate text-gray-500 hover:underline"
+                        <Typography.Text
+                            type="secondary"
+                            className="block max-w-[130px] cursor-pointer truncate hover:underline sm:max-w-80"
                             onClick={() =>
                                 onChangeFilter({
                                     isVariousArtist: 'true',
@@ -74,21 +76,18 @@ export default function ReleaseTitleColumn({ record, onChangeFilter }: Props) {
                             }
                         >
                             {messages('common.variousArtists')}
-                        </span>
+                        </Typography.Text>
                     ) : (
-                        <span
-                            // onClick={() =>
-                            //     onChangeFilter({
-                            //         artistId: mainArtist?.artist?.id,
-                            //     })
-                            // }
-                            className="inline-block !max-w-80 cursor-pointer truncate text-gray-500"
+                        <Typography.Text
+                            type="secondary"
+                            className="block max-w-[130px] truncate sm:max-w-80"
                         >
                             {artistName || ''}
-                        </span>
+                        </Typography.Text>
                     )}
                 </CustomTooltip>
             </div>
         </div>
     );
 }
+
