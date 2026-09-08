@@ -19,12 +19,19 @@ import { useExportReleaseCiData } from '@/modules/release-distribution/hooks/use
 import { useGetListReleaseCiData } from '@/modules/release-distribution/hooks/use-get-list-release-ci-data';
 import { ReleaseCiDataFilter } from '@/modules/release-distribution/types';
 import { RELEASE_TYPE } from '@/modules/releases/enums';
-import { DownloadOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+    DownloadOutlined,
+    EllipsisOutlined,
+    LoadingOutlined,
+    PlusOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Space, theme } from 'antd';
+import { Button, Dropdown, Grid, type MenuProps, Space, theme } from 'antd';
 import { RotateCw, Send } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Key, useMemo, useState } from 'react';
+
+const { useBreakpoint } = Grid;
 
 export default function ReleaseDistributionPage() {
     const {
@@ -45,6 +52,7 @@ export default function ReleaseDistributionPage() {
 
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const screens = useBreakpoint();
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [isBulkSubmitModalOpen, setIsBulkSubmitModalOpen] = useState(false);
     const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
@@ -142,35 +150,42 @@ export default function ReleaseDistributionPage() {
         preserveSelectedRowKeys: true,
     };
 
-    return (
-        <AppPageWrapper>
-            <PageContainer
-                title={messages('release.releaseDistribution')}
-                extra={[
-                    <Button
-                        key="export"
-                        icon={<DownloadOutlined />}
-                        loading={isExporting}
-                        onClick={handleExport}
-                    >
-                        {messages('common.export')}
-                    </Button>,
-                    <Button
-                        key="auto-sync-ci"
-                        icon={<RotateCw size={SIZE_ICON} />}
-                        loading={isAutoSyncing}
-                        onClick={handleAutoSync}
-                    >
-                        {messages('common.autoSyncCi')}
-                    </Button>,
-                    <Button
-                        key="sync-track-order"
-                        icon={<RotateCw size={SIZE_ICON} />}
-                        loading={isSyncingTrackOrder}
-                        onClick={handleSyncTrackOrder}
-                    >
-                        {messages('common.syncTrackOrder')}
-                    </Button>,
+    const moreMenuItems: MenuProps['items'] = [
+        {
+            key: 'export',
+            icon: isExporting ? <LoadingOutlined /> : <DownloadOutlined />,
+            label: messages('common.export'),
+            disabled: isExporting,
+            onClick: handleExport,
+        },
+        {
+            key: 'auto-sync-ci',
+            icon: isAutoSyncing ? (
+                <LoadingOutlined />
+            ) : (
+                <RotateCw size={SIZE_ICON} />
+            ),
+            label: messages('common.autoSyncCi'),
+            disabled: isAutoSyncing,
+            onClick: handleAutoSync,
+        },
+        {
+            key: 'sync-track-order',
+            icon: isSyncingTrackOrder ? (
+                <LoadingOutlined />
+            ) : (
+                <RotateCw size={SIZE_ICON} />
+            ),
+            label: messages('common.syncTrackOrder'),
+            disabled: isSyncingTrackOrder,
+            onClick: handleSyncTrackOrder,
+        },
+    ];
+
+    const renderExtra = () => {
+        if (!screens.lg) {
+            return (
+                <div className="flex items-center gap-2">
                     <Button
                         key="bulk-create"
                         type="primary"
@@ -179,8 +194,63 @@ export default function ReleaseDistributionPage() {
                         onClick={handleBulkCreate}
                     >
                         {messages('common.bulkCreate')}
-                    </Button>,
-                ]}
+                    </Button>
+                    <Dropdown
+                        menu={{ items: moreMenuItems }}
+                        trigger={['click']}
+                        placement="bottomRight"
+                    >
+                        <Button icon={<EllipsisOutlined />} />
+                    </Dropdown>
+                </div>
+            );
+        }
+
+        return (
+            <div className="flex flex-wrap items-center gap-2">
+                <Button
+                    key="export"
+                    icon={<DownloadOutlined />}
+                    loading={isExporting}
+                    onClick={handleExport}
+                >
+                    {messages('common.export')}
+                </Button>
+                <Button
+                    key="auto-sync-ci"
+                    icon={<RotateCw size={SIZE_ICON} />}
+                    loading={isAutoSyncing}
+                    onClick={handleAutoSync}
+                >
+                    {messages('common.autoSyncCi')}
+                </Button>
+                <Button
+                    key="sync-track-order"
+                    icon={<RotateCw size={SIZE_ICON} />}
+                    loading={isSyncingTrackOrder}
+                    onClick={handleSyncTrackOrder}
+                >
+                    {messages('common.syncTrackOrder')}
+                </Button>
+                <Button
+                    key="bulk-create"
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    loading={isBulkCreating}
+                    onClick={handleBulkCreate}
+                >
+                    {messages('common.bulkCreate')}
+                </Button>
+            </div>
+        );
+    };
+
+    return (
+        <AppPageWrapper>
+            <PageContainer
+                title={messages('release.releaseDistribution')}
+                className="[&_.ant-page-header-heading]:flex-wrap [&_.ant-page-header-heading-left]:flex-1"
+                extra={renderExtra()}
             >
                 <ReleaseDistributionTable
                     rowSelection={rowSelection}
@@ -227,11 +297,16 @@ export default function ReleaseDistributionPage() {
                     }}
                     onChange={onChangeSort}
                     dataFilter={dataFilter}
-                    options={{
-                        reload: () => {
-                            handleRefresh();
-                        },
-                    }}
+                    options={
+                        screens.lg
+                            ? {
+                                  reload: () => {
+                                      handleRefresh();
+                                  },
+                              }
+                            : false
+                    }
+                    toolBarRender={screens.lg ? undefined : () => []}
                 />
 
                 <AppPagination

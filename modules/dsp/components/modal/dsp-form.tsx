@@ -3,6 +3,7 @@ import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { uploadApi } from '@/modules/upload/apis';
@@ -11,7 +12,7 @@ import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Spin, Tabs, TabsProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { TYPE_MODAL_DSP, DSP_TYPE } from '../../enums';
+import { DSP_TYPE, TYPE_MODAL_DSP } from '../../enums';
 import { useCreateDsp } from '../../hooks/use-create-dsp';
 import { useGetDetailDsp } from '../../hooks/use-get-detail-dsp';
 import { useUpdateDsp } from '../../hooks/use-update-dsp';
@@ -29,6 +30,7 @@ type Props = Omit<AppModalProps, 'children'> & {};
 
 export default function DspFormModal({ ...props }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const { active, isActive, deActive } = useActive();
     const [form] = Form.useForm();
     const closeModal = useModalStore((state) => state.closeModal);
@@ -170,7 +172,15 @@ export default function DspFormModal({ ...props }: Props) {
 
     return (
         <AppModal
-            width={'40vw'}
+            width={isMobile ? 'calc(100vw - 32px)' : '40vw'}
+            style={isMobile ? { maxWidth: '100vw', top: 16 } : undefined}
+            styles={{
+                body: {
+                    maxHeight: isMobile ? 'calc(100vh - 140px)' : '80vh',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                },
+            }}
             {...props}
             title={`${isUpdate ? messages('common.update') : messages('common.create')} DSP`}
             open
@@ -178,14 +188,14 @@ export default function DspFormModal({ ...props }: Props) {
             okButtonProps={{ disabled: isOnLoadingData }}
             onOk={form.submit}
             loading={isActive}
-            className="!top-8"
+            className={isMobile ? '!top-4' : '!top-8'}
             footer={false}
         >
             <Spin spinning={isOnLoadingData}>
                 <AppForm
                     form={form}
                     onFinish={onFinish}
-                    layout="horizontal"
+                    layout={isMobile ? 'vertical' : 'horizontal'}
                     disabled={isActive}
                     initialValues={{
                         isActive: true,

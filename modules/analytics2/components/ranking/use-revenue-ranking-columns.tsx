@@ -98,7 +98,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -109,7 +109,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -181,7 +181,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -192,7 +192,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -264,7 +264,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -275,7 +275,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -423,7 +423,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -434,7 +434,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -488,7 +488,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -499,7 +499,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -554,7 +554,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -565,7 +565,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -641,7 +641,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -652,7 +652,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -740,7 +740,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -751,7 +751,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}
@@ -806,7 +806,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.usage'),
                 dataIndex: 'quantity',
                 key: 'quantity',
-                width: '20%',
+                width: '25%',
                 render: (qty: number) => (
                     <span className="text-gray-600 dark:text-zinc-400">
                         {qty ? qty.toLocaleString() : 0}
@@ -817,7 +817,7 @@ export function useRevenueRankingColumns({
                 title: messages('common.revenue'),
                 dataIndex: 'revenueUsd',
                 key: 'revenueUsd',
-                width: '20%',
+                width: '25%',
                 render: (val: number) => (
                     <span className="font-semibold">
                         ${val ? formattedNumber(val) : '0.00'}

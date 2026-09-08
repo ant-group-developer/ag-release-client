@@ -30,7 +30,7 @@ import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
 import { SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Space, TableProps } from 'antd';
+import { Button, Grid, Space, TableProps } from 'antd';
 import { useTranslations } from 'next-intl';
 import nProgress from 'nprogress';
 import { Key, useState } from 'react';
@@ -39,6 +39,7 @@ export default function ReleaseVideos() {
     // hooks - state
     const messages = useTranslations();
     const router = useRouter();
+    const screens = Grid.useBreakpoint();
     const { isSystemTenant } = useAuth();
     const {
         dataFilter,
@@ -175,11 +176,16 @@ export default function ReleaseVideos() {
                     dataFilter={dataFilter}
                     onChange={onChangeSort}
                     rowSelection={rowSelection}
-                    options={{
-                        reload: () => {
-                            refetch();
-                        },
-                    }}
+                    options={
+                        screens.lg
+                            ? {
+                                  reload: () => {
+                                      refetch();
+                                  },
+                              }
+                            : false
+                    }
+                    toolBarRender={screens.lg ? undefined : () => []}
                     tableAlertRender={({ selectedRowKeys }) => {
                         return (
                             <Space>

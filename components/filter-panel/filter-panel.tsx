@@ -1,14 +1,17 @@
 'use client';
 
 import { cn } from '@/helpers/common';
-import { Badge, Button, Popover, theme } from 'antd';
+import { Badge, Button, Grid, Popover, theme, Typography } from 'antd';
 import { Filter } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo, useState } from 'react';
 import ActiveFilterTags from './active-filter-tags';
 import FilterCategoryContent from './filter-category-content';
 import FilterCategoryList from './filter-category-list';
+import MobileFilterDrawer from './mobile-filter-drawer';
 import { FilterConfig, FilterPanelProps } from './types';
+
+const { useBreakpoint } = Grid;
 
 export default function FilterPanel<TFilter extends Record<string, any>>({
     configs,
@@ -23,10 +26,16 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
 }: FilterPanelProps<TFilter>) {
     const messages = useTranslations();
     const { token } = theme.useToken();
+    const screens = useBreakpoint();
+    // Áp dụng chế độ tinh gọn Drawer cho màn hình nhỏ và tablet (< 992px)
+    const isMobileOrTablet = screens.lg === false;
     const [open, setOpen] = useState(false);
     const [activeCategory, setActiveCategory] = useState<string | null>(
         configs[0]?.key || null
     );
+    const [mobileSelectedCategory, setMobileSelectedCategory] = useState<
+        string | null
+    >(null);
 
     /**
      * Count active filter values for a given config
@@ -127,87 +136,119 @@ export default function FilterPanel<TFilter extends Record<string, any>>({
     );
 
     const popoverFooter = totalActiveCount > 0 && (
-        <div className="flex items-center justify-between border-t border-gray-100 px-4 py-2">
+        <div className="flex items-center justify-between border-t border-gray-100 px-4 py-2 dark:border-zinc-700">
             {canClearFilter ? (
-                <button
+                <Button
+                    type="link"
+                    danger
+                    size="small"
                     onClick={() => {
                         removeFilter();
                         setOpen(false);
                     }}
-                    className="text-xs font-medium text-red-500 hover:text-red-700"
+                    className="!p-0 !text-xs"
                 >
                     {messages('common.clearFilter')}
-                </button>
+                </Button>
             ) : (
                 <div />
             )}
-            <div className="text-xs font-medium text-blue-500">
+            <Typography.Text type="secondary" className="text-xs font-medium">
                 {messages('filter.activeFilterCount', {
                     count: totalActiveCount,
                 })}
-            </div>
+            </Typography.Text>
         </div>
+    );
+
+    const filterButton = (
+        <Badge
+            count={totalActiveCount}
+            size="small"
+            offset={[-2, 2]}
+            color="#1677ff"
+        >
+            <Button onClick={isMobileOrTablet ? () => setOpen(true) : undefined}>
+                <Filter size={14} />
+                <span className="font-medium">
+                    {messages('common.filter')}
+                </span>
+            </Button>
+        </Badge>
     );
 
     return (
         <div
-            className={cn('flex items-center gap-3', className)}
+            className={cn('flex flex-wrap items-center gap-2', className)}
             style={{
                 backgroundColor: token.colorBgContainer,
                 borderRadius: token.borderRadius,
-                // padding: '8px 12px',
             }}
         >
             {/* Filter trigger button */}
-            <Popover
-                open={open}
-                onOpenChange={setOpen}
-                trigger="click"
-                placement={placement}
-                arrow={false}
-                autoAdjustOverflow={false}
-                // overlayInnerStyle={{ padding: 0, overflow: 'hidden' }}
-                styles={{
-                    body: {
-                        padding: 0,
-                        overflow: 'hidden',
-                    },
-                }}
-                content={
-                    <div>
-                        {popoverContent}
-                        {popoverFooter}
-                    </div>
-                }
-            >
-                <Badge
-                    count={totalActiveCount}
-                    size="small"
-                    offset={[-2, 2]}
-                    color="#1677ff"
+            {isMobileOrTablet ? (
+                <>
+                    {filterButton}
+                    <MobileFilterDrawer
+                        open={open}
+                        onClose={() => {
+                            setOpen(false);
+                            setMobileSelectedCategory(null);
+                        }}
+                        configs={configs}
+                        dataFilter={dataFilter}
+                        onChangeFilter={(newValue) =>
+                            onChangeFilter(newValue as Partial<TFilter>)
+                        }
+                        removeFilter={removeFilter}
+                        canClearFilter={canClearFilter}
+                        getActiveCount={getActiveCount}
+                        totalActiveCount={totalActiveCount}
+                        handleRemoveFilter={handleRemoveFilter}
+                        selectedCategoryKey={mobileSelectedCategory}
+                        onSelectCategory={setMobileSelectedCategory}
+                    />
+                </>
+            ) : (
+                <Popover
+                    open={open}
+                    onOpenChange={setOpen}
+                    trigger="click"
+                    placement={placement}
+                    arrow={false}
+                    autoAdjustOverflow={false}
+                    styles={{
+                        body: {
+                            padding: 0,
+                            overflow: 'hidden',
+                        },
+                    }}
+                    content={
+                        <div>
+                            {popoverContent}
+                            {popoverFooter}
+                        </div>
+                    }
                 >
-                    <Button>
-                        <Filter size={14} />
-                        <span className="font-medium">
-                            {messages('common.filter')}
-                        </span>
-                    </Button>
-                </Badge>
-            </Popover>
+                    {filterButton}
+                </Popover>
+            )}
 
-            {/* Active filter tags */}
-            <ActiveFilterTags
-                configs={configs}
-                dataFilter={dataFilter}
-                defaultFilter={defaultFilter}
-                canClearFilter={canClearFilter}
-                onRemoveFilter={handleRemoveFilter}
-                onRemoveAll={removeFilter}
-                onClickTag={(key) => {
-                    setActiveCategory(key);
-                    setOpen(true);
-                }}
-            />
+            {/* Active filter tags (chỉ hiển thị trên desktop >= 992px) */}
+            {!isMobileOrTablet && (
+                <ActiveFilterTags
+                    configs={configs}
+                    dataFilter={dataFilter}
+                    defaultFilter={defaultFilter}
+                    canClearFilter={canClearFilter}
+                    onRemoveFilter={handleRemoveFilter}
+                    onRemoveAll={removeFilter}
+                    onClickTag={(key) => {
+                        setActiveCategory(key);
+                        setOpen(true);
+                    }}
+                />
+            )}
         </div>
     );
 }

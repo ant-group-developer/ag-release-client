@@ -2,7 +2,7 @@
 
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
-import { Tag } from 'antd';
+import { Button, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { FilterConfig } from './types';
 
@@ -124,10 +124,10 @@ export default function ActiveFilterTags({
     if (activeFilters.length === 0) return null;
 
     return (
-        <div className="flex flex-1 flex-wrap items-center gap-1">
-            <span className="mr-1 text-xs text-gray-500">
+        <div className="flex w-full flex-wrap items-center gap-1.5 md:w-auto">
+            <Typography.Text type="secondary" className="mr-1 text-xs">
                 {messages('filter.filterBy')}:
-            </span>
+            </Typography.Text>
             {activeFilters.map(({ config, displayValue, isDefault }) => (
                 <Tag
                     key={config.key}
@@ -137,11 +137,11 @@ export default function ActiveFilterTags({
                         e.stopPropagation();
                         onRemoveFilter(config);
                     }}
-                    className="m-0 max-w-[300px] cursor-pointer transition-colors hover:border-blue-300"
+                    className="m-0 max-w-[200px] cursor-pointer transition-colors hover:border-blue-300 sm:max-w-[300px]"
                     onClick={() => onClickTag?.(config.key)}
                 >
                     <span
-                        className="inline-block max-w-[250px] truncate align-middle"
+                        className="inline-block max-w-[150px] truncate align-middle sm:max-w-[240px]"
                         title={`${config.label}: ${displayValue}`}
                     >
                         <span className="font-medium">{config.label}</span>:{' '}
@@ -150,12 +150,15 @@ export default function ActiveFilterTags({
                 </Tag>
             ))}
             {canClearFilter && (
-                <button
+                <Button
+                    type="link"
+                    danger
+                    size="small"
                     onClick={onRemoveAll}
-                    className="ml-1 text-xs text-red-500 hover:text-red-700"
+                    className="!p-0 !text-xs"
                 >
                     {messages('common.clearFilter')}
-                </button>
+                </Button>
             )}
         </div>
     );

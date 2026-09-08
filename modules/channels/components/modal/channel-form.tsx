@@ -1,6 +1,7 @@
 import AppModal, { AppModalProps } from '@/components/ui/modal/normal-modal';
 import { showNotification } from '@/helpers/messages-helper';
 import { useActive } from '@/hooks/use-active';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Tabs, Tooltip } from 'antd';
@@ -23,6 +24,7 @@ type Props = Omit<AppModalProps, 'children'> & {};
 
 export default function ChannelFormModal({ ...props }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const [form] = Form.useForm<ChannelFormValues>();
     const closeModal = useModalStore((state) => state.closeModal);
     const dataEdit = useModalStore((state) => state.dataEdit as ChannelsData);
@@ -159,13 +161,14 @@ export default function ChannelFormModal({ ...props }: Props) {
 
     return (
         <AppModal
-            centered
-            width="50vw"
+            centered={!isMobile}
+            width={isMobile ? 'calc(100vw - 32px)' : '50vw'}
+            style={isMobile ? { maxWidth: '100vw', top: 16 } : undefined}
             styles={{
                 body: {
-                    minHeight: '60vh',
-                    maxHeight: '75vh',
+                    maxHeight: isMobile ? 'calc(100vh - 160px)' : '75vh',
                     overflowY: 'auto',
+                    overflowX: 'hidden',
                 },
             }}
             {...props}
