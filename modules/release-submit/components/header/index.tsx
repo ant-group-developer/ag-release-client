@@ -470,7 +470,8 @@ export default function ReleaseSubmitHeader({
     return (
         <div className="flex flex-wrap items-center gap-2 font-normal">
             <AppSearch
-                className="w-52"
+                key={dataFilter.queryListReleases?.keyword ?? ''}
+                wrapperClassName="w-40 sm:w-52"
                 placeholder={messages('common.search')}
                 onChange={(event) =>
                     handleChangeFilter({ keyword: event.target.value })
@@ -487,7 +488,7 @@ export default function ReleaseSubmitHeader({
                     ).toLowerCase(),
                 })}
                 onChange={(value) => onChangeFilter({ status: value })}
-                defaultValue={dataFilter?.status}
+                value={dataFilter?.status}
                 allowClear
                 className="w-52"
             />
