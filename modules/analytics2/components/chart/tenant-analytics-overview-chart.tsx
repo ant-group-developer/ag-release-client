@@ -1,4 +1,5 @@
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetTenantRevenueDspBarChart } from '../../hooks/use-get-tenant-revenue-dsp-bar-chart';
 import { useGetTenantRevenueLineChart } from '../../hooks/use-get-tenant-revenue-line-chart';
 import { useGetTenantRevenueTerBarChart } from '../../hooks/use-get-tenant-revenue-ter-bar-chart';
@@ -14,6 +15,7 @@ export interface TenantAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
 }
 
 export default function TenantAnalyticsOverviewChart({
@@ -23,6 +25,7 @@ export default function TenantAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
 }: TenantAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -32,6 +35,7 @@ export default function TenantAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        ...scopeParams,
     };
 
     const isEnabled = enabled && !!tenantId;

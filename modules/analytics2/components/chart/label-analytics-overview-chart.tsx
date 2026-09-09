@@ -1,4 +1,5 @@
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetLabelRevenueDspBarChart } from '../../hooks/use-get-label-revenue-dsp-bar-chart';
 import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
 import { useGetLabelRevenueTerBarChart } from '../../hooks/use-get-label-revenue-ter-bar-chart';
@@ -14,6 +15,7 @@ export interface LabelAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
 }
 
 export default function LabelAnalyticsOverviewChart({
@@ -23,6 +25,7 @@ export default function LabelAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
 }: LabelAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -32,6 +35,7 @@ export default function LabelAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        ...scopeParams,
     };
 
     const isEnabled = enabled && !!labelId;
