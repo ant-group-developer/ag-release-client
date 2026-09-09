@@ -449,7 +449,21 @@ export interface RevenueLabelItem {
     bySource?: BySourceItem[];
 }
 
-export interface TrendViewLineChartParams {
+export interface AnalyticsScopeParams {
+    trackId?: string;
+    isrc?: string;
+    releaseId?: string;
+    tenantId?: string;
+    labelId?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+    dspId?: string;
+    artistId?: string;
+    channelId?: string;
+    importSource?: string;
+}
+
+export interface TrendViewLineChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -460,7 +474,7 @@ export interface TrendViewLineChartItem {
     totalViews: number;
 }
 
-export interface TrendViewDspBarChartParams {
+export interface TrendViewDspBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -491,7 +505,7 @@ export interface BySourceItem {
     revenueUsd?: number;
 }
 
-export interface RevenueLineChartParams {
+export interface RevenueLineChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -503,7 +517,7 @@ export interface RevenueLineChartItem {
     quantity: number;
 }
 
-export interface RevenueDspBarChartParams {
+export interface RevenueDspBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -516,7 +530,7 @@ export interface RevenueDspBarChartItem {
     imageUrl?: string;
 }
 
-export interface TrendViewTerBarChartParams {
+export interface TrendViewTerBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -527,7 +541,7 @@ export interface TrendViewTerBarChartItem {
     totalViews: number;
 }
 
-export interface RevenueTerBarChartParams {
+export interface RevenueTerBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -847,4 +861,3 @@ export interface AnalyticsFilterItem {
     title: string;
     thumbnailUrl?: string;
 }
-

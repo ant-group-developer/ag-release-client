@@ -1,6 +1,10 @@
 import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
 import { ANALYTICS_VIEW_TYPE } from '../enums/tabs';
-import { ActiveAnalyticsEntity, AnalyticsFilterItem, RankingParams } from '../types';
+import {
+    ActiveAnalyticsEntity,
+    AnalyticsFilterItem,
+    AnalyticsScopeParams,
+} from '../types';
 
 export const createViewMoreHref = (
     pathname: string,
@@ -30,24 +34,10 @@ export const getAnalyticsReleaseType = (releaseType: string | null) =>
         : ANALYTICS_RELEASE_TYPE.ALL;
 
 /**
- * The subset of ranking/revenue request params that identify *what the numbers
- * are filtered by*. Both `RankingParams` and `RevenueQueryParams` declare all of
- * these, so the same bag can be spread into either kind of request.
+ * The params that identify *what the numbers are filtered by*. Declared once in
+ * `../types` so ranking, revenue, summary and chart requests all share it.
  */
-export type AnalyticsScopeParams = Pick<
-    RankingParams,
-    | 'trackId'
-    | 'isrc'
-    | 'releaseId'
-    | 'tenantId'
-    | 'labelId'
-    | 'pgDspId'
-    | 'dspReportId'
-    | 'dspId'
-    | 'artistId'
-    | 'channelId'
-    | 'importSource'
->;
+export type { AnalyticsScopeParams } from '../types';
 
 /**
  * Maps the selected entity to the request params that scope a ranking to it.

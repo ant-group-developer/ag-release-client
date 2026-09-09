@@ -1,4 +1,5 @@
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetSourceTypeRevenueDspBarChart } from '../../hooks/use-get-source-type-revenue-dsp-bar-chart';
 import { useGetSourceTypeRevenueLineChart } from '../../hooks/use-get-source-type-revenue-line-chart';
 import { useGetSourceTypeRevenueTerBarChart } from '../../hooks/use-get-source-type-revenue-ter-bar-chart';
@@ -14,6 +15,7 @@ export interface SourceTypeAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
 }
 
 export default function SourceTypeAnalyticsOverviewChart({
@@ -23,6 +25,7 @@ export default function SourceTypeAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
 }: SourceTypeAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -32,6 +35,7 @@ export default function SourceTypeAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        ...scopeParams,
     };
 
     const isEnabled = enabled && !!sourceType;

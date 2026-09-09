@@ -1,4 +1,5 @@
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetChannelRevenueDspBarChart } from '../../hooks/use-get-channel-revenue-dsp-bar-chart';
 import { useGetChannelRevenueLineChart } from '../../hooks/use-get-channel-revenue-line-chart';
 import { useGetChannelRevenueTerBarChart } from '../../hooks/use-get-channel-revenue-ter-bar-chart';
@@ -14,6 +15,7 @@ export interface ChannelAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
 }
 
 export default function ChannelAnalyticsOverviewChart({
@@ -23,6 +25,7 @@ export default function ChannelAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
 }: ChannelAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -32,6 +35,7 @@ export default function ChannelAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        ...scopeParams,
     };
 
     const isEnabled = enabled && !!channelId;

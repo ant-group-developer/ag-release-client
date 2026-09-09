@@ -1,4 +1,5 @@
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetTrackRevenueDspBarChart } from '../../hooks/use-get-track-revenue-dsp-bar-chart';
 import { useGetTrackRevenueLineChart } from '../../hooks/use-get-track-revenue-line-chart';
 import { useGetTrackRevenueTerBarChart } from '../../hooks/use-get-track-revenue-ter-bar-chart';
@@ -14,6 +15,7 @@ export interface TrackAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
 }
 
 export default function TrackAnalyticsOverviewChart({
@@ -23,6 +25,7 @@ export default function TrackAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
 }: TrackAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -32,6 +35,7 @@ export default function TrackAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        ...scopeParams,
     };
 
     const isEnabled = enabled && !!isrc;
