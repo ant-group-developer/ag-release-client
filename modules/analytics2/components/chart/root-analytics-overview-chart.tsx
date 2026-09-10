@@ -5,6 +5,7 @@ import {
     ANALYTICS_OVERVIEW_CHART_MODE,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
 import { useGetRevenueLineChart } from '../../hooks/use-get-revenue-line-chart';
 import { useGetRevenueTerBarChart } from '../../hooks/use-get-revenue-ter-bar-chart';
@@ -20,6 +21,7 @@ export interface RootAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
     overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
     onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
 }
@@ -30,6 +32,7 @@ export default function RootAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
     overviewChartMode: externalOverviewChartMode,
     onOverviewChartModeChange,
 }: RootAnalyticsOverviewChartProps) {
@@ -57,6 +60,7 @@ export default function RootAnalyticsOverviewChart({
         toDate,
         releaseType,
         granularity,
+        ...scopeParams,
     };
 
     const {

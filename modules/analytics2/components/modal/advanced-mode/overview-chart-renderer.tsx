@@ -9,8 +9,8 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '../../../enums';
 import {
-    getAnalyticsScopeParams,
     getCombinedAnalyticsScopeParams,
+    getFilterScopeParams,
 } from '../../../helpers';
 import { useGetTrendViewDemographicsBarCharts } from '../../../hooks/use-get-trend-view-demographics-bar-chart';
 import {
@@ -56,12 +56,16 @@ export default function OverviewChartRenderer({
             ANALYTICS_OVERVIEW_CHART_MODE.LINE
         );
 
+
+    const filterScope = useMemo(() => getFilterScopeParams(filters), [filters]);
+
     const commonProps = {
         fromDate,
         toDate,
         releaseType,
         activeMetric,
         enabled,
+        scopeParams: filterScope,
         overviewChartMode,
         onOverviewChartModeChange: setOverviewChartMode,
     };

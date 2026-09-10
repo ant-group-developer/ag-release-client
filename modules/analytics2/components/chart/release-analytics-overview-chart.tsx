@@ -1,4 +1,5 @@
 import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import { AnalyticsScopeParams } from '../../types';
 import { useGetReleaseRevenueDspBarChart } from '../../hooks/use-get-release-revenue-dsp-bar-chart';
 import { useGetReleaseRevenueLineChart } from '../../hooks/use-get-release-revenue-line-chart';
 import { useGetReleaseRevenueTerBarChart } from '../../hooks/use-get-release-revenue-ter-bar-chart';
@@ -14,6 +15,7 @@ export interface ReleaseAnalyticsOverviewChartProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric?: string;
     enabled?: boolean;
+    scopeParams?: AnalyticsScopeParams;
 }
 
 export default function ReleaseAnalyticsOverviewChart({
@@ -23,6 +25,7 @@ export default function ReleaseAnalyticsOverviewChart({
     releaseType,
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
+    scopeParams,
 }: ReleaseAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -32,6 +35,7 @@ export default function ReleaseAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        ...scopeParams,
     };
 
     const isEnabled = enabled && !!releaseId;
