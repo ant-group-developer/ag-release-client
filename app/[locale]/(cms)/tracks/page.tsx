@@ -13,8 +13,8 @@ import AcrCloudScanModal from '@/modules/acr-cloud/components/modal/acr-scan-mod
 import AcrCloudScanResultModal from '@/modules/acr-cloud/components/modal/acr-scan-result-modal';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { TYPE_MODAL_TRACK } from '@/modules/releases/enums';
-import { ReleasesDataFilter } from '@/modules/releases/types';
 import { TRACK_SORT_FIELD } from '@/modules/tracks/enums';
+import { TrackDataFilter } from '@/modules/tracks/types';
 
 import TrackHeader from '@/modules/tracks/components/header';
 import TracksTable from '@/modules/tracks/components/table';
@@ -46,11 +46,12 @@ export default function Tracks({}: Props) {
         onChangeFilter,
         canClearFilter,
         removeFilter,
-    } = useFilter<ReleasesDataFilter>({
+    } = useFilter<TrackDataFilter>({
         page: 1,
         pageSize: PAGE_SIZE,
         orderBy: ORDER.DESC,
         fieldOrder: TRACK_SORT_FIELD.CREATED_AT,
+        isImportedFromReport: 'false',
     });
     const {
         tracksData,

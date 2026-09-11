@@ -64,6 +64,7 @@ export interface TrackDataFilter extends CommonParams {
     genres?: string;
     scanCopyrightStatus?: string;
     idInclude?: string;
+    isImportedFromReport?: string;
 }
 
 export interface TrackPolicyData extends CommonAttribute {

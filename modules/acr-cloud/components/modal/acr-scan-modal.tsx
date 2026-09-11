@@ -7,7 +7,7 @@ import { TrackData } from '@/modules/releases/types';
 import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
 import { Checkbox, Form, InputNumber } from 'antd';
 import { useTranslations } from 'next-intl';
-import { Key, useEffect } from 'react';
+import { Key, useEffect, useMemo } from 'react';
 import { useScanTracks } from '../../hooks/use-scan-tracks';
 
 type Props = Omit<AppModalProps, 'children'> & {
@@ -30,6 +30,16 @@ export default function AcrCloudScanModal({
     const { settingConfig } = useGetSettingPublic();
     const acrConfig = settingConfig?.acrCloud;
 
+    const trackIds = useMemo(
+        () =>
+            Array.from(
+                new Set(
+                    [...(selectedTrackIds ?? []), dataEdit?.id].filter(Boolean)
+                )
+            ),
+        [selectedTrackIds, dataEdit?.id]
+    );
+
     const handleSubmit = (values: any) => {
         const { date, track, ...rest } = values;
 
@@ -48,14 +58,10 @@ export default function AcrCloudScanModal({
 
     useEffect(() => {
         form.setFieldsValue({
-            track: Array.from(
-                new Set(
-                    [...(selectedTrackIds ?? []), dataEdit?.id].filter(Boolean)
-                )
-            ),
+            track: trackIds,
             chunkDuration: acrConfig?.chunkDuration,
         });
-    }, [selectedTrackIds]);
+    }, [trackIds, acrConfig?.chunkDuration, form]);
 
     return (
         <AppModal
@@ -103,7 +109,12 @@ export default function AcrCloudScanModal({
                 </AppFormItem> */}
 
                 <AppFormItem name="track" label={messages('track.label')}>
-                    <TracksSelect mode="multiple" allowClear disabled />
+                    <TracksSelect
+                        mode="multiple"
+                        allowClear
+                        disabled
+                        idInclude={trackIds}
+                    />
                 </AppFormItem>
                 {!hideSkipScannedOption && (
                     <AppFormItem
