@@ -155,7 +155,8 @@ export default function ACRCloudForm({}: Props) {
                 </AppFormItem>
                 <AppFormItem
                     name="chunkDuration"
-                    label={messages('track.chunkDuration')}
+                    label={messages('track.chunkDuration.label')}
+                    tooltipInfo={messages('track.chunkDuration.tooltip')}
                     required
                     rules={[
                         {
@@ -167,7 +168,7 @@ export default function ACRCloudForm({}: Props) {
                             min: 1,
                             message: messages('validation.numberMin', {
                                 min: 1,
-                                field: messages('track.chunkDuration'),
+                                field: messages('track.chunkDuration.label'),
                             }),
                         },
                         {
@@ -175,12 +176,15 @@ export default function ACRCloudForm({}: Props) {
                             max: 12,
                             message: messages('validation.numberMax', {
                                 max: 12,
-                                field: messages('track.chunkDuration'),
+                                field: messages('track.chunkDuration.label'),
                             }),
                         },
                     ]}
                 >
-                    <InputNumber className="!w-full" />
+                    <InputNumber
+                        addonAfter={messages('common.seconds')}
+                        style={{ width: 170 }}
+                    />
                 </AppFormItem>
                 <AppFormItem
                     name="scoreWarning"
