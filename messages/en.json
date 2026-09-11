@@ -1559,6 +1559,7 @@
         "autoScan": "Auto scan",
         "scoreWarning": "Score warning",
         "autoScanTime": "Auto scan time",
+        "releaseStatusAutoScan": "Release status auto scan",
         "chunkDuration": {
             "label": "Chunk duration",
             "tooltip": "The duration (in seconds) of each audio segment split for ACRCloud copyright scanning (1 - 12 seconds)"
