@@ -5,7 +5,7 @@ import TracksSelect from '@/components/ui/select/tracks-select';
 import useModalStore from '@/hooks/use-modal';
 import { TrackData } from '@/modules/releases/types';
 import { useGetSettingPublic } from '@/modules/setting/hooks/use-get-setting-public';
-import { Checkbox, Form, InputNumber } from 'antd';
+import { Checkbox, Form, InputNumber, Popover } from 'antd';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useMemo } from 'react';
 import { useScanTracks } from '../../hooks/use-scan-tracks';
@@ -44,7 +44,7 @@ export default function AcrCloudScanModal({
         const { date, track, ...rest } = values;
 
         const payload = {
-            trackIds: values?.track,
+            trackIds: values?.track ?? trackIds,
             ...rest,
         };
         scanTracks({
@@ -70,7 +70,7 @@ export default function AcrCloudScanModal({
             onCancel={closeModal}
             onOk={form.submit}
             okText={messages('common.scan')}
-            width={750}
+            width={640}
             loading={isPendingScan}
             {...props}
         >
@@ -81,38 +81,42 @@ export default function AcrCloudScanModal({
                 onFinish={(values) => handleSubmit(values)}
                 disabled={isPendingScan}
             >
-                {/* <AppFormItem
-                    required
-                    name="date"
-                    label={messages('common.createdAt')}
-                    // rules={[
-                    //     {
-                    //         required: true,
-                    //         message: messages('validation.input'),
-                    //     },
-                    // ]}
-                >
-                    <DateRangePicker
-                        className="w-full"
-                        allowClear
-                        defaultValue={
-                            tempStartDate && tempEndDate
-                                ? [dayjs(tempStartDate), dayjs(tempEndDate)]
-                                : undefined
-                        }
-                        externalOnChange={handleDateChange}
-                        placement="topLeft"
-                        disabledDate={(current) =>
-                            current && current > dayjs().endOf('day')
-                        }
-                    />
-                </AppFormItem> */}
-
                 <AppFormItem name="track" label={messages('track.label')}>
                     <TracksSelect
                         mode="multiple"
-                        allowClear
-                        disabled
+                        open={false}
+                        suffixIcon={null}
+                        tagRender={({ label }) => (
+                            <span className="ant-select-selection-item">
+                                <span className="ant-select-selection-item-content">
+                                    {label}
+                                </span>
+                            </span>
+                        )}
+                        maxTagCount="responsive"
+                        maxTagPlaceholder={(omittedValues) => (
+                            <Popover
+                                trigger="hover"
+                                title={`${omittedValues.length} ${messages('common.others')}`}
+                                content={
+                                    <div className="max-h-60 max-w-xs overflow-y-auto space-y-1 py-1">
+                                        {omittedValues.map((item, idx) => (
+                                            <div
+                                                key={idx}
+                                                className="truncate py-0.5 text-xs"
+                                            >
+                                                {item.label}
+                                            </div>
+                                        ))}
+                                    </div>
+                                }
+                            >
+                                <span className="cursor-pointer">
+                                    +{omittedValues.length}{' '}
+                                    {messages('common.others')}
+                                </span>
+                            </Popover>
+                        )}
                         idInclude={trackIds}
                     />
                 </AppFormItem>
@@ -129,29 +133,34 @@ export default function AcrCloudScanModal({
                 )}
                 <AppFormItem
                     name="chunkDuration"
-                    label={messages('track.chunkDuration')}
+                    label={messages('track.chunkDuration.label')}
+                    tooltipInfo={messages('track.chunkDuration.tooltip')}
                     rules={[
                         {
                             type: 'number',
                             max: 12,
-                            message: messages('validation.stringMax', {
+                            message: messages('validation.numberMax', {
                                 max: 12,
-                                field: messages('track.chunkDuration'),
+                                field: messages('track.chunkDuration.label'),
                             }),
                         },
                         {
                             type: 'number',
                             min: 1,
-                            message: messages('validation.stringMin', {
+                            message: messages('validation.numberMin', {
                                 min: 1,
-                                field: messages('track.chunkDuration'),
+                                field: messages('track.chunkDuration.label'),
                             }),
                         },
                     ]}
                 >
-                    <InputNumber />
+                    <InputNumber
+                        addonAfter={messages('common.seconds')}
+                        style={{ width: 170 }}
+                    />
                 </AppFormItem>
             </AppForm>
         </AppModal>
     );
 }
+

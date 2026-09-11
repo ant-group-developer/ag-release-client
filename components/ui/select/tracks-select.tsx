@@ -1,4 +1,4 @@
-import { PAGE_SIZE_DEFAULT } from '@/constants/page-size';
+import { PAGE_SIZE_LARGE } from '@/constants/page-size';
 import { toNonAccentVietnamese } from '@/helpers/string';
 import { useGetListTracks } from '@/modules/tracks/hooks/use-get-list-tracks';
 import { TrackData } from '@/modules/tracks/types';
@@ -27,7 +27,7 @@ export default function TracksSelect({
     }, [idInclude]);
 
     const { tracksData, isFetching } = useGetListTracks({
-        pageSize: PAGE_SIZE_DEFAULT,
+        pageSize: PAGE_SIZE_LARGE,
         idInclude: normalizedIdInclude,
     });
 
