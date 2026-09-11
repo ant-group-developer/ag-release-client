@@ -8,9 +8,14 @@ export const useGetListTracks = (
     params: TrackDataFilter,
     options?: { enabled?: boolean }
 ) => {
+    const apiParams = { ...params };
+    if (apiParams.isImportedFromReport === 'all') {
+        delete apiParams.isImportedFromReport;
+    }
+
     const { data, ...res } = useQuery({
         queryKey: trackQueryKeys.list(params),
-        queryFn: () => trackApi.getListTrack(params),
+        queryFn: () => trackApi.getListTrack(apiParams),
         placeholderData: (prev) => prev,
         enabled:
             (options?.enabled ?? true) &&

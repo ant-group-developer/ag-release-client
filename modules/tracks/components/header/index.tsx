@@ -3,18 +3,18 @@ import { SIZE_ICON } from '@/constants/common';
 import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
 import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
 import { useGetArtistSimpleList } from '@/modules/artist/hooks/use-get-artist-simple-list';
-import { GENRE_SCOPE } from '@/modules/genres/enums';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { useGetListSimpleGenres } from '@/modules/genres/hooks/use-get-list-simple-genres';
+import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import {
     CalendarOutlined,
+    ImportOutlined,
     SafetyCertificateOutlined,
     SearchOutlined,
     SoundOutlined,
     TeamOutlined,
 } from '@ant-design/icons';
 import { Layers } from 'lucide-react';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { useGetListSimpleTenant } from '@/modules/tenant/hooks/use-get-simple-list';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { SCAN_COPYRIGHT_STATUS } from '../../enums';
@@ -38,7 +38,8 @@ export default function TrackHeader({
     const messages = useTranslations();
     const [artistKeyword, setArtistKeyword] = useState('');
     const { isAdmin } = useAuth();
-    const { tenantSimpleData, isLoading: isLoadingTenants } = useGetListSimpleTenant();
+    const { tenantSimpleData, isLoading: isLoadingTenants } =
+        useGetListSimpleTenant();
 
     // 1. Truyền keyword vào hook.
     // Chúng ta lấy pageSize lớn hơn (ví dụ 100) để cover tốt hơn
@@ -101,6 +102,20 @@ export default function TrackHeader({
         [tenantSimpleData]
     );
 
+    const isImportedFromReportOptions = useMemo(
+        () => [
+            {
+                label: messages('release.importedFromReport'),
+                value: 'true',
+            },
+            {
+                label: messages('release.createdDirectly'),
+                value: 'false',
+            },
+        ],
+        [messages]
+    );
+
     const filterConfigs: FilterConfig[] = useMemo(() => {
         const configs: FilterConfig[] = [
             {
@@ -150,6 +165,14 @@ export default function TrackHeader({
                 isCommaSeparated: true,
             },
             {
+                key: 'isImportedFromReport',
+                label: messages('release.creationSource'),
+                icon: <ImportOutlined />,
+                type: 'radio',
+                filterKey: 'isImportedFromReport',
+                options: isImportedFromReportOptions,
+            },
+            {
                 key: 'dateCreated',
                 label: messages('common.dateCreated'),
                 icon: <CalendarOutlined />,
@@ -179,165 +202,43 @@ export default function TrackHeader({
         artistOptions,
         isLoadingArtists,
         genreOptions,
+        isImportedFromReportOptions,
         isAdmin,
         tenantOptions,
         isLoadingTenants,
     ]);
 
+    const handleChangeFilter = (
+        newValue: Partial<TrackDataFilter>,
+        backToFirstPage?: boolean
+    ) => {
+        const nextValue = { ...newValue };
+        if ('isImportedFromReport' in nextValue) {
+            const val = nextValue.isImportedFromReport;
+            if (!val) {
+                nextValue.isImportedFromReport = 'all';
+            }
+        }
+        onChangeFilter(nextValue, backToFirstPage);
+    };
+
+    const mappedDataFilter = useMemo(() => {
+        const copy = { ...dataFilter };
+        if (copy.isImportedFromReport === 'all') {
+            copy.isImportedFromReport = undefined;
+        }
+        return copy;
+    }, [dataFilter]);
+
     return (
         <div className="app-header">
             <FilterPanel
                 configs={filterConfigs}
-                dataFilter={dataFilter}
-                onChangeFilter={onChangeFilter}
+                dataFilter={mappedDataFilter}
+                onChangeFilter={handleChangeFilter}
                 removeFilter={removeFilter}
                 canClearFilter={canClearFilter}
             />
         </div>
     );
 }
-
-// ============================================================
-// OLD IMPLEMENTATION (Commented out)
-// ============================================================
-/*
-import AppFilter from '@/components/ui/antd-form/app-filter';
-import DateRangePicker from '@/components/ui/input/date-range-picker';
-import ArtistSelect from '@/components/ui/select/artist-select';
-import GenresSelect from '@/components/ui/select/genres-select';
-import { arrayFromString, getDateRange } from '@/helpers/array';
-import { getIntlCodeByScanCopyrightStatus } from '@/helpers/intl';
-import { OnChangeFilter, RemoveFilter } from '@/hooks/use-filter';
-import {
-    ProForm,
-    ProFormSelect,
-    ProFormText,
-} from '@ant-design/pro-components';
-import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { SCAN_COPYRIGHT_STATUS } from '../../enums';
-import { TrackDataFilter } from '../../types';
-
-type Props = {
-    dataFilter: TrackDataFilter;
-    onChangeFilter: OnChangeFilter<TrackDataFilter>;
-    canClearFilter: boolean;
-    removeFilter: RemoveFilter;
-};
-
-export default function TrackHeader({
-    dataFilter,
-    onChangeFilter,
-    canClearFilter,
-    removeFilter,
-}: Props) {
-    const [form] = ProForm.useForm();
-    const messages = useTranslations();
-
-    const initialValue = {
-        ...dataFilter,
-        artistId: arrayFromString(dataFilter?.artistId),
-        genres: arrayFromString(dataFilter?.genres),
-        scanCopyrightStatus: arrayFromString(dataFilter?.scanCopyrightStatus),
-        dateCreated: getDateRange(
-            dataFilter?.startCreatedAt,
-            dataFilter?.endCreatedAt
-        ),
-    };
-
-    const handleSubmit = (values: any) => {
-        const { dateCreated, dateUpdated, ...res } = values;
-        const startCreatedAt = dateCreated?.[0] ?? null;
-        const endCreatedAt = dateCreated?.[1] ?? null;
-
-        onChangeFilter({
-            ...res,
-            startCreatedAt,
-            endCreatedAt,
-        });
-    };
-
-    const handleReset = (values: any) => {
-        removeFilter();
-        form.setFieldsValue({});
-    };
-
-    useEffect(() => {
-        form.setFieldsValue(initialValue);
-    }, [dataFilter, form]);
-
-    return (
-        <div className="app-header mb-4">
-            <AppFilter
-                form={form}
-                onFinish={handleSubmit}
-                onReset={handleReset}
-            >
-                <ProFormText
-                    name="keyword"
-                    label={messages('common.search')}
-                    placeholder={messages('placeholder.searchBy', {
-                        value: messages('common.keyword').toLowerCase(),
-                    })}
-                />
-
-                <ProFormSelect
-                    name="scanCopyrightStatus"
-                    label={messages('common.scan')}
-                    options={Object.values(SCAN_COPYRIGHT_STATUS).map(
-                        (item) => ({
-                            label: messages(
-                                getIntlCodeByScanCopyrightStatus(item) as any
-                            ),
-                            value: item,
-                        })
-                    )}
-                    mode="multiple"
-                    fieldProps={{
-                        maxTagCount: 'responsive',
-                    }}
-                    placeholder={messages('placeholder.filterBy', {
-                        value: messages('common.scan').toLowerCase(),
-                    })}
-                />
-
-                <ProForm.Item name="artistId" label={messages('artist.label')}>
-                    <ArtistSelect
-                        showCreate={false}
-                        allowClear
-                        popupMatchSelectWidth={false}
-                        placeholder={messages('placeholder.filterBy', {
-                            value: messages('artist.artists').toLowerCase(),
-                        })}
-                        mode="multiple"
-                        maxTagCount={'responsive'}
-                    />
-                </ProForm.Item>
-
-                <ProForm.Item name="genres" label={messages('genre.label')}>
-                    <GenresSelect
-                        scope={GENRE_SCOPE.AUDIO}
-                        allowClear
-                        placeholder={messages('placeholder.filterBy', {
-                            value: messages('genre.genres').toLowerCase(),
-                        })}
-                        mode="multiple"
-                        maxCount={2}
-                    />
-                </ProForm.Item>
-
-                <ProForm.Item
-                    name="dateCreated"
-                    label={messages('common.dateCreated')}
-                >
-                    <DateRangePicker
-                        className="w-full"
-                        allowClear
-                        placement="topLeft"
-                    />
-                </ProForm.Item>
-            </AppFilter>
-        </div>
-    );
-}
-*/

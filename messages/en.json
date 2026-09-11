@@ -129,6 +129,7 @@
         "audio": "Audio",
         "video": "Video",
         "seconds": "seconds",
+        "second": "second",
         "mb": "MB",
         "converted": "Converted",
         "speed": "{speed}/s",
@@ -1559,7 +1560,10 @@
         "scoreWarning": "Score warning",
         "autoScanTime": "Auto scan time",
         "releaseStatusAutoScan": "Release status auto scan",
-        "chunkDuration": "Chunk duration",
+        "chunkDuration": {
+            "label": "Chunk duration",
+            "tooltip": "The duration (in seconds) of each audio segment split for ACRCloud copyright scanning (1 - 12 seconds)"
+        },
         "sampleLength": {
             "label": "Sample length",
             "tooltip": "Defines the duration of the audio sample that listeners can preview"
