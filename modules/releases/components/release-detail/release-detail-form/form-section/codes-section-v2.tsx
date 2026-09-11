@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
 
 type Props = {
-    debouncedUpdate: (data: any) => void;
+    debouncedUpdate: (data: any, fieldName?: string) => void;
     isReadMode: boolean;
     isCreateReleasePage: boolean;
 };
@@ -24,7 +24,9 @@ export default function CodesSectionV2({
     const messages = useTranslations();
     const formValues = useReleaseFormStore((state) => state.formValues);
 
-    const isDraft = formValues?.status === RELEASES_STATUS.DRAFT;
+    const isUpcEditableStatus =
+        formValues?.status === RELEASES_STATUS.DRAFT ||
+        formValues?.status === RELEASES_STATUS.FAILED;
 
     return (
         <div id="codes" className="flex flex-col gap-6">
@@ -49,16 +51,19 @@ export default function CodesSectionV2({
                                 onBlur={(e) => {
                                     const value = e.target.value.trim();
                                     field.onChange(value);
-                                    debouncedUpdate({
-                                        upc: value,
-                                    });
+                                    debouncedUpdate(
+                                        {
+                                            upc: value,
+                                        },
+                                        'upc'
+                                    );
                                 }}
                                 allowClear
                                 status={errors.upc ? 'error' : undefined}
                                 disabled={
                                     isCreateReleasePage ||
                                     isReadMode ||
-                                    !isDraft
+                                    !isUpcEditableStatus
                                 }
                             />
                         )}
@@ -81,9 +86,12 @@ export default function CodesSectionV2({
                                 onBlur={(e) => {
                                     const value = e.target.value.trim();
                                     field.onChange(value);
-                                    debouncedUpdate({
-                                        catalogId: value,
-                                    });
+                                    debouncedUpdate(
+                                        {
+                                            catalogId: value,
+                                        },
+                                        'catalogId'
+                                    );
                                 }}
                                 allowClear
                                 status={errors.catalogId ? 'error' : undefined}

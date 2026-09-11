@@ -31,6 +31,7 @@ export const releaseSchema = (messages: any) =>
                 z.literal(''),
                 z
                     .string()
+                    .regex(/^\d+$/, messages('validation.mustBeNumber'))
                     .min(10, messages('validation.min', { number: 10 }))
                     .max(14, messages('validation.max', { number: 14 })),
             ])
