@@ -1551,6 +1551,7 @@
         "autoScan": "Tự động quét",
         "scoreWarning": "Điểm cảnh báo",
         "autoScanTime": "Giờ tự động quét",
+        "releaseStatusAutoScan": "Trạng thái tự động quét",
         "chunkDuration": {
             "label": "Thời lượng đoạn",
             "tooltip": "Thời lượng (tính bằng giây) của mỗi đoạn nhạc được chia nhỏ để quét bản quyền với ACRCloud (1 - 12 giây)"
