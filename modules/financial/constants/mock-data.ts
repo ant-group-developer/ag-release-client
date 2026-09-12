@@ -85,7 +85,7 @@ export const MOCK_MONTHLY_ROYALTIES: MonthlyRoyaltyItem[] = [
 export const MOCK_REVENUE_SHARES: RevenueShareItem[] = [
     {
         id: '1',
-        name: 'ANT Music',
+        name: '22R',
         share: 36.5,
         revenue: 176200.0,
         color: '#8B5CF6',
@@ -180,7 +180,7 @@ export const MOCK_TOP_ARTISTS: TopArtistRevenueItem[] = [
         rank: 1,
         artistId: 'art-1',
         artistName: 'Luna Vance',
-        labelName: 'ANT Music',
+        labelName: '22R',
         revenue: 4866.77,
         share: 16.5,
         picture:
@@ -220,7 +220,7 @@ export const MOCK_TOP_ARTISTS: TopArtistRevenueItem[] = [
         rank: 5,
         artistId: 'art-5',
         artistName: 'Marcus Vex',
-        labelName: 'ANT Music',
+        labelName: '22R',
         revenue: 2097.43,
         share: 7.2,
         picture:
@@ -260,7 +260,7 @@ export const MOCK_TOP_ARTISTS: TopArtistRevenueItem[] = [
         rank: 9,
         artistId: 'art-9',
         artistName: 'Lyra Bennett',
-        labelName: 'ANT Music',
+        labelName: '22R',
         revenue: 1085.4,
         share: 3.7,
         picture:
@@ -300,7 +300,7 @@ export const MOCK_TOP_ARTISTS: TopArtistRevenueItem[] = [
         rank: 13,
         artistId: 'art-13',
         artistName: 'Darian Mercer',
-        labelName: 'ANT Music',
+        labelName: '22R',
         revenue: 630.8,
         share: 2.1,
         picture:

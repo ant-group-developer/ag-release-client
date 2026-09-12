@@ -135,16 +135,6 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
             ),
         },
         {
-            title: t('platform'),
-            dataIndex: 'platform',
-            key: 'platform',
-            render: (val) => (
-                <Typography.Text strong className="text-xs">
-                    {val}
-                </Typography.Text>
-            ),
-        },
-        {
             title: t('period'),
             dataIndex: 'period',
             key: 'period',
