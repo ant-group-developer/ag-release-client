@@ -3639,5 +3639,33 @@
                 "update": "Cập nhật cấu hình FTP Provider thành công"
             }
         }
+    },
+    "financial": {
+        "title": "Tài chính",
+        "label": "Tài chính",
+        "subtitle": "Theo dõi tiền bản quyền, thanh toán và phân chia doanh thu",
+        "totalRoyalties": "Tổng tiền bản quyền (Giai đoạn đã chọn)",
+        "vsPrevious6Months": "so với 6 tháng trước",
+        "paid": "Đã thanh toán",
+        "pending": "Chờ thanh toán",
+        "available": "Khả dụng",
+        "royaltiesByMonth": "Tiền bản quyền theo tháng",
+        "revenueShareByArtistLabel": "Phân chia doanh thu theo Nghệ sĩ / Hãng đĩa",
+        "artistLabel": "Nghệ sĩ / Hãng đĩa",
+        "share": "Tỷ lệ",
+        "revenue": "Doanh thu",
+        "recentTransactions": "Giao dịch gần đây",
+        "date": "Ngày",
+        "platform": "Nền tảng",
+        "period": "Kỳ",
+        "type": "Loại",
+        "amount": "Số tiền",
+        "status": "Trạng thái",
+        "showingOfTransactions": "Hiển thị {current} trên {total} giao dịch",
+        "topArtistsByRevenue": "Top nghệ sĩ theo doanh thu",
+        "artist": "Nghệ sĩ",
+        "labelCol": "Hãng đĩa",
+        "royalty": "Tiền bản quyền",
+        "showingOfArtists": "Hiển thị {current} trên {total} nghệ sĩ"
     }
 }

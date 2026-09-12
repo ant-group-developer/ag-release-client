@@ -16,6 +16,7 @@ import {
     ClipboardList,
     Clock,
     Contact,
+    CreditCard,
     DiscAlbum,
     Earth,
     FileClock,
@@ -256,6 +257,15 @@ export const adminRoutes: RouteNode[] = [
                 required: {
                     permission: [PERMISSION.RELEASE_AUDIO.UPDATE],
                 },
+            },
+            {
+                id: 'financial',
+                type: 'link',
+                label: 'financial.label',
+                title: 'Financial',
+                href: APP_ROUTES.FINANCIAL,
+                icon: CreditCard,
+                required: SYS_ADMIN_REQ,
             },
             // {
             //     id: 'revenue',

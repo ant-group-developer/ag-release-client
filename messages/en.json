@@ -3649,5 +3649,33 @@
                 "update": "FTP Provider config updated successfully"
             }
         }
+    },
+    "financial": {
+        "title": "Financial",
+        "label": "Financial",
+        "subtitle": "Track your royalties, payments and revenue share",
+        "totalRoyalties": "Total Royalties (Selected Period)",
+        "vsPrevious6Months": "vs. previous 6 months",
+        "paid": "Paid",
+        "pending": "Pending",
+        "available": "Available",
+        "royaltiesByMonth": "Royalties by Month",
+        "revenueShareByArtistLabel": "Revenue Share by Artist / Label",
+        "artistLabel": "Artist / Label",
+        "share": "Share",
+        "revenue": "Revenue",
+        "recentTransactions": "Recent transactions",
+        "date": "Date",
+        "platform": "Platform",
+        "period": "Period",
+        "type": "Type",
+        "amount": "Amount",
+        "status": "Status",
+        "showingOfTransactions": "Showing {current} of {total} transactions",
+        "topArtistsByRevenue": "Top Artists by Revenue",
+        "artist": "Artist",
+        "labelCol": "Label",
+        "royalty": "Royalty",
+        "showingOfArtists": "Showing {current} of {total} artists"
     }
 }

@@ -20,6 +20,7 @@ export enum APP_ROUTES {
     RELEASE_TYPE = '/release-type',
     TRACKS = '/tracks',
     TRACK_DETAIL = '/tracks/*',
+    FINANCIAL = '/financial',
     CREATE_RELEASE = '/release-detail',
     LABELS = '/labels',
     LABEL_DETAIL = '/labels/*',
