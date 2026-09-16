@@ -256,6 +256,7 @@
         "continueDownload": "Continue downloading",
         "cancelDownload": "Cancel download",
         "maxFileSize": "File size cannot exceed {size}",
+        "maxUploadSize": "Maximum file size: {size}",
         "collapse": "Collapse",
         "expand": "Expand",
         "assets": "Assets",
@@ -3154,7 +3155,8 @@
             "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
             "SYNC_RESULT_TO_RELEASE": "Sync result to release",
             "REVIEW_RELEASE": "Review release",
-            "GET_RESULT_IMPORT_CI": "Get result import CI"
+            "GET_RESULT_IMPORT_CI": "Get result import CI",
+            "SUBMIT_VEVO_VIDEO": "Submit release to Backstage"
         },
         "action": {
             "markCompleted": "Mark completed",

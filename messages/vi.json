@@ -256,6 +256,7 @@
         "continueDownload": "Tiếp tục tải xuống",
         "cancelDownload": "Hủy tải xuống",
         "maxFileSize": "Dung lượng tệp không được vượt quá {size}",
+        "maxUploadSize": "Dung lượng tối đa: {size}",
         "collapse": "Thu gọn",
         "expand": "Mở rộng",
         "assets": "Tài sản",
@@ -3146,7 +3147,8 @@
             "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
             "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành",
             "REVIEW_RELEASE": "Duyệt phát hành",
-            "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI"
+            "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI",
+            "SUBMIT_VEVO_VIDEO": "Gửi phát hành đến backstage"
         },
         "action": {
             "markCompleted": "Đánh dấu hoàn thành",
