@@ -136,7 +136,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
             key: 'visibility',
             dataIndex: ['video', 'visibility'],
             align: 'left',
-            width: 150,
+            width: 220,
             render: (_, record) => {
                 const value = record.video
                     ?.visibility as RELEASE_VIDEO_VISIBILITY;
@@ -174,7 +174,7 @@ export const ReleaseVideoTable = ({ dataFilter, ...props }: Props) => {
                     <Tooltip title={config.label}>
                         <Tag
                             color={config.color}
-                            className="m-0 inline-flex max-w-[120px] items-center truncate align-middle"
+                            className="m-0 inline-flex max-w-[180px] items-center truncate align-middle"
                         >
                             <span className="truncate">{config.label}</span>
                         </Tag>

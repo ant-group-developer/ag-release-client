@@ -256,6 +256,7 @@
         "continueDownload": "Continue downloading",
         "cancelDownload": "Cancel download",
         "maxFileSize": "File size cannot exceed {size}",
+        "maxUploadSize": "Maximum file size: {size}",
         "collapse": "Collapse",
         "expand": "Expand",
         "assets": "Assets",
@@ -3154,7 +3155,8 @@
             "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
             "SYNC_RESULT_TO_RELEASE": "Sync result to release",
             "REVIEW_RELEASE": "Review release",
-            "GET_RESULT_IMPORT_CI": "Get result import CI"
+            "GET_RESULT_IMPORT_CI": "Get result import CI",
+            "SUBMIT_VEVO_VIDEO": "Submit release to Backstage"
         },
         "action": {
             "markCompleted": "Mark completed",
@@ -3649,5 +3651,33 @@
                 "update": "FTP Provider config updated successfully"
             }
         }
+    },
+    "financial": {
+        "title": "Financial",
+        "label": "Financial",
+        "subtitle": "Track your royalties, payments and revenue share",
+        "totalRoyalties": "Total Royalties (Selected Period)",
+        "vsPrevious6Months": "vs. previous 6 months",
+        "paid": "Paid",
+        "pending": "Pending",
+        "available": "Available",
+        "royaltiesByMonth": "Royalties by Month",
+        "revenueShareByArtistLabel": "Revenue Share by Artist / Label",
+        "artistLabel": "Artist / Label",
+        "share": "Share",
+        "revenue": "Revenue",
+        "recentTransactions": "Recent transactions",
+        "date": "Date",
+        "platform": "Platform",
+        "period": "Period",
+        "type": "Type",
+        "amount": "Amount",
+        "status": "Status",
+        "showingOfTransactions": "Showing {current} of {total} transactions",
+        "topArtistsByRevenue": "Top Artists by Revenue",
+        "artist": "Artist",
+        "labelCol": "Label",
+        "royalty": "Royalty",
+        "showingOfArtists": "Showing {current} of {total} artists"
     }
 }
