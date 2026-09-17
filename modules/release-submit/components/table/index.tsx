@@ -12,8 +12,16 @@ import {
 } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
+import { APP_ROUTES } from '@/enums/routes';
+import { useReleaseActionStore } from '@/hooks/use-release-action-store';
+import { Link } from '@/i18n/routing';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
+import { RELEASE_TYPE, RELEASES_TABS } from '@/modules/releases/enums';
+import {
+    getReleaseDetailTabRoute,
+    RELEASE_DETAIL_ACTION,
+} from '@/modules/releases/helpers/link';
 import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar, Space, Tag, theme, Typography } from 'antd';
@@ -47,6 +55,7 @@ export default function ReleaseSubmitTable({
 }: Props) {
     const messages = useTranslations();
     const openModal = useModalStore((state) => state.openModal);
+    const setAction = useReleaseActionStore((state) => state.setAction);
     const { dspData } = useGetListDsp({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
@@ -67,9 +76,7 @@ export default function ReleaseSubmitTable({
                 ),
         },
         {
-            title: showIsrc
-                ? messages('common.isrc')
-                : messages('releaseExecution.columns.upc'),
+            title: 'UPC/ISRC',
             dataIndex: FieldOrderReleaseExecution3.execution_releaseUpc,
             key: FieldOrderReleaseExecution3.execution_releaseUpc,
             sorter: true,
@@ -83,12 +90,18 @@ export default function ReleaseSubmitTable({
             render: (_, record) => {
                 const releaseSnapshot =
                     record?.metadata?.input?.releaseSnapshot;
-                if (showIsrc) {
+                const isVideo =
+                    showIsrc ||
+                    releaseSnapshot?.type === RELEASE_TYPE.VIDEO ||
+                    Boolean(releaseSnapshot?.video);
+
+                if (isVideo) {
                     const isrc =
                         releaseSnapshot?.isrc || releaseSnapshot?.video?.isrc;
                     if (!isrc) return '-';
                     return <Typography.Text copyable>{isrc}</Typography.Text>;
                 }
+
                 const upc =
                     record?.metadata?.input?.upcAutoIfReleaseSnapshotNull ||
                     releaseSnapshot?.upc;
@@ -110,37 +123,101 @@ export default function ReleaseSubmitTable({
             render: (_, record) => {
                 const releaseSnapshot =
                     record?.metadata?.input?.releaseSnapshot;
+                const releaseId = record?.releaseId || releaseSnapshot?.id;
+                const title = releaseSnapshot?.title;
                 const coverArts = (releaseSnapshot as any)?.releaseCoverArts as
                     | { type: string; fileId: string }[]
                     | undefined;
                 const coverArtFileId =
                     coverArts?.find((art) => art.type === '75x75')?.fileId ??
                     coverArts?.[0]?.fileId;
+
+                const isVideo =
+                    releaseSnapshot?.type === RELEASE_TYPE.VIDEO ||
+                    Boolean(releaseSnapshot?.video);
+
+                const href = releaseId
+                    ? isVideo
+                        ? `${APP_ROUTES.RELEASE_VIDEOS}/${releaseId}`
+                        : getReleaseDetailTabRoute(
+                              releaseId,
+                              RELEASES_TABS.CORE_DETAIL
+                          )
+                    : undefined;
+
+                const coverElement = coverArtFileId ? (
+                    <div className="flex-shrink-0">
+                        <ReleaseCoverImage
+                            fileId={coverArtFileId}
+                            width={36}
+                            height={36}
+                        />
+                    </div>
+                ) : (
+                    <Avatar
+                        shape="square"
+                        size={36}
+                        className="flex-shrink-0"
+                    >
+                        -
+                    </Avatar>
+                );
+
+                if (!title) {
+                    return (
+                        <div className="flex min-w-0 items-center gap-2">
+                            {coverElement}
+                            <Typography.Text className="min-w-0 flex-1 break-words">
+                                -
+                            </Typography.Text>
+                        </div>
+                    );
+                }
+
+                if (!href) {
+                    return (
+                        <div className="flex min-w-0 items-center gap-2">
+                            {coverElement}
+                            <Typography.Text
+                                copyable
+                                className="min-w-0 flex-1 break-words"
+                            >
+                                {title}
+                            </Typography.Text>
+                        </div>
+                    );
+                }
+
                 return (
                     <div className="flex min-w-0 items-center gap-2">
-                        {coverArtFileId ? (
-                            <div className="flex-shrink-0">
-                                <ReleaseCoverImage
-                                    fileId={coverArtFileId}
-                                    width={36}
-                                    height={36}
-                                />
-                            </div>
-                        ) : (
-                            <Avatar
-                                shape="square"
-                                size={36}
-                                className="flex-shrink-0"
-                            >
-                                -
-                            </Avatar>
-                        )}
-                        <Typography.Text
-                            copyable
-                            className="min-w-0 flex-1 break-words"
+                        <Link
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => {
+                                if (!isVideo) {
+                                    setAction(RELEASE_DETAIL_ACTION.READ);
+                                }
+                            }}
+                            className="flex-shrink-0"
                         >
-                            {releaseSnapshot?.title || '-'}
-                        </Typography.Text>
+                            {coverElement}
+                        </Link>
+                        <Link
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => {
+                                if (!isVideo) {
+                                    setAction(RELEASE_DETAIL_ACTION.READ);
+                                }
+                            }}
+                            className="group min-w-0 flex-1"
+                        >
+                            <Typography.Text className="cursor-pointer break-words transition-colors group-hover:!text-blue-500 hover:!text-blue-500">
+                                {title}
+                            </Typography.Text>
+                        </Link>
                     </div>
                 );
             },
