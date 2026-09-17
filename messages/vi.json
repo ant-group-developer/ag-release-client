@@ -1374,7 +1374,8 @@
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
             "partial_done": "Phân phối một phần",
-            "failed": "Thất bại"
+            "failed": "Thất bại",
+            "unreleased": "Chưa phát hành"
         },
         "statusV2": {
             "draft": "Nháp",
@@ -1389,7 +1390,8 @@
             "submitted": "Đã gửi",
             "partially_failed": "Phân phối thất bại một phần",
             "failed": "Thất bại",
-            "partial_done": "Hoàn thành một phần"
+            "partial_done": "Hoàn thành một phần",
+            "unreleased": "Chưa phát hành"
         },
         "releaseError": "Lỗi phát hành",
         "error": {

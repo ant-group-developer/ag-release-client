@@ -1383,7 +1383,8 @@
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
             "partial_done": "Partial done",
-            "failed": "Failed"
+            "failed": "Failed",
+            "unreleased": "Unreleased"
         },
         "statusV2": {
             "draft": "Editing",
@@ -1397,7 +1398,8 @@
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
             "partial_done": "Partial done",
-            "failed": "Failed"
+            "failed": "Failed",
+            "unreleased": "Unreleased"
         },
         "releaseError": "Release error",
         "error": {
