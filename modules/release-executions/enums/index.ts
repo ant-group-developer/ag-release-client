@@ -36,6 +36,7 @@ export enum STEP_TYPE {
     SEND_EMAIL_EXPORT = 'SEND_EMAIL_EXPORT', // Gửi email
     WAITING_EXPORT = 'WAITING_EXPORT', // Chờ Admin xuất và upload thủ công
     CLEANUP = 'CLEANUP',
+    SUBMIT_VEVO_VIDEO = 'SUBMIT_VEVO_VIDEO',
 }
 
 export enum STEP_STATUS {

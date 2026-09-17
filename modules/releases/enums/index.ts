@@ -90,6 +90,7 @@ export enum RELEASES_STATUS {
     FAILED = 'failed',
     TAKEN_DOWN = 'taken_down',
     SUBMITTED = 'submitted',
+    UNRELEASED = 'unreleased',
 }
 
 export enum RELEASES_COLUMNS_DISPLAY {

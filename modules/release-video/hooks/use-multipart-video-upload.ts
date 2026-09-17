@@ -39,7 +39,7 @@ export interface UseMultipartVideoUploadOptions {
 }
 
 const STORAGE_PREFIX = 'ag_video_multipart_';
-export const MAX_VIDEO_SIZE = 100 * 1024 * 1024 * 1024; // 100 GiB
+export const MAX_VIDEO_SIZE = 30 * 1024 * 1024 * 1024; // 30 GiB
 
 export function getResumeDescriptorKey(releaseId: string): string {
     return `${STORAGE_PREFIX}${releaseId}`;

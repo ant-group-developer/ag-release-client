@@ -1,15 +1,25 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
 import { formatFileSize2 } from '@/helpers/common';
 import { showNotification } from '@/helpers/messages-helper';
-import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
-import { ReleasesData } from '@/modules/releases/types';
 import {
     MAX_VIDEO_SIZE,
     useMultipartVideoUpload,
 } from '@/modules/release-video/hooks/use-multipart-video-upload';
+import { RELEASES_STATUS } from '@/modules/releases/enums';
+import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
+import { ReleasesData } from '@/modules/releases/types';
 import { useGetLinkReadFile } from '@/modules/upload/hooks/use-get-link-read-file';
 import { VideoCameraOutlined } from '@ant-design/icons';
-import { Button, FormInstance, Modal, Space, Tag, Typography, Upload, theme } from 'antd';
+import {
+    Button,
+    FormInstance,
+    Modal,
+    Space,
+    Tag,
+    Typography,
+    Upload,
+    theme,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import VideoUploadProgress from './video-upload-progress';
@@ -120,6 +130,8 @@ export default function VideoAssetItem({
         }
     }, [upload.phase, upload.fileId, upload.file, form]);
 
+    const isDraft = !dataEdit?.id || dataEdit?.status === RELEASES_STATUS.DRAFT;
+
     const isUploading =
         upload.phase === 'initiating' ||
         upload.phase === 'uploading' ||
@@ -127,8 +139,10 @@ export default function VideoAssetItem({
         upload.phase === 'saving' ||
         upload.phase === 'canceling';
 
+    const isVideoDisabled = disabled || isUploading || isRemoving || !isDraft;
+
     const handleBeforeUpload = (file: File) => {
-        if (disabled || isUploading) return Upload.LIST_IGNORE;
+        if (isVideoDisabled) return Upload.LIST_IGNORE;
 
         const isVideo = file.type.startsWith('video/');
         if (!isVideo) {
@@ -143,7 +157,7 @@ export default function VideoAssetItem({
             showNotification(
                 'error',
                 messages('releaseVideo.fields.maxVideoFileSize', {
-                    size: '100GB',
+                    size: formatFileSize2(MAX_VIDEO_SIZE) || '30GB',
                 })
             );
             return Upload.LIST_IGNORE;
@@ -195,11 +209,13 @@ export default function VideoAssetItem({
     };
 
     const handleRemove = () => {
-        if (disabled || isUploading || isRemoving) return false;
+        if (isVideoDisabled) return false;
         return new Promise<boolean>((resolve) => {
             Modal.confirm({
                 title: messages('releaseVideo.fields.removeVideoConfirmTitle'),
-                content: messages('releaseVideo.fields.removeVideoConfirmMessage'),
+                content: messages(
+                    'releaseVideo.fields.removeVideoConfirmMessage'
+                ),
                 okText: messages('common.yes'),
                 cancelText: messages('common.cancel'),
                 okButtonProps: { danger: true },
@@ -244,12 +260,11 @@ export default function VideoAssetItem({
     };
 
     const fileList = form.getFieldValue('videoFile')?.fileList || [];
-    const fileSize =
-        dataEdit?.video?.videoFile?.fileSize || upload.file?.size;
+    const fileSize = dataEdit?.video?.videoFile?.fileSize || upload.file?.size;
 
     return (
         <div className="mb-5">
-            <div className="mb-1 flex w-full justify-between items-center">
+            <div className="mb-1 flex w-full items-center justify-between">
                 <Space className="text-xs font-bold">
                     <Text strong className="text-xs">
                         {messages('releaseVideo.fields.videoFile')}
@@ -294,7 +309,9 @@ export default function VideoAssetItem({
                 ]}
             >
                 {/* 1. Resume Banner if there is an interrupted session */}
-                {upload.canResume && upload.phase === 'idle' && upload.resumeDescriptor ? (
+                {upload.canResume &&
+                upload.phase === 'idle' &&
+                upload.resumeDescriptor ? (
                     <VideoUploadResumeBanner
                         descriptor={upload.resumeDescriptor}
                         onResumeFileSelected={(file) => upload.resume(file)}
@@ -330,7 +347,10 @@ export default function VideoAssetItem({
                         <Upload
                             accept="video/*"
                             fileList={fileList}
-                            disabled={disabled || isUploading || isRemoving}
+                            disabled={isVideoDisabled}
+                            showUploadList={{
+                                showRemoveIcon: true,
+                            }}
                             beforeUpload={handleBeforeUpload}
                             onRemove={handleRemove}
                             listType="picture"
@@ -346,16 +366,20 @@ export default function VideoAssetItem({
                             {fileList.length < 1 && (
                                 <Button
                                     icon={<VideoCameraOutlined />}
-                                    disabled={
-                                        disabled ||
-                                        isUploading ||
-                                        isRemoving
-                                    }
+                                    disabled={isVideoDisabled}
                                 >
                                     {messages('common.upload')}
                                 </Button>
                             )}
                         </Upload>
+                        <Text
+                            type="secondary"
+                            className="mt-1.5 block !text-xs"
+                        >
+                            {messages('common.maxUploadSize', {
+                                size: formatFileSize2(MAX_VIDEO_SIZE),
+                            })}
+                        </Text>
                     </div>
                 )}
             </AppFormItem>

@@ -725,7 +725,6 @@ export default function MetadataFields({
                 initialValue={RELEASE_MADE_FOR_KIDS.CHANNEL_DEFAULT}
             >
                 <Select
-                    disabled
                     placeholder={messages('common.select')}
                     allowClear={false}
                     options={[

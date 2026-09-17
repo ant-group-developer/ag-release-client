@@ -38,6 +38,8 @@ export default function ReleaseStatusTagIcon({ status, ...props }: Props) {
                 return { color: 'green', icon: <CheckCircleOutlined /> };
             case RELEASES_STATUS.PARTIALLY_FAILED:
                 return { color: 'volcano', icon: <WarningOutlined /> };
+            case RELEASES_STATUS.UNRELEASED:
+                return { color: 'blue', icon: <StopOutlined /> };
             default:
                 return { color: 'default', icon: null };
         }
