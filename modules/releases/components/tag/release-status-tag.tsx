@@ -37,6 +37,9 @@ export default function ReleaseStatusTag({ status, ...props }: Props) {
         case RELEASES_STATUS.PARTIAL_DONE:
             color = 'volcano';
             break;
+        case RELEASES_STATUS.UNRELEASED:
+            color = 'blue';
+            break;
         default:
             color = 'default';
             break;

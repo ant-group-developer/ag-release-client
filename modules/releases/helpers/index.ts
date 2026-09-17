@@ -20,6 +20,8 @@ export const getReleaseStatusColor = (
             return '#52C41A';
         case RELEASES_STATUS.PARTIALLY_FAILED:
             return '#FA541C';
+        case RELEASES_STATUS.UNRELEASED:
+            return '#1677FF';
         default:
             return '#d9d9d9';
     }
