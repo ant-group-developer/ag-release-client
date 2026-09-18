@@ -241,6 +241,19 @@ export default function AdditionalTab({
                     <AppFormItem
                         name={['video', 'partnerCustomId1']}
                         label={messages('releaseVideo.fields.partnerCustomId1')}
+                        rules={[
+                            {
+                                pattern: /^[a-zA-Z0-9]+$/,
+                                message: messages(
+                                    'validation.alphanumericNoSpaces',
+                                    {
+                                        field: messages(
+                                            'releaseVideo.fields.partnerCustomId1'
+                                        ),
+                                    }
+                                ),
+                            },
+                        ]}
                     >
                         <Input
                             placeholder={messages(
@@ -249,6 +262,7 @@ export default function AdditionalTab({
                             allowClear
                             onBlur={(e) => {
                                 const val = e.target.value;
+                                if (val && !/^[a-zA-Z0-9]+$/.test(val)) return;
                                 if (val !== dataEdit?.video?.partnerCustomId1) {
                                     onFieldUpdate?.({
                                         video: {
@@ -264,6 +278,19 @@ export default function AdditionalTab({
                     <AppFormItem
                         name={['video', 'partnerCustomId2']}
                         label={messages('releaseVideo.fields.partnerCustomId2')}
+                        rules={[
+                            {
+                                pattern: /^[a-zA-Z0-9]+$/,
+                                message: messages(
+                                    'validation.alphanumericNoSpaces',
+                                    {
+                                        field: messages(
+                                            'releaseVideo.fields.partnerCustomId2'
+                                        ),
+                                    }
+                                ),
+                            },
+                        ]}
                     >
                         <Input
                             placeholder={messages(
@@ -272,6 +299,7 @@ export default function AdditionalTab({
                             allowClear
                             onBlur={(e) => {
                                 const val = e.target.value;
+                                if (val && !/^[a-zA-Z0-9]+$/.test(val)) return;
                                 if (val !== dataEdit?.video?.partnerCustomId2) {
                                     onFieldUpdate?.({
                                         video: {
