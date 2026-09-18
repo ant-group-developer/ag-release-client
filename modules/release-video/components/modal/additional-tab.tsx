@@ -330,7 +330,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectComposer}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === composerRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === composerRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -348,7 +350,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectEditor}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === editorRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === editorRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -366,7 +370,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectProducer}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === producerRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === producerRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -387,7 +393,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectDirector}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === directorRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === directorRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -416,13 +424,13 @@ export default function AdditionalTab({
                     <AppFormItem
                         name="cLineYear"
                         label={messages('releaseVideo.fields.copyrightYear')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: messages('validation.select'),
+                        //     },
+                        // ]}
                     >
                         <DatePicker
                             picker="year"
