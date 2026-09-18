@@ -905,7 +905,8 @@
         "mustBeLength": "{field} phải có {number} ký tự.",
         "invalidType": "{field} không hợp lệ.",
         "noUnderscore": "{field} Không được có ký tự (_)",
-        "email": "Email không hợp lệ."
+        "email": "Email không hợp lệ.",
+        "alphanumericNoSpaces": "{field} không được chứa khoảng trắng và ký tự đặc biệt."
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"

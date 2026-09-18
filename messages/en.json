@@ -908,7 +908,8 @@
         "numberMax": "{field} must not exceed {max}.",
         "invalidType": "{field} must be a valid value.",
         "noUnderscore": "{field} must not contain underscores (_)",
-        "email": "Invalid email address."
+        "email": "Invalid email address.",
+        "alphanumericNoSpaces": "{field} must not contain spaces or special characters."
     },
     "form": {
         "searchPlaceholder": "Search"

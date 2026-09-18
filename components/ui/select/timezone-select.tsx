@@ -18,6 +18,7 @@ export default function TimezoneSelect({
         id: item.id,
         value: item.id,
         name: item.name,
+        utc: item.utc,
         label: (
             <div className="space-x-1">
                 <Typography.Text className="!text-xs">
@@ -35,17 +36,31 @@ export default function TimezoneSelect({
         }
     };
 
+    const filterOption = (input: string, option: any) => {
+        const searchValue = toNonAccentVietnamese(input).toLowerCase().trim();
+        if (!searchValue) return true;
+
+        const name = toNonAccentVietnamese(option?.name ?? '').toLowerCase();
+        if (name.includes(searchValue)) return true;
+
+        const rawUtc = toNonAccentVietnamese(option?.utc ?? '').toLowerCase();
+        if (rawUtc.includes(searchValue)) return true;
+
+        const cleanSearch = searchValue.replace(/\s+/g, '');
+        const cleanUtc = rawUtc.replace(/\s+/g, '');
+        if (cleanUtc.includes(cleanSearch)) return true;
+
+        const normalizedSearch = cleanSearch.replace(/([+-])0(\d)/g, '$1$2');
+        const normalizedUtc = cleanUtc.replace(/([+-])0(\d)/g, '$1$2');
+        return normalizedUtc.includes(normalizedSearch);
+    };
+
     return (
         <Select
             placeholder={messages('timezone.placeholder.selectTimezone')}
             {...props}
             showSearch
-            filterOption={(input, option) =>
-                toNonAccentVietnamese(option?.name ?? '')
-                    .toLowerCase()
-                    .includes(toNonAccentVietnamese(input).toLowerCase())
-            }
-            optionFilterProp="name"
+            filterOption={filterOption}
             options={options}
             allowClear
             labelRender={labelRender}

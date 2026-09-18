@@ -124,6 +124,10 @@ export default function ReleaseVideoForm({ dataEdit }: Props) {
                     : undefined,
                 video: {
                     ...dataEdit.video,
+                    explicit: dataEdit.video?.explicit ?? false,
+                    aiContent:
+                        dataEdit.video?.aiContent ||
+                        RELEASE_AI_CONTENT.UNDETERMINED,
                     keywords: Array.isArray(dataEdit.video?.keywords)
                         ? dataEdit.video?.keywords
                         : typeof dataEdit.video?.keywords === 'string'
