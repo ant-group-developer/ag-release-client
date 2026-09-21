@@ -2,6 +2,7 @@
 
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { LOCALE } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { Link } from '@/i18n/routing';
 import { useGetListNewsCategory } from '@/modules/news-category/hooks/use-get-list';
 import { useGetListNewsPublic } from '@/modules/news/hooks/use-get-list-public';
@@ -177,7 +178,7 @@ export default function DocsSection({ locale }: DocsSectionProps) {
                     {posts.map((post: NewsData) => (
                         <Link
                             key={post.id}
-                            href={`/landing/news/${post.slug}`}
+                            href={`${APP_ROUTES.LANDING_NEWS}/${post.slug}`}
                             className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-zinc-900/60 bg-zinc-900/20 p-6 shadow-lg transition-all duration-300 hover:scale-[1.01] hover:border-purple-500/30 hover:bg-purple-950/10 hover:shadow-purple-500/5"
                         >
                             <div className="space-y-4">

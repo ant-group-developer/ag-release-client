@@ -436,8 +436,23 @@ export default function ArtistFormModal({
                                                             field.name,
                                                             'name',
                                                         ]}
+                                                        required
                                                         noStyle
                                                         rules={[
+                                                            {
+                                                                required: true,
+                                                                transform: (
+                                                                    value
+                                                                ) =>
+                                                                    typeof value ===
+                                                                    'string'
+                                                                        ? value.trim()
+                                                                        : value,
+                                                                message:
+                                                                    messages(
+                                                                        'validation.input'
+                                                                    ),
+                                                            },
                                                             {
                                                                 max: MAX_NAME_LENGTH,
                                                                 message:

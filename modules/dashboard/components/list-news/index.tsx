@@ -78,7 +78,7 @@ export default function ListNews({}: Props) {
                             lg={6}
                         >
                             <Link
-                                href={`${APP_ROUTES.NEWS}/${item?.slug}`}
+                                href={`${APP_ROUTES.LANDING_NEWS}/${item?.slug}`}
                                 className="block h-full"
                             >
                                 <PostCard data={item} />

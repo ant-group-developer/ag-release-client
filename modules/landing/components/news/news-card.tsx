@@ -1,6 +1,7 @@
 'use client';
 
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { getNameByLocale } from '@/helpers/string';
 import { Link } from '@/i18n/routing';
 import { NewsData } from '@/modules/news/types';
@@ -19,7 +20,7 @@ export default function NewsCard({ post }: NewsCardProps) {
 
     return (
         <Link
-            href={`/landing/news/${post.slug}`}
+            href={`${APP_ROUTES.LANDING_NEWS}/${post.slug}`}
             className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-zinc-900/60 bg-zinc-900/20 shadow-lg transition-all duration-300 hover:border-zinc-800 hover:bg-zinc-900/40"
         >
             {post.thumbnail && (

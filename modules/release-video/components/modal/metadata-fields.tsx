@@ -214,9 +214,9 @@ export default function MetadataFields({
                         message: messages('validation.input'),
                     },
                     {
-                        max: 100,
+                        max: 99,
                         message: messages('validation.stringMax', {
-                            max: 100,
+                            max: 99,
                             field: messages('releaseVideo.fields.videoTitle'),
                         }),
                     },
@@ -238,7 +238,7 @@ export default function MetadataFields({
                     )}
                     allowClear
                     showCount
-                    maxLength={100}
+                    maxLength={99}
                     onBlur={(e) => {
                         const val = e.target.value;
                         if (val !== dataEdit?.title) {
