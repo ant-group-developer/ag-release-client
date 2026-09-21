@@ -346,6 +346,8 @@
         "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
+        "done": "Done",
+        "partial_done": "Partial done",
         "progress": "Progress",
         "issues": "Issues",
         "neverDistributed": "Never distributed",

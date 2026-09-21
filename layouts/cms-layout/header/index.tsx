@@ -1,20 +1,15 @@
-import CreateButton from '@/components/ui/button/create-button';
 import IconButton from '@/components/ui/button/icon-button';
 import { SIZE_ICON_BIG } from '@/constants/common';
 import { toastPromise } from '@/helpers/messages-helper';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
-import { PermissionGate } from '@/modules/auth/components/permission-gate';
-import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useDownloadTemplate } from '@/modules/releases/hooks/use-download-template';
 import TenantSwitch from '@/modules/tenant/components/tenant-switch';
-import { DownloadOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Layout, MenuProps, Space } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { Layout, MenuProps } from 'antd';
 import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import nProgress from 'nprogress';
 import AppAvatar from './app-avatar';
 import AppSupport from './app-support';
 
@@ -66,7 +61,7 @@ function Header({ toggleCollapsed }: Props) {
             </div>
 
             <div className="flex flex-1 items-center justify-end gap-2">
-                {isNotSystemTenant && (
+                {/* {isNotSystemTenant && (
                     <PermissionGate
                         anyOf={[
                             PERMISSION.RELEASE_AUDIO.CREATE,
@@ -96,7 +91,7 @@ function Header({ toggleCollapsed }: Props) {
                             </Dropdown>
                         </Space.Compact>
                     </PermissionGate>
-                )}
+                )} */}
                 <AppSupport />
                 <AppAvatar />
             </div>

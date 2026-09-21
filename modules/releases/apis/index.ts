@@ -11,6 +11,8 @@ import {
     ReleasesData,
     ReleasesDataFilter,
     ReleasesDataSimple,
+    ReleaseStatusCounts,
+    ReleaseStatusCountsFilter,
     ReleaseValidate,
 } from '../types';
 import {
@@ -298,5 +300,11 @@ export const releasesApi = {
                 params,
             }
         );
+    },
+
+    getStatusCounts: (payload?: ReleaseStatusCountsFilter) => {
+        return axiosInstance.post<
+            DetailResponse<ReleaseStatusCounts> | ReleaseStatusCounts
+        >('/releases/status-counts', payload ?? {});
     },
 };

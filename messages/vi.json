@@ -346,6 +346,8 @@
         "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
+        "done": "Hoàn tất",
+        "partial_done": "Hoàn thành một phần",
         "progress": "Tiến trình",
         "issues": "Vấn đề",
         "neverDistributed": "Không phát hành",
