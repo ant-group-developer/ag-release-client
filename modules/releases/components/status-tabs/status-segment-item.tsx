@@ -29,35 +29,30 @@ function StatusSegmentItem({
     const itemConfig = useMemo(() => {
         switch (status) {
             case RELEASES_STATUS.PROCESSING:
-            case 'processing':
                 return {
                     dotColor: token.colorInfo,
                     badgeBg: token.colorInfoBg,
                     badgeColor: token.colorInfoText,
                 };
             case RELEASES_STATUS.FAILED:
-            case 'issues':
                 return {
                     dotColor: token.colorError,
                     badgeBg: token.colorErrorBg,
                     badgeColor: token.colorErrorText,
                 };
             case RELEASES_STATUS.PARTIAL_DONE:
-            case 'partial_done':
                 return {
                     dotColor: token.colorWarning,
                     badgeBg: token.colorWarningBg,
                     badgeColor: token.colorWarningText,
                 };
             case RELEASES_STATUS.DISTRIBUTED:
-            case 'done':
                 return {
                     dotColor: token.colorSuccess,
                     badgeBg: token.colorSuccessBg,
                     badgeColor: token.colorSuccessText,
                 };
             case RELEASES_STATUS.DRAFT:
-            case 'draft':
                 return {
                     dotColor: undefined,
                     badgeBg: token.colorFillSecondary,
@@ -93,11 +88,13 @@ function StatusSegmentItem({
                 className="inline-flex min-w-[20px] items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-semibold leading-tight"
                 style={{
                     backgroundColor:
-                        isSelected && (status === 'all' || status === 'draft')
+                        isSelected &&
+                        (status === 'all' || status === RELEASES_STATUS.DRAFT)
                             ? token.colorBgContainer
                             : itemConfig.badgeBg,
                     color:
-                        isSelected && (status === 'all' || status === 'draft')
+                        isSelected &&
+                        (status === 'all' || status === RELEASES_STATUS.DRAFT)
                             ? token.colorText
                             : itemConfig.badgeColor,
                 }}
