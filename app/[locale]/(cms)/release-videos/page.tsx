@@ -17,6 +17,7 @@ import { useAuth } from '@/modules/auth/hooks/use-auth';
 import ReleaseVideoHeader from '@/modules/release-video/components/header';
 import { ReleaseVideoTable } from '@/modules/release-video/components/table';
 import { TYPE_MODAL_RELEASE_VIDEO } from '@/modules/release-video/enums';
+import ReleaseStatusTabs from '@/modules/releases/components/status-tabs';
 import {
     RELEASE_TYPE,
     RELEASES_STATUS,
@@ -135,25 +136,26 @@ export default function ReleaseVideos() {
 
     return (
         <AppPageWrapper>
-            <PageContainer
-                title={messages('releaseVideo.routeLabel')}
-                extra={
-                    <div className="flex items-center gap-2">
-                        {!isSystemTenant && (
-                            <PermissionGate
-                                permission={PERMISSION.RELEASE_VIDEO.CREATE}
-                            >
-                                <CreateButton
-                                    canCreate={true}
-                                    text={messages('releaseVideo.add')}
-                                    loading={isCreatingDraft}
-                                    onClick={handleCreateReleaseVideo}
-                                />
-                            </PermissionGate>
-                        )}
-                    </div>
-                }
-            >
+            <PageContainer>
+                <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap">
+                    <ReleaseStatusTabs
+                        dataFilter={dataFilter}
+                        onChange={(status) => onChangeFilter({ status })}
+                    />
+                    {!isSystemTenant && (
+                        <PermissionGate
+                            permission={PERMISSION.RELEASE_VIDEO.CREATE}
+                        >
+                            <CreateButton
+                                canCreate={true}
+                                text={messages('releaseVideo.add')}
+                                loading={isCreatingDraft}
+                                onClick={handleCreateReleaseVideo}
+                            />
+                        </PermissionGate>
+                    )}
+                </div>
+
                 <ReleaseVideoTable
                     headerTitle={
                         <ReleaseVideoHeader

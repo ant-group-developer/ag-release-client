@@ -9,11 +9,16 @@ import { setSortOrder } from '@/helpers/common';
 import { useFilterV2 } from '@/hooks/use-filter-v2';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
+import { APP_ROUTES } from '@/enums/routes';
+import { useRouter } from '@/i18n/routing';
+import { PermissionGate } from '@/modules/auth/components/permission-gate';
+import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
+import ReleaseStatusTabs from '@/modules/releases/components/status-tabs';
 import ReleasesTable from '@/modules/releases/components/table';
 import { releasesFilterParsers } from '@/modules/releases/constants';
 
@@ -84,7 +89,8 @@ export default function Releases({}: Props) {
     const dataEdit = useModalStore((state) => state.dataEdit);
     const { token } = theme.useToken();
     const [selectedRows, setSelectedRows] = useState<Key[]>([]);
-    const { isAdmin } = useAuth();
+    const { isAdmin, isSystemTenant } = useAuth();
+    const router = useRouter();
     const isMobile = useIsMobile();
 
     // apis
@@ -158,7 +164,26 @@ export default function Releases({}: Props) {
 
     return (
         <AppPageWrapper>
-            <PageContainer title={messages('release.routeLabel')}>
+            <PageContainer>
+                <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap">
+                    <ReleaseStatusTabs
+                        dataFilter={dataFilter}
+                        onChange={(status) => onChangeFilter({ status })}
+                    />
+                    {!isSystemTenant && (
+                        <PermissionGate
+                            permission={PERMISSION.RELEASE_AUDIO.CREATE}
+                        >
+                            <CreateButton
+                                text={messages('release.create')}
+                                onClick={() =>
+                                    router.push(APP_ROUTES.RELEASES_CREATE)
+                                }
+                            />
+                        </PermissionGate>
+                    )}
+                </div>
+
                 <ReleasesTable
                     headerTitle={
                         <ReleasesHeaderV2

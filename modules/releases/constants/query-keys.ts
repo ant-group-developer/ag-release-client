@@ -1,5 +1,10 @@
 import { QUERY_KEY } from '@/constants/query-key';
-import { ReleaseEnrichedErrorFilter, ReleasesDataFilter, ReleaseReviewFilter } from '../types';
+import {
+    ReleaseEnrichedErrorFilter,
+    ReleasesDataFilter,
+    ReleaseReviewFilter,
+    ReleaseStatusCountsFilter,
+} from '../types';
 
 export const releasesQueryKeys = {
     all: [QUERY_KEY.RELEASES.KEY] as const,
@@ -45,4 +50,9 @@ export const releasesQueryKeys = {
         params
             ? ([...releasesQueryKeys.releaseReviews(), params] as const)
             : releasesQueryKeys.releaseReviews(),
+
+    statusCounts: (params?: ReleaseStatusCountsFilter) =>
+        params
+            ? ([...releasesQueryKeys.all, 'status-counts', params] as const)
+            : ([...releasesQueryKeys.all, 'status-counts'] as const),
 };

@@ -346,6 +346,8 @@
         "releaseTime": "Giờ phát hành",
         "duration": "Thời lượng",
         "draft": "Bản nháp",
+        "done": "Hoàn tất",
+        "partial_done": "Hoàn thành một phần",
         "progress": "Tiến trình",
         "issues": "Vấn đề",
         "neverDistributed": "Không phát hành",
@@ -905,7 +907,8 @@
         "mustBeLength": "{field} phải có {number} ký tự.",
         "invalidType": "{field} không hợp lệ.",
         "noUnderscore": "{field} Không được có ký tự (_)",
-        "email": "Email không hợp lệ."
+        "email": "Email không hợp lệ.",
+        "alphanumericNoSpaces": "{field} không được chứa khoảng trắng và ký tự đặc biệt."
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
@@ -1221,8 +1224,8 @@
         "importedFromReport": "Nhập từ báo cáo",
         "createdDirectly": "Tạo trực tiếp",
         "routeLabel": "Phát hành âm nhạc",
-        "releaseDistribution": "Phân phối phát hành",
-        "releaseDistributionRouteLabel": "Phân phối phát hành",
+        "releaseDistribution": "Bản ghi phân phối",
+        "releaseDistributionRouteLabel": "Bản ghi phân phối",
         "create": "Tạo phát hành ",
         "latestReleases": "Phát hành gần đây",
         "latestAudioReleases": "Phát hành nhạc gần đây",

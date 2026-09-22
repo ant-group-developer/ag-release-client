@@ -241,6 +241,19 @@ export default function AdditionalTab({
                     <AppFormItem
                         name={['video', 'partnerCustomId1']}
                         label={messages('releaseVideo.fields.partnerCustomId1')}
+                        rules={[
+                            {
+                                pattern: /^[a-zA-Z0-9]+$/,
+                                message: messages(
+                                    'validation.alphanumericNoSpaces',
+                                    {
+                                        field: messages(
+                                            'releaseVideo.fields.partnerCustomId1'
+                                        ),
+                                    }
+                                ),
+                            },
+                        ]}
                     >
                         <Input
                             placeholder={messages(
@@ -249,6 +262,7 @@ export default function AdditionalTab({
                             allowClear
                             onBlur={(e) => {
                                 const val = e.target.value;
+                                if (val && !/^[a-zA-Z0-9]+$/.test(val)) return;
                                 if (val !== dataEdit?.video?.partnerCustomId1) {
                                     onFieldUpdate?.({
                                         video: {
@@ -264,6 +278,19 @@ export default function AdditionalTab({
                     <AppFormItem
                         name={['video', 'partnerCustomId2']}
                         label={messages('releaseVideo.fields.partnerCustomId2')}
+                        rules={[
+                            {
+                                pattern: /^[a-zA-Z0-9]+$/,
+                                message: messages(
+                                    'validation.alphanumericNoSpaces',
+                                    {
+                                        field: messages(
+                                            'releaseVideo.fields.partnerCustomId2'
+                                        ),
+                                    }
+                                ),
+                            },
+                        ]}
                     >
                         <Input
                             placeholder={messages(
@@ -272,6 +299,7 @@ export default function AdditionalTab({
                             allowClear
                             onBlur={(e) => {
                                 const val = e.target.value;
+                                if (val && !/^[a-zA-Z0-9]+$/.test(val)) return;
                                 if (val !== dataEdit?.video?.partnerCustomId2) {
                                     onFieldUpdate?.({
                                         video: {
@@ -302,7 +330,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectComposer}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === composerRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === composerRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -320,7 +350,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectEditor}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === editorRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === editorRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -338,7 +370,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectProducer}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === producerRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === producerRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -359,7 +393,9 @@ export default function AdditionalTab({
                             onDeselect={handleDeselectDirector}
                             tagRender={tagRender}
                             artistId={dataEdit?.releaseContributors
-                                ?.filter((c) => c.artistRole?.id === directorRoleId)
+                                ?.filter(
+                                    (c) => c.artistRole?.id === directorRoleId
+                                )
                                 ?.map((c) => c.artistId)
                                 .join(',')}
                         />
@@ -388,13 +424,13 @@ export default function AdditionalTab({
                     <AppFormItem
                         name="cLineYear"
                         label={messages('releaseVideo.fields.copyrightYear')}
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: messages('validation.select'),
-                            },
-                        ]}
+                        // required
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: messages('validation.select'),
+                        //     },
+                        // ]}
                     >
                         <DatePicker
                             picker="year"

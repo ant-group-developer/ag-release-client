@@ -253,3 +253,24 @@ export interface ReleaseReviewFilter extends CommonParams {
     releaseId?: string;
     status?: RELEASE_REVIEW_STATUS;
 }
+
+export type ReleaseStatusCounts = {
+    draft?: number;
+    submitted?: number;
+    processing?: number;
+    unreleased?: number;
+    awaiting_action?: number;
+    distributed?: number;
+    partial_done?: number;
+    failed?: number;
+    taken_down?: number;
+    issues?: number;
+    done?: number;
+    [key: string]: number | undefined;
+};
+
+export type ReleaseStatusCountsFilter = {
+    type?: string;
+    isImportedFromReport?: string;
+    [key: string]: any;
+};

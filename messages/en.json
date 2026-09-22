@@ -346,6 +346,8 @@
         "releaseTime": "Release time",
         "duration": "Duration",
         "draft": "Draft",
+        "done": "Done",
+        "partial_done": "Partial done",
         "progress": "Progress",
         "issues": "Issues",
         "neverDistributed": "Never distributed",
@@ -908,7 +910,8 @@
         "numberMax": "{field} must not exceed {max}.",
         "invalidType": "{field} must be a valid value.",
         "noUnderscore": "{field} must not contain underscores (_)",
-        "email": "Invalid email address."
+        "email": "Invalid email address.",
+        "alphanumericNoSpaces": "{field} must not contain spaces or special characters."
     },
     "form": {
         "searchPlaceholder": "Search"
