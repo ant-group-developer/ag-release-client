@@ -317,7 +317,14 @@ export default function MetadataFields({
                     <AppFormItem
                         name={['releaseLanguage', 'audioLanguageId']}
                         label={messages('common.language')}
-                        tooltipInfo={messages('common.noLanguageTooltip')}
+                        // tooltipInfo={messages('common.noLanguageTooltip')}
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.select'),
+                            },
+                        ]}
                     >
                         <LanguageSelect
                             placeholder={messages('common.select')}
