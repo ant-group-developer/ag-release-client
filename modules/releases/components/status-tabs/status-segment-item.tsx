@@ -9,7 +9,8 @@ export type ReleaseStatusTab =
     | RELEASES_STATUS.PROCESSING
     | RELEASES_STATUS.FAILED
     | RELEASES_STATUS.PARTIAL_DONE
-    | RELEASES_STATUS.DISTRIBUTED;
+    | RELEASES_STATUS.DISTRIBUTED
+    | 'needsReview';
 
 type Props = {
     status: ReleaseStatusTab;
@@ -18,12 +19,7 @@ type Props = {
     isSelected: boolean;
 };
 
-function StatusSegmentItem({
-    status,
-    title,
-    count,
-    isSelected,
-}: Props) {
+function StatusSegmentItem({ status, title, count, isSelected }: Props) {
     const { token } = theme.useToken();
 
     const itemConfig = useMemo(() => {
@@ -41,6 +37,12 @@ function StatusSegmentItem({
                     badgeColor: token.colorErrorText,
                 };
             case RELEASES_STATUS.PARTIAL_DONE:
+                return {
+                    dotColor: token.volcano,
+                    badgeBg: token.volcano1,
+                    badgeColor: token.volcano,
+                };
+            case 'needsReview':
                 return {
                     dotColor: token.colorWarning,
                     badgeBg: token.colorWarningBg,

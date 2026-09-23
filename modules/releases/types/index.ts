@@ -266,6 +266,8 @@ export type ReleaseStatusCounts = {
     taken_down?: number;
     issues?: number;
     done?: number;
+    needsReview?: number;
+    needs_review?: number;
     [key: string]: number | undefined;
 };
 

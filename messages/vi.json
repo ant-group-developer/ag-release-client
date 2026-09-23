@@ -1190,6 +1190,18 @@
         "bulkSubmitConfirm": "Bạn có chắc chắn muốn gửi {count} phát hành đã chọn không?",
         "bulkDelete": "Xoá hàng loạt",
         "bulkDeleteConfirm": "Bạn có chắc chắn muốn xoá {count} phát hành đã chọn không?",
+        "bulkReview": "Duyệt hàng loạt",
+        "bulkReviewModal": {
+            "title": "Duyệt hàng loạt phát hành",
+            "selectedCount": "Số phát hành đã chọn: {count}",
+            "status": "Trạng thái",
+            "statusPlaceholder": "Chọn trạng thái duyệt",
+            "statusRequired": "Vui lòng chọn trạng thái",
+            "note": "Ghi chú",
+            "notePlaceholder": "Nhập ghi chú...",
+            "submit": "Xác nhận",
+            "confirmMessage": "Bạn có chắc chắn muốn cập nhật trạng thái cho {count} phát hành đã chọn không?"
+        },
         "deleteReport": {
             "button": "Xoá báo cáo",
             "title": "Xóa phát hành từ báo cáo",
@@ -1394,6 +1406,7 @@
             "partially_failed": "Phân phối thất bại một phần",
             "failed": "Thất bại",
             "partial_done": "Hoàn thành một phần",
+            "needsReview": "Đợi duyệt",
             "unreleased": "Chưa phát hành"
         },
         "releaseError": "Lỗi phát hành",
@@ -2373,6 +2386,10 @@
             "placeholder": "Chọn workspace cha",
             "label": "Workspace cha"
         },
+        "requiresManualReview": {
+            "label": "Yêu cầu duyệt thủ công",
+            "tooltip": "Nếu bật thì workspace này khi phát hành phải đợi admin duyệt"
+        },
         "back": "Trở lại workspace",
         "member": "Thành viên",
         "manager": "Quản lý",
@@ -2978,7 +2995,9 @@
         },
         "typeOptions": {
             "EMAIL_STATE51": "Tự động gửi email",
-            "ADMIN_EXPORT": "Tải file excel"
+            "ADMIN_EXPORT": "Tải file excel",
+            "ADMIN_TAKEDOWN": "Admin gỡ xuống",
+            "EMAIL_STATE51_TAKEDOWN": "Gửi email State51 gỡ xuống"
         },
         "cancelConfirmTitle": "Hủy lệnh phân phối",
         "cancelConfirmMessage": "Bạn có chắc chắn muốn hủy lệnh phân phối này?"
@@ -3151,7 +3170,7 @@
             "CREATE_METADATA_ON_SERVER": "Tạo metadata trên server",
             "UPLOAD_METADATA_TO_SFTP": "Tải metadata lên SFTP",
             "SYNC_RESULT_TO_RELEASE": "Đồng bộ kết quả vào phát hành",
-            "REVIEW_RELEASE": "Duyệt phát hành",
+            "REVIEW_RELEASE": "Đợi admin duyệt",
             "GET_RESULT_IMPORT_CI": "Lấy kết quả nhập CI",
             "SUBMIT_VEVO_VIDEO": "Gửi phát hành đến backstage"
         },

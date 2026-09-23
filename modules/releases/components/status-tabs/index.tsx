@@ -1,3 +1,4 @@
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { ConfigProvider, Segmented, SegmentedProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
 import { startTransition, useEffect, useMemo, useState } from 'react';
@@ -8,10 +9,13 @@ import StatusSegmentItem, { ReleaseStatusTab } from './status-segment-item';
 
 type Props = {
     dataFilter?: ReleasesDataFilter;
-    onChange: (status?: string) => void;
+    onChange: (
+        status?: string,
+        extraFilter?: { needsReview?: string | boolean }
+    ) => void;
 };
 
-const RELEASE_STATUS_TABS: ReleaseStatusTab[] = [
+const BASE_RELEASE_STATUS_TABS: ReleaseStatusTab[] = [
     'all',
     RELEASES_STATUS.DRAFT,
     RELEASES_STATUS.PROCESSING,
@@ -26,6 +30,22 @@ export default function ReleaseStatusTabs({
     const messages = useTranslations();
     const commonMessages = useTranslations('common');
     const { token } = theme.useToken();
+    const { isAdmin } = useAuth();
+
+    const statusTabs: ReleaseStatusTab[] = useMemo(() => {
+        if (isAdmin) {
+            const partialDoneIndex = BASE_RELEASE_STATUS_TABS.indexOf(
+                RELEASES_STATUS.PARTIAL_DONE
+            );
+            if (partialDoneIndex !== -1) {
+                const tabs = [...BASE_RELEASE_STATUS_TABS];
+                tabs.splice(partialDoneIndex + 1, 0, 'needsReview');
+                return tabs;
+            }
+            return [...BASE_RELEASE_STATUS_TABS, 'needsReview'];
+        }
+        return BASE_RELEASE_STATUS_TABS;
+    }, [isAdmin]);
 
     const countsPayload: ReleaseStatusCountsFilter = useMemo(() => {
         const payload: Record<string, any> = {
@@ -33,6 +53,7 @@ export default function ReleaseStatusTabs({
         };
 
         delete payload.status;
+        delete payload.needsReview;
         delete payload.page;
         delete payload.pageSize;
         delete payload.orderBy;
@@ -58,15 +79,22 @@ export default function ReleaseStatusTabs({
     const { statusCounts } = useGetReleaseStatusCounts(countsPayload);
 
     const targetKey: ReleaseStatusTab = useMemo(() => {
+        if (
+            (dataFilter?.needsReview === true ||
+                dataFilter?.needsReview === 'true') &&
+            isAdmin
+        ) {
+            return 'needsReview';
+        }
         const activeStatus = dataFilter?.status;
         if (!activeStatus) return 'all';
-        if (RELEASE_STATUS_TABS.includes(activeStatus as ReleaseStatusTab)) {
+        if (statusTabs.includes(activeStatus as ReleaseStatusTab)) {
             return activeStatus as ReleaseStatusTab;
         }
         if (activeStatus === 'issues') return RELEASES_STATUS.FAILED;
         if (activeStatus === 'done') return RELEASES_STATUS.DISTRIBUTED;
         return 'all';
-    }, [dataFilter?.status]);
+    }, [dataFilter?.status, dataFilter?.needsReview, isAdmin, statusTabs]);
 
     const [currentKey, setCurrentKey] = useState<ReleaseStatusTab>(targetKey);
 
@@ -90,18 +118,23 @@ export default function ReleaseStatusTabs({
             [RELEASES_STATUS.FAILED]: statusCounts.failed ?? 0,
             [RELEASES_STATUS.PARTIAL_DONE]: statusCounts.partial_done ?? 0,
             [RELEASES_STATUS.DISTRIBUTED]: statusCounts.distributed ?? 0,
+            needsReview:
+                statusCounts.needsReview ??
+                statusCounts.needs_review ??
+                0,
         }),
         [statusCounts, totalCount]
     );
 
     const getTabTitle = (status: ReleaseStatusTab) => {
         if (status === 'all') return commonMessages('all');
+        if (status === 'needsReview') return commonMessages('needsReview');
         return messages(`release.statusV2.${status}`);
     };
 
     const options: SegmentedProps['options'] = useMemo(
         () =>
-            RELEASE_STATUS_TABS.map((status) => ({
+            statusTabs.map((status) => ({
                 value: status,
                 label: (
                     <StatusSegmentItem
@@ -112,7 +145,7 @@ export default function ReleaseStatusTabs({
                     />
                 ),
             })),
-        [counts, currentKey, messages, commonMessages]
+        [statusTabs, counts, currentKey, messages, commonMessages]
     );
 
     const customTheme = useMemo(
@@ -131,7 +164,13 @@ export default function ReleaseStatusTabs({
     const handleChange = (status: ReleaseStatusTab) => {
         setCurrentKey(status);
         startTransition(() => {
-            onChange(status === 'all' ? undefined : status);
+            if (status === 'needsReview') {
+                onChange(undefined, { needsReview: 'true' });
+            } else {
+                onChange(status === 'all' ? undefined : status, {
+                    needsReview: undefined,
+                });
+            }
         });
     };
 

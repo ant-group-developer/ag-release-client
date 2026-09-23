@@ -34,6 +34,7 @@ export interface TenantDetail extends CommonAttributeCreator {
     primaryColor: string | null;
     email: string;
     isActive: boolean;
+    requiresManualReview?: boolean;
     type: TENANT_TYPE;
     parent: TenantDetail | null;
     children: TenantDetail[];
@@ -57,6 +58,7 @@ export type TenantData = Pick<
     | 'code'
     | 'email'
     | 'isActive'
+    | 'requiresManualReview'
     | 'type'
     | 'parent'
     | 'children'
@@ -75,6 +77,7 @@ export interface UpdateTenantPayload {
     email?: string;
     primaryColor?: string;
     isActive?: boolean;
+    requiresManualReview?: boolean;
     ownerId?: UserData['id'];
     type?: TENANT_TYPE;
     parentId?: string;
