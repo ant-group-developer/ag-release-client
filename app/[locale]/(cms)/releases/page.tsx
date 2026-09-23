@@ -15,6 +15,7 @@ import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import AutoSubmitUndistributedMusicV2Modal from '@/modules/releases/components/auto-submit-undistributed-music-v2-modal';
+import BulkReviewModal from '@/modules/releases/components/bulk-review-modal';
 import BulkSubmitModal from '@/modules/releases/components/bulk-submit-modal';
 
 import ReleasesHeaderV2 from '@/modules/releases/components/header';
@@ -33,7 +34,7 @@ import { useDeleteRelease } from '@/modules/releases/hooks/use-delete-release';
 import { useGetListReleases } from '@/modules/releases/hooks/use-get-list-releases';
 import { ReleasesData, ReleasesDataFilter } from '@/modules/releases/types';
 import { DeleteVariables } from '@/types/api';
-import { DeleteOutlined, SendOutlined } from '@ant-design/icons';
+import { AuditOutlined, DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Button, Space, TableProps, theme } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -168,7 +169,9 @@ export default function Releases({}: Props) {
                 <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap">
                     <ReleaseStatusTabs
                         dataFilter={dataFilter}
-                        onChange={(status) => onChangeFilter({ status })}
+                        onChange={(status, extraFilter) =>
+                            onChangeFilter({ status, ...extraFilter })
+                        }
                     />
                     {!isSystemTenant && (
                         <PermissionGate
@@ -258,6 +261,18 @@ export default function Releases({}: Props) {
                                 >
                                     {messages('release.bulkDelete')}
                                 </Button>
+                                <Button
+                                    type="primary"
+                                    icon={<AuditOutlined />}
+                                    onClick={() =>
+                                        openModal(
+                                            TYPE_MODAL_RELEASE.BULK_REVIEW,
+                                            selectedRowKeys
+                                        )
+                                    }
+                                >
+                                    {messages('release.bulkReview')}
+                                </Button>
                             </Space>
                         );
                     }}
@@ -346,6 +361,10 @@ export default function Releases({}: Props) {
                             disabled: (dataEdit as Key[])?.length === 0,
                         }}
                     />
+                )}
+
+                {typeModal === TYPE_MODAL_RELEASE.BULK_REVIEW && (
+                    <BulkReviewModal onFinished={() => setSelectedRows([])} />
                 )}
             </PageContainer>
         </AppPageWrapper>

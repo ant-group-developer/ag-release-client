@@ -12,6 +12,8 @@ export enum DISTRIBUTION_JOB_STATUS {
 export enum DISTRIBUTION_JOB_TYPE {
     EMAIL_STATE51 = 'EMAIL_STATE51',
     ADMIN_EXPORT = 'ADMIN_EXPORT',
+    ADMIN_TAKEDOWN = 'ADMIN_TAKEDOWN',
+    EMAIL_STATE51_TAKEDOWN = 'EMAIL_STATE51_TAKEDOWN',
 }
 
 export interface DistributionJobData extends CommonAttribute {

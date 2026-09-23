@@ -2,6 +2,7 @@
 
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate } from '@/helpers/common';
+import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
@@ -9,16 +10,19 @@ import {
     RELEASE_ERROR_APPROVAL_STATUS,
     RELEASE_ERROR_SUBMISSION_STATUS,
     RELEASE_ERROR_TYPE,
+    TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
+import { useBulkUpdateReleaseErrors } from '@/modules/releases/hooks/use-bulk-update-release-errors';
 import { ReleaseEnrichedError } from '@/modules/releases/types';
-import { Button, Table, Tag, Tooltip } from 'antd';
+import { Button, Table, Tag, Tooltip, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { CheckCircle, Wrench, XCircle } from 'lucide-react';
+import { CheckCircle, Plus, Wrench, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface ReleaseErrorsTableProps {
     data: ReleaseEnrichedError[];
-    onUpdateError: (
+    isLoading?: boolean;
+    onUpdateError?: (
         id: string,
         payload: {
             approvalStatus?: RELEASE_ERROR_APPROVAL_STATUS;
@@ -29,10 +33,36 @@ interface ReleaseErrorsTableProps {
 
 export default function ReleaseErrorsTable({
     data,
+    isLoading,
     onUpdateError,
 }: ReleaseErrorsTableProps) {
     const messages = useTranslations();
+    const openModal = useModalStore((state) => state.openModal);
     const { hasPermission } = usePermission();
+    const { bulkUpdateReleaseErrors } = useBulkUpdateReleaseErrors();
+
+    const handleUpdateError = (
+        id: string,
+        payload: {
+            approvalStatus?: RELEASE_ERROR_APPROVAL_STATUS;
+            submissionStatus?: RELEASE_ERROR_SUBMISSION_STATUS;
+        }
+    ) => {
+        if (onUpdateError) {
+            onUpdateError(id, payload);
+            return;
+        }
+        bulkUpdateReleaseErrors({
+            payload: {
+                items: [
+                    {
+                        id,
+                        ...payload,
+                    },
+                ],
+            },
+        });
+    };
 
     const canFix = hasPermission(PERMISSION.RELEASE_REVIEW.CAN_FIX);
     const canApprove = hasPermission(PERMISSION.RELEASE_REVIEW.APPROVE);
@@ -93,9 +123,9 @@ export default function ReleaseErrorsTable({
             key: 'message',
             width: 400,
             render: (record: ReleaseEnrichedError) => (
-                <span className="text-red-500">
+                <Typography.Text type="danger">
                     {getEnrichedErrorMessages(record)}
-                </span>
+                </Typography.Text>
             ),
         },
         {
@@ -194,7 +224,7 @@ export default function ReleaseErrorsTable({
                                               type="primary"
                                               className="flex items-center gap-1"
                                               onClick={() =>
-                                                  onUpdateError(record.id, {
+                                                  handleUpdateError(record.id, {
                                                       submissionStatus:
                                                           RELEASE_ERROR_SUBMISSION_STATUS.FIXED,
                                                   })
@@ -220,7 +250,7 @@ export default function ReleaseErrorsTable({
                                               type="primary"
                                               className="flex items-center gap-1 !border-none !bg-green-600 !text-white hover:!bg-green-700"
                                               onClick={() =>
-                                                  onUpdateError(record.id, {
+                                                  handleUpdateError(record.id, {
                                                       approvalStatus:
                                                           RELEASE_ERROR_APPROVAL_STATUS.APPROVED,
                                                   })
@@ -245,7 +275,7 @@ export default function ReleaseErrorsTable({
                                           danger
                                           className="flex items-center gap-1"
                                           onClick={() =>
-                                              onUpdateError(record.id, {
+                                              handleUpdateError(record.id, {
                                                   approvalStatus:
                                                       RELEASE_ERROR_APPROVAL_STATUS.REJECTED,
                                               })
@@ -267,6 +297,33 @@ export default function ReleaseErrorsTable({
 
     return (
         <Table
+            title={() => (
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Typography.Text strong className="!mb-0 !text-base">
+                            {messages('release.systemReview.errorsCard.title', {
+                                count: data.length,
+                            })}
+                        </Typography.Text>
+                    </div>
+                    <PermissionGate
+                        permission={PERMISSION.RELEASE_REVIEW.CREATE}
+                    >
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                openModal(TYPE_MODAL_RELEASE.CREATE_ERROR)
+                            }
+                            className="flex items-center gap-1"
+                            icon={<Plus size={14} />}
+                        >
+                            {messages(
+                                'release.systemReview.errorsCard.addError'
+                            )}
+                        </Button>
+                    </PermissionGate>
+                </div>
+            )}
             scroll={{
                 x: 'max-content',
             }}
@@ -274,8 +331,9 @@ export default function ReleaseErrorsTable({
             dataSource={data}
             rowKey="id"
             pagination={false}
-            size="small"
+            size="middle"
             bordered
+            loading={isLoading}
         />
     );
 }

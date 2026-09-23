@@ -1193,6 +1193,18 @@
         "bulkSubmitConfirm": "Are you sure you want to submit {count} selected releases?",
         "bulkDelete": "Bulk Delete",
         "bulkDeleteConfirm": "Are you sure you want to delete {count} selected releases?",
+        "bulkReview": "Bulk review",
+        "bulkReviewModal": {
+            "title": "Bulk Review Releases",
+            "selectedCount": "Selected releases: {count}",
+            "status": "Status",
+            "statusPlaceholder": "Select review status",
+            "statusRequired": "Please select review status",
+            "note": "Note",
+            "notePlaceholder": "Enter note...",
+            "submit": "Confirm",
+            "confirmMessage": "Are you sure you want to update review status for {count} selected releases?"
+        },
         "deleteReport": {
             "button": "Delete report",
             "title": "Delete report releases",
@@ -1401,6 +1413,7 @@
             "submitted": "Submitted",
             "partially_failed": "Partially failed",
             "partial_done": "Partial done",
+            "needsReview": "Needs review",
             "failed": "Failed",
             "unreleased": "Unreleased"
         },
@@ -2420,6 +2433,10 @@
             "placeholder": "Select parent workspace",
             "label": "Parent workspace"
         },
+        "requiresManualReview": {
+            "label": "Requires manual review",
+            "tooltip": "If enabled, releases from this workspace require admin approval before delivery"
+        },
         "back": "Back to workspaces",
         "member": "Member",
         "manager": "Manager",
@@ -2986,7 +3003,9 @@
         },
         "typeOptions": {
             "EMAIL_STATE51": "Email state51",
-            "ADMIN_EXPORT": "Admin export"
+            "ADMIN_EXPORT": "Admin export",
+            "ADMIN_TAKEDOWN": "Admin takedown",
+            "EMAIL_STATE51_TAKEDOWN": "Email state51 takedown"
         },
         "cancelConfirmTitle": "Cancel distribution job",
         "cancelConfirmMessage": "Are you sure you want to cancel this distribution job?"
@@ -3159,7 +3178,7 @@
             "CREATE_METADATA_ON_SERVER": "Create metadata on server",
             "UPLOAD_METADATA_TO_SFTP": "Upload metadata to SFTP",
             "SYNC_RESULT_TO_RELEASE": "Sync result to release",
-            "REVIEW_RELEASE": "Review release",
+            "REVIEW_RELEASE": "Pending review",
             "GET_RESULT_IMPORT_CI": "Get result import CI",
             "SUBMIT_VEVO_VIDEO": "Submit release to Backstage"
         },

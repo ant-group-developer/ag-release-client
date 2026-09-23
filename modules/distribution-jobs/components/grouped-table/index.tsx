@@ -126,7 +126,7 @@ export default function DistributionJobsGroupedTable({
             title: messages('distributionJobs.columns.type'),
             dataIndex: 'type',
             key: 'type',
-            width: 140,
+            width: 160,
             render: (_, record) =>
                 record.type ? (
                     <Tag color={getDistributionJobTypeColor(record.type)}>

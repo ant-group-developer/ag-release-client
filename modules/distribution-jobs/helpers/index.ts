@@ -26,6 +26,10 @@ export const getDistributionJobTypeColor = (type?: string | null) => {
             return 'geekblue';
         case DISTRIBUTION_JOB_TYPE.ADMIN_EXPORT:
             return 'magenta';
+        case DISTRIBUTION_JOB_TYPE.ADMIN_TAKEDOWN:
+            return 'volcano';
+        case DISTRIBUTION_JOB_TYPE.EMAIL_STATE51_TAKEDOWN:
+            return 'cyan';
         default:
             return 'default';
     }
