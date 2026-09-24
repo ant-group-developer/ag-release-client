@@ -1,9 +1,11 @@
 'use client';
 
+import IconButton from '@/components/ui/button/icon-button';
 import AppPagination from '@/components/ui/pagination';
 import AppProTable from '@/components/ui/table/pro-table';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
@@ -35,7 +37,7 @@ import ReleaseCoverImage from '@/modules/releases/components/image/release-cover
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
 import { CommonParams } from '@/types/api';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Card, Grid, Tag, Typography } from 'antd';
+import { Avatar, Card, Grid, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import RankingTableFilter from './ranking-table-filter';
@@ -52,8 +54,8 @@ interface WorkspaceCell {
 
 interface ChannelCell {
     id: string;
-    name?: string;
-    youtubeChannelId?: string;
+    name?: string | null;
+    youtubeChannelId?: string | null;
 }
 
 export interface ReleaseVideoRankingTableCardProps {
@@ -272,25 +274,55 @@ export default function ReleaseVideoRankingTableCard({
         if (!channels?.length) return '-';
         return (
             <div className="flex flex-col items-start gap-1">
-                {channels.map((channel) => (
-                    <CustomTooltip
-                        key={channel.id}
-                        title={messages('common.detailedAnalysis')}
-                    >
-                        <Typography.Text
-                            className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                            onClick={() =>
-                                onSelectEntity?.({
-                                    id: channel.id,
-                                    title: channel.name || '',
-                                    type: ANALYTICS_ENTITY_TYPE.CHANNEL,
-                                })
-                            }
+                {channels.map((channel) => {
+                    const channelYoutubeId =
+                        channel.youtubeChannelId || channel.id;
+                    return (
+                        <div
+                            key={channel.id}
+                            className="flex max-w-full items-center gap-1.5"
                         >
-                            {channel.name || '-'}
-                        </Typography.Text>
-                    </CustomTooltip>
-                ))}
+                            {channelYoutubeId && (
+                                <CustomTooltip
+                                    title={messages('common.viewOnYoutube')}
+                                >
+                                    <a
+                                        href={`https://www.youtube.com/channel/${channelYoutubeId}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        data-stop-row-click="true"
+                                    >
+                                        <IconButton
+                                            shape="circle"
+                                            className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
+                                        >
+                                            <Avatar
+                                                size={SIZE_ICON_BIG}
+                                                src={'/icon/youtube.png'}
+                                            />
+                                        </IconButton>
+                                    </a>
+                                </CustomTooltip>
+                            )}
+                            <CustomTooltip
+                                title={messages('common.detailedAnalysis')}
+                            >
+                                <Typography.Text
+                                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                                    onClick={() =>
+                                        onSelectEntity?.({
+                                            id: channel.id,
+                                            title: channel.name || '',
+                                            type: ANALYTICS_ENTITY_TYPE.CHANNEL,
+                                        })
+                                    }
+                                >
+                                    {channel.name || '-'}
+                                </Typography.Text>
+                            </CustomTooltip>
+                        </div>
+                    );
+                })}
             </div>
         );
     };
@@ -299,25 +331,26 @@ export default function ReleaseVideoRankingTableCard({
         const value = record.video?.externalId;
         if (!value) return '-';
         return (
-            <div className="flex w-fit items-center gap-1">
+            <div className="flex justify-center">
                 <CustomTooltip title={messages('common.viewOnYoutube')}>
                     <a
                         href={`https://www.youtube.com/watch?v=${value}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block max-w-full truncate text-blue-500 hover:underline"
+                        className="flex items-center text-blue-500 hover:underline"
+                        data-stop-row-click="true"
                     >
-                        {value}
+                        <IconButton
+                            shape="circle"
+                            className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
+                        >
+                            <Avatar
+                                size={SIZE_ICON_BIG}
+                                src={'/icon/youtube.png'}
+                            />
+                        </IconButton>
                     </a>
                 </CustomTooltip>
-                <span
-                    className="inline-block align-middle"
-                    data-stop-row-click="true"
-                >
-                    <Typography.Text
-                        copyable={{ text: value, tooltips: false }}
-                    />
-                </span>
             </div>
         );
     };
@@ -411,10 +444,10 @@ export default function ReleaseVideoRankingTableCard({
                 renderChannels(record.channels),
         },
         {
-            title: messages('common.youtubeId'),
+            title: 'Video',
             key: 'youtubeId',
-            width: 140,
-            ellipsis: true,
+            width: 90,
+            align: 'center' as const,
             render: renderYoutubeId,
         },
         {
@@ -509,10 +542,10 @@ export default function ReleaseVideoRankingTableCard({
                 renderChannels(record.channels),
         },
         {
-            title: messages('common.youtubeId'),
+            title: 'Video',
             key: 'youtubeId',
-            width: 140,
-            ellipsis: true,
+            width: 90,
+            align: 'center' as const,
             render: renderYoutubeId,
         },
         {

@@ -34,9 +34,11 @@ import {
     RevenueChannelItem,
     TenantInfo,
 } from '@/modules/analytics2/types';
+import IconButton from '@/components/ui/button/icon-button';
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { CommonParams } from '@/types/api';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Card, Grid, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Card, Grid, Tag, Tooltip, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import RankingTableFilter from './ranking-table-filter';
@@ -231,25 +233,25 @@ export default function ChannelRankingTableCard({
     const renderYoutubeChannelId = (value?: string) => {
         if (!value) return '-';
         return (
-            <div className="flex items-center gap-1">
-                <Tooltip title={messages('common.viewOnYoutube')}>
+            <div className="flex justify-center">
+                <CustomTooltip title={messages('common.viewOnYoutube')}>
                     <a
                         href={`https://www.youtube.com/channel/${value}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="truncate text-blue-500 hover:underline"
+                        data-stop-row-click="true"
                     >
-                        {value}
+                        <IconButton
+                            shape="circle"
+                            className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
+                        >
+                            <Avatar
+                                size={SIZE_ICON_BIG}
+                                src={'/icon/youtube.png'}
+                            />
+                        </IconButton>
                     </a>
-                </Tooltip>
-                <span
-                    className="inline-block align-middle"
-                    data-stop-row-click="true"
-                >
-                    <Typography.Text
-                        copyable={{ text: value, tooltips: false }}
-                    />
-                </span>
+                </CustomTooltip>
             </div>
         );
     };
@@ -342,11 +344,11 @@ export default function ChannelRankingTableCard({
                 renderChannelName(record.channelName, record),
         },
         {
-            title: messages('common.youtubeChannelId'),
+            title: 'Channel',
             dataIndex: 'youtubeChannelId',
             key: 'youtubeChannelId',
-            width: 240,
-            ellipsis: true,
+            width: 90,
+            align: 'center' as const,
             render: (_, record: RevenueChannelItem) =>
                 renderYoutubeChannelId(record.youtubeChannelId),
         },
@@ -421,11 +423,11 @@ export default function ChannelRankingTableCard({
                 renderChannelName(record.channelName, record),
         },
         {
-            title: messages('common.youtubeChannelId'),
+            title: 'Channel',
             dataIndex: 'youtubeChannelId',
             key: 'youtubeChannelId',
-            width: 240,
-            ellipsis: true,
+            width: 90,
+            align: 'center' as const,
             render: (_, record: ChannelRankingItem) =>
                 renderYoutubeChannelId(record.youtubeChannelId),
         },
