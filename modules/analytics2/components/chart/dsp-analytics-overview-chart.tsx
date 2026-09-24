@@ -2,7 +2,9 @@ import { ANALYTIC_SORT_BY } from '@/enums/common';
 import { useMemo } from 'react';
 import {
     ANALYTICS_BAR_CHART_TYPE,
+    ANALYTICS_GRANULARITY,
     ANALYTICS_METRIC_KEY,
+    ANALYTICS_OVERVIEW_CHART_MODE,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
 import { useGetDspRevenueLineChart } from '../../hooks/use-get-dsp-revenue-line-chart';
@@ -20,6 +22,10 @@ export interface DspAnalyticsOverviewChartProps {
     activeMetric?: string;
     sortBy?: string;
     enabled?: boolean;
+    overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
+    onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
+    granularity?: ANALYTICS_GRANULARITY;
+    onGranularityChange?: (granularity: ANALYTICS_GRANULARITY) => void;
 }
 
 export default function DspAnalyticsOverviewChart({
@@ -31,6 +37,10 @@ export default function DspAnalyticsOverviewChart({
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     sortBy,
     enabled = true,
+    overviewChartMode,
+    onOverviewChartModeChange,
+    granularity,
+    onGranularityChange,
 }: DspAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -53,6 +63,7 @@ export default function DspAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        granularity,
     };
 
     const barChartFilterParams = {
@@ -117,6 +128,10 @@ export default function DspAnalyticsOverviewChart({
             isBarChartLoading={isBarChartLoading}
             showSegment={false}
             defaultBarChartType={ANALYTICS_BAR_CHART_TYPE.TERRITORY}
+            overviewChartMode={overviewChartMode}
+            onOverviewChartModeChange={onOverviewChartModeChange}
+            granularity={granularity}
+            onGranularityChange={onGranularityChange}
         />
     );
 }

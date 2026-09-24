@@ -1,4 +1,9 @@
-import { ANALYTICS_METRIC_KEY, ANALYTICS_RELEASE_TYPE } from '../../enums';
+import {
+    ANALYTICS_GRANULARITY,
+    ANALYTICS_METRIC_KEY,
+    ANALYTICS_OVERVIEW_CHART_MODE,
+    ANALYTICS_RELEASE_TYPE,
+} from '../../enums';
 import { AnalyticsScopeParams } from '../../types';
 import { useGetLabelRevenueDspBarChart } from '../../hooks/use-get-label-revenue-dsp-bar-chart';
 import { useGetLabelRevenueLineChart } from '../../hooks/use-get-label-revenue-line-chart';
@@ -16,6 +21,10 @@ export interface LabelAnalyticsOverviewChartProps {
     activeMetric?: string;
     enabled?: boolean;
     scopeParams?: AnalyticsScopeParams;
+    overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
+    onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
+    granularity?: ANALYTICS_GRANULARITY;
+    onGranularityChange?: (granularity: ANALYTICS_GRANULARITY) => void;
 }
 
 export default function LabelAnalyticsOverviewChart({
@@ -26,6 +35,10 @@ export default function LabelAnalyticsOverviewChart({
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     enabled = true,
     scopeParams,
+    overviewChartMode,
+    onOverviewChartModeChange,
+    granularity,
+    onGranularityChange,
 }: LabelAnalyticsOverviewChartProps) {
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -35,6 +48,7 @@ export default function LabelAnalyticsOverviewChart({
         fromDate,
         toDate,
         releaseType,
+        granularity,
         ...scopeParams,
     };
 
@@ -119,6 +133,10 @@ export default function LabelAnalyticsOverviewChart({
             dspData={dspData}
             terData={terData}
             isBarChartLoading={isBarChartLoading}
+            overviewChartMode={overviewChartMode}
+            onOverviewChartModeChange={onOverviewChartModeChange}
+            granularity={granularity}
+            onGranularityChange={onGranularityChange}
         />
     );
 }
