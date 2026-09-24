@@ -619,7 +619,7 @@ export default function MetadataFields({
                 label={
                     <div className="flex items-center gap-2">
                         <span>{messages('common.keyword')}</span>
-                        <Tooltip title={messages('common.copy') || 'Copy'}>
+                        <Tooltip title={messages('common.copy')}>
                             <Button
                                 type="text"
                                 size="small"
@@ -668,6 +668,13 @@ export default function MetadataFields({
                         },
                     },
                 ]}
+                normalize={(value) =>
+                    Array.isArray(value)
+                        ? value.map((item) =>
+                              typeof item === 'string' ? item.trim() : item
+                          )
+                        : value
+                }
                 extra={
                     <div className="mt-1 text-right">
                         <Typography.Text
@@ -680,6 +687,7 @@ export default function MetadataFields({
                 }
             >
                 <Select
+                    open={false}
                     mode="tags"
                     placeholder={messages(
                         'releaseVideo.fields.keywordsPlaceholder'
@@ -688,7 +696,13 @@ export default function MetadataFields({
                     onChange={(value) =>
                         onFieldUpdate?.({
                             video: {
-                                keywords: value,
+                                keywords: Array.isArray(value)
+                                    ? value.map((item) =>
+                                          typeof item === 'string'
+                                              ? item.trim()
+                                              : item
+                                      )
+                                    : value,
                             },
                         })
                     }

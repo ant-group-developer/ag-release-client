@@ -24,6 +24,12 @@ export const useUpdateReleaseReviewDecision = () => {
             queryKey: releasesQueryKeys.detail(id),
         });
         queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.lists(),
+        });
+        queryClient.invalidateQueries({
+            queryKey: releasesQueryKeys.statusCounts(),
+        });
+        queryClient.invalidateQueries({
             queryKey: releasesQueryKeys.enrichedErrors(),
         });
         queryClient.invalidateQueries({

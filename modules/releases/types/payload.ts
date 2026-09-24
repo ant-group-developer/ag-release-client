@@ -130,3 +130,9 @@ export interface UpdateReleaseCaptionPayload extends CommonFunction {
     type?: RELEASE_VIDEO_CAPTION_TYPE;
     fileId?: string;
 }
+
+export interface BulkReleaseReviewPayload extends CommonFunction {
+    releaseIds: string[];
+    status: RELEASE_REVIEW_STATUS | string;
+    note?: string;
+}

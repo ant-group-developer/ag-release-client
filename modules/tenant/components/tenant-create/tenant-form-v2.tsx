@@ -265,6 +265,21 @@ function TenantFormV2({ excludeIds, wrapperClassName, ...props }: Props) {
                                             }
                                         />
                                     </AppForm.Item>
+
+                                    {isAdmin && (
+                                        <AppForm.Item
+                                            label={messages(
+                                                'tenant.requiresManualReview.label'
+                                            )}
+                                            name="requiresManualReview"
+                                            valuePropName="checked"
+                                            tooltip={messages(
+                                                'tenant.requiresManualReview.tooltip'
+                                            )}
+                                        >
+                                            <Switch />
+                                        </AppForm.Item>
+                                    )}
                                 </>
                             ),
                         },

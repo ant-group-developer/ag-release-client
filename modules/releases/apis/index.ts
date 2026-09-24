@@ -18,6 +18,7 @@ import {
 import {
     AutoSubmitUndistributedMusicRelease,
     BulkCreateReleaseErrorsPayload,
+    BulkReleaseReviewPayload,
     BulkSubmitRelease,
     BulkUpdateReleaseErrorsPayload,
     CreateReleaseDraftPayload,
@@ -306,5 +307,9 @@ export const releasesApi = {
         return axiosInstance.post<
             DetailResponse<ReleaseStatusCounts> | ReleaseStatusCounts
         >('/releases/status-counts', payload ?? {});
+    },
+
+    bulkReleaseReview: (payload: BulkReleaseReviewPayload) => {
+        return axiosInstance.post('/releases/release-review/bulk', payload);
     },
 };

@@ -140,7 +140,9 @@ export default function ReleaseVideos() {
                 <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap">
                     <ReleaseStatusTabs
                         dataFilter={dataFilter}
-                        onChange={(status) => onChangeFilter({ status })}
+                        onChange={(status, extraFilter) =>
+                            onChangeFilter({ status, ...extraFilter })
+                        }
                     />
                     {!isSystemTenant && (
                         <PermissionGate

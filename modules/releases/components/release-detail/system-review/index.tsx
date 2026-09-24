@@ -6,13 +6,11 @@ import {
     RELEASE_ERROR_APPROVAL_STATUS,
     TYPE_MODAL_RELEASE,
 } from '@/modules/releases/enums';
-import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useReleaseEnrichedErrors } from '@/modules/releases/hooks/use-release-enriched-errors';
-import { SCAN_COPYRIGHT_STATUS } from '@/modules/tracks/enums';
 import { useParams } from 'next/navigation';
 import ApprovalCard from './approval-card';
 import CreateErrorsModal from './create-errors-modal';
-import ReleaseErrorsCard from './release-errors-card';
+import ReleaseErrorsTable from './release-errors-table';
 
 export default function SystemReviewTab() {
     const params = useParams();
@@ -21,8 +19,8 @@ export default function SystemReviewTab() {
         : '';
 
     // Lấy dữ liệu thực tế của Release
-    const { releaseData, isLoading: isReleaseLoading } =
-        useGetDetailRelease(releaseId);
+    // const { releaseData, isLoading: isReleaseLoading } =
+    //     useGetDetailRelease(releaseId);
 
     // Lấy danh sách lỗi chất lượng
     const {
@@ -36,32 +34,6 @@ export default function SystemReviewTab() {
     const typeModal = useModalStore((state) => state.typeModal);
     const closeModal = useModalStore((state) => state.closeModal);
 
-    const mockTracks = [
-        {
-            id: 'mock-track-1',
-            title: 'Remember Me',
-            isrc: 'USUM71890123',
-            scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.WARNING,
-        },
-        {
-            id: 'mock-track-2',
-            title: 'Sunset Boulevard',
-            isrc: 'DEUM71900456',
-            scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.WARNING,
-        },
-        {
-            id: 'mock-track-3',
-            title: 'Acoustic Garden',
-            isrc: 'VNAM12300001',
-            scanCopyrightStatus: SCAN_COPYRIGHT_STATUS.FINISHED,
-        },
-    ] as any[];
-
-    const tracksToShow =
-        releaseData?.tracks && releaseData.tracks.length > 0
-            ? releaseData.tracks
-            : mockTracks;
-
     const unresolvedErrorsCount = releaseEnrichedErrorsData.filter(
         (err) => err.approvalStatus === RELEASE_ERROR_APPROVAL_STATUS.PENDING
     ).length;
@@ -74,11 +46,10 @@ export default function SystemReviewTab() {
                 releaseEnrichedErrorsCount={unresolvedErrorsCount}
             />
 
-            {/* CARD 1.5: KIỂM TRA LỖI CHẤT LƯỢNG (ENRICHED ERRORS) */}
-            <ReleaseErrorsCard
-                releaseId={releaseId}
-                releaseEnrichedErrorsData={releaseEnrichedErrorsData}
-                isFetchingEnrichedErrors={isFetchingEnrichedErrors}
+            {/* BẢNG KIỂM TRA LỖI CHẤT LƯỢNG (ENRICHED ERRORS) */}
+            <ReleaseErrorsTable
+                data={releaseEnrichedErrorsData}
+                isLoading={isFetchingEnrichedErrors}
             />
 
             {/* CARD 2: KẾT QUẢ QUÉT NHẠC TỪ ARC (ACRCLOUD) */}
