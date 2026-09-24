@@ -5,11 +5,11 @@ import AppConfirm from '@/components/ui/modal/confirm-modal';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { ORDER } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import { setSortOrder } from '@/helpers/common';
 import { useFilterV2 } from '@/hooks/use-filter-v2';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
-import { APP_ROUTES } from '@/enums/routes';
 import { useRouter } from '@/i18n/routing';
 import { PermissionGate } from '@/modules/auth/components/permission-gate';
 import { PERMISSION } from '@/modules/auth/constants/permission';
@@ -44,23 +44,6 @@ import { Key, useState } from 'react';
 type Props = {};
 
 export default function Releases({}: Props) {
-    // const {
-    //     dataFilter,
-    //     onSearch,
-    //     onChangePage,
-    //     onChangeFilter,
-    //     canClearFilter,
-    //     removeFilter,
-    //     defaultFilter,
-    // } = useFilter<ReleasesDataFilter>({
-    //     page: 1,
-    //     pageSize: PAGE_SIZE,
-    //     orderBy: ORDER.DESC,
-    //     fieldOrder: RELEASES_COLUMNS_DISPLAY.CREATED_AT,
-    //     type: RELEASE_TYPE.AUDIO,
-    //     isImportedFromReport: 'false',
-    // });
-
     const {
         dataFilter,
         onChangePage,

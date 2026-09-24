@@ -2,6 +2,7 @@
 
 import { PAGE_SIZE } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { useLoadingStatus } from '@/hooks/use-loading-status';
 import ConfigTab from '@/modules/report-import/components/config-tab';
 import DeleteReportTab from '@/modules/report-import/components/delete-report-tab';
@@ -38,6 +39,7 @@ type ReportConfigFilter = ReportConfigDataFilter & {
 
 export default function ReportConfigs() {
     const { token } = theme.useToken();
+    const isMobile = useIsMobile();
     const messages = useTranslations();
     const { dataFilter, onChangeFilter, onChangePage, onSearch } =
         useFilter<ReportConfigFilter>({
@@ -157,8 +159,8 @@ export default function ReportConfigs() {
                             activeKey={activeTab}
                             onChange={handleTabChange}
                             items={tabItems}
-                            className="!p-6"
-                            tabPosition="left"
+                            className="!px-4 !py-3 sm:!p-6 [&_.ant-tabs-nav]:!px-2 sm:[&_.ant-tabs-nav]:!px-0"
+                            tabPosition={isMobile ? 'top' : 'left'}
                         />
                     </div>
                 </Spin>

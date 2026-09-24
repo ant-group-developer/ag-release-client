@@ -4,7 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { DeleteVariables } from '@/types/api';
-import { theme } from 'antd';
+import { theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { TYPE_MODAL_ENRICH_SCAN_SCHEDULE } from '../../enums';
@@ -62,27 +62,22 @@ export default function EnrichDataCronTab() {
         <div>
             <EnrichScanScheduleTable
                 title={() => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            width: '100%',
-                        }}
-                    >
-                        <span className="px-2 text-sm font-medium">
+                    <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <Typography.Text strong className="text-sm">
                             {messages(
                                 'reportConfigs.enrichScanSchedules.title'
                             )}
-                        </span>
-                        <CreateButton
-                            canCreate
-                            onClick={() =>
-                                openModal(
-                                    TYPE_MODAL_ENRICH_SCAN_SCHEDULE.CREATE
-                                )
-                            }
-                        />
+                        </Typography.Text>
+                        <div className="flex items-center justify-end">
+                            <CreateButton
+                                canCreate
+                                onClick={() =>
+                                    openModal(
+                                        TYPE_MODAL_ENRICH_SCAN_SCHEDULE.CREATE
+                                    )
+                                }
+                            />
+                        </div>
                     </div>
                 )}
                 sticky

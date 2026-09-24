@@ -2,7 +2,7 @@ import CreateButton from '@/components/ui/button/create-button';
 import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SyncOutlined } from '@ant-design/icons';
-import { Button, Select, theme } from 'antd';
+import { Button, Select, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { REPORT_SOURCE } from '../../enums';
@@ -58,26 +58,13 @@ export default function ImportTab() {
         <div>
             <EtlJobsTable
                 title={() => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            width: '100%',
-                        }}
-                    >
-                        <span style={{ fontSize: 14, fontWeight: 600 }}>
+                    <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <Typography.Text strong className="text-sm">
                             {messages(
                                 'reportConfigs.importResult.recentJobsTitle'
                             )}
-                        </span>
-                        <div
-                            style={{
-                                display: 'flex',
-                                gap: 8,
-                                alignItems: 'center',
-                            }}
-                        >
+                        </Typography.Text>
+                        <div className="flex flex-wrap items-center gap-2">
                             <Select
                                 allowClear
                                 placeholder={messages('reportConfigs.source')}
@@ -87,7 +74,7 @@ export default function ImportTab() {
                                     setPage(1);
                                 }}
                                 options={reportSourceOptions}
-                                style={{ minWidth: 140 }}
+                                className="min-w-[140px] flex-1 sm:flex-initial"
                             />
                             <Button
                                 icon={<SyncOutlined />}

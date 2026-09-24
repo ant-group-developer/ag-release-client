@@ -1,6 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate, getIndex } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import PopoverTags from '@/components/ui/tag/popover-tags';
 import { ColumnType } from 'antd/es/table';
@@ -26,6 +27,7 @@ const renderList = (items?: string[]) => {
 
 export default function ReportConfigTable({ dataFilter, ...props }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const openModal = useModalStore((state) => state.openModal);
     void dataFilter;
 
@@ -35,7 +37,7 @@ export default function ReportConfigTable({ dataFilter, ...props }: Props) {
             key: 'iNo',
             width: 70,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination?.pageSize,
@@ -48,7 +50,7 @@ export default function ReportConfigTable({ dataFilter, ...props }: Props) {
             key: 'id',
             dataIndex: 'id',
             width: 180,
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             ellipsis: true,
         },
         {
@@ -127,7 +129,7 @@ export default function ReportConfigTable({ dataFilter, ...props }: Props) {
             key: 'actions',
             width: 90,
             align: 'center',
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate

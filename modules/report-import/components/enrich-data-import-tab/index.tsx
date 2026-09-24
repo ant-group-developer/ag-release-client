@@ -2,7 +2,7 @@ import AppPagination from '@/components/ui/pagination';
 import { PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { useFilter } from '@/hooks/use-filter';
 import { ScanOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, theme } from 'antd';
+import { Button, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { ENRICH_SCAN_STATUS } from '../../enums';
@@ -73,26 +73,13 @@ export default function EnrichDataImportTab() {
         <div>
             <EnrichScanSessionsTable
                 title={() => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            width: '100%',
-                        }}
-                    >
-                        <span style={{ fontSize: 14, fontWeight: 600 }}>
+                    <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <Typography.Text strong className="text-sm">
                             {messages(
                                 'reportConfigs.enrichDataImport.recentSessionsTitle'
                             )}
-                        </span>
-                        <div
-                            style={{
-                                display: 'flex',
-                                gap: 8,
-                                alignItems: 'center',
-                            }}
-                        >
+                        </Typography.Text>
+                        <div className="flex flex-wrap items-center gap-2">
                             <Button
                                 icon={<SyncOutlined />}
                                 onClick={() => refetch()}
@@ -104,7 +91,6 @@ export default function EnrichDataImportTab() {
                                 type="primary"
                                 icon={<ScanOutlined />}
                                 onClick={handleOpenScanModal}
-                                // disabled={hasRunningScanSession}
                             >
                                 {messages(
                                     'reportConfigs.enrichDataImport.scanButton'

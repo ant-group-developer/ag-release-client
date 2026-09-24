@@ -8,6 +8,7 @@ import {
     getIndex,
 } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { Space, Tag, Tooltip } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Eye, FileText } from 'lucide-react';
@@ -69,6 +70,7 @@ export default function EtlJobsTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
 
     const getSourceTypeTagColor = (sourceType: string) => {
         return (
@@ -130,7 +132,7 @@ export default function EtlJobsTable({
             key: 'iNo',
             width: 70,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination?.pageSize,
@@ -247,7 +249,7 @@ export default function EtlJobsTable({
             key: 'actions',
             width: 110,
             align: 'center',
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => (
                 <Space>
                     <Tooltip
