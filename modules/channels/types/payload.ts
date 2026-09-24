@@ -7,7 +7,10 @@ export interface CreateChannelPayload {
     isActive?: boolean;
 }
 
-export interface UpdateChannelPayload extends Partial<CreateChannelPayload> {}
+export interface UpdateChannelPayload extends Partial<CreateChannelPayload> {
+    effectiveDate?: string;
+    revenueEffectiveFrom?: string;
+}
 
 export interface TransferChannelTenantPayload {
     tenantId: string;
