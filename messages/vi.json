@@ -813,7 +813,7 @@
             "selectDate": "Chọn ngày",
             "selectMonth": "Chọn tháng",
             "currentWorkspace": "Kênh thuộc",
-            "changeWorkspaceHint": "Đổi workspace trên danh sách kênh (cột workspace). Cần chọn ngày chuyển views và tháng chuyển doanh thu.",
+            "changeWorkspaceHint": "Đổi workspace cần chọn ngày chuyển views và tháng chuyển doanh thu.",
             "fromStart": "Chuyển từ đầu lịch sử",
             "fromStartHelp": "Tự điền ngày sớm nhất có thể: toàn bộ views/revenue thực tế sẽ thuộc workspace mới.",
             "success": "Chuyển workspace kênh thành công",
