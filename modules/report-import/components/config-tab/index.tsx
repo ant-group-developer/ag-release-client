@@ -56,25 +56,20 @@ export default function ConfigTab({
         <>
             <ReportConfigTable
                 title={() => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            width: '100%',
-                        }}
-                    >
+                    <div className="flex w-full items-center justify-between gap-2 sm:gap-3">
                         <AppSearch
                             onChange={onSearch}
                             defaultValue={dataFilter.keyword}
-                            style={{ maxWidth: 260 }}
+                            wrapperClassName="flex-1 sm:max-w-[260px]"
                         />
-                        <CreateButton
-                            canCreate
-                            onClick={() =>
-                                openModal(TYPE_MODAL_REPORT_CONFIG.CREATE)
-                            }
-                        />
+                        <div className="shrink-0">
+                            <CreateButton
+                                canCreate
+                                onClick={() =>
+                                    openModal(TYPE_MODAL_REPORT_CONFIG.CREATE)
+                                }
+                            />
+                        </div>
                     </div>
                 )}
                 sticky

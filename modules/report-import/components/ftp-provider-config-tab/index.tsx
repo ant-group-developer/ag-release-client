@@ -96,16 +96,7 @@ export default function FtpProviderConfigTab() {
         >
             <FtpProviderConfigTable
                 title={() => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            width: '100%',
-                            flexWrap: 'wrap',
-                            gap: 12,
-                        }}
-                    >
+                    <div className="flex w-full flex-wrap items-center justify-between gap-3">
                         <FtpProviderConfigTableFilter
                             filter={{
                                 keyword,

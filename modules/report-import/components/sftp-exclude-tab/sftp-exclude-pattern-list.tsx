@@ -5,7 +5,7 @@ import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import useModalStore from '@/hooks/use-modal';
 import { DeleteVariables } from '@/types/api';
 import { SyncOutlined } from '@ant-design/icons';
-import { Button, theme } from 'antd';
+import { Button, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import {
@@ -114,19 +114,12 @@ export default function SftpExcludePatternList() {
                 borderRadius: token.borderRadiusLG,
             }}
         >
-            <span className="px-2 font-bold">
+            <Typography.Text strong className="px-2">
                 {messages('report-import.configExcludePattern')}
-            </span>
+            </Typography.Text>
             <FtpExcludePatternTable
                 title={() => (
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'start',
-                            width: '100%',
-                        }}
-                    >
+                    <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                         <FtpExcludePatternTableFilter
                             filter={{
                                 keyword,
@@ -136,13 +129,7 @@ export default function SftpExcludePatternList() {
                             }}
                             onChangeFilter={handleFilterChange}
                         />
-                        <div
-                            style={{
-                                display: 'flex',
-                                gap: 8,
-                                alignItems: 'center',
-                            }}
-                        >
+                        <div className="flex flex-wrap items-center gap-2 justify-end">
                             <Button
                                 icon={<SyncOutlined />}
                                 onClick={() => setIsSyncModalOpen(true)}

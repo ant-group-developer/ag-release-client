@@ -1,6 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { getIndex } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { Switch, Tag } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -25,6 +26,7 @@ export default function EnrichScanScheduleTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const openModal = useModalStore((state) => state.openModal);
     const { updateEnrichScanSchedule } = useUpdateEnrichScanSchedule();
     void dataFilter;
@@ -43,7 +45,7 @@ export default function EnrichScanScheduleTable({
             key: 'iNo',
             width: 70,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination?.pageSize,
@@ -106,7 +108,7 @@ export default function EnrichScanScheduleTable({
             key: 'actions',
             width: 90,
             align: 'center',
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate

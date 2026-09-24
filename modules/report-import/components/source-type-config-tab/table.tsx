@@ -1,6 +1,7 @@
 import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { formattedDate } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, Image, Tag, Typography } from 'antd';
@@ -20,6 +21,7 @@ export default function SourceTypeConfigTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const openModal = useModalStore((state) => state.openModal);
     const { isAdmin } = useAuth();
 
@@ -29,7 +31,7 @@ export default function SourceTypeConfigTable({
             key: 'iNo',
             width: 70,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) => index + 1,
         },
         {
@@ -118,7 +120,7 @@ export default function SourceTypeConfigTable({
                       key: 'actions',
                       width: 90,
                       align: 'center' as const,
-                      fixed: 'right' as const,
+                      fixed: isMobile ? undefined : ('right' as const),
                       render: (_: any, record: SourceTypeConfigData) => (
                           <ActionButton
                               showUpdate

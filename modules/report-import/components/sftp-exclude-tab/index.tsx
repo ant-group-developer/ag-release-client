@@ -7,12 +7,9 @@ export default function SftpExcludeTab() {
 
     return (
         <div
+            className="flex flex-col rounded-lg p-3 sm:p-4 md:p-6"
             style={{
                 backgroundColor: token.colorBgContainer,
-                padding: 24,
-                borderRadius: 8,
-                display: 'flex',
-                flexDirection: 'column',
             }}
         >
             <SyncConfigForm />

@@ -3,6 +3,7 @@ import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import { SIZE_ICON } from '@/constants/common';
 import { formattedDate, formattedNumber, getIndex } from '@/helpers/common';
 import { LoadingOutlined } from '@ant-design/icons';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import { Tag, Tooltip, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { Eye, FileText } from 'lucide-react';
@@ -33,6 +34,7 @@ export default function EnrichScanSessionsTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const { Text } = Typography;
 
     const getStatusTagColor = (status: string) => {
@@ -195,7 +197,7 @@ export default function EnrichScanSessionsTable({
             key: 'actions',
             width: 100,
             align: 'center',
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => (
                 <div className="flex items-center justify-center gap-2">
                     <Tooltip title={messages('common.viewDetail')}>

@@ -4,6 +4,7 @@ import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { Card, Empty, Skeleton, Table, Typography } from 'antd';
+import { ANALYTICS_GRANULARITY } from '../../enums';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 
@@ -17,6 +18,7 @@ interface OverviewTableViewProps {
     loading?: boolean;
     valuePrefix?: string;
     className?: string;
+    granularity?: ANALYTICS_GRANULARITY;
 }
 
 export default function OverviewTableView({
@@ -29,6 +31,7 @@ export default function OverviewTableView({
     loading = false,
     valuePrefix = '',
     className = '',
+    granularity,
 }: OverviewTableViewProps) {
     const messages = useTranslations();
 
@@ -39,9 +42,13 @@ export default function OverviewTableView({
             key: xAxisKey,
             width: '70%',
             render: (text: any) => {
+                const format =
+                    granularity === ANALYTICS_GRANULARITY.DAY
+                        ? DATE_FORMAT.DATE_ONLY
+                        : DATE_FORMAT.MONTH_YEAR;
                 return (
                     <Typography.Text>
-                        {formattedDate(text, DATE_FORMAT.MONTH_YEAR)}
+                        {formattedDate(text, format)}
                     </Typography.Text>
                 );
             },

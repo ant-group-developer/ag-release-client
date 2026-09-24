@@ -11,7 +11,9 @@ import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
+    ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -187,6 +189,45 @@ export default function DspRankingTableCard({
         );
     }, [dspRankingData, page, pageSize]);
 
+    const renderDspName = (
+        record: (RevenueDspItem | DspRankingItem) & { rank: number }
+    ) => (
+        <div className="flex items-center gap-3">
+            <ReleaseCoverImage
+                width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
+                src={record.imageUrl}
+            />
+            <CustomTooltip title={messages('common.detailedAnalysis')}>
+                <Typography.Text
+                    className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                    onClick={() => {
+                        const dspId =
+                            record.pgDspId ||
+                            record.dspReportId ||
+                            record.source ||
+                            record.dspName ||
+                            '';
+                        const dspTitle =
+                            record.dspName ||
+                            record.sourceLabel ||
+                            record.source ||
+                            '';
+                        onSelectEntity?.({
+                            id: dspId,
+                            entitySubId: record.dspReportId,
+                            title: dspTitle,
+                            type: ANALYTICS_ENTITY_TYPE.DSP,
+                            thumbnailUrl: record.imageUrl ?? undefined,
+                        });
+                    }}
+                >
+                    {record.dspName || '—'}
+                </Typography.Text>
+            </CustomTooltip>
+        </div>
+    );
+
     const revenueColumns: ProColumns<RevenueDspItem & { rank: number }>[] = [
         {
             title: messages('analytics2.rank'),
@@ -208,35 +249,7 @@ export default function DspRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: fixedLeft,
-            render: (_, record) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <Typography.Text
-                        className="cursor-pointer transition-colors hover:text-blue-500"
-                        onClick={() => {
-                            const dspId =
-                                record.pgDspId ||
-                                record.dspReportId ||
-                                record.source ||
-                                record.dspName ||
-                                '';
-                            const dspTitle =
-                                record.dspName ||
-                                record.sourceLabel ||
-                                record.source ||
-                                '';
-                            onSelectEntity?.({
-                                id: dspId,
-                                entitySubId: record.dspReportId,
-                                title: dspTitle,
-                                type: ANALYTICS_ENTITY_TYPE.DSP,
-                                thumbnailUrl: record.imageUrl ?? undefined,
-                            });
-                        }}
-                    >
-                        {record.dspName || '—'}
-                    </Typography.Text>
-                </CustomTooltip>
-            ),
+            render: (_, record) => renderDspName(record),
         },
         {
             title: messages('common.sourcePlatform'),
@@ -322,35 +335,7 @@ export default function DspRankingTableCard({
             width: 250,
             ellipsis: true,
             fixed: fixedLeft,
-            render: (_, record) => (
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <Typography.Text
-                        className="cursor-pointer transition-colors hover:text-blue-500"
-                        onClick={() => {
-                            const dspId =
-                                record.pgDspId ||
-                                record.dspReportId ||
-                                record.source ||
-                                record.dspName ||
-                                '';
-                            const dspTitle =
-                                record.dspName ||
-                                record.sourceLabel ||
-                                record.source ||
-                                '';
-                            onSelectEntity?.({
-                                id: dspId,
-                                entitySubId: record.dspReportId,
-                                title: dspTitle,
-                                type: ANALYTICS_ENTITY_TYPE.DSP,
-                                thumbnailUrl: record.imageUrl ?? undefined,
-                            });
-                        }}
-                    >
-                        {record.dspName || '—'}
-                    </Typography.Text>
-                </CustomTooltip>
-            ),
+            render: (_, record) => renderDspName(record),
         },
         {
             title: messages('common.sourcePlatform'),
