@@ -11,6 +11,8 @@ import {
     AnalyticsScopeParams,
     AnalyticsSelectedIds,
     AnalyticsSelectionParams,
+    AnalyticsSummaryV2Filters,
+    AnalyticsSummaryV2Params,
     TrendViewLineChartV2DspId,
     TrendViewLineChartV2Filters,
     TrendViewLineChartV2Params,
@@ -132,9 +134,9 @@ const toDspFilter = (value: string): TrendViewLineChartV2DspId => {
     };
 };
 
-export const getTrendViewLineChartV2Params = (
+export const getAnalyticsV2Filters = (
     params: AnalyticsCommonParams
-): TrendViewLineChartV2Params => {
+): AnalyticsSummaryV2Filters => {
     const tenantIds = uniqueNonEmpty([
         params.tenantId,
         ...(params.tenantIds ?? []),
@@ -190,7 +192,7 @@ export const getTrendViewLineChartV2Params = (
             ) === index
     );
 
-    const filters: TrendViewLineChartV2Filters = {
+    return {
         ...(tenantIds.length ? { tenantIds } : {}),
         ...(labelIds.length ? { labelIds } : {}),
         ...(artistIds.length ? { artistIds } : {}),
@@ -200,13 +202,28 @@ export const getTrendViewLineChartV2Params = (
         ...(importSources.length ? { importSources } : {}),
         ...(dspIds.length ? { dspIds } : {}),
     };
+};
 
+export const getAnalyticsSummaryV2Params = (
+    params: AnalyticsCommonParams
+): AnalyticsSummaryV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewLineChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewLineChartV2Params => {
     return {
         fromDate: params.fromDate || '',
         toDate: params.toDate || '',
         releaseType: params.releaseType,
         seriesBy: 'auto',
-        filters,
+        filters: getAnalyticsV2Filters(params),
         granularity: params.granularity || ANALYTICS_GRANULARITY.DAY,
     };
 };

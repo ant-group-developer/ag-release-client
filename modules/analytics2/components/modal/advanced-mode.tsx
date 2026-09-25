@@ -19,6 +19,7 @@ import {
 } from '../../enums';
 import {
     getAnalyticsSelectionParams,
+    getAnalyticsSummaryV2Params,
     getCombinedAnalyticsScopeParams,
     getFilterScopeParams,
 } from '../../helpers';
@@ -27,7 +28,7 @@ import {
     useAdvancedModeModal,
 } from '../../hooks/use-advanced-mode-modal';
 import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
-import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
+import { useGetAnalyticsSummaryV2 } from '../../hooks/use-get-analytics-summary-v2';
 import { useExportJobStore } from '../../store/use-export-job-store';
 import {
     ActiveAnalyticsEntity,
@@ -135,9 +136,15 @@ export default function AdvancedModeModal({
         selectionParams,
     ]);
 
-    // Single unified Analytics Summary hook replacing separate summary calls
-    const { analyticsSummaryData } = useGetAnalyticsSummary(
-        analyticsSummaryParams
+    const analyticsSummaryV2Params = useMemo(
+        () => getAnalyticsSummaryV2Params(analyticsSummaryParams),
+        [analyticsSummaryParams]
+    );
+
+    // Single unified Analytics Summary V2 hook replacing separate summary calls
+    const { analyticsSummaryData } = useGetAnalyticsSummaryV2(
+        analyticsSummaryV2Params,
+        { enabled: props.open }
     );
 
     const { message } = App.useApp();

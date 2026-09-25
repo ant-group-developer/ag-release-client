@@ -480,6 +480,7 @@ export const QUERY_KEY = {
     ANALYTICS2: {
         KEY: 'ANALYTICS2',
         ANALYTICS_SUMMARY: 'analytics-summary',
+        ANALYTICS_SUMMARY_V2: 'analytics-summary-v2',
         DSP_TIMELINE: 'dsp-timeline',
         TER_TIMELINE: 'ter-timeline',
         TREND_VIEW_SUMMARY: 'trend-view-summary',

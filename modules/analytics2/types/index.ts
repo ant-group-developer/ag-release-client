@@ -503,6 +503,16 @@ export interface TrendViewLineChartV2Filters {
     dspIds?: TrendViewLineChartV2DspId[];
 }
 
+export type AnalyticsSummaryV2DspId = TrendViewLineChartV2DspId;
+export type AnalyticsSummaryV2Filters = TrendViewLineChartV2Filters;
+
+export interface AnalyticsSummaryV2Params {
+    fromDate: string;
+    toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE | string;
+    filters?: AnalyticsSummaryV2Filters;
+}
+
 export interface TrendViewLineChartV2Params {
     fromDate: string;
     toDate: string;

@@ -2,6 +2,7 @@ import { QUERY_KEY } from '@/constants/query-key';
 
 import {
     AnalyticsCommonParams,
+    AnalyticsSummaryV2Params,
     DspDetailParams,
     DspRankingParams,
     DspTimelineParams,
@@ -24,6 +25,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.ANALYTICS_SUMMARY,
+            params,
+        ] as const,
+    analyticsSummaryV2: (params: AnalyticsSummaryV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ANALYTICS_SUMMARY_V2,
             params,
         ] as const,
     dspTimeline: (params: DspTimelineParams) =>

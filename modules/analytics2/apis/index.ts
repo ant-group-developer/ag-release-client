@@ -4,6 +4,7 @@ import { DetailResponse, PaginationResponse } from '@/types/api';
 import {
     AnalyticsCommonParams,
     AnalyticsSummaryData,
+    AnalyticsSummaryV2Params,
     ArtistDspItem,
     ArtistRankingItem,
     ArtistTerItem,
@@ -101,6 +102,12 @@ export const analytics2Apis = {
     getAnalyticsSummary: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
             '/analytics/summary',
+            params
+        );
+    },
+    getAnalyticsSummaryV2: (params: AnalyticsSummaryV2Params) => {
+        return axiosInstance.post<DetailResponse<AnalyticsSummaryData>>(
+            '/analytics/summary/v2',
             params
         );
     },
