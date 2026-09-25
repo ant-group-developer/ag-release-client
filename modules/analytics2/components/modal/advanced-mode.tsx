@@ -5,6 +5,7 @@ import FullScreenModal, {
 } from '@/components/ui/modal/fullScreenModal';
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
+import { DetailResponse } from '@/types/api';
 import { DownloadOutlined } from '@ant-design/icons';
 import { App, Button, Grid, Typography } from 'antd';
 import dayjs from 'dayjs';
@@ -17,6 +18,7 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
 import {
+    getAnalyticsSelectionParams,
     getCombinedAnalyticsScopeParams,
     getFilterScopeParams,
 } from '../../helpers';
@@ -24,23 +26,24 @@ import {
     ADVANCED_MODE_PARAM_PREFIX,
     useAdvancedModeModal,
 } from '../../hooks/use-advanced-mode-modal';
+import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
 import { useGetAnalyticsSummary } from '../../hooks/use-get-analytics-summary';
+import { useExportJobStore } from '../../store/use-export-job-store';
 import {
     ActiveAnalyticsEntity,
     AnalyticsCommonParams,
     AnalyticsEntityType,
+    AnalyticsSelectedIds,
+    ExportReportRequest,
+    ExportReportResponse,
 } from '../../types';
+import ExportReportProgressPopover from '../export-report-progress-popover';
 import MetricHeaderTabs, { MetricHeaderTabItem } from '../metric-header-tabs';
 import { ContentItem } from './advanced-mode/content-entity-selector';
 import ControlsSidebar from './advanced-mode/controls-sidebar';
 import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import FilterChipsBar from './advanced-mode/filter-chips-bar';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
-import ExportReportProgressPopover from '../export-report-progress-popover';
-import { DetailResponse } from '@/types/api';
-import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
-import { useExportJobStore } from '../../store/use-export-job-store';
-import { ExportReportRequest, ExportReportResponse } from '../../types';
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -70,6 +73,16 @@ export default function AdvancedModeModal({
     } = useAdvancedModeModal();
 
     const [showSidebar, setShowSidebar] = useState(true);
+    const [selectedIds, setSelectedIds] = useState<AnalyticsSelectedIds>({});
+
+    const selectionParams = useMemo(
+        () => getAnalyticsSelectionParams(selectedIds),
+        [selectedIds]
+    );
+
+    useEffect(() => {
+        setSelectedIds({});
+    }, [activeMetric, entity.id, entity.type, filters, rankBy]);
 
     useEffect(() => {
         if (props.open) {
@@ -100,6 +113,7 @@ export default function AdvancedModeModal({
             toDate: effectiveToDate,
             releaseType,
             ...getCombinedAnalyticsScopeParams(activeEntity, filters),
+            ...selectionParams,
         };
 
         // Video releases live behind the same `releaseId` as audio ones, so the
@@ -118,6 +132,7 @@ export default function AdvancedModeModal({
         effectiveFromDate,
         effectiveToDate,
         releaseType,
+        selectionParams,
     ]);
 
     // Single unified Analytics Summary hook replacing separate summary calls
@@ -173,8 +188,7 @@ export default function AdvancedModeModal({
                 ? {
                       dspId: scopeParams.dspId,
                       pgDspId: scopeParams.pgDspId || scopeParams.dspId,
-                      dspReportId:
-                          scopeParams.dspReportId || scopeParams.dspId,
+                      dspReportId: scopeParams.dspReportId || scopeParams.dspId,
                   }
                 : {}),
             ...(scopeParams.isrc ? { isrc: scopeParams.isrc } : {}),
@@ -199,7 +213,8 @@ export default function AdvancedModeModal({
                     addJob(data.data.jobId);
                 }
                 message.success({
-                    content: 'Đang xuất báo cáo, vui lòng đợi trong giây lát...',
+                    content:
+                        'Đang xuất báo cáo, vui lòng đợi trong giây lát...',
                     key: 'export-report-status',
                     duration: 3,
                 });
@@ -241,6 +256,7 @@ export default function AdvancedModeModal({
         }
 
         // All clicks within table cells act as secondary filters
+        setSelectedIds({});
         toggleFilter({
             type: (item.type || entity.type) as AnalyticsEntityType,
             id: (item.id || item.entitySubId) as string,
@@ -248,6 +264,28 @@ export default function AdvancedModeModal({
             title: item.title,
             thumbnailUrl: item.thumbnailUrl,
         });
+    };
+
+    const handleMetricChange = (metric: ANALYTICS_METRIC_KEY) => {
+        setSelectedIds({});
+        setMetric(metric);
+    };
+
+    const handleRemoveFilter = (type: AnalyticsEntityType) => {
+        setSelectedIds({});
+        removeFilter(type);
+    };
+
+    const handleClearAllFilters = () => {
+        setSelectedIds({});
+        clearAllFilters();
+    };
+
+    const handleSelectedIdsChange = (
+        type: AnalyticsEntityType,
+        ids: string[]
+    ) => {
+        setSelectedIds(ids.length ? { [type]: ids } : {});
     };
 
     const currentSelectedItem = useMemo<ContentItem | undefined>(() => {
@@ -270,7 +308,7 @@ export default function AdvancedModeModal({
         entity.thumbnail,
     ]);
 
-    const metricTabItems: MetricHeaderTabItem[] = [
+    const metricTabItems: MetricHeaderTabItem<ANALYTICS_METRIC_KEY>[] = [
         {
             key: ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
             label: messages('analytics.totalTrendViews') || 'Views',
@@ -368,7 +406,9 @@ export default function AdvancedModeModal({
                             }}
                             activeMetric={activeMetric}
                             onMetricChange={(metric) =>
-                                setMetric(metric as ANALYTICS_METRIC_KEY)
+                                handleMetricChange(
+                                    metric as ANALYTICS_METRIC_KEY
+                                )
                             }
                             selectedItem={currentSelectedItem}
                             initialType={entity.type}
@@ -385,18 +425,16 @@ export default function AdvancedModeModal({
                         {/* Filter Chips Bar */}
                         <FilterChipsBar
                             filters={filters}
-                            onRemoveFilter={removeFilter}
-                            onClearAll={clearAllFilters}
+                            onRemoveFilter={handleRemoveFilter}
+                            onClearAll={handleClearAllFilters}
                         />
 
                         {/* Metric Header Tabs & Overview Chart */}
                         <div className="flex flex-col overflow-hidden rounded-lg border border-slate-200 dark:border-zinc-800">
-                            <MetricHeaderTabs
+                            <MetricHeaderTabs<ANALYTICS_METRIC_KEY>
                                 items={metricTabItems}
                                 activeKey={activeMetric}
-                                onChangeKey={(metric) =>
-                                    setMetric(metric as ANALYTICS_METRIC_KEY)
-                                }
+                                onChangeKey={handleMetricChange}
                             />
                             <OverviewChartRenderer
                                 activeEntity={activeEntity}
@@ -405,6 +443,7 @@ export default function AdvancedModeModal({
                                 toDate={effectiveToDate}
                                 releaseType={releaseType}
                                 activeMetric={activeMetric}
+                                selectionParams={selectionParams}
                                 enabled={props.open !== false}
                             />
                         </div>
@@ -420,9 +459,13 @@ export default function AdvancedModeModal({
                             activeMetric={activeMetric}
                             paramPrefix={ADVANCED_MODE_PARAM_PREFIX}
                             onMetricChange={(metric) =>
-                                setMetric(metric as ANALYTICS_METRIC_KEY)
+                                handleMetricChange(
+                                    metric as ANALYTICS_METRIC_KEY
+                                )
                             }
                             onSelectEntity={handleTableSelectEntity}
+                            selectedIds={selectedIds}
+                            onSelectedIdsChange={handleSelectedIdsChange}
                             enabled={props.open !== false}
                         />
                     </div>

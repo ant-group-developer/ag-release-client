@@ -75,7 +75,18 @@ export interface DspSalesTimelineData {
     items: DspSalesTimelinePeriod[];
 }
 
-export interface RankingParams {
+export interface AnalyticsSelectionParams {
+    trackIds?: string[];
+    releaseIds?: string[];
+    tenantIds?: string[];
+    labelIds?: string[];
+    dspIds?: string[];
+    artistIds?: string[];
+    channelIds?: string[];
+    importSources?: string[];
+}
+
+export interface RankingParams extends AnalyticsSelectionParams {
     fromDate: string;
     toDate: string;
     page?: number;
@@ -244,7 +255,9 @@ export interface SyncJobResponse {
 }
 
 // Params for Revenue APIs
-export interface RevenueQueryParams extends CommonParams {
+export interface RevenueQueryParams
+    extends CommonParams,
+        AnalyticsSelectionParams {
     fromDate: string;
     toDate: string;
     topN?: number;
@@ -695,6 +708,14 @@ export interface AnalyticsCommonParams extends CommonParams {
     artistId?: string;
     channelId?: string;
     importSource?: string;
+    trackIds?: string[];
+    releaseIds?: string[];
+    tenantIds?: string[];
+    labelIds?: string[];
+    dspIds?: string[];
+    artistIds?: string[];
+    channelIds?: string[];
+    importSources?: string[];
     groupBySource?: boolean;
     territoryCode?: string;
     granularity?: ANALYTICS_GRANULARITY | 'day' | 'month' | string;
@@ -847,6 +868,8 @@ export interface RevenueSourceTypeItem {
 export type AnalyticsEntityType =
     | ANALYTICS_ENTITY_TYPE
     | `${ANALYTICS_ENTITY_TYPE}`;
+
+export type AnalyticsSelectedIds = Partial<Record<string, string[]>>;
 
 export interface ActiveAnalyticsEntity {
     type: AnalyticsEntityType;

@@ -1,10 +1,12 @@
 'use client';
 
+import IconButton from '@/components/ui/button/icon-button';
 import ImageFallback from '@/components/ui/image/image-fallback';
 import AppPagination from '@/components/ui/pagination';
 import AppProTable from '@/components/ui/table/pro-table';
 import PopoverTagsV2 from '@/components/ui/tag/popover-tags-v2';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
+import { SIZE_ICON_BIG } from '@/constants/common';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { SCREEN } from '@/enums/common';
 import { formattedNumber } from '@/helpers/common';
@@ -34,11 +36,9 @@ import {
     RevenueChannelItem,
     TenantInfo,
 } from '@/modules/analytics2/types';
-import IconButton from '@/components/ui/button/icon-button';
-import { SIZE_ICON_BIG } from '@/constants/common';
 import { CommonParams } from '@/types/api';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Card, Grid, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Card, Grid, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import RankingTableFilter from './ranking-table-filter';
@@ -54,6 +54,8 @@ export interface ChannelRankingTableCardProps {
     metricKey?: ANALYTICS_METRIC_KEY;
     onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
     enabled?: boolean;
     className?: string;
     paramPrefix?: string;
@@ -75,6 +77,8 @@ export default function ChannelRankingTableCard({
     metricKey,
     onMetricChange,
     onSelectEntity,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
     paramPrefix,
@@ -261,8 +265,7 @@ export default function ChannelRankingTableCard({
         currentTenant?: TenantInfo | null
     ) => {
         if (!tenant) return '-';
-        const showCurrent =
-            currentTenant?.id && currentTenant.id !== tenant.id;
+        const showCurrent = currentTenant?.id && currentTenant.id !== tenant.id;
         return (
             <div className="flex min-w-0 flex-col gap-1">
                 <div className="flex items-center gap-3">
@@ -283,7 +286,10 @@ export default function ChannelRankingTableCard({
                     </CustomTooltip>
                 </div>
                 {showCurrent && (
-                    <Typography.Text type="secondary" className="truncate text-xs">
+                    <Typography.Text
+                        type="secondary"
+                        className="truncate text-xs"
+                    >
                         {messages('channel.transfer.currentWorkspace')}:{' '}
                         {currentTenant?.name}
                     </Typography.Text>
@@ -507,6 +513,16 @@ export default function ChannelRankingTableCard({
                     dataSource={topChannelData.items}
                     loading={isFetching}
                     rowKey="channelId"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
@@ -521,6 +537,16 @@ export default function ChannelRankingTableCard({
                     dataSource={channelRankingData.items}
                     loading={isFetching}
                     rowKey="channelId"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}

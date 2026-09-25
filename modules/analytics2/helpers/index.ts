@@ -4,6 +4,8 @@ import {
     ActiveAnalyticsEntity,
     AnalyticsFilterItem,
     AnalyticsScopeParams,
+    AnalyticsSelectedIds,
+    AnalyticsSelectionParams,
 } from '../types';
 
 export const createViewMoreHref = (
@@ -110,6 +112,41 @@ export const getCombinedAnalyticsScopeParams = (
     };
 };
 
+const selectionParamByEntityType: Record<
+    string,
+    keyof AnalyticsSelectionParams
+> = {
+    [ANALYTICS_ENTITY_TYPE.TRACK]: 'trackIds',
+    [ANALYTICS_ENTITY_TYPE.RELEASE]: 'releaseIds',
+    [ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO]: 'releaseIds',
+    [ANALYTICS_ENTITY_TYPE.WORKSPACE]: 'tenantIds',
+    [ANALYTICS_ENTITY_TYPE.LABEL]: 'labelIds',
+    [ANALYTICS_ENTITY_TYPE.DSP]: 'dspIds',
+    [ANALYTICS_ENTITY_TYPE.ARTIST]: 'artistIds',
+    [ANALYTICS_ENTITY_TYPE.CHANNEL]: 'channelIds',
+    [ANALYTICS_ENTITY_TYPE.SOURCE_TYPE]: 'importSources',
+};
+
+export const getAnalyticsSelectionParams = (
+    selectedIds?: AnalyticsSelectedIds
+): AnalyticsSelectionParams => {
+    if (!selectedIds) {
+        return {};
+    }
+
+    return Object.entries(selectedIds).reduce<AnalyticsSelectionParams>(
+        (params, [entityType, ids]) => {
+            const key = selectionParamByEntityType[entityType];
+
+            if (key && ids?.length) {
+                (params as Record<string, string[]>)[key] = ids;
+            }
+
+            return params;
+        },
+        {}
+    );
+};
 
 export type DemographicsDimension = 'device' | 'gender' | 'age';
 
@@ -160,4 +197,3 @@ export const formatDemographicsLabel = (
         ? t(`analytics2.demographics.device.${deviceKey}`)
         : dimensionValue;
 };
-

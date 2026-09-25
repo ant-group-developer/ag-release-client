@@ -34,6 +34,8 @@ interface ArtistViewsTableProps {
         thumbnailUrl?: string | null
     ) => void;
     onDetailSource?: (sourceType: string, title: string) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
 }
 
 export default function ArtistViewsTable({
@@ -43,6 +45,8 @@ export default function ArtistViewsTable({
     toolbar,
     onDetailArtist,
     onDetailSource,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
 }: ArtistViewsTableProps) {
     const messages = useTranslations();
 
@@ -229,6 +233,16 @@ export default function ArtistViewsTable({
             dataSource={dataSource}
             loading={loading}
             rowKey="artistId"
+            rowSelection={
+                onSelectedRowKeysChange
+                    ? {
+                          selectedRowKeys,
+                          preserveSelectedRowKeys: true,
+                          onChange: (keys) =>
+                              onSelectedRowKeysChange(keys.map(String)),
+                      }
+                    : undefined
+            }
             pagination={false}
             search={false}
             options={false}

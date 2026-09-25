@@ -66,6 +66,8 @@ export interface ReleaseVideoRankingTableCardProps {
     metricKey?: ANALYTICS_METRIC_KEY;
     onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
     enabled?: boolean;
     className?: string;
     paramPrefix?: string;
@@ -85,6 +87,8 @@ export default function ReleaseVideoRankingTableCard({
     metricKey,
     onMetricChange,
     onSelectEntity,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
     paramPrefix,
@@ -604,6 +608,16 @@ export default function ReleaseVideoRankingTableCard({
                     dataSource={topReleaseVideoData.items}
                     loading={isFetching}
                     rowKey="youtubeVideoId"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
@@ -618,6 +632,16 @@ export default function ReleaseVideoRankingTableCard({
                     dataSource={releaseVideoRankingData.items}
                     loading={isFetching}
                     rowKey="youtubeVideoId"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}

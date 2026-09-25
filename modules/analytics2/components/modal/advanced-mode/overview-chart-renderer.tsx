@@ -18,6 +18,7 @@ import {
     ActiveAnalyticsEntity,
     AnalyticsCommonParams,
     AnalyticsFilterItem,
+    AnalyticsSelectionParams,
 } from '../../../types';
 import {
     AnalyticsDemographicsContext,
@@ -32,6 +33,7 @@ export interface OverviewChartRendererProps {
     toDate?: string;
     releaseType?: ANALYTICS_RELEASE_TYPE;
     activeMetric: string;
+    selectionParams?: AnalyticsSelectionParams;
     enabled?: boolean;
 }
 
@@ -42,6 +44,7 @@ export default function OverviewChartRenderer({
     toDate,
     releaseType,
     activeMetric,
+    selectionParams,
     enabled = true,
 }: OverviewChartRendererProps) {
     const [overviewChartMode, setOverviewChartMode] =
@@ -60,7 +63,7 @@ export default function OverviewChartRenderer({
         releaseType,
         activeMetric,
         enabled,
-        scopeParams: filterScope,
+        scopeParams: { ...filterScope, ...selectionParams },
         overviewChartMode,
         onOverviewChartModeChange: setOverviewChartMode,
         granularity,
@@ -79,10 +82,11 @@ export default function OverviewChartRenderer({
                     ? ANALYTICS_RELEASE_TYPE.VIDEO
                     : releaseType,
             ...getCombinedAnalyticsScopeParams(activeEntity, filters),
+            ...selectionParams,
         };
 
         return params;
-    }, [activeEntity, filters, fromDate, releaseType, toDate]);
+    }, [activeEntity, filters, fromDate, releaseType, selectionParams, toDate]);
 
     const { device, gender, age, isFetching } =
         useGetTrendViewDemographicsBarCharts(demographicsParams, {

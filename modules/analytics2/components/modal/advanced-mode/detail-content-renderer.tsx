@@ -6,7 +6,6 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '@/modules/analytics2/enums';
 import {
-    getAnalyticsScopeParams,
     getCombinedAnalyticsScopeParams,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
@@ -14,6 +13,7 @@ import {
     ActiveAnalyticsEntity,
     AnalyticsEntityType,
     AnalyticsFilterItem,
+    AnalyticsSelectedIds,
 } from '@/modules/analytics2/types';
 import ArtistRankingTableCard from '../../ranking/artist-ranking-table-card';
 import ChannelRankingTableCard from '../../ranking/channel-ranking-table-card';
@@ -36,6 +36,8 @@ export interface DetailContentRendererProps {
     activeMetric: ANALYTICS_METRIC_KEY;
     onMetricChange: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedIds?: AnalyticsSelectedIds;
+    onSelectedIdsChange?: (type: AnalyticsEntityType, ids: string[]) => void;
     enabled?: boolean;
     paramPrefix?: string;
 }
@@ -49,6 +51,8 @@ interface RankingTableProps {
     metricKey: ANALYTICS_METRIC_KEY;
     onMetricChange: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
     enabled: boolean;
     paramPrefix?: string;
 }
@@ -80,6 +84,8 @@ function RankingTable({ type, ...rest }: RankingTableProps) {
                     metricKey={rest.metricKey}
                     onMetricChange={rest.onMetricChange}
                     onSelectEntity={rest.onSelectEntity}
+                    selectedRowKeys={rest.selectedRowKeys}
+                    onSelectedRowKeysChange={rest.onSelectedRowKeysChange}
                     enabled={rest.enabled}
                     paramPrefix={rest.paramPrefix}
                 />
@@ -99,10 +105,18 @@ export default function DetailContentRenderer({
     activeMetric,
     onMetricChange,
     onSelectEntity,
+    selectedIds,
+    onSelectedIdsChange,
     enabled = true,
     paramPrefix,
 }: DetailContentRendererProps) {
     const scopeParams = getCombinedAnalyticsScopeParams(activeEntity, filters);
+
+    const tableType =
+        rankBy && activeEntity.id && rankBy !== activeEntity.type
+            ? rankBy
+            : activeEntity.type;
+    const selectedRowKeys = selectedIds?.[tableType] ?? [];
 
     const commonTableProps = {
         scopeParams,
@@ -112,13 +126,11 @@ export default function DetailContentRenderer({
         metricKey: activeMetric,
         onMetricChange,
         onSelectEntity,
+        selectedRowKeys,
+        onSelectedRowKeysChange: (keys: string[]) =>
+            onSelectedIdsChange?.(tableType, keys),
         enabled,
     };
-
-    const tableType =
-        rankBy && activeEntity.id && rankBy !== activeEntity.type
-            ? rankBy
-            : activeEntity.type;
 
     return (
         <div className="flex flex-col gap-4">
