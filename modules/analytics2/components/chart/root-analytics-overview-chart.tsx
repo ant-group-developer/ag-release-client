@@ -5,16 +5,22 @@ import {
     ANALYTICS_OVERVIEW_CHART_MODE,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
-import { getTrendViewLineChartV2Params } from '../../helpers';
-import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
+import {
+    getRevenueDspBarChartV2Params,
+    getRevenueTerBarChartV2Params,
+    getTrendViewDspBarChartV2Params,
+    getTrendViewLineChartV2Params,
+    getTrendViewTerBarChartV2Params,
+} from '../../helpers';
+import { useGetRevenueDspBarChartV2 } from '../../hooks/use-get-revenue-dsp-bar-chart-v2';
 import { useGetRevenueLineChartV2 } from '../../hooks/use-get-revenue-line-chart-v2';
-import { useGetRevenueTerBarChart } from '../../hooks/use-get-revenue-ter-bar-chart';
-import { useGetTrendViewDspBarChart } from '../../hooks/use-get-trend-view-dsp-bar-chart';
+import { useGetRevenueTerBarChartV2 } from '../../hooks/use-get-revenue-ter-bar-chart-v2';
+import { useGetTrendViewDspBarChartV2 } from '../../hooks/use-get-trend-view-dsp-bar-chart-v2';
 import {
     mapTrendViewLineChartV2Series,
     useGetTrendViewLineChartV2,
 } from '../../hooks/use-get-trend-view-line-chart-v2';
-import { useGetTrendViewTerBarChart } from '../../hooks/use-get-trend-view-ter-bar-chart';
+import { useGetTrendViewTerBarChartV2 } from '../../hooks/use-get-trend-view-ter-bar-chart-v2';
 import { AnalyticsCommonParams, AnalyticsScopeParams } from '../../types';
 import AnalyticsOverviewChart from './analytics-overview-chart';
 
@@ -106,27 +112,47 @@ export default function RootAnalyticsOverviewChart({
         [activeLineSeries, trendLineValueKey]
     );
 
+    const trendViewDspBarChartV2Params = useMemo(
+        () => getTrendViewDspBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
+
     const {
         barChartData: dspTrendViewData,
         isFetching: isDspTrendViewFetching,
-    } = useGetTrendViewDspBarChart(chartFilterParams, {
+    } = useGetTrendViewDspBarChartV2(trendViewDspBarChartV2Params, {
         enabled: enabled && !isRevenueMetric,
     });
+
+    const trendViewTerBarChartV2Params = useMemo(
+        () => getTrendViewTerBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
 
     const {
         barChartData: terTrendViewData,
         isFetching: isTerTrendViewFetching,
-    } = useGetTrendViewTerBarChart(chartFilterParams, {
+    } = useGetTrendViewTerBarChartV2(trendViewTerBarChartV2Params, {
         enabled: enabled && !isRevenueMetric,
     });
 
+    const revenueDspBarChartV2Params = useMemo(
+        () => getRevenueDspBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
+
     const { revenueDspBarChartData, isFetching: isDspRevenueFetching } =
-        useGetRevenueDspBarChart(chartFilterParams, {
+        useGetRevenueDspBarChartV2(revenueDspBarChartV2Params, {
             enabled: enabled && isRevenueMetric,
         });
 
+    const revenueTerBarChartV2Params = useMemo(
+        () => getRevenueTerBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
+
     const { revenueTerBarChartData, isFetching: isTerRevenueFetching } =
-        useGetRevenueTerBarChart(chartFilterParams, {
+        useGetRevenueTerBarChartV2(revenueTerBarChartV2Params, {
             enabled: enabled && isRevenueMetric,
         });
 

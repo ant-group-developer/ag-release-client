@@ -565,6 +565,17 @@ export interface TrendViewDspBarChartItem {
     imageUrl?: string;
 }
 
+export type TrendViewDspBarChartV2Params = AnalyticsSummaryV2Params;
+
+export interface TrendViewDspBarChartV2Item {
+    pgDspId: string | null;
+    dspReportId: string;
+    dspReportIds?: string[];
+    dspName: string;
+    imageUrl: string | null;
+    totalViews: number;
+}
+
 export interface DspRankingItem {
     rank: number;
     dspName?: string;
@@ -609,6 +620,18 @@ export interface RevenueDspBarChartItem {
     imageUrl?: string;
 }
 
+export type RevenueDspBarChartV2Params = AnalyticsSummaryV2Params;
+
+export interface RevenueDspBarChartV2Item {
+    pgDspId: string | null;
+    dspReportId: string;
+    dspReportIds?: string[];
+    dspName: string;
+    imageUrl: string | null;
+    revenueUsd: number;
+    quantity: number;
+}
+
 export interface TrendViewTerBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
@@ -619,6 +642,11 @@ export interface TrendViewTerBarChartItem {
     territory: string;
     totalViews: number;
 }
+
+export type TrendViewTerBarChartV2Params = AnalyticsSummaryV2Params;
+export type TrendViewTerBarChartV2Item = TrendViewTerBarChartItem;
+
+export type TrendViewDemographicsBarChartV2Params = AnalyticsSummaryV2Params;
 
 export interface RevenueTerBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
@@ -632,6 +660,9 @@ export interface RevenueTerBarChartItem {
     revenueUsdExact: string;
     quantity?: number;
 }
+
+export type RevenueTerBarChartV2Params = AnalyticsSummaryV2Params;
+export type RevenueTerBarChartV2Item = RevenueTerBarChartItem;
 
 export interface ExportReportRequest {
     fromDate: string;

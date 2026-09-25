@@ -13,9 +13,14 @@ import {
     AnalyticsSelectionParams,
     AnalyticsSummaryV2Filters,
     AnalyticsSummaryV2Params,
+    RevenueDspBarChartV2Params,
+    RevenueTerBarChartV2Params,
+    TrendViewDemographicsBarChartV2Params,
+    TrendViewDspBarChartV2Params,
     TrendViewLineChartV2DspId,
     TrendViewLineChartV2Filters,
     TrendViewLineChartV2Params,
+    TrendViewTerBarChartV2Params,
 } from '../types';
 
 export const createViewMoreHref = (
@@ -207,6 +212,61 @@ export const getAnalyticsV2Filters = (
 export const getAnalyticsSummaryV2Params = (
     params: AnalyticsCommonParams
 ): AnalyticsSummaryV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewDspBarChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewDspBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getRevenueDspBarChartV2Params = (
+    params: AnalyticsCommonParams
+): RevenueDspBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewTerBarChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewTerBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewDemographicsBarChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewDemographicsBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getRevenueTerBarChartV2Params = (
+    params: AnalyticsCommonParams
+): RevenueTerBarChartV2Params => {
     return {
         fromDate: params.fromDate || '',
         toDate: params.toDate || '',

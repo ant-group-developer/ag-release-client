@@ -11,8 +11,9 @@ import {
 } from '../../../enums';
 import {
     getCombinedAnalyticsScopeParams,
+    getTrendViewDemographicsBarChartV2Params,
 } from '../../../helpers';
-import { useGetTrendViewDemographicsBarCharts } from '../../../hooks/use-get-trend-view-demographics-bar-chart';
+import { useGetTrendViewDemographicsBarChartsV2 } from '../../../hooks/use-get-trend-view-demographics-bar-chart-v2';
 import {
     ActiveAnalyticsEntity,
     AnalyticsCommonParams,
@@ -90,8 +91,13 @@ export default function OverviewChartRenderer({
         return params;
     }, [activeEntity, filters, fromDate, releaseType, selectionParams, toDate]);
 
+    const demographicsV2Params = useMemo(
+        () => getTrendViewDemographicsBarChartV2Params(demographicsParams),
+        [demographicsParams]
+    );
+
     const { device, gender, age, isFetching } =
-        useGetTrendViewDemographicsBarCharts(demographicsParams, {
+        useGetTrendViewDemographicsBarChartsV2(demographicsV2Params, {
             enabled: enabled && isViewsMetric && !!fromDate && !!toDate,
         });
 

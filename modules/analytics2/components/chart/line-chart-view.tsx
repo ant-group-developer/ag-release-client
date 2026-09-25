@@ -3,7 +3,7 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { Card, Empty } from 'antd';
+import { Card, Empty, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
     Area,
@@ -54,63 +54,115 @@ const CustomLineTooltip = ({
     additionalTooltipKeys = [],
     lines = [],
 }: any) => {
+    const messages = useTranslations();
+
     if (active && payload && payload.length) {
         const firstEntry = payload[0];
         const originalData = firstEntry.payload;
         const tooltipEntries = lines.length ? payload : [firstEntry];
 
+        const sortedEntries = [...tooltipEntries].sort(
+            (a: any, b: any) =>
+                (Number(b?.value) || 0) - (Number(a?.value) || 0)
+        );
+
+        const totalValue = sortedEntries.reduce(
+            (sum: number, entry: any) => sum + (Number(entry?.value) || 0),
+            0
+        );
+
+        const showTotal = Boolean(lines?.length) || sortedEntries.length > 1;
+
         return (
-            <div className="flex flex-col gap-1 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
-                <span className="text-[13px] font-semibold text-gray-900 dark:text-zinc-100">
+            <div className="flex max-w-[360px] flex-col gap-1.5 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
+                <Typography.Text strong className="text-[13px]">
                     {label}
-                </span>
+                </Typography.Text>
 
-                {/* Main line items */}
-                {tooltipEntries.map((entry: any) => (
-                    <div
-                        className="flex items-center gap-2"
-                        key={entry.dataKey || entry.name}
-                    >
-                        <div
-                            className="h-2 w-2 rounded-full"
-                            style={{
-                                backgroundColor:
-                                    entry.color || entry.stroke || '#1890ff',
-                            }}
-                        />
-                        <span className="text-xs text-gray-600 dark:text-zinc-400">
-                            {entry.name || lineName}:
-                        </span>
-                        <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
+                {showTotal && (
+                    <div className="flex items-center justify-between gap-3 border-b border-[#f0f0f0] pb-1.5 text-xs dark:border-zinc-700">
+                        <Typography.Text strong className="text-xs">
+                            {messages('common.total')}:
+                        </Typography.Text>
+                        <Typography.Text
+                            strong
+                            className="shrink-0 text-right text-xs tabular-nums"
+                        >
                             {valuePrefix}
-                            {formattedNumber(entry.value)}
-                        </span>
+                            {formattedNumber(totalValue)}
+                        </Typography.Text>
                     </div>
-                ))}
+                )}
 
-                {/* Additional metrics */}
-                {!lines.length &&
-                    additionalTooltipKeys.map(
-                        (cfg: TooltipKeyConfig, idx: number) => {
-                            const val = originalData?.[cfg.key];
-                            if (val === undefined || val === null) return null;
-                            return (
+                <div className="flex flex-col gap-1">
+                    {/* Main line items */}
+                    {sortedEntries.map((entry: any) => (
+                        <div
+                            className="flex items-center justify-between gap-3 text-xs"
+                            key={entry.dataKey || entry.name}
+                        >
+                            <div className="flex min-w-0 items-center gap-2">
                                 <div
-                                    key={idx}
-                                    className="flex items-center gap-2"
+                                    className="h-2 w-2 shrink-0 rounded-full"
+                                    style={{
+                                        backgroundColor:
+                                            entry.color ||
+                                            entry.stroke ||
+                                            '#1890ff',
+                                    }}
+                                />
+                                <Typography.Text
+                                    type="secondary"
+                                    className="block max-w-[210px] truncate text-xs"
+                                    title={entry.name || lineName}
                                 >
-                                    <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-zinc-500" />
-                                    <span className="text-xs text-gray-600 dark:text-zinc-400">
-                                        {cfg.name}:
-                                    </span>
-                                    <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
-                                        {cfg.valuePrefix || ''}
-                                        {formattedNumber(val)}
-                                    </span>
-                                </div>
-                            );
-                        }
-                    )}
+                                    {entry.name || lineName}
+                                </Typography.Text>
+                            </div>
+                            <Typography.Text
+                                strong
+                                className="shrink-0 text-right text-xs tabular-nums"
+                            >
+                                {valuePrefix}
+                                {formattedNumber(entry.value)}
+                            </Typography.Text>
+                        </div>
+                    ))}
+
+                    {/* Additional metrics */}
+                    {!lines.length &&
+                        additionalTooltipKeys.map(
+                            (cfg: TooltipKeyConfig, idx: number) => {
+                                const val = originalData?.[cfg.key];
+                                if (val === undefined || val === null)
+                                    return null;
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="flex items-center justify-between gap-3 text-xs"
+                                    >
+                                        <div className="flex min-w-0 items-center gap-2">
+                                            <div className="h-2 w-2 shrink-0 rounded-full bg-gray-400 dark:bg-zinc-500" />
+                                            <Typography.Text
+                                                type="secondary"
+                                                className="block max-w-[210px] truncate text-xs"
+                                                title={cfg.name}
+                                            >
+                                                {cfg.name}:
+                                            </Typography.Text>
+                                        </div>
+                                        <Typography.Text
+                                            strong
+                                            className="shrink-0 text-right text-xs tabular-nums"
+                                        >
+                                            {cfg.valuePrefix || ''}
+                                            {formattedNumber(val)}
+                                        </Typography.Text>
+                                    </div>
+                                );
+                            }
+                        )}
+                </div>
             </div>
         );
     }

@@ -19,16 +19,41 @@ export interface TrendViewLineChartRow {
     [key: string]: string | number;
 }
 
-const LINE_COLORS = [
-    '#1890ff',
-    '#52c41a',
-    '#fa8c16',
-    '#722ed1',
-    '#eb2f96',
-    '#13c2c2',
-    '#f5222d',
-    '#2f54eb',
+export const LINE_COLORS = [
+    '#1890ff', // Blue
+    '#52c41a', // Green
+    '#fa8c16', // Orange
+    '#722ed1', // Purple
+    '#eb2f96', // Magenta
+    '#13c2c2', // Cyan
+    '#f5222d', // Red
+    '#2f54eb', // Geek Blue
+    '#faad14', // Gold
+    '#a0d911', // Lime
+    '#13c296', // Teal / Emerald
+    '#eb2f63', // Rose Red
+    '#08979c', // Dark Cyan
+    '#d4380d', // Volcano
+    '#c41d7f', // Dark Magenta
+    '#531dab', // Dark Purple
+    '#096dd9', // Deep Daybreak Blue
+    '#389e0d', // Forest Green
+    '#d48806', // Golden Sun
+    '#7cb305', // Moss Green
+    '#0050b3', // Navy Blue
+    '#ad2102', // Rust Red
+    '#9254de', // Lavender
+    '#ff85c0', // Soft Pink
 ];
+
+export const getSeriesColor = (index: number): string => {
+    if (index < LINE_COLORS.length) {
+        return LINE_COLORS[index];
+    }
+    // Golden ratio hue angle to generate distinct contrast colors indefinitely
+    const hue = Math.round((index * 137.508) % 360);
+    return `hsl(${hue}, 75%, 50%)`;
+};
 
 const getSeriesKey = (
     series: TrendViewLineChartV2Series,
@@ -71,7 +96,7 @@ export const mapTrendViewLineChartV2Series = (
         lines.push({
             key,
             name: item.metadata?.name || key,
-            color: LINE_COLORS[index % LINE_COLORS.length],
+            color: getSeriesColor(index),
             imageUrl: item.metadata?.imageUrl,
         });
 
