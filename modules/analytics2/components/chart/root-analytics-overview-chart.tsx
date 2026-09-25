@@ -1,18 +1,27 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
     ANALYTICS_GRANULARITY,
     ANALYTICS_METRIC_KEY,
     ANALYTICS_OVERVIEW_CHART_MODE,
     ANALYTICS_RELEASE_TYPE,
 } from '../../enums';
-import { AnalyticsScopeParams } from '../../types';
-import { useGetRevenueDspBarChart } from '../../hooks/use-get-revenue-dsp-bar-chart';
-import { useGetRevenueLineChart } from '../../hooks/use-get-revenue-line-chart';
-import { useGetRevenueTerBarChart } from '../../hooks/use-get-revenue-ter-bar-chart';
-import { useGetTrendViewDspBarChart } from '../../hooks/use-get-trend-view-dsp-bar-chart';
-import { useGetTrendViewLineChart } from '../../hooks/use-get-trend-view-line-chart';
-import { useGetTrendViewTerBarChart } from '../../hooks/use-get-trend-view-ter-bar-chart';
-import { AnalyticsCommonParams } from '../../types';
+import {
+    getRevenueDspBarChartV2Params,
+    getRevenueTerBarChartV2Params,
+    getTrendViewDspBarChartV2Params,
+    getTrendViewLineChartV2Params,
+    getTrendViewTerBarChartV2Params,
+} from '../../helpers';
+import { useGetRevenueDspBarChartV2 } from '../../hooks/use-get-revenue-dsp-bar-chart-v2';
+import { useGetRevenueLineChartV2 } from '../../hooks/use-get-revenue-line-chart-v2';
+import { useGetRevenueTerBarChartV2 } from '../../hooks/use-get-revenue-ter-bar-chart-v2';
+import { useGetTrendViewDspBarChartV2 } from '../../hooks/use-get-trend-view-dsp-bar-chart-v2';
+import {
+    mapTrendViewLineChartV2Series,
+    useGetTrendViewLineChartV2,
+} from '../../hooks/use-get-trend-view-line-chart-v2';
+import { useGetTrendViewTerBarChartV2 } from '../../hooks/use-get-trend-view-ter-bar-chart-v2';
+import { AnalyticsCommonParams, AnalyticsScopeParams } from '../../types';
 import AnalyticsOverviewChart from './analytics-overview-chart';
 
 export interface RootAnalyticsOverviewChartProps {
@@ -60,63 +69,101 @@ export default function RootAnalyticsOverviewChart({
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD;
 
-    const chartFilterParams: AnalyticsCommonParams = {
-        fromDate,
-        toDate,
-        releaseType,
-        granularity,
-        ...scopeParams,
-    };
+    const chartFilterParams = useMemo<AnalyticsCommonParams>(
+        () => ({
+            fromDate,
+            toDate,
+            releaseType,
+            granularity,
+            ...scopeParams,
+        }),
+        [fromDate, granularity, releaseType, scopeParams, toDate]
+    );
 
+    const trendViewLineChartV2Params = useMemo(
+        () => getTrendViewLineChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
+
+    const trendLineValueKey =
+        activeMetric === ANALYTICS_METRIC_KEY.TOTAL_REVENUE_USD
+            ? 'revenueUsd'
+            : activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE
+              ? 'quantity'
+              : 'totalViews';
     const {
-        lineChartData: trendViewLineData,
+        lineChartSeries: trendViewLineSeries,
         isFetching: isTrendViewLineFetching,
-    } = useGetTrendViewLineChart(chartFilterParams, {
+    } = useGetTrendViewLineChartV2(trendViewLineChartV2Params, {
         enabled: enabled && !isRevenueMetric,
     });
+    const {
+        lineChartSeries: revenueLineSeries,
+        isFetching: isRevenueLineFetching,
+    } = useGetRevenueLineChartV2(trendViewLineChartV2Params, {
+        enabled: enabled && isRevenueMetric,
+    });
+    const activeLineSeries = isRevenueMetric
+        ? revenueLineSeries
+        : trendViewLineSeries;
+    const trendViewLineChart = useMemo(
+        () =>
+            mapTrendViewLineChartV2Series(activeLineSeries, trendLineValueKey),
+        [activeLineSeries, trendLineValueKey]
+    );
+
+    const trendViewDspBarChartV2Params = useMemo(
+        () => getTrendViewDspBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
 
     const {
         barChartData: dspTrendViewData,
         isFetching: isDspTrendViewFetching,
-    } = useGetTrendViewDspBarChart(chartFilterParams, {
+    } = useGetTrendViewDspBarChartV2(trendViewDspBarChartV2Params, {
         enabled: enabled && !isRevenueMetric,
     });
+
+    const trendViewTerBarChartV2Params = useMemo(
+        () => getTrendViewTerBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
 
     const {
         barChartData: terTrendViewData,
         isFetching: isTerTrendViewFetching,
-    } = useGetTrendViewTerBarChart(chartFilterParams, {
+    } = useGetTrendViewTerBarChartV2(trendViewTerBarChartV2Params, {
         enabled: enabled && !isRevenueMetric,
     });
 
-    const { revenueLineChartData, isFetching: isRevenueLineFetching } =
-        useGetRevenueLineChart(chartFilterParams, {
-            enabled: enabled && isRevenueMetric,
-        });
+    const revenueDspBarChartV2Params = useMemo(
+        () => getRevenueDspBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
 
     const { revenueDspBarChartData, isFetching: isDspRevenueFetching } =
-        useGetRevenueDspBarChart(chartFilterParams, {
+        useGetRevenueDspBarChartV2(revenueDspBarChartV2Params, {
             enabled: enabled && isRevenueMetric,
         });
+
+    const revenueTerBarChartV2Params = useMemo(
+        () => getRevenueTerBarChartV2Params(chartFilterParams),
+        [chartFilterParams]
+    );
 
     const { revenueTerBarChartData, isFetching: isTerRevenueFetching } =
-        useGetRevenueTerBarChart(chartFilterParams, {
+        useGetRevenueTerBarChartV2(revenueTerBarChartV2Params, {
             enabled: enabled && isRevenueMetric,
         });
 
-    const lineChartData = isRevenueMetric
-        ? revenueLineChartData
-        : trendViewLineData;
+    const lineChartData = trendViewLineChart.data;
+    const lineChartLines = trendViewLineChart.lines;
     const isLineChartLoading = isRevenueMetric
         ? isRevenueLineFetching
         : isTrendViewLineFetching;
 
-    const dspData = isRevenueMetric
-        ? revenueDspBarChartData
-        : dspTrendViewData;
-    const terData = isRevenueMetric
-        ? revenueTerBarChartData
-        : terTrendViewData;
+    const dspData = isRevenueMetric ? revenueDspBarChartData : dspTrendViewData;
+    const terData = isRevenueMetric ? revenueTerBarChartData : terTrendViewData;
     const isBarChartLoading = isRevenueMetric
         ? isDspRevenueFetching || isTerRevenueFetching
         : isDspTrendViewFetching || isTerTrendViewFetching;
@@ -125,6 +172,7 @@ export default function RootAnalyticsOverviewChart({
         <AnalyticsOverviewChart
             activeMetric={activeMetric}
             lineChartData={lineChartData}
+            lineChartLines={lineChartLines}
             isLineChartLoading={isLineChartLoading}
             dspData={dspData}
             terData={terData}

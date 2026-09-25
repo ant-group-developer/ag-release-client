@@ -35,6 +35,8 @@ interface ArtistRevenueTableProps {
         thumbnailUrl?: string | null
     ) => void;
     onDetailSource?: (sourceType: string, title: string) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
 }
 
 export default function ArtistRevenueTable({
@@ -44,6 +46,8 @@ export default function ArtistRevenueTable({
     toolbar,
     onDetailArtist,
     onDetailSource,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
 }: ArtistRevenueTableProps) {
     const messages = useTranslations();
 
@@ -245,6 +249,16 @@ export default function ArtistRevenueTable({
             dataSource={dataSource}
             loading={loading}
             rowKey="artistId"
+            rowSelection={
+                onSelectedRowKeysChange
+                    ? {
+                          selectedRowKeys,
+                          preserveSelectedRowKeys: true,
+                          onChange: (keys) =>
+                              onSelectedRowKeysChange(keys.map(String)),
+                      }
+                    : undefined
+            }
             pagination={false}
             search={false}
             options={false}

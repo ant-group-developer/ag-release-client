@@ -29,10 +29,10 @@ import { useGetArtistRanking } from '@/modules/analytics2/hooks/use-get-rankings
 import { useGetRevenueTopArtist } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { CommonParams } from '@/types/api';
-import { Card, Segmented } from 'antd';
-import RankingTableFilter from './ranking-table-filter';
+import { Card } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import RankingTableFilter from './ranking-table-filter';
 
 const DEFAULT_PAGE = 1;
 
@@ -45,6 +45,8 @@ export interface ArtistRankingTableCardProps {
     metricKey?: ANALYTICS_METRIC_KEY;
     onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
     enabled?: boolean;
     className?: string;
     paramPrefix?: string;
@@ -66,6 +68,8 @@ export default function ArtistRankingTableCard({
     metricKey,
     onMetricChange,
     onSelectEntity,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
     paramPrefix,
@@ -225,6 +229,8 @@ export default function ArtistRankingTableCard({
                     dspData={dspData}
                     onDetailArtist={handleDetailArtist}
                     onDetailSource={handleDetailSource}
+                    selectedRowKeys={selectedRowKeys}
+                    onSelectedRowKeysChange={onSelectedRowKeysChange}
                 />
             ) : (
                 <ArtistViewsTable
@@ -233,6 +239,8 @@ export default function ArtistRankingTableCard({
                     dspData={dspData}
                     onDetailArtist={handleDetailArtist}
                     onDetailSource={handleDetailSource}
+                    selectedRowKeys={selectedRowKeys}
+                    onSelectedRowKeysChange={onSelectedRowKeysChange}
                 />
             )}
             <AppPagination

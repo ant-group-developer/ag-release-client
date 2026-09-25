@@ -21,7 +21,8 @@ import {
     ANALYTICS_RELEASE_TYPE,
 } from '@/modules/analytics2/enums';
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
-import { useGetAnalyticsSummary } from '@/modules/analytics2/hooks/use-get-analytics-summary';
+import { getAnalyticsSummaryV2Params } from '@/modules/analytics2/helpers';
+import { useGetAnalyticsSummaryV2 } from '@/modules/analytics2/hooks/use-get-analytics-summary-v2';
 import {
     Analytics2DataFilter,
     ExportReportJob,
@@ -32,7 +33,7 @@ import { theme } from 'antd';
 import { DollarSign, Eye, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const defaultFilter: Analytics2DataFilter = {
     startDate: ANALYTICS_DEFAULT_START_DATE,
@@ -161,11 +162,18 @@ export default function Analytics2Page() {
     const effectiveReleaseType =
         releaseType === ANALYTICS_RELEASE_TYPE.ALL ? undefined : releaseType;
 
-    const { analyticsSummaryData } = useGetAnalyticsSummary({
-        fromDate,
-        toDate,
-        releaseType: effectiveReleaseType,
-    });
+    const analyticsSummaryV2Params = useMemo(
+        () =>
+            getAnalyticsSummaryV2Params({
+                fromDate,
+                toDate,
+                releaseType: effectiveReleaseType,
+            }),
+        [fromDate, toDate, effectiveReleaseType]
+    );
+
+    const { analyticsSummaryData } =
+        useGetAnalyticsSummaryV2(analyticsSummaryV2Params);
 
     const metricTabItems: MetricHeaderTabItem[] = [
         {
