@@ -5,12 +5,14 @@ import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { CreateVariables, UpdateVariables } from '@/types/api';
 import { Form, Tabs, Tooltip } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { CHANNEL_FORM_TAB } from '../../enums';
 import { useCreateChannel } from '../../hooks/use-create-channel';
+import { useTransferChannel } from '../../hooks/use-transfer-channel';
 import { useUpdateChannel } from '../../hooks/use-update-channel';
-import { ChannelsData } from '../../types';
+import { ChannelTransferPreview, ChannelsData } from '../../types';
 import {
     CreateChannelPayload,
     UpdateChannelPayload,
@@ -18,9 +20,17 @@ import {
 import ChannelAccessTab from './channel-access-tab';
 import ChannelInfoForm from './channel-info-form';
 
-type ChannelFormValues = UpdateChannelPayload;
+type ChannelFormValues = Omit<
+    UpdateChannelPayload,
+    'effectiveDate' | 'revenueEffectiveFrom'
+> & {
+    effectiveDate?: Dayjs;
+    revenueEffectiveFrom?: Dayjs;
+};
 
 type Props = Omit<AppModalProps, 'children'> & {};
+
+const PROBE_DATE = '2099-01-01';
 
 export default function ChannelFormModal({ ...props }: Props) {
     const messages = useTranslations();
@@ -36,6 +46,54 @@ export default function ChannelFormModal({ ...props }: Props) {
 
     const { createChannel, isPending: isCreatePending } = useCreateChannel();
     const { updateChannel, isPending: isUpdatePending } = useUpdateChannel();
+    const { previewTransfer, isPreviewing } = useTransferChannel();
+    const tenantId = Form.useWatch('tenantId', form);
+    const [transferPreview, setTransferPreview] =
+        useState<ChannelTransferPreview | null>(null);
+    const tenantChanged =
+        isUpdateForm && Boolean(tenantId) && tenantId !== dataEdit?.tenantId;
+
+    useEffect(() => {
+        setTransferPreview(null);
+        if (!tenantChanged || !dataEdit?.id || !tenantId) return;
+
+        let cancelled = false;
+        previewTransfer({
+            id: dataEdit.id,
+            payload: {
+                tenantId,
+                effectiveDate: PROBE_DATE,
+                revenueEffectiveFrom: PROBE_DATE,
+            },
+        })
+            .then((response) => {
+                if (!cancelled) {
+                    setTransferPreview(
+                        response.data.data as ChannelTransferPreview
+                    );
+                }
+            })
+            .catch(() => {
+                if (!cancelled) setTransferPreview(null);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [dataEdit?.id, previewTransfer, tenantChanged, tenantId]);
+
+    const applyFromStart = () => {
+        const viewsFrom =
+            transferPreview?.maxCurrentEffectiveFrom || '1900-01-01';
+        const revenueFrom =
+            transferPreview?.maxCurrentRevenueEffectiveFrom || '1900-01-01';
+        form.setFieldsValue({
+            effectiveDate: dayjs(viewsFrom).add(1, 'day'),
+            revenueEffectiveFrom: dayjs(revenueFrom)
+                .add(1, 'month')
+                .startOf('month'),
+        });
+    };
 
     const handleFormError = (data: any) => {
         const response = data?.response?.data;
@@ -86,7 +144,20 @@ export default function ChannelFormModal({ ...props }: Props) {
     };
 
     const handleUpdateChannel = (values: ChannelFormValues) => {
-        const { tenantId: _tenantId, ...payload } = values;
+        const tenantChanged = values.tenantId !== dataEdit?.tenantId;
+        const payload: UpdateChannelPayload = {
+            ...values,
+            effectiveDate:
+                tenantChanged && values.effectiveDate
+                    ? values.effectiveDate.format('YYYY-MM-DD')
+                    : undefined,
+            revenueEffectiveFrom:
+                tenantChanged && values.revenueEffectiveFrom
+                    ? values.revenueEffectiveFrom
+                          .startOf('month')
+                          .format('YYYY-MM-DD')
+                    : undefined,
+        };
         const variables: UpdateVariables<
             ChannelsData['id'],
             UpdateChannelPayload
@@ -139,6 +210,10 @@ export default function ChannelFormModal({ ...props }: Props) {
                     form={form}
                     onFinish={onfinish}
                     isUpdateForm={isUpdateForm}
+                    originalTenantId={dataEdit?.tenantId}
+                    transferPreview={transferPreview}
+                    isTransferPreviewing={isPreviewing}
+                    onApplyFromStart={applyFromStart}
                     isActive={isActive}
                 />
             ),

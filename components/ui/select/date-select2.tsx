@@ -85,6 +85,22 @@ export default function DateSelect2({
                         ] as [Dayjs, Dayjs];
                     },
                 },
+                {
+                    label: messages('date.last3Months'),
+                    value: () =>
+                        [
+                            dayjs().subtract(3, 'month').startOf('day'),
+                            dayjs().endOf('day'),
+                        ] as [Dayjs, Dayjs],
+                },
+                {
+                    label: messages('date.last6Months'),
+                    value: () =>
+                        [
+                            dayjs().subtract(6, 'month').startOf('day'),
+                            dayjs().endOf('day'),
+                        ] as [Dayjs, Dayjs],
+                },
                 ...Array.from({ length: 4 }, (_, i) => {
                     const targetMonth = dayjs().subtract(i + 2, 'month');
                     return {
@@ -98,6 +114,31 @@ export default function DateSelect2({
                 }),
             ];
         }
+
+        const rangePresets = [
+            {
+                label: messages('date.last3Months'),
+                value: () => {
+                    const start = dayjs().subtract(3, 'month').startOf('month');
+                    let end = dayjs().endOf('month');
+                    if (end.isAfter(dayjs())) {
+                        end = dayjs().endOf('day');
+                    }
+                    return [start, end] as [Dayjs, Dayjs];
+                },
+            },
+            {
+                label: messages('date.last6Months'),
+                value: () => {
+                    const start = dayjs().subtract(6, 'month').startOf('month');
+                    let end = dayjs().endOf('month');
+                    if (end.isAfter(dayjs())) {
+                        end = dayjs().endOf('day');
+                    }
+                    return [start, end] as [Dayjs, Dayjs];
+                },
+            },
+        ];
 
         const monthPresets = Array.from(
             { length: MONTH_PRESET_COUNT },
@@ -146,7 +187,12 @@ export default function DateSelect2({
                 ] as [Dayjs, Dayjs],
         };
 
-        return [...monthPresets, lifetimePreset, ...pastYearsPresets];
+        return [
+            ...rangePresets,
+            ...monthPresets,
+            lifetimePreset,
+            ...pastYearsPresets,
+        ];
     }, [messages, picker]);
 
     const rangeValue = useMemo<RangePickerProps['value']>(() => {

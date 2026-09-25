@@ -24,6 +24,8 @@ export interface RootAnalyticsOverviewChartProps {
     scopeParams?: AnalyticsScopeParams;
     overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
     onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
+    granularity?: ANALYTICS_GRANULARITY;
+    onGranularityChange?: (granularity: ANALYTICS_GRANULARITY) => void;
 }
 
 export default function RootAnalyticsOverviewChart({
@@ -35,21 +37,24 @@ export default function RootAnalyticsOverviewChart({
     scopeParams,
     overviewChartMode: externalOverviewChartMode,
     onOverviewChartModeChange,
+    granularity: externalGranularity,
+    onGranularityChange,
 }: RootAnalyticsOverviewChartProps) {
     const [internalOverviewChartMode, setInternalOverviewChartMode] =
         useState<ANALYTICS_OVERVIEW_CHART_MODE>(
             ANALYTICS_OVERVIEW_CHART_MODE.LINE
         );
+    const [internalGranularity, setInternalGranularity] =
+        useState<ANALYTICS_GRANULARITY>(ANALYTICS_GRANULARITY.DAY);
 
     const overviewChartMode =
         externalOverviewChartMode ?? internalOverviewChartMode;
     const handleOverviewChartModeChange =
         onOverviewChartModeChange ?? setInternalOverviewChartMode;
 
-    const granularity =
-        overviewChartMode === ANALYTICS_OVERVIEW_CHART_MODE.TABLE
-            ? ANALYTICS_GRANULARITY.MONTH
-            : ANALYTICS_GRANULARITY.DAY;
+    const granularity = externalGranularity ?? internalGranularity;
+    const handleGranularityChange =
+        onGranularityChange ?? setInternalGranularity;
 
     const isRevenueMetric =
         activeMetric === ANALYTICS_METRIC_KEY.TOTAL_USAGE ||
@@ -126,6 +131,8 @@ export default function RootAnalyticsOverviewChart({
             isBarChartLoading={isBarChartLoading}
             overviewChartMode={overviewChartMode}
             onOverviewChartModeChange={handleOverviewChartModeChange}
+            granularity={granularity}
+            onGranularityChange={handleGranularityChange}
         />
     );
 }

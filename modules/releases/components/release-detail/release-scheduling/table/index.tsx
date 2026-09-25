@@ -5,12 +5,12 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { getIndex } from '@/helpers/common';
 import { getTrackDetailRoute } from '@/modules/tracks/helpers/link';
 
-import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import { useGetListEnablePolicyDsp } from '@/modules/dsp/hooks/use-get-list-enable-policy-dsp';
 import { DspData } from '@/modules/dsp/types';
 import { PRICE_TIER_TYPE } from '@/modules/price_tiers/enums';
+import { RELEASE_DETAIL_ACTION } from '@/modules/releases/helpers/link';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { useGetDetailRelease } from '@/modules/releases/hooks/use-get-detail-release';
 import { useUpdateReleaseDraft } from '@/modules/releases/hooks/use-update-release-draft';
@@ -200,7 +200,6 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
                             disabled={!isCanEdit}
                             className="w-full"
                             variant="borderless"
-                            allowClear
                             params={{
                                 isActive: true,
                             }}
@@ -255,4 +254,3 @@ export default function ReleaseSchedulingTable({ ...props }: Props) {
         />
     );
 }
-

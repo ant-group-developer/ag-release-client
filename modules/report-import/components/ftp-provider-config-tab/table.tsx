@@ -2,6 +2,7 @@ import ActionButton from '@/components/ui/button/action-button';
 import AppTable, { AppTableProps } from '@/components/ui/table/normal-table';
 import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { formattedDate, getIndex } from '@/helpers/common';
+import { useIsMobile } from '@/hooks/use-is-mobile';
 import useModalStore from '@/hooks/use-modal';
 import { Switch, Tag, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -26,6 +27,7 @@ export default function FtpProviderConfigTable({
     ...props
 }: Props) {
     const messages = useTranslations();
+    const isMobile = useIsMobile();
     const openModal = useModalStore((state) => state.openModal);
     const { updateFtpProviderConfig } = useUpdateFtpProviderConfig();
     void dataFilter;
@@ -36,7 +38,7 @@ export default function FtpProviderConfigTable({
             key: 'iNo',
             width: 70,
             align: 'center',
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             render: (_, __, index) =>
                 getIndex(
                     props.pagination?.pageSize,
@@ -49,7 +51,7 @@ export default function FtpProviderConfigTable({
             key: 'name',
             dataIndex: 'name',
             width: 180,
-            fixed: 'left',
+            fixed: isMobile ? undefined : 'left',
             ellipsis: true,
             render: (value) => (
                 <Typography.Text strong>{value}</Typography.Text>
@@ -160,7 +162,7 @@ export default function FtpProviderConfigTable({
             key: 'actions',
             width: 90,
             align: 'center',
-            fixed: 'right',
+            fixed: isMobile ? undefined : 'right',
             render: (_, record) => (
                 <ActionButton
                     showUpdate

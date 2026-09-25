@@ -141,7 +141,7 @@ export interface ReleaseVideoRankingItem {
     labelName: string;
     trackCount: number;
     totalViews: number;
-    channels: Pick<ChannelsData, 'id' | 'name'>[];
+    channels: Pick<ChannelsData, 'id' | 'name' | 'youtubeChannelId'>[];
     workspaces: (Pick<TenantData, 'id' | 'name'> & { logo?: string | null })[];
     release?: Pick<ReleasesData, 'coverArtThumbnails'>;
     video: VideoData;
@@ -427,7 +427,7 @@ export interface RevenueReleaseVideoItem {
     trackCount: number;
     revenueUsd: number;
     quantity: number;
-    channels: Pick<ChannelsData, 'id' | 'name'>[];
+    channels: Pick<ChannelsData, 'id' | 'name' | 'youtubeChannelId'>[];
     workspaces: (Pick<TenantData, 'id' | 'name'> & { logo?: string | null })[];
     release?: Pick<ReleasesData, 'coverArtThumbnails'>;
     video: VideoData;

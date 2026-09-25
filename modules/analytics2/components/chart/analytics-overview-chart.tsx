@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import {
     ANALYTICS_BAR_CHART_TYPE,
+    ANALYTICS_GRANULARITY,
     ANALYTICS_METRIC_KEY,
     ANALYTICS_OVERVIEW_CHART_MODE,
 } from '../../enums';
@@ -37,6 +38,8 @@ export interface AnalyticsOverviewChartProps {
     defaultBarChartType?: ANALYTICS_BAR_CHART_TYPE;
     overviewChartMode?: ANALYTICS_OVERVIEW_CHART_MODE;
     onOverviewChartModeChange?: (mode: ANALYTICS_OVERVIEW_CHART_MODE) => void;
+    granularity?: ANALYTICS_GRANULARITY;
+    onGranularityChange?: (granularity: ANALYTICS_GRANULARITY) => void;
 }
 
 export default function AnalyticsOverviewChart({
@@ -50,6 +53,8 @@ export default function AnalyticsOverviewChart({
     defaultBarChartType = ANALYTICS_BAR_CHART_TYPE.DSP,
     overviewChartMode: externalOverviewChartMode,
     onOverviewChartModeChange,
+    granularity: externalGranularity,
+    onGranularityChange,
 }: AnalyticsOverviewChartProps) {
     const messages = useTranslations();
     const demographics = useContext(AnalyticsDemographicsContext);
@@ -59,6 +64,8 @@ export default function AnalyticsOverviewChart({
         useState<ANALYTICS_OVERVIEW_CHART_MODE>(
             ANALYTICS_OVERVIEW_CHART_MODE.LINE
         );
+    const [internalGranularity, setInternalGranularity] =
+        useState<ANALYTICS_GRANULARITY>(ANALYTICS_GRANULARITY.DAY);
 
     const overviewChartMode =
         externalOverviewChartMode ?? internalOverviewChartMode;
@@ -69,6 +76,14 @@ export default function AnalyticsOverviewChart({
             setInternalOverviewChartMode(mode);
         }
         onOverviewChartModeChange?.(mode);
+    };
+
+    const granularity = externalGranularity ?? internalGranularity;
+    const handleGranularityChange = (val: ANALYTICS_GRANULARITY) => {
+        if (externalGranularity === undefined) {
+            setInternalGranularity(val);
+        }
+        onGranularityChange?.(val);
     };
 
     useEffect(() => {
@@ -237,7 +252,24 @@ export default function AnalyticsOverviewChart({
     }, [viewType, dspData, terData, isRevenueUsd, isUsage]);
 
     const overviewSegmentHeader = (
-        <div className="flex w-full items-center justify-end">
+        <div className="flex w-full items-center justify-between">
+            <Segmented
+                options={[
+                    {
+                        label: messages('date.day.label') || 'Ngày',
+                        value: ANALYTICS_GRANULARITY.DAY,
+                    },
+                    {
+                        label: messages('date.month.label') || 'Tháng',
+                        value: ANALYTICS_GRANULARITY.MONTH,
+                    },
+                ]}
+                value={granularity}
+                onChange={(val) =>
+                    handleGranularityChange(val as ANALYTICS_GRANULARITY)
+                }
+                className="flex-shrink-0"
+            />
             <Segmented
                 options={[
                     {
@@ -324,6 +356,7 @@ export default function AnalyticsOverviewChart({
                         chartHeight={250}
                         valuePrefix={isRevenueUsd ? '$' : ''}
                         className="!rounded-none !border-0 !shadow-none lg:!border-r"
+                        granularity={granularity}
                     />
                 )}
             </Col>

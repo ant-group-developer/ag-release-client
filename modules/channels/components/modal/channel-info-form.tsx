@@ -4,14 +4,28 @@ import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
-import { Form, FormInstance, Image, Input, Switch } from 'antd';
+import {
+    Button,
+    DatePicker,
+    Form,
+    FormInstance,
+    Image,
+    Input,
+    Switch,
+    Tooltip,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
+import { ChannelTransferPreview } from '../../types';
 
 type Props = {
     form: FormInstance;
     onFinish: (values: any) => void;
     isUpdateForm: boolean;
+    originalTenantId?: string;
+    transferPreview?: ChannelTransferPreview | null;
+    isTransferPreviewing?: boolean;
+    onApplyFromStart?: () => void;
     isActive: boolean;
 };
 
@@ -19,10 +33,17 @@ export default function ChannelInfoForm({
     form,
     onFinish,
     isUpdateForm,
+    originalTenantId,
+    transferPreview,
+    isTransferPreviewing,
+    onApplyFromStart,
     isActive,
 }: Props) {
     const messages = useTranslations();
     const thumbUrl = Form.useWatch('thumbUrl', form);
+    const tenantId = Form.useWatch('tenantId', form);
+    const tenantChanged =
+        isUpdateForm && Boolean(tenantId) && tenantId !== originalTenantId;
 
     const handleFinish = (values: any) => {
         const payloadValues = {
@@ -60,9 +81,81 @@ export default function ChannelInfoForm({
             >
                 <TenantSelectActive
                     placeholder={messages('tenant.selectTitle')}
-                    disabled={isUpdateForm || isActive}
+                    disabled={isActive}
                 />
             </AppFormItem>
+
+            {tenantChanged && (
+                <>
+                    <div className="mb-3">
+                        <Tooltip
+                            title={messages('channel.transfer.fromStartHelp')}
+                        >
+                            <Button
+                                size="small"
+                                loading={isTransferPreviewing}
+                                disabled={
+                                    !transferPreview ||
+                                    Boolean(
+                                        transferPreview.blockingSharedIsrcs
+                                            ?.length
+                                    )
+                                }
+                                onClick={onApplyFromStart}
+                            >
+                                {messages('channel.transfer.fromStart')}
+                            </Button>
+                        </Tooltip>
+                    </div>
+                    <AppFormItem
+                        name="effectiveDate"
+                        label={messages('channel.transfer.effectiveDate')}
+                        required
+                        tooltipInfo={messages(
+                            'channel.transfer.effectiveDateHelp'
+                        )}
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <DatePicker
+                            className="w-full"
+                            format="YYYY-MM-DD"
+                            placeholder={messages(
+                                'channel.transfer.selectDate'
+                            )}
+                        />
+                    </AppFormItem>
+                    <AppFormItem
+                        name="revenueEffectiveFrom"
+                        label={messages(
+                            'channel.transfer.revenueEffectiveFrom'
+                        )}
+                        required
+                        tooltipInfo={messages(
+                            'channel.transfer.revenueEffectiveFromHelp'
+                        )}
+                        rules={[
+                            {
+                                required: true,
+                                message: messages('validation.input'),
+                            },
+                        ]}
+                    >
+                        <DatePicker
+                            className="w-full"
+                            picker="month"
+                            format="MM/YYYY"
+                            placeholder={messages(
+                                'channel.transfer.selectMonth'
+                            )}
+                        />
+                    </AppFormItem>
+                </>
+            )}
 
             <AppFormItem
                 name="name"
