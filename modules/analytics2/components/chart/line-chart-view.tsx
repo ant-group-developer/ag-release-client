@@ -21,6 +21,12 @@ export interface TooltipKeyConfig {
     valuePrefix?: string;
 }
 
+export interface LineChartLineConfig {
+    key: string;
+    name: string;
+    color: string;
+}
+
 const DEFAULT_MIN_TICK_GAP = 15;
 
 interface LineChartViewProps {
@@ -36,6 +42,7 @@ interface LineChartViewProps {
     additionalTooltipKeys?: TooltipKeyConfig[];
     minTickGap?: number;
     className?: string;
+    lines?: LineChartLineConfig[];
 }
 
 const CustomLineTooltip = ({
@@ -45,10 +52,12 @@ const CustomLineTooltip = ({
     lineName,
     valuePrefix = '',
     additionalTooltipKeys = [],
+    lines = [],
 }: any) => {
     if (active && payload && payload.length) {
         const firstEntry = payload[0];
         const originalData = firstEntry.payload;
+        const tooltipEntries = lines.length ? payload : [firstEntry];
 
         return (
             <div className="flex flex-col gap-1 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
@@ -56,45 +65,52 @@ const CustomLineTooltip = ({
                     {label}
                 </span>
 
-                {/* Main line item */}
-                <div className="flex items-center gap-2">
+                {/* Main line items */}
+                {tooltipEntries.map((entry: any) => (
                     <div
-                        className="h-2 w-2 rounded-full"
-                        style={{
-                            backgroundColor:
-                                firstEntry.color ||
-                                firstEntry.stroke ||
-                                '#1890ff',
-                        }}
-                    />
-                    <span className="text-xs text-gray-600 dark:text-zinc-400">
-                        {firstEntry.name || lineName}:
-                    </span>
-                    <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
-                        {valuePrefix}
-                        {formattedNumber(firstEntry.value)}
-                    </span>
-                </div>
+                        className="flex items-center gap-2"
+                        key={entry.dataKey || entry.name}
+                    >
+                        <div
+                            className="h-2 w-2 rounded-full"
+                            style={{
+                                backgroundColor:
+                                    entry.color || entry.stroke || '#1890ff',
+                            }}
+                        />
+                        <span className="text-xs text-gray-600 dark:text-zinc-400">
+                            {entry.name || lineName}:
+                        </span>
+                        <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
+                            {valuePrefix}
+                            {formattedNumber(entry.value)}
+                        </span>
+                    </div>
+                ))}
 
                 {/* Additional metrics */}
-                {additionalTooltipKeys.map(
-                    (cfg: TooltipKeyConfig, idx: number) => {
-                        const val = originalData?.[cfg.key];
-                        if (val === undefined || val === null) return null;
-                        return (
-                            <div key={idx} className="flex items-center gap-2">
-                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-zinc-500" />
-                                <span className="text-xs text-gray-600 dark:text-zinc-400">
-                                    {cfg.name}:
-                                </span>
-                                <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
-                                    {cfg.valuePrefix || ''}
-                                    {formattedNumber(val)}
-                                </span>
-                            </div>
-                        );
-                    }
-                )}
+                {!lines.length &&
+                    additionalTooltipKeys.map(
+                        (cfg: TooltipKeyConfig, idx: number) => {
+                            const val = originalData?.[cfg.key];
+                            if (val === undefined || val === null) return null;
+                            return (
+                                <div
+                                    key={idx}
+                                    className="flex items-center gap-2"
+                                >
+                                    <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-zinc-500" />
+                                    <span className="text-xs text-gray-600 dark:text-zinc-400">
+                                        {cfg.name}:
+                                    </span>
+                                    <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
+                                        {cfg.valuePrefix || ''}
+                                        {formattedNumber(val)}
+                                    </span>
+                                </div>
+                            );
+                        }
+                    )}
             </div>
         );
     }
@@ -114,8 +130,12 @@ export default function LineChartView({
     additionalTooltipKeys = [],
     minTickGap = DEFAULT_MIN_TICK_GAP,
     className = '',
+    lines,
 }: LineChartViewProps) {
     const messages = useTranslations();
+    const renderLines = lines?.length
+        ? lines
+        : [{ key: lineKey, name: lineName, color: strokeColor }];
 
     return (
         <Card
@@ -175,24 +195,27 @@ export default function LineChartView({
                                 }}
                             >
                                 <defs>
-                                    <linearGradient
-                                        id="colorViews"
-                                        x1="0"
-                                        y1="0"
-                                        x2="0"
-                                        y2="1"
-                                    >
-                                        <stop
-                                            offset="5%"
-                                            stopColor={strokeColor}
-                                            stopOpacity={0.2}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor={strokeColor}
-                                            stopOpacity={0.01}
-                                        />
-                                    </linearGradient>
+                                    {renderLines.map((line, index) => (
+                                        <linearGradient
+                                            key={line.key}
+                                            id={'colorLine' + index}
+                                            x1="0"
+                                            y1="0"
+                                            x2="0"
+                                            y2="1"
+                                        >
+                                            <stop
+                                                offset="5%"
+                                                stopColor={line.color}
+                                                stopOpacity={0.2}
+                                            />
+                                            <stop
+                                                offset="95%"
+                                                stopColor={line.color}
+                                                stopOpacity={0.01}
+                                            />
+                                        </linearGradient>
+                                    ))}
                                 </defs>
                                 <CartesianGrid
                                     strokeDasharray="3 3"
@@ -236,6 +259,7 @@ export default function LineChartView({
                                         <CustomLineTooltip
                                             lineName={lineName}
                                             valuePrefix={valuePrefix}
+                                            lines={lines}
                                             additionalTooltipKeys={
                                                 additionalTooltipKeys
                                             }
@@ -243,25 +267,22 @@ export default function LineChartView({
                                     }
                                     animationEasing="ease"
                                 />
-                                <Area
-                                    type="monotone"
-                                    dataKey={lineKey}
-                                    name={lineName}
-                                    stroke={strokeColor}
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorViews)"
-                                    // dot={{
-                                    //     r: 4,
-                                    //     fill: strokeColor,
-                                    //     stroke: strokeColor,
-                                    // }}
-                                    // activeDot={{
-                                    //     r: 6,
-                                    //     fill: strokeColor,
-                                    //     stroke: strokeColor,
-                                    // }}
-                                />
+                                {renderLines.map((line, index) => (
+                                    <Area
+                                        key={line.key}
+                                        type="monotone"
+                                        dataKey={line.key}
+                                        name={line.name}
+                                        stroke={line.color}
+                                        strokeWidth={2}
+                                        fillOpacity={lines?.length ? 0 : 1}
+                                        fill={
+                                            lines?.length
+                                                ? 'none'
+                                                : 'url(#colorLine' + index + ')'
+                                        }
+                                    />
+                                ))}
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>

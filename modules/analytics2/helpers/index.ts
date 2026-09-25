@@ -1,11 +1,19 @@
-import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_GRANULARITY,
+    ANALYTICS_RELEASE_TYPE,
+} from '../enums';
 import { ANALYTICS_VIEW_TYPE } from '../enums/tabs';
 import {
     ActiveAnalyticsEntity,
+    AnalyticsCommonParams,
     AnalyticsFilterItem,
     AnalyticsScopeParams,
     AnalyticsSelectedIds,
     AnalyticsSelectionParams,
+    TrendViewLineChartV2DspId,
+    TrendViewLineChartV2Filters,
+    TrendViewLineChartV2Params,
 } from '../types';
 
 export const createViewMoreHref = (
@@ -109,6 +117,97 @@ export const getCombinedAnalyticsScopeParams = (
     return {
         ...entityScope,
         ...filterScope,
+    };
+};
+
+const uniqueNonEmpty = (values: (string | undefined)[]) =>
+    Array.from(new Set(values.filter((value): value is string => !!value)));
+
+const toDspFilter = (value: string): TrendViewLineChartV2DspId => {
+    const [pgDspId, dspReportId] = value.split('\u001f');
+
+    return {
+        pgDspId,
+        dspReportId: dspReportId || pgDspId,
+    };
+};
+
+export const getTrendViewLineChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewLineChartV2Params => {
+    const tenantIds = uniqueNonEmpty([
+        params.tenantId,
+        ...(params.tenantIds ?? []),
+    ]);
+    const labelIds = uniqueNonEmpty([
+        params.labelId,
+        ...(params.labelIds ?? []),
+    ]);
+    const artistIds = uniqueNonEmpty([
+        params.artistId,
+        ...(params.artistIds ?? []),
+    ]);
+    const releaseIds = uniqueNonEmpty([
+        params.releaseId,
+        ...(params.releaseIds ?? []),
+    ]);
+    const channelIds = uniqueNonEmpty([
+        params.channelId,
+        ...(params.channelIds ?? []),
+    ]);
+    const isrcs = uniqueNonEmpty([
+        params.isrc,
+        params.trackId,
+        ...(params.trackIds ?? []),
+    ]);
+    const importSources = uniqueNonEmpty([
+        params.importSource,
+        ...(params.importSources ?? []),
+    ]);
+
+    const dspIds = [
+        ...(params.dspIds ?? []).map(toDspFilter),
+        ...(params.pgDspId || params.dspReportId
+            ? [
+                  {
+                      pgDspId: params.pgDspId || params.dspId || '',
+                      dspReportId:
+                          params.dspReportId ||
+                          params.pgDspId ||
+                          params.dspId ||
+                          '',
+                  },
+              ]
+            : []),
+    ].filter(
+        (dsp, index, list) =>
+            dsp.pgDspId &&
+            dsp.dspReportId &&
+            list.findIndex(
+                (item) =>
+                    item.pgDspId === dsp.pgDspId &&
+                    item.dspReportId === dsp.dspReportId
+            ) === index
+    );
+
+    const filters: TrendViewLineChartV2Filters = {
+        ...(tenantIds.length ? { tenantIds } : {}),
+        ...(labelIds.length ? { labelIds } : {}),
+        ...(artistIds.length ? { artistIds } : {}),
+        ...(releaseIds.length ? { releaseIds } : {}),
+        ...(channelIds.length ? { channelIds } : {}),
+        ...(isrcs.length ? { isrcs } : {}),
+        ...(importSources.length ? { importSources } : {}),
+        ...(dspIds.length ? { dspIds } : {}),
+    };
+
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        seriesBy: 'auto',
+        filters,
+        granularity: params.granularity || ANALYTICS_GRANULARITY.DAY,
     };
 };
 

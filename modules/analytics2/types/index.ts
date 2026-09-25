@@ -487,6 +487,62 @@ export interface TrendViewLineChartItem {
     totalViews: number;
 }
 
+export interface TrendViewLineChartV2DspId {
+    pgDspId: string;
+    dspReportId: string;
+}
+
+export interface TrendViewLineChartV2Filters {
+    tenantIds?: string[];
+    labelIds?: string[];
+    artistIds?: string[];
+    releaseIds?: string[];
+    channelIds?: string[];
+    isrcs?: string[];
+    importSources?: string[];
+    dspIds?: TrendViewLineChartV2DspId[];
+}
+
+export interface TrendViewLineChartV2Params {
+    fromDate: string;
+    toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE | string;
+    seriesBy: string;
+    filters: TrendViewLineChartV2Filters;
+    granularity: ANALYTICS_GRANULARITY | 'day' | 'month' | string;
+}
+
+export interface TrendViewLineChartV2SeriesValue {
+    period: string;
+    totalViews?: number;
+    revenueUsd?: number;
+    revenueUsdExact?: string;
+    quantity?: number;
+}
+
+export interface TrendViewLineChartV2SeriesMetadata {
+    id: string;
+    type: string;
+    name: string;
+    imageUrl?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+}
+
+export interface TrendViewLineChartV2Series {
+    id: string;
+    metadata: TrendViewLineChartV2SeriesMetadata;
+    values: TrendViewLineChartV2SeriesValue[];
+}
+
+export interface TrendViewLineChartV2Data {
+    seriesBy: string;
+    series: TrendViewLineChartV2Series[];
+}
+
+export type RevenueLineChartV2Params = TrendViewLineChartV2Params;
+export type RevenueLineChartV2Data = TrendViewLineChartV2Data;
+
 export interface TrendViewDspBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;

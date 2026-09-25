@@ -35,6 +35,8 @@ import {
     RevenueLabelItem,
     RevenueLineChartItem,
     RevenueLineChartParams,
+    RevenueLineChartV2Data,
+    RevenueLineChartV2Params,
     RevenueQueryParams,
     RevenueReleaseItem,
     RevenueReleaseVideoItem,
@@ -63,6 +65,8 @@ import {
     TrendViewDspBarChartItem,
     TrendViewDspBarChartParams,
     TrendViewLineChartItem,
+    TrendViewLineChartV2Data,
+    TrendViewLineChartV2Params,
     TrendViewSummaryData,
     TrendViewTenantBarChartItem,
     TrendViewTerBarChartItem,
@@ -109,6 +113,12 @@ export const analytics2Apis = {
     getTrendViewLineChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<TrendViewLineChartItem[]>>(
             '/analytics/trend-view/line-chart',
+            params
+        );
+    },
+    getTrendViewLineChartV2: (params: TrendViewLineChartV2Params) => {
+        return axiosInstance.post<DetailResponse<TrendViewLineChartV2Data>>(
+            '/analytics/trend-view/line-chart/v2',
             params
         );
     },
@@ -218,6 +228,12 @@ export const analytics2Apis = {
     getRevenueLineChart: (params: AnalyticsCommonParams) => {
         return axiosInstance.post<DetailResponse<RevenueLineChartItem[]>>(
             '/analytics/revenue/line-chart',
+            params
+        );
+    },
+    getRevenueLineChartV2: (params: RevenueLineChartV2Params) => {
+        return axiosInstance.post<DetailResponse<RevenueLineChartV2Data>>(
+            '/analytics/revenue/line-chart/v2',
             params
         );
     },

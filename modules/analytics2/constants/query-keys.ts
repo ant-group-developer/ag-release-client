@@ -9,10 +9,12 @@ import {
     ReleaseOverviewParams,
     RevenueDspBarChartParams,
     RevenueLineChartParams,
+    RevenueLineChartV2Params,
     RevenueQueryParams,
     RevenueTerBarChartParams,
     TerTimelineParams,
     TrendViewDspBarChartParams,
+    TrendViewLineChartV2Params,
     TrendViewTerBarChartParams,
 } from '../types';
 
@@ -46,6 +48,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_LINE_CHART,
+            params,
+        ] as const,
+    trendViewLineChartV2: (params: TrendViewLineChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_LINE_CHART_V2,
             params,
         ] as const,
     trendViewDspBarChart: (params: AnalyticsCommonParams) =>
@@ -154,6 +162,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_LINE_CHART,
+            params,
+        ] as const,
+    revenueLineChartV2: (params: RevenueLineChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_LINE_CHART_V2,
             params,
         ] as const,
     revenueDspBarChart: (params: AnalyticsCommonParams) =>

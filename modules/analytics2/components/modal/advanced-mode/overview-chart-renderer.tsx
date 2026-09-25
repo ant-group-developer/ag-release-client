@@ -11,7 +11,6 @@ import {
 } from '../../../enums';
 import {
     getCombinedAnalyticsScopeParams,
-    getFilterScopeParams,
 } from '../../../helpers';
 import { useGetTrendViewDemographicsBarCharts } from '../../../hooks/use-get-trend-view-demographics-bar-chart';
 import {
@@ -55,7 +54,10 @@ export default function OverviewChartRenderer({
         ANALYTICS_GRANULARITY.DAY
     );
 
-    const filterScope = useMemo(() => getFilterScopeParams(filters), [filters]);
+    const entityScope = useMemo(
+        () => getCombinedAnalyticsScopeParams(activeEntity, filters),
+        [activeEntity, filters]
+    );
 
     const commonProps = {
         fromDate,
@@ -63,7 +65,7 @@ export default function OverviewChartRenderer({
         releaseType,
         activeMetric,
         enabled,
-        scopeParams: { ...filterScope, ...selectionParams },
+        scopeParams: { ...entityScope, ...selectionParams },
         overviewChartMode,
         onOverviewChartModeChange: setOverviewChartMode,
         granularity,
