@@ -12,7 +12,7 @@ import {
 } from '../../enums';
 import { formatDemographicsLabel } from '../../helpers';
 import { TrendViewDemographicsBarChartData } from '../../types';
-import LineChartView from './line-chart-view';
+import LineChartView, { LineChartLineConfig } from './line-chart-view';
 import OverviewBarChartView from './overview-bar-chart-view';
 import OverviewTableView from './overview-table-view';
 import PieChartView from './pie-chart-view';
@@ -30,6 +30,7 @@ export const AnalyticsDemographicsContext =
 export interface AnalyticsOverviewChartProps {
     activeMetric?: string;
     lineChartData?: any[];
+    lineChartLines?: LineChartLineConfig[];
     isLineChartLoading?: boolean;
     dspData?: any[];
     terData?: any[];
@@ -45,6 +46,7 @@ export interface AnalyticsOverviewChartProps {
 export default function AnalyticsOverviewChart({
     activeMetric = ANALYTICS_METRIC_KEY.TOTAL_VIEWS,
     lineChartData = [],
+    lineChartLines,
     isLineChartLoading = false,
     dspData = [],
     terData = [],
@@ -105,6 +107,11 @@ export default function AnalyticsOverviewChart({
         if (isUsage) return messages('analytics.totalSalesViews');
         return messages('common.streams');
     }, [isRevenueUsd, isUsage, messages]);
+
+    const primaryLine = lineChartLines?.[0];
+    const chartLineKey = primaryLine?.key ?? lineKey;
+    const chartLineName = primaryLine?.name ?? lineName;
+    const chartLineColor = primaryLine?.color;
 
     const isDemographicsView =
         viewType === ANALYTICS_BAR_CHART_TYPE.DEVICE ||
@@ -325,8 +332,10 @@ export default function AnalyticsOverviewChart({
                         title={overviewSegmentHeader}
                         data={lineChartData}
                         xAxisKey="period"
-                        lineKey={lineKey}
-                        lineName={lineName}
+                        lineKey={chartLineKey}
+                        lineName={chartLineName}
+                        strokeColor={chartLineColor}
+                        lines={lineChartLines}
                         loading={isLineChartLoading}
                         chartHeight={250}
                         valuePrefix={isRevenueUsd ? '$' : ''}
@@ -338,8 +347,8 @@ export default function AnalyticsOverviewChart({
                         title={overviewSegmentHeader}
                         data={lineChartData}
                         xAxisKey="period"
-                        barKey={lineKey}
-                        barName={lineName}
+                        barKey={chartLineKey}
+                        barName={chartLineName}
                         loading={isLineChartLoading}
                         chartHeight={250}
                         valuePrefix={isRevenueUsd ? '$' : ''}
@@ -350,8 +359,8 @@ export default function AnalyticsOverviewChart({
                         title={overviewSegmentHeader}
                         data={lineChartData}
                         xAxisKey="period"
-                        valueKey={lineKey}
-                        valueName={lineName}
+                        valueKey={chartLineKey}
+                        valueName={chartLineName}
                         loading={isLineChartLoading}
                         chartHeight={250}
                         valuePrefix={isRevenueUsd ? '$' : ''}

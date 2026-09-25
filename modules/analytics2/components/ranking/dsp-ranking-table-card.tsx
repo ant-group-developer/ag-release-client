@@ -13,7 +13,6 @@ import {
     ANALYTICS_DEFAULT_START_DATE,
     ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -32,6 +31,7 @@ import {
     DspRankingItem,
     RevenueDspItem,
 } from '@/modules/analytics2/types';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { CommonParams } from '@/types/api';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Card, Grid, Tag, Typography } from 'antd';
@@ -52,6 +52,8 @@ export interface DspRankingTableCardProps {
     metricKey?: ANALYTICS_METRIC_KEY;
     onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
     enabled?: boolean;
     className?: string;
     paramPrefix?: string;
@@ -75,6 +77,8 @@ export default function DspRankingTableCard({
     metricKey,
     onMetricChange,
     onSelectEntity,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
     paramPrefix,
@@ -430,6 +434,16 @@ export default function DspRankingTableCard({
                     dataSource={revenueDataWithRank}
                     loading={isFetching}
                     rowKey="source"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
@@ -444,6 +458,16 @@ export default function DspRankingTableCard({
                     dataSource={viewsDataWithRank}
                     loading={isFetching}
                     rowKey="source"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}

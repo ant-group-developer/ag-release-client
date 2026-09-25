@@ -2,18 +2,26 @@ import { QUERY_KEY } from '@/constants/query-key';
 
 import {
     AnalyticsCommonParams,
+    AnalyticsSummaryV2Params,
     DspDetailParams,
     DspRankingParams,
     DspTimelineParams,
     RankingParams,
     ReleaseOverviewParams,
     RevenueDspBarChartParams,
+    RevenueDspBarChartV2Params,
     RevenueLineChartParams,
+    RevenueLineChartV2Params,
     RevenueQueryParams,
     RevenueTerBarChartParams,
+    RevenueTerBarChartV2Params,
     TerTimelineParams,
+    TrendViewDemographicsBarChartV2Params,
     TrendViewDspBarChartParams,
+    TrendViewDspBarChartV2Params,
+    TrendViewLineChartV2Params,
     TrendViewTerBarChartParams,
+    TrendViewTerBarChartV2Params,
 } from '../types';
 
 export const analytics2QueryKeys = {
@@ -22,6 +30,12 @@ export const analytics2QueryKeys = {
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.ANALYTICS_SUMMARY,
+            params,
+        ] as const,
+    analyticsSummaryV2: (params: AnalyticsSummaryV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.ANALYTICS_SUMMARY_V2,
             params,
         ] as const,
     dspTimeline: (params: DspTimelineParams) =>
@@ -48,10 +62,22 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.TREND_VIEW_LINE_CHART,
             params,
         ] as const,
+    trendViewLineChartV2: (params: TrendViewLineChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_LINE_CHART_V2,
+            params,
+        ] as const,
     trendViewDspBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_DSP_BAR_CHART,
+            params,
+        ] as const,
+    trendViewDspBarChartV2: (params: TrendViewDspBarChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_DSP_BAR_CHART_V2,
             params,
         ] as const,
     trendViewTerBarChart: (params: AnalyticsCommonParams) =>
@@ -60,10 +86,24 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.TREND_VIEW_TER_BAR_CHART,
             params,
         ] as const,
+    trendViewTerBarChartV2: (params: TrendViewTerBarChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_TER_BAR_CHART_V2,
+            params,
+        ] as const,
     trendViewDeviceBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_DEVICE_BAR_CHART,
+            params,
+        ] as const,
+    trendViewDeviceBarChartV2: (
+        params: TrendViewDemographicsBarChartV2Params
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_DEVICE_BAR_CHART_V2,
             params,
         ] as const,
     trendViewGenderBarChart: (params: AnalyticsCommonParams) =>
@@ -72,10 +112,26 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.TREND_VIEW_GENDER_BAR_CHART,
             params,
         ] as const,
+    trendViewGenderBarChartV2: (
+        params: TrendViewDemographicsBarChartV2Params
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_GENDER_BAR_CHART_V2,
+            params,
+        ] as const,
     trendViewAgeRangeBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.TREND_VIEW_AGE_RANGE_BAR_CHART,
+            params,
+        ] as const,
+    trendViewAgeRangeBarChartV2: (
+        params: TrendViewDemographicsBarChartV2Params
+    ) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.TREND_VIEW_AGE_RANGE_BAR_CHART_V2,
             params,
         ] as const,
     dspSalesTimeline: (params: DspTimelineParams) =>
@@ -156,16 +212,34 @@ export const analytics2QueryKeys = {
             QUERY_KEY.ANALYTICS2.REVENUE_LINE_CHART,
             params,
         ] as const,
+    revenueLineChartV2: (params: RevenueLineChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_LINE_CHART_V2,
+            params,
+        ] as const,
     revenueDspBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_DSP_BAR_CHART,
             params,
         ] as const,
+    revenueDspBarChartV2: (params: RevenueDspBarChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_DSP_BAR_CHART_V2,
+            params,
+        ] as const,
     revenueTerBarChart: (params: AnalyticsCommonParams) =>
         [
             ...analytics2QueryKeys.all,
             QUERY_KEY.ANALYTICS2.REVENUE_TER_BAR_CHART,
+            params,
+        ] as const,
+    revenueTerBarChartV2: (params: RevenueTerBarChartV2Params) =>
+        [
+            ...analytics2QueryKeys.all,
+            QUERY_KEY.ANALYTICS2.REVENUE_TER_BAR_CHART_V2,
             params,
         ] as const,
     revenueTimeline: (params: RevenueQueryParams) =>

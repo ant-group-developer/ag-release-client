@@ -3,7 +3,7 @@
 import { DATE_FORMAT } from '@/enums/common';
 import { formattedDate, formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
-import { Card, Empty } from 'antd';
+import { Card, Empty, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import {
     Area,
@@ -21,6 +21,12 @@ export interface TooltipKeyConfig {
     valuePrefix?: string;
 }
 
+export interface LineChartLineConfig {
+    key: string;
+    name: string;
+    color: string;
+}
+
 const DEFAULT_MIN_TICK_GAP = 15;
 
 interface LineChartViewProps {
@@ -36,6 +42,7 @@ interface LineChartViewProps {
     additionalTooltipKeys?: TooltipKeyConfig[];
     minTickGap?: number;
     className?: string;
+    lines?: LineChartLineConfig[];
 }
 
 const CustomLineTooltip = ({
@@ -45,56 +52,117 @@ const CustomLineTooltip = ({
     lineName,
     valuePrefix = '',
     additionalTooltipKeys = [],
+    lines = [],
 }: any) => {
+    const messages = useTranslations();
+
     if (active && payload && payload.length) {
         const firstEntry = payload[0];
         const originalData = firstEntry.payload;
+        const tooltipEntries = lines.length ? payload : [firstEntry];
+
+        const sortedEntries = [...tooltipEntries].sort(
+            (a: any, b: any) =>
+                (Number(b?.value) || 0) - (Number(a?.value) || 0)
+        );
+
+        const totalValue = sortedEntries.reduce(
+            (sum: number, entry: any) => sum + (Number(entry?.value) || 0),
+            0
+        );
+
+        const showTotal = Boolean(lines?.length) || sortedEntries.length > 1;
 
         return (
-            <div className="flex flex-col gap-1 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
-                <span className="text-[13px] font-semibold text-gray-900 dark:text-zinc-100">
+            <div className="flex max-w-[360px] flex-col gap-1.5 rounded-lg border border-[#f0f0f0] bg-white px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:border-zinc-700 dark:bg-zinc-800">
+                <Typography.Text strong className="text-[13px]">
                     {label}
-                </span>
+                </Typography.Text>
 
-                {/* Main line item */}
-                <div className="flex items-center gap-2">
-                    <div
-                        className="h-2 w-2 rounded-full"
-                        style={{
-                            backgroundColor:
-                                firstEntry.color ||
-                                firstEntry.stroke ||
-                                '#1890ff',
-                        }}
-                    />
-                    <span className="text-xs text-gray-600 dark:text-zinc-400">
-                        {firstEntry.name || lineName}:
-                    </span>
-                    <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
-                        {valuePrefix}
-                        {formattedNumber(firstEntry.value)}
-                    </span>
-                </div>
-
-                {/* Additional metrics */}
-                {additionalTooltipKeys.map(
-                    (cfg: TooltipKeyConfig, idx: number) => {
-                        const val = originalData?.[cfg.key];
-                        if (val === undefined || val === null) return null;
-                        return (
-                            <div key={idx} className="flex items-center gap-2">
-                                <div className="h-2 w-2 rounded-full bg-gray-400 dark:bg-zinc-500" />
-                                <span className="text-xs text-gray-600 dark:text-zinc-400">
-                                    {cfg.name}:
-                                </span>
-                                <span className="ml-1 text-xs font-semibold text-gray-900 dark:text-zinc-100">
-                                    {cfg.valuePrefix || ''}
-                                    {formattedNumber(val)}
-                                </span>
-                            </div>
-                        );
-                    }
+                {showTotal && (
+                    <div className="flex items-center justify-between gap-3 border-b border-[#f0f0f0] pb-1.5 text-xs dark:border-zinc-700">
+                        <Typography.Text strong className="text-xs">
+                            {messages('common.total')}:
+                        </Typography.Text>
+                        <Typography.Text
+                            strong
+                            className="shrink-0 text-right text-xs tabular-nums"
+                        >
+                            {valuePrefix}
+                            {formattedNumber(totalValue)}
+                        </Typography.Text>
+                    </div>
                 )}
+
+                <div className="flex flex-col gap-1">
+                    {/* Main line items */}
+                    {sortedEntries.map((entry: any) => (
+                        <div
+                            className="flex items-center justify-between gap-3 text-xs"
+                            key={entry.dataKey || entry.name}
+                        >
+                            <div className="flex min-w-0 items-center gap-2">
+                                <div
+                                    className="h-2 w-2 shrink-0 rounded-full"
+                                    style={{
+                                        backgroundColor:
+                                            entry.color ||
+                                            entry.stroke ||
+                                            '#1890ff',
+                                    }}
+                                />
+                                <Typography.Text
+                                    type="secondary"
+                                    className="block max-w-[210px] truncate text-xs"
+                                    title={entry.name || lineName}
+                                >
+                                    {entry.name || lineName}
+                                </Typography.Text>
+                            </div>
+                            <Typography.Text
+                                strong
+                                className="shrink-0 text-right text-xs tabular-nums"
+                            >
+                                {valuePrefix}
+                                {formattedNumber(entry.value)}
+                            </Typography.Text>
+                        </div>
+                    ))}
+
+                    {/* Additional metrics */}
+                    {!lines.length &&
+                        additionalTooltipKeys.map(
+                            (cfg: TooltipKeyConfig, idx: number) => {
+                                const val = originalData?.[cfg.key];
+                                if (val === undefined || val === null)
+                                    return null;
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="flex items-center justify-between gap-3 text-xs"
+                                    >
+                                        <div className="flex min-w-0 items-center gap-2">
+                                            <div className="h-2 w-2 shrink-0 rounded-full bg-gray-400 dark:bg-zinc-500" />
+                                            <Typography.Text
+                                                type="secondary"
+                                                className="block max-w-[210px] truncate text-xs"
+                                                title={cfg.name}
+                                            >
+                                                {cfg.name}:
+                                            </Typography.Text>
+                                        </div>
+                                        <Typography.Text
+                                            strong
+                                            className="shrink-0 text-right text-xs tabular-nums"
+                                        >
+                                            {cfg.valuePrefix || ''}
+                                            {formattedNumber(val)}
+                                        </Typography.Text>
+                                    </div>
+                                );
+                            }
+                        )}
+                </div>
             </div>
         );
     }
@@ -114,8 +182,12 @@ export default function LineChartView({
     additionalTooltipKeys = [],
     minTickGap = DEFAULT_MIN_TICK_GAP,
     className = '',
+    lines,
 }: LineChartViewProps) {
     const messages = useTranslations();
+    const renderLines = lines?.length
+        ? lines
+        : [{ key: lineKey, name: lineName, color: strokeColor }];
 
     return (
         <Card
@@ -175,24 +247,27 @@ export default function LineChartView({
                                 }}
                             >
                                 <defs>
-                                    <linearGradient
-                                        id="colorViews"
-                                        x1="0"
-                                        y1="0"
-                                        x2="0"
-                                        y2="1"
-                                    >
-                                        <stop
-                                            offset="5%"
-                                            stopColor={strokeColor}
-                                            stopOpacity={0.2}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor={strokeColor}
-                                            stopOpacity={0.01}
-                                        />
-                                    </linearGradient>
+                                    {renderLines.map((line, index) => (
+                                        <linearGradient
+                                            key={line.key}
+                                            id={'colorLine' + index}
+                                            x1="0"
+                                            y1="0"
+                                            x2="0"
+                                            y2="1"
+                                        >
+                                            <stop
+                                                offset="5%"
+                                                stopColor={line.color}
+                                                stopOpacity={0.2}
+                                            />
+                                            <stop
+                                                offset="95%"
+                                                stopColor={line.color}
+                                                stopOpacity={0.01}
+                                            />
+                                        </linearGradient>
+                                    ))}
                                 </defs>
                                 <CartesianGrid
                                     strokeDasharray="3 3"
@@ -236,6 +311,7 @@ export default function LineChartView({
                                         <CustomLineTooltip
                                             lineName={lineName}
                                             valuePrefix={valuePrefix}
+                                            lines={lines}
                                             additionalTooltipKeys={
                                                 additionalTooltipKeys
                                             }
@@ -243,25 +319,22 @@ export default function LineChartView({
                                     }
                                     animationEasing="ease"
                                 />
-                                <Area
-                                    type="monotone"
-                                    dataKey={lineKey}
-                                    name={lineName}
-                                    stroke={strokeColor}
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorViews)"
-                                    // dot={{
-                                    //     r: 4,
-                                    //     fill: strokeColor,
-                                    //     stroke: strokeColor,
-                                    // }}
-                                    // activeDot={{
-                                    //     r: 6,
-                                    //     fill: strokeColor,
-                                    //     stroke: strokeColor,
-                                    // }}
-                                />
+                                {renderLines.map((line, index) => (
+                                    <Area
+                                        key={line.key}
+                                        type="monotone"
+                                        dataKey={line.key}
+                                        name={line.name}
+                                        stroke={line.color}
+                                        strokeWidth={2}
+                                        fillOpacity={lines?.length ? 0 : 1}
+                                        fill={
+                                            lines?.length
+                                                ? 'none'
+                                                : 'url(#colorLine' + index + ')'
+                                        }
+                                    />
+                                ))}
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>

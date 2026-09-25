@@ -1,9 +1,26 @@
-import { ANALYTICS_ENTITY_TYPE, ANALYTICS_RELEASE_TYPE } from '../enums';
+import {
+    ANALYTICS_ENTITY_TYPE,
+    ANALYTICS_GRANULARITY,
+    ANALYTICS_RELEASE_TYPE,
+} from '../enums';
 import { ANALYTICS_VIEW_TYPE } from '../enums/tabs';
 import {
     ActiveAnalyticsEntity,
+    AnalyticsCommonParams,
     AnalyticsFilterItem,
     AnalyticsScopeParams,
+    AnalyticsSelectedIds,
+    AnalyticsSelectionParams,
+    AnalyticsSummaryV2Filters,
+    AnalyticsSummaryV2Params,
+    RevenueDspBarChartV2Params,
+    RevenueTerBarChartV2Params,
+    TrendViewDemographicsBarChartV2Params,
+    TrendViewDspBarChartV2Params,
+    TrendViewLineChartV2DspId,
+    TrendViewLineChartV2Filters,
+    TrendViewLineChartV2Params,
+    TrendViewTerBarChartV2Params,
 } from '../types';
 
 export const createViewMoreHref = (
@@ -110,6 +127,202 @@ export const getCombinedAnalyticsScopeParams = (
     };
 };
 
+const uniqueNonEmpty = (values: (string | undefined)[]) =>
+    Array.from(new Set(values.filter((value): value is string => !!value)));
+
+const toDspFilter = (value: string): TrendViewLineChartV2DspId => {
+    const [pgDspId, dspReportId] = value.split('\u001f');
+
+    return {
+        pgDspId,
+        dspReportId: dspReportId || pgDspId,
+    };
+};
+
+export const getAnalyticsV2Filters = (
+    params: AnalyticsCommonParams
+): AnalyticsSummaryV2Filters => {
+    const tenantIds = uniqueNonEmpty([
+        params.tenantId,
+        ...(params.tenantIds ?? []),
+    ]);
+    const labelIds = uniqueNonEmpty([
+        params.labelId,
+        ...(params.labelIds ?? []),
+    ]);
+    const artistIds = uniqueNonEmpty([
+        params.artistId,
+        ...(params.artistIds ?? []),
+    ]);
+    const releaseIds = uniqueNonEmpty([
+        params.releaseId,
+        ...(params.releaseIds ?? []),
+    ]);
+    const channelIds = uniqueNonEmpty([
+        params.channelId,
+        ...(params.channelIds ?? []),
+    ]);
+    const isrcs = uniqueNonEmpty([
+        params.isrc,
+        params.trackId,
+        ...(params.trackIds ?? []),
+    ]);
+    const importSources = uniqueNonEmpty([
+        params.importSource,
+        ...(params.importSources ?? []),
+    ]);
+
+    const dspIds = [
+        ...(params.dspIds ?? []).map(toDspFilter),
+        ...(params.pgDspId || params.dspReportId
+            ? [
+                  {
+                      pgDspId: params.pgDspId || params.dspId || '',
+                      dspReportId:
+                          params.dspReportId ||
+                          params.pgDspId ||
+                          params.dspId ||
+                          '',
+                  },
+              ]
+            : []),
+    ].filter(
+        (dsp, index, list) =>
+            dsp.pgDspId &&
+            dsp.dspReportId &&
+            list.findIndex(
+                (item) =>
+                    item.pgDspId === dsp.pgDspId &&
+                    item.dspReportId === dsp.dspReportId
+            ) === index
+    );
+
+    return {
+        ...(tenantIds.length ? { tenantIds } : {}),
+        ...(labelIds.length ? { labelIds } : {}),
+        ...(artistIds.length ? { artistIds } : {}),
+        ...(releaseIds.length ? { releaseIds } : {}),
+        ...(channelIds.length ? { channelIds } : {}),
+        ...(isrcs.length ? { isrcs } : {}),
+        ...(importSources.length ? { importSources } : {}),
+        ...(dspIds.length ? { dspIds } : {}),
+    };
+};
+
+export const getAnalyticsSummaryV2Params = (
+    params: AnalyticsCommonParams
+): AnalyticsSummaryV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewDspBarChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewDspBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getRevenueDspBarChartV2Params = (
+    params: AnalyticsCommonParams
+): RevenueDspBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewTerBarChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewTerBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewDemographicsBarChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewDemographicsBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getRevenueTerBarChartV2Params = (
+    params: AnalyticsCommonParams
+): RevenueTerBarChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        filters: getAnalyticsV2Filters(params),
+    };
+};
+
+export const getTrendViewLineChartV2Params = (
+    params: AnalyticsCommonParams
+): TrendViewLineChartV2Params => {
+    return {
+        fromDate: params.fromDate || '',
+        toDate: params.toDate || '',
+        releaseType: params.releaseType,
+        seriesBy: 'auto',
+        filters: getAnalyticsV2Filters(params),
+        granularity: params.granularity || ANALYTICS_GRANULARITY.DAY,
+    };
+};
+
+const selectionParamByEntityType: Record<
+    string,
+    keyof AnalyticsSelectionParams
+> = {
+    [ANALYTICS_ENTITY_TYPE.TRACK]: 'trackIds',
+    [ANALYTICS_ENTITY_TYPE.RELEASE]: 'releaseIds',
+    [ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO]: 'releaseIds',
+    [ANALYTICS_ENTITY_TYPE.WORKSPACE]: 'tenantIds',
+    [ANALYTICS_ENTITY_TYPE.LABEL]: 'labelIds',
+    [ANALYTICS_ENTITY_TYPE.DSP]: 'dspIds',
+    [ANALYTICS_ENTITY_TYPE.ARTIST]: 'artistIds',
+    [ANALYTICS_ENTITY_TYPE.CHANNEL]: 'channelIds',
+    [ANALYTICS_ENTITY_TYPE.SOURCE_TYPE]: 'importSources',
+};
+
+export const getAnalyticsSelectionParams = (
+    selectedIds?: AnalyticsSelectedIds
+): AnalyticsSelectionParams => {
+    if (!selectedIds) {
+        return {};
+    }
+
+    return Object.entries(selectedIds).reduce<AnalyticsSelectionParams>(
+        (params, [entityType, ids]) => {
+            const key = selectionParamByEntityType[entityType];
+
+            if (key && ids?.length) {
+                (params as Record<string, string[]>)[key] = ids;
+            }
+
+            return params;
+        },
+        {}
+    );
+};
 
 export type DemographicsDimension = 'device' | 'gender' | 'age';
 
@@ -160,4 +373,3 @@ export const formatDemographicsLabel = (
         ? t(`analytics2.demographics.device.${deviceKey}`)
         : dimensionValue;
 };
-

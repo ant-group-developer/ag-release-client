@@ -75,7 +75,18 @@ export interface DspSalesTimelineData {
     items: DspSalesTimelinePeriod[];
 }
 
-export interface RankingParams {
+export interface AnalyticsSelectionParams {
+    trackIds?: string[];
+    releaseIds?: string[];
+    tenantIds?: string[];
+    labelIds?: string[];
+    dspIds?: string[];
+    artistIds?: string[];
+    channelIds?: string[];
+    importSources?: string[];
+}
+
+export interface RankingParams extends AnalyticsSelectionParams {
     fromDate: string;
     toDate: string;
     page?: number;
@@ -244,7 +255,9 @@ export interface SyncJobResponse {
 }
 
 // Params for Revenue APIs
-export interface RevenueQueryParams extends CommonParams {
+export interface RevenueQueryParams
+    extends CommonParams,
+        AnalyticsSelectionParams {
     fromDate: string;
     toDate: string;
     topN?: number;
@@ -474,6 +487,72 @@ export interface TrendViewLineChartItem {
     totalViews: number;
 }
 
+export interface TrendViewLineChartV2DspId {
+    pgDspId: string;
+    dspReportId: string;
+}
+
+export interface TrendViewLineChartV2Filters {
+    tenantIds?: string[];
+    labelIds?: string[];
+    artistIds?: string[];
+    releaseIds?: string[];
+    channelIds?: string[];
+    isrcs?: string[];
+    importSources?: string[];
+    dspIds?: TrendViewLineChartV2DspId[];
+}
+
+export type AnalyticsSummaryV2DspId = TrendViewLineChartV2DspId;
+export type AnalyticsSummaryV2Filters = TrendViewLineChartV2Filters;
+
+export interface AnalyticsSummaryV2Params {
+    fromDate: string;
+    toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE | string;
+    filters?: AnalyticsSummaryV2Filters;
+}
+
+export interface TrendViewLineChartV2Params {
+    fromDate: string;
+    toDate: string;
+    releaseType?: ANALYTICS_RELEASE_TYPE | string;
+    seriesBy: string;
+    filters: TrendViewLineChartV2Filters;
+    granularity: ANALYTICS_GRANULARITY | 'day' | 'month' | string;
+}
+
+export interface TrendViewLineChartV2SeriesValue {
+    period: string;
+    totalViews?: number;
+    revenueUsd?: number;
+    revenueUsdExact?: string;
+    quantity?: number;
+}
+
+export interface TrendViewLineChartV2SeriesMetadata {
+    id: string;
+    type: string;
+    name: string;
+    imageUrl?: string;
+    pgDspId?: string;
+    dspReportId?: string;
+}
+
+export interface TrendViewLineChartV2Series {
+    id: string;
+    metadata: TrendViewLineChartV2SeriesMetadata;
+    values: TrendViewLineChartV2SeriesValue[];
+}
+
+export interface TrendViewLineChartV2Data {
+    seriesBy: string;
+    series: TrendViewLineChartV2Series[];
+}
+
+export type RevenueLineChartV2Params = TrendViewLineChartV2Params;
+export type RevenueLineChartV2Data = TrendViewLineChartV2Data;
+
 export interface TrendViewDspBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
@@ -484,6 +563,17 @@ export interface TrendViewDspBarChartItem {
     dspName: string;
     totalViews: number;
     imageUrl?: string;
+}
+
+export type TrendViewDspBarChartV2Params = AnalyticsSummaryV2Params;
+
+export interface TrendViewDspBarChartV2Item {
+    pgDspId: string | null;
+    dspReportId: string;
+    dspReportIds?: string[];
+    dspName: string;
+    imageUrl: string | null;
+    totalViews: number;
 }
 
 export interface DspRankingItem {
@@ -530,6 +620,18 @@ export interface RevenueDspBarChartItem {
     imageUrl?: string;
 }
 
+export type RevenueDspBarChartV2Params = AnalyticsSummaryV2Params;
+
+export interface RevenueDspBarChartV2Item {
+    pgDspId: string | null;
+    dspReportId: string;
+    dspReportIds?: string[];
+    dspName: string;
+    imageUrl: string | null;
+    revenueUsd: number;
+    quantity: number;
+}
+
 export interface TrendViewTerBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
     toDate?: string;
@@ -540,6 +642,11 @@ export interface TrendViewTerBarChartItem {
     territory: string;
     totalViews: number;
 }
+
+export type TrendViewTerBarChartV2Params = AnalyticsSummaryV2Params;
+export type TrendViewTerBarChartV2Item = TrendViewTerBarChartItem;
+
+export type TrendViewDemographicsBarChartV2Params = AnalyticsSummaryV2Params;
 
 export interface RevenueTerBarChartParams extends AnalyticsScopeParams {
     fromDate?: string;
@@ -553,6 +660,9 @@ export interface RevenueTerBarChartItem {
     revenueUsdExact: string;
     quantity?: number;
 }
+
+export type RevenueTerBarChartV2Params = AnalyticsSummaryV2Params;
+export type RevenueTerBarChartV2Item = RevenueTerBarChartItem;
 
 export interface ExportReportRequest {
     fromDate: string;
@@ -695,6 +805,14 @@ export interface AnalyticsCommonParams extends CommonParams {
     artistId?: string;
     channelId?: string;
     importSource?: string;
+    trackIds?: string[];
+    releaseIds?: string[];
+    tenantIds?: string[];
+    labelIds?: string[];
+    dspIds?: string[];
+    artistIds?: string[];
+    channelIds?: string[];
+    importSources?: string[];
     groupBySource?: boolean;
     territoryCode?: string;
     granularity?: ANALYTICS_GRANULARITY | 'day' | 'month' | string;
@@ -847,6 +965,8 @@ export interface RevenueSourceTypeItem {
 export type AnalyticsEntityType =
     | ANALYTICS_ENTITY_TYPE
     | `${ANALYTICS_ENTITY_TYPE}`;
+
+export type AnalyticsSelectedIds = Partial<Record<string, string[]>>;
 
 export interface ActiveAnalyticsEntity {
     type: AnalyticsEntityType;

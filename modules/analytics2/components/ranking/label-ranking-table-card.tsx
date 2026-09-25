@@ -55,6 +55,8 @@ export interface LabelRankingTableCardProps {
     metricKey?: ANALYTICS_METRIC_KEY;
     onMetricChange?: (metricKey: ANALYTICS_METRIC_KEY) => void;
     onSelectEntity?: (item?: ContentItem) => void;
+    selectedRowKeys?: string[];
+    onSelectedRowKeysChange?: (keys: string[]) => void;
     enabled?: boolean;
     className?: string;
     paramPrefix?: string;
@@ -76,6 +78,8 @@ export default function LabelRankingTableCard({
     metricKey,
     onMetricChange,
     onSelectEntity,
+    selectedRowKeys,
+    onSelectedRowKeysChange,
     enabled = true,
     className = 'rounded-xl border-none shadow-sm',
     paramPrefix,
@@ -550,6 +554,16 @@ export default function LabelRankingTableCard({
                     dataSource={topLabelData.items}
                     loading={isFetching}
                     rowKey="labelId"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
@@ -564,6 +578,16 @@ export default function LabelRankingTableCard({
                     dataSource={labelRankingData.items}
                     loading={isFetching}
                     rowKey="labelId"
+                    rowSelection={
+                        onSelectedRowKeysChange
+                            ? {
+                                  selectedRowKeys,
+                                  preserveSelectedRowKeys: true,
+                                  onChange: (keys) =>
+                                      onSelectedRowKeysChange(keys.map(String)),
+                              }
+                            : undefined
+                    }
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
