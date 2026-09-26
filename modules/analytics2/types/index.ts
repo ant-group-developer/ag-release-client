@@ -104,6 +104,7 @@ export interface RankingParams extends AnalyticsSelectionParams {
     labelId?: string;
     pgDspId?: string;
     dspReportId?: string;
+    dspReportIds?: string[];
     dspId?: string;
     artistId?: string;
     channelId?: string;
@@ -313,6 +314,7 @@ export interface RevenueDspItem {
     quantity: number;
     pgDspId?: string;
     dspReportId?: string;
+    dspReportIds?: string[];
     imageUrl?: string | null;
     bySource?: BySourceItem[];
 }
@@ -470,6 +472,7 @@ export interface AnalyticsScopeParams {
     labelId?: string;
     pgDspId?: string;
     dspReportId?: string;
+    dspReportIds?: string[];
     dspId?: string;
     artistId?: string;
     channelId?: string;
@@ -489,7 +492,7 @@ export interface TrendViewLineChartItem {
 
 export interface TrendViewLineChartV2DspId {
     pgDspId: string;
-    dspReportId: string;
+    dspReportIds: string[];
 }
 
 export interface TrendViewLineChartV2Filters {
@@ -584,6 +587,7 @@ export interface DspRankingItem {
     totalViews: number;
     pgDspId?: string;
     dspReportId?: string;
+    dspReportIds?: string[];
     imageUrl?: string | null;
     bySource?: BySourceItem[];
 }
@@ -802,6 +806,7 @@ export interface AnalyticsCommonParams extends CommonParams {
     dspId?: string;
     pgDspId?: string;
     dspReportId?: string;
+    dspReportIds?: string[];
     artistId?: string;
     channelId?: string;
     importSource?: string;
@@ -972,12 +977,14 @@ export interface ActiveAnalyticsEntity {
     type: AnalyticsEntityType;
     id?: string;
     entitySubId?: string;
+    dspReportIds?: string[];
 }
 
 export interface AnalyticsFilterItem {
     type: AnalyticsEntityType;
     id: string;
     entitySubId?: string;
+    dspReportIds?: string[];
     title: string;
     thumbnailUrl?: string;
 }

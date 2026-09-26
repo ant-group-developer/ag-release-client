@@ -19,6 +19,7 @@ import EntityListWorkspaces from './entity-list/entity-list-workspaces';
 export interface ContentItem {
     id: string;
     entitySubId?: string;
+    dspReportIds?: string[];
     title: string;
     type:
         | 'Workspace'

@@ -15,7 +15,6 @@ import { ContentItem } from '@/modules/analytics2/components/modal/advanced-mode
 import {
     ANALYTICS_DEFAULT_END_DATE,
     ANALYTICS_DEFAULT_START_DATE,
-    ANALYTICS_RANKING_THUMBNAIL_SIZE,
 } from '@/modules/analytics2/constants/types';
 import {
     ANALYTICS_ENTITY_TYPE,
@@ -66,6 +65,77 @@ interface RankingFilter extends CommonParams {
     endDate?: string;
     type?: ANALYTICS_VIEW_TYPE;
     releaseType?: ANALYTICS_RELEASE_TYPE;
+}
+
+interface ChannelRankingCellProps {
+    channelId: string;
+    channelName: string;
+    thumbUrl?: string | null;
+    youtubeChannelId?: string;
+    onSelectChannel: (
+        id: string,
+        title: string,
+        thumbnailUrl?: string | null
+    ) => void;
+}
+
+function ChannelRankingCell({
+    channelId,
+    channelName,
+    thumbUrl,
+    youtubeChannelId,
+    onSelectChannel,
+}: ChannelRankingCellProps) {
+    const messages = useTranslations();
+    return (
+        <div className="flex items-center gap-3">
+            <ImageFallback
+                src={thumbUrl ?? ''}
+                alt={channelName}
+                width={40}
+                height={40}
+                className="aspect-square shrink-0 rounded-lg object-cover"
+            />
+            <div className="flex min-w-0 flex-1 flex-col">
+                <CustomTooltip title={messages('common.detailedAnalysis')}>
+                    <Typography.Text
+                        className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                        onClick={() =>
+                            onSelectChannel(channelId, channelName, thumbUrl)
+                        }
+                    >
+                        {channelName || '-'}
+                    </Typography.Text>
+                </CustomTooltip>
+                <div className="flex h-7 items-center">
+                    <div className="hidden items-center group-hover:flex">
+                        {youtubeChannelId && (
+                            <CustomTooltip
+                                title={messages('common.viewOnYoutube')}
+                            >
+                                <a
+                                    href={`https://www.youtube.com/channel/${youtubeChannelId}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    data-stop-row-click="true"
+                                >
+                                    <IconButton
+                                        shape="circle"
+                                        className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
+                                    >
+                                        <Avatar
+                                            size={SIZE_ICON_BIG}
+                                            src={'/icon/youtube.png'}
+                                        />
+                                    </IconButton>
+                                </a>
+                            </CustomTooltip>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default function ChannelRankingTableCard({
@@ -207,58 +277,14 @@ export default function ChannelRankingTableCard({
         text: string,
         record: ChannelRankingItem | RevenueChannelItem
     ) => (
-        <div className="flex items-center gap-3">
-            <ImageFallback
-                src={record.thumbUrl ?? ''}
-                alt={text}
-                width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                className="aspect-square rounded-full object-cover"
-            />
-            <div className="flex min-w-0 flex-col">
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <Typography.Text
-                        className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                        onClick={() =>
-                            handleSelectChannel(
-                                record.channelId,
-                                text,
-                                record.thumbUrl
-                            )
-                        }
-                    >
-                        {text || '-'}
-                    </Typography.Text>
-                </CustomTooltip>
-            </div>
-        </div>
+        <ChannelRankingCell
+            channelId={record.channelId}
+            channelName={text}
+            thumbUrl={record.thumbUrl}
+            youtubeChannelId={record.youtubeChannelId}
+            onSelectChannel={handleSelectChannel}
+        />
     );
-
-    const renderYoutubeChannelId = (value?: string) => {
-        if (!value) return '-';
-        return (
-            <div className="flex justify-center">
-                <CustomTooltip title={messages('common.viewOnYoutube')}>
-                    <a
-                        href={`https://www.youtube.com/channel/${value}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-stop-row-click="true"
-                    >
-                        <IconButton
-                            shape="circle"
-                            className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
-                        >
-                            <Avatar
-                                size={SIZE_ICON_BIG}
-                                src={'/icon/youtube.png'}
-                            />
-                        </IconButton>
-                    </a>
-                </CustomTooltip>
-            </div>
-        );
-    };
 
     const renderTenant = (
         tenant?: TenantInfo | null,
@@ -272,9 +298,9 @@ export default function ChannelRankingTableCard({
                     <ImageFallback
                         src={tenant.logo ?? ''}
                         alt={tenant.name ?? ''}
-                        width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                        height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                        className="aspect-square rounded-full object-cover"
+                        width={40}
+                        height={40}
+                        className="aspect-square shrink-0 rounded-lg object-cover"
                     />
                     <CustomTooltip title={messages('common.detailedAnalysis')}>
                         <Typography.Text
@@ -350,15 +376,6 @@ export default function ChannelRankingTableCard({
                 renderChannelName(record.channelName, record),
         },
         {
-            title: 'Channel',
-            dataIndex: 'youtubeChannelId',
-            key: 'youtubeChannelId',
-            width: 90,
-            align: 'center' as const,
-            render: (_, record: RevenueChannelItem) =>
-                renderYoutubeChannelId(record.youtubeChannelId),
-        },
-        {
             title: messages('tenant.label'),
             dataIndex: 'tenant',
             key: 'tenant',
@@ -427,15 +444,6 @@ export default function ChannelRankingTableCard({
             fixed: fixedLeft,
             render: (_, record: ChannelRankingItem) =>
                 renderChannelName(record.channelName, record),
-        },
-        {
-            title: 'Channel',
-            dataIndex: 'youtubeChannelId',
-            key: 'youtubeChannelId',
-            width: 90,
-            align: 'center' as const,
-            render: (_, record: ChannelRankingItem) =>
-                renderYoutubeChannelId(record.youtubeChannelId),
         },
         {
             title: messages('tenant.label'),
@@ -509,6 +517,7 @@ export default function ChannelRankingTableCard({
                     options={false}
                     sticky
                     size="small"
+                    rowClassName="group cursor-pointer"
                     columns={revenueColumns}
                     dataSource={topChannelData.items}
                     loading={isFetching}
@@ -533,6 +542,7 @@ export default function ChannelRankingTableCard({
                     options={false}
                     sticky
                     size="small"
+                    rowClassName="group cursor-pointer"
                     columns={viewColumns}
                     dataSource={channelRankingData.items}
                     loading={isFetching}
