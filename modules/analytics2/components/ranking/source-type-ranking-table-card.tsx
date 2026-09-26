@@ -23,6 +23,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetSourceTypeRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopSourceType } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -188,6 +189,25 @@ export default function SourceTypeRankingTableCard({
             ),
         [topSourceTypeData, page, pageSize]
     );
+
+    const currentItems = isRevenue ? revenueItems : viewItems;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'sourceType',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            sourceType,
+        ],
+    });
 
     const renderSourceTypeName = (
         text: string,

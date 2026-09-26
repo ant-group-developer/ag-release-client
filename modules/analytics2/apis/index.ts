@@ -822,6 +822,12 @@ export const analytics2Apis = {
             params
         );
     },
+    exportStatementReport: (params: ExportReportRequest) => {
+        return axiosInstance.post<ExportReportResponse>(
+            '/analytics/reports/statement-export',
+            params
+        );
+    },
     cancelExportReport: (jobId: string) => {
         return axiosInstance.post<void>(
             `/analytics/reports/export/${jobId}/cancel`

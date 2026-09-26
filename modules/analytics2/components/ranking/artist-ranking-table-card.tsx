@@ -25,6 +25,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetArtistRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopArtist } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
@@ -165,6 +166,27 @@ export default function ArtistRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topArtistData.items
+        : artistRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'artistId',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            artistId,
+        ],
+    });
 
     const handleDetailArtist = (
         artistId: string,

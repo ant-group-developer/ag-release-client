@@ -472,13 +472,11 @@ export default function RevenueRankings({
                 )}
             </Row>
 
-            {isAdvancedModeOpen && (
-                <AdvancedModeModal
-                    open
-                    onCancel={closeAdvancedMode}
-                    releaseType={releaseType}
-                />
-            )}
+            <AdvancedModeModal
+                open={isAdvancedModeOpen}
+                onCancel={closeAdvancedMode}
+                releaseType={releaseType}
+            />
         </>
     );
 }

@@ -25,6 +25,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetReleaseRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopRelease } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -171,6 +172,27 @@ export default function ReleaseRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topReleaseData.items
+        : releaseRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'releaseId',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            releaseId,
+        ],
+    });
 
     const revenueColumns: ProColumns<RevenueReleaseItem>[] = [
         {

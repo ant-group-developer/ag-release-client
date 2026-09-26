@@ -27,6 +27,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetChannelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopChannel } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -242,6 +243,27 @@ export default function ChannelRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topChannelData.items
+        : channelRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'channelId',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            channelId,
+        ],
+    });
 
     const handleSelectChannel = (
         id: string,
