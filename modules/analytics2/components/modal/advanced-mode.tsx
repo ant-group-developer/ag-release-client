@@ -88,13 +88,21 @@ export default function AdvancedModeModal({
         [selectedIds]
     );
 
+    const filtersKey = useMemo(() => JSON.stringify(filters), [filters]);
+
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
             return;
         }
         setSelectedIds({});
-    }, [activeMetric, entity.id, entity.type, filters, rankBy]);
+    }, [activeMetric, entity.id, entity.type, filtersKey, rankBy]);
+
+    useEffect(() => {
+        if (!props.open) {
+            setSelectedIds({});
+        }
+    }, [props.open]);
 
     useEffect(() => {
         if (props.open) {
@@ -498,7 +506,7 @@ export default function AdvancedModeModal({
                                 releaseType={releaseType}
                                 activeMetric={activeMetric}
                                 selectionParams={selectionParams}
-                                enabled={props.open !== false}
+                                enabled={props.open === true}
                             />
                         </div>
 
@@ -520,7 +528,7 @@ export default function AdvancedModeModal({
                             onSelectEntity={handleTableSelectEntity}
                             selectedIds={selectedIds}
                             onSelectedIdsChange={handleSelectedIdsChange}
-                            enabled={props.open !== false}
+                            enabled={props.open === true}
                         />
                     </div>
                 </div>

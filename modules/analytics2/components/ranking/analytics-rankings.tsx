@@ -435,13 +435,11 @@ export default function AnalyticsRankings({
                 )}
             </Row>
 
-            {isAdvancedModeOpen && (
-                <AdvancedModeModal
-                    open
-                    onCancel={closeAdvancedMode}
-                    releaseType={releaseType}
-                />
-            )}
+            <AdvancedModeModal
+                open={isAdvancedModeOpen}
+                onCancel={closeAdvancedMode}
+                releaseType={releaseType}
+            />
         </div>
     );
 }
