@@ -268,6 +268,7 @@ export default function AdvancedModeModal({
             type: (item.type || entity.type) as AnalyticsEntityType,
             id: (item.id || item.entitySubId) as string,
             entitySubId: item.entitySubId,
+            dspReportIds: item.dspReportIds,
             title: item.title,
             thumbnailUrl: item.thumbnailUrl,
         });

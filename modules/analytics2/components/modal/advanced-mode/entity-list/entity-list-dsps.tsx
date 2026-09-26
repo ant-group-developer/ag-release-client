@@ -62,6 +62,7 @@ export default function EntityListDsps({
                             onSelect({
                                 id: item?.pgDspId || item?.dspReportId || item?.dspName || '',
                                 entitySubId: item?.dspReportId || '',
+                                dspReportIds: item?.dspReportIds,
                                 title: item.dspName || '',
                                 type: 'DSP',
                                 thumbnailUrl: dspLogo || undefined,

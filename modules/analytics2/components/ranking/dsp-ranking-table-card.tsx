@@ -20,6 +20,8 @@ import {
 } from '@/modules/analytics2/enums';
 import { ANALYTICS_VIEW_TYPE } from '@/modules/analytics2/enums/tabs';
 import {
+    ANALYTICS_DSP_SELECTION_SEPARATOR,
+    getAnalyticsDspSelectionKey,
     getAnalyticsReleaseType,
     getAnalyticsViewType,
     type AnalyticsScopeParams,
@@ -45,6 +47,7 @@ export interface DspRankingTableCardProps {
     dspId?: string;
     pgDspId?: string;
     dspReportId?: string;
+    dspReportIds?: string[];
     scopeParams?: AnalyticsScopeParams;
     fromDate?: string;
     toDate?: string;
@@ -70,6 +73,7 @@ interface RankingFilter extends CommonParams {
 export default function DspRankingTableCard({
     pgDspId,
     dspReportId,
+    dspReportIds,
     scopeParams,
     fromDate,
     toDate,
@@ -137,6 +141,28 @@ export default function DspRankingTableCard({
             ? undefined
             : selectedReleaseType;
 
+    const getDspRowKey = (record: DspRankingItem | RevenueDspItem) =>
+        getAnalyticsDspSelectionKey(record) ||
+        `unselectable-${record.source || record.dspName || 'unknown'}`;
+
+    const dspRowSelection = onSelectedRowKeysChange
+        ? {
+              selectedRowKeys,
+              preserveSelectedRowKeys: true,
+              getCheckboxProps: (record: DspRankingItem | RevenueDspItem) => ({
+                  disabled: !getAnalyticsDspSelectionKey(record),
+              }),
+              onChange: (keys: React.Key[]) =>
+                  onSelectedRowKeysChange(
+                      keys
+                          .map(String)
+                          .filter((key) =>
+                              key.includes(ANALYTICS_DSP_SELECTION_SEPARATOR)
+                          )
+                  ),
+          }
+        : undefined;
+
     // Fetch ranking data (Views)
     const { dspRankingData, isFetching: isViewsFetching } = useGetDspRanking(
         {
@@ -147,8 +173,8 @@ export default function DspRankingTableCard({
             keyword: dataFilter.keyword ?? undefined,
             groupBySource: true,
             releaseType: requestReleaseType,
-            pgDspId: pgDspId || '',
-            dspReportId: dspReportId || '',
+            ...(pgDspId ? { pgDspId } : {}),
+            ...(dspReportIds?.length ? { dspReportIds } : {}),
             ...scopeParams,
         },
         { enabled: enabled && !isRevenue }
@@ -166,8 +192,8 @@ export default function DspRankingTableCard({
             sortBy: revenueSortBy,
             groupBySource: true,
             releaseType: requestReleaseType,
-            pgDspId: pgDspId || '',
-            dspReportId: dspReportId || '',
+            ...(pgDspId ? { pgDspId } : {}),
+            ...(dspReportIds?.length ? { dspReportIds } : {}),
             ...scopeParams,
         },
         { enabled: enabled && isRevenue }
@@ -220,6 +246,7 @@ export default function DspRankingTableCard({
                         onSelectEntity?.({
                             id: dspId,
                             entitySubId: record.dspReportId,
+                            dspReportIds: record.dspReportIds,
                             title: dspTitle,
                             type: ANALYTICS_ENTITY_TYPE.DSP,
                             thumbnailUrl: record.imageUrl ?? undefined,
@@ -433,17 +460,8 @@ export default function DspRankingTableCard({
                     columns={revenueColumns}
                     dataSource={revenueDataWithRank}
                     loading={isFetching}
-                    rowKey="source"
-                    rowSelection={
-                        onSelectedRowKeysChange
-                            ? {
-                                  selectedRowKeys,
-                                  preserveSelectedRowKeys: true,
-                                  onChange: (keys) =>
-                                      onSelectedRowKeysChange(keys.map(String)),
-                              }
-                            : undefined
-                    }
+                    rowKey={getDspRowKey}
+                    rowSelection={dspRowSelection}
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
@@ -457,17 +475,8 @@ export default function DspRankingTableCard({
                     columns={viewsColumns}
                     dataSource={viewsDataWithRank}
                     loading={isFetching}
-                    rowKey="source"
-                    rowSelection={
-                        onSelectedRowKeysChange
-                            ? {
-                                  selectedRowKeys,
-                                  preserveSelectedRowKeys: true,
-                                  onChange: (keys) =>
-                                      onSelectedRowKeysChange(keys.map(String)),
-                              }
-                            : undefined
-                    }
+                    rowKey={getDspRowKey}
+                    rowSelection={dspRowSelection}
                     pagination={false}
                     search={false}
                     scroll={{ x: SCREEN.LG }}
