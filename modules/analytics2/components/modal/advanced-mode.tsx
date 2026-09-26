@@ -11,7 +11,7 @@ import { App, Button, Grid, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -75,6 +75,7 @@ export default function AdvancedModeModal({
 
     const [showSidebar, setShowSidebar] = useState(true);
     const [selectedIds, setSelectedIds] = useState<AnalyticsSelectedIds>({});
+    const isFirstRender = useRef(true);
 
     const selectionParams = useMemo(
         () => getAnalyticsSelectionParams(selectedIds),
@@ -82,6 +83,10 @@ export default function AdvancedModeModal({
     );
 
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
         setSelectedIds({});
     }, [activeMetric, entity.id, entity.type, filters, rankBy]);
 
@@ -346,6 +351,7 @@ export default function AdvancedModeModal({
     return (
         <FullScreenModal
             {...props}
+            destroyOnClose
             footer={null}
             styles={{
                 body: {
