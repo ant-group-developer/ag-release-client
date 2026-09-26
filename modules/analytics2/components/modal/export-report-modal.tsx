@@ -5,11 +5,12 @@ import DateSelect2 from '@/components/ui/select/date-select2';
 import LabelSelect from '@/components/ui/select/label-select';
 import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { useExportAnalyticsReport } from '@/modules/analytics2/hooks/use-export-analytics-report';
+import { useExportAnalyticsStatementReport } from '@/modules/analytics2/hooks/use-export-analytics-statement-report';
 import { useAuth } from '@/modules/auth/hooks/use-auth';
 import DspSelect from '@/modules/dsp/components/select/dsp-select';
 import { useTenantActive } from '@/modules/tenant/hooks/use-get-tenant';
 import { DetailResponse } from '@/types/api';
-import { Button, Form, Modal } from 'antd';
+import { Button, Form, Modal, Radio } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
@@ -56,8 +57,14 @@ export default function ExportReportModal({
     const { profile } = useAuth();
     const addJob = useExportJobStore((state) => state.addJob);
 
-    const { exportAnalyticsReport, isPending: isExporting } =
+    const { exportAnalyticsReport, isPending: isExportingUsd } =
         useExportAnalyticsReport();
+    const {
+        exportAnalyticsStatementReport,
+        isPending: isExportingStatement,
+    } = useExportAnalyticsStatementReport();
+
+    const isExporting = isExportingUsd || isExportingStatement;
 
     const watchedArtistId = Form.useWatch('artistId', form);
     const watchedTenantId = Form.useWatch('tenantId', form);
@@ -92,15 +99,18 @@ export default function ExportReportModal({
                 currentTenantId && activeTenantIds.includes(currentTenantId);
 
             const initialTenantId =
-                initialValues?.tenantId && activeTenantIds.includes(initialValues.tenantId)
+                initialValues?.tenantId &&
+                activeTenantIds.includes(initialValues.tenantId)
                     ? initialValues.tenantId
-                    : initialValues?.tenantIds?.[0] && activeTenantIds.includes(initialValues.tenantIds[0])
+                    : initialValues?.tenantIds?.[0] &&
+                        activeTenantIds.includes(initialValues.tenantIds[0])
                       ? initialValues.tenantIds[0]
                       : hasActiveTenant
                         ? currentTenantId
                         : undefined;
 
             form.setFieldsValue({
+                reportType: 'statement',
                 dateRange: `${startDate},${endDate}`,
                 tenantId: initialTenantId,
                 labelId: initialValues?.labelId || undefined,
@@ -111,6 +121,7 @@ export default function ExportReportModal({
     }, [open, form, profile, activeTenantIds, initialValues, dataFilter]);
 
     const handleExport = (values: {
+        reportType?: 'statement' | 'usd';
         dateRange: string;
         tenantId?: string;
         labelId?: string;
@@ -137,7 +148,12 @@ export default function ExportReportModal({
                 : {}),
         };
 
-        exportAnalyticsReport({
+        const exportFn =
+            values.reportType === 'usd'
+                ? exportAnalyticsReport
+                : exportAnalyticsStatementReport;
+
+        exportFn({
             payload,
             onSuccess: (data: DetailResponse<ExportReportResponse>) => {
                 if (data?.data?.jobId) {
@@ -187,6 +203,20 @@ export default function ExportReportModal({
                 layout="vertical"
                 disabled={isExporting}
             >
+                <AppFormItem
+                    name="reportType"
+                    label={messages('common.currencyConversion')}
+                >
+                    <Radio.Group>
+                        <Radio value="statement">
+                            {messages('common.exportOriginalReport')}
+                        </Radio>
+                        <Radio value="usd">
+                            {messages('common.exportUsdReport')}
+                        </Radio>
+                    </Radio.Group>
+                </AppFormItem>
+
                 <AppFormItem
                     name="dateRange"
                     label={messages('common.time')}

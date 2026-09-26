@@ -6,8 +6,13 @@ import FullScreenModal, {
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { DetailResponse } from '@/types/api';
-import { DownloadOutlined } from '@ant-design/icons';
-import { App, Button, Grid, Typography } from 'antd';
+import {
+    DollarOutlined,
+    DownOutlined,
+    DownloadOutlined,
+    FileTextOutlined,
+} from '@ant-design/icons';
+import { App, Button, Dropdown, Grid, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -28,6 +33,7 @@ import {
     useAdvancedModeModal,
 } from '../../hooks/use-advanced-mode-modal';
 import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
+import { useExportAnalyticsStatementReport } from '../../hooks/use-export-analytics-statement-report';
 import { useGetAnalyticsSummaryV2 } from '../../hooks/use-get-analytics-summary-v2';
 import { useExportJobStore } from '../../store/use-export-job-store';
 import {
@@ -160,10 +166,14 @@ export default function AdvancedModeModal({
         removeJob: handleRemoveExportJob,
         clearJobs,
     } = useExportJobStore();
-    const { exportAnalyticsReport, isPending: isExporting } =
+    const { exportAnalyticsReport, isPending: isExportingUsd } =
         useExportAnalyticsReport();
+    const { exportAnalyticsStatementReport, isPending: isExportingStatement } =
+        useExportAnalyticsStatementReport();
 
-    const handleExport = () => {
+    const isExporting = isExportingUsd || isExportingStatement;
+
+    const handleExport = (exportType: 'statement' | 'usd') => {
         const rawStartDate =
             effectiveFromDate ?? dayjs().startOf('month').format('YYYY-MM-DD');
         const rawEndDate =
@@ -218,7 +228,12 @@ export default function AdvancedModeModal({
             duration: 2.5,
         });
 
-        exportAnalyticsReport({
+        const exportFn =
+            exportType === 'statement'
+                ? exportAnalyticsStatementReport
+                : exportAnalyticsReport;
+
+        exportFn({
             payload,
             onSuccess: (data: DetailResponse<ExportReportResponse>) => {
                 if (data?.data?.jobId) {
@@ -377,17 +392,42 @@ export default function AdvancedModeModal({
                             {messages('common.advancedMode')}
                         </Typography.Text>
                     </div>
-                    <Button
-                        size="small"
-                        type="primary"
-                        icon={<DownloadOutlined />}
-                        loading={isExporting}
+                    <Dropdown
+                        menu={{
+                            items: [
+                                {
+                                    key: 'statement',
+                                    label: messages(
+                                        'common.exportOriginalReport'
+                                    ),
+                                    icon: <FileTextOutlined />,
+                                    onClick: () => handleExport('statement'),
+                                },
+                                {
+                                    key: 'usd',
+                                    label: messages('common.exportUsdReport'),
+                                    icon: <DollarOutlined />,
+                                    onClick: () => handleExport('usd'),
+                                },
+                            ],
+                        }}
+                        trigger={['click']}
                         disabled={isExporting}
-                        onClick={handleExport}
-                        className="!w-auto"
                     >
-                        {messages('common.exportReport')}
-                    </Button>
+                        <Button
+                            size="small"
+                            type="primary"
+                            icon={<DownloadOutlined />}
+                            loading={isExporting}
+                            disabled={isExporting}
+                            className="!w-auto"
+                        >
+                            <Space size={4}>
+                                {messages('common.exportReport')}
+                                <DownOutlined className="text-xs" />
+                            </Space>
+                        </Button>
+                    </Dropdown>
                 </div>
             }
             width="100%"
