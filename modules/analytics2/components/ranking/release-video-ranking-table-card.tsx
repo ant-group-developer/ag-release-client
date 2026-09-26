@@ -79,6 +79,77 @@ interface RankingFilter extends CommonParams {
     type?: ANALYTICS_VIEW_TYPE;
 }
 
+interface ReleaseVideoRankingCellProps {
+    releaseId: string;
+    title: string;
+    coverFileId?: string;
+    youtubeVideoId?: string;
+    onSelectEntity?: (item?: ContentItem) => void;
+}
+
+function ReleaseVideoRankingCell({
+    releaseId,
+    title,
+    coverFileId,
+    youtubeVideoId,
+    onSelectEntity,
+}: ReleaseVideoRankingCellProps) {
+    const messages = useTranslations();
+
+    return (
+        <div className="flex items-center gap-3">
+            <ReleaseCoverImage
+                width={40}
+                height={40}
+                fileId={coverFileId}
+            />
+            <div className="flex min-w-0 flex-1 flex-col">
+                <CustomTooltip title={messages('common.detailedAnalysis')}>
+                    <Typography.Text
+                        className="cursor-pointer truncate transition-colors hover:text-blue-500"
+                        onClick={() =>
+                            onSelectEntity?.({
+                                id: releaseId,
+                                title,
+                                type: ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
+                                thumbnailUrl: coverFileId,
+                            })
+                        }
+                    >
+                        {title || '-'}
+                    </Typography.Text>
+                </CustomTooltip>
+                <div className="flex h-7 items-center">
+                    <div className="hidden items-center group-hover:flex">
+                        {youtubeVideoId && (
+                            <CustomTooltip
+                                title={messages('common.viewOnYoutube')}
+                            >
+                                <a
+                                    href={`https://www.youtube.com/watch?v=${youtubeVideoId}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    data-stop-row-click="true"
+                                >
+                                    <IconButton
+                                        shape="circle"
+                                        className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
+                                    >
+                                        <Avatar
+                                            size={SIZE_ICON_BIG}
+                                            src={'/icon/youtube.png'}
+                                        />
+                                    </IconButton>
+                                </a>
+                            </CustomTooltip>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function ReleaseVideoRankingTableCard({
     releaseId,
     scopeParams,
@@ -172,37 +243,17 @@ export default function ReleaseVideoRankingTableCard({
     );
 
     const renderTitle = (text: string, record: ReleaseVideoRow) => (
-        <div className="flex items-center gap-3">
-            <ReleaseCoverImage
-                width={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                height={ANALYTICS_RANKING_THUMBNAIL_SIZE}
-                fileId={
-                    record.release?.coverArtThumbnails?.[
-                        RELEASE_COVER_ART_SIZE.S75
-                    ] as string
-                }
-            />
-            <div className="flex min-w-0 flex-col">
-                <CustomTooltip title={messages('common.detailedAnalysis')}>
-                    <Typography.Text
-                        className="cursor-pointer truncate transition-colors hover:text-blue-500"
-                        onClick={() =>
-                            onSelectEntity?.({
-                                id: record.releaseId,
-                                title: text,
-                                type: ANALYTICS_ENTITY_TYPE.RELEASE_VIDEO,
-                                thumbnailUrl: record.release
-                                    ?.coverArtThumbnails?.[
-                                    RELEASE_COVER_ART_SIZE.S75
-                                ] as string,
-                            })
-                        }
-                    >
-                        {text || '-'}
-                    </Typography.Text>
-                </CustomTooltip>
-            </div>
-        </div>
+        <ReleaseVideoRankingCell
+            releaseId={record.releaseId}
+            title={text}
+            coverFileId={
+                record.release?.coverArtThumbnails?.[
+                    RELEASE_COVER_ART_SIZE.S75
+                ] as string
+            }
+            youtubeVideoId={record.video?.externalId}
+            onSelectEntity={onSelectEntity}
+        />
     );
 
     const renderIsrc = (_: unknown, record: ReleaseVideoRow) => (
@@ -331,33 +382,7 @@ export default function ReleaseVideoRankingTableCard({
         );
     };
 
-    const renderYoutubeId = (_: unknown, record: ReleaseVideoRow) => {
-        const value = record.video?.externalId;
-        if (!value) return '-';
-        return (
-            <div className="flex justify-center">
-                <CustomTooltip title={messages('common.viewOnYoutube')}>
-                    <a
-                        href={`https://www.youtube.com/watch?v=${value}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center text-blue-500 hover:underline"
-                        data-stop-row-click="true"
-                    >
-                        <IconButton
-                            shape="circle"
-                            className="!h-7 !w-7 !min-w-7 shrink-0 p-1"
-                        >
-                            <Avatar
-                                size={SIZE_ICON_BIG}
-                                src={'/icon/youtube.png'}
-                            />
-                        </IconButton>
-                    </a>
-                </CustomTooltip>
-            </div>
-        );
-    };
+
 
     const renderBySource = (bySource?: BySourceItem[], revenue = false) => {
         if (!bySource?.length) return '-';
@@ -447,13 +472,7 @@ export default function ReleaseVideoRankingTableCard({
             render: (_, record: RevenueReleaseVideoItem) =>
                 renderChannels(record.channels),
         },
-        {
-            title: 'Video',
-            key: 'youtubeId',
-            width: 90,
-            align: 'center' as const,
-            render: renderYoutubeId,
-        },
+
         {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
@@ -545,13 +564,7 @@ export default function ReleaseVideoRankingTableCard({
             render: (_, record: ReleaseVideoRankingItem) =>
                 renderChannels(record.channels),
         },
-        {
-            title: 'Video',
-            key: 'youtubeId',
-            width: 90,
-            align: 'center' as const,
-            render: renderYoutubeId,
-        },
+
         {
             title: messages('common.sourcePlatform'),
             dataIndex: 'bySource',
@@ -604,6 +617,7 @@ export default function ReleaseVideoRankingTableCard({
                     options={false}
                     sticky
                     size="small"
+                    rowClassName="group cursor-pointer"
                     columns={revenueColumns}
                     dataSource={topReleaseVideoData.items}
                     loading={isFetching}
@@ -628,6 +642,7 @@ export default function ReleaseVideoRankingTableCard({
                     options={false}
                     sticky
                     size="small"
+                    rowClassName="group cursor-pointer"
                     columns={viewColumns}
                     dataSource={releaseVideoRankingData.items}
                     loading={isFetching}
