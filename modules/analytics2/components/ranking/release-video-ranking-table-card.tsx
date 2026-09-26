@@ -26,6 +26,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetReleaseVideoRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopReleaseVideo } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -237,6 +238,26 @@ export default function ReleaseVideoRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topReleaseVideoData.items
+        : releaseVideoRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'youtubeVideoId',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            releaseId,
+        ],
+    });
 
     const renderRank = (rank: number) => (
         <Typography.Text type="secondary">#{rank}</Typography.Text>

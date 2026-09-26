@@ -6,12 +6,17 @@ import FullScreenModal, {
 import { formattedNumber } from '@/helpers/common';
 import { cn } from '@/helpers/tailwind';
 import { DetailResponse } from '@/types/api';
-import { DownloadOutlined } from '@ant-design/icons';
-import { App, Button, Grid, Typography } from 'antd';
+import {
+    DollarOutlined,
+    DownOutlined,
+    DownloadOutlined,
+    FileTextOutlined,
+} from '@ant-design/icons';
+import { App, Button, Dropdown, Grid, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { DollarSign, Eye, Menu, Music } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     ANALYTICS_ENTITY_TYPE,
     ANALYTICS_METRIC_KEY,
@@ -28,6 +33,7 @@ import {
     useAdvancedModeModal,
 } from '../../hooks/use-advanced-mode-modal';
 import { useExportAnalyticsReport } from '../../hooks/use-export-analytics-report';
+import { useExportAnalyticsStatementReport } from '../../hooks/use-export-analytics-statement-report';
 import { useGetAnalyticsSummaryV2 } from '../../hooks/use-get-analytics-summary-v2';
 import { useExportJobStore } from '../../store/use-export-job-store';
 import {
@@ -75,15 +81,28 @@ export default function AdvancedModeModal({
 
     const [showSidebar, setShowSidebar] = useState(true);
     const [selectedIds, setSelectedIds] = useState<AnalyticsSelectedIds>({});
+    const isFirstRender = useRef(true);
 
     const selectionParams = useMemo(
         () => getAnalyticsSelectionParams(selectedIds),
         [selectedIds]
     );
 
+    const filtersKey = useMemo(() => JSON.stringify(filters), [filters]);
+
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
         setSelectedIds({});
-    }, [activeMetric, entity.id, entity.type, filters, rankBy]);
+    }, [activeMetric, entity.id, entity.type, filtersKey, rankBy]);
+
+    useEffect(() => {
+        if (!props.open) {
+            setSelectedIds({});
+        }
+    }, [props.open]);
 
     useEffect(() => {
         if (props.open) {
@@ -155,10 +174,14 @@ export default function AdvancedModeModal({
         removeJob: handleRemoveExportJob,
         clearJobs,
     } = useExportJobStore();
-    const { exportAnalyticsReport, isPending: isExporting } =
+    const { exportAnalyticsReport, isPending: isExportingUsd } =
         useExportAnalyticsReport();
+    const { exportAnalyticsStatementReport, isPending: isExportingStatement } =
+        useExportAnalyticsStatementReport();
 
-    const handleExport = () => {
+    const isExporting = isExportingUsd || isExportingStatement;
+
+    const handleExport = (exportType: 'statement' | 'usd') => {
         const rawStartDate =
             effectiveFromDate ?? dayjs().startOf('month').format('YYYY-MM-DD');
         const rawEndDate =
@@ -213,7 +236,12 @@ export default function AdvancedModeModal({
             duration: 2.5,
         });
 
-        exportAnalyticsReport({
+        const exportFn =
+            exportType === 'statement'
+                ? exportAnalyticsStatementReport
+                : exportAnalyticsReport;
+
+        exportFn({
             payload,
             onSuccess: (data: DetailResponse<ExportReportResponse>) => {
                 if (data?.data?.jobId) {
@@ -346,6 +374,7 @@ export default function AdvancedModeModal({
     return (
         <FullScreenModal
             {...props}
+            destroyOnClose
             footer={null}
             styles={{
                 body: {
@@ -371,17 +400,42 @@ export default function AdvancedModeModal({
                             {messages('common.advancedMode')}
                         </Typography.Text>
                     </div>
-                    <Button
-                        size="small"
-                        type="primary"
-                        icon={<DownloadOutlined />}
-                        loading={isExporting}
+                    <Dropdown
+                        menu={{
+                            items: [
+                                {
+                                    key: 'statement',
+                                    label: messages(
+                                        'common.exportOriginalReport'
+                                    ),
+                                    icon: <FileTextOutlined />,
+                                    onClick: () => handleExport('statement'),
+                                },
+                                {
+                                    key: 'usd',
+                                    label: messages('common.exportUsdReport'),
+                                    icon: <DollarOutlined />,
+                                    onClick: () => handleExport('usd'),
+                                },
+                            ],
+                        }}
+                        trigger={['click']}
                         disabled={isExporting}
-                        onClick={handleExport}
-                        className="!w-auto"
                     >
-                        {messages('common.exportReport')}
-                    </Button>
+                        <Button
+                            size="small"
+                            type="primary"
+                            icon={<DownloadOutlined />}
+                            loading={isExporting}
+                            disabled={isExporting}
+                            className="!w-auto"
+                        >
+                            <Space size={4}>
+                                {messages('common.exportReport')}
+                                <DownOutlined className="text-xs" />
+                            </Space>
+                        </Button>
+                    </Dropdown>
                 </div>
             }
             width="100%"
@@ -452,7 +506,7 @@ export default function AdvancedModeModal({
                                 releaseType={releaseType}
                                 activeMetric={activeMetric}
                                 selectionParams={selectionParams}
-                                enabled={props.open !== false}
+                                enabled={props.open === true}
                             />
                         </div>
 
@@ -474,7 +528,7 @@ export default function AdvancedModeModal({
                             onSelectEntity={handleTableSelectEntity}
                             selectedIds={selectedIds}
                             onSelectedIdsChange={handleSelectedIdsChange}
-                            enabled={props.open !== false}
+                            enabled={props.open === true}
                         />
                     </div>
                 </div>

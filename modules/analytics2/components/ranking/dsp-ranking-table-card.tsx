@@ -26,6 +26,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetDspRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopDsp } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -218,6 +219,26 @@ export default function DspRankingTableCard({
             })
         );
     }, [dspRankingData, page, pageSize]);
+
+    const currentItems = isRevenue ? revenueDataWithRank : viewsDataWithRank;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: (item) => getAnalyticsDspSelectionKey(item) || '',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            pgDspId,
+            dspReportIds,
+        ],
+    });
 
     const renderDspName = (
         record: (RevenueDspItem | DspRankingItem) & { rank: number }

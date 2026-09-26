@@ -26,6 +26,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetTenantRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTenant } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import {
@@ -193,6 +194,27 @@ export default function TenantRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topTenantData.items
+        : tenantRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'tenantId',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            tenantId,
+        ],
+    });
 
     const revenueColumns: ColumnsType<RevenueTenantItem> = [
         {

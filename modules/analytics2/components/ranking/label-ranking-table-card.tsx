@@ -26,6 +26,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetLabelRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopLabel } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { LabelRankingItem, RevenueLabelItem } from '@/modules/analytics2/types';
@@ -175,6 +176,27 @@ export default function LabelRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topLabelData.items
+        : labelRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'labelId',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            labelId,
+        ],
+    });
 
     const revenueColumns: ProColumns<RevenueLabelItem>[] = [
         {

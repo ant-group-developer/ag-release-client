@@ -25,6 +25,7 @@ import {
     getAnalyticsViewType,
     type AnalyticsScopeParams,
 } from '@/modules/analytics2/helpers';
+import { useAutoSelectTopRows } from '@/modules/analytics2/hooks/use-auto-select-top-rows';
 import { useGetTrackRanking } from '@/modules/analytics2/hooks/use-get-rankings';
 import { useGetRevenueTopTrack } from '@/modules/analytics2/hooks/use-get-revenue-data';
 import { RevenueTrackItem, TrackRankingItem } from '@/modules/analytics2/types';
@@ -169,6 +170,27 @@ export default function TrackRankingTableCard({
         );
 
     const isFetching = isRevenue ? isRevenueFetching : isViewsFetching;
+
+    const currentItems = isRevenue
+        ? topTrackData.items
+        : trackRankingData.items;
+
+    useAutoSelectTopRows({
+        items: currentItems,
+        rowKey: 'isrc',
+        selectedRowKeys,
+        onSelectedRowKeysChange,
+        enabled,
+        resetDeps: [
+            metricKey,
+            isRevenue,
+            selectedReleaseType,
+            dataFilter.keyword,
+            effectiveFromDate,
+            effectiveToDate,
+            trackId,
+        ],
+    });
 
     const revenueColumns: ProColumns<RevenueTrackItem>[] = [
         {

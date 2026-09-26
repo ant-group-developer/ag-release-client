@@ -23,11 +23,8 @@ import {
 import { ANALYTICS2_TABS } from '@/modules/analytics2/enums/tabs';
 import { getAnalyticsSummaryV2Params } from '@/modules/analytics2/helpers';
 import { useGetAnalyticsSummaryV2 } from '@/modules/analytics2/hooks/use-get-analytics-summary-v2';
-import {
-    Analytics2DataFilter,
-    ExportReportJob,
-} from '@/modules/analytics2/types';
 import { useExportJobStore } from '@/modules/analytics2/store/use-export-job-store';
+import { Analytics2DataFilter } from '@/modules/analytics2/types';
 import { PageContainer } from '@ant-design/pro-components';
 import { theme } from 'antd';
 import { DollarSign, Eye, Music } from 'lucide-react';
@@ -172,8 +169,9 @@ export default function Analytics2Page() {
         [fromDate, toDate, effectiveReleaseType]
     );
 
-    const { analyticsSummaryData } =
-        useGetAnalyticsSummaryV2(analyticsSummaryV2Params);
+    const { analyticsSummaryData } = useGetAnalyticsSummaryV2(
+        analyticsSummaryV2Params
+    );
 
     const metricTabItems: MetricHeaderTabItem[] = [
         {
@@ -274,7 +272,6 @@ export default function Analytics2Page() {
                     onRemoveJob={handleRemoveExportJob}
                 />
             ) : null}
-
         </PageContainer>
     );
 }

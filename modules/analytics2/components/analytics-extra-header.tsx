@@ -28,7 +28,7 @@ export default function AnalyticsExtraHeader({
             wrap
             gap="small"
             align="center"
-            className="w-full sm:w-auto justify-start sm:justify-end"
+            className="w-full justify-start sm:w-auto sm:justify-end"
         >
             <Button
                 icon={<DownloadOutlined />}
@@ -60,7 +60,7 @@ export default function AnalyticsExtraHeader({
                         value: ANALYTICS_RELEASE_TYPE.VIDEO,
                     },
                 ]}
-                className="!w-full sm:!w-auto !flex [&>label]:!flex-1 [&>label]:!text-center [&>label]:!inline-flex [&>label]:!justify-center [&>label]:!items-center sm:[&>label]:!flex-none"
+                className="!flex !w-full sm:!w-auto [&>label]:!inline-flex [&>label]:!flex-1 [&>label]:!items-center [&>label]:!justify-center [&>label]:!text-center sm:[&>label]:!flex-none"
             />
             <DateSelect2
                 className="!w-full sm:!w-[240px]"
