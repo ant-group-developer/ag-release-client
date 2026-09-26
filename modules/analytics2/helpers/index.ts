@@ -18,7 +18,6 @@ import {
     TrendViewDemographicsBarChartV2Params,
     TrendViewDspBarChartV2Params,
     TrendViewLineChartV2DspId,
-    TrendViewLineChartV2Filters,
     TrendViewLineChartV2Params,
     TrendViewTerBarChartV2Params,
 } from '../types';
@@ -83,7 +82,11 @@ export const getAnalyticsScopeParams = (
         case ANALYTICS_ENTITY_TYPE.DSP:
             return {
                 pgDspId: entity.id,
-                dspReportId: entity.entitySubId || entity.id,
+                dspReportIds: entity.dspReportIds?.length
+                    ? entity.dspReportIds
+                    : [entity.entitySubId || entity.id].filter(
+                          (value): value is string => Boolean(value)
+                      ),
                 dspId: entity.id,
             };
         case ANALYTICS_ENTITY_TYPE.ARTIST:
@@ -109,6 +112,7 @@ export const getFilterScopeParams = (
             type: filter.type,
             id: filter.id,
             entitySubId: filter.entitySubId,
+            dspReportIds: filter.dspReportIds,
         });
         return { ...acc, ...itemScope };
     }, {});
@@ -130,13 +134,52 @@ export const getCombinedAnalyticsScopeParams = (
 const uniqueNonEmpty = (values: (string | undefined)[]) =>
     Array.from(new Set(values.filter((value): value is string => !!value)));
 
-const toDspFilter = (value: string): TrendViewLineChartV2DspId => {
-    const [pgDspId, dspReportId] = value.split('\u001f');
+export const ANALYTICS_DSP_SELECTION_SEPARATOR = '\u001f';
 
-    return {
-        pgDspId,
-        dspReportId: dspReportId || pgDspId,
-    };
+const normalizeDspId = (value?: string) => {
+    const normalized = value?.trim();
+
+    return normalized && normalized !== 'undefined' && normalized !== 'null'
+        ? normalized
+        : undefined;
+};
+
+const normalizeDspIds = (values: (string | undefined)[]) =>
+    Array.from(
+        new Set(
+            values
+                .map(normalizeDspId)
+                .filter((value): value is string => Boolean(value))
+        )
+    );
+
+export const getAnalyticsDspSelectionKey = (params: {
+    pgDspId?: string;
+    dspReportId?: string;
+    dspReportIds?: string[];
+}) => {
+    const dspReportIds = normalizeDspIds(
+        params.dspReportIds?.length ? params.dspReportIds : [params.dspReportId]
+    );
+    const pgDspId = normalizeDspId(params.pgDspId) || dspReportIds[0];
+
+    return pgDspId
+        ? [pgDspId, ...dspReportIds].join(ANALYTICS_DSP_SELECTION_SEPARATOR)
+        : '';
+};
+
+const toDspFilter = (value: string): TrendViewLineChartV2DspId | undefined => {
+    const [rawPgDspId, ...rawDspReportIds] = value.split(
+        ANALYTICS_DSP_SELECTION_SEPARATOR
+    );
+    const pgDspId = normalizeDspId(rawPgDspId);
+    const dspReportIds = normalizeDspIds(rawDspReportIds);
+
+    if (!pgDspId || !dspReportIds.length) {
+        return undefined;
+    }
+
+    return { pgDspId, dspReportIds };
 };
 
 export const getAnalyticsV2Filters = (
@@ -172,30 +215,31 @@ export const getAnalyticsV2Filters = (
         ...(params.importSources ?? []),
     ]);
 
-    const dspIds = [
-        ...(params.dspIds ?? []).map(toDspFilter),
-        ...(params.pgDspId || params.dspReportId
-            ? [
-                  {
-                      pgDspId: params.pgDspId || params.dspId || '',
-                      dspReportId:
-                          params.dspReportId ||
-                          params.pgDspId ||
-                          params.dspId ||
-                          '',
-                  },
-              ]
-            : []),
-    ].filter(
-        (dsp, index, list) =>
-            dsp.pgDspId &&
-            dsp.dspReportId &&
-            list.findIndex(
-                (item) =>
-                    item.pgDspId === dsp.pgDspId &&
-                    item.dspReportId === dsp.dspReportId
-            ) === index
+    const directPgDspId =
+        normalizeDspId(params.pgDspId) || normalizeDspId(params.dspId);
+    const directDspReportIds = normalizeDspIds(
+        params.dspReportIds?.length
+            ? params.dspReportIds
+            : [params.dspReportId || directPgDspId]
     );
+    const directDspFilter =
+        directPgDspId && directDspReportIds.length
+            ? { pgDspId: directPgDspId, dspReportIds: directDspReportIds }
+            : undefined;
+
+    const dspIds = [...(params.dspIds ?? []).map(toDspFilter), directDspFilter]
+        .filter((dsp): dsp is TrendViewLineChartV2DspId =>
+            Boolean(dsp?.pgDspId && dsp.dspReportIds.length)
+        )
+        .filter(
+            (dsp, index, list) =>
+                list.findIndex(
+                    (item) =>
+                        item.pgDspId === dsp.pgDspId &&
+                        item.dspReportIds.join('\u001e') ===
+                            dsp.dspReportIds.join('\u001e')
+                ) === index
+        );
 
     return {
         ...(tenantIds.length ? { tenantIds } : {}),
