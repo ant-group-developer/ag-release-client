@@ -128,6 +128,8 @@
         "scope": "Phạm vi",
         "audio": "Audio",
         "video": "Video",
+        "catalog": "Danh mục",
+        "distribution": "Phân phối",
         "seconds": "giây",
         "second": "giây",
         "mb": "MB",
