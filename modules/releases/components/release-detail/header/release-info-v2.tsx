@@ -128,10 +128,13 @@ export default function ReleaseInfoV2({ isScrolled }: Props) {
 
     return (
         <div
-            className={cn('overflow-hidden transition-all duration-300', {
-                'max-h-20': isScrolled,
-                'max-h-40': !isScrolled,
-            })}
+            className={cn(
+                'hidden overflow-hidden transition-all duration-300 sm:block',
+                {
+                    'max-h-20': isScrolled,
+                    'max-h-40': !isScrolled,
+                }
+            )}
         >
             <Descriptions
                 layout="horizontal"

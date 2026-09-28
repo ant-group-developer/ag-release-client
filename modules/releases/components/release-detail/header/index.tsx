@@ -8,6 +8,7 @@ import { APP_ROUTES } from '@/enums/routes';
 import { formattedDate } from '@/helpers/common';
 import { toastPromise } from '@/helpers/messages-helper';
 import { cn } from '@/helpers/tailwind';
+import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import { useHash } from '@/hooks/use-hash';
 import { LoadingType, useLoading, waitForLoading } from '@/hooks/use-loading';
 import useModalStore from '@/hooks/use-modal';
@@ -20,7 +21,6 @@ import { useDistributeRelease } from '@/modules/distribution/hooks/use-distribut
 import { useReleaseDistribute } from '@/modules/distribution/hooks/use-release-distribute';
 import { DistributeRelease } from '@/modules/distribution/types/payload';
 import { RELEASE_COVER_ART_SIZE } from '@/modules/releases/constants';
-import { useGetReleaseDetailRoute } from '@/hooks/use-get-release-detail-route';
 import {
     RELEASE_ROUTE_ACTION,
     RELEASES_TABS,
@@ -48,11 +48,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     Form,
+    notification,
     Space,
     Tag,
-    Typography,
-    notification,
     theme,
+    Typography,
 } from 'antd';
 import exifr from 'exifr';
 import { useTranslations } from 'next-intl';
@@ -678,7 +678,7 @@ export default function ReleaseDetailHeader({ isScrolled }: Props) {
                     {!isCreateReleasePage && (
                         <div className="flex flex-col justify-between gap-2">
                             <div className="space-y-2">
-                                <p className="text-nowrap text-xs text-gray-500">
+                                <p className="hidden text-nowrap text-xs text-gray-500 sm:block">
                                     {messages('common.lastEdit')}:{' '}
                                     {releaseData?.modifier?.name} |{' '}
                                     {formattedDate(releaseData?.updatedAt)}

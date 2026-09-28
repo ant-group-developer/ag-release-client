@@ -22,7 +22,7 @@ export default function DistributionStatus({ onChangeStatus, value }: Props) {
     const options = [
         {
             label: (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 whitespace-nowrap">
                     <span className="font-medium">
                         {messages('common.all')}
                     </span>
@@ -38,7 +38,7 @@ export default function DistributionStatus({ onChangeStatus, value }: Props) {
             .filter((item) => item !== RELEASE_DSP_DELIVERY_STATUS.DRAFT)
             .map((item) => ({
                 label: (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
                         <span className="font-medium">
                             {messages(
                                 getIntlCodeByReleaseDspDeliveryStatus(item)
@@ -55,19 +55,21 @@ export default function DistributionStatus({ onChangeStatus, value }: Props) {
     ];
 
     return (
-        <div
-            className="flex w-full items-center gap-2 rounded-lg"
-            style={{ backgroundColor: token.colorBgContainer }}
-        >
-            <Segmented
-                options={options}
-                value={value ?? 'all'}
-                onChange={(value) =>
-                    handleChangeStatus(
-                        value as RELEASE_DSP_DELIVERY_STATUS | 'all'
-                    )
-                }
-            />
+        <div className="w-full max-w-full overflow-x-auto scrollbar-hidden">
+            <div
+                className="inline-flex min-w-max items-center gap-2 rounded-lg"
+                style={{ backgroundColor: token.colorBgContainer }}
+            >
+                <Segmented
+                    options={options}
+                    value={value ?? 'all'}
+                    onChange={(value) =>
+                        handleChangeStatus(
+                            value as RELEASE_DSP_DELIVERY_STATUS | 'all'
+                        )
+                    }
+                />
+            </div>
         </div>
     );
 }
