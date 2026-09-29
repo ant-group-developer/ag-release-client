@@ -68,6 +68,14 @@ export default function ReleaseMergeItemModal({
                 </Descriptions.Item>
                 <Descriptions.Item label={messages('releaseMerge.sourceOnlyIsrc')}>
                     <CodeList codes={item?.sourceOnlyIsrcs} />
+                    {!!item?.sourceOnlyIsrcs?.length && (
+                        <Typography.Paragraph
+                            type="secondary"
+                            className="!mb-0 !mt-1 !text-xs"
+                        >
+                            {messages('releaseMerge.sourceOnlyHint')}
+                        </Typography.Paragraph>
+                    )}
                 </Descriptions.Item>
                 <Descriptions.Item label={messages('releaseMerge.targetOnlyIsrc')}>
                     <CodeList codes={item?.targetOnlyIsrcs} />

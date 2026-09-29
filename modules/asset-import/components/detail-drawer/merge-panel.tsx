@@ -299,6 +299,30 @@ export default function MergePanel({
                                                             }
                                                         />
                                                     </div>
+                                                    {!!plan.sourceOnlyIsrcs
+                                                        .length && (
+                                                        <div>
+                                                            <span className="text-xs text-gray-500">
+                                                                {messages(
+                                                                    'assetImport.merge.sourceOnlyIsrc'
+                                                                )}
+                                                                :{' '}
+                                                            </span>
+                                                            <CodeList
+                                                                codes={
+                                                                    plan.sourceOnlyIsrcs
+                                                                }
+                                                            />
+                                                            <Typography.Text
+                                                                type="secondary"
+                                                                className="!text-xs"
+                                                            >
+                                                                {messages(
+                                                                    'assetImport.merge.sourceOnlyHint'
+                                                                )}
+                                                            </Typography.Text>
+                                                        </div>
+                                                    )}
                                                     <ReasonTags
                                                         codes={plan.reasonCodes}
                                                     />
