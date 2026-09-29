@@ -5,11 +5,11 @@ import { SyncOutlined } from '@ant-design/icons';
 import { Button, Select, theme, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { REPORT_SOURCE } from '../../enums';
+import { ETL_JOB_SOURCE_TYPE, REPORT_SOURCE } from '../../enums';
 import { useGetListEtlJobs } from '../../hooks/use-get-list-etl-jobs';
 import { EtlJobData } from '../../types/payload';
-import EtlJobsTable from './etl-jobs-table';
 import { EtlJobStatusDetailModal } from './etl-job-status-detail-modal';
+import EtlJobsTable from './etl-jobs-table';
 import { ImportModal } from './import-form-modal';
 
 export default function ImportTab() {
@@ -20,16 +20,24 @@ export default function ImportTab() {
     const [viewJobId, setViewJobId] = useState<string | null>(null);
 
     const [isStatusDetailOpen, setIsStatusDetailOpen] = useState(false);
-    const [statusDetailJobId, setStatusDetailJobId] = useState<string | null>(null);
+    const [statusDetailJobId, setStatusDetailJobId] = useState<string | null>(
+        null
+    );
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [reportSource, setReportSource] = useState<REPORT_SOURCE | null>(null);
+    const [reportSource, setReportSource] = useState<REPORT_SOURCE | null>(
+        null
+    );
+    const [sourceType, setSourceType] = useState<
+        ETL_JOB_SOURCE_TYPE | '' | null
+    >(null);
 
     const { etlJobsData, isLoading, isFetching, refetch } = useGetListEtlJobs({
         page,
         pageSize,
         ...(reportSource ? { reportSource } : {}),
+        ...(sourceType ? { sourceType } : {}),
     });
 
     const reportSourceOptions = [
@@ -37,6 +45,16 @@ export default function ImportTab() {
         { label: 'Merlin', value: REPORT_SOURCE.MERLIN },
         { label: 'Spotify', value: REPORT_SOURCE.SPOTIFY },
         { label: 'Warner', value: REPORT_SOURCE.WARNER },
+    ];
+
+    const sourceTypeOptions = [
+        {
+            label: messages(
+                'reportConfigs.importResult.sourceTypeAnalyticsReportExport'
+            ),
+            value: ETL_JOB_SOURCE_TYPE.ANALYTICS_REPORT_EXPORT,
+        },
+        { label: 'Report', value: '' },
     ];
 
     const handleCloseModal = () => {
@@ -75,6 +93,19 @@ export default function ImportTab() {
                                 }}
                                 options={reportSourceOptions}
                                 className="min-w-[140px] flex-1 sm:flex-initial"
+                            />
+                            <Select
+                                allowClear
+                                placeholder={messages(
+                                    'reportConfigs.importResult.sourceType'
+                                )}
+                                value={sourceType}
+                                onChange={(value) => {
+                                    setSourceType(value ?? null);
+                                    setPage(1);
+                                }}
+                                options={sourceTypeOptions}
+                                style={{ minWidth: 240 }}
                             />
                             <Button
                                 icon={<SyncOutlined />}

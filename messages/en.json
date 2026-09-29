@@ -834,7 +834,7 @@
             "selectDate": "Select date",
             "selectMonth": "Select month",
             "currentWorkspace": "Channel belongs to",
-            "changeWorkspaceHint": "Change workspace from the channel list (workspace column). You must pick a views date and a revenue month.",
+            "changeWorkspaceHint": "Changing the workspace requires a views date and a revenue month.",
             "fromStart": "Transfer from the beginning",
             "fromStartHelp": "Fills the earliest allowed dates so all real views/revenue move to the new workspace.",
             "success": "Channel workspace transferred successfully",
