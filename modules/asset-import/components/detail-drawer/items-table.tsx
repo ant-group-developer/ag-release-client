@@ -4,7 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import AppTable from '@/components/ui/table/normal-table';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { getIndex } from '@/helpers/common';
-import { Button, Select, Space, Typography } from 'antd';
+import { Button, Modal, Select, Space, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { Key, useEffect, useState } from 'react';
@@ -18,10 +18,11 @@ import {
 import { useApplyAssetImport } from '../../hooks/use-apply-asset-import';
 import { useGetListAssetImportItem } from '../../hooks/use-get-list-items';
 import { AssetImportItemFilter } from '../../types';
-import { AssetImportItemData } from '../../types/payload';
+import { AssetImportItemData, MergeImpactData } from '../../types/payload';
 import ItemActionTag from '../tag/item-action-tag';
 import ItemStatusTag from '../tag/item-status-tag';
 import ChangeDiff from './change-diff';
+import ItemMergeCell from './item-merge-cell';
 
 type Props = {
     open: boolean;
@@ -29,6 +30,9 @@ type Props = {
     batchStatus?: string | null;
     waitForItems?: boolean;
     onApplyStart?: () => void;
+    unresolvedMergeCount?: number;
+    unresolvedConflictCount?: number;
+    impact?: MergeImpactData | null;
 };
 
 const DEFAULT_FILTER: AssetImportItemFilter = {
@@ -42,6 +46,9 @@ export default function ItemsTable({
     batchStatus,
     waitForItems,
     onApplyStart,
+    unresolvedMergeCount = 0,
+    unresolvedConflictCount = 0,
+    impact,
 }: Props) {
     const messages = useTranslations();
 
@@ -79,7 +86,7 @@ export default function ItemsTable({
         setFilter((prev) => ({ ...prev, page, pageSize }));
     };
 
-    const handleApply = (payload: { selectAll: boolean; itemIds?: string[] }) => {
+    const runApply = (payload: { selectAll: boolean; itemIds?: string[] }) => {
         if (!batchId) return;
 
         onApplyStart?.();
@@ -90,6 +97,25 @@ export default function ItemsTable({
             onSuccess: () => {
                 setSelectedRowKeys([]);
             },
+        });
+    };
+
+    const handleApply = (payload: { selectAll: boolean; itemIds?: string[] }) => {
+        const unresolved = unresolvedMergeCount + unresolvedConflictCount;
+        if (unresolved <= 0) {
+            runApply(payload);
+            return;
+        }
+
+        Modal.confirm({
+            title: messages('assetImport.merge.applyConfirmTitle'),
+            content: messages('assetImport.merge.applyConfirmDescription', {
+                merge: unresolvedMergeCount,
+                conflict: unresolvedConflictCount,
+            }),
+            okText: messages('assetImport.merge.applyContinue'),
+            cancelText: messages('common.cancel'),
+            onOk: () => runApply(payload),
         });
     };
 
@@ -159,9 +185,17 @@ export default function ItemsTable({
             title: messages('assetImport.item.action.label'),
             dataIndex: 'action',
             key: 'action',
-            width: 110,
+            width: 130,
             align: 'center',
             render: (value) => <ItemActionTag action={value} />,
+        },
+        {
+            title: messages('assetImport.merge.column'),
+            key: 'merge',
+            width: 320,
+            render: (_, record) => (
+                <ItemMergeCell record={record} impact={impact} />
+            ),
         },
         {
             title: messages('common.status'),

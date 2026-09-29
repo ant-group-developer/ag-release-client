@@ -20,6 +20,7 @@ export enum AssetImportAction {
     NO_CHANGE = 'NO_CHANGE',
     INVALID = 'INVALID',
     CONFLICT = 'CONFLICT',
+    MERGE_REQUIRED = 'MERGE_REQUIRED',
 }
 
 export enum AssetImportItemStatus {
@@ -69,6 +70,7 @@ export const NON_SELECTABLE_ASSET_IMPORT_ACTIONS = [
     AssetImportAction.NO_CHANGE,
     AssetImportAction.INVALID,
     AssetImportAction.CONFLICT,
+    AssetImportAction.MERGE_REQUIRED,
 ];
 
 export enum TYPE_MODAL_ASSET_IMPORT {

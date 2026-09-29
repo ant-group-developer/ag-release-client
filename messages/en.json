@@ -3061,6 +3061,7 @@
             "totalRows": "Total rows",
             "matchedRows": "Matched rows",
             "appliedRows": "Applied rows",
+            "downloadFile": "Download scanned file",
             "status": {
                 "SCANNING": "Scanning",
                 "SCANNED": "Scanned",
@@ -3085,7 +3086,8 @@
                 "UPDATE": "Update",
                 "NO_CHANGE": "No change",
                 "INVALID": "Invalid",
-                "CONFLICT": "Conflict"
+                "CONFLICT": "Conflict",
+                "MERGE_REQUIRED": "Merge required"
             },
             "status": {
                 "PENDING": "Pending",
@@ -3093,6 +3095,109 @@
                 "SKIPPED": "Skipped",
                 "FAILED": "Failed"
             }
+        },
+        "merge": {
+            "column": "Release merge",
+            "flow": "This batch has rows to merge: review the impact, merge the safe pairs, rescan conflicts, then apply ownership.",
+            "mergeSafe": "Merge safe pairs ({count})",
+            "rescan": "Rescan conflicts",
+            "sourceRelease": "Source import release",
+            "targetRelease": "Canonical target release",
+            "duplicateCodes": "Duplicate UPC/ISRC",
+            "reason": "Reason",
+            "autoSafe": "Safe to auto-merge",
+            "manual": "Needs manual review",
+            "mixed": "Partly needs manual review",
+            "prepareError": "Could not build a merge plan",
+            "noImpact": "No rows left to merge.",
+            "loadingImpact": "Loading merge impact...",
+            "confirmMergeTitle": "Merge the safe pairs?",
+            "confirmMergeDescription": "{safe} safe pairs will be merged. {manual} manual pairs stay in place, then conflicts are rescanned.",
+            "started": "Merge is running in the background. Progress shows on this screen.",
+            "progressHint": "Merging duplicate releases, please wait...",
+            "jobFailed": "Merge failed: {error}",
+            "mergeResult": "Merged {merged}, failed {failed}, rescanned {rescanned} rows.",
+            "rescanResult": "Rescanned {count} rows.",
+            "applyWarning": "This batch still has {merge} rows to merge and {conflict} conflicts. Apply skips those rows.",
+            "applyConfirmTitle": "Apply the import anyway?",
+            "applyConfirmDescription": "{merge} merge rows and {conflict} conflicts are still open. The server skips them and only applies create or update rows.",
+            "applyContinue": "Apply anyway",
+            "sharedIsrc": "Shared ISRC",
+            "upcEquivalent": "Equivalent UPC",
+            "upcDifferent": "Different UPC",
+            "tracks": "{source} source tracks / {target} target tracks",
+            "classification": {
+                "RESOLVABLE_IMPORTED_DUPLICATE": "Imported duplicate that can fold into the canonical release",
+                "AMBIGUOUS_DUPLICATE": "Duplicate with no single canonical release"
+            }
+        }
+    },
+    "releaseMerge": {
+        "label": "Duplicate release merge",
+        "hint": "Scan every track for report releases that duplicate a canonical release.",
+        "createScan": "Create scan",
+        "scanDetail": "Scan detail",
+        "itemDetail": "Conflict detail",
+        "viewDetail": "View detail",
+        "apply": "Apply",
+        "applyAllSafe": "Apply all safe pairs",
+        "loading": "Loading...",
+        "pollingHint": "A scan or apply is running. Status refreshes automatically.",
+        "totalCandidates": "Candidates",
+        "autoSafe": "Safe",
+        "manual": "Manual",
+        "applied": "Applied",
+        "failed": "Failed",
+        "sourceRelease": "Source release",
+        "targetRelease": "Target release",
+        "candidateTargets": "Candidate targets",
+        "sharedIsrc": "Shared ISRC",
+        "sourceOnlyIsrc": "Source-only ISRC",
+        "targetOnlyIsrc": "Target-only ISRC",
+        "trackCounts": "Track counts",
+        "upc": "UPC",
+        "confirmApplyTitle": "Apply this release pair?",
+        "confirmApplyDescription": "Only AUTO_SAFE pairs can be applied. The source release is merged into the canonical release.",
+        "confirmApplyAllTitle": "Apply every safe pair?",
+        "confirmApplyAllDescription": "Every pending AUTO_SAFE item will be merged. Manual items are not included.",
+        "trigger": {
+            "label": "Scan source",
+            "FULL_SCAN": "Full catalog scan",
+            "ASSET_IMPORT": "Asset import"
+        },
+        "runStatus": {
+            "SCANNING": "Scanning",
+            "READY": "Ready",
+            "APPLYING": "Applying",
+            "PARTIALLY_APPLIED": "Partially applied",
+            "APPLIED": "Applied",
+            "FAILED": "Failed"
+        },
+        "classification": {
+            "label": "Classification",
+            "AUTO_SAFE": "Safe",
+            "MANUAL_REVIEW": "Manual review"
+        },
+        "itemStatus": {
+            "PENDING": "Pending",
+            "APPLYING": "Applying",
+            "APPLIED": "Applied",
+            "MANUAL_REVIEW": "Manual review",
+            "STALE": "Stale",
+            "FAILED": "Failed"
+        },
+        "reasonCode": {
+            "SOURCE_NOT_IMPORTED": "Source release was not imported from a report",
+            "TARGET_NOT_CANONICAL": "Target release is still a report import",
+            "RELEASE_TYPE_MISMATCH": "The two releases have different types",
+            "SOURCE_HAS_NO_TRACKS": "Source release has no tracks",
+            "SOURCE_HAS_NON_IMPORTED_TRACK": "Source release has a track that did not come from a report",
+            "SOURCE_HAS_UNMATCHED_TRACKS": "Source release still has tracks missing on the target",
+            "NO_SHARED_ISRC": "No shared ISRC",
+            "UPC_NOT_EQUIVALENT": "UPCs are not equivalent",
+            "SOURCE_MULTI_TARGET": "One source release points at several targets",
+            "NO_CANONICAL_TARGET": "No canonical release to merge into",
+            "CANONICAL_TO_CANONICAL": "Both sides are canonical releases"
         }
     },
     "releaseExecution": {

@@ -12,6 +12,18 @@ export const assetImportBatchQueryKeys = {
         params
             ? ([...assetImportBatchQueryKeys.lists(), params] as const)
             : assetImportBatchQueryKeys.lists(),
+    detail: (batchId: string) =>
+        [
+            ...assetImportBatchQueryKeys.all,
+            QUERY_KEY.ASSET_IMPORT_BATCH.GET_DETAIL,
+            batchId,
+        ] as const,
+    mergeImpact: (batchId: string) =>
+        [
+            ...assetImportBatchQueryKeys.all,
+            QUERY_KEY.ASSET_IMPORT_BATCH.MERGE_IMPACT,
+            batchId,
+        ] as const,
 };
 
 export const assetImportItemQueryKeys = {

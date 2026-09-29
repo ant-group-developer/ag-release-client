@@ -25,6 +25,7 @@ import {
     FileText,
     FileVolume,
     Flag,
+    GitMerge,
     Globe,
     House,
     Key,
@@ -509,6 +510,15 @@ export const adminRoutes: RouteNode[] = [
                 title: 'Asset Import',
                 href: APP_ROUTES.ASSET_IMPORT,
                 icon: UploadCloud,
+                required: SYS_ADMIN_REQ,
+            },
+            {
+                id: 'release-merges',
+                type: 'link',
+                label: 'releaseMerge.label',
+                title: 'Release merges',
+                href: APP_ROUTES.RELEASE_MERGES,
+                icon: GitMerge,
                 required: SYS_ADMIN_REQ,
             },
             {

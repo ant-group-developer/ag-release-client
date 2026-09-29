@@ -1,5 +1,5 @@
-import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { assetImportApis } from '../apis';
 import {
     assetImportBatchQueryKeys,
@@ -7,31 +7,30 @@ import {
 } from '../constants/query-keys';
 import { ApplyAssetImportVariables } from '../types/payload';
 
-export const useApplyAssetImport = () => {
+export const useMergeAssetImportDuplicates = () => {
     const queryClient = useQueryClient();
-    const { handleSuccess, handleError } = useApiNotify();
+    const { handleError } = useApiNotify();
 
     const mutation = useMutation({
         mutationFn: ({ batchId, payload }: ApplyAssetImportVariables) =>
-            assetImportApis.apply(batchId, payload),
-        onSuccess: (data, { onSuccess }: ApplyAssetImportVariables) => {
+            assetImportApis.mergeDuplicates(batchId, payload),
+        onSuccess: (data, variables) => {
             queryClient.invalidateQueries({
                 queryKey: assetImportItemQueryKeys.lists(),
             });
             queryClient.invalidateQueries({
                 queryKey: assetImportBatchQueryKeys.all,
             });
-            handleSuccess(data?.data);
-            onSuccess?.(data?.data);
+            variables.onSuccess?.(data?.data);
         },
-        onError: (error, { onError }: ApplyAssetImportVariables) => {
-            onError?.();
+        onError: (error, variables) => {
+            variables.onError?.();
             handleError(error);
         },
     });
 
     return {
-        applyAssetImport: mutation.mutate,
+        mergeDuplicates: mutation.mutate,
         ...mutation,
     };
 };

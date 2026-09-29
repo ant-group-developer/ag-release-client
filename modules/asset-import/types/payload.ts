@@ -79,6 +79,11 @@ export interface AssetImportItemData {
     status: AssetImportItemStatus | string;
     matchedReleaseId?: string | null;
     matchedTrackId?: string | null;
+    requiresMerge?: boolean;
+    duplicateClassification?: string | null;
+    canonicalReleaseId?: string | null;
+    canonicalTrackId?: string | null;
+    duplicateSourceReleaseIds?: string[] | null;
     current?: AssetImportItemCurrent | null;
     changes: AssetImportChange[];
     errorMessage?: string | null;
@@ -130,4 +135,71 @@ export interface AssetImportEventData {
     summary?: Partial<AssetImportBatchData>;
     status?: string;
     [key: string]: any;
+}
+
+/** Release snapshot returned by merge prepare. */
+export interface MergeReleaseSnapshot {
+    id: string;
+    upc: string | null;
+    title: string | null;
+    type: string;
+    tenantId: string;
+    labelId: string | null;
+    isImportedFromReport: boolean;
+    updatedAt: string;
+}
+
+export interface MergePairPlan {
+    source: MergeReleaseSnapshot;
+    target: MergeReleaseSnapshot;
+    sharedIsrcs: string[];
+    sourceOnlyIsrcs: string[];
+    targetOnlyIsrcs: string[];
+    sourceTrackCount: number;
+    targetTrackCount: number;
+    upcEquivalent: boolean;
+    autoSafe: boolean;
+    reasonCodes: string[];
+}
+
+export interface MergeImpactSource {
+    sourceReleaseId: string;
+    plan: MergePairPlan | null;
+    error: string | null;
+}
+
+export interface MergeImpactGroup {
+    targetReleaseId: string;
+    itemIds: string[];
+    isrcs: string[];
+    sources: MergeImpactSource[];
+}
+
+export interface MergeImpactData {
+    totalItems: number;
+    totalTargets: number;
+    groups: MergeImpactGroup[];
+}
+
+/** POST merge-duplicates trả ngay job. Kết quả nằm ở SSE `result`. */
+export interface MergeDuplicatesJob {
+    batchId: string;
+    jobId: string;
+    totalPairs: number;
+}
+
+export interface MergeDuplicatesResult {
+    merged: number;
+    failed: number;
+    rescanned: number;
+    errors?: string[];
+}
+
+export interface RescanConflictsResult {
+    rescanned: number;
+    summary: unknown;
+}
+
+export interface RescanAssetImportVariables extends CommonFunction {
+    batchId: string;
 }
