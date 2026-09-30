@@ -239,7 +239,7 @@ export default function YoutubeChannelSyncRunsModal({
                             icon={<PlayCircleOutlined />}
                             loading={isPending}
                             onClick={() =>
-                                runYoutubeChannelSync({ force: false })
+                                runYoutubeChannelSync({ force: true })
                             }
                         >
                             {messages('channel.youtubeSyncRuns.runButton')}
