@@ -12,6 +12,7 @@ import useModalStore from '@/hooks/use-modal';
 import { usePermission } from '@/hooks/use-permission';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { useRouter } from '@/i18n/routing';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { PERMISSION } from '@/modules/auth/constants/permission';
 import {
     RELEASES_STATUS,
@@ -51,6 +52,7 @@ type Props = {
 export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     // hooks - state
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
     const formValues = useReleaseFormStore((state) => state.formValues);
     const openModal = useModalStore((state) => state.openModal);
     // const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
@@ -67,10 +69,8 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
 
     // const
     const isReadMode = action !== RELEASE_DETAIL_ACTION.EDIT;
-    const isIsrcEditableStatus =
-        formValues?.status === RELEASES_STATUS.DRAFT ||
-        formValues?.status === RELEASES_STATUS.FAILED;
-    const canEditIsrc = !isReadMode && isIsrcEditableStatus;
+    const isDraft = formValues?.status === RELEASES_STATUS.DRAFT;
+    const canEditIsrc = !isReadMode && (isDraft || isAdmin);
     const { hasPermission } = usePermission();
     const canUpdate = hasPermission(PERMISSION.RELEASE_AUDIO.UPDATE);
     const tracksLength = props.dataSource?.length || 0;
@@ -96,7 +96,7 @@ export default function ReleaseTracksTable({ dataFilter, ...props }: Props) {
     );
 
     const columns: ColumnType<TrackData>[] = [
-        ...(canUpdate && !isReadMode && isIsrcEditableStatus
+        ...(canUpdate && canEditIsrc
             ? [
                   {
                       key: 'sort',

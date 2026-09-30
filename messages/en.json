@@ -2120,6 +2120,8 @@
             "original": "Release image"
         },
         "validate": {
+            "upcAlreadyExists": "UPC has already been used",
+            "isrcAlreadyExists": "ISRC has already been used",
             "releaseNameMustMatchTrackName": "The release title must match at least one track title",
             "isrcMustBe12Characters": "ISRC must be 12 characters",
             "missingRequiredContributorsRoles": "Missing required contributors roles",
