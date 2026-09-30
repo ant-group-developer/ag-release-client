@@ -71,7 +71,7 @@ function StatusSegmentItem({ status, title, count, isSelected }: Props) {
     }, [status, token]);
 
     return (
-        <div className="flex items-center gap-2 px-2 py-1">
+        <div className="flex items-center gap-1.5 px-2 py-1 whitespace-nowrap sm:gap-2">
             {itemConfig.dotColor && (
                 <span
                     className="inline-block h-2 w-2 shrink-0 rounded-full"

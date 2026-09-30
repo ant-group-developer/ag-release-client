@@ -4,6 +4,7 @@ import TenantSelectActive from '@/components/ui/select/tenant-select-active';
 import { FALLBACK_IMAGE } from '@/constants/common';
 import { MAX_NAME_LENGTH } from '@/constants/validate';
 import { getAvatarUrl } from '@/helpers/avatar-tailwind';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import {
     Button,
     DatePicker,
@@ -15,7 +16,10 @@ import {
     Tooltip,
 } from 'antd';
 import { useTranslations } from 'next-intl';
-import { CHANNEL_THUMB_URL_MAX_LENGTH } from '../../constants';
+import {
+    CHANNEL_THUMB_URL_MAX_LENGTH,
+    YOUTUBE_CHANNEL_ID_LENGTH,
+} from '../../constants';
 import { ChannelTransferPreview } from '../../types';
 
 type Props = {
@@ -40,6 +44,7 @@ export default function ChannelInfoForm({
     isActive,
 }: Props) {
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
     const thumbUrl = Form.useWatch('thumbUrl', form);
     const tenantId = Form.useWatch('tenantId', form);
     const tenantChanged =
@@ -48,6 +53,7 @@ export default function ChannelInfoForm({
     const handleFinish = (values: any) => {
         const payloadValues = {
             ...values,
+            youtubeChannelId: values?.youtubeChannelId?.trim() || undefined,
             thumbUrl: values?.thumbUrl
                 ? values.thumbUrl
                 : getAvatarUrl(values?.name || ''),
@@ -193,7 +199,7 @@ export default function ChannelInfoForm({
                 <Input
                     placeholder={messages('channel.name')}
                     allowClear
-                    disabled={isUpdateForm || isActive}
+                    disabled={(!isAdmin && isUpdateForm) || isActive}
                 />
             </AppFormItem>
 
@@ -202,9 +208,10 @@ export default function ChannelInfoForm({
                 label={messages('channel.youtubeChannelId')}
                 rules={[
                     {
-                        max: 100,
-                        message: messages('validation.stringMax', {
-                            max: 100,
+                        min: YOUTUBE_CHANNEL_ID_LENGTH,
+                        max: YOUTUBE_CHANNEL_ID_LENGTH,
+                        message: messages('validation.mustBeLength', {
+                            number: YOUTUBE_CHANNEL_ID_LENGTH,
                             field: messages('channel.youtubeChannelId'),
                         }),
                     },
@@ -213,7 +220,7 @@ export default function ChannelInfoForm({
                 <Input
                     placeholder="UC..."
                     allowClear
-                    disabled={isUpdateForm || isActive}
+                    disabled={(!isAdmin && isUpdateForm) || isActive}
                 />
             </AppFormItem>
 

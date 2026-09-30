@@ -18,7 +18,9 @@ import SyncToTracksModal from '@/modules/releases/components/release-detail/rele
 import TrackDetailModal from '@/modules/releases/components/release-detail/release-tracks/modal/track-detail';
 import ReleaseTracksTable from '@/modules/releases/components/release-detail/release-tracks/table';
 import TrackActions from '@/modules/releases/components/release-detail/release-tracks/track-actions';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import {
+    RELEASES_STATUS,
     RELEASES_TABS,
     TYPE_MODAL_RELEASE,
     TYPE_MODAL_TRACK,
@@ -47,6 +49,7 @@ import { Key, useState } from 'react';
 export default function Tracks() {
     // hooks - state
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
     const [selectedRow, setSelectedRow] = useState<Key[]>([]);
     const pathname = usePathname();
     const headerHeight = useElementHeightById('release-header');
@@ -133,13 +136,15 @@ export default function Tracks() {
         },
     };
     const isTracksPage = pathname.includes(`/${RELEASES_TABS.TRACKS}`);
-    const isShowAddTrack = releaseAction == RELEASE_DETAIL_ACTION.EDIT;
+    const isDraft = formValues?.status === RELEASES_STATUS.DRAFT;
+    const canAddTrack =
+        (isDraft || isAdmin) && releaseAction === RELEASE_DETAIL_ACTION.EDIT;
 
     return (
         <ConfigProvider theme={customTheme}>
             <div className="pb-4">
                 <div className="mb-2 flex justify-end">
-                    {isTracksPage && isShowAddTrack && (
+                    {isTracksPage && canAddTrack && (
                         <Space>
                             <Button
                                 icon={
@@ -186,7 +191,9 @@ export default function Tracks() {
                         emptyText: isLoading ? (
                             <Empty />
                         ) : (
-                            <DropUploadTracks disabled={isReleaseReadAction} />
+                            <DropUploadTracks
+                                disabled={isReleaseReadAction || !canAddTrack}
+                            />
                         ),
                     }}
                     onChange={onChangeSort}

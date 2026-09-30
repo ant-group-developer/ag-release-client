@@ -668,10 +668,19 @@ export interface RevenueTerBarChartItem {
 export type RevenueTerBarChartV2Params = AnalyticsSummaryV2Params;
 export type RevenueTerBarChartV2Item = RevenueTerBarChartItem;
 
+export type ExportReportCurrency =
+    | 'USD'
+    | 'VND'
+    | 'GBP'
+    | 'INR'
+    | 'CNY'
+    | 'EUR';
+
 export interface ExportReportRequest {
     fromDate: string;
     endDate: string;
     format?: 'xlsx' | 'csv';
+    currency?: ExportReportCurrency;
     labelId?: string;
     artistId?: string;
     releaseId?: string;

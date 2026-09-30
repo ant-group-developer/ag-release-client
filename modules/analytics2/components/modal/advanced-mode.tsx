@@ -10,7 +10,6 @@ import {
     DollarOutlined,
     DownOutlined,
     DownloadOutlined,
-    FileTextOutlined,
 } from '@ant-design/icons';
 import { App, Button, Dropdown, Grid, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
@@ -41,6 +40,7 @@ import {
     AnalyticsCommonParams,
     AnalyticsEntityType,
     AnalyticsSelectedIds,
+    ExportReportCurrency,
     ExportReportRequest,
     ExportReportResponse,
 } from '../../types';
@@ -51,6 +51,18 @@ import ControlsSidebar from './advanced-mode/controls-sidebar';
 import DetailContentRenderer from './advanced-mode/detail-content-renderer';
 import FilterChipsBar from './advanced-mode/filter-chips-bar';
 import OverviewChartRenderer from './advanced-mode/overview-chart-renderer';
+
+const EXPORT_CURRENCIES: Array<{
+    code: ExportReportCurrency;
+    symbol: string;
+}> = [
+    { code: 'USD', symbol: '$' },
+    { code: 'VND', symbol: '₫' },
+    { code: 'GBP', symbol: '£' },
+    { code: 'INR', symbol: '₹' },
+    { code: 'CNY', symbol: '¥' },
+    { code: 'EUR', symbol: '€' },
+];
 
 export interface AdvancedModeModalProps extends FullScreenModalProps {
     releaseType?: ANALYTICS_RELEASE_TYPE;
@@ -174,14 +186,15 @@ export default function AdvancedModeModal({
         removeJob: handleRemoveExportJob,
         clearJobs,
     } = useExportJobStore();
-    const { exportAnalyticsReport, isPending: isExportingUsd } =
+    const { exportAnalyticsReport, isPending: isExportingConverted } =
         useExportAnalyticsReport();
     const { exportAnalyticsStatementReport, isPending: isExportingStatement } =
         useExportAnalyticsStatementReport();
 
-    const isExporting = isExportingUsd || isExportingStatement;
+    const isExporting = isExportingConverted || isExportingStatement;
 
-    const handleExport = (exportType: 'statement' | 'usd') => {
+    const handleExport = (exportType: 'statement' | ExportReportCurrency) => {
+        const isOriginalCurrency = exportType === 'statement';
         const rawStartDate =
             effectiveFromDate ?? dayjs().startOf('month').format('YYYY-MM-DD');
         const rawEndDate =
@@ -208,6 +221,7 @@ export default function AdvancedModeModal({
             fromDate: fromDateFormatted,
             endDate: toDateFormatted,
             format: 'xlsx',
+            ...(!isOriginalCurrency ? { currency: exportType } : {}),
             ...(tenantIds ? { tenantIds } : {}),
             ...(scopeParams.labelId ? { labelId: scopeParams.labelId } : {}),
             ...(scopeParams.artistId ? { artistId: scopeParams.artistId } : {}),
@@ -236,10 +250,9 @@ export default function AdvancedModeModal({
             duration: 2.5,
         });
 
-        const exportFn =
-            exportType === 'statement'
-                ? exportAnalyticsStatementReport
-                : exportAnalyticsReport;
+        const exportFn = isOriginalCurrency
+            ? exportAnalyticsStatementReport
+            : exportAnalyticsReport;
 
         exportFn({
             payload,
@@ -405,17 +418,59 @@ export default function AdvancedModeModal({
                             items: [
                                 {
                                     key: 'statement',
-                                    label: messages(
-                                        'common.exportOriginalReport'
+                                    label: (
+                                        <Space size={6}>
+                                            <DollarOutlined />
+                                            <Typography.Text>
+                                                {messages(
+                                                    'common.exportOriginalReport'
+                                                )}
+                                            </Typography.Text>
+                                        </Space>
                                     ),
-                                    icon: <FileTextOutlined />,
                                     onClick: () => handleExport('statement'),
                                 },
                                 {
-                                    key: 'usd',
-                                    label: messages('common.exportUsdReport'),
-                                    icon: <DollarOutlined />,
-                                    onClick: () => handleExport('usd'),
+                                    type: 'divider',
+                                    key: 'currency-divider',
+                                },
+                                {
+                                    type: 'group',
+                                    key: 'currency-conversion',
+                                    label: (
+                                        <Space size={6}>
+                                            <DollarOutlined />
+                                            <Typography.Text>
+                                                {messages(
+                                                    'common.selectCurrency'
+                                                )}
+                                            </Typography.Text>
+                                        </Space>
+                                    ),
+                                    children: EXPORT_CURRENCIES.map(
+                                        (currency) => ({
+                                            key: currency.code,
+                                            label: (
+                                                <div className="flex min-w-[210px] items-center justify-between gap-4">
+                                                    <Space size={6}>
+                                                        <Typography.Text strong>
+                                                            {currency.code}
+                                                        </Typography.Text>
+                                                        <Typography.Text type="secondary">
+                                                            {messages(
+                                                                `common.currencyNames.${currency.code}`
+                                                            )}
+                                                        </Typography.Text>
+                                                    </Space>
+                                                    <Typography.Text type="secondary">
+                                                        {currency.symbol}
+                                                    </Typography.Text>
+                                                </div>
+                                            ),
+                                            onClick: () =>
+                                                handleExport(currency.code),
+                                        })
+                                    ),
                                 },
                             ],
                         }}
