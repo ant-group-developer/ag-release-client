@@ -63,6 +63,8 @@ export interface ApplyReleaseMergePayload {
     selectAll: boolean;
     itemIds?: string[];
     excludeItemIds?: string[];
+    force?: boolean;
+    retryFailed?: boolean;
 }
 
 export interface ApplyReleaseMergeResult {

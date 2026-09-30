@@ -1,10 +1,14 @@
 'use client';
 
 import ReasonTags from '@/modules/release-merge/components/reason-tags';
-import { Tag, Typography } from 'antd';
+import { Button, Space, Tag, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import { AssetImportAction } from '../../enums';
-import { AssetImportItemData, MergeImpactData } from '../../types/payload';
+import {
+    AssetImportItemData,
+    MergeImpactData,
+    MergeImpactSource,
+} from '../../types/payload';
 import {
     findImpactSource,
     formatMergeRelease,
@@ -14,9 +18,18 @@ import {
 type Props = {
     record: AssetImportItemData;
     impact?: MergeImpactData | null;
+    canOperate?: boolean;
+    isMerging?: boolean;
+    onMergeSource?: (source: MergeImpactSource) => void;
 };
 
-export default function ItemMergeCell({ record, impact }: Props) {
+export default function ItemMergeCell({
+    record,
+    impact,
+    canOperate = false,
+    isMerging = false,
+    onMergeSource,
+}: Props) {
     const messages = useTranslations();
     const isMerge = record.action === AssetImportAction.MERGE_REQUIRED;
     const isConflict = record.action === AssetImportAction.CONFLICT;
@@ -80,9 +93,7 @@ export default function ItemMergeCell({ record, impact }: Props) {
                 {sourceLabels.length
                     ? sourceLabels.slice(0, 2).join(', ')
                     : '-'}
-                {sourceLabels.length > 2
-                    ? ` +${sourceLabels.length - 2}`
-                    : ''}
+                {sourceLabels.length > 2 ? ` +${sourceLabels.length - 2}` : ''}
             </div>
             <div>
                 <span className="text-gray-500">
@@ -111,13 +122,42 @@ export default function ItemMergeCell({ record, impact }: Props) {
                         {messages(verdictKey)}
                     </Tag>
                 )}
-                {classificationKey && messages.has(classificationKey as never) && (
-                    <Typography.Text type="secondary" className="!text-xs">
-                        {messages(classificationKey as never)}
-                    </Typography.Text>
-                )}
+                {classificationKey &&
+                    messages.has(classificationKey as never) && (
+                        <Typography.Text type="secondary" className="!text-xs">
+                            {messages(classificationKey as never)}
+                        </Typography.Text>
+                    )}
             </div>
             <ReasonTags codes={reasonCodes} />
+            <Space wrap size={[4, 4]}>
+                {sources.map((source, index) => {
+                    const plan = source?.plan;
+                    if (!source || !plan) return null;
+                    const autoSafe = plan.autoSafe;
+                    const force = source.forceEligible && !autoSafe;
+                    if (!autoSafe && !force) return null;
+
+                    return (
+                        <Button
+                            key={source.sourceReleaseId || index}
+                            size="small"
+                            type={autoSafe ? 'primary' : 'default'}
+                            danger={force}
+                            disabled={!canOperate || !onMergeSource}
+                            loading={isMerging}
+                            title={source.sourceReleaseId}
+                            onClick={() => onMergeSource?.(source)}
+                        >
+                            {messages(
+                                autoSafe
+                                    ? 'assetImport.merge.mergeOne'
+                                    : 'assetImport.merge.forceMergeOne'
+                            )}
+                        </Button>
+                    );
+                })}
+            </Space>
             {!reasonCodes.length && record.errorMessage && (
                 <Typography.Text type="danger" className="!text-xs">
                     {record.errorMessage}

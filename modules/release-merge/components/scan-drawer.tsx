@@ -38,7 +38,8 @@ export default function ReleaseMergeScanDrawer({
     onClose,
 }: Props) {
     const messages = useTranslations();
-    const [filter, setFilter] = useState<ReleaseMergeItemFilter>(DEFAULT_FILTER);
+    const [filter, setFilter] =
+        useState<ReleaseMergeItemFilter>(DEFAULT_FILTER);
     const [detailItemId, setDetailItemId] = useState<string | null>(null);
     const { scan } = useGetReleaseMergeScan(scanId, open);
     const { itemList, isFetching } = useGetReleaseMergeItems(
@@ -58,6 +59,7 @@ export default function ReleaseMergeScanDrawer({
     const canApply =
         scan?.status === ReleaseMergeRunStatus.READY ||
         scan?.status === ReleaseMergeRunStatus.PARTIALLY_APPLIED;
+    const isPartial = scan?.status === ReleaseMergeRunStatus.PARTIALLY_APPLIED;
     const isRunning =
         scan?.status === ReleaseMergeRunStatus.SCANNING ||
         scan?.status === ReleaseMergeRunStatus.APPLYING;
@@ -65,6 +67,8 @@ export default function ReleaseMergeScanDrawer({
     const applyItems = (payload: {
         selectAll: boolean;
         itemIds?: string[];
+        force?: boolean;
+        retryFailed?: boolean;
     }) => {
         if (!scanId) return;
         applyMerge({ scanId, payload });
@@ -73,19 +77,38 @@ export default function ReleaseMergeScanDrawer({
     const confirmApply = (payload: {
         selectAll: boolean;
         itemIds?: string[];
+        force?: boolean;
+        retryFailed?: boolean;
     }) => {
         Modal.confirm({
-            title: payload.selectAll
-                ? messages('releaseMerge.confirmApplyAllTitle')
-                : messages('releaseMerge.confirmApplyTitle'),
-            content: payload.selectAll
-                ? messages('releaseMerge.confirmApplyAllDescription')
-                : messages('releaseMerge.confirmApplyDescription'),
-            okText: messages('releaseMerge.apply'),
+            title: payload.force
+                ? messages('releaseMerge.confirmForceTitle')
+                : payload.selectAll
+                  ? messages('releaseMerge.confirmApplyAllTitle')
+                  : messages('releaseMerge.confirmApplyTitle'),
+            content: payload.force
+                ? messages('releaseMerge.confirmForceDescription')
+                : payload.selectAll
+                  ? messages('releaseMerge.confirmApplyAllDescription')
+                  : messages('releaseMerge.confirmApplyDescription'),
+            okText: messages(
+                payload.force ? 'releaseMerge.forceMerge' : 'releaseMerge.apply'
+            ),
             cancelText: messages('common.cancel'),
             onOk: () => applyItems(payload),
         });
     };
+
+    const isForceEligible = (record: ReleaseMergeItem) =>
+        record.classification ===
+            ReleaseMergeItemClassification.MANUAL_REVIEW &&
+        (record.status === ReleaseMergeItemStatus.MANUAL_REVIEW ||
+            record.status === ReleaseMergeItemStatus.FAILED) &&
+        record.reasonCodes.length === 1 &&
+        record.reasonCodes[0] === 'UPC_NOT_EQUIVALENT' &&
+        record.sharedIsrcs.length > 0 &&
+        record.sourceOnlyIsrcs.length === 0 &&
+        record.targetOnlyIsrcs.length === 0;
 
     const columns: ColumnType<ReleaseMergeItem>[] = [
         {
@@ -153,7 +176,10 @@ export default function ReleaseMergeScanDrawer({
                     canApply &&
                     record.classification ===
                         ReleaseMergeItemClassification.AUTO_SAFE &&
-                    record.status === ReleaseMergeItemStatus.PENDING;
+                    (record.status === ReleaseMergeItemStatus.PENDING ||
+                        (isPartial &&
+                            record.status === ReleaseMergeItemStatus.FAILED));
+                const canForceItem = canApply && isForceEligible(record);
                 return (
                     <Space>
                         <Button
@@ -171,10 +197,34 @@ export default function ReleaseMergeScanDrawer({
                                     confirmApply({
                                         selectAll: false,
                                         itemIds: [record.id],
+                                        retryFailed:
+                                            isPartial &&
+                                            record.status ===
+                                                ReleaseMergeItemStatus.FAILED,
                                     })
                                 }
                             >
                                 {messages('releaseMerge.apply')}
+                            </Button>
+                        )}
+                        {canForceItem && (
+                            <Button
+                                size="small"
+                                danger
+                                loading={isPending}
+                                onClick={() =>
+                                    confirmApply({
+                                        selectAll: false,
+                                        itemIds: [record.id],
+                                        force: true,
+                                        retryFailed:
+                                            isPartial &&
+                                            record.status ===
+                                                ReleaseMergeItemStatus.FAILED,
+                                    })
+                                }
+                            >
+                                {messages('releaseMerge.forceMerge')}
                             </Button>
                         )}
                     </Space>
@@ -292,9 +342,32 @@ export default function ReleaseMergeScanDrawer({
                             type="primary"
                             disabled={!canApply}
                             loading={isPending}
-                            onClick={() => confirmApply({ selectAll: true })}
+                            onClick={() =>
+                                confirmApply({
+                                    selectAll: true,
+                                    retryFailed: isPartial,
+                                })
+                            }
                         >
-                            {messages('releaseMerge.applyAllSafe')}
+                            {messages(
+                                isPartial
+                                    ? 'releaseMerge.applyAllSafeRetry'
+                                    : 'releaseMerge.applyAllSafe'
+                            )}
+                        </Button>
+                        <Button
+                            danger
+                            disabled={!canApply}
+                            loading={isPending}
+                            onClick={() =>
+                                confirmApply({
+                                    selectAll: true,
+                                    force: true,
+                                    retryFailed: isPartial,
+                                })
+                            }
+                        >
+                            {messages('releaseMerge.forceMergeAll')}
                         </Button>
                     </div>
                 )}

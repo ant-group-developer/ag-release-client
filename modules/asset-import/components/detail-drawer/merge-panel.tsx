@@ -1,7 +1,7 @@
 'use client';
 
-import { showNotification } from '@/helpers/messages-helper';
 import { APP_ROUTES } from '@/enums/routes';
+import { showNotification } from '@/helpers/messages-helper';
 import { Link } from '@/i18n/routing';
 import ReasonTags, {
     CodeList,
@@ -14,6 +14,7 @@ import { useRescanAssetImportConflicts } from '../../hooks/use-rescan-conflicts'
 import {
     MergeImpactData,
     MergeImpactGroup,
+    MergeImpactSource,
     RescanConflictsResult,
 } from '../../types/payload';
 import {
@@ -59,6 +60,15 @@ export default function MergePanel({
 
     const safeItemIds = collectAutoSafeItemIds(impact);
     const sourceCounts = countMergeSources(impact);
+    const forceEligibleSourceIds = Array.from(
+        new Set(
+            (impact?.groups ?? []).flatMap((group) =>
+                group.sources
+                    .filter((source) => source.forceEligible)
+                    .map((source) => source.sourceReleaseId)
+            )
+        )
+    );
 
     const handleMerge = () => {
         if (!batchId || safeItemIds.length === 0) return;
@@ -86,12 +96,97 @@ export default function MergePanel({
         });
     };
 
+    const handleMergeSource = (
+        group: MergeImpactGroup,
+        source: MergeImpactSource
+    ) => {
+        const plan = source.plan;
+        const force = !!source.forceEligible && !plan?.autoSafe;
+        if (!batchId || !plan || (!plan.autoSafe && !force)) return;
+
+        const sourceLabel =
+            formatMergeRelease(plan.source) ?? source.sourceReleaseId;
+        const targetLabel =
+            formatMergeRelease(plan.target) ?? group.targetReleaseId;
+        Modal.confirm({
+            title: messages(
+                force
+                    ? 'assetImport.merge.confirmForceOneTitle'
+                    : 'assetImport.merge.confirmOneTitle'
+            ),
+            content: messages(
+                force
+                    ? 'assetImport.merge.confirmForceOneDescription'
+                    : 'assetImport.merge.confirmOneDescription',
+                {
+                    source: sourceLabel,
+                    target: targetLabel,
+                }
+            ),
+            okText: messages(
+                force
+                    ? 'assetImport.merge.forceMergeOne'
+                    : 'assetImport.merge.mergeOne'
+            ),
+            okButtonProps: { danger: force },
+            cancelText: messages('common.cancel'),
+            onOk: () =>
+                mergeDuplicates({
+                    batchId,
+                    payload: {
+                        selectAll: true,
+                        sourceReleaseIds: [source.sourceReleaseId],
+                        force,
+                    },
+                    onSuccess: () => {
+                        onMergeStart?.();
+                        const text = messages('assetImport.merge.started');
+                        showNotification('success', text);
+                        setNotice({ type: 'success', message: text });
+                    },
+                }),
+        });
+    };
+
+    const handleForceEligible = () => {
+        if (!batchId || forceEligibleSourceIds.length === 0) return;
+        Modal.confirm({
+            title: messages('assetImport.merge.confirmForceEligibleTitle'),
+            content: messages(
+                'assetImport.merge.confirmForceEligibleDescription',
+                { count: forceEligibleSourceIds.length }
+            ),
+            okText: messages('assetImport.merge.forceMergeEligible', {
+                count: forceEligibleSourceIds.length,
+            }),
+            okButtonProps: { danger: true },
+            cancelText: messages('common.cancel'),
+            onOk: () =>
+                mergeDuplicates({
+                    batchId,
+                    payload: {
+                        selectAll: true,
+                        sourceReleaseIds: forceEligibleSourceIds,
+                        force: true,
+                    },
+                    onSuccess: () => {
+                        onMergeStart?.();
+                        const text = messages('assetImport.merge.started');
+                        showNotification('success', text);
+                        setNotice({ type: 'success', message: text });
+                    },
+                }),
+        });
+    };
+
     const handleRescan = () => {
         if (!batchId) return;
         rescanConflicts({
             batchId,
             onSuccess: (response) => {
-                const result = response?.data as RescanConflictsResult | undefined;
+                const result = response?.data as
+                    | RescanConflictsResult
+                    | undefined;
                 const text = messages('assetImport.merge.rescanResult', {
                     count: result?.rescanned ?? 0,
                 });
@@ -132,6 +227,20 @@ export default function MergePanel({
                 >
                     {messages('assetImport.merge.mergeSafe', {
                         count: safeItemIds.length,
+                    })}
+                </Button>
+                <Button
+                    danger
+                    disabled={
+                        !canOperate ||
+                        forceEligibleSourceIds.length === 0 ||
+                        !batchId
+                    }
+                    loading={isMerging || impactLoading}
+                    onClick={handleForceEligible}
+                >
+                    {messages('assetImport.merge.forceMergeEligible', {
+                        count: forceEligibleSourceIds.length,
                     })}
                 </Button>
                 <Button
@@ -284,6 +393,37 @@ export default function MergePanel({
                                             >
                                                 {source.sourceReleaseId}
                                             </Typography.Text>
+                                            {plan &&
+                                                (autoSafe ||
+                                                    source.forceEligible) && (
+                                                    <div className="mt-2">
+                                                        <Button
+                                                            size="small"
+                                                            type={
+                                                                autoSafe
+                                                                    ? 'primary'
+                                                                    : 'default'
+                                                            }
+                                                            danger={!autoSafe}
+                                                            disabled={
+                                                                !canOperate
+                                                            }
+                                                            loading={isMerging}
+                                                            onClick={() =>
+                                                                handleMergeSource(
+                                                                    group,
+                                                                    source
+                                                                )
+                                                            }
+                                                        >
+                                                            {messages(
+                                                                autoSafe
+                                                                    ? 'assetImport.merge.mergeOne'
+                                                                    : 'assetImport.merge.forceMergeOne'
+                                                            )}
+                                                        </Button>
+                                                    </div>
+                                                )}
                                             {plan && (
                                                 <div className="mt-2 space-y-1">
                                                     <div>

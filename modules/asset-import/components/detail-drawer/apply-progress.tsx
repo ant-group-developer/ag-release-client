@@ -27,7 +27,6 @@ export default function ApplyProgress({
     const progress = latestEvent?.progress as
         | { current?: number; total?: number; label?: string }
         | undefined;
-    const rows = latestEvent?.rows as { errors?: number } | undefined;
     // The first SSE frame is the raw job row (progressCurrent/progressTotal).
     // Later frames nest the same numbers under progress/rows.
     const totalRows = Number(
@@ -36,23 +35,23 @@ export default function ApplyProgress({
     const current = Number(
         progress?.current ?? latestEvent?.progressCurrent ?? 0
     );
-    const failedRows = Number(
-        rows?.errors ?? latestEvent?.errorRows ?? summary?.failedRows ?? 0
-    );
     const label =
         progress?.label ||
         (typeof latestEvent?.progressLabel === 'string'
             ? latestEvent.progressLabel
             : '');
-    const percent =
-        totalRows > 0 ? Math.round((current / totalRows) * 100) : 0;
+    const percent = totalRows > 0 ? Math.round((current / totalRows) * 100) : 0;
     const isMerge = latestEvent?.sourceType === 'ASSET_IMPORT_MERGE';
 
     return (
         <div className="mb-3 rounded-lg border p-3">
             <Progress
                 percent={percent}
-                status={failedRows > 0 ? 'exception' : 'active'}
+                // Keep the operation progress blue even when individual rows
+                // fail. Row-level errors are reported separately and should
+                // not make the whole progress bar look like a failed job.
+                status="active"
+                strokeColor="#1677ff"
                 format={() =>
                     `${formattedNumber(current)}/${formattedNumber(totalRows)}`
                 }

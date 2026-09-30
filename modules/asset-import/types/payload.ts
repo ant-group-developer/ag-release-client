@@ -96,6 +96,9 @@ export interface ApplyAssetImportPayload {
     itemIds?: string[];
     excludeItemIds?: string[];
     action?: AssetImportAction | string;
+    retryFailed?: boolean;
+    sourceReleaseIds?: string[];
+    force?: boolean;
 }
 
 export interface ApplyAssetImportResponse {
@@ -165,6 +168,7 @@ export interface MergePairPlan {
 export interface MergeImpactSource {
     sourceReleaseId: string;
     plan: MergePairPlan | null;
+    forceEligible: boolean;
     error: string | null;
 }
 

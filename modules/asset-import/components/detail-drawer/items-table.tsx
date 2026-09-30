@@ -4,6 +4,7 @@ import AppPagination from '@/components/ui/pagination';
 import AppTable from '@/components/ui/table/normal-table';
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/page-size';
 import { getIndex } from '@/helpers/common';
+import { showNotification } from '@/helpers/messages-helper';
 import { Button, Modal, Select, Space, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -17,8 +18,14 @@ import {
 } from '../../enums';
 import { useApplyAssetImport } from '../../hooks/use-apply-asset-import';
 import { useGetListAssetImportItem } from '../../hooks/use-get-list-items';
+import { useMergeAssetImportDuplicates } from '../../hooks/use-merge-duplicates';
 import { AssetImportItemFilter } from '../../types';
-import { AssetImportItemData, MergeImpactData } from '../../types/payload';
+import {
+    AssetImportItemData,
+    MergeImpactData,
+    MergeImpactSource,
+} from '../../types/payload';
+import { formatMergeRelease } from '../../utils/merge-impact';
 import ItemActionTag from '../tag/item-action-tag';
 import ItemStatusTag from '../tag/item-status-tag';
 import ChangeDiff from './change-diff';
@@ -61,6 +68,8 @@ export default function ItemsTable({
         waitForItems
     );
     const { applyAssetImport, isPending: isApplying } = useApplyAssetImport();
+    const { mergeDuplicates, isPending: isMerging } =
+        useMergeAssetImportDuplicates();
 
     const items = assetImportItemData.items;
     const metadata = assetImportItemData.metadata;
@@ -86,7 +95,11 @@ export default function ItemsTable({
         setFilter((prev) => ({ ...prev, page, pageSize }));
     };
 
-    const runApply = (payload: { selectAll: boolean; itemIds?: string[] }) => {
+    const runApply = (payload: {
+        selectAll: boolean;
+        itemIds?: string[];
+        retryFailed?: boolean;
+    }) => {
         if (!batchId) return;
 
         onApplyStart?.();
@@ -100,7 +113,11 @@ export default function ItemsTable({
         });
     };
 
-    const handleApply = (payload: { selectAll: boolean; itemIds?: string[] }) => {
+    const handleApply = (payload: {
+        selectAll: boolean;
+        itemIds?: string[];
+        retryFailed?: boolean;
+    }) => {
         const unresolved = unresolvedMergeCount + unresolvedConflictCount;
         if (unresolved <= 0) {
             runApply(payload);
@@ -119,15 +136,67 @@ export default function ItemsTable({
         });
     };
 
+    const handleMergeSource = (
+        record: AssetImportItemData,
+        source: MergeImpactSource
+    ) => {
+        const plan = source.plan;
+        const force = !!source.forceEligible && !plan?.autoSafe;
+        if (!batchId || !plan || (!plan.autoSafe && !force)) return;
+
+        const sourceLabel =
+            formatMergeRelease(plan.source) ?? source.sourceReleaseId;
+        const targetLabel =
+            formatMergeRelease(plan.target) ?? record.canonicalReleaseId ?? '-';
+        Modal.confirm({
+            title: messages(
+                force
+                    ? 'assetImport.merge.confirmForceOneTitle'
+                    : 'assetImport.merge.confirmOneTitle'
+            ),
+            content: messages(
+                force
+                    ? 'assetImport.merge.confirmForceOneDescription'
+                    : 'assetImport.merge.confirmOneDescription',
+                { source: sourceLabel, target: targetLabel }
+            ),
+            okText: messages(
+                force
+                    ? 'assetImport.merge.forceMergeOne'
+                    : 'assetImport.merge.mergeOne'
+            ),
+            okButtonProps: { danger: force },
+            cancelText: messages('common.cancel'),
+            onOk: () =>
+                mergeDuplicates({
+                    batchId,
+                    payload: {
+                        selectAll: true,
+                        sourceReleaseIds: [source.sourceReleaseId],
+                        force,
+                    },
+                    onSuccess: () => {
+                        onApplyStart?.();
+                        showNotification(
+                            'success',
+                            messages('assetImport.merge.started')
+                        );
+                    },
+                }),
+        });
+    };
+
     const actionOptions = Object.values(AssetImportAction).map((action) => ({
         label: messages(`assetImport.item.action.${action}` as any),
         value: action,
     }));
 
-    const statusOptions = Object.values(AssetImportItemStatus).map((status) => ({
-        label: messages(`assetImport.item.status.${status}` as any),
-        value: status,
-    }));
+    const statusOptions = Object.values(AssetImportItemStatus).map(
+        (status) => ({
+            label: messages(`assetImport.item.status.${status}` as any),
+            value: status,
+        })
+    );
 
     const matchTypeOptions = Object.values(AssetImportMatchType).map(
         (matchType) => ({
@@ -143,7 +212,8 @@ export default function ItemsTable({
             width: 50,
             align: 'center',
             fixed: 'left',
-            render: (_, __, index) => getIndex(filter.pageSize, filter.page, index),
+            render: (_, __, index) =>
+                getIndex(filter.pageSize, filter.page, index),
         },
         {
             title: messages('assetImport.item.rowNumber'),
@@ -194,7 +264,15 @@ export default function ItemsTable({
             key: 'merge',
             width: 320,
             render: (_, record) => (
-                <ItemMergeCell record={record} impact={impact} />
+                <ItemMergeCell
+                    record={record}
+                    impact={impact}
+                    canOperate={canApply}
+                    isMerging={isMerging}
+                    onMergeSource={(source) =>
+                        handleMergeSource(record, source)
+                    }
+                />
             ),
         },
         {
@@ -300,20 +378,39 @@ export default function ItemsTable({
                                     onClick={() =>
                                         handleApply({
                                             selectAll: false,
-                                            itemIds: selectedRowKeys as string[],
+                                            itemIds:
+                                                selectedRowKeys as string[],
+                                            retryFailed:
+                                                batchStatus ===
+                                                AssetImportBatchStatus.PARTIALLY_APPLIED,
                                         })
                                     }
                                 >
-                                    {messages('assetImport.item.applySelected', {
-                                        count: selectedRowKeys.length,
-                                    })}
+                                    {messages(
+                                        'assetImport.item.applySelected',
+                                        {
+                                            count: selectedRowKeys.length,
+                                        }
+                                    )}
                                 </Button>
                                 <Button
                                     type="primary"
                                     loading={isApplying}
-                                    onClick={() => handleApply({ selectAll: true })}
+                                    onClick={() =>
+                                        handleApply({
+                                            selectAll: true,
+                                            retryFailed:
+                                                batchStatus ===
+                                                AssetImportBatchStatus.PARTIALLY_APPLIED,
+                                        })
+                                    }
                                 >
-                                    {messages('assetImport.item.applyAll')}
+                                    {messages(
+                                        batchStatus ===
+                                            AssetImportBatchStatus.PARTIALLY_APPLIED
+                                            ? 'assetImport.item.applyAllRetry'
+                                            : 'assetImport.item.applyAll'
+                                    )}
                                 </Button>
                             </Space>
                         )}
