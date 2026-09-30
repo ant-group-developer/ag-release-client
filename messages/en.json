@@ -3312,6 +3312,7 @@
             "GEN_UPC": "Generate UPC",
             "GEN_ISRCS": "Generate ISRCs",
             "GEN_ISRC": "Generate ISRC",
+            "CHECK_DUPLICATE_IDENTIFIERS": "Check duplicate UPC/ISRC",
             "VALIDATE": "Validate",
             "PROCESS_DSPS": "Process DSPs",
             "PROCESS_DIRECT": "Process direct",

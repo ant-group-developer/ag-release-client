@@ -3304,6 +3304,7 @@
             "GEN_UPC": "Tạo UPC",
             "GEN_ISRCS": "Tạo ISRCs",
             "GEN_ISRC": "Tạo ISRC",
+            "CHECK_DUPLICATE_IDENTIFIERS": "Kiểm tra trùng UPC/ISRC",
             "VALIDATE": "Xác thực",
             "PROCESS_DSPS": "Xử lý DSPs",
             "PROCESS_DIRECT": "Xử lý trực tiếp",
