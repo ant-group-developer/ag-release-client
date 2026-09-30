@@ -2112,6 +2112,8 @@
             "original": "Ảnh phát hành"
         },
         "validate": {
+            "upcAlreadyExists": "Mã UPC đã được sử dụng",
+            "isrcAlreadyExists": "Mã ISRC đã được sử dụng",
             "releaseNameMustMatchTrackName": "Tên phát hành phải trùng với tên một bài hát",
             "isrcMustBe12Characters": "ISRC phải đủ 12 ký tự",
             "missingRequiredContributorsRoles": "Thiếu vai trò người đóng góp",
