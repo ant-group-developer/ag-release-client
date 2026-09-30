@@ -10,6 +10,8 @@ import {
     AssetImportBatchStatus,
     TERMINAL_ASSET_IMPORT_BATCH_STATUSES,
 } from '../enums';
+
+const BATCH_STATUSES = new Set<string>(Object.values(AssetImportBatchStatus));
 import { AssetImportBatchData } from '../types';
 import { AssetImportEventData, AssetImportEventType } from '../types/payload';
 
@@ -49,8 +51,18 @@ const parseEventData = (
 const getEventSummary = (
     eventData: AssetImportEventData
 ): Partial<AssetImportBatchData> | undefined => {
+    // Job snapshots reuse `status` for PENDING/PROCESSING. That is not a batch
+    // status; copying it would close the SSE listener while the job is running.
+    const isJobEvent =
+        typeof eventData.sourceType === 'string' || !!eventData.progress;
+    const batchStatus =
+        !isJobEvent &&
+        typeof eventData.status === 'string' &&
+        BATCH_STATUSES.has(eventData.status)
+            ? eventData.status
+            : undefined;
     const hasFlatSummary =
-        eventData.status !== undefined ||
+        batchStatus !== undefined ||
         eventData.totalRows !== undefined ||
         eventData.matchedRows !== undefined ||
         eventData.appliedRows !== undefined ||
@@ -61,7 +73,7 @@ const getEventSummary = (
 
     return {
         ...(eventData.summary || {}),
-        ...(eventData.status !== undefined ? { status: eventData.status } : {}),
+        ...(batchStatus !== undefined ? { status: batchStatus } : {}),
         ...(eventData.totalRows !== undefined
             ? { totalRows: eventData.totalRows }
             : {}),
@@ -80,6 +92,9 @@ const getEventSummary = (
     };
 };
 
+const isJobTerminalStatus = (status: unknown) =>
+    status === 'COMPLETED' || status === 'FAILED' || status === 'CANCELLED';
+
 const isTerminalEventData = (
     eventData: AssetImportEventData | null,
     summary: Partial<AssetImportBatchData> | null
@@ -87,12 +102,20 @@ const isTerminalEventData = (
     const status = (eventData?.status || summary?.status) as
         | AssetImportBatchStatus
         | undefined;
+    // A late subscriber only gets the job snapshot. Its type stays "snapshot"
+    // even when the job has already finished, so status has to count too.
+    const jobFinished =
+        typeof eventData?.sourceType === 'string' &&
+        isJobTerminalStatus(eventData?.status);
 
     return (
+        jobFinished ||
         eventData?.type === AssetImportEventType.COMPLETED ||
         eventData?.type === AssetImportEventType.FAILED ||
         eventData?.type === AssetImportEventType.CANCELLED ||
-        (!!status && TERMINAL_ASSET_IMPORT_BATCH_STATUSES.includes(status))
+        (!eventData?.sourceType &&
+            !!status &&
+            TERMINAL_ASSET_IMPORT_BATCH_STATUSES.includes(status))
     );
 };
 
@@ -104,7 +127,8 @@ const isFailedEventData = (
 
     return (
         eventData?.type === AssetImportEventType.FAILED ||
-        status === AssetImportBatchStatus.FAILED
+        (typeof eventData?.sourceType === 'string' && status === 'FAILED') ||
+        (!eventData?.sourceType && status === AssetImportBatchStatus.FAILED)
     );
 };
 
@@ -184,7 +208,9 @@ export const useAssetImportBatchEvents = ({
                     );
                     const eventSummary = getEventSummary(eventData);
 
-                    setLatestEvent(eventData);
+                    if (eventData.type !== AssetImportEventType.HEARTBEAT) {
+                        setLatestEvent(eventData);
+                    }
 
                     let nextSummary = summaryRef.current;
                     if (eventSummary) {

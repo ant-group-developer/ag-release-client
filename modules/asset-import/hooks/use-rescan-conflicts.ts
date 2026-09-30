@@ -1,37 +1,36 @@
-import { useApiNotify } from '@/hooks/use-api-notify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useApiNotify } from '@/hooks/use-api-notify';
 import { assetImportApis } from '../apis';
 import {
     assetImportBatchQueryKeys,
     assetImportItemQueryKeys,
 } from '../constants/query-keys';
-import { ApplyAssetImportVariables } from '../types/payload';
+import { RescanAssetImportVariables } from '../types/payload';
 
-export const useApplyAssetImport = () => {
+export const useRescanAssetImportConflicts = () => {
     const queryClient = useQueryClient();
-    const { handleSuccess, handleError } = useApiNotify();
+    const { handleError } = useApiNotify();
 
     const mutation = useMutation({
-        mutationFn: ({ batchId, payload }: ApplyAssetImportVariables) =>
-            assetImportApis.apply(batchId, payload),
-        onSuccess: (data, { onSuccess }: ApplyAssetImportVariables) => {
+        mutationFn: ({ batchId }: RescanAssetImportVariables) =>
+            assetImportApis.rescanConflicts(batchId),
+        onSuccess: (data, variables) => {
             queryClient.invalidateQueries({
                 queryKey: assetImportItemQueryKeys.lists(),
             });
             queryClient.invalidateQueries({
                 queryKey: assetImportBatchQueryKeys.all,
             });
-            handleSuccess(data?.data);
-            onSuccess?.(data?.data);
+            variables.onSuccess?.(data?.data);
         },
-        onError: (error, { onError }: ApplyAssetImportVariables) => {
-            onError?.();
+        onError: (error, variables) => {
+            variables.onError?.();
             handleError(error);
         },
     });
 
     return {
-        applyAssetImport: mutation.mutate,
+        rescanConflicts: mutation.mutate,
         ...mutation,
     };
 };

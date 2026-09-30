@@ -8,8 +8,10 @@ import {
     getIndex,
 } from '@/helpers/common';
 import useModalStore from '@/hooks/use-modal';
-import { Avatar, Typography } from 'antd';
+import { SIZE_ICON } from '@/constants/common';
+import { Avatar, Tooltip, Typography } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { TYPE_MODAL_ASSET_IMPORT } from '../../enums';
 import { AssetImportBatchData, AssetImportBatchFilter } from '../../types';
@@ -129,7 +131,7 @@ export default function AssetImportBatchesTable({
         },
         {
             key: 'actions',
-            width: 90,
+            width: 130,
             align: 'center',
             fixed: 'right',
             render: (_, record) => (
@@ -140,6 +142,25 @@ export default function AssetImportBatchesTable({
                             openModal(TYPE_MODAL_ASSET_IMPORT.DETAIL, record)
                         }
                     />
+                    {record.downloadUrl && (
+                        <Tooltip
+                            title={messages('assetImport.batch.downloadFile')}
+                        >
+                            <button
+                                type="button"
+                                className="h-fit w-fit rounded-full border-0 bg-inherit p-2 hover:bg-slate-200"
+                                onClick={() =>
+                                    window.open(
+                                        record.downloadUrl as string,
+                                        '_blank',
+                                        'noopener,noreferrer'
+                                    )
+                                }
+                            >
+                                <Download size={SIZE_ICON} />
+                            </button>
+                        </Tooltip>
+                    )}
                     <DeleteButton
                         canDelete
                         onClick={() =>

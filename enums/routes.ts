@@ -82,6 +82,7 @@ export enum APP_ROUTES {
     RELEASE_SUBMITS = '/release-submits',
     DISTRIBUTION_JOBS = '/distribution-jobs',
     ASSET_IMPORT = '/asset-import',
+    RELEASE_MERGES = '/release-merges',
     LANDING_NEWS = '/landing/news',
     LANDING_NEWS_DETAIL = '/landing/news/*',
     LANDING = '/landing',
