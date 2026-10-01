@@ -24,12 +24,12 @@ export default function NewsCard({ post }: NewsCardProps) {
             className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-zinc-900/60 bg-zinc-900/20 shadow-lg transition-all duration-300 hover:border-zinc-800 hover:bg-zinc-900/40"
         >
             {post.thumbnail && (
-                <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-zinc-900 bg-zinc-950">
+                <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-zinc-900 bg-zinc-950">
                     <Image
                         src={post.thumbnail}
                         alt={post.title}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="object-contain transition-transform duration-500 group-hover:scale-105"
                     />
                 </div>
             )}
