@@ -1,4 +1,5 @@
 import AppFormItem from '@/components/ui/antd-form/form-Item';
+import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { RELEASES_STATUS } from '@/modules/releases/enums';
 import { useReleaseFormStore } from '@/modules/releases/hooks/release-form-store';
 import { ReleaseDetailSchema } from '@/modules/releases/schemas';
@@ -22,11 +23,11 @@ export default function CodesSectionV2({
         formState: { errors },
     } = useFormContext<ReleaseDetailSchema>();
     const messages = useTranslations();
+    const { isAdmin } = useAuth();
     const formValues = useReleaseFormStore((state) => state.formValues);
 
-    const isUpcEditableStatus =
-        formValues?.status === RELEASES_STATUS.DRAFT ||
-        formValues?.status === RELEASES_STATUS.FAILED;
+    const isDraft = formValues?.status === RELEASES_STATUS.DRAFT;
+    const canEditUpc = !isReadMode && (isDraft || isAdmin);
 
     return (
         <div id="codes" className="flex flex-col gap-6">
@@ -61,9 +62,7 @@ export default function CodesSectionV2({
                                 allowClear
                                 status={errors.upc ? 'error' : undefined}
                                 disabled={
-                                    isCreateReleasePage ||
-                                    isReadMode ||
-                                    !isUpcEditableStatus
+                                    isCreateReleasePage || !canEditUpc
                                 }
                             />
                         )}

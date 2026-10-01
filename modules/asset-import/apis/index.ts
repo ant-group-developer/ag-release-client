@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axios-auth';
 import { DetailResponse, SuccessResponse } from '@/types/api';
 import {
     AssetImportBatchData,
+    AssetImportBatchDetail,
     AssetImportBatchFilter,
     AssetImportBatchListResponse,
     AssetImportItemFilter,
@@ -11,8 +12,11 @@ import {
     ApplyAssetImportPayload,
     ApplyAssetImportResponse,
     AssetImportItemData,
+    MergeDuplicatesJob,
+    MergeImpactData,
     PresignUploadPayload,
     PresignUploadResponse,
+    RescanConflictsResult,
     TemplateDownloadResponse,
     ScanAssetImportPayload,
     ScanAssetImportResponse,
@@ -58,10 +62,35 @@ export const assetImportApis = {
         );
     },
 
+    getBatch: (batchId: string) => {
+        return axiosInstance.get<DetailResponse<AssetImportBatchDetail>>(
+            `${ASSET_IMPORT_API_PATHS.BATCHES}/${batchId}`
+        );
+    },
+
     getListItems: (batchId: string, params: AssetImportItemFilter) => {
         return axiosInstance.get<DetailResponse<AssetImportItemListResponse>>(
             `${ASSET_IMPORT_API_PATHS.BATCHES}/${batchId}/items`,
             { params }
+        );
+    },
+
+    getMergeImpact: (batchId: string) => {
+        return axiosInstance.get<DetailResponse<MergeImpactData>>(
+            `${ASSET_IMPORT_API_PATHS.BATCHES}/${batchId}/merge-impact`
+        );
+    },
+
+    mergeDuplicates: (batchId: string, payload: ApplyAssetImportPayload) => {
+        return axiosInstance.post<DetailResponse<MergeDuplicatesJob>>(
+            `${ASSET_IMPORT_API_PATHS.BATCHES}/${batchId}/merge-duplicates`,
+            payload
+        );
+    },
+
+    rescanConflicts: (batchId: string) => {
+        return axiosInstance.post<DetailResponse<RescanConflictsResult>>(
+            `${ASSET_IMPORT_API_PATHS.BATCHES}/${batchId}/rescan-conflicts`
         );
     },
 

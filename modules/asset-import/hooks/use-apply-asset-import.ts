@@ -19,7 +19,7 @@ export const useApplyAssetImport = () => {
                 queryKey: assetImportItemQueryKeys.lists(),
             });
             queryClient.invalidateQueries({
-                queryKey: assetImportBatchQueryKeys.lists(),
+                queryKey: assetImportBatchQueryKeys.all,
             });
             handleSuccess(data?.data);
             onSuccess?.(data?.data);

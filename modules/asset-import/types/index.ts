@@ -16,7 +16,10 @@ export interface AssetImportTargetTenant {
 
 export interface AssetImportBatchData extends CommonAttribute {
     fileName: string;
-    r2Key?: string;
+    /** Object key của file Excel đã scan, nằm trong bucket R2. */
+    fileKey?: string | null;
+    /** URL tải file đã scan. Hết hạn sau vài giờ, lấy lại bằng cách tải list/detail. */
+    downloadUrl?: string | null;
     targetTenantId: string;
     targetTenant: AssetImportTargetTenant;
     status: AssetImportBatchStatus | string;
@@ -30,6 +33,27 @@ export interface AssetImportBatchData extends CommonAttribute {
     createdBy?: string | null;
     /** Used only by the client to refresh items immediately after a scan. */
     waitForItems?: boolean;
+}
+
+export interface AssetImportBatchSummary {
+    byAction: Record<string, number>;
+    byStatus: Record<string, number>;
+}
+
+/** GET /asset-import/batches/:batchId — batch kèm bộ đếm theo action/status. */
+export interface AssetImportBatchDetail {
+    id: string;
+    fileName?: string;
+    fileKey?: string | null;
+    downloadUrl?: string | null;
+    status: AssetImportBatchStatus | string;
+    totalRows?: number;
+    matchedRows?: number;
+    newRows?: number;
+    invalidRows?: number;
+    appliedRows?: number;
+    failedRows?: number;
+    summary?: AssetImportBatchSummary;
 }
 
 export interface AssetImportBatchFilter extends CommonParams {

@@ -4,6 +4,7 @@ import CustomTooltip from '@/components/ui/tooltip/custom-tooltip';
 import { SIZE_ICON } from '@/constants/common';
 import { PAGE_SIZE_EXTRA_LARGE } from '@/constants/page-size';
 import { DATE_FORMAT } from '@/enums/common';
+import { APP_ROUTES } from '@/enums/routes';
 import {
     formattedDate,
     getAvatarPlaceholder,
@@ -12,19 +13,18 @@ import {
 } from '@/helpers/common';
 import { OnChangeFilter } from '@/hooks/use-filter';
 import useModalStore from '@/hooks/use-modal';
-import { APP_ROUTES } from '@/enums/routes';
 import { useReleaseActionStore } from '@/hooks/use-release-action-store';
 import { Link } from '@/i18n/routing';
 import { useGetListDsp } from '@/modules/dsp/hooks/use-get-list-dsp';
 import { TYPE_MODAL_RELEASE_EXECUTION } from '@/modules/release-executions/enums';
+import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { RELEASE_TYPE, RELEASES_TABS } from '@/modules/releases/enums';
 import {
     getReleaseDetailTabRoute,
     RELEASE_DETAIL_ACTION,
 } from '@/modules/releases/helpers/link';
-import ReleaseCoverImage from '@/modules/releases/components/image/release-cover-image';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Space, Tag, theme, Typography } from 'antd';
+import { Avatar, Grid, Space, Tag, theme, Typography } from 'antd';
 import { Eye, FileJson } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { FieldOrderReleaseExecution3 } from '../../enums';
@@ -60,6 +60,7 @@ export default function ReleaseSubmitTable({
         pageSize: PAGE_SIZE_EXTRA_LARGE,
     });
     const { token } = theme.useToken();
+    const screens = Grid.useBreakpoint();
 
     const columns: ProColumns<ReleaseSubmitData>[] = [
         {
@@ -67,7 +68,7 @@ export default function ReleaseSubmitTable({
             key: 'iNo',
             width: 50,
             align: 'center',
-            fixed: 'left',
+            fixed: screens.md ? 'left' : undefined,
             render: (_, __, index) =>
                 getIndex(
                     props?.pagination?.pageSize,
@@ -86,7 +87,7 @@ export default function ReleaseSubmitTable({
                 FieldOrderReleaseExecution3.execution_releaseUpc
             ),
             width: 150,
-            fixed: 'left',
+            fixed: screens.md ? 'left' : undefined,
             render: (_, record) => {
                 const releaseSnapshot =
                     record?.metadata?.input?.releaseSnapshot;
@@ -154,11 +155,7 @@ export default function ReleaseSubmitTable({
                         />
                     </div>
                 ) : (
-                    <Avatar
-                        shape="square"
-                        size={36}
-                        className="flex-shrink-0"
-                    >
+                    <Avatar shape="square" size={36} className="flex-shrink-0">
                         -
                     </Avatar>
                 );
@@ -214,7 +211,7 @@ export default function ReleaseSubmitTable({
                             }}
                             className="group min-w-0 flex-1"
                         >
-                            <Typography.Text className="cursor-pointer break-words transition-colors group-hover:!text-blue-500 hover:!text-blue-500">
+                            <Typography.Text className="cursor-pointer break-words transition-colors hover:!text-blue-500 group-hover:!text-blue-500">
                                 {title}
                             </Typography.Text>
                         </Link>
@@ -411,7 +408,7 @@ export default function ReleaseSubmitTable({
             title: '',
             key: 'actions',
             width: 80,
-            fixed: 'right',
+            fixed: screens.md ? 'right' : undefined,
             align: 'center',
             render: (_, record) => (
                 <Space>

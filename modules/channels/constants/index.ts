@@ -1,1 +1,2 @@
 export const CHANNEL_THUMB_URL_MAX_LENGTH = 500;
+export const YOUTUBE_CHANNEL_ID_LENGTH = 24;

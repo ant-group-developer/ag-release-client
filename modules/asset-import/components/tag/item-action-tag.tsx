@@ -18,6 +18,8 @@ export const getItemActionColor = (action: AssetImportAction) => {
             return 'error';
         case AssetImportAction.CONFLICT:
             return 'warning';
+        case AssetImportAction.MERGE_REQUIRED:
+            return 'purple';
         default:
             return 'default';
     }

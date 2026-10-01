@@ -176,20 +176,22 @@ export default function ReleaseStatusTabs({
 
     return (
         <ConfigProvider theme={customTheme}>
-            <div
-                className="my-4 inline-flex items-center rounded-lg p-0.5 shadow-sm"
-                style={{
-                    backgroundColor: token.colorBgContainer,
-                    border: `1px solid ${token.colorBorderSecondary}`,
-                }}
-            >
-                <Segmented
-                    value={currentKey}
-                    options={options}
-                    onChange={(status) =>
-                        handleChange(status as ReleaseStatusTab)
-                    }
-                />
+            <div className="my-4 max-w-full overflow-x-auto scrollbar-hidden">
+                <div
+                    className="inline-flex min-w-max items-center rounded-lg p-0.5 shadow-sm"
+                    style={{
+                        backgroundColor: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorderSecondary}`,
+                    }}
+                >
+                    <Segmented
+                        value={currentKey}
+                        options={options}
+                        onChange={(status) =>
+                            handleChange(status as ReleaseStatusTab)
+                        }
+                    />
+                </div>
             </div>
         </ConfigProvider>
     );
