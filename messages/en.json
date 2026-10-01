@@ -929,7 +929,8 @@
         "invalidType": "{field} must be a valid value.",
         "noUnderscore": "{field} must not contain underscores (_)",
         "email": "Invalid email address.",
-        "alphanumericNoSpaces": "{field} must not contain spaces or special characters."
+        "alphanumericNoSpaces": "{field} must not contain spaces or special characters.",
+        "releaseEndDateMustBeAfterReleaseDate": "Release end date must be after release date"
     },
     "form": {
         "searchPlaceholder": "Search"
