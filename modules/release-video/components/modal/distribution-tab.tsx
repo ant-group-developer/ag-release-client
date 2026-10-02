@@ -36,6 +36,21 @@ export default function DistributionTab({
         ['releaseTerritory', 'distributeWorldwide'],
         form
     );
+    const releaseDate = Form.useWatch('releaseDate', form);
+    const maxYear = dayjs().year() + 3;
+
+    const disabledReleaseDate = (current: dayjs.Dayjs) => {
+        return current ? current.year() > maxYear : false;
+    };
+
+    const disabledReleaseEndDate = (current: dayjs.Dayjs) => {
+        if (!current) return false;
+        if (current.year() > maxYear) return true;
+        if (releaseDate && !current.isAfter(dayjs(releaseDate), 'day')) {
+            return true;
+        }
+        return false;
+    };
 
     return (
         <div className="mx-auto w-full pb-8 pt-4">
@@ -108,13 +123,17 @@ export default function DistributionTab({
                         <DatePicker
                             className="w-full"
                             format={DATE_FORMAT.DATE_ONLY}
-                            onChange={(date) =>
+                            disabledDate={disabledReleaseDate}
+                            onChange={(date) => {
                                 onFieldUpdate?.({
                                     releaseDate: date
                                         ? date.toISOString()
                                         : null,
-                                })
-                            }
+                                });
+                                if (form.getFieldValue('releaseEndDate')) {
+                                    form.validateFields(['releaseEndDate']);
+                                }
+                            }}
                         />
                     </AppFormItem>
                 </Col>
@@ -123,6 +142,32 @@ export default function DistributionTab({
                     <AppFormItem
                         name="releaseEndDate"
                         label={messages('release.releaseEndDate')}
+                        dependencies={['releaseDate']}
+                        rules={[
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    const startDate = getFieldValue('releaseDate');
+                                    if (!value || !startDate) {
+                                        return Promise.resolve();
+                                    }
+                                    if (
+                                        !dayjs(value).isAfter(
+                                            dayjs(startDate),
+                                            'day'
+                                        )
+                                    ) {
+                                        return Promise.reject(
+                                            new Error(
+                                                messages(
+                                                    'validation.releaseEndDateMustBeAfterReleaseDate'
+                                                )
+                                            )
+                                        );
+                                    }
+                                    return Promise.resolve();
+                                },
+                            }),
+                        ]}
                         getValueProps={(value) => ({
                             value: value ? dayjs(value) : null,
                         })}
@@ -133,6 +178,7 @@ export default function DistributionTab({
                         <DatePicker
                             className="w-full"
                             format={DATE_FORMAT.DATE_ONLY}
+                            disabledDate={disabledReleaseEndDate}
                             onChange={(date) =>
                                 onFieldUpdate?.({
                                     releaseEndDate: date

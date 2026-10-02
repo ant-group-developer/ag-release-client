@@ -926,7 +926,8 @@
         "invalidType": "{field} không hợp lệ.",
         "noUnderscore": "{field} Không được có ký tự (_)",
         "email": "Email không hợp lệ.",
-        "alphanumericNoSpaces": "{field} không được chứa khoảng trắng và ký tự đặc biệt."
+        "alphanumericNoSpaces": "{field} không được chứa khoảng trắng và ký tự đặc biệt.",
+        "releaseEndDateMustBeAfterReleaseDate": "Ngày kết thúc phát hành phải lớn hơn ngày phát hành"
     },
     "form": {
         "searchPlaceholder": "Tìm kiếm"
